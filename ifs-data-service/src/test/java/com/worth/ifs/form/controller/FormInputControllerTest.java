@@ -14,12 +14,15 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInputController> {
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     protected FormInputController supplyControllerUnderTest() {
         return new FormInputController();
@@ -29,17 +32,13 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
     public void testFindByQuestionId() throws Exception {
         Long questionId = 1L;
 
-        List<FormInputResource> expected = newFormInputResource()
-                .withId(1L)
-                .withFormInputTypeTitle("testFormInputTypeTitle")
-                .build(1);
+        List<FormInputResource> expected = newFormInputResource().build(1);
 
         when(formInputServiceMock.findByQuestionId(questionId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminput/findByQuestionId/{id}", questionId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]formInputTypeTitle", is("testFormInputTypeTitle")))
-                .andExpect(jsonPath("[0]id", is(1)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(formInputServiceMock, only()).findByQuestionId(questionId);
     }
@@ -54,7 +53,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.findByQuestionIdAndScope(questionId, scope)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/forminput/findByQuestionId/{questionId}/scope/{scope}", questionId, scope))
+        mockMvc.perform(get("/forminput/findByQuestionId/{questionId}/scope/{scope}", questionId, scope))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
@@ -72,7 +71,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.findByCompetitionIdAndScope(competitionId, scope)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/forminput/findByCompetitionId/{competitionId}/scope/{scope}", competitionId, scope))
+        mockMvc.perform(get("/forminput/findByCompetitionId/{competitionId}/scope/{scope}", competitionId, scope))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
@@ -89,7 +88,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         when(formInputServiceMock.save(any(FormInputResource.class))).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/forminput/", competitionId)
+        mockMvc.perform(put("/forminput/", competitionId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .content(new ObjectMapper().writeValueAsString(expected)))
                 .andExpect(status().isOk())

@@ -27,7 +27,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager of the consortium will need to upload the following documents
+    And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -197,7 +197,7 @@ Status in the dashboard remains action required after uploads
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-6152
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
@@ -274,8 +274,6 @@ Non-lead partner can still view both documents after submitting
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
 
-
-
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621
     [Tags]    HappyPath
@@ -341,7 +339,7 @@ Project Finance is able to Approve and Reject
     Then the user should not see an error in the page
 
 
-Project Finance user can clik the link and go back to the Competition Dashboard page
+Project Finance user can click the link and go back to the Competition Dashboard page
     [Documentation]    INFUND-5516
     [Tags]
     When the user clicks the button/link           link=Competition dashboard
@@ -373,8 +371,7 @@ CompAdmin approves other documents
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424
-    [Tags]    HappyPath    Pending
-    #TO DO:INFUND-5887
+    [Tags]    HappyPath
     Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")

@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -118,7 +119,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public void removeSectionsQuestionsWithType(SectionResource section, String name) {
+    public void removeSectionsQuestionsWithType(SectionResource section, FormInputType type) {
         List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
         List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
         List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(section.getCompetition());
@@ -131,7 +132,7 @@ public class SectionServiceImpl implements SectionService {
                                 q -> q != null &&
                                 !q.getFormInputs().stream()
                                     .anyMatch(
-                                        input -> simpleFilter(formInputResources, i -> input.equals(i.getId())).get(0).getFormInputTypeTitle().equals(name)
+                                        input -> type == simpleFilter(formInputResources, i -> input.equals(i.getId())).get(0).getType()
                                     )
                         )
                         .map(QuestionResource::getId)

@@ -40,7 +40,7 @@ ${external_spendprofile_summary}    ${la_fromage_overview}/partner-organisation/
 Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
-    [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
+    [Setup]  log in as user                   lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
@@ -185,6 +185,19 @@ Lead partner marks spend profile as complete
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
+
 
 # TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
 
@@ -265,13 +278,12 @@ Academic partner spend profile client side validations
     When the user enters text to a text field    table.monthlyCostsPerCategoryMap[48][2]    5
     And the user moves focus to the element    link=Project setup status
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
-    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+
 
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
-    [Tags]    Pending
-    # Pending due to ongoing work (Ewan Cormack)
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3
