@@ -3,7 +3,10 @@ package com.worth.ifs.project.sections;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.ProjectResource;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.sections.SectionStatus.*;
+
+import static java.util.Arrays.asList;
 
 /**
  * This is a helper class for determining the status of a given Project Setup section
@@ -35,9 +38,9 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus bankDetailsSectionStatus(final ProjectActivityStates bankDetails) {
         if (bankDetails != null) {
-            if (bankDetails.equals(ProjectActivityStates.PENDING)) {
+            if (PENDING.equals(bankDetails)) {
                 return HOURGLASS;
-            } else if (bankDetails.equals(ProjectActivityStates.COMPLETE)) {
+            } else if (COMPLETE.equals(bankDetails)) {
                 return TICK;
             }
             return FLAG;
@@ -58,11 +61,11 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState,
                                                    final boolean spendProfileApproved) {
-        if (spendProfileState.equals(ProjectActivityStates.PENDING)) {
+        if (PENDING.equals(spendProfileState)) {
             return HOURGLASS;
-        } else if (spendProfileState.equals(ProjectActivityStates.ACTION_REQUIRED)) {
+        } else if (ACTION_REQUIRED.equals(spendProfileState)) {
             return FLAG;
-        } else if (spendProfileState.equals(ProjectActivityStates.COMPLETE)) {
+        } else if (COMPLETE.equals(spendProfileState)) {
             if (spendProfileApproved) {
                 return TICK;
             }
@@ -88,15 +91,23 @@ public class ProjectSetupSectionStatus {
         return HOURGLASS;
     }
 
-    public SectionStatus grantOfferLetterSectionStatus(final boolean canAccessGrantOfferLetterSection,
-                                                       final boolean leadPartner,
-                                                       final boolean grantOfferLetterSubmitted) {
-        if (canAccessGrantOfferLetterSection) {
-            //TODO statuses for lead partners are not yet implemented
-            if (leadPartner) {
-                return FLAG;
+    public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
+                                                       final boolean leadPartner) {
+        if(grantOfferLetterState != null) {
+            if (COMPLETE.equals(grantOfferLetterState)) {
+                return TICK;
             }
-            return HOURGLASS;
+            if (leadPartner) {
+                if (ACTION_REQUIRED.equals(grantOfferLetterState)) {
+                    return FLAG;
+                }
+                if (asList(PENDING, NOT_STARTED).contains(grantOfferLetterState)) {
+                    return HOURGLASS;
+                }
+                return EMPTY;
+            } else if (!NOT_REQUIRED.equals(grantOfferLetterState)) {
+                return HOURGLASS;
+            }
         }
         return EMPTY;
     }

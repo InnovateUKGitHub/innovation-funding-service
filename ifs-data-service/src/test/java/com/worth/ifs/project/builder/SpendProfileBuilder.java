@@ -53,4 +53,8 @@ public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileB
     public SpendProfileBuilder withApproval(ApprovalType... approvalTypes) {
         return withArray((approvalType, spendProfile) -> setField("approval", approvalType, spendProfile), approvalTypes);
     }
+
+    public SpendProfileBuilder withMarkedComplete(Boolean... completed) {
+        return withArray((complete, spendProfile) -> setField("markedAsComplete", complete, spendProfile), completed);
+    }
 }

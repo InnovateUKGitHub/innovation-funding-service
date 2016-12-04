@@ -51,6 +51,10 @@ class ProjectSetupProgressChecker {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getOtherDocumentsStatus());
     }
 
+    public boolean isGrantOfferLetterAvailable() {
+        return !NOT_REQUIRED.equals(projectTeamStatus.getLeadPartnerStatus().getGrantOfferLetterStatus());
+    }
+
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {
         return projectTeamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
     }

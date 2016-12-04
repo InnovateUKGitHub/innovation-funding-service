@@ -40,7 +40,7 @@ ${external_spendprofile_summary}    ${la_fromage_overview}/partner-organisation/
 Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
-    [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
+    [Setup]  log in as user                   lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
