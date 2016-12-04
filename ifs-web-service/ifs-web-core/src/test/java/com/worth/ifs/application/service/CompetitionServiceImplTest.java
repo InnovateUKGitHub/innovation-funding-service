@@ -241,4 +241,12 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(1, found.size());
         assertEquals(Long.valueOf(1L), found.get(0).getId());
     }
+
+    @Test
+    public void test_notifyAssessors() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        when(competitionsRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+
+        service.notifyAssessors(competitionId);
+    }
 }

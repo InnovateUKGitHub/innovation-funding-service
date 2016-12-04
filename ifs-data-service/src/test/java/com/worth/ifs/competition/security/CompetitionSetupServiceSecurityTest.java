@@ -61,7 +61,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            Long sectionId = 3L;
             assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
@@ -69,6 +68,9 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
                 verifyNoMoreInteractions(rules);
             });
             assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
+                verifyNoMoreInteractions(rules);
+            });
+            assertAccessDenied(() -> classUnderTest.notifyAssessors(competitionId), () -> {
                 verifyNoMoreInteractions(rules);
             });
         });
@@ -130,6 +132,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> notifyAssessors(Long competitionId) {
             return null;
         }
 

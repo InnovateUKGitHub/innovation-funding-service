@@ -44,4 +44,7 @@ public interface CompetitionSetupService {
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId);
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    ServiceResult<Void> notifyAssessors(Long competitionId);
 }

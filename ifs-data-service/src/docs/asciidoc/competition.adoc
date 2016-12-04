@@ -45,12 +45,23 @@ include::{snippets}/competition/bank-details/export-bank-details/curl-request.ad
 
 === Get all assessor count options based on the competition type
 ==== Request
-include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/http-request.adoc[]
-include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/path-parameters.adoc[]
+include::{snippets}/assessor-count-options/find-all-by-competition-type/http-request.adoc[]
+include::{snippets}/assessor-count-options/find-all-by-competition-type/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/http-response.adoc[]
-include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/response-fields.adoc[]
+include::{snippets}/assessor-count-options/find-all-by-competition-type/http-response.adoc[]
+include::{snippets}/assessor-count-options/find-all-by-competition-type/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/competition-type-assessor-options/get-all-by-competition-type/curl-request.adoc[]
+include::{snippets}/assessor-count-options/find-all-by-competition-type/curl-request.adoc[]
+
+=== Notify assessors of assessment period
+==== Request
+include::{snippets}/competition/notify-assessors/http-request.adoc[]
+include::{snippets}/competition/notify-assessors/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/notify-assessors/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/notify-assessors/curl-request.adoc[]
