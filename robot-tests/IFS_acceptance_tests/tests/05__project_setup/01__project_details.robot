@@ -179,7 +179,7 @@ Lead partner can see the overview of the project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
     And the user should see the element    link=Target start date
     And the user should see the element    link=Project address
-    And the user should see the element    link=Project manager
+    And the user should see the element    link=Project Manager
     And the user should see the text in the page    Finance contacts
 
 Submit button is disabled if the details are not fully filled out
@@ -212,7 +212,7 @@ Option to invite a project manager
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     And the user should see the element    jQuery=p:contains("Who will be the Project Manager for your project?")
     When the user selects the radio button    projectManager    new
     Then the user should see the element    id=invite-project-manager
@@ -279,7 +279,7 @@ Invited project manager shows on the project manager selection screen
     [Tags]    Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     Then the user should see the text in the page    Bob Jones
 
 Lead partner selects a project manager
@@ -289,14 +289,14 @@ Lead partner selects a project manager
     ...    INFUND-5610
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
     When the user selects the radio button    projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     And the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
     And the user selects the radio button    projectManager    projectManager2
     And the user clicks the button/link    jQuery=.button:contains("Save")
@@ -460,7 +460,7 @@ Non-lead partner cannot change start date, project manager or project address
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should not see the element    link=Target start date
-    And the user should not see the element    link=Project manager
+    And the user should not see the element    link=Project Manager
     And the user should not see the element    link=Project address
 
 Academic Partner nominates Finance contact
@@ -519,7 +519,7 @@ Project details read only after submission
     Then all the fields are completed
     And The user should not see the element    link=Target start date
     And The user should not see the element    link=Project address
-    And The user should not see the element    link=Project manager
+    And The user should not see the element    link=Project Manager
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
@@ -549,9 +549,9 @@ Non-lead partner cannot change any project details
     Then the user should see the text in the page    Target start date
     And the user should see the text in the page    1 Jan 2017
     And the user should not see the element    link=Target start date
-    And the user should see the text in the page    Project manager
+    And the user should see the text in the page    Project Manager
     And the user should see the text in the page    Elmo Chenault
-    And the user should not see the element    link=Project manager
+    And the user should not see the element    link=Project Manager
     And the user should see the text in the page    Project address
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address

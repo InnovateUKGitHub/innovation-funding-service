@@ -214,7 +214,7 @@ the users fill out project details
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     And the user selects the radio button    projectManager    projectManager1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=Project address
