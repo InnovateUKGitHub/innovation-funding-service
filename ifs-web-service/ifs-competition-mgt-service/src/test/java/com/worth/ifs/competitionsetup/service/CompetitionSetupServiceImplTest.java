@@ -6,7 +6,6 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupServiceImpl;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
@@ -153,7 +152,7 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
-		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.FALSE);
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -201,7 +200,7 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
-		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.FALSE);
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
 				.build();
