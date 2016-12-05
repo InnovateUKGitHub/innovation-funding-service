@@ -1,7 +1,6 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.resource.*;
 import org.junit.Test;
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static com.worth.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
@@ -105,6 +104,9 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
+                userResource.getGender().toString(),
+                userResource.getEthnicity(),
+                userResource.getDisability().toString(),
                 organisationId
         ).getSuccessObject();
 
