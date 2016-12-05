@@ -286,8 +286,8 @@ Academic partner edits spend profile and this updates on the table
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3
-    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[2]/td[3]    5
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    5
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
