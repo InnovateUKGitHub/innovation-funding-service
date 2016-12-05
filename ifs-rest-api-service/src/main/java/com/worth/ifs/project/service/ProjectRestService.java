@@ -100,4 +100,8 @@ public interface ProjectRestService {
     RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
 
     RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
+
+    RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
+
+    RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 }

@@ -233,6 +233,26 @@ public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
     }
 
+    @Test
+    public void testCompAdminsCanApproveSignedGrantOfferLetters() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
+    }
+
+    @Test
+    public void testNonCompAdminsCannotApproveSignedGrantOfferLetters() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
+    }
+
     @Override
     protected ProjectGrantOfferPermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectGrantOfferPermissionRules();

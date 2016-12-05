@@ -1,7 +1,6 @@
 package com.worth.ifs.project.gol.workflow.configuration;
 
 import com.worth.ifs.project.domain.Project;
-import com.worth.ifs.project.domain.ProjectDetailsProcess;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.gol.domain.GOLProcess;
 import com.worth.ifs.project.gol.repository.GrantOfferLetterProcessRepository;
@@ -9,7 +8,6 @@ import com.worth.ifs.project.gol.resource.GOLOutcomes;
 import com.worth.ifs.project.gol.resource.GOLState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
-import com.worth.ifs.project.resource.ProjectDetailsState;
 import com.worth.ifs.workflow.BaseWorkflowEventHandler;
 import com.worth.ifs.workflow.domain.ActivityType;
 import com.worth.ifs.workflow.repository.ProcessRepository;
@@ -105,6 +103,17 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
             return false;
         return grantOfferLetterSent(project, projectUser);
     }
+
+    public boolean approve(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        if(process == null)
+            return false;
+        ProjectUser projectUser = process.getParticipant();
+        if(projectUser == null)
+            return false;
+        return grantOfferLetterApproved(project, projectUser);
+    }
+
     @Override
     protected GOLProcess createNewProcess(Project target, ProjectUser participant) {
         return new GOLProcess(participant, target, null);

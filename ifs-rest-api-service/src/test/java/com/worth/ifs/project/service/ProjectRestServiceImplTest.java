@@ -8,10 +8,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -566,5 +563,30 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
         assertEquals(Boolean.TRUE, result.getSuccessObject());
     }
+
+    @Test
+    public void testApproveSignedGrantOfferLetter() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + ApprovalType.APPROVED;
+        setupPostWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsSignedGrantOfferLetterApproved() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/is-signed-grant-offer-letter-approved";
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
+
+        RestResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
 
 }

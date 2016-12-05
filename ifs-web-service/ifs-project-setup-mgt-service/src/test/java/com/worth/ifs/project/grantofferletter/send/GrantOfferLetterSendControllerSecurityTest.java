@@ -3,6 +3,7 @@ package com.worth.ifs.project.grantofferletter.send;
 import com.worth.ifs.project.BaseProjectSetupControllerSecurityTest;
 import com.worth.ifs.project.ProjectSetupSectionsPermissionRules;
 import com.worth.ifs.project.grantofferletter.send.controller.ProjectGrantOfferLetterSendController;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -38,13 +39,20 @@ public class GrantOfferLetterSendControllerSecurityTest extends BaseProjectSetup
         assertSecured(() -> classUnderTest.sendGrantOfferLetter(123L, null, null, null, null));
     }
 
+    /* disabled GOL received by post INFUND-6377
     @Test
     public void testGrantOfferLetterReceivedByPostPage() {
         assertSecured(() -> classUnderTest.grantOfferLetterReceivedByPost(123L, null, null, null, null));
     }
+    */
     @Test
     public void testUploadAnnexPage() {
         assertSecured(() -> classUnderTest.uploadAnnexFile(123L, null, null, null, null, null));
+    }
+
+    @Test
+    public void testApproceOrRejectSignedGrantOfferLetter() {
+        assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(123L, ApprovalType.APPROVED, null, null, null, null));
     }
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {

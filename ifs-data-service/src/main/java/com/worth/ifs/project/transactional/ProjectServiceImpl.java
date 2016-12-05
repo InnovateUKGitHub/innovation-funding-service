@@ -100,6 +100,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     public static final String WEB_CONTEXT = "/project-setup";
 
+    private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
+
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -1088,7 +1090,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         if (golWorkflowHandler.grantOfferLetterSent(project)) {
             return serviceSuccess();
         } else {
-            LOG.error(String.format("Set Grant Offer Letter workflow status to sent failed for project %s", project.getId()));
+            LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
     }
@@ -1110,6 +1112,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId)
                 .andOnSuccess(project -> {
                     if(!golWorkflowHandler.isAlreadySent(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if(golWorkflowHandler.isReadyToApprove(project)) {
+                if(ApprovalType.APPROVED == approvalType) {
+                    if(!golWorkflowHandler.approve(project)) {
+                        LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                    }
+                }
+            }
+            return serviceSuccess();
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isApproved(project)) {
                         return serviceSuccess(Boolean.FALSE);
                     }
                     return serviceSuccess(Boolean.TRUE);

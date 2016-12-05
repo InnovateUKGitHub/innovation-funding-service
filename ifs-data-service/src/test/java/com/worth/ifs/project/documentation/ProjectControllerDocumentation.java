@@ -3,7 +3,6 @@ package com.worth.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder;
@@ -538,7 +537,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                                parameterWithName("projectId").description("Id of the project for which the Grant Offer Letter is being sent.")
                         )));
     }
 
@@ -549,7 +548,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                                parameterWithName("projectId").description("Id of the project for which the Grant Offer Letter send allowed status is requested.")
                         )));
     }
 
@@ -560,7 +559,30 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
+                                parameterWithName("projectId").description("Id of the project for which the the Grant Offer Letter already sent status is requested.")
+                        )));
+    }
+
+    @Test
+    public void approveOrRejectSignedGrantOfferLetter() throws Exception{
+        when(projectServiceMock.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(ServiceResult.serviceSuccess());
+        mockMvc.perform(post("/project/{projectId}/signed-grant-offer-letter/approval/{approvalType}", 123L, ApprovalType.APPROVED))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the signed Grant Offer Letter is being approved/rejected."),
+                                parameterWithName("approvalType").description("Approval or rejection.")
+                        )));
+    }
+
+    @Test
+    public void isSignedGrantOfferLetterApproved() throws Exception{
+        when(projectServiceMock.isSignedGrantOfferLetterApproved(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
+        mockMvc.perform(get("/project/{projectId}/is-signed-grant-offer-letter-approved", 123L))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the approval status of the signed Grant Offer Letter is requested.")
                         )));
     }
 

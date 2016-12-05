@@ -8,10 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.service.ProjectInviteRestService;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.service.ProjectRestService;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -315,6 +312,16 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
         return projectRestService.isGrantOfferLetterAlreadySent(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+        return projectRestService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+        return projectRestService.isSignedGrantOfferLetterApproved(projectId).toServiceResult();
     }
 
 }

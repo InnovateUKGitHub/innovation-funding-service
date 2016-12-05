@@ -9,10 +9,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
@@ -447,6 +444,28 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testApproveSignedGrantOfferLetter(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED), () -> {
+            verify(projectPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testSignedGrantOfferLetterApproved(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
+            verify(projectPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -633,6 +652,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
 
     }
 }

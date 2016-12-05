@@ -6,6 +6,7 @@
 <body th:with="context='project-management'" class="project-management grant-offer-letter">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 <div th:include="fragments/modals :: modal-accept-send-gol" th:remove="tag"/>
+<div th:include="fragments/modals :: modal-accept-signed-gol" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -24,6 +25,12 @@
         </div>
     </div>
     <hr/>
+
+    <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
+        <div class="success-alert extra-margin-bottom">
+            <h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted.</h2>
+        </div>
+    </th:block>
 
     <th:block th:if="${!model.isSentToProjectTeam()}">
         <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
@@ -95,8 +102,8 @@
         </button>
     </div>
 
+    <!-- disable GOL received by post INFUND-6377
     <th:block th:if="${model.isSentToProjectTeam()}">
-        <!-- TODO DRS prototype uses javascript to enable button once checkbox ticked - need to have a HTML only option for this -->
         <h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
         <p>If the grant offer letter has been received by post, please tick the box below.</p>
 
@@ -117,10 +124,15 @@
                 <hr />
                 <div class="alignright-button">
                     <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                    <a th:href="@{'/project/{id}/offer/grant-offer-letter/received-by-post'}" class="button">Confirm</a> <!-- TODO DRS connect this up -->
+                    <a th:href="@{'/project/{id}/offer/grant-offer-letter/received-by-post'}" class="button">Confirm</a>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <th:block th:if="${model.isSentToProjectTeam()}" th:remove="tag">
+        <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
+        <p>Do the documents supplied meet the requirements for the grant offer letter?</p>
+        <a href="#" data-js-modal="modal-accept-gol" class="button large">Accept signed grant offer letter</a>
     </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

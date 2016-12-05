@@ -19,6 +19,7 @@ public class ProjectGrantOfferLetterSendViewModel {
     private Long applicationId;
     private Boolean grantOfferLetterFileContentAvailable;
     private Boolean additionalContractFileContentAvailable;
+    private Boolean signedGrantOfferLetterApproved;
 
     public ProjectGrantOfferLetterSendViewModel(CompetitionSummaryResource competitionSummary,
                                                 FileDetailsViewModel grantOfferLetterFile,
@@ -28,7 +29,8 @@ public class ProjectGrantOfferLetterSendViewModel {
                                                 String projectName,
                                                 Long applicationId,
                                                 Boolean grantOfferLetterFileContentAvailable,
-                                                Boolean additionalContractFileContentAvailable) {
+                                                Boolean additionalContractFileContentAvailable,
+                                                Boolean signedGrantOfferLetterApproved) {
         this.competitionSummary = competitionSummary;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
@@ -38,6 +40,7 @@ public class ProjectGrantOfferLetterSendViewModel {
         this.applicationId = applicationId;
         this.grantOfferLetterFileContentAvailable = grantOfferLetterFileContentAvailable;
         this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
+        this.signedGrantOfferLetterApproved = signedGrantOfferLetterApproved;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -75,6 +78,8 @@ public class ProjectGrantOfferLetterSendViewModel {
 
     public Boolean getAdditionalContractFileContentAvailable() { return additionalContractFileContentAvailable; }
 
+    public Boolean getSignedGrantOfferLetterApproved() { return signedGrantOfferLetterApproved; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,6 +98,7 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(applicationId, that.applicationId)
                 .append(grantOfferLetterFileContentAvailable, that.grantOfferLetterFileContentAvailable)
                 .append(additionalContractFileContentAvailable, that.additionalContractFileContentAvailable)
+                .append(signedGrantOfferLetterApproved, that.signedGrantOfferLetterApproved)
                 .isEquals();
     }
 
@@ -107,6 +113,7 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(applicationId)
                 .append(grantOfferLetterFileContentAvailable)
                 .append(additionalContractFileContentAvailable)
+                .append(signedGrantOfferLetterApproved)
                 .toHashCode();
     }
 }

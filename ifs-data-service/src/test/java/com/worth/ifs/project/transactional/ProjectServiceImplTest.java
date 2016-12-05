@@ -1433,7 +1433,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
 
-        assertTrue(result.isSuccess());
+        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
     }
 
     @Test
@@ -1459,6 +1459,71 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterSuccess(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.approve(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterFailure(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.approve(any())).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        assertFalse(result.isFailure());
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterApprovalStatusSuccess(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterApprovalStatusFailure(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
     }
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,

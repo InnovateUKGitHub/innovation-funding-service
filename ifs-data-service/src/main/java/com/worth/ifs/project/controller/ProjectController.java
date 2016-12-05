@@ -7,10 +7,7 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.project.resource.MonitoringOfficerResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectTeamStatusResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
@@ -290,5 +287,16 @@ public class ProjectController {
     @RequestMapping(value= "/{projectId}/is-grant-offer-letter-already-sent", method = GET)
     public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
         return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval/{approvalType}", method = POST)
+    public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
+                                                                  @PathVariable("approvalType") final ApprovalType approvalType) {
+        return projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/is-signed-grant-offer-letter-approved", method = GET)
+    public RestResult<Boolean> isignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
+        return projectService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
     }
 }

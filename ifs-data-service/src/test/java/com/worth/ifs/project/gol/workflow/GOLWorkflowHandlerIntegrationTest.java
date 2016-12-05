@@ -103,6 +103,33 @@ public class GOLWorkflowHandlerIntegrationTest extends
                 GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
     }
 
+    @Test
+    public void testApproveSignedGrantOfferLetter() throws Exception {
+
+        callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
+
+                // current State, destination State and expected Event to be fired
+                GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterWithoutProjectUser() throws Exception {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.approve(project)),
+
+                // current State, destination State and expected Event to be fired
+                GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
+    }
+
+    @Test
+    public void testSendGrantOfferLetterWithoutProjectUser() throws Exception {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.grantOfferLetterSent(project)),
+
+                // current State, destination State and expected Event to be fired
+                GOLState.PENDING, GOLState.SENT, GOLOutcomes.GOL_SENT);
+    }
+
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();
@@ -119,6 +146,36 @@ public class GOLWorkflowHandlerIntegrationTest extends
 
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(project, projectUser);
+
+        assertTrue(result);
+
+        // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
+        // This can be done by building the expected GOLProcess object (say X) and verifying that X was the object that was saved.
+        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, expectedActivityState);
+
+        // Ensure the correct event was fired by the workflow
+        expectedGolProcess.setProcessEvent(expectedEventToBeFired.getType());
+
+        verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
+    }
+
+    private void callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser(Function<Project, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
+
+        Project project = newProject().build();
+        ProjectUser projectUser = newProjectUser().build();
+
+        // Set the current state in the GOL Process
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
+        GOLProcess currentGOLProcess = new GOLProcess(null, project, currentActivityState);
+        currentGOLProcess.setParticipant(projectUser);
+        when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
+
+        // Set the destination state which we expect when the event is fired
+        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState());
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState())).thenReturn(expectedActivityState);
+
+        // Call the workflow here
+        boolean result = workflowMethodToCall.apply(project);
 
         assertTrue(result);
 

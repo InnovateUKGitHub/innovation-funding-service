@@ -207,4 +207,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isCompAdmin(user);
     }
 
+    @PermissionRule(
+            value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
+            description = "Internal users can approve the signed Grant Offer Letter")
+    public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user){
+        return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
 }
