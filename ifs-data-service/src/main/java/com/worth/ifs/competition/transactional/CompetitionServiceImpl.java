@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +31,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Optional.ofNullable;
-
 /**
  * Service for operations around the usage and processing of Competitions
  */
@@ -129,7 +129,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
         return new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
-                ofNullable(c.getInnovationAreas().iterator().next()).map(Category::getName).orElse(null), // TODO: INFUND-6479 deal with a set of innovation areas
+                ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
+                        .stream().map(Category::getName).collect(Collectors.toSet()),
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),

@@ -5,6 +5,7 @@ import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
@@ -33,8 +34,8 @@ public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionS
         return withArray((date, competition) -> competition.setStartDateDisplay(date), startDate);
     }
 
-    public CompetitionSearchResultItemBuilder withInnovationAreaName(String... innovationAreaName) {
-        return withArray((name, competition) -> competition.setInnovationAreaName(name), innovationAreaName);
+    public CompetitionSearchResultItemBuilder withInnovationAreaNames(Set<String>... innovationAreaNames) {
+        return withArray((names, competition) -> competition.setInnovationAreaNames(names), innovationAreaNames);
     }
 
     public CompetitionSearchResultItemBuilder withNumberOfApplications(Integer... numberOfApplications) {

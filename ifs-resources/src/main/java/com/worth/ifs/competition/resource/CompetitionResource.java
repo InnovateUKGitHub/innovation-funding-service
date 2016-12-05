@@ -147,7 +147,7 @@ public class CompetitionResource {
         this.startDate = startDate;
     }
 
-    public String assementEndDateDisplay() {
+    public String assessmentEndDateDisplay() {
         return displayDate(getFundersPanelDate(), ASSESSMENT_DATE_FORMAT);
     }
 
