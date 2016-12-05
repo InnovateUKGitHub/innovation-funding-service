@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Controller for showing and creating new competitions
+ * This controller will handle all requests that are related to the applications of a Competition within Competition Management.
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
