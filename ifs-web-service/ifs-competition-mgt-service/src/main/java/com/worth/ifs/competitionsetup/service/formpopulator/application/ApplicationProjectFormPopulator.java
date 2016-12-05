@@ -7,11 +7,10 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationProjectForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
-import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowViewModel;
-import com.worth.ifs.form.service.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,35 +20,27 @@ import java.util.Optional;
  * Form populator for the application form competition setup section.
  */
 @Service
-public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
+public class ApplicationProjectFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
 	@Autowired
 	private QuestionService questionService;
-
-	@Autowired
-	private FormInputService formInputService;
 
 	@Autowired
 	private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Override
 	public CompetitionSetupSubsection sectionToFill() {
-		return CompetitionSetupSubsection.QUESTIONS;
+		return CompetitionSetupSubsection.PROJECT_DETAILS;
 	}
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 
-		ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
+		ApplicationProjectForm competitionSetupForm = new ApplicationProjectForm();
 
 		if(objectId.isPresent()) {
             QuestionResource questionResource = questionService.getById(objectId.get());
             competitionSetupForm.setQuestion(initQuestionForForm(questionResource));
-
-			competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource ->  {
-				GuidanceRowViewModel grvm = new GuidanceRowViewModel(guidanceRowResource);
-				competitionSetupForm.getGuidanceRows().add(grvm);
-			});
 
         } else {
             throw new ObjectNotFoundException();

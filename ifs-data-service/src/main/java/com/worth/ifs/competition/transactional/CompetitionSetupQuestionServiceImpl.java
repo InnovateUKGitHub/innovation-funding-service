@@ -1,7 +1,9 @@
 package com.worth.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -16,6 +18,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -33,6 +37,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private GuidanceRowMapper guidanceRowMapper;
+
+    @Autowired
+    private GuidanceRowRepository guidanceRowRepository;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -103,6 +110,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
         question.setName(competitionSetupQuestionResource.getTitle());
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
+        question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
 
         FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA);
         questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
@@ -110,8 +118,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-
-        //TODO INFUND-5685 and INFUND-5631 Save assessor form inputs for AssessorFormInputTypes
+        markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
@@ -120,6 +130,53 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
+        }
+    }
+
+    private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE);
+
+        if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
+            scoredFormInput.setActive(competitionSetupQuestionResource.getScored());
+        }
+    }
+
+    private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput researchCategoryQuestionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY);
+
+        if (researchCategoryQuestionFormInput != null && competitionSetupQuestionResource.getResearchCategoryQuestion() != null) {
+            researchCategoryQuestionFormInput.setActive(competitionSetupQuestionResource.getResearchCategoryQuestion());
+        }
+    }
+
+    private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput scopeFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE);
+
+        if (scopeFormInput != null && competitionSetupQuestionResource.getScope() != null) {
+            scopeFormInput.setActive(competitionSetupQuestionResource.getScope());
+        }
+    }
+
+    private void markWrittenFeedbackAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+
+        FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA);
+
+        if (writtenFeedbackFormInput != null && competitionSetupQuestionResource.getWrittenFeedback() != null) {
+            writtenFeedbackFormInput.setActive(competitionSetupQuestionResource.getWrittenFeedback());
+
+            writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
+            writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
+
+            // Delete all existing guidance rows and replace with new list
+            List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
+            // Ensure form input set against newly added rows
+            newRows.stream().forEach(row -> row.setFormInput(writtenFeedbackFormInput));
+            guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
+            guidanceRowRepository.save(newRows);
+            writtenFeedbackFormInput.setGuidanceRows(newRows);
         }
     }
 

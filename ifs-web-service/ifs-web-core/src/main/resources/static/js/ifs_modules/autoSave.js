@@ -126,7 +126,7 @@ IFS.core.autoSave = (function() {
       switch(saveType){
         case 'application':
           var applicationId = jQuery("#application_id").val();
-          var competitionId = jQuery("#competition_id").val();
+          competitionId = jQuery("#competition_id").val();
           url ='/application/'+applicationId+'/form/' + competitionId + '/saveFormElement';
           break;
         case 'fundingDecision':
