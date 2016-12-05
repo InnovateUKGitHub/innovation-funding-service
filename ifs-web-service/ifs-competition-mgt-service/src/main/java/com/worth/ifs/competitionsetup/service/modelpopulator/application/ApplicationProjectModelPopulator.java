@@ -16,7 +16,7 @@ public class ApplicationProjectModelPopulator implements CompetitionSetupSubsect
 
     @Override
 	public CompetitionSetupSubsection sectionToPopulateModel() {
-		return CompetitionSetupSubsection.QUESTIONS;
+		return CompetitionSetupSubsection.PROJECT_DETAILS;
 	}
 
 	@Override

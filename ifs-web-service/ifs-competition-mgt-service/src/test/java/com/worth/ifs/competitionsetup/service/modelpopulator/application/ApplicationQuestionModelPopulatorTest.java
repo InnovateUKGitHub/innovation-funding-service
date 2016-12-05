@@ -35,7 +35,7 @@ public class ApplicationQuestionModelPopulatorTest {
 	public void testSectionToPopulateModel() {
 		CompetitionSetupSubsection result = populator.sectionToPopulateModel();
 		
-		assertEquals(CompetitionSetupSubsection.PROJECT_DETAILS, result);
+		assertEquals(CompetitionSetupSubsection.QUESTIONS, result);
 	}
 	
 	@Test

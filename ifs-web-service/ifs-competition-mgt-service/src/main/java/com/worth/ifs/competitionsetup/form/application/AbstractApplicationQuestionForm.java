@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by simon on 28/11/16.
+ * Abstract class for common functionality in application question and application project forms.
  */
 abstract class AbstractApplicationQuestionForm extends CompetitionSetupForm {
 
