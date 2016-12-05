@@ -12,11 +12,19 @@ public class OrganisationFinanceDelegate {
     private OrganisationJESFinance organisationJESFinance;
 
     public OrganisationFinanceHandler getOrganisationFinanceHandler(String organisationType) {
+        if (isUsingJesFinances(organisationType)) {
+            return organisationJESFinance;
+        } else {
+            return organisationFinanceDefaultHandler;
+        }
+    }
+
+    public boolean isUsingJesFinances(String organisationType) {
         switch(organisationType) {
             case "University (HEI)":
-                return organisationJESFinance;
+                return true;
             default:
-                return organisationFinanceDefaultHandler;
+                return false;
         }
     }
 }

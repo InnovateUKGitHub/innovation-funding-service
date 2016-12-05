@@ -12,6 +12,8 @@ import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -25,6 +27,8 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
  * Implementation of {@link SpendProfileCostCategorySummaryStrategy} that looks to the {@link com.worth.ifs.project.finance.domain.FinanceCheck} in order to generate
  * a summary of each {@link com.worth.ifs.project.finance.domain.CostCategory} for a Partner Organisation for the purposes of generating a {@link com.worth.ifs.project.finance.domain.SpendProfile}
  */
+@Component
+@ConditionalOnProperty(name = "ifs.spend.profile.generation.strategy", havingValue = "ByFinanceCheckCostCategorySummaryStrategy")
 public class ByFinanceCheckCostCategorySummaryStrategy implements SpendProfileCostCategorySummaryStrategy {
 
     @Autowired
@@ -38,8 +42,6 @@ public class ByFinanceCheckCostCategorySummaryStrategy implements SpendProfileCo
 
     @Autowired
     private CostCategoryRepository costCategoryRepository;
-
-
 
     @Override
     public ServiceResult<SpendProfileCostCategorySummaries> getCostCategorySummaries(Long projectId, Long organisationId) {

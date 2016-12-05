@@ -2,8 +2,6 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
-import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
-import com.worth.ifs.finance.handler.OrganisationJESFinance;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
@@ -14,6 +12,7 @@ import com.worth.ifs.project.finance.domain.CostCategory;
 import com.worth.ifs.project.finance.domain.CostCategoryType;
 import com.worth.ifs.project.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -30,7 +29,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
  * a summary of each Cost Category for a Partner Organisation for the purposes of generating a Spend Profile
  */
 @Component
-public class ByApplicationFinanceCostCategorySummaryStrategy implements SpendProfileCostCategorySummaryStrategy {
+@ConditionalOnProperty(value = "ifs.spend.profile.generation.strategy", havingValue = "ByProjectFinanceCostCategorySummaryStrategy")
+public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfileCostCategorySummaryStrategy {
 
     @Autowired
     private ProjectService projectService;
@@ -54,9 +54,7 @@ public class ByApplicationFinanceCostCategorySummaryStrategy implements SpendPro
                organisationService.findById(organisationId).andOnSuccess(organisation ->
                financeRowService.financeChecksDetails(project.getId(), organisationId).andOnSuccess(finances -> {
 
-                   OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationTypeName());
-
-                   boolean academicFinances = OrganisationJESFinance.class.isAssignableFrom(organisationFinanceHandler.getClass());
+                   boolean academicFinances = organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationTypeName());
 
                    return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(costCategoryType -> {
 
@@ -69,14 +67,8 @@ public class ByApplicationFinanceCostCategorySummaryStrategy implements SpendPro
                                getAcademicValuesPerCostCategory(costCategoryType, spendRows) :
                                getIndustrialValuesPerCostCategory(costCategoryType, spendRows);
 
-//                        List<Pair<CostCategory, FinanceRowCostCategory>> spendRowsAgainstCategories =
-//                                simpleMap(spendRows, (category, costs) -> Pair.of(findCategoryForFinanceRowType(category, costCategoryType), costs));
-
                         List<SpendProfileCostCategorySummary> costCategorySummaries = new ArrayList<>();
                         valuesPerCostCategory.forEach((cc, total) -> costCategorySummaries.add(new SpendProfileCostCategorySummary(cc, total, project.getDurationInMonths())));
-
-//                                simpleMap(toMap(spendRowsAgainstCategories), (category, costs) ->
-//                                new SpendProfileCostCategorySummary(category, costs.getTotal(), project.getDurationInMonths()));
 
                         return new SpendProfileCostCategorySummaries(costCategorySummaries, costCategoryType);
                     });
@@ -88,9 +80,7 @@ public class ByApplicationFinanceCostCategorySummaryStrategy implements SpendPro
         Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> costCategoryDetails : spendRows.entrySet()) {
-
             CostCategory costCategory = findIndustrialCostCategoryForName(costCategoryType, costCategoryDetails.getKey().getName());
-
             valuesPerCostCategory.put(costCategory, costCategoryDetails.getValue().getTotal());
         }
 
