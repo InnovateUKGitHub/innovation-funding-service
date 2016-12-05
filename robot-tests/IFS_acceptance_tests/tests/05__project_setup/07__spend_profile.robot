@@ -221,7 +221,7 @@ Non-lead partner can see correct project start date and duration
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    When the user clicks the button/link            jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -292,7 +292,7 @@ Academic partner edits spend profile and this updates on the table
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    When the user clicks the button/link            jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
