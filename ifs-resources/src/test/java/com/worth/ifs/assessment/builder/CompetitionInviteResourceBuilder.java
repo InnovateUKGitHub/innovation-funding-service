@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.Builder;
 import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 
@@ -30,47 +29,27 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
     }
 
     public CompetitionInviteResourceBuilder withCompetitionName(String... competitionNames) {
-        return withArray((competitionName, inviteResource) -> inviteResource.setCompetitionName(competitionName), competitionNames);
-    }
-
-    public CompetitionInviteResourceBuilder withCompetitionName(Builder<String, ?> competitionName) {
-        return withCompetitionName(competitionName.build());
+        return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
     public CompetitionInviteResourceBuilder withAcceptsDate(LocalDateTime... acceptsDates) {
-        return withArray((acceptsDate, inviteResource) -> inviteResource.setAcceptsDate(acceptsDate), acceptsDates);
-    }
-
-    public CompetitionInviteResourceBuilder withAcceptsDate(Builder<LocalDateTime, ?> acceptsDate) {
-        return withAcceptsDate(acceptsDate.build());
+        return withArraySetFieldByReflection("acceptsDate", acceptsDates);
     }
 
     public CompetitionInviteResourceBuilder withDeadlineDate(LocalDateTime... deadlineDates) {
-        return withArray((deadlineDate, inviteResource) -> inviteResource.setDeadlineDate(deadlineDate), deadlineDates);
-    }
-
-    public CompetitionInviteResourceBuilder withDeadlineDate(Builder<LocalDateTime, ?> deadlineDate) {
-        return withDeadlineDate(deadlineDate.build());
+        return withArraySetFieldByReflection("deadlineDate", deadlineDates);
     }
 
     public CompetitionInviteResourceBuilder withBriefingDate(LocalDateTime... briefingDates) {
-        return withArray((briefingDate, inviteResource) -> inviteResource.setBriefingDate(briefingDate), briefingDates);
-    }
-
-    public CompetitionInviteResourceBuilder withBriefingDate(Builder<LocalDateTime, ?> briefingDate) {
-        return withBriefingDate(briefingDate.build());
+        return withArraySetFieldByReflection("briefingDate", briefingDates);
     }
 
     public CompetitionInviteResourceBuilder withAssessorPay(BigDecimal... assessorPays) {
-        return withArray((assessorPay, inviteResource) -> inviteResource.setAssessorPay(assessorPay), assessorPays);
-    }
-
-    public CompetitionInviteResourceBuilder withAssessorPay(Builder<BigDecimal, ?> assessorPay) {
-        return withAssessorPay(assessorPay.build());
+        return withArraySetFieldByReflection("assessorPay", assessorPays);
     }
 
     public CompetitionInviteResourceBuilder withEmail(String... emails) {
-        return withArray((email, inviteResource) -> inviteResource.setEmail(email), emails);
+        return withArraySetFieldByReflection("email", emails);
     }
 
     @Override

@@ -22,7 +22,10 @@
                 <h2 class="heading-medium no-margin">
                     <span th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|" th:remove="tag"/>
                 </h2>
-                <p>Assessment period for reading, scoring, providing written comments and submitting to our online service. Each assessor could receive up to 10 applications to assess. This depends on the application response. Our assessment fee for this competition is <span th:text="${model.assessorPay}" th:remove="tag">&pound;100</span> per application.</p>
+                <p>Assessment period for reading, scoring, providing written comments and submitting to our online
+                    service. Each assessor could receive up to 10 applications to assess. This depends on the
+                    application response. Our assessment fee for this competition is &pound;<span
+                            th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
 
                 <p th:if="${model.assessorBriefingDate != null}">The assessor briefing is mandatory. It will consist of a one hour webinar on <span th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}" th:remove="tag">21 March 2017</span>.</p>
             </section>
