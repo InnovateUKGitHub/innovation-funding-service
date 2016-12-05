@@ -194,10 +194,10 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         Application application = financeRowRepository.findOne(id).getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
             find(cost(id)).andOnSuccessReturn(existingCost -> {
-                ApplicationFinance applicationFinance = ((ApplicationFinanceRow)existingCost).getTarget();
+                ApplicationFinance applicationFinance = existingCost.getTarget();
                 OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
-                ApplicationFinanceRow newCost = (ApplicationFinanceRow) organisationFinanceHandler.costItemToCost(newCostItem);
-                ApplicationFinanceRow updatedCost = mapCost((ApplicationFinanceRow)existingCost, newCost);
+                ApplicationFinanceRow newCost = organisationFinanceHandler.costItemToCost(newCostItem);
+                ApplicationFinanceRow updatedCost = mapCost(existingCost, newCost);
 
                 ApplicationFinanceRow savedCost = financeRowRepository.save(updatedCost);
 
@@ -487,11 +487,11 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return find(questionRepository.findOne(questionId), notFoundError(Question.class));
     }
 
-    private ServiceResult<FinanceRow> getCost(Long costId) {
+    private ServiceResult<ApplicationFinanceRow> getCost(Long costId) {
         return find(financeRowRepository.findOne(costId), notFoundError(Question.class));
     }
 
-    private Supplier<ServiceResult<FinanceRow>> cost(Long costId) {
+    private Supplier<ServiceResult<ApplicationFinanceRow>> cost(Long costId) {
         return () -> getCost(costId);
     }
 
