@@ -188,7 +188,7 @@ IFS.competitionManagement.setup = (function() {
             jQuery('[name="removeGuidanceRow"]').val(inst.val());
             IFS.core.autoSave.fieldChanged('[name="removeGuidanceRow"]');
             inst.closest('tr').remove();
-            IFS.competitionManagement.setup.reindexRows('.form-group-row.guidance');
+            IFS.competitionManagement.setup.reindexRows('tr[id^="guidance-"]');
             break;
         }
 
