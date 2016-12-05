@@ -164,7 +164,7 @@ IFS.competitionManagement.setup = (function() {
       }
       html+='<td class="form-group">'+
               '<label class="form-label" for="guidancerow-'+idCount+'-justification"><span class="visuallyhidden">Justification</span></label>'+
-              '<textarea required="required" rows="3" class="form-control width-full" data-required-errormessage="Please enter a justification" id="guidancerow-'+count+'-justification" name="'+(isAssessed ? '' : 'question.')+'guidanceRows['+count+'].justification"></textarea>'+
+              '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters" data-required-errormessage="Please enter a justification" id="guidancerow-'+count+'-justification" name="'+(isAssessed ? '' : 'question.')+'guidanceRows['+count+'].justification"></textarea>'+
             '</td>'+
             '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="'+count+'">Remove</button></td>';
       html+='</tr>';

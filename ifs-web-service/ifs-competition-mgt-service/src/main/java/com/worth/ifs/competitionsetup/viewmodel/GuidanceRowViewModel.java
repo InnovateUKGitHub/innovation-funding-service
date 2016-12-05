@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * View model for guidance rows in order that the subject field can be split into score from and score to elements
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 public class GuidanceRowViewModel {
 
     @NotEmpty(message = "{validation.applicationquestionform.justification.required}")
+    @Size(max=255, message = "{validation.applicationquestionform.justification.max}")
     private String justification;
 
     @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}")

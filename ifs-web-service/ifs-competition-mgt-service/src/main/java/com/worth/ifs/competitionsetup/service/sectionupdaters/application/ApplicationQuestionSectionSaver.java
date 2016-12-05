@@ -275,10 +275,8 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         }
     }
 
-
-
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return ApplicationFormForm.class.equals(clazz);
+		return ApplicationQuestionForm.class.equals(clazz);
 	}
 }
