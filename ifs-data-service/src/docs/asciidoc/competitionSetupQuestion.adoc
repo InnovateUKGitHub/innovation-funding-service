@@ -13,10 +13,11 @@ include::{snippets}//competition-setup-question/get-by-question-id/curl-request.
 === Save competition setup question
 ==== Request
 include::{snippets}/competition-setup-question/save/http-request.adoc[]
+include::{snippets}/competition-setup-question/save/path-parameters.adoc[]
+include::{snippets}/competition-setup-question/save/request-parameters.adoc[]
 
 ==== Response
 include::{snippets}/competition-setup-question/save/http-response.adoc[]
-include::{snippets}/competition-setup-question/save/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition-setup-question/save/curl-request.adoc[]

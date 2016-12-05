@@ -142,6 +142,6 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public void notifyAssessors(Long competitionId) {
-        competitionsRestService.notifyAssessors(competitionId);
+        competitionsRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
     }
 }

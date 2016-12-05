@@ -22,6 +22,8 @@ import static com.worth.ifs.competition.builder.AssessorCountOptionResourceBuild
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -248,5 +250,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionsRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         service.notifyAssessors(competitionId);
+        verify(competitionsRestService, only()).notifyAssessors(competitionId);
     }
 }
