@@ -15,8 +15,7 @@ import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.validator.util.ValidationUtil;
@@ -64,9 +63,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Autowired
     private AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private FormInputTypeService formInputTypeService;
 
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
@@ -277,24 +273,22 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
-        return getFormInputTypeByTitle(formInputTypeTitle).andOnSuccess(inputType -> {
-            List<Question> questions = questionRepository.findByCompetitionId(competitionId);
-            Optional<Question> question = simpleFindFirst(questions, q -> {
-                List<FormInput> activeFormInputs = simpleFilter(q.getFormInputs(), FormInput::getActive);
-                return !activeFormInputs.isEmpty() && inputType.getId().equals(activeFormInputs.get(0).getFormInputType().getId());
-            });
-            if (question.isPresent()) {
-                return serviceSuccess(question.get());
-            } else {
-                return serviceFailure(notFoundError(Question.class, competitionId, formInputTypeTitle));
-            }
+    public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
+        List<Question> questions = questionRepository.findByCompetitionId(competitionId);
+        Optional<Question> question = simpleFindFirst(questions, q -> {
+            List<FormInput> activeFormInputs = simpleFilter(q.getFormInputs(), FormInput::getActive);
+            return !activeFormInputs.isEmpty() && formInputType == activeFormInputs.get(0).getType();
         });
+        if (question.isPresent()) {
+            return serviceSuccess(question.get());
+        } else {
+            return serviceFailure(notFoundError(Question.class, competitionId, formInputType));
+        }
     }
 
     @Override
-    public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, String formInputTypeTitle) {
-        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInputTypeTitle).andOnSuccessReturn(questionMapper::mapToResource);
+    public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInpuType) {
+        return getQuestionByCompetitionIdAndFormInputType(competitionId, formInpuType).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     @Override
@@ -455,10 +449,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             markedAsComplete = questionStatus.getMarkedAsComplete();
         }
         return Optional.ofNullable(markedAsComplete);
-    }
-
-    private ServiceResult<FormInputType> getFormInputTypeByTitle(String formInputTypeTitle) {
-        return find(formInputTypeService.findByTitle(formInputTypeTitle), notFoundError(Question.class, formInputTypeTitle));
     }
 
     private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {

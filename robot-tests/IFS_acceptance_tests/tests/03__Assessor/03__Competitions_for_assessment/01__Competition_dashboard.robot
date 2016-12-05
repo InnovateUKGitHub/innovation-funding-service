@@ -12,6 +12,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-6040 As an assessor I want to see applications sorted by status in my competition dashboard so that I can clearly see applications that are pending, open and assessed
 ...
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
+...
+...               INFUND-3725 As an Assessor I want to see the scores that I have given for applications I have completed assessing so that I can compare all the applications I am assessing.
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -38,11 +40,16 @@ Details of the competition are visible
     And the user should see the text in the page    12:00am Tuesday 12 January 2016
     And the user should see the text in the page    12:00am Saturday 28 January 2017
 
-Applications should show with the correct order
+Applications should have correct status and order
     [Documentation]    INFUND-6040
     ...
     ...    INFUND-3724
+    ...
+    ...    INFUND-3725
+    ...
+    ...    INFUND-6358
     Then the order of the applications should be correct according to the status
+    And The user should not see the text in the page    Overall score
 
 Accept an application for assessment
     [Documentation]    INFUND-1180
@@ -54,12 +61,14 @@ Accept an application for assessment
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the status should update as Open
+    And The user should not see the text in the page    Pending
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
+    ...
+    ...    INFUND-6358
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
@@ -83,9 +92,6 @@ Applications should not have a check-box when the status is Open
     Then The user should not see the element    css=.assessment-submit-checkbox
 
 *** Keywords ***
-the status should update as Open
-    the user should see the element    css=.my-applications li:nth-child(2) .column-assessment-status.navigation-right
-
 the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
     The user should not see the text in the page    Please enter a reason
@@ -99,6 +105,6 @@ the application for assessment should be removed
 
 The order of the applications should be correct according to the status
     element should contain    css=li:nth-child(1) .grid-row    Pending
-    element should contain    css=.boxed-list li:nth-child(2)    Open
-    element should contain    css=.boxed-list li:nth-child(3)    Open
-    element should contain    css=.boxed-list li:nth-child(4)    Open
+    element should contain    css=.boxed-list li:nth-child(2)    Accepted
+    element should contain    css=.boxed-list li:nth-child(3)    Accepted
+    element should contain    css=.boxed-list li:nth-child(4)    Accepted

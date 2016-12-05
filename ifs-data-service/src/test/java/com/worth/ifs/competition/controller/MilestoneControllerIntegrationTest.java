@@ -111,7 +111,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         });
     }
 
-    @Ignore
     @Test
     public void testUpdateMilestones() throws Exception {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_VALID);

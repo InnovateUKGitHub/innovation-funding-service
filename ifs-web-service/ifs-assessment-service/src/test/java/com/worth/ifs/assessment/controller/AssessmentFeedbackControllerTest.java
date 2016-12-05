@@ -11,23 +11,24 @@ import com.worth.ifs.assessment.model.AssessmentFeedbackModelPopulator;
 import com.worth.ifs.assessment.model.AssessmentFeedbackNavigationModelPopulator;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
-import com.worth.ifs.category.builder.CategoryResourceBuilder;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.form.resource.FormInputTypeResource;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -37,7 +38,6 @@ import org.springframework.validation.BindingResult;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -52,11 +52,11 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static com.worth.ifs.form.resource.FormInputType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
@@ -96,13 +96,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     private static Long QUESTION_ID = 20L; // 1. What is the business opportunity that this project addresses?
     private static Long APPLICATION_DETAILS_QUESTION_ID = 1L;
     private static Long ASSESSMENT_ID = 1L;
-    private static Map<String, FormInputTypeResource> FORM_INPUT_TYPES = simpleToMap(asList(
-            new FormInputTypeResource(1L, "textarea"),
-            new FormInputTypeResource(2L, "application_details"),
-            new FormInputTypeResource(3L, "assessor_score"),
-            new FormInputTypeResource(4L, AssessorFormInputType.RESEARCH_CATEGORY.getTitle()),
-            new FormInputTypeResource(5L, AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle())
-    ), FormInputTypeResource::getTitle);
 
     @Before
     public void setUp() {
@@ -126,10 +119,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         CompetitionResource expectedCompetition = competitionResource;
         ApplicationResource expectedApplication = simpleToMap(applications, ApplicationResource::getId).get(APPLICATION_ID);
 
-        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, TEXTAREA);
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
 
-        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"), FORM_INPUT_TYPES.get("assessor_score"));
+        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, TEXTAREA, ASSESSOR_SCORE);
         List<AssessorFormInputResponseResource> assessorResponses = this.setupAssessorResponses(ASSESSMENT_ID, QUESTION_ID, assessmentFormInputs);
 
         Form expectedForm = new Form();
@@ -184,10 +177,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Long expectedPreviousQuestionId = 10L;
         Long expectedNextQuestionId = 21L;
         Long sectionId = 71L;
-        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, TEXTAREA);
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
 
-        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"), FORM_INPUT_TYPES.get("assessor_score"));
+        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, TEXTAREA, ASSESSOR_SCORE);
         List<AssessorFormInputResponseResource> assessorResponses = this.setupAssessorResponses(ASSESSMENT_ID, QUESTION_ID, assessmentFormInputs);
 
         Form expectedForm = new Form();
@@ -195,7 +188,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, of(questionResources.get(expectedPreviousQuestionId)), Optional.empty());
         this.setupNextQuestionSection(sectionId, expectedNextQuestionId, false);
 
-        MvcResult result = mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID))
+        mockMvc.perform(get("/{assessmentId}/question/{questionId}", ASSESSMENT_ID, QUESTION_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attributeExists("model"))
@@ -212,7 +205,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         ApplicationResource expectedApplication = simpleToMap(applications, ApplicationResource::getId).get(APPLICATION_ID);
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(ASSESSMENT_ID, empty(), of(questionResources.get(expectedNextQuestionId)));
 
-        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(APPLICATION_DETAILS_QUESTION_ID, FORM_INPUT_TYPES.get("application_details"));
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(APPLICATION_DETAILS_QUESTION_ID, APPLICATION_DETAILS);
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
         this.setupInvites();
         this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
@@ -254,10 +247,10 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         CompetitionResource expectedCompetition = competitionResource;
         ApplicationResource expectedApplication = simpleToMap(applications, ApplicationResource::getId).get(APPLICATION_ID);
 
-        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, TEXTAREA);
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
 
-        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"), FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("assessor_research_category"), FORM_INPUT_TYPES.get(AssessorFormInputType.APPLICATION_IN_SCOPE.getTitle()));
+        List<FormInputResource> assessmentFormInputs = this.setupAssessmentFormInputs(QUESTION_ID, TEXTAREA, ASSESSOR_SCORE, ASSESSOR_RESEARCH_CATEGORY, ASSESSOR_APPLICATION_IN_SCOPE);
         List<AssessorFormInputResponseResource> assessorResponses = this.setupAssessorResponses(ASSESSMENT_ID, QUESTION_ID, assessmentFormInputs);
 
         Form expectedForm = new Form();
@@ -373,7 +366,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void save() throws Exception {
-        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, ASSESSOR_SCORE, TEXTAREA);
 
         Long formInputIdScore = formInputs.get(0).getId();
         Long formInputIdFeedback = formInputs.get(1).getId();
@@ -399,7 +392,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void save_exceedsCharacterSizeLimit() throws Exception {
         Long expectedNextQuestionId = 21L;
         Long sectionId = 71L;
-        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, ASSESSOR_SCORE, TEXTAREA);
 
         Long formInputIdScore = formInputs.get(0).getId();
         Long formInputIdFeedback = formInputs.get(1).getId();
@@ -410,7 +403,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         // For re-display of question view following the invalid data entry
-        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, TEXTAREA);
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
         this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
 
@@ -445,7 +438,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void save_exceedWordLimit() throws Exception {
         Long expectedNextQuestionId = 21L;
         Long sectionId = 71L;
-        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("assessor_score"), FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> formInputs = this.setupAssessmentFormInputs(QUESTION_ID, ASSESSOR_SCORE, TEXTAREA);
 
         Long formInputIdScore = formInputs.get(0).getId();
         Long formInputIdFeedback = formInputs.get(1).getId();
@@ -456,7 +449,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         when(assessorFormInputResponseService.updateFormInputResponse(ASSESSMENT_ID, formInputIdFeedback, "Feedback")).thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
 
         // For re-display of question view following the invalid data entry
-        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, FORM_INPUT_TYPES.get("textarea"));
+        List<FormInputResource> applicationFormInputs = this.setupApplicationFormInputs(QUESTION_ID, TEXTAREA);
         this.setupApplicantResponses(APPLICATION_ID, applicationFormInputs);
         this.setupNextQuestionSection(sectionId, expectedNextQuestionId, true);
 
@@ -508,22 +501,20 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         question.setSection(sectionId);
     }
 
-    private List<FormInputResource> setupApplicationFormInputs(Long questionId, FormInputTypeResource... formInputTypes) {
+    private List<FormInputResource> setupApplicationFormInputs(Long questionId, FormInputType... formInputTypes) {
         List<FormInputResource> formInputs = stream(formInputTypes).map(formInputType ->
                 newFormInputResource()
-                        .withFormInputType(formInputType.getId())
-                        .withFormInputTypeTitle(formInputType.getTitle())
+                        .withType(formInputType)
                         .build()
         ).collect(toList());
         when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(formInputs);
         return formInputs;
     }
 
-    private List<FormInputResource> setupAssessmentFormInputs(Long questionId, FormInputTypeResource... formInputTypes) {
+    private List<FormInputResource> setupAssessmentFormInputs(Long questionId, FormInputType... formInputTypes) {
         List<FormInputResource> formInputs = stream(formInputTypes).map(formInputType ->
                 newFormInputResource()
-                        .withFormInputType(formInputType.getId())
-                        .withFormInputTypeTitle(formInputType.getTitle())
+                        .withType(formInputType)
                         .build()
         ).collect(toList());
         when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(formInputs);

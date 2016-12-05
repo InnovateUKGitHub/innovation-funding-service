@@ -707,7 +707,7 @@
     </form>
     <ul class="pagination">
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=funding'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Funding information</span>
             </a>
@@ -871,13 +871,13 @@
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{'?section=essential'}">
+            <a rel="prev" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=essential' : '/prototypes/2469-comp-setup?section=essential'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Initial details</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=eligibility'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
@@ -953,13 +953,13 @@
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{'?section=funding'}">
+            <a rel="prev" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Funding information</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{'?section=milestones'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=milestones' : '/prototypes/2469-comp-setup?section=milestones'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Milestones</span>
             </a>
@@ -1201,13 +1201,13 @@
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{'?section=eligibility'}">
+            <a rel="prev" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" href="/prototypes/5085-application-process">
+            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec&amp;section=funding' : '/prototypes/5085-application-process'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Application</span>
             </a>

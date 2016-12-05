@@ -64,7 +64,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
     }
 
     @Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, String costType) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, FinanceRowType costType) {
 
     }
 
