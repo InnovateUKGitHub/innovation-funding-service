@@ -1,3 +1,2 @@
-UPDATE form_input
-SET guidance_answer = 'Your answer should be based upon the following:'
-WHERE description = 'Feedback';
+UPDATE form_input SET guidance_answer = 'Your answer should be based upon the following:' WHERE description = 'Feedback' AND guidance_answer LIKE '%answer%';
+UPDATE form_input SET guidance_answer = 'Your score should be based upon the following:' WHERE description = 'Feedback' AND guidance_answer LIKE '%score%';
