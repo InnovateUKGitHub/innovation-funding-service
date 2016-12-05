@@ -202,6 +202,11 @@ Finance overview
     And the user clicks the button/link    link=Back to your assessment overview
     And the user should see the element    link=Back to your competition dashboard
 
+Status of the application should be In Progress
+    [Documentation]    INFUND-6358
+    When The user navigates to the page    ${SERVER}/assessment/assessor/dashboard/competition/4
+    Then the status of the appllications should be correct    css=.boxed-list li:nth-child(2)    In progress
+
 *** Keywords ***
 the user clicks next and goes to the page
     [Arguments]    ${page_content}
@@ -257,3 +262,7 @@ the project cost breakdown total should be correct
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £45,000
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £2,985
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £550
+
+The status of the appllications should be correct
+    [Arguments]    ${APPLICATION}    ${STATUS}
+    element should contain    ${APPLICATION}    ${STATUS}
