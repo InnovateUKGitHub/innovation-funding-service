@@ -184,12 +184,18 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
 
-        when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname", "Mrs", "0987654321")).thenReturn(restSuccess(newUserResource().build()));
+        when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname",
+                "Mrs", "0987654321", "MALE", 2L,"NO"))
+                .thenReturn(restSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", "Mrs")
                 .param("firstName", "newfirstname")
                 .param("lastName", "newlastname")
                 .param("phoneNumber", "0987654321")
+                .param("gender", "MALE")
+                .param("ethnicity", "2")
+                .param("disability", "NO")
+
         );
 
         verify(userService, times(1)).updateDetails(
@@ -198,7 +204,10 @@ public class ProfileControllerTest extends BaseUnitTest {
                 "newfirstname",
                 "newlastname",
                 "Mrs",
-                "0987654321");
+                "0987654321",
+                "MALE",
+                2L,
+                "NO");
     }
 
     @Test
@@ -208,6 +217,9 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
+                .param("gender", "illegalcharacters:!@#$%^&*()")
+                .param("ethnicity", "illegalcharacters:!@#$%^&*()")
+                .param("disability", "illegalcharacters:!@#$%^&*()")
         );
 
         verify(userService, times(0)).updateDetails(
@@ -216,19 +228,27 @@ public class ProfileControllerTest extends BaseUnitTest {
                 isA(String.class),
                 isA(String.class),
                 isA(String.class),
+                isA(String.class),
+                isA(String.class),
+                isA(Long.class),
                 isA(String.class));
     }
 
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
 
-        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restSuccess(newUserResource().build()));
+        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(),
+                user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name()))
+                .thenReturn(restSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle())
                 .param("firstName", user.getFirstName())
                 .param("lastName", user.getLastName())
                 .param("phoneNumber", user.getPhoneNumber())
+                .param("gender", user.getGender().name())
+                .param("ethnicity", user.getEthnicity().toString())
+                .param("disability", user.getDisability().name())
 
         )
                 .andExpect(status().is2xxSuccessful())
@@ -242,6 +262,9 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
+                .param("gender", "illegalcharacters:!@#$%^&*()")
+                .param("ethnicity", "illegalcharacters:!@#$%^&*()")
+                .param("disability", "illegalcharacters:!@#$%^&*()")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("profile/edit-user-profile"));
@@ -251,13 +274,17 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
 
         Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
-        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restFailure(error));
+        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(),
+                user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name())).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle())
                 .param("firstName", user.getFirstName())
                 .param("lastName", user.getLastName())
                 .param("phoneNumber", user.getPhoneNumber())
+                .param("gender", user.getGender().name())
+                .param("ethnicity", user.getEthnicity().toString())
+                .param("disability", user.getDisability().name())
 
         )
                 .andExpect(model().hasErrors());

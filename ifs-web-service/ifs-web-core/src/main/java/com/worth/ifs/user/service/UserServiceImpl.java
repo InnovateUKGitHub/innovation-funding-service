@@ -110,8 +110,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
+    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability);
     }
 
     @Override

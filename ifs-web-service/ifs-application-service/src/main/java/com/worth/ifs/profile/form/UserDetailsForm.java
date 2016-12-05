@@ -33,6 +33,15 @@ public class UserDetailsForm {
     })
     private String lastName;
 
+    @NotEmpty(message = "{validation.standard.gender.selectionrequired}")
+    private String gender;
+
+    @NotEmpty(message = "{validation.standard.ethnicity.selectionrequired}")
+    private String ethnicity;
+
+    @NotEmpty(message = "{validation.standard.disability.selectionrequired}")
+    private String disability;
+
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
         @Size(min=8, message="{validation.standard.phonenumber.length.min}"),
@@ -90,6 +99,30 @@ public class UserDetailsForm {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public String getDisability() {
+        return disability;
+    }
+
+    public void setDisability(String disability) {
+        this.disability = disability;
     }
 
     public String getPhoneNumber() {

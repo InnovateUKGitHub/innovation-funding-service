@@ -32,7 +32,7 @@ public interface UserService {
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
                                                                                  String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
     RestResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
-    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber);
+    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
     ProfileSkillsResource getProfileSkills(Long userId);
     ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas);
     ProfileContractResource getProfileContract(Long userId);

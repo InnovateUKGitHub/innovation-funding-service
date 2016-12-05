@@ -9,6 +9,7 @@ import com.worth.ifs.invite.service.EthnicityRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.profile.form.UserDetailsForm;
 import com.worth.ifs.profile.viewmodel.UserDetailsViewModel;
+import com.worth.ifs.user.resource.EthnicityResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
@@ -79,6 +80,9 @@ public class ProfileController {
         form.setLastName(user.getLastName());
         form.setTitle(user.getTitle());
         form.setPhoneNumber(user.getPhoneNumber());
+        form.setEthnicity(user.getEthnicity() != null ? user.getEthnicity().toString() : null);
+        form.setGender(user.getGender() != null ? user.getGender().name() : null);
+        form.setDisability(user.getDisability() != null ? user.getDisability().name() : null);
 
         if(organisation == null) {
         	LOG.warn("No organisation retrieved for user" + user.getId());
@@ -131,7 +135,12 @@ public class ProfileController {
         populateUserDetailsForm(model, request);
         boolean userIsLoggedIn = userIsLoggedIn(request);
         model.addAttribute("userIsLoggedIn", userIsLoggedIn);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "profile/edit-user-profile";
+    }
+
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 
     private boolean userIsLoggedIn(HttpServletRequest request) {
@@ -151,7 +160,10 @@ public class ProfileController {
                 userDetailsForm.getFirstName(),
                 userDetailsForm.getLastName(),
                 userDetailsForm.getTitle(),
-                userDetailsForm.getPhoneNumber());
+                userDetailsForm.getPhoneNumber(),
+                userDetailsForm.getGender(),
+                Long.parseLong(userDetailsForm.getEthnicity()),
+                userDetailsForm.getDisability());
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
