@@ -19,7 +19,7 @@ Back to the dashboard link
 
 Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then The user should see a summary error    Please correct the errors in the form below.
@@ -33,7 +33,7 @@ Server-side validations when No selected at yes/no
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
-    [Tags]
+    [Tags]    HappyPath
     Given the user selects the radio button    hasAppointments    yes
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see a field error    Please enter an organisation.
@@ -51,7 +51,7 @@ Server-side when Yes selected at yes/no
 
 Client-side validations
     [Documentation]    INFUND-3715
-    [Tags]
+    [Tags]    HappyPath
     When the user correctly fills out the role, principle employer and accurate fields
     Then The user should not see the text in the page    Please enter a principal employer.
     And The user should not see the text in the page    Please enter your role with your principal employer.
@@ -61,7 +61,7 @@ Client-side validations
     And The user should not see the text in the page    Please tell us if any of your close family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.
 
-Successful save for the Declaration form
+Successful save for the DOI form
     [Documentation]    INFUND-3715
     ...
     ...    INFUND-5432
