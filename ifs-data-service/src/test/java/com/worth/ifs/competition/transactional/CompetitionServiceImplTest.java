@@ -23,7 +23,6 @@ import java.util.Set;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
-import static com.worth.ifs.competition.resource.MilestoneType.ASSESSOR_DEADLINE;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Collections.singletonList;
@@ -193,7 +192,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         milestones.addAll(newMilestone()
                 .withDate(LocalDateTime.now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
-                .build(3));
+                .build(2));
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .build();

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competition.service.AssessorCountOptionsRestService;
-import com.worth.ifs.competition.service.AssessorCountOptionsRestService;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
-import static com.worth.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -248,5 +247,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionsRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
 
         service.closeAssessment(competitionId);
+        verify(competitionsRestService, times(1)).closeAssessment(competitionId);
     }
 }

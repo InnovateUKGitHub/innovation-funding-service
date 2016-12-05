@@ -142,6 +142,6 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public void closeAssessment(Long competitionId) {
-        competitionsRestService.closeAssessment(competitionId);
+        competitionsRestService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
     }
 }
