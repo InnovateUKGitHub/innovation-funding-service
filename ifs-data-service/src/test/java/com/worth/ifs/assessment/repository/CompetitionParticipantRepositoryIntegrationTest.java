@@ -2,6 +2,8 @@ package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.BaseRepositoryIntegrationTest;
 import com.worth.ifs.assessment.builder.CompetitionInviteBuilder;
+import com.worth.ifs.category.domain.Category;
+import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.invite.domain.*;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.category.builder.CategoryBuilder.newCategory;
+import static com.worth.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -24,9 +28,13 @@ import static org.junit.Assert.assertNotNull;
 public class CompetitionParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionParticipantRepository> {
 
     private Competition competition;
+    private Category innovationArea;
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private RejectionReasonRepository rejectionReasonRepository;
@@ -40,12 +48,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Before
     public void setup() {
         competition = competitionRepository.save( newCompetition().withName("competition").build()) ;
+        innovationArea = categoryRepository.save( newCategory().withName("innovation area").withType(INNOVATION_AREA).build() );
     }
 
     @Test
     public void findAll() {
-        CompetitionInvite invite1 = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
-        CompetitionInvite invite2 = new CompetitionInvite("name2", "tom2@poly.io", "hash2", competition);
+        CompetitionInvite invite1 = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
+        CompetitionInvite invite2 = new CompetitionInvite("name2", "tom2@poly.io", "hash2", competition, innovationArea);
 
         repository.save( new CompetitionParticipant(competition, invite1) );
         repository.save( new CompetitionParticipant(competition, invite2) );
@@ -57,7 +66,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getByInviteHash() {
-        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
+        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
         CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, invite) );
 
         flushAndClearSession();
@@ -83,7 +92,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void save() {
-        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
+        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
         CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, invite) );
 
         flushAndClearSession();
@@ -146,7 +155,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getByUserRoleStatus() {
-        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition);
+        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
         User user = newUser()
                 .withId(3L)
                 .withFirstName("Professor")
