@@ -36,6 +36,7 @@ import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.service.FileTemplateRenderer;
@@ -161,6 +162,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    protected CompetitionService competitionServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
