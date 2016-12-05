@@ -36,7 +36,7 @@ public abstract class FinanceRow<FinanceType> {
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @OneToMany(mappedBy="financeRow")
+    @OneToMany(mappedBy="financeRowId")
     private List<FinanceRowMetaValue> costValues = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

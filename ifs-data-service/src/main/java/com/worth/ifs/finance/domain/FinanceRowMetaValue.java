@@ -1,8 +1,5 @@
 package com.worth.ifs.finance.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.finance.resource.FinanceRowMetaValueId;
-
 import javax.persistence.*;
 
 /**
@@ -11,16 +8,15 @@ import javax.persistence.*;
  * The value is stored and the type determines how it is processed.
  */
 @Entity
-@IdClass(FinanceRowMetaValueId.class)
 public class FinanceRowMetaValue {
     private String value;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="finance_row_id")
-    private Long financeRow;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Id
+    private Long financeRowId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="finance_row_meta_field_id")
     private FinanceRowMetaField financeRowMetaField;
@@ -35,7 +31,11 @@ public class FinanceRowMetaValue {
     }
 
     public FinanceRowMetaValue(FinanceRow financeRow, FinanceRowMetaField financeRowMetaField, String value) {
-        this.financeRow = financeRow;
+        this(financeRow.getId(), financeRowMetaField, value);
+    }
+
+    public FinanceRowMetaValue(Long financeRowId, FinanceRowMetaField financeRowMetaField, String value) {
+        this.financeRowId = financeRowId;
         this.financeRowMetaField = financeRowMetaField;
         this.value = value;
     }
@@ -44,9 +44,8 @@ public class FinanceRowMetaValue {
         return value;
     }
 
-    @JsonIgnore
-    public FinanceRow getFinanceRow() {
-        return financeRow;
+    public Long getFinanceRowId() {
+        return financeRowId;
     }
 
     public FinanceRowMetaField getFinanceRowMetaField() {
@@ -54,15 +53,15 @@ public class FinanceRowMetaValue {
     }
 
 
-    public void setFinanceRow(FinanceRow financeRow) {
-        this.financeRow = financeRow;
+    public void setFinanceRowId(Long financeRowId) {
+        this.financeRowId = financeRowId;
     }
 
     public void setFinanceRowMetaField(FinanceRowMetaField financeRowMetaField) {
         this.financeRowMetaField = financeRowMetaField;
     }
 
-    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.financeRow.getId(), this.financeRowMetaField.getId());}
+    public Long getId(){ return id;}
 
     public void setValue(String value) {
         this.value = value;

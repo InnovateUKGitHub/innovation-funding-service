@@ -36,7 +36,7 @@ public class FinanceRowMetaValueTest {
 
     @Test
     public void costValueShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(costValue.getFinanceRow(), cost);
+        Assert.assertEquals(costValue.getFinanceRowId(), cost.getId());
         Assert.assertEquals(costValue.getFinanceRowMetaField(), financeRowMetaField);
         Assert.assertEquals(costValue.getValue(), value);
     }
@@ -46,10 +46,10 @@ public class FinanceRowMetaValueTest {
         FinanceRow newCost = new ApplicationFinanceRow(2L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
         FinanceRowMetaField newFinanceRowMetaField = new FinanceRowMetaField(2L,"title","type");
 
-        costValue.setFinanceRow(newCost);
+        costValue.setFinanceRowId(newCost.getId());
         costValue.setFinanceRowMetaField(newFinanceRowMetaField);
 
-        Assert.assertEquals(costValue.getFinanceRow(), newCost);
+        Assert.assertEquals(costValue.getFinanceRowId(), newCost.getId());
         Assert.assertEquals(costValue.getFinanceRowMetaField(), newFinanceRowMetaField);
     }
 }

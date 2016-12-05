@@ -2,7 +2,6 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.resource.FinanceRowMetaValueId;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.security.ApplicationFinanceRowPermissionRules;
 import com.worth.ifs.finance.transactional.FinanceRowMetaValueService;
@@ -31,7 +30,7 @@ public class FinanceRowMetaValueServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
-        final FinanceRowMetaValueId financeRowMetaValueId = new FinanceRowMetaValueId();
+        final Long financeRowMetaValueId = 123L;
         assertAccessDenied(
                 () -> classUnderTest.findOne(financeRowMetaValueId),
                 () -> costPermissionsRules.consortiumCanReadACostValueForTheirApplicationAndOrganisation(isA(FinanceRowMetaValueResource.class), isA(UserResource.class))
@@ -49,7 +48,7 @@ public class FinanceRowMetaValueServiceSecurityTest extends BaseServiceSecurityT
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public ServiceResult<FinanceRowMetaValueResource> findOne(FinanceRowMetaValueId id) {
+        public ServiceResult<FinanceRowMetaValueResource> findOne(Long id) {
             return serviceSuccess(newFinanceRowMetaValue().build());
         }
     }

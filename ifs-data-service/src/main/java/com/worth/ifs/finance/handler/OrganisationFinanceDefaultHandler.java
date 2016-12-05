@@ -108,8 +108,11 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             ApplicationFinance applicationFinance =
                     applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
 
-            return new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
+            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
                     cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+
+            applicationFinanceRow.setCostValues(cost.getCostValues());
+            return applicationFinanceRow;
         });
     }
 

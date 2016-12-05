@@ -442,7 +442,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     	  List<FinanceRowMetaValue> costValues = cost.getCostValues();
           cost.setCostValues(new ArrayList<>());
           ApplicationFinanceRow persistedCost = financeRowRepository.save((ApplicationFinanceRow)cost);
-          costValues.stream().forEach(costVal -> costVal.setFinanceRow(persistedCost));
+          costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
           persistedCost.setCostValues(costValues);
           financeRowMetaValueRepository.save(costValues);
           return financeRowRepository.save(persistedCost);
@@ -471,7 +471,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
             return;
         }
         FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(costValue.getFinanceRowMetaField().getId());
-        costValue.setFinanceRow(savedCost);
+        costValue.setFinanceRowId(savedCost.getId());
         costValue.setFinanceRowMetaField(financeRowMetaField);
         costValue = financeRowMetaValueRepository.save(costValue);
         savedCost.addCostValues(costValue);

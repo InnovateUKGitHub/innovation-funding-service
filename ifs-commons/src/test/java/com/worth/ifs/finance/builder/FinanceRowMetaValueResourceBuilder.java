@@ -36,6 +36,6 @@ public class FinanceRowMetaValueResourceBuilder extends BaseBuilder<FinanceRowMe
     }
 
     public FinanceRowMetaValueResourceBuilder withCost(final Long costId) {
-        return with(costValue -> costValue.setFinanceRow(costId));
+        return with(costValue -> costValue.setFinanceRowId(costId));
     }
 }

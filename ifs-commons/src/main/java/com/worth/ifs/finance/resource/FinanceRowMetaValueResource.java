@@ -1,8 +1,10 @@
 package com.worth.ifs.finance.resource;
 
 public class FinanceRowMetaValueResource {
+
+    private Long id;
     String value;
-    private Long financeRow;
+    private Long financeRowId;
     private Long financeRowMetaField;
 
     public FinanceRowMetaValueResource() {
@@ -14,8 +16,8 @@ public class FinanceRowMetaValueResource {
         this.value = value;
     }
 
-    public FinanceRowMetaValueResource(FinanceRowResource financeRow, FinanceRowMetaFieldResource financeRowMetaField, String value) {
-        this.financeRow = financeRow.getId();
+    public FinanceRowMetaValueResource(FinanceRowResource financeRowId, FinanceRowMetaFieldResource financeRowMetaField, String value) {
+        this.financeRowId = financeRowId.getId();
         this.financeRowMetaField = financeRowMetaField.getId();
         this.value = value;
     }
@@ -24,8 +26,8 @@ public class FinanceRowMetaValueResource {
         return value;
     }
 
-    public Long getFinanceRow() {
-        return financeRow;
+    public Long getFinanceRowId() {
+        return financeRowId;
     }
 
     public Long getFinanceRowMetaField() {
@@ -33,22 +35,22 @@ public class FinanceRowMetaValueResource {
     }
 
 
-    public void setFinanceRow(FinanceRowResource financeRow) {
-        this.financeRow = financeRow.getId();
+    public void setFinanceRowId(FinanceRowResource financeRowId) {
+        this.financeRowId = financeRowId.getId();
     }
 
     public void setFinanceRowMetaField(FinanceRowMetaFieldResource financeRowMetaField) {
         this.financeRowMetaField = financeRowMetaField.getId();
     }
 
-    public FinanceRowMetaValueId getId(){ return new FinanceRowMetaValueId(this.financeRow, this.financeRowMetaField);}
+    public Long getId(){ return id;}
 
     public void setValue(String value) {
         this.value = value;
     }
 
-    public void setFinanceRow(Long financeRow) {
-        this.financeRow = financeRow;
+    public void setFinanceRowId(Long financeRowId) {
+        this.financeRowId = financeRowId;
     }
 
     public void setFinanceRowMetaField(Long financeRowMetaField) {

@@ -1007,7 +1007,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
 
-        List<ProjectFinanceRow> copiedFinanceFigures = simpleMap(originalFinanceFigures, original -> {
+        List<ProjectFinanceRow> copiedFinanceRows = simpleMap(originalFinanceFigures, original -> {
             ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
             newRow.setApplicationRowId(original.getId());
             newRow.setCost(original.getCost());
@@ -1021,11 +1021,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return newRow;
         });
 
-        copiedFinanceFigures.forEach(projectFinanceRowRepository::save);
-        copiedFinanceFigures.forEach(figure -> figure.getCostValues().forEach(metaValue -> {
-            metaValue.setFinanceRowMetaField(financeRowMetaFieldRepository.findOne(metaValue.getFinanceRowMetaField().getId()));
-            financeRowMetaValueRepository.save(metaValue);
-        }));
+        copiedFinanceRows.forEach(figure -> {
+            projectFinanceRowRepository.save(figure);
+            figure.getCostValues().forEach(metaValue -> {
+                metaValue.setFinanceRowMetaField(financeRowMetaFieldRepository.findOne(metaValue.getFinanceRowMetaField().getId()));
+                metaValue.setFinanceRowId(figure.getId());
+                financeRowMetaValueRepository.save(metaValue);
+            });
+        });
+
         return serviceSuccess();
     }
 
