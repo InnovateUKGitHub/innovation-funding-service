@@ -61,8 +61,8 @@
             <dd>Paul Ray</dd>
           </dl>
 
-          <p>
-            <a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}">View and update competition setup</a>
+          <p th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
+            <a href="/prototypes/2469-comp-setup?compStatus=ready">View and update competition setup</a>
           </p>
         </div>
 

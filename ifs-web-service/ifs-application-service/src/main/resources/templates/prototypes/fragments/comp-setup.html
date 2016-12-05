@@ -19,13 +19,13 @@
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
 
         <ul class="list-overview">
-            <li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=essential' : '?section=essential')}">Initial details</a></h3></li>
-            <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=funding' : '?section=funding')}">Funding information</a></h3></li>
-            <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=eligibility' : '?section=eligibility')}">Eligibility</a></h3></li>
-            <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=milestones' : '?section=milestones')}">Milestones</a></h3></li>
-            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>
+            <li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></li>
+            <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></li>
+            <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></li>
+            <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></li>
+            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>
             <!--<li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>-->
-            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/5090-assessors-required?user=compExec' : '/prototypes/5090-assessors-required')}">Assessment</a></h3></li>
+            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessment</a></h3></li>
             <!--<li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>-->
 
         </ul>
@@ -43,9 +43,9 @@
 <div th:fragment="prototype-section-cta">
     <input type="hidden" id="section" name="section" th:value="${section}" />
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
-    <input type="hidden" id="user" name="user" th:value="${(param.user != null and param.user[0] == 'compExec' ? 'compExec' : '')}" />
+    <input type="hidden" id="compStatus" name="compStatus" th:value="${(param.compStatus != null and param.compStatus[0] == 'ready' ? 'ready' : '')}" />
     <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
-    <button formaction="/prototypes/2469-comp-setup" class="button" th:text="${param.status == null or param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
+    <button formaction="/prototypes/2469-comp-setup" class="button" th:text="${param.status != null and param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
     <!--<button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>-->
 </div>
 
@@ -469,7 +469,7 @@
         <h1 class="heading-xlarge no-margin">Initial details</h1>
     </div>
 
-    <div th:unless="${(param.user != null and param.user[0] == 'compExec' )}" class="panel-indent">
+    <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="panel-indent">
         This will create a new competition. You can add more details as you progress.
     </div>
 
@@ -526,14 +526,14 @@
                 <label class="form-label" for="compTitle">
                     <span class="form-label-bold">Competition title</span>
                 </label>
-                <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="compType">
                     <span class="form-label-bold">Competition type</span>
                 </label>
-                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Programme">Programme</option>
                     <option value="Managed services">Managed services</option>
@@ -555,7 +555,7 @@
                 <label class="form-label" for="compInnovationSector">
                     <span class="form-label-bold">Innovation sector</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="health">Health and life sciences</option>
                     <option value="materials">Materials and manufacturing</option>
@@ -569,7 +569,7 @@
                 <label class="form-label" for="compInnovationArea">
                     <span class="form-label-bold">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -596,7 +596,7 @@
                 <label class="form-label" for="compInnovationArea2">
                     <span class="form-label-bold visuallyhidden">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -620,7 +620,7 @@
                 </select>
                 <a href="#" id="remove-innovation-area">Remove</a>
             </div>
-            <p th:unless="${(param.user != null and param.user[0] == 'compExec')}" id="add-innovation-area" class="section-1-edit">
+            <p th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" id="add-innovation-area" class="section-1-edit">
                 <a href="#">+ add another innovation area</a>
             </p>
 
@@ -633,21 +633,21 @@
                         <label class="form-label" for="startDay">
                                 <div>Day</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
+                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
                     </div>
 
                     <div class="month">
                         <label class="form-label" for="startMonth">
                                 <div>Month</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
+                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
                     </div>
 
                     <div class="year">
                         <label class="form-label" for="startYear">
                                 <div>Year</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
+                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
                     </div>
                 </div>
             </fieldset>
@@ -707,7 +707,7 @@
     </form>
     <ul class="pagination">
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Funding information</span>
             </a>
@@ -798,29 +798,29 @@
                     <label class="form-label" for="compPaf">
                         <span class="form-label-bold">PAF number</span>
                     </label>
-                    <input class="form-control width-large" id="compPaf" name="compPaf" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                    <input class="form-control width-large" id="compPaf" name="compPaf" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
                <div class="form-group">
                     <label class="form-label" for="compBudgetCode">
                         <span class="form-label-bold">Budget code</span>
                     </label>
-                    <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                    <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
                 <div class="form-group extra-margin">
                     <label class="form-label" for="comp-activity-code">
                         <span class="form-label-bold">Activity code</span>
                     </label>
-                    <input class="form-control width-large" id="comp-activity-code" name="comp-activity-code" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                    <input class="form-control width-large" id="comp-activity-code" name="comp-activity-code" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="compCode">
                         <span class="form-label-bold">Competition code</span>
                     </label>
-                    <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
-                    <a th:unless="${(param.user != null and param.user[0] == 'compExec')}" href="#" class="button button-secondary">Generate code</a>
+                    <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+                    <a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" href="#" class="button button-secondary">Generate code</a>
                 </div>
 
             </fieldset>
@@ -871,13 +871,13 @@
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=essential' : '/prototypes/2469-comp-setup?section=essential'}">
+            <a rel="prev" title="Navigate to previous part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=essential' : '/prototypes/2469-comp-setup?section=essential'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Initial details</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
@@ -941,25 +941,28 @@
 
         <div class="grid-row ">
             <div class="column-half">
-                 <div th:unless="${(param.user != null and param.user[0] == 'compExec' )}" th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
+                 <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}" th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
             </div>
             <div class="column-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
             </div>
         </div>
 
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
+        </div>
 
     </form>
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
+            <a rel="prev" title="Navigate to previous part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Funding information</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=milestones' : '/prototypes/2469-comp-setup?section=milestones'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=milestones' : '/prototypes/2469-comp-setup?section=milestones'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Milestones</span>
             </a>
@@ -1201,13 +1204,13 @@
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
+            <a rel="prev" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec&amp;section=funding' : '/prototypes/5085-application-process'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready&amp;section=funding' : '/prototypes/5085-application-process'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Application</span>
             </a>
