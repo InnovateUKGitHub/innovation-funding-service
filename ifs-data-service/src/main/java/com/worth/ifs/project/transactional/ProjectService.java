@@ -86,7 +86,7 @@ public interface ProjectService {
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
-    ServiceResult<Void> saveMonitoringOfficer(Long projectId, MonitoringOfficerResource monitoringOfficerResource);
+    ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(Long projectId, MonitoringOfficerResource monitoringOfficerResource);
 
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);

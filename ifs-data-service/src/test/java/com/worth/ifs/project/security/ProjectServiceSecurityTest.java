@@ -11,6 +11,7 @@ import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.transactional.SaveMonitoringOfficerResult;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -417,7 +418,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.sendGrantOfferLetter(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -428,7 +429,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSendGrantOfferLetterAllowed(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -439,7 +440,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanSendGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -551,7 +552,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+        public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
             return null;
         }
 

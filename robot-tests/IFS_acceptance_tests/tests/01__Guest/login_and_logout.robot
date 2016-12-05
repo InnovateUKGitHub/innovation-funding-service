@@ -47,7 +47,7 @@ Valid login as Collaborator
 Valid login as Assessor
     [Documentation]    INFUND-286
     [Tags]    HappyPath    Pending
-    #TODO INFUND-5990  Assessor bin slow in building
+    #TODO INFUND-5990    Assessor bin slow in building
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -55,24 +55,29 @@ Valid login as Assessor
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    Logout as user
 
-Valid login for Multiple role
+Valid login with double role as Applicant
     [Documentation]    INFUND-1479
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then The user should see the text in the page    Please choose the role you are signing in as today
     And The user clicks the button/link    jquery=button:contains("Continue")
     Then The user should see an error    Please select a role
-    And the user selects the radio button    selectedRole    ASSESSOR
-    And The user clicks the button/link    jquery=button:contains("Continue")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user clicks the button/link    link=Sign out
-    When the guest user enters the log in credentials    jo.peters@ntag.example.com    Passw0rd
-    And the user clicks the button/link    css=button[name="_eventId_proceed"]
     And the user selects the radio button    selectedRole    APPLICANT
     And The user clicks the button/link    jquery=button:contains("Continue")
     Then the user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should see the element    link=Sign out
+    [Teardown]    Logout as user
+
+Valid login with Double role as Assessor
+    [Documentation]    INFUND-1479
+    Given the user is not logged-in
+    When the guest user enters the log in credentials    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    And the user selects the radio button    selectedRole    ASSESSOR
+    And The user clicks the button/link    jquery=button:contains("Continue")
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should see the element    link=Sign out
     [Teardown]    Logout as user
 

@@ -31,6 +31,10 @@ import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -334,7 +338,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+    public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
                 andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
@@ -615,7 +619,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
 
         return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
                 noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
@@ -623,18 +627,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         );
     }
 
-    private ServiceResult<Void> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
-        existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
-        existingMonitoringOfficer.setLastName(updateDetails.getLastName());
-        existingMonitoringOfficer.setEmail(updateDetails.getEmail());
-        existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
-        return serviceSuccess();
+    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+        return !existingMonitoringOfficer.getFirstName().equals(updateDetails.getFirstName()) ||
+                !existingMonitoringOfficer.getLastName().equals(updateDetails.getLastName()) ||
+                !existingMonitoringOfficer.getEmail().equals(updateDetails.getEmail()) ||
+                !existingMonitoringOfficer.getPhoneNumber().equals(updateDetails.getPhoneNumber());
     }
 
-    private ServiceResult<Void> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
+
+        if (isMonitoringOfficerDetailsChanged(existingMonitoringOfficer, updateDetails)) {
+            existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
+            existingMonitoringOfficer.setLastName(updateDetails.getLastName());
+            existingMonitoringOfficer.setEmail(updateDetails.getEmail());
+            existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
+        } else {
+            result.setMonitoringOfficerSaved(false);
+        }
+
+        return serviceSuccess(result);
+    }
+
+    private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
+        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
         MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         monitoringOfficerRepository.save(monitoringOfficer);
-        return serviceSuccess();
+        return serviceSuccess(result);
     }
 
     @Override
@@ -711,7 +730,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(spendProfileStatus, otherDocumentsStatus, project);
 
         ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 

@@ -10,6 +10,7 @@ import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.controller.ProjectController;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
+import com.worth.ifs.project.transactional.SaveMonitoringOfficerResult;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -320,7 +321,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         Long projectId = 1L;
 
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
         when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
@@ -345,7 +347,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         Long projectId = 1L;
 
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
         when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
