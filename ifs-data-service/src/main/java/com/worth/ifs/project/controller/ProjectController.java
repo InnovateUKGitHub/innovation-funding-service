@@ -15,6 +15,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
+import com.worth.ifs.project.transactional.SaveMonitoringOfficerResult;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,9 +137,15 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
-        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
-                .andOnSuccess(() -> projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource))
-                .toPutResponse();
+        final boolean[] sendNotification = new boolean[1];
+        ServiceResult<Boolean> result = projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
+                .andOnSuccessReturn(r -> r.isMonitoringOfficerSaved() ? (sendNotification[0] = true) : (sendNotification[0] = false));
+
+        if (sendNotification[0]) {
+            return projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource).toPutResponse();
+        }
+
+        return result.toPutResponse();
     }
 
     @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
