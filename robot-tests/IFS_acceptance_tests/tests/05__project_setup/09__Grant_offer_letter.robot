@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-4851 As a project manager I want to be able to submit an uploaded Grant Offer Letter so that Innovate UK can review my signed copy
+...
+...               INFUND-6059 As the contracts team I want to be able to send a Grant Offer Letter to the partners so that the project can begin
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -17,13 +19,15 @@ PM can view the grant offer letter page
     And the user should not see the text in the page    This document is awaiting signature by the Project Manager
 
 Partners should not be able to submit the Grant Offer
-    [Documentation]    INFUND-4851
+    [Documentation]    INFUND-4851, INFUND-6133
     [Tags]
     [Setup]    log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
     And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
+    Then the user goes back to the previous page
+    And the user should see the element    jQuery=li.waiting:nth-child(8)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -59,9 +63,10 @@ PM should be able upload a file and then access the Submit button
     When the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
 
-PM can view the uploaded Grant Offer file
+PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
     [Tags]    HappyPath
+    Given the user navigates to the page    ${server}/project-setup/project/11/offer
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
