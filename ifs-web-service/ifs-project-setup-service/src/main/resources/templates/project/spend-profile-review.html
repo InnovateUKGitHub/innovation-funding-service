@@ -19,9 +19,15 @@
         <h1 class="heading-xlarge">Spend Profile</h1>
     </div>
 
-    <div th:if="${model.submitted}" th:remove="tag">
+    <div th:if="${model.submitted and !model.approved}" th:remove="tag">
         <div class="success-alert extra-margin-bottom">
-            <p><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
+            <p><strong>All project spend profiles have been submitted to Innovate UK.</strong></p>
+        </div>
+    </div>
+
+    <div th:if="${model.submitted and model.approved}" th:remove="tag">
+        <div class="success-alert extra-margin-bottom">
+            <p><strong>All project spend profiles have been approved by Innovate UK.</strong></p>
         </div>
     </div>
 
