@@ -422,21 +422,28 @@
 
 <div th:fragment="prototype-post-query(queryType, user)">
 
-    <!-- <fieldset th:unless="${queryType == 'note' or user == 'partner'}">
+    <div class="grid-row extra-margin-top">
+      <div class="column-half">
+        <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
+      </div>
+      <div class="column-half">
+        <fieldset th:unless="${queryType == 'note' or user == 'partner'}">
 
-        <div class="form-group alignright">
-            <label for="querySection">Query section</label>
-            <select class="form-control">
-                <option value="All">All</option>
-                <option value="Viability">Viability</option>
-                <option value="Eligibility">Eligibility</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-
-    </fieldset> -->
-
-    <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
+           <div class="form-group alignright">
+               <label for="querySection">Query section</label>
+               <select class="form-control">
+                   <th:block th:if="${param.section != null}">
+                     <option th:text="${#httpServletRequest.getParameter('section')}" th:value="${#httpServletRequest.getParameter('section')}"></option>
+                   </th:block>
+                   <option value="All">All</option>
+                   <option value="Viability">Viability</option>
+                   <option value="Eligibility">Eligibility</option>
+                   <option value="Other">Other</option>
+               </select>
+           </div>
+       </fieldset>
+      </div>
+    </div>
 
     <th:block th:if="${param.action != null and param.action[0] == 'newQuery'}" th:unless="${user == 'partner'}" >
 
@@ -528,6 +535,8 @@
 
     <th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${user == 'partner'}" >
         <th:block th:if="${queryType == 'query'}">
+
+            <hr />
 
             <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
 
