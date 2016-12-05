@@ -161,7 +161,7 @@ Status of the application should be In Progress
     [Tags]    HappyPath
     [Setup]    The user navigates to the page    ${assessor_dashboard_url}
     When The user clicks the button/link    link=Sustainable living models for the future
-    Then the status of the appllications should be correct    css=.boxed-list li:nth-child(4)    In progress
+    Then the status of the appllications should be correct    css=.boxed-list li:nth-child(2)    In progress
 
 *** Keywords ***
 the user clicks next and goes to the page
