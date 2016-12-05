@@ -84,10 +84,6 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return withArraySetFieldByReflection("description", value);
     }
 
-    public FormInputBuilder withGuidanceTitle(String guidanceTitle) {
-        return with(formInput -> formInput.setGuidanceTitle(guidanceTitle));
-    }
-
     public FormInputBuilder withIncludedInApplicationSummary(Boolean... value) {
         return withArraySetFieldByReflection("includedInApplicationSummary", value);
     }
