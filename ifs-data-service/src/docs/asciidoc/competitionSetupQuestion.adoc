@@ -14,7 +14,7 @@ include::{snippets}//competition-setup-question/get-by-question-id/curl-request.
 ==== Request
 include::{snippets}/competition-setup-question/save/http-request.adoc[]
 include::{snippets}/competition-setup-question/save/path-parameters.adoc[]
-include::{snippets}/competition-setup-question/save/request-parameters.adoc[]
+include::{snippets}/competition-setup-question/save/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competition-setup-question/save/http-response.adoc[]
