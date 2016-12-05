@@ -1,4 +1,4 @@
-package com.worth.ifs.profile;
+package com.worth.ifs.profile.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
