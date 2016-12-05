@@ -1,4 +1,4 @@
-package com.worth.ifs.competition.controller;
+package com.worth.ifs.management.controller;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -25,11 +26,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Controller for showing and creating new competitions
+ * This controller will handle all requests that are related to the applications of a Competition within Competition Management.
  */
 @Controller
-@RequestMapping("/competition")
-public class CompetitionManagementController {
+@RequestMapping("/competition/{competitionId}/applications")
+public class CompetitionManagementApplicationsController {
     
 	private static final int PAGE_SIZE = 20;
 	
@@ -45,18 +46,11 @@ public class CompetitionManagementController {
     @Autowired
     private AssessorFeedbackService assessorFeedbackService;
 
-	@RequestMapping("/create")
-	public String create(){
-		CompetitionResource competition = competitionService.create();
-		return String.format("redirect:/competition/setup/%s", competition.getId());
-	}
-
-
-    @RequestMapping("/{competitionId}")
-    public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
+    @RequestMapping(method = RequestMethod.GET)
+    public String applications(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
 
     	if(bindingResult.hasErrors()) {
-    		return "redirect:/competition/" + competitionId;
+    		return "redirect:/competition/" + competitionId + "/applications";
     	}
     	
     	CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
@@ -157,7 +151,7 @@ public class CompetitionManagementController {
 		model.addAttribute("activeTab", "overview");
 	}
 
-	@RequestMapping("/{competitionId}/download")
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
         CompetitionResource competition = competitionService.getById(competitionId);
         if(competition!= null){
