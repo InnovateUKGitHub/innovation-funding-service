@@ -153,10 +153,5 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             return null;
         }
 
-        @Override
-        public ServiceResult<Void> closeAssessment(Long competitionId) {
-            return null;
-        }
-
     }
 }

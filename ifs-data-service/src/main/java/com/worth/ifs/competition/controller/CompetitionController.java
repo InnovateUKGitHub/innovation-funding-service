@@ -65,7 +65,7 @@ public class CompetitionController {
 
     @RequestMapping(value = "/{id}/close-assessment", method = RequestMethod.PUT)
     public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
-        return competitionSetupService.closeAssessment(id).toPutResponse();
+        return competitionService.closeAssessment(id).toPutResponse();
     }
     
     @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
