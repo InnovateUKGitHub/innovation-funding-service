@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class SpendProfileTableResource {
 
-    private Boolean markedAsComplete;
+    private boolean markedAsComplete = false;
 
     /*
      * Dynamically holds the months for the duration of the project
@@ -55,11 +55,11 @@ public class SpendProfileTableResource {
         this.eligibleCostPerCategoryMap = eligibleCostPerCategoryMap;
     }
 
-    public Boolean getMarkedAsComplete() {
+    public boolean getMarkedAsComplete() {
         return markedAsComplete;
     }
 
-    public void setMarkedAsComplete(Boolean markedAsComplete) {
+    public void setMarkedAsComplete(boolean markedAsComplete) {
         this.markedAsComplete = markedAsComplete;
     }
 
