@@ -11,9 +11,9 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
 ...
-...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
+...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial details section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
+...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding information section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
 ...
@@ -33,7 +33,7 @@ Initial details: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user clicks the button/link    link=Initial Details
+    And The user clicks the button/link    link=Initial details
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
     And the user should see an error    Please select a competition type
@@ -76,7 +76,7 @@ Initial details: Autosave
     [Tags]    Pending
     # TODO pending due Ito NFUND-5367
     When the user clicks the button/link    link=Competition setup
-    and the user clicks the button/link    link=Initial Details
+    and the user clicks the button/link    link=Initial details
     Then the user should see the correct values in the initial details form
 
 Initial details: should not allow dates in the past
@@ -105,7 +105,7 @@ Funding information server-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
-    Given the user clicks the button/link    link=Funding Information
+    Given the user clicks the button/link    link=Funding information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a funder name
@@ -135,7 +135,7 @@ Funding information Autosave
     [Documentation]    INFUND-4581
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
-    And the user clicks the button/link    link=Funding Information
+    And the user clicks the button/link    link=Funding information
     Then the user should see the correct details in the funding information form
 
 Eligibility server-side validations
