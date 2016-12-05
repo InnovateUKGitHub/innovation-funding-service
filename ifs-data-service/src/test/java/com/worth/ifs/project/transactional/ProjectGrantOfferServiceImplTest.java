@@ -37,6 +37,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -226,7 +227,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         assertTrue(result.isSuccess());
         assertNull(project.getGrantOfferLetter());
-
+        verify(fileServiceMock).deleteFile(existingGOLFile.getId());
     }
 
     @Override
