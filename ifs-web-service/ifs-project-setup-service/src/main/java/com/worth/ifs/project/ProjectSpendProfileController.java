@@ -6,10 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.form.SpendProfileForm;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.util.DateUtil;
 import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.project.util.SpendProfileTableCalculator;
@@ -41,6 +38,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -221,7 +219,7 @@ public class ProjectSpendProfileController {
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
-                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()));
+                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()), isApproved(projectResource.getId()));
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {
@@ -304,7 +302,17 @@ public class ProjectSpendProfileController {
                 partnersSpendProfileProgress,
                 partnerOrganisations,
                 projectResource.getSpendProfileSubmittedDate() != null,
-                editablePartners);
+                editablePartners,
+                isApproved(projectId));
+    }
+
+    private boolean isApproved(final Long projectId) {
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        boolean approved = false;
+        if(teamStatus != null) {
+            approved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+        }
+        return approved;
     }
 
     private boolean userHasProjectManagerRole(UserResource user, Long projectId) {

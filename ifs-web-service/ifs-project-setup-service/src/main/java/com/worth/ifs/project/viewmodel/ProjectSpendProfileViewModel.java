@@ -39,6 +39,7 @@ public class ProjectSpendProfileViewModel {
     private boolean submitted;
     private boolean userPartOfThisOrganisation;
     private boolean projectManager;
+    private boolean approved;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
@@ -46,7 +47,7 @@ public class ProjectSpendProfileViewModel {
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
                                         Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation,
-                                        boolean isProjectManager) {
+                                        boolean isProjectManager, boolean approved) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -67,6 +68,7 @@ public class ProjectSpendProfileViewModel {
         this.submitted = submitted;
         this.userPartOfThisOrganisation = userPartOfThisOrganisation;
         this.projectManager = isProjectManager;
+        this.approved = approved;
     }
 
     public Long getProjectId() {
@@ -165,6 +167,8 @@ public class ProjectSpendProfileViewModel {
         return markedAsComplete;
     }
 
+    public boolean isApproved() { return approved; }
+
     public void setCategoryToActualTotal(Map<Long, BigDecimal> categoryToActualTotal) {
         this.categoryToActualTotal = categoryToActualTotal;
     }
@@ -241,6 +245,7 @@ public class ProjectSpendProfileViewModel {
                 .append(costCategoryGroupMap, that.costCategoryGroupMap)
                 .append(costCategoryResourceMap, that.costCategoryResourceMap)
                 .append(projectManager, that.projectManager)
+                .append(approved, that.approved)
                 .isEquals();
     }
 
@@ -268,6 +273,7 @@ public class ProjectSpendProfileViewModel {
                 .append(submitted)
                 .append(userPartOfThisOrganisation)
                 .append(projectManager)
+                .append(approved)
                 .toHashCode();
     }
 

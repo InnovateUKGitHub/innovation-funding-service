@@ -316,7 +316,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 partnersSpendProfileProgress,
                 partnerOrganisations,
                 projectResource.getSpendProfileSubmittedDate() != null,
-                editablePartners);
+                editablePartners,
+                false);
     }
 
     private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource, SpendProfileTableResource expectedTable) {
@@ -355,7 +356,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {
