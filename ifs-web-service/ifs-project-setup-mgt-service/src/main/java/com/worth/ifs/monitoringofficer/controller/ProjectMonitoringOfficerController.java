@@ -162,7 +162,7 @@ public class ProjectMonitoringOfficerController {
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
         String projectManagerName = getProjectManagerName(projectResource);
         List<String> partnerOrganisationNames = getPartnerOrganisationNames(projectId);
-        String innovationArea = competition.getInnovationAreaName();
+        String innovationArea = competition.getInnovationAreaNames().iterator().next(); //TODO: INFUND-6479
 
         return new ProjectMonitoringOfficerViewModel(projectId, projectResource.getName(),
                 innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,

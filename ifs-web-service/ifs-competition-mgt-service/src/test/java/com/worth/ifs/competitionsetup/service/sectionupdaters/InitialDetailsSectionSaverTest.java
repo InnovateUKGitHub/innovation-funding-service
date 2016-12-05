@@ -7,7 +7,6 @@ import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.category.builder.CategoryResourceBuilder;
 import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
@@ -25,6 +24,7 @@ import java.util.List;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
@@ -86,7 +86,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(Long.valueOf(1L), competition.getExecutive());
         assertEquals(Long.valueOf(2L), competition.getCompetitionType());
         assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-        assertEquals(Long.valueOf(innovationArea.getId()), competition.getInnovationArea());
+        assertEquals(singleton(Long.valueOf(innovationArea.getId())), competition.getInnovationAreas());     //TODO: INFUND-6479
         assertEquals(Long.valueOf(innovationSectorId), competition.getInnovationSector());
         assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
 

@@ -83,7 +83,7 @@ public class Competition implements ProcessActivity {
     @Transient
     private Category innovationSector;
     @Transient
-    private Category innovationArea;
+    private Set<Category> innovationAreas;
     @Transient
     private Set<Category> researchCategories;
 
@@ -420,12 +420,12 @@ public class Competition implements ProcessActivity {
         this.innovationSector = innovationSector;
     }
 
-    public Category getInnovationArea() {
-        return innovationArea;
+    public Set<Category> getInnovationAreas() {
+        return innovationAreas;
     }
 
-    public void setInnovationArea(Category innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreas(Set<Category> innovationAreas) {
+        this.innovationAreas = innovationAreas;
     }
 
     public Set<Category> getResearchCategories() {

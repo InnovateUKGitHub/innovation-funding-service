@@ -21,15 +21,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -44,6 +41,8 @@ import static com.worth.ifs.project.constant.ProjectActivityStates.PENDING;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -80,7 +79,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
             build();
 
     private CompetitionResource competition = newCompetitionResource().
-            withInnovationAreaName("Some Area").
+            withInnovationAreaNames(Collections.singleton("Some Area")).  //TODO: INFUND-6479
             build();
 
     private CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
@@ -534,7 +533,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());
-        assertEquals("Some Area", competition.getInnovationAreaName());
+        assertThat(competition.getInnovationAreaNames(), hasItems("Some Area"));
         assertEquals("Dave Smith", model.getProjectManagerName());
         assertEquals(asList("Line 1", "Line 3", "Line 4", "Line 5"), model.getPrimaryAddressLines());
         assertEquals(asList("Partner Org 1", "Partner Org 2"), model.getPartnerOrganisationNames());

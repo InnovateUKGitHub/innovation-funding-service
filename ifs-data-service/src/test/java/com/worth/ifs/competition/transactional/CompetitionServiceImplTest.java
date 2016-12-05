@@ -22,6 +22,8 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -73,7 +75,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition compResp = service.addCategories(competition);
 
         assertEquals(competition, compResp);
-        assertEquals(competition.getInnovationArea(), innovationArea);
+        assertThat(competition.getInnovationAreas(), hasItem(innovationArea));
         assertEquals(competition.getInnovationSector(), innovationSector);
         assertEquals(competition.getResearchCategories(), researchCategories);
     }

@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -33,7 +34,7 @@ public class InitialDetailsFormPopulatorTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionType(4L)
 				.withExecutive(5L)
-				.withInnovationArea(6L)
+				.withInnovationAreas(singleton(6L))  //TODO: INFUND-6479
 				.withLeadTechnologist(7L)
 				.withStartDate(LocalDateTime.of(2000, 1, 2, 3, 4))
 				.withCompetitionCode("code")

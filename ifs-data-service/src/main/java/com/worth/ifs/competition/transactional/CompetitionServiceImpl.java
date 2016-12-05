@@ -67,7 +67,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public Competition addCategories(Competition competition) {
         addInnovationSector(competition);
-        addInnovationArea(competition);
+        addInnovationAreas(competition);
         addResearchCategories(competition);
         return competition;
     }
@@ -77,9 +77,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         competition.setInnovationSector(category);
     }
 
-    private void addInnovationArea(Competition competition) {
-        Category category = categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId());
-        competition.setInnovationArea(category);
+    private void addInnovationAreas(Competition competition) {
+        Set<Category> categories = categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId());
+        competition.setInnovationAreas(categories);
     }
 
     private void addResearchCategories(Competition competition) {
@@ -129,7 +129,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
         return new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
-                ofNullable(c.getInnovationArea()).map(Category::getName).orElse(null),
+                ofNullable(c.getInnovationAreas().iterator().next()).map(Category::getName).orElse(null), // TODO: INFUND-6479 deal with a set of innovation areas
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),

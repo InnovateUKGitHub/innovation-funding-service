@@ -11,9 +11,8 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
-import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import com.worth.ifs.controller.ValidationHandler;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
@@ -96,7 +96,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 					"competition.setup.innovation.area.must.be.selected",
                     singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
 		}
-		competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
+		competition.setInnovationAreas(singleton(initialDetailsForm.getInnovationAreaCategoryId())); //TODO: INFUND-6479
 
 		competitionService.update(competition);
         return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId()).getErrors();
@@ -120,7 +120,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competitionResource.setInnovationSector(Long.parseLong(value));
                 break;
             case "innovationAreaCategoryId":
-                competitionResource.setInnovationArea(Long.parseLong(value));
+                competitionResource.setInnovationAreas(singleton(Long.parseLong(value)));  //TODO: INFUND-6479
                 break;
             case "leadTechnologistUserId":
                 competitionResource.setLeadTechnologist(Long.parseLong(value));

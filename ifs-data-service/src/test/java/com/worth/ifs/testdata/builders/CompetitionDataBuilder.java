@@ -66,7 +66,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 competition.setName(name);
                 competition.setDescription(description);
-                competition.setInnovationArea(innovationArea);
+                competition.setInnovationAreas(singleton(innovationArea)); //TODO: INFUND-6479
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(singleton(researchCategory));
                 competition.setMaxResearchRatio(30);
