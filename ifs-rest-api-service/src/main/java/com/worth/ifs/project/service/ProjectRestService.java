@@ -75,6 +75,8 @@ public interface ProjectRestService {
 
     RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
+    RestResult<Void> removeGeneratedGrantOfferLetter(Long projectId);
+
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
 
     RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
