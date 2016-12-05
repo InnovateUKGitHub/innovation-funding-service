@@ -63,9 +63,34 @@ PM should be able upload a file and then access the Submit button
     When the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
 
+PM can view the generated Grant Offer Letter
+    [Documentation]    INFUND-6059
+    [Tags]
+    [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
+    Given the user navigates to the page  ${server}/project-setup/project/11/
+    Then the user should see the element  jQuery=ul li.require-action:nth-child(8)
+    When the user clicks the button/link  link=Grant offer letter
+    Then the user should see the element  jQuery=h2:contains("Grant offer letter")
+#    And the user should see the element   link=grant-offer-letter
+#    Then the user clicks the button/link  link=grant-offer-letter
+#TODO Pending due to INFUND-5998. In 5998 the CompAdmin can upload the GOL
+
+Other external users can see the uploaded Grant Offer letter
+    [Documentation]    INFUND-6059
+    [Tags]    Pending
+    Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
+    And the user navigates to the page  ${server}/project-setup/project/11/
+    Then the user should see the element  jQuery=ul li.waiting:nth-child(8)
+    When the user clicks the button/link  link=Grant offer letter
+    Then the user should see the element  jQuery=h2:contains("Grant offer letter")
+#    And the user should see the element   link=grant-offer-letter
+#    Then the user clicks the button/link  link=grant-offer-letter
+#TODO Pending due to INFUND-5998. In 5998 the CompAdmin can upload the GOL
+
 PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
     [Tags]    HappyPath
+    [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user navigates to the page    ${server}/project-setup/project/11/offer
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
