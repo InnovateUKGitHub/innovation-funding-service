@@ -180,7 +180,7 @@ public class CompetitionSetupController {
                     section, subsection,
                     fieldName, value,
                     Optional.ofNullable(objectId)
-                    )
+                    ).getErrors()
             );
             return this.createJsonObjectNode(true);
         } catch (Exception e) {
@@ -208,7 +208,7 @@ public class CompetitionSetupController {
 
         List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)).getErrors());
 
             return this.createJsonObjectNode(true);
         } catch (Exception e) {

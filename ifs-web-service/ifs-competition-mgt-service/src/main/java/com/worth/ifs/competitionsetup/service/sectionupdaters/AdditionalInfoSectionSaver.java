@@ -10,16 +10,12 @@ import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -42,7 +38,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean allowInvalidData) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 		competition.setActivityCode(additionalInfoForm.getActivityCode());
 		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
@@ -69,95 +65,79 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
-        return performAutoSaveField(competitionResource, fieldName, value);
-	}
-
-	@Override
-	protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
-		switch (fieldName) {
-			case "pafNumber":
-				competitionResource.setPafCode(value);
-				break;
-			case "budgetCode":
-				competitionResource.setBudgetCode(value);
-				break;
-			case "activityCode":
-				competitionResource.setActivityCode(value);
-				break;
-			case "competitionCode":
-				competitionResource.setCode(value);
-				break;
-			case "removeFunder":
-				int index = Integer.valueOf(value);
-				//If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
-				if (competitionResource.getFunders().size() <= index) {
-					break;
-				}
-
-				//Not allowed to remove 0th index.
-				if (index > 0) {
-					competitionResource.getFunders().remove(index);
-				} else {
-					return asList(new Error("competition.setup.autosave.funder.could.not.be.removed", HttpStatus.BAD_REQUEST));
-				}
-				break;
-			default:
-				errors = tryUpdateFunders(competitionResource, fieldName, value);
+	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+		if("removeFunder".equals(fieldName)) {
+			return removeFunder(competitionResource, fieldName, value);
+		} else {
+			return tryUpdateFunders(competitionResource, fieldName, value);
 		}
-
-		return errors;
 	}
 
-	private Integer getFunderIndex(String fieldName) throws ParseException {
-	    return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
-    }
+	private ServiceResult<Void> removeFunder(CompetitionResource competitionResource, String fieldName, String value) {
+		int index = Integer.valueOf(value);
+		//If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
+		if (competitionResource.getFunders().size() <= index) {
+			return serviceSuccess();
+		}
+		if (index > 0) {
+			competitionResource.getFunders().remove(index);
+			return competitionService.update(competitionResource);
+	    } else {
+			//Not allowed to remove 0th index.
+			return serviceFailure(new Error("competition.setup.autosave.funder.could.not.be.removed", HttpStatus.BAD_REQUEST));
+	    }
+	}
 
-    private List<Error> tryUpdateFunders(CompetitionResource competitionResource, String fieldName, String value) {
-        Integer index;
-        CompetitionFunderResource funder;
+	private ServiceResult<Void> tryUpdateFunders(CompetitionResource competitionResource, String fieldName, String value) {
+		Integer index;
+		CompetitionFunderResource funder;
 
-        try {
-            index = getFunderIndex(fieldName);
-            if(index >= competitionResource.getFunders().size()) {
-                addNotSavedFunders(competitionResource, index);
-            }
+		try {
+			index = getFunderIndex(fieldName);
+			if(index >= competitionResource.getFunders().size()) {
+				addNotSavedFunders(competitionResource, index);
+			}
 
-            funder = competitionResource.getFunders().get(index);
+			funder = competitionResource.getFunders().get(index);
 
-            if(fieldName.endsWith("funder")) {
-                funder.setFunder(value);
-            } else if(fieldName.endsWith("funderBudget")) {
+			if (fieldName.endsWith("funder")) {
+				funder.setFunder(value);
+			} else if(fieldName.endsWith("funderBudget")) {
 				BigDecimal funderBudget = new BigDecimal(value);
 				if (funderBudget.compareTo(BigDecimal.ZERO) < 0) {
-					return asList(new Error("validation.additionalinfoform.funderbudget.min", HttpStatus.BAD_REQUEST));
+					return serviceFailure(new Error("validation.additionalinfoform.funderbudget.min", HttpStatus.BAD_REQUEST));
 				}
 				if (new BigDecimal("99999999.99").compareTo(funderBudget) > 0 && funderBudget.scale() <= 2) {
 					funder.setFunderBudget(funderBudget);
 				} else {
-					return asList(new Error("validation.additionalinfoform.funderbudget.invalid", HttpStatus.BAD_REQUEST));
+					return serviceFailure(new Error("validation.additionalinfoform.funderbudget.invalid", HttpStatus.BAD_REQUEST));
 				}
 			} else {
-               return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
-            }
-        } catch (ParseException e) {
-            return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
-        }
+				return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
+			}
+		} catch (NumberFormatException e) {
+			return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
+		}
 
-        competitionResource.getFunders().set(index, funder);
+		competitionResource.getFunders().set(index, funder);
 
-        return Collections.emptyList();
-    }
+		return competitionService.update(competitionResource);
+	}
 
-    private void addNotSavedFunders(CompetitionResource competitionResource, Integer index) {
-        Integer currentIndexNotUsed = competitionResource.getFunders().size();
+	private Integer getFunderIndex(String fieldName) {
+		return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
+	}
 
-        for(Integer i = currentIndexNotUsed; i <= index; i++) {
-            CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
-            competitionFunderResource.setCoFunder(true);
-            competitionResource.getFunders().add(i, competitionFunderResource);
-        }
-    }
+	private void addNotSavedFunders(CompetitionResource competitionResource, Integer index) {
+		Integer currentIndexNotUsed = competitionResource.getFunders().size();
+
+		for(Integer i = currentIndexNotUsed; i <= index; i++) {
+			CompetitionFunderResource funder = new CompetitionFunderResource();
+			funder.setCoFunder(true);
+			competitionResource.getFunders().add(i, funder);
+		}
+	}
+
 
 
     @Override

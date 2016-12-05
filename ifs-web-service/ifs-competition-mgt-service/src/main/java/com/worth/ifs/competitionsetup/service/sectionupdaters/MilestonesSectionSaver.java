@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +49,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean invalidDataAllowed) {
 
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         LinkedMap<String, MilestoneViewModel> milestoneEntries = milestonesForm.getMilestoneEntries();
@@ -58,15 +57,10 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition.getId());
         if(!errors.isEmpty()) {
             competitionSetupMilestoneService.sortMilestones(milestonesForm);
-            serviceFailure(errors);
+            return serviceFailure(errors);
         }
 
         return serviceSuccess();
-    }
-
-    @Override
-    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId) {
-        return updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneViewModel> milestoneEntries, Long competitionId){
@@ -84,10 +78,14 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
 
-    @Override
-    protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) {
-      return  Collections.emptyList();
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+        List<Error> errors = updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
+        if (!errors.isEmpty()) {
+            return serviceFailure(errors);
+        }
+        return serviceSuccess();
     }
+
 
     private List<Error> updateMilestoneWithValueByFieldname(CompetitionResource competitionResource, String fieldName, String value) {
         List<Error> errors = new ArrayList<>();
@@ -135,4 +133,5 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         typeMatcher.find();
         return typeMatcher.group(1);
     }
+
 }

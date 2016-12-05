@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
@@ -78,18 +79,14 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
     public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        String view = getFinancePage(model, competitionId);
-        model.addAttribute("editable", false);
-        return view;
+        return getFinancePage(model, competitionId, false);
     }
 
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        String view = getFinancePage(model, competitionId);
-        model.addAttribute("editable", true);
-        return view;
+        return getFinancePage(model, competitionId, true);
     }
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
@@ -99,7 +96,7 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        Supplier<String> failureView = () -> getFinancePage(model, competitionId);
+        Supplier<String> failureView = () -> getFinancePage(model, competitionId, true);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         CompetitionResource resource = competitionService.getById(competitionId);
@@ -110,16 +107,20 @@ public class CompetitionSetupApplicationController {
 
     }
 
-    private String getFinancePage(Model model, Long competitionId) {
+    private String getFinancePage(Model model, Long competitionId, boolean isEditable) {
         CompetitionResource competition = competitionService.getById(competitionId);
         competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition,
                 CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.FINANCES, Optional.empty());
 
-        ApplicationDetailsForm competitionSetupForm = (ApplicationDetailsForm) competitionSetupService.getSubsectionFormData(
+        CompetitionSetupForm competitionSetupForm =competitionSetupService.getSubsectionFormData(
                 competition,
                 CompetitionSetupSection.APPLICATION_FORM,
                 CompetitionSetupSubsection.FINANCES,
                 null);
+
+
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+        model.addAttribute("editable", isEditable);
 
         return "competition/finances";
     }

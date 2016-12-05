@@ -2,38 +2,45 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import org.apache.el.parser.ParseException;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.apache.commons.beanutils.ConvertUtils.convert;
+import static org.apache.commons.beanutils.PropertyUtils.getPropertyType;
+import static org.apache.commons.beanutils.PropertyUtils.setNestedProperty;
 
 /**
  * Class to hold all the common functionality in the section savers.
  */
-public abstract class AbstractSectionSaver {
+public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
 
     @Autowired
     private CompetitionService competitionService;
 
-    protected List<Error> performAutoSaveField(CompetitionResource competitionResource, String fieldName, String value) {
-        List<Error> errors = new ArrayList<>();
+    @Override
+    public ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> ObjectId) {
         try {
-            errors = updateCompetitionResourceWithAutoSave(errors, competitionResource, fieldName, value);
-        } catch (ParseException|NumberFormatException e) {
-            errors.add(new Error("validation.standard.only.numbers", HttpStatus.BAD_REQUEST));
+            form.setMarkAsCompleteAction(false);
+            Class<?> propertyType = getPropertyType(form, fieldName);
+            setNestedProperty(form, fieldName, convert(value, propertyType));
+            return saveSection(competitionResource, form, true);
+        } catch (RuntimeException e) {
+            return handleIrregularAutosaveCase(competitionResource, fieldName, value);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
         }
-
-        if(!errors.isEmpty()) {
-            return errors;
-        }
-        competitionService.update(competitionResource);
-        return Collections.emptyList();
     }
 
-    protected abstract List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException;
+
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+        return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
+    }
 
 }

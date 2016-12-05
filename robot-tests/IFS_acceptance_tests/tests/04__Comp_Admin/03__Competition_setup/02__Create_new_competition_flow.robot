@@ -413,7 +413,7 @@ Application: Mark as done and the Edit again
 
 Application: should have a green check
     [Tags]    HappyPath
-    When The user clicks the button/link    jQuery=a:contains("Done")
+    When The user clicks the button/link    jQuery=.button:contains("Done")
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
     And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")

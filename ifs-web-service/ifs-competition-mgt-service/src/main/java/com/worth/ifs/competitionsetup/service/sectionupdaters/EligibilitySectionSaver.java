@@ -1,7 +1,6 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import com.worth.ifs.competition.resource.CollaborationLevel;
@@ -11,15 +10,8 @@ import com.worth.ifs.competition.resource.LeadApplicantType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
-import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
  * Competition setup section saver for the eligibility section.
@@ -36,7 +28,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean allowInvalidData) {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
@@ -67,54 +59,26 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	}
 
 	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> objectId) {
-		return performAutoSaveField(competitionResource, fieldName, value);
+	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+        if("researchCategoryId".equals(fieldName)) {
+            processResearchCategoryForAutoSave(value, competitionResource);
+            return competitionService.update(competitionResource);
+        }
+		return super.handleIrregularAutosaveCase(competitionResource, fieldName, value);
 	}
+
+	private void processResearchCategoryForAutoSave(String inputValue, CompetitionResource competitionResource) {
+        Long value = Long.parseLong(inputValue);
+        if (competitionResource.getResearchCategories().contains(value)) {
+			competitionResource.getResearchCategories().remove(value);
+        } else {
+			competitionResource.getResearchCategories().add(value);
+        }
+    }
 
 	@Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return EligibilityForm.class.equals(clazz);
 	}
 
-	@Override
-	public List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) throws ParseException {
-		switch (fieldName) {
-			case "multipleStream":
-				competitionResource.setMultiStream(CompetitionUtils.textToBoolean(value));
-				break;
-			case "streamName":
-				competitionResource.setStreamName(value);
-				break;
-			case "singleOrCollaborative":
-				competitionResource.setCollaborationLevel(CollaborationLevel.fromCode(value));
-				break;
-			case "researchCategoryId":
-				processResearchCategoryForAutoSave(value, competitionResource);
-				break;
-			case "leadApplicantType":
-				competitionResource.setLeadApplicantType(LeadApplicantType.fromCode(value));
-				break;
-			case "researchParticipationAmountId":
-				ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(Integer.parseInt(value));
-				if(amount != null) {
-					competitionResource.setMaxResearchRatio(amount.getAmount());
-				}
-				break;
-			case "resubmission":
-				competitionResource.setResubmission(CompetitionUtils.textToBoolean(value));
-				break;
-			default:
-				return asList(new Error("Field not found", HttpStatus.BAD_REQUEST));
-		}
-		return errors;
-	}
-
-	private void processResearchCategoryForAutoSave(String inputValue, CompetitionResource competitionResource) throws ParseException {
-		Long value = Long.parseLong(inputValue);
-		if (competitionResource.getResearchCategories().contains(value)) {
-			competitionResource.getResearchCategories().remove(value);
-		} else {
-			competitionResource.getResearchCategories().add(value);
-		}
-	}
 }

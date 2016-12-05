@@ -6,7 +6,6 @@ import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupServiceImpl;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
@@ -141,8 +140,8 @@ public class CompetitionSetupServiceImplTest {
 		
 		service.saveCompetitionSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
 		
-		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm);
-		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
+		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm, false);
+		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm, false);
 	}
 
 	@Test
