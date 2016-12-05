@@ -101,6 +101,6 @@ public class CompetitionController {
 
     @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
     public RestResult<Void> notifyAssessors(@PathVariable("id") final Long id) {
-        return competitionSetupService.notifyAssessors(id).toPutResponse();
+        return competitionService.notifyAssessors(id).toPutResponse();
     }
 }

@@ -203,7 +203,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void notifyAssessors() throws Exception {
         final Long competitionId = 1L;
 
-        when(competitionSetupService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
+        when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
                 .andExpect(status().isOk())

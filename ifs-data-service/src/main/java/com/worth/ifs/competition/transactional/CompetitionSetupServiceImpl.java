@@ -213,13 +213,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return copyFromCompetitionTemplate(competition, template);
 	}
 
-    @Override
-    public ServiceResult<Void> notifyAssessors(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
-        competition.notifyAssessors(LocalDateTime.now());
-        return serviceSuccess();
-    }
-
     private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
         cleanUpCompetitionSections(competition);
 

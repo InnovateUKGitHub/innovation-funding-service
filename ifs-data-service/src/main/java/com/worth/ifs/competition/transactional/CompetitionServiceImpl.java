@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -143,5 +144,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
                 competitionRepository.countUpcoming(), 0L));
+    }
+
+    @Override
+    public ServiceResult<Void> notifyAssessors(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.notifyAssessors(LocalDateTime.now());
+        return serviceSuccess();
     }
 }

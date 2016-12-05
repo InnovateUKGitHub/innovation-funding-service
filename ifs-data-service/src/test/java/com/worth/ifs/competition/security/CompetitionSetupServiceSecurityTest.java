@@ -70,9 +70,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            assertAccessDenied(() -> classUnderTest.notifyAssessors(competitionId), () -> {
-                verifyNoMoreInteractions(rules);
-            });
         });
     }
 
@@ -132,11 +129,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> notifyAssessors(Long competitionId) {
             return null;
         }
 
