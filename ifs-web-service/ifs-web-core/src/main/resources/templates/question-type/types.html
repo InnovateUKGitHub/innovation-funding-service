@@ -218,9 +218,9 @@
                                          min="1"
                                          max="36"
                                          required="required"
-                                         data-required-errormessage="Please enter a valid value"
-                                         data-min-errormessage="Your project should last between 1 and 36 months"
-                                         data-max-errormessage="Your project should last between 1 and 36 months " />
+                                         th:attr="data-required-errormessage=#{validation.project.duration.range.invalid},
+                                         data-min-errormessage=#{validation.project.duration.range.invalid},
+                                         data-max-errormessage=#{validation.project.duration.range.invalid}" />
                               </div>
                           </fieldset>
                       </div>
