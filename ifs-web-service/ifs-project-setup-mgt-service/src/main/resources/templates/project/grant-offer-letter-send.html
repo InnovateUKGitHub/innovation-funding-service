@@ -26,7 +26,7 @@
     <hr/>
 
     <th:block th:if="${!model.isSentToProjectTeam()}">
-        <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+        <p>We have created the grant offer letter using information given during project setup.</p>
     </th:block>
     <th:block th:if="${model.isSentToProjectTeam()}">
         <p>The grant offer letter is now available for review. Once all project partners are happy, please upload or send the signed original to Innovate UK.</p>
@@ -52,6 +52,7 @@
                         <span class="error-message" th:each="err : ${#fields.errors('grantOfferLetter')}"
                               th:text="${err}"/>
                 </th:block>
+                <p>The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
                 <input th:field="*{grantOfferLetter}" type="file" id="grantOfferLetter" class="inputfile"/>
                 <label for="grantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
                 <button name="uploadGrantOfferLetterClicked" class="button-secondary" type="submit"
