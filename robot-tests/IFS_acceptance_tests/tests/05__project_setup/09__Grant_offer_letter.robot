@@ -65,7 +65,7 @@ PM should be able upload a file and then access the Submit button
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059
-    [Tags]
+    [Tags]    Pending
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user navigates to the page  ${server}/project-setup/project/11/
     Then the user should see the element  jQuery=ul li.require-action:nth-child(8)
