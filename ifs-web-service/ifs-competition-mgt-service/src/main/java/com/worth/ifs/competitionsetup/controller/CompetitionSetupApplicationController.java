@@ -150,14 +150,9 @@ public class CompetitionSetupApplicationController {
 
         if(!bindingResult.hasErrors()) {
 
-            competitionSetupForm.getQuestion().getGuidanceRows().clear();
-
-            competitionSetupForm.getGuidanceRows().forEach(guidanceRowViewModel -> {
-                GuidanceRowResource grr = new GuidanceRowResource();
-                grr.setSubject(guidanceRowViewModel.getScoreFrom() + "," + guidanceRowViewModel.getScoreTo());
-                grr.setJustification(guidanceRowViewModel.getJustification());
-                competitionSetupForm.getQuestion().getGuidanceRows().add(grr);
-            });
+            CompetitionResource competitionResource = competitionService.getById(competitionId);
+            competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource,
+                    CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS);
 
             competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
@@ -191,8 +186,6 @@ public class CompetitionSetupApplicationController {
             return questionView;
         }
     }
-
-    // TODO - treat the following 2 types as per a scoped question until further analysis has been done
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PUBLIC_DESCRIPTION")
     public String submitPublicDescriptionQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,

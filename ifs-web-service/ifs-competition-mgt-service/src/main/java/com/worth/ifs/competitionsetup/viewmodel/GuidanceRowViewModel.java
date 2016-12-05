@@ -8,7 +8,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by simon on 22/11/16.
+ * View model for guidance rows in order that the subject field can be split into score from and score to elements
+ * and validated accordingly.
  */
 public class GuidanceRowViewModel {
 
