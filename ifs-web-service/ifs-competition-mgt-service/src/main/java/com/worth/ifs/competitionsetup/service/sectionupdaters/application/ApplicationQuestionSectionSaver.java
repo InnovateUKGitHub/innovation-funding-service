@@ -134,13 +134,13 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 question.setAssessmentGuidance(value);
                 break;
             case "question.scored" :
-                question.setScored(Boolean.parseBoolean(value));
+                question.setScored(textToBoolean(value));
                 break;
             case "question.scoreTotal" :
                 question.setScoreTotal(Integer.parseInt(value));
                 break;
             case "question.writtenFeedback" :
-                question.setWrittenFeedback(Boolean.parseBoolean(value));
+                question.setWrittenFeedback(textToBoolean(value));
                 break;
             case "question.assessmentMaxWords" :
                 question.setAssessmentMaxWords(Integer.parseInt(value));
@@ -202,28 +202,32 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
             if(fieldName.endsWith("subject")) {
 
                 if (StringUtils.isBlank(value)) {
-                    return asList(new Error("validation.applicationquestionform.subject.required", HttpStatus.BAD_REQUEST));
+                    return asList(fieldError(fieldName, "", "validation.applicationquestionform.subject.required"));
+                } else if (value.length() > 255) {
+                    return asList(fieldError(fieldName, "", "validation.applicationquestionform.subject.max"));
                 }
                 guidanceRow.setSubject(value);
 
             } else if(fieldName.endsWith("justification")) {
 
                 if (StringUtils.isBlank(value)) {
-                    return asList(new Error("validation.applicationquestionform.justification.required", HttpStatus.BAD_REQUEST));
+                    return asList(fieldError(fieldName, "", "validation.applicationquestionform.justification.required"));
+                } else if (value.length() > 255) {
+                    return asList(fieldError(fieldName, "", "validation.applicationquestionform.justification.max"));
                 }
                 guidanceRow.setJustification(value);
 
             } else if(fieldName.endsWith("scoreFrom")) {
 
                 if (!NumberUtils.isNumber(value) || Integer.parseInt(value) < 0) {
-                    return asList(new Error("validation.applicationquestionform.scorefrom.min", HttpStatus.BAD_REQUEST));
+                    return asList(fieldError(fieldName, "", "validation.applicationquestionform.scorefrom.min"));
                 }
                 guidanceRow.setSubject(modifySubject(question, guidanceRow.getSubject(), value, null));
 
             } else if(fieldName.endsWith("scoreTo")) {
 
                 if (!NumberUtils.isNumber(value) || Integer.parseInt(value) < 0) {
-                    return asList(new Error("validation.applicationquestionform.scoreto.min", HttpStatus.BAD_REQUEST));
+                    return asList(fieldError(fieldName, "", "validation.applicationquestionform.scoreto.min"));
                 }
                 guidanceRow.setSubject(modifySubject(question, guidanceRow.getSubject(), null, value));
 
