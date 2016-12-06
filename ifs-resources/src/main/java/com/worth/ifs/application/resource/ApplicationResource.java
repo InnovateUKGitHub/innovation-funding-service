@@ -2,12 +2,17 @@ package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.commons.validation.constraints.FieldRequiredIf;
+import com.worth.ifs.commons.validation.constraints.FutureLocalDate;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -19,10 +24,14 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
+@FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
+@FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
 public class ApplicationResource {
     private static final String ID_PATTERN = "#00000000";
-    private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
+
+    private static final int MIN_DURATION_IN_MONTHS = 1;
+    private static final int MAX_DURATION_IN_MONTHS = 36;
 
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
@@ -31,11 +40,17 @@ public class ApplicationResource {
             simpleMap(asList(ApplicationStatusConstants.SUBMITTED, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED), ApplicationStatusConstants::getId);
 
     private Long id;
+
+    @NotBlank(message ="{validation.project.name.must.not.be.empty}")
     private String name;
+
+    @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
     private LocalDateTime submittedDate;
 
-    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
+    @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
+    @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
+    @NotNull(message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
     private Long applicationStatus;
@@ -46,6 +61,8 @@ public class ApplicationResource {
     private CompetitionStatus competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
+
+    @NotNull(message="{validation.application.must.indicate.resubmission.or.not}")
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
@@ -54,30 +71,30 @@ public class ApplicationResource {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @JsonIgnore
     public String getFormattedId(){
         return formatter.format(id);
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    @JsonIgnore
-    public String getApplicationDisplayName() {
-        if(StringUtils.isNotEmpty(name)){
-            return name;
-        }else{
-            return competitionName;
-        }
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonIgnore
+    public String getApplicationDisplayName() {
+        if(StringUtils.isNotEmpty(name)) {
+            return name;
+        } else {
+            return competitionName;
+        }
     }
 
     public LocalDate getStartDate() {
@@ -100,14 +117,14 @@ public class ApplicationResource {
         return applicationStatus;
     }
 
+    public void setApplicationStatus(Long applicationStatus) {
+        this.applicationStatus = applicationStatus;
+    }
+
     @JsonIgnore
     public void setApplicationStatusConstant(ApplicationStatusConstants applicationStatus) {
         this.applicationStatus = applicationStatus.getId();
         this.applicationStatusName = applicationStatus.getName();
-    }
-
-    public void setApplicationStatus(Long applicationStatus) {
-        this.applicationStatus = applicationStatus;
     }
 
     public Long getCompetition() {
@@ -197,16 +214,16 @@ public class ApplicationResource {
         return submittedDate;
     }
 
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
+    }
+
     public String getApplicationStatusName() {
         return applicationStatusName;
     }
 
     public void setApplicationStatusName(String applicationStatusName) {
         this.applicationStatusName = applicationStatusName;
-    }
-
-    public void setSubmittedDate(LocalDateTime submittedDate) {
-        this.submittedDate = submittedDate;
     }
 
     public CompetitionStatus getCompetitionStatus() {
