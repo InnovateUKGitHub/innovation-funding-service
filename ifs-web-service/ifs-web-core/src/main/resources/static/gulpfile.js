@@ -6,6 +6,8 @@ var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var sassLint = require('gulp-sass-lint');
+var urlAdjuster = require('gulp-css-url-adjuster');
+
 var compass = require('compass-importer');
 
 var repo_root = __dirname + '/../../../../../';
@@ -37,6 +39,9 @@ gulp.task('css', function () {
         importer: compass,
         outputStyle: 'expanded'
       }).on('error', sass.logError))
+      .pipe(urlAdjuster({
+        prepend: '/'
+      }))
     .pipe(gulp.dest('./css'));
 });
 
