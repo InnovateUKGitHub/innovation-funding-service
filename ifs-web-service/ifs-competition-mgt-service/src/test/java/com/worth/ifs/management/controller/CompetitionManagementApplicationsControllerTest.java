@@ -1,5 +1,4 @@
-
-package com.worth.ifs.controller;
+package com.worth.ifs.management.controller;
 
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -15,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 
-import com.worth.ifs.competition.controller.CompetitionManagementController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +32,12 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionManagementControllerTest  {
+public class CompetitionManagementApplicationsControllerTest {
 
     public static final Long COMPETITION_ID = Long.valueOf(123L);
     
     @InjectMocks
-	private CompetitionManagementController controller;
+	private CompetitionManagementApplicationsController controller;
 	
     @Mock
     private ApplicationSummaryService applicationSummaryService;
@@ -70,7 +68,7 @@ public class CompetitionManagementControllerTest  {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(resource);
 
-    	mockMvc.perform(get("/competition/123"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -92,7 +90,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "sortfield", 2, 20)).thenReturn(resource);
 
-    	mockMvc.perform(get("/competition/123?page=3"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?page=3", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -114,7 +112,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "properSort", 0, 20)).thenReturn(resource);
 
-    	mockMvc.perform(get("/competition/123?sort=lead"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?sort=lead", 123))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -136,7 +134,7 @@ public class CompetitionManagementControllerTest  {
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-    	mockMvc.perform(get("/competition/123"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-in-assessment"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -157,7 +155,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-    	mockMvc.perform(get("/competition/123?tab=submitted"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-in-assessment"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -178,7 +176,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-    	mockMvc.perform(get("/competition/123?tab=notSubmitted"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-in-assessment"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -200,7 +198,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-    	mockMvc.perform(get("/competition/123?tab=notSubmitted"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -222,7 +220,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE)).thenReturn(summary);
 
-    	mockMvc.perform(get("/competition/123?tab=submitted"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -244,7 +242,7 @@ public class CompetitionManagementControllerTest  {
     	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-    	mockMvc.perform(get("/competition/123?tab=notSubmitted"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-assessor-feedback"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -268,7 +266,7 @@ public class CompetitionManagementControllerTest  {
 
         when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 
-    	mockMvc.perform(get("/competition/123?tab=submitted"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-assessor-feedback"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -301,7 +299,7 @@ public class CompetitionManagementControllerTest  {
         		.build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         
-    	mockMvc.perform(get("/competition/123?tab=overview"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=overview", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-assessor-feedback"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -317,19 +315,10 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionIdProvidingInvalidPage() throws Exception {
     	
-    	mockMvc.perform(get("/competition/123?page=0"))
+    	mockMvc.perform(get("/competition/{competitionId}/applications?page=0", COMPETITION_ID))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/competition/123"));
+                .andExpect(redirectedUrl("/competition/123/applications"));
     	
     	verifyNoMoreInteractions(applicationSummaryService);
-    }
-
-    @Test
-    public void createCompetition() throws Exception {
-        when(competitionService.create()).thenReturn(newCompetitionResource().withId(COMPETITION_ID).build());
-
-        mockMvc.perform(get("/competition/create"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID));
     }
 }

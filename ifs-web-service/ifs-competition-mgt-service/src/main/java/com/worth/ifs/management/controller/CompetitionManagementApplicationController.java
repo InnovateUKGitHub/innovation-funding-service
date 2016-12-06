@@ -1,4 +1,4 @@
-package com.worth.ifs.competition.controller;
+package com.worth.ifs.management.controller;
 
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -61,10 +61,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-public class ApplicationManagementController extends BaseController {
+public class CompetitionManagementApplicationController extends BaseController {
 
     @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(ApplicationManagementController.class);
+    private static final Log LOG = LogFactory.getLog(CompetitionManagementApplicationController.class);
 
     @Autowired
     private FormInputResponseService formInputResponseService;
