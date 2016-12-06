@@ -9,6 +9,7 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -19,12 +20,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -32,11 +39,15 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
 
@@ -188,6 +199,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testSubmitGrantOfferLetterFailure() {
+        when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.FALSE);
 
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
@@ -198,6 +210,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Test
     public void testSubmitGrantOfferLetterSuccess() {
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
+
+        when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.TRUE);
+
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
@@ -210,6 +225,22 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 fileEntryResource ->
                         service.generateGrantOfferLetter(123L, fileEntryResource));
     }
+
+    @Test
+    public void testRemoveGrantOfferLetterFileEntry() {
+
+        FileEntry existingGOLFile = newFileEntry().build();
+        project.setGrantOfferLetter(existingGOLFile);
+
+        when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
+
+        ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isSuccess());
+        assertNull(project.getGrantOfferLetter());
+        verify(fileServiceMock).deleteFile(existingGOLFile.getId());
+    }
+
 
     @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {

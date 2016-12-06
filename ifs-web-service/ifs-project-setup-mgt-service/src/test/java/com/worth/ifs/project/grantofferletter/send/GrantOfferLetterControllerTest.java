@@ -3,62 +3,34 @@ package com.worth.ifs.project.grantofferletter.send;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.commons.error.CommonFailureKeys.*;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.builder.FileEntryResourceBuilder;
 import com.worth.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.project.finance.resource.FinanceCheckResource;
-import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.grantofferletter.send.controller.ProjectGrantOfferLetterSendController;
 import com.worth.ifs.project.grantofferletter.send.form.ProjectGrantOfferLetterSendForm;
 import com.worth.ifs.project.grantofferletter.send.viewmodel.ProjectGrantOfferLetterSendViewModel;
 import com.worth.ifs.project.resource.ApprovalType;
-import com.worth.ifs.project.resource.PartnerOrganisationResource;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus.*;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
-import static com.worth.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
-import static com.worth.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
-import static com.worth.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
@@ -66,8 +38,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferLetterSendController> {
     @Test
@@ -262,6 +232,94 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         assertEquals("HelloWorld", response.getContentAsString());
         assertEquals("inline; filename=\"gol-file.pdf\"", response.getHeader("Content-Disposition"));
         assertEquals(10, response.getContentLength());
+    }
+
+    @Test
+    public void uploadGrantOfferLetterFile() throws Exception {
+
+        Long projectId = 123L;
+        Long competitionId = 1L;
+        Long applicationId = 789L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+
+        Optional<FileEntryResource> golFileEntryResource = Optional.of(FileEntryResourceBuilder.newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build());
+
+        // when the model is re-loaded after uploading
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
+
+        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(golFileEntryResource);
+        when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(null);
+
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
+
+        when(projectService.addGeneratedGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes())).
+                thenReturn(serviceSuccess(createdFileDetails));
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
+
+        MvcResult result = mockMvc.perform(
+                fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
+                        file(uploadedFile).param("uploadGrantOfferLetterClicked", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-send")).
+                andReturn();
+
+        ProjectGrantOfferLetterSendForm form = (ProjectGrantOfferLetterSendForm) result.getModelAndView().getModel().get("form");
+        assertEquals(uploadedFile, form.getGrantOfferLetter());
+
+        ProjectGrantOfferLetterSendViewModel model = (ProjectGrantOfferLetterSendViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(new FileDetailsViewModel(createdFileDetails), model.getGrantOfferLetterFile());
+        assertTrue(model.getGrantOfferLetterFileContentAvailable());
+
+    }
+
+    @Test
+    public void removeGrantOfferLetterFile() throws Exception {
+
+        Long projectId = 123L;
+        Long competitionId = 1L;
+        Long applicationId = 789L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+
+        // when the model is re-loaded
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
+
+        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(null);
+
+
+        when(projectService.removeGeneratedGrantOfferLetter(123L)).
+                thenReturn(serviceSuccess());
+
+        MockMultipartFile fileToDelete = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
+
+        MvcResult result = mockMvc.perform(
+                fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
+                        file(fileToDelete).param("removeGrantOfferLetterClicked", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-send")).
+                andReturn();
+
+        ProjectGrantOfferLetterSendViewModel model = (ProjectGrantOfferLetterSendViewModel) result.getModelAndView().getModel().get("model");
+        assertFalse(model.getGrantOfferLetterFileContentAvailable());
+
     }
 
     @Test

@@ -45,6 +45,17 @@ public class GrantOfferLetterSendControllerSecurityTest extends BaseProjectSetup
         assertSecured(() -> classUnderTest.grantOfferLetterReceivedByPost(123L, null, null, null, null));
     }
     */
+
+    @Test
+    public void testUploadGrantOfferLetterFile() {
+        assertSecured(() -> classUnderTest.uploadGrantOfferLetterFile(123L, null, null, null, null));
+    }
+
+    @Test
+    public void testRemoveGrantOfferLetterFile() {
+        assertSecured(() -> classUnderTest.removeGrantOfferLetterFile(123L, null, null, null, null));
+    }
+
     @Test
     public void testUploadAnnexPage() {
         assertSecured(() -> classUnderTest.uploadAnnexFile(123L, null, null, null, null, null));

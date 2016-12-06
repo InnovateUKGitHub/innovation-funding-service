@@ -130,6 +130,15 @@ public class GOLWorkflowHandlerIntegrationTest extends
                 GOLState.PENDING, GOLState.SENT, GOLOutcomes.GOL_SENT);
     }
 
+    @Test
+    public void testSignGrantOfferLetterWithoutProjectUser() throws Exception {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.sign(project)),
+
+                // current State, destination State and expected Event to be fired
+                GOLState.SENT, GOLState.READY_TO_APPROVE, GOLOutcomes.GOL_SIGNED);
+    }
+
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();

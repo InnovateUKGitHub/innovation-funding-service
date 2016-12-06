@@ -13,6 +13,18 @@ include::{snippets}/project/add-grant-offer-letter/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/add-grant-offer-letter/curl-request.adoc[]
 
+=== Remove Grant Offer Letter
+
+==== Request
+include::{snippets}/project/remove-grant-offer-letter-file/http-request.adoc[]
+include::{snippets}/project/remove-grant-offer-letter-file/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/remove-grant-offer-letter-file/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/remove-grant-offer-letter-file/curl-request.adoc[]
+
 === Upload Additional Contract File during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 

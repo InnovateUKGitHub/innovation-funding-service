@@ -114,6 +114,16 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return grantOfferLetterApproved(project, projectUser);
     }
 
+    public boolean sign(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        if(process == null)
+            return false;
+        ProjectUser projectUser = process.getParticipant();
+        if(projectUser == null)
+            return false;
+        return grantOfferLetterSigned(project, projectUser);
+    }
+
     @Override
     protected GOLProcess createNewProcess(Project target, ProjectUser participant) {
         return new GOLProcess(participant, target, null);
