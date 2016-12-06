@@ -4,10 +4,9 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import org.junit.Test;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerTest extends BaseControllerMockMVCTest<CompetitionController> {
@@ -27,6 +26,9 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).notifyAssessors(competitionId);
+    }
+
+    @Test
     public void closeAssessment() throws Exception {
         final Long competitionId = 1L;
 
@@ -35,6 +37,8 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         mockMvc.perform(put("/competition/{id}/close-assessment", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+
+        verify(competitionServiceMock, only()).closeAssessment(competitionId);
 
     }
 }

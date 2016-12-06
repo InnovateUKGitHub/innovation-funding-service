@@ -21,9 +21,7 @@ import static com.worth.ifs.competition.builder.CompetitionTypeResourceBuilder.n
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -249,7 +247,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionsRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
 
         service.closeAssessment(competitionId);
-        verify(competitionsRestService, times(1)).closeAssessment(competitionId);
+        verify(competitionsRestService, only()).closeAssessment(competitionId);
     }
 
     @Test
