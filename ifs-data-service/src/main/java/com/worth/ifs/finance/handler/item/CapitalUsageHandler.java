@@ -33,7 +33,7 @@ public class CapitalUsageHandler extends FinanceRowHandler {
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;
 
-        for (FinanceRowMetaValue costValue : cost.getCostValues()) {
+        for (FinanceRowMetaValue costValue : cost.getFinanceRowMetadata()) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle() != null){
                 String title = costValue.getFinanceRowMetaField().getTitle();
                 if (title.equals(COST_FIELD_EXISTING)) {

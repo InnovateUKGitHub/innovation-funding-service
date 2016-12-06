@@ -19,7 +19,7 @@ import java.util.Collections;
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
-import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newFinanceRow;
+import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -67,7 +67,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
             final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisationSize(organisation).build();
-            cost = newFinanceRow().withApplicationFinance(applicationFinance).build();
+            cost = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
             costItem = new AcademicCost(cost.getId(), "", ZERO, "");
 
             leadApplicant = newUserResource().build();
@@ -84,7 +84,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
             final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
             final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisationSize(otherOrganisation).withApplication(otherApplication).build();
-            otherCost = newFinanceRow().withApplicationFinance(otherApplicationFinance).build();
+            otherCost = newApplicationFinanceRow().withOwningFinance(otherApplicationFinance).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
         }

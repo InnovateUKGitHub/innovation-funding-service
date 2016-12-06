@@ -37,7 +37,7 @@ public abstract class FinanceRow<FinanceType> {
     private String name;
 
     @OneToMany(mappedBy="financeRowId")
-    private List<FinanceRowMetaValue> costValues = new ArrayList<>();
+    private List<FinanceRowMetaValue> financeRowMetadata = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -100,16 +100,16 @@ public abstract class FinanceRow<FinanceType> {
         return cost;
     }
 
-    public List<FinanceRowMetaValue> getCostValues() {
-        return costValues;
+    public List<FinanceRowMetaValue> getFinanceRowMetadata() {
+        return financeRowMetadata;
     }
 
-    public void setCostValues(List<FinanceRowMetaValue> costValues) {
-        this.costValues = costValues;
+    public void setFinanceRowMetadata(List<FinanceRowMetaValue> costValues) {
+        this.financeRowMetadata = costValues;
     }
     
     public void addCostValues(FinanceRowMetaValue... c) {
-        Collections.addAll(this.costValues, c);
+        Collections.addAll(this.financeRowMetadata, c);
     }
 
     public Question getQuestion() {

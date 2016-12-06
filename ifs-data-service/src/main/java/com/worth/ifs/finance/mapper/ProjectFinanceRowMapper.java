@@ -35,7 +35,7 @@ public abstract class ProjectFinanceRowMapper extends BaseMapper<ProjectFinanceR
 
         @Mappings({
                 @Mapping(target = "question", ignore = true),
-                @Mapping(target = "costValues", ignore = true),
+                @Mapping(target = "financeRowMetadata", ignore = true),
                 @Mapping(target = "target", ignore = true),
                 @Mapping(source = "linkedFinanceRow", target = "applicationRowId")
         })

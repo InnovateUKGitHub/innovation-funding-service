@@ -34,7 +34,7 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newFinanceRow;
+import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static com.worth.ifs.finance.service.FinanceRowServiceSecurityTest.TestFinanceRowService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -147,7 +147,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testUpdateCost() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.updateCost(costId, new AcademicCost()),
                 () -> {
@@ -169,7 +169,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testDeleteCost() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.deleteCost(costId),
                 () -> {
@@ -368,7 +368,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<List<? extends FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
-            return serviceSuccess(newFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newApplicationFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override

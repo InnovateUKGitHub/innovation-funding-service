@@ -18,9 +18,6 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.domain.*;
-import com.worth.ifs.finance.repository.*;
-import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
@@ -40,8 +37,7 @@ import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
@@ -68,10 +64,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
@@ -160,34 +158,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Autowired
-    private FinanceCheckRepository financeCheckRepository;
-
-    @Autowired
-    private ProjectFinanceRepository projectFinanceRepository;
-
-    @Autowired
-    private ProjectFinanceRowRepository projectFinanceRowRepository;
-
-    @Autowired
-    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
-
-    @Autowired
-    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
-
-    @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
-
-    @Autowired
-    private ApplicationFinanceRowRepository financeRowRepository;
-
-    @Autowired
     private InviteProjectRepository inviteProjectRepository;
 
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
+
+    @Autowired
+    private FinanceChecksGenerator financeChecksGenerator;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -968,86 +945,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
         List<Organisation> organisations = newProject.getOrganisations();
 
-        List<ServiceResult<FinanceCheck>> financeCheckResults = simpleMap(organisations, organisation ->
-                copyFinanceChecksFromApplicationFinances(newProject, organisation).andOnSuccess(() ->
-                costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
-                andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
-                andOnSuccessReturn(this::populateFinanceCheck)
-            ));
+        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
+            financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
+            costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+            financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
 
         return processAnyFailuresOrSucceed(financeCheckResults);
-    }
-
-    private FinanceCheck createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
-
-        List<Cost> costs = new ArrayList<>();
-        List<CostCategory> costCategories = costCategoryType.getCostCategories();
-        CostGroup costGroup = new CostGroup("finance-check", costs);
-        costCategories.forEach(costCategory -> {
-            Cost cost = new Cost(new BigDecimal(0.0));
-            costs.add(cost);
-            cost.setCostCategory(costCategory);
-        });
-        costGroup.setCosts(costs);
-
-        FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
-        financeCheck.setOrganisation(organisation);
-        financeCheck.setProject(newProject);
-
-        return financeCheck;
-    }
-
-    private ServiceResult<Void> copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
-
-        ApplicationFinance applicationFinanceForOrganisation =
-                applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
-
-        ProjectFinance projectFinanceForOrganisation =
-                projectFinanceRepository.save(new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject));
-
-        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
-
-        List<ProjectFinanceRow> copiedFinanceRows = simpleMap(originalFinanceFigures, original -> {
-            ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
-            newRow.setApplicationRowId(original.getId());
-            newRow.setCost(original.getCost());
-            List<FinanceRowMetaValue> metaValues = simpleMap(original.getCostValues(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
-            newRow.setCostValues(metaValues);
-            newRow.setDescription(original.getDescription());
-            newRow.setItem(original.getItem());
-            newRow.setName(original.getName());
-            newRow.setQuantity(original.getQuantity());
-            newRow.setQuestion(original.getQuestion());
-            return newRow;
-        });
-
-        copiedFinanceRows.forEach(figure -> {
-            projectFinanceRowRepository.save(figure);
-            figure.getCostValues().forEach(metaValue -> {
-                metaValue.setFinanceRowMetaField(financeRowMetaFieldRepository.findOne(metaValue.getFinanceRowMetaField().getId()));
-                metaValue.setFinanceRowId(figure.getId());
-                financeRowMetaValueRepository.save(metaValue);
-            });
-        });
-
-        return serviceSuccess();
-    }
-
-    private FinanceRowMetaValue copyFinanceRowMetaValue(ProjectFinanceRow row, FinanceRowMetaValue costValue) {
-        return new FinanceRowMetaValue(row, costValue.getFinanceRowMetaField(), costValue.getValue());
-    }
-
-    private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
-        Organisation organisation = financeCheck.getOrganisation();
-        Application application = financeCheck.getProject().getApplication();
-        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-            List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.getId());
-            financeCheck.getCostGroup().getCosts().forEach(
-                    c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
-            );
-        }
-        return financeCheckRepository.save(financeCheck);
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {

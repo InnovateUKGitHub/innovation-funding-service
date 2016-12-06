@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.finance.builder.FinanceRowMetaValueResourceBuilder.newFinanceRowMetaValue;
+import static com.worth.ifs.finance.builder.FinanceRowMetaValueResourceBuilder.newFinanceRowMetaValueResource;
 import static org.mockito.Matchers.isA;
 
 /**
@@ -49,7 +49,7 @@ public class FinanceRowMetaValueServiceSecurityTest extends BaseServiceSecurityT
 
         @Override
         public ServiceResult<FinanceRowMetaValueResource> findOne(Long id) {
-            return serviceSuccess(newFinanceRowMetaValue().build());
+            return serviceSuccess(newFinanceRowMetaValueResource().build());
         }
     }
 }

@@ -11,9 +11,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.ProjectFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
@@ -27,7 +25,6 @@ import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 import com.worth.ifs.project.finance.domain.CostCategoryType;
-import com.worth.ifs.project.finance.domain.FinanceCheck;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.resource.*;
@@ -75,7 +72,6 @@ import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBa
 import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
-import static com.worth.ifs.project.builder.CostGroupBuilder.newCostGroup;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -87,7 +83,6 @@ import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static com.worth.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static com.worth.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -109,6 +104,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
+
+    @Mock
+    private FinanceChecksGenerator financeChecksGeneratorMock;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -204,13 +202,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
-        ApplicationFinance applicationFinance = newApplicationFinance().
-                withOrganisationSize(organisation.getOrganisationSize()).
-                build();
-
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(
-                savedProject.getApplication().getId(), organisation.getId())).thenReturn(applicationFinance);
-
         CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
@@ -220,17 +211,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
                 organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
 
-        FinanceCheck newFinanceCheck = newFinanceCheck().
-                withId().
-                withProject(savedProject).
-                withOrganisation(organisation).
-                withCostGroup(newCostGroup().withDescription("finance-check").build()).
-                build();
-
-        when(financeCheckRepositoryMock.save(createFinanceCheckExpectations(newFinanceCheck))).thenReturn(newFinanceCheck);
-
-        ProjectFinance expectedProjectFinance = new ProjectFinance(organisation, organisation.getOrganisationSize(), savedProject);
-        when(projectFinanceRepositoryMock.save(createNewProjectFinanceExpectations(expectedProjectFinance))).thenReturn(expectedProjectFinance);
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess());
 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -241,30 +223,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
 
-        verify(financeCheckRepositoryMock).save(createFinanceCheckExpectations(newFinanceCheck));
-        verify(projectFinanceRepositoryMock).save(createNewProjectFinanceExpectations(expectedProjectFinance));
+        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
+        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
+        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
+
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
-    }
-
-    private FinanceCheck createFinanceCheckExpectations(FinanceCheck expectedFinanceCheck) {
-        return createLambdaMatcher(actual -> {
-            assertEquals(expectedFinanceCheck.getId(), actual.getId());
-            assertEquals(expectedFinanceCheck.getOrganisation(), actual.getOrganisation());
-            assertEquals(expectedFinanceCheck.getProject(), actual.getProject());
-            assertEquals(expectedFinanceCheck.getCostGroup().getDescription(), actual.getCostGroup().getDescription());
-        });
-    }
-
-    private ProjectFinance createNewProjectFinanceExpectations(ProjectFinance expectedProjectFinance) {
-        return createLambdaMatcher(actual -> {
-            assertEquals(expectedProjectFinance.getId(),actual.getId());
-            assertEquals(expectedProjectFinance.getProject(),actual.getProject());
-            assertEquals(expectedProjectFinance.getOrganisation(),actual.getOrganisation());
-            assertEquals(expectedProjectFinance.getOrganisationSize(),actual.getOrganisationSize());
-        });
     }
 
     @Test
@@ -1421,26 +1387,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccessObject());
-
-    }
-
-    private void assertUploadedFilesExist(Consumer<FileEntry> fileSetter1, Consumer<FileEntry> fileSetter2,
-                                          Supplier<List<ServiceResult<FileAndContents>>> getFileContentsFnForFiles) {
-
-
-        Supplier<InputStream> inputStreamSupplier1 = () -> null;
-        Supplier<InputStream> inputStreamSupplier2 = () -> null;
-
-        List<FileEntryResource> fileEntryResourcesToGet = getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
-
-        List<ServiceResult<FileAndContents>> results = getFileContentsFnForFiles.get();
-
-        assertTrue(results.get(0).isSuccess());
-        assertTrue(results.get(1).isSuccess());
-        assertEquals(fileEntryResourcesToGet.get(0), results.get(0).getSuccessObject().getFileEntry());
-        assertEquals(fileEntryResourcesToGet.get(1), results.get(1).getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier1, results.get(0).getSuccessObject().getContentsSupplier());
-        assertEquals(inputStreamSupplier2, results.get(1).getSuccessObject().getContentsSupplier());
 
     }
 

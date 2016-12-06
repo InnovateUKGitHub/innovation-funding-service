@@ -156,7 +156,7 @@ public class OtherFundingValidatorTest {
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
         ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance().withApplication(application).build();
-        ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newFinanceRow().withApplicationFinance(applicationFinance).withItem(value).build();
+        ApplicationFinanceRow cost = ApplicationFinanceRowBuilder.newApplicationFinanceRow().withOwningFinance(applicationFinance).withItem(value).build();
         Question question = QuestionBuilder.newQuestion().build();
         when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FinanceRowType.OTHER_FUNDING.getType())).thenReturn(ServiceResult.serviceSuccess(question));

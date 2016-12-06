@@ -41,7 +41,7 @@ public class FinanceRowTest {
         Assert.assertEquals(costItem.getDescription(), description);
         Assert.assertEquals(costItem.getQuantity(), quantity);
         Assert.assertEquals(costItem.getCost(), cost);
-        //TODO: mock getCostValues()
+        //TODO: mock getFinanceRowMetadata()
     }
 
     @Test

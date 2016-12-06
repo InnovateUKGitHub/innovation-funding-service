@@ -111,7 +111,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
                     cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
 
-            applicationFinanceRow.setCostValues(cost.getCostValues());
+            applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
             return applicationFinanceRow;
         });
     }

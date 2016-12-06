@@ -201,7 +201,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
                 ApplicationFinanceRow savedCost = financeRowRepository.save(updatedCost);
 
-                newCost.getCostValues()
+                newCost.getFinanceRowMetadata()
                         .stream()
                         .filter(c -> c.getValue() != null)
                         .filter(c -> !"null".equals(c.getValue()))
@@ -439,11 +439,11 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     
     private ApplicationFinanceRow persistCostHandlingCostValues(FinanceRow cost) {
     	
-    	  List<FinanceRowMetaValue> costValues = cost.getCostValues();
-          cost.setCostValues(new ArrayList<>());
+    	  List<FinanceRowMetaValue> costValues = cost.getFinanceRowMetadata();
+          cost.setFinanceRowMetadata(new ArrayList<>());
           ApplicationFinanceRow persistedCost = financeRowRepository.save((ApplicationFinanceRow)cost);
           costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
-          persistedCost.setCostValues(costValues);
+          persistedCost.setFinanceRowMetadata(costValues);
           financeRowMetaValueRepository.save(costValues);
           return financeRowRepository.save(persistedCost);
     }

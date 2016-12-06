@@ -35,7 +35,7 @@ public abstract class ApplicationFinanceRowMapper extends BaseMapper<Application
 
         @Mappings({
                 @Mapping(target = "question", ignore = true),
-                @Mapping(target = "costValues", ignore = true),
+                @Mapping(target = "financeRowMetadata", ignore = true),
                 @Mapping(target = "target", ignore = true)
         })
         @Override
