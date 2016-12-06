@@ -84,7 +84,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case TEXTAREA:
                 setupResource.setWrittenFeedback(formInput.getActive());
                 setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
-                setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
+                setupResource.setAssessmentGuidance(formInput.getGuidanceTitle());
                 setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
                 break;
             case ASSESSOR_SCORE:
