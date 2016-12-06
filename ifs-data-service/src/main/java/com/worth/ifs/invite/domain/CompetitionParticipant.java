@@ -56,11 +56,11 @@ public class CompetitionParticipant extends Participant<Competition, Competition
 
     public CompetitionParticipant(User user, CompetitionInvite invite) {
         super();
-        if (competition == null) throw new NullPointerException("competition cannot be null");
         if (invite == null) throw new NullPointerException("invite cannot be null");
+        if (invite.getTarget() == null) throw new NullPointerException("invite.target cannot be null");
 
-        this.competition = invite.getTarget();
         this.user = user;
+        this.competition = invite.getTarget();
         this.invite = invite;
         this.role = CompetitionParticipantRole.ASSESSOR;
     }

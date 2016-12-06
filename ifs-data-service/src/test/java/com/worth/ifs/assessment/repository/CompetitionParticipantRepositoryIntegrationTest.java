@@ -56,8 +56,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         CompetitionInvite invite1 = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
         CompetitionInvite invite2 = new CompetitionInvite("name2", "tom2@poly.io", "hash2", competition, innovationArea);
 
-        repository.save( new CompetitionParticipant(competition, invite1) );
-        repository.save( new CompetitionParticipant(competition, invite2) );
+        repository.save( new CompetitionParticipant(invite1) );
+        repository.save( new CompetitionParticipant(invite2) );
 
         Iterable<CompetitionParticipant> invites = repository.findAll();
 
@@ -67,7 +67,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void getByInviteHash() {
         CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
-        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, invite) );
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite) );
 
         flushAndClearSession();
 
@@ -93,7 +93,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void save() {
         CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
-        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, invite) );
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite) );
 
         flushAndClearSession();
 
@@ -118,7 +118,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withStatus(OPENED).build();
 
         CompetitionParticipant savedParticipant = repository.save(
-                (new CompetitionParticipant(competition, invite)).acceptAndAssignUser(user) );
+                (new CompetitionParticipant(invite)).acceptAndAssignUser(user) );
 
         flushAndClearSession();
 
@@ -141,7 +141,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withStatus(OPENED).build();
 
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(competition, invite)).reject(reason, Optional.of("too busy")) );
+        CompetitionParticipant savedParticipant = repository.save( (new CompetitionParticipant(invite)).reject(reason, Optional.of("too busy")) );
 
         flushAndClearSession();
 
@@ -160,7 +160,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withId(3L)
                 .withFirstName("Professor")
                 .build();
-        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(competition, user, invite));
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(user, invite));
         flushAndClearSession();
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRoleAndStatus(user.getId(),CompetitionParticipantRole.ASSESSOR, ParticipantStatus.PENDING );
