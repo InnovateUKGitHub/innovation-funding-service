@@ -124,6 +124,15 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
+    public void testCloseAssessment() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.closeAssessment(1L), () -> {
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
     public void testNotifyAssessors() {
         setLoggedInUser(null);
 
@@ -174,6 +183,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<CompetitionCountResource> countCompetitions() {
             return serviceSuccess(new CompetitionCountResource());
+        }
+
+        @Override
+        public ServiceResult<Void> closeAssessment(Long competitionId) {
+            return null;
         }
 
         @Override
