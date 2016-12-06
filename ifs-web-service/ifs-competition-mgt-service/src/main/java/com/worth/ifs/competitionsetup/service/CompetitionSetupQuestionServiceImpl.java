@@ -94,7 +94,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         validator.validate(form, bindingResult);
 
         if(bindingResult.hasErrors()) {
-            translateErrors(bindingResult, form);
             return serviceFailure(Collections.emptyList());
         } else {
             return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM);
@@ -103,8 +102,4 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     }
 
-    private void translateErrors(BindingResult bindingResult, LandingPageForm form) {
-
-
-    }
 }
