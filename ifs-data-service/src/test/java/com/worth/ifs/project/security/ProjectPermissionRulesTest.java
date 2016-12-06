@@ -467,4 +467,24 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         ProjectResource project = newProjectResource().build();
         assertTrue(rules.projectFinanceUserCanViewTeamStatus(project, projectFinanceUser()));
     }
+
+    @Test
+    public void testProjectFinanceUserCanSendGrantOfferLetter(){
+        ProjectResource project = newProjectResource().build();
+        assertTrue(rules.internalUserCanSendGrantOfferLetter(project, projectFinanceUser()));
+    }
+
+    @Test
+    public void testCompAdminsUserCanSendGrantOfferLetter(){
+        ProjectResource project = newProjectResource().build();
+        assertTrue(rules.internalUserCanSendGrantOfferLetter(project, compAdminUser()));
+    }
+
+    @Test
+    public void testPartnerUserCannotSendGrantOfferLetter(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        setupUserAsPartner(project, user);
+        assertFalse(rules.internalUserCanSendGrantOfferLetter(project, user));
+    }
 }
