@@ -153,25 +153,20 @@ Summary:Assessor should be able to re-edit before submit
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 
-Summary:Feedback validations
+Summary:Funding Decision Validations
     [Documentation]    INFUND-1485
     ...
     ...    INFUND-4217
     ...
     ...    INFUND-5228
-    When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
-    And the user enters text to a text field    id=comment    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should see an error    Please indicate your decision
-    And the word count should be correct    Words remaining: -4
+    [Tags]
+    When The user clicks the button/link    jQuery=.button:contains(Save assessment)
+    And The user should see an error    Please indicate your decision
     And The user enters text to a text field    id=feedback    ${EMPTY}
     And The user enters text to a text field    id=comment    ${EMPTY}
     Then the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should see an error    Please enter your feedback
-    And The user enters text to a text field    id=feedback    Testing the required feedback textarea when the decision is "No".
-    And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should not see the text in the page    Please enter your feedback
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485
@@ -182,17 +177,14 @@ Summary:Word count check(Your feedback)
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
-    [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
-    Given The user clicks the button/link    link=Intelligent Building
-    and The user clicks the button/link    jQuery=.button:contains("Review assessment")
-    When the user enters text to a text field    id=feedback    Testing the feedback word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
-    Then the word count should be correct    Words remaining: -4
-    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    And the user enters multiple strings into a text field    id=feedback    test    5001
+    When the user enters multiple strings into a text field    id=feedback    test    5001
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    This field cannot contain more than 5,000 characters
-    And the user enters text to a text field    id=feedback    Testing the feedback word count.
+    When the user enters text to a text field    id=feedback    a a a a a a a a a a a a a a a a a a \ a a \ a a a \ a a a a a \ a a aa \ a a a a a \ a a a a a a a a \ a a a a a \ a a a \ a a a \ a a a \ a a a a \ a \ a a a a \ a a \ a a aa \ a a a a a a a a a a \ a a a a a \ aa a a a a a a a a a a a a a a
+    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
+    Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And the word count should be correct    Words remaining: -2
+    When the user enters text to a text field    id=feedback    Testing the feedback word count.
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
@@ -204,14 +196,11 @@ Summary:Word count check(Comments for InnovateUK)
     ...    INFUND-5178
     ...
     ...    INFUND-5179
-    When the user enters text to a text field    id=comment    Testing the comments word count. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco
-    Then the word count should be correct    Words remaining: -4
+    When the user enters text to a text field    id=comment    a a a a a a a a a a a a a a a a a a \ a a \ a a a \ a a a a a \ a a aa \ a a a a a \ a a a a a a a a \ a a a a a \ a a a \ a a a \ a a a \ a a a a \ a \ a a a a \ a a \ a a aa \ a a a a a a a a a a \ a a a a a \ aa a a a a a a a a a a a a a a
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
-    And the user enters multiple strings into a text field    id=feedback    test    5001
-    And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    This field cannot contain more than 5,000 characters
-    And the user enters text to a text field    id=comment    Testing the comments word count.
+    And the word count should be correct    Words remaining: -2
+    When the user enters text to a text field    id=comment    Testing the comments word count.
     Then The user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: 95
 
@@ -225,7 +214,7 @@ User Saves the Assessment as Recommended
     ...    INFUND-6040
     ...
     ...    INFUND-3724
-    [Tags]
+    [Tags]    HappyPath
     Given the user enters text to a text field    id=feedback    ${EMPTY}
     And the user selects the radio button    fundingConfirmation    true
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
@@ -243,6 +232,7 @@ User Saves the Assessment as Not Recommended
     ...    INFUND-6040
     ...
     ...    INFUND-3724
+    [Tags]    HappyPath
     [Setup]
     Given The user clicks the button/link    link=Park living
     And the user adds score and feedback for every question
@@ -265,13 +255,15 @@ Submit Assessments
     [Documentation]    INFUND-5739
     ...
     ...    INFUND-3743
-    [Tags]
+    ...
+    ...    INFUND-6358
+    [Tags]    HappyPath
     Given The user clicks the button/link    css=li:nth-child(4) .assessment-submit-checkbox
     When the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Cancel")
     And The user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
-    Then the assessor should see correct status for submitted assessments
+    Then the application should have the correct status    css=div.submitted .boxed-list    Submitted
     And the user should see the element    css=li:nth-child(3) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
     And The user should see the text in the page    Intelligent Building
     And The user should see the text in the page    98
@@ -279,7 +271,7 @@ Submit Assessments
 
 Progress of the applications in Dashboard
     [Documentation]    INFUND-3719
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Count the applications
     When The user navigates to the page    ${assessor_dashboard_url}
     Then the progress of the applications should be correct
@@ -412,9 +404,6 @@ the status of the status of the application should be correct
 the application should have the correct status
     [Arguments]    ${APPLICATION}    ${STATUS}
     element should contain    ${APPLICATION}    ${STATUS}
-
-the assessor should see correct status for submitted assessments
-    Element Should Contain    css=.my-applications .submitted ul li:nth-child(1) .column-assessment-status.navigation-right > div > p    Submitted
 
 the progress of the applications should be correct
     element should contain    css=.greentext span:nth-child(1)    1

@@ -26,6 +26,7 @@ import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
+import static com.worth.ifs.project.util.ControllersUtil.isLeadPartner;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
@@ -197,7 +198,7 @@ public class FinanceCheckController {
         String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
         LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
 
-        boolean isLeadPartner = isLeadPartner(projectId, organisationId);
+        boolean isLeadPartner = isLeadPartner(partnerOrganisationService, projectId, organisationId);
 
         FileDetailsViewModel jesFileDetailsViewModel = null;
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisationId);
@@ -255,13 +256,4 @@ public class FinanceCheckController {
         return "redirect:/project/" + projectId + "/finance-check";
     }
 
-    private boolean isLeadPartner(Long projectId, Long organisationId) {
-        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
-        if(result.isSuccess()) {
-            Optional<PartnerOrganisationResource> partnerOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
-            return partnerOrganisationResource.isPresent() && partnerOrganisationResource.get().getOrganisation().equals(organisationId);
-        } else {
-            return false;
-        }
-    }
 }

@@ -31,7 +31,7 @@ public class AssessorFeedbackController {
 		
 		if(!assessorFeedbackService.feedbackUploaded(competitionId)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "feedbackNotUploadedForAllApplications");
-			return "redirect:/competition/" + competitionId;
+			return "redirect:/competition/" + competitionId + "/applications";
 		}
 		
 		model.addAttribute("competitionId", competitionId);
@@ -44,7 +44,7 @@ public class AssessorFeedbackController {
 		
 		if(!assessorFeedbackService.feedbackUploaded(competitionId)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "feedbackNotUploadedForAllApplications");
-			return "redirect:/competition/" + competitionId;
+			return "redirect:/competition/" + competitionId + "/applications";
 		}
 		
 		assessorFeedbackService.submitAssessorFeedback(competitionId);

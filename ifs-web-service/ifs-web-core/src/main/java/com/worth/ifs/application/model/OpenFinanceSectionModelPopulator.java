@@ -38,7 +38,7 @@ import static java.util.Collections.singletonList;
  * Class for populating the model for the "Your Finances" section
  */
 @Component
-public class OpenFinanceSectionSectionModelPopulator extends BaseSectionModelPopulator {
+public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
