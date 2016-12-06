@@ -170,10 +170,10 @@ project finance generates the Spend Profile
 all parteners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
     log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
     log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
