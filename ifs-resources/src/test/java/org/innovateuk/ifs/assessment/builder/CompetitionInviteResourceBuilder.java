@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 
 import java.math.BigDecimal;
@@ -50,6 +51,10 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
 
     public CompetitionInviteResourceBuilder withEmail(String... emails) {
         return withArraySetFieldByReflection("email", emails);
+    }
+
+    public CompetitionInviteResourceBuilder withStatus(InviteStatus... statuses) {
+        return withArraySetFieldByReflection("status", statuses);
     }
 
     @Override

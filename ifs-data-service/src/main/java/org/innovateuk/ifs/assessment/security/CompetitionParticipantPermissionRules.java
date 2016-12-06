@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.security;
 
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.commons.security.PermissionRule;
@@ -7,6 +8,9 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Provides the permissions around CRUD operations for {@link org.innovateuk.ifs.invite.domain.CompetitionParticipant} resources.
@@ -17,19 +21,21 @@ public class CompetitionParticipantPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ACCEPT", description = "only the same user can accept an invitation")
     public boolean userCanAcceptCompetitionInvite(CompetitionParticipantResource competitionParticipant, UserResource user) {
-        return  user != null &&
+        return user != null &&
                 competitionParticipant != null &&
                 isAssessor(user) &&
                 isSameUser(competitionParticipant, user);
     }
 
-    @PermissionRule(value = "READ", description = "only the same user can read their competition participation")
+    @PermissionRule(value = "READ", description = "only the same user can read their competition participation that is visible")
     public boolean userCanViewTheirOwnCompetitionParticipation(CompetitionParticipantResource competitionParticipant, UserResource user) {
-        return isAssessor(user) && isSameParticipant(competitionParticipant, user);
+        return isAssessor(user) &&
+                isSameParticipant(competitionParticipant, user) &&
+                isInviteVisible(competitionParticipant);
     }
 
     private static boolean isSameParticipant(CompetitionParticipantResource competitionParticipant, UserResource user) {
-        return user.getId() == competitionParticipant.getUserId();
+        return user.getId().equals(competitionParticipant.getUserId());
     }
 
     private static boolean isAssessor(UserResource user) {
@@ -39,12 +45,17 @@ public class CompetitionParticipantPermissionRules extends BasePermissionRules {
     private static boolean isSameUser(CompetitionParticipantResource competitionParticipant, UserResource user) {
         if (isSameParticipant(competitionParticipant, user)) {
             return true;
-        }
-        else if (   competitionParticipant.getUserId() == null &&
-                    competitionParticipant.getInvite() !=null &&
-                    user.getEmail().equals(competitionParticipant.getInvite().getEmail())) {
+        } else if (competitionParticipant.getUserId() == null &&
+                competitionParticipant.getInvite() != null &&
+                user.getEmail().equals(competitionParticipant.getInvite().getEmail())) {
             return true;
         }
         return false;
+    }
+
+    private boolean isInviteVisible(CompetitionParticipantResource competitionParticipant) {
+        Set<InviteStatus> allowedStatuses = EnumSet.of(InviteStatus.SENT, InviteStatus.OPENED);
+
+        return allowedStatuses.contains(competitionParticipant.getInvite().getStatus());
     }
 }
