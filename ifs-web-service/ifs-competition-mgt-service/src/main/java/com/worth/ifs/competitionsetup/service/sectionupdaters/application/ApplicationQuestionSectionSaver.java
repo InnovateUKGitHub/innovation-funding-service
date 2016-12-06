@@ -68,14 +68,8 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
             question.getGuidanceRows().add(guidanceRowResource);
         });
 
-        try {
-            competitionSetupQuestionService.updateQuestion(question);
-        } catch (RuntimeException e) {
-            return makeErrorList();
-        }
-
-        return Collections.emptyList();
-	}
+        return competitionSetupQuestionService.updateQuestion(question).getErrors();
+    }
 
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName,
