@@ -31,9 +31,9 @@
 <!-- ========================= Form Guidance =========================== -->
 
 <div th:fragment="form-guidance (guidable)">
-    <details th:if="${guidable?.getGuidanceQuestion()}">
+    <details th:if="${guidable?.getGuidanceTitle()}">
         <summary>
-            <span class="summary" th:text="${guidable.getGuidanceQuestion()}"/>
+            <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
         <div class="panel-indent" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
