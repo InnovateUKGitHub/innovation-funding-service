@@ -8,7 +8,35 @@ var sass = require('gulp-sass');
 var sassLint = require('gulp-sass-lint');
 var compass = require('compass-importer');
 
+var repo_root = __dirname + '/../../../../../';
+var govuk_frontend_toolkit_root =  repo_root + 'node_modules/govuk_frontend_toolkit/stylesheets';
+var govuk_elements_sass_root =  repo_root + 'node_modules/govuk-elements-sass/public/sass';
+
 gulp.task('default',['js','css']);
+
+//build all css
+gulp.task('css', function () {
+  return gulp.src('./sass/**/*.scss')
+    .pipe(sassLint({
+      files: {
+        ignore: [
+          '**/prototype.scss',
+          '**/{prototype,vendor}/**/*.scss'
+        ]
+      },
+      config: '.sass-lint.yml'
+    }))
+    .pipe(sassLint.format())
+    // .pipe(sassLint.failOnError())
+    .pipe(sass({includePaths: [
+          govuk_frontend_toolkit_root,
+          govuk_elements_sass_root
+        ],
+        importer: compass,
+        outputStyle: 'compressed'
+      }).on('error', sass.logError))
+    .pipe(gulp.dest('./css'));
+});
 
 //build all js
 gulp.task('js',['vendor','ifs-js']);
@@ -45,26 +73,6 @@ gulp.task('vendor',function(){
   .pipe(concat('vendor.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
-});
-
-gulp.task('css', function () {
-  return gulp.src('./sass/**/*.scss')
-    .pipe(sassLint({
-      files: {
-        ignore: [
-          '**/prototype.scss',
-          '**/{prototype,vendor}/**/*.scss'
-        ]
-      },
-      config: '.sass-lint.yml'
-    }))
-    .pipe(sassLint.format())
-    // .pipe(sassLint.failOnError())
-    .pipe(sass({
-        importer: compass,
-        outputStyle: 'compressed'
-      }).on('error', sass.logError))
-    .pipe(gulp.dest('./css'));
 });
 
 gulp.task('css:watch', function () {
