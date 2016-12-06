@@ -14,7 +14,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
     public InviteAssessorsFindViewModel populateModel(CompetitionResource competition) {
         InviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        // TODO INFUND-6604
+        // TODO INFUND-6392 Populate the assessors list
 
         return model;
     }
