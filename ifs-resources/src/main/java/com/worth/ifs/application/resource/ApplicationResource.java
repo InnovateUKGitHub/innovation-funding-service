@@ -30,6 +30,9 @@ public class ApplicationResource {
     private static final String ID_PATTERN = "#00000000";
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
 
+    private static final int MIN_DURATION_IN_MONTHS = 1;
+    private static final int MAX_DURATION_IN_MONTHS = 36;
+
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
     private static final List<CompetitionStatus> SUBMITABLE_COMPETITION_STATES = asList(OPEN);
@@ -45,8 +48,8 @@ public class ApplicationResource {
     private LocalDate startDate;
     private LocalDateTime submittedDate;
 
-    @Min(value=1, message ="{validation.application.details.duration.in.months.max.digits}")
-    @Max(value=36, message ="{validation.application.details.duration.in.months.max.digits}")
+    @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
+    @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @NotNull(message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
@@ -68,30 +71,30 @@ public class ApplicationResource {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @JsonIgnore
     public String getFormattedId(){
         return formatter.format(id);
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    @JsonIgnore
-    public String getApplicationDisplayName() {
-        if(StringUtils.isNotEmpty(name)){
-            return name;
-        }else{
-            return competitionName;
-        }
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonIgnore
+    public String getApplicationDisplayName() {
+        if(StringUtils.isNotEmpty(name)) {
+            return name;
+        } else {
+            return competitionName;
+        }
     }
 
     public LocalDate getStartDate() {
@@ -114,14 +117,14 @@ public class ApplicationResource {
         return applicationStatus;
     }
 
+    public void setApplicationStatus(Long applicationStatus) {
+        this.applicationStatus = applicationStatus;
+    }
+
     @JsonIgnore
     public void setApplicationStatusConstant(ApplicationStatusConstants applicationStatus) {
         this.applicationStatus = applicationStatus.getId();
         this.applicationStatusName = applicationStatus.getName();
-    }
-
-    public void setApplicationStatus(Long applicationStatus) {
-        this.applicationStatus = applicationStatus;
     }
 
     public Long getCompetition() {
@@ -211,16 +214,16 @@ public class ApplicationResource {
         return submittedDate;
     }
 
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
+    }
+
     public String getApplicationStatusName() {
         return applicationStatusName;
     }
 
     public void setApplicationStatusName(String applicationStatusName) {
         this.applicationStatusName = applicationStatusName;
-    }
-
-    public void setSubmittedDate(LocalDateTime submittedDate) {
-        this.submittedDate = submittedDate;
     }
 
     public CompetitionStatus getCompetitionStatus() {

@@ -306,7 +306,7 @@ public class ApplicationFormController {
             model.addAttribute("form", form);
 
             /* End save action */
-            if ((errors.hasErrors() || bindingResult.hasErrors()) && isMarkQuestionRequest(params)) {
+            if (isMarkAsCompleteRequestWithValidationErrors(params, errors, bindingResult)) {
 
                 validationHandler.addAnyErrors(errors);
 
@@ -326,6 +326,10 @@ public class ApplicationFormController {
                 return getRedirectUrl(request, applicationId);
             }
         }
+    }
+
+    private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params, ValidationMessages errors, BindingResult bindingResult) {
+        return ((errors.hasErrors() || bindingResult.hasErrors()) && isMarkQuestionRequest(params));
     }
 
     private Boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {

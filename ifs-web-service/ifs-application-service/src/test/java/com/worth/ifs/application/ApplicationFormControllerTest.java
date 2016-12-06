@@ -242,8 +242,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
                 .andReturn();
-
-        Object object = new Object();
     }
 
     @Test
