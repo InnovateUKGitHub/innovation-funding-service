@@ -11,8 +11,6 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.*;
-import com.worth.ifs.application.model.ApplicationNavigationPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
@@ -131,7 +129,7 @@ public class ApplicationFormController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
+    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -907,7 +905,7 @@ public class ApplicationFormController {
         if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         }else{
-            LOG.error("Got a exception on autosave : "+ e.getMessage());
+            LOG.error("Got an exception on autosave : "+ e.getMessage());
             LOG.debug("Autosave exception: ", e);
             errors.add(ex.getErrorMessage());
         }

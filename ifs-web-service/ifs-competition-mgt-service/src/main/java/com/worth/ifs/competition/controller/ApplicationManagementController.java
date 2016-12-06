@@ -4,7 +4,7 @@ import com.worth.ifs.BaseController;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationPrintPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenFinanceSectionModelPopulator;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -53,7 +53,6 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Arrays.asList;
@@ -77,7 +76,7 @@ public class ApplicationManagementController extends BaseController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionSectionModelPopulator openFinanceSectionSectionModelPopulator;
+    private OpenFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
