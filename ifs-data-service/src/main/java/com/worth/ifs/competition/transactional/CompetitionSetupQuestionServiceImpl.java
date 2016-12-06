@@ -167,7 +167,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (writtenFeedbackFormInput != null && competitionSetupQuestionResource.getWrittenFeedback() != null) {
             writtenFeedbackFormInput.setActive(competitionSetupQuestionResource.getWrittenFeedback());
 
-            writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
+            writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
 
             // Delete all existing guidance rows and replace with new list
