@@ -4,6 +4,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -15,12 +16,17 @@ public class UpcomingCompetitionViewModel {
     private String competitionDescription;
     private LocalDateTime assessmentPeriodDateFrom;
     private LocalDateTime assessmentPeriodDateTo;
+    private LocalDateTime assessorBriefingDate;
+    private BigDecimal assessorPay;
+
 
     public UpcomingCompetitionViewModel(CompetitionResource competitionResource) {
         this.competitionName = competitionResource.getName();
         this.competitionDescription = competitionResource.getDescription();
         this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
+        this.assessorPay = competitionResource.getAssessorPay();
+        this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
     }
 
     public String getCompetitionName() {
@@ -55,6 +61,22 @@ public class UpcomingCompetitionViewModel {
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
     }
 
+    public LocalDateTime getAssessorBriefingDate() {
+        return assessorBriefingDate;
+    }
+
+    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+        this.assessorBriefingDate = assessorBriefingDate;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -70,8 +92,10 @@ public class UpcomingCompetitionViewModel {
         return new EqualsBuilder()
                 .append(competitionName, that.competitionName)
                 .append(competitionDescription, that.competitionDescription)
-                .append(assessmentPeriodDateFrom, assessmentPeriodDateFrom)
-                .append(assessmentPeriodDateTo, assessmentPeriodDateTo)
+                .append(assessmentPeriodDateFrom, that.assessmentPeriodDateFrom)
+                .append(assessmentPeriodDateTo, that.assessmentPeriodDateTo)
+                .append(assessorBriefingDate, that.assessorBriefingDate)
+                .append(assessorPay, that.assessorPay)
                 .isEquals();
     }
 
@@ -82,6 +106,8 @@ public class UpcomingCompetitionViewModel {
                 .append(competitionDescription)
                 .append(assessmentPeriodDateFrom)
                 .append(assessmentPeriodDateTo)
+                .append(assessorBriefingDate)
+                .append(assessorPay)
                 .toHashCode();
     }
 }
