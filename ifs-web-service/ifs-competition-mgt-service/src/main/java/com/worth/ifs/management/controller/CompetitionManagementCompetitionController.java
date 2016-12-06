@@ -46,6 +46,6 @@ public class CompetitionManagementCompetitionController {
     @RequestMapping(value = "/{competitionId}/close-assessment", method = RequestMethod.POST)
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
         competitionService.closeAssessment(competitionId);
-        return "redirect:/dashboard/live";
+        return "redirect:/dashboard";
     }
 }
