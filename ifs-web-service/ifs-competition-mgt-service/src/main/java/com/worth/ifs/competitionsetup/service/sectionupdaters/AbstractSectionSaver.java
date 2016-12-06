@@ -1,11 +1,9 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,9 +18,6 @@ import static org.apache.commons.beanutils.PropertyUtils.setNestedProperty;
  * Class to hold all the common functionality in the section savers.
  */
 public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Override
     public ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> ObjectId) {

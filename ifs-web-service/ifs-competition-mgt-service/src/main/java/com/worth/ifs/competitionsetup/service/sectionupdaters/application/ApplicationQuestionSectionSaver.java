@@ -4,7 +4,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
@@ -34,6 +33,6 @@ public class ApplicationQuestionSectionSaver extends AbstractSectionSaver implem
 
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return LandingPageForm.class.equals(clazz);
+		return ApplicationQuestionForm.class.equals(clazz);
 	}
 }

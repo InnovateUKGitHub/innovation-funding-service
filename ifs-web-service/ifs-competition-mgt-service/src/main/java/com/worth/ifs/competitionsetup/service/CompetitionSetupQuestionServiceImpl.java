@@ -8,6 +8,7 @@ import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionType;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.service.CompetitionSetupQuestionRestService;
 import com.worth.ifs.competitionsetup.form.LandingPageForm;
@@ -75,14 +76,17 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
         Set<Long> validateableSections = sections.stream().filter(sectionResource ->
                 sectionResource.getParentSection() == null &&
-                        (sectionResource.getName().equals("Application questions")
+                        (sectionResource.getName().equals("Project details")
                                 || sectionResource.getName().equals("Application questions")))
                 .map(SectionResource::getId)
                 .collect(Collectors.toSet());
 
-        form.setQuestion(questionResources.stream().filter(question -> validateableSections.contains(question.getSection())).map(questionResource -> {
-            return (ApplicationQuestionForm) applicationQuestionFormPopulator.populateForm(competitionResource, Optional.of(questionResource.getId()));
-        }).collect(Collectors.toList()));
+        form.setQuestion(questionResources.stream()
+                .filter(question -> validateableSections.contains(question.getSection()))
+                //Application details question has its own form.
+                .filter(questionResource -> !CompetitionSetupQuestionType.APPLICATION_DETAILS.getShortName().equals(questionResource.getShortName()))
+                .map(questionResource -> (ApplicationQuestionForm) applicationQuestionFormPopulator.populateForm(competitionResource, Optional.of(questionResource.getId())))
+                .collect(Collectors.toList()));
 
         form.setDetailsForm((ApplicationDetailsForm) applicationDetailsFormPopulator.populateForm(competitionResource, Optional.empty()));
         form.setFinanceForm((ApplicationFinanceForm) financesFormPopulator.populateForm(competitionResource, Optional.empty()));
@@ -90,10 +94,16 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         validator.validate(form, bindingResult);
 
         if(bindingResult.hasErrors()) {
+            translateErrors(bindingResult, form);
             return serviceFailure(Collections.emptyList());
         } else {
             return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM);
         }
+
+
+    }
+
+    private void translateErrors(BindingResult bindingResult, LandingPageForm form) {
 
 
     }
