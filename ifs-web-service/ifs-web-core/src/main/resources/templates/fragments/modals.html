@@ -398,7 +398,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <div>
             <h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
-            <p>This will accept the signed grant offer letter that has been sent by the project manager, and will inform them that it is acceptable.</p>
+            <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
             <hr />
             <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed/APPROVED'}" method="post">
                 <div class="column-half">

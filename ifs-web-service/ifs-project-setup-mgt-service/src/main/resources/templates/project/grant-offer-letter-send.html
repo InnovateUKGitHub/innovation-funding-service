@@ -102,7 +102,7 @@
             <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
         </th:block>
         <th:block th:unless="${model.additionalContractFile != null}">
-            No Annex is specified.
+            None specified.
         </th:block>
     </th:block>
 
