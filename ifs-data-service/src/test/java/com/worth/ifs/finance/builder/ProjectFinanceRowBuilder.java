@@ -12,7 +12,7 @@ import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for FinanceRow entities.
+ * Builder for ProjectFinanceRow entities.
  */
 public class ProjectFinanceRowBuilder extends BaseFinanceRowBuilder<ProjectFinance, ProjectFinanceRow, ProjectFinanceRowBuilder> {
 

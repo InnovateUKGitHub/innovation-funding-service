@@ -11,7 +11,7 @@ import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for FinanceRow entities.
+ * Builder for ApplicationFinanceRow entities.
  */
 public class ApplicationFinanceRowBuilder extends BaseFinanceRowBuilder<ApplicationFinance, ApplicationFinanceRow, ApplicationFinanceRowBuilder> {
 

@@ -25,8 +25,9 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * Implementation of SpendProfileCostCategorySummaryStrategy that looks to the Application Finances in order to generate
- * a summary of each Cost Category for a Partner Organisation for the purposes of generating a Spend Profile
+ * Implementation of SpendProfileCostCategorySummaryStrategy that looks to the Project Finances (i.e. the Project's
+ * Finance Checks version of the original Application Finances) in order to generate a summary of each Cost Category
+ * for a Partner Organisation for the purposes of generating a Spend Profile
  */
 @Component
 @ConditionalOnProperty(value = "ifs.spend.profile.generation.strategy", havingValue = "ByProjectFinanceCostCategorySummaryStrategy")

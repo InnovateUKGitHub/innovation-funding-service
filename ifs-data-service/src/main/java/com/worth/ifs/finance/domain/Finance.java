@@ -5,6 +5,9 @@ import com.worth.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.*;
 
+/**
+ * Base class for high-level Organisational Finances belonging to different aspects of the IFS application
+ */
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Finance {

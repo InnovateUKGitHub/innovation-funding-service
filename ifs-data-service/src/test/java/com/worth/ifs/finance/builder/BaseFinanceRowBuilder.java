@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
- * Builder for FinanceRow entities.
+ * Base class Builder for building FinanceRow subclasses.  THis base class holds the build steps common to all
+ * FinanceRow subclasses.
  */
 public abstract class BaseFinanceRowBuilder<FinanceType extends Finance, FinanceRowType extends FinanceRow<FinanceType>, S extends BaseFinanceRowBuilder<FinanceType, FinanceRowType, S>> extends BaseBuilder<FinanceRowType, S> {
 

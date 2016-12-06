@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.resource;
 
 /**
- * Compound class for holding the application finance resource keys
+ * Compound class for holding the project finance resource keys
  */
 public class ProjectFinanceResourceId extends BaseFinanceResourceId {
 

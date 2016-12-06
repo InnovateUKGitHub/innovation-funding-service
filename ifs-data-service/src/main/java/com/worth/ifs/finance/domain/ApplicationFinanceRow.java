@@ -8,6 +8,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
+/**
+ * Entity representing an Organisation's high-level Finances in an Application Form
+ */
 @Entity
 public class ApplicationFinanceRow extends FinanceRow<ApplicationFinance> {
 

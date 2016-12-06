@@ -15,7 +15,8 @@ import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
 /**
- * Builder for ApplicationFinance entities.
+ * Base class Builder for building BaseFinanceResource entities.  This class holds build steps that are common to all
+ * BaseFinanceResource subclasses.
  */
 public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends BaseFinanceResource, S extends BaseFinanceResourceBuilder<FinanceResourceType, S>>
         extends BaseBuilder<FinanceResourceType, S> {

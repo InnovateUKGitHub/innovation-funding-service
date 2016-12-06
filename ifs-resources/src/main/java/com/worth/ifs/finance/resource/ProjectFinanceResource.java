@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Application finance resource holds the organisation's finance resources for an application
+ * Project finance resource holds the organisation's finance resources for a project during Finance Checks
  */
 public class ProjectFinanceResource extends BaseFinanceResource {
 
