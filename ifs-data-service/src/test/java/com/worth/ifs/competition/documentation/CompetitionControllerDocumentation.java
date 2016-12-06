@@ -200,6 +200,20 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void closeAssessment() throws Exception {
+        Long competitionId = 2L;
+        when (competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/close-assessment", competitionId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition to close the assessment of")
+                        )
+                ));
+    }
+
+    @Test
     public void notifyAssessors() throws Exception {
         final Long competitionId = 1L;
 

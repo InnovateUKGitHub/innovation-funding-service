@@ -4,17 +4,19 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationOverviewModelPopulator;
+import com.worth.ifs.application.model.ApplicationPrintPopulator;
 import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatus;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
@@ -30,7 +32,9 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.function.Function;
@@ -40,8 +44,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
-import static com.worth.ifs.competition.resource.CompetitionStatus.OPEN;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
@@ -69,6 +72,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Spy
     @InjectMocks
     private ApplicationModelPopulator applicationModelPopulator;
+
+    @Mock
+    private ApplicationPrintPopulator applicationPrintPopulator;
 
     @Spy
     @InjectMocks
@@ -267,6 +273,36 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
     }
 
+
+    @Test
+    public void testApplicationSummaryWithProjectSetupStatus() throws Exception {
+        CompetitionResource competition = competitionResources.get(0);
+        competition.setCompetitionStatus(PROJECT_SETUP);
+
+        ApplicationResource app = applications.get(0);
+        app.setCompetition(competition.getId());
+        app.setAssessorFeedbackFileEntry(123L);
+
+        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/special").build();
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(app.getId())).thenReturn(restSuccess(fileEntry));
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        mockMvc.perform(get("/application/" + app.getId()+"/summary"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-summary"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
+                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+    }
+
     @Test
     public void testApplicationSummaryReadyForReviewAction() throws Exception {
         ApplicationResource app = applications.get(0);
@@ -411,6 +447,28 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
+    public void testApplicationTrack() throws Exception {
+        ApplicationResource app = applications.get(0);
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        mockMvc.perform(get("/application/1/track"))
+                .andExpect(view().name("application-track"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
+
+    }
+
+    @Test
+    public void testTeesAndCees() throws Exception {
+
+        mockMvc.perform(get("/application/terms-and-conditions"))
+                .andExpect(view().name("application-terms-and-conditions"));
+
+    }
+
+    @Test
      public void testApplicationCreateWithoutApplicationName() throws Exception {
         ApplicationResource application = new ApplicationResource();
         application.setName("application");
@@ -478,4 +536,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         verify(assessorFeedbackRestService).getAssessorFeedbackFile(123L);
         verify(assessorFeedbackRestService).getAssessorFeedbackFileDetails(123L);
     }
+
+    @Test
+    public void testApplicationPrint() throws Exception {
+        ApplicationResource app = applications.get(0);
+
+        when(applicationPrintPopulator.print(eq(1L), any(Model.class), any(HttpServletRequest.class))).thenReturn("uri");
+
+        mockMvc.perform(get("/application/" + app.getId() + "/print"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("uri"));
+
+        verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(HttpServletRequest.class));
+    }
+
 }
