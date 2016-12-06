@@ -104,6 +104,10 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray ((date, project) -> project.setOfferSubmittedDate(date), dates);
     }
 
+    public ProjectBuilder withOtherDocumentsSubmittedDate(LocalDateTime date) {
+        return with (project -> project.setDocumentsSubmittedDate(date));
+    }
+
     @Override
     protected void postProcess(int index, Project project) {
 

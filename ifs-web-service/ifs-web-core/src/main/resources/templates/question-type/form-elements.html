@@ -21,6 +21,12 @@
         <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
     </div>
 </div>
+
+<div th:fragment="form-validation-custom-messages (errorId)">
+    <div th:if="${(form != null) and #fields.hasErrors('{__${errorId}__}')}"  th:remove="tag">
+        <p class="error-message no-margin" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
+    </div>
+</div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
     <span class="form-hint"
