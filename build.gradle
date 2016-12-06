@@ -107,9 +107,10 @@ sonarqube {
 }
 
 dockerCompose {
-    useComposeFiles = ['docker-compose-services.yml']
+    useComposeFiles = ['docker-compose-services.yml' ,'docker-compose-services-dev.yml']
     removeContainers = false
     removeImages = "None" // Other accepted values are: "All" and "Local"
+    removeVolumes = false
 }
 
 task happyServiceTests(type:Exec) {
