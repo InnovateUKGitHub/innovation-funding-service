@@ -93,7 +93,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/management/dashboard/live"));
+                .andExpect(redirectedUrl("/dashboard/live"));
         verify(competitionService, only()).closeAssessment(competitionId);
     }
 }
