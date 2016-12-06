@@ -185,6 +185,26 @@ table{
   }
 }
 
+
+/*--- Table actions header ---*/
+
+.table-actions-header{
+  border-bottom: 1px solid $grey-2;
+  overflow: auto;
+  div.table-actions-header-content {
+    float: right;
+    div {
+      float: left;
+      padding: 1.75em 1.25em 0.5625em 0;
+    }
+    div:first-child {
+      max-width: 145px;
+      padding-top: 0.75em;
+    }
+  }
+}
+
+
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{

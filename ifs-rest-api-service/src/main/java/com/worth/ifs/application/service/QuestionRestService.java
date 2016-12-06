@@ -4,6 +4,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.resource.FormInputType;
 
 import java.util.List;
 import java.util.Set;
@@ -24,7 +25,7 @@ public interface QuestionRestService {
     RestResult<QuestionResource> getPreviousQuestion(Long questionId);
     RestResult<QuestionResource> getPreviousQuestionBySection(Long sectionId);
     RestResult<QuestionResource> getNextQuestionBySection(Long sectionId);
-    RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, String formInputType);
+    RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
     RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
     RestResult<QuestionResource> save(QuestionResource questionResource);
     RestResult<QuestionResource> getByIdAndAssessmentId(Long questionId, Long assessmentId);

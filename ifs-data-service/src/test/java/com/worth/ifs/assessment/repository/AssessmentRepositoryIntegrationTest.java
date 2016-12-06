@@ -6,6 +6,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -20,17 +21,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.LongAccumulator;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
+import static com.worth.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.EnumSet.complementOf;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
@@ -172,6 +177,53 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assertTrue("Expecting there to be at least one assessment form input within the competition questions", anyFormInputResponse.isPresent());
         assessorFormInputResponseRepository.delete(anyFormInputResponse.get());
         assertFalse(repository.isFeedbackComplete(assessment.getId()));
+    }
+
+    @Test
+    public void getTotalScore() {
+        Application application = applicationRepository.findOne(1L);
+        Competition competition = application.getCompetition();
+
+        ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
+
+        int expectedTotalScorePossible = competition.getQuestions().stream()
+                .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> formInput.getActive() && ASSESSOR_SCORE == formInput.getType()))
+                .mapToInt(question -> ofNullable(question.getAssessorMaximumScore()).orElse(0))
+                .sum();
+
+        Assessment assessment = repository.save(newAssessment()
+                .with(id(null))
+                .withActivityState(submittedState)
+                .withApplication(application)
+                .build());
+
+        AssessmentTotalScoreResource assessmentTotalScoreBefore = repository.getTotalScore(assessment.getId());
+        assertEquals(0, assessmentTotalScoreBefore.getTotalScoreGiven());
+        assertEquals(expectedTotalScorePossible, assessmentTotalScoreBefore.getTotalScorePossible());
+
+        // Create form input responses for each of the score form inputs, tracking the total score given
+        LongAccumulator scoreGivenAccumulator = new LongAccumulator((x, y) -> x + y, 0);
+        assessorFormInputResponseRepository.save(
+                competition.getQuestions().stream().flatMap(question ->
+                        question.getFormInputs().stream().filter(formInput ->
+                                formInput.getActive() && ASSESSOR_SCORE == formInput.getType()
+                        ).map(formInput -> {
+                                    int randomScore = new Random().nextInt(ofNullable(question.getAssessorMaximumScore()).orElse(0));
+                                    scoreGivenAccumulator.accumulate(randomScore);
+                                    return newAssessorFormInputResponse()
+                                            .withAssessment(assessment)
+                                            .withFormInput(formInput)
+                                            .withValue(String.valueOf(randomScore))
+                                            .withUpdatedDate(LocalDateTime.now())
+                                            .build();
+                                }
+                        )
+                ).collect(toList())
+        );
+
+        AssessmentTotalScoreResource assessmentTotalScoreAfter = repository.getTotalScore(assessment.getId());
+        assertEquals(scoreGivenAccumulator.intValue(), assessmentTotalScoreAfter.getTotalScoreGiven());
+        assertEquals(expectedTotalScorePossible, assessmentTotalScoreAfter.getTotalScorePossible());
     }
 
     private void setUpShuffledAssessments(User user, Application application, int numOfAssessmentsForEachState) {

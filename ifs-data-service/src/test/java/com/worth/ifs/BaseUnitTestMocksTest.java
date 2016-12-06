@@ -36,8 +36,10 @@ import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.service.FileTemplateRenderer;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -82,6 +84,7 @@ import com.worth.ifs.user.mapper.*;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
+import com.worth.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -158,6 +161,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    protected CompetitionService competitionServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
@@ -248,6 +254,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
+
+    @Mock
+    protected ProcessOutcomeService processOutcomeServiceMock;
 
     @Mock
     protected ProcessOutcomeMapper processOutcomeMapperMock;
@@ -443,6 +452,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ContractMapper contractMapperMock;
+
+    @Mock
+    protected FileTemplateRenderer rendererMock;
 
     @Mock
     protected AssessorCountOptionMapper assessorCountOptionMapperMock;

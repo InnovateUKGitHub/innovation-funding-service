@@ -66,7 +66,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     				.param("8", "Y")
     				.param("9", "N")
     			)
-                .andExpect(redirectedUrl("/competition/123"));
+                .andExpect(redirectedUrl("/competition/123/applications"));
     	
     	verify(applicationFundingDecisionService, never()).makeApplicationFundingDecision(any(Long.class), any(Map.class));
     	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("fundingNotDecidedForAllApplications"));
@@ -88,7 +88,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     				.param("9", "N")
     				.param("10", "Y")
     			)
-                .andExpect(redirectedUrl("/competition/123"));
+                .andExpect(redirectedUrl("/competition/123/applications"));
     	
     	verifyNoMoreInteractions(cookieFlashMessageFilter);
     	
@@ -108,7 +108,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     				.param("9", "N")
     				.param("action", "notify")
     			)
-                .andExpect(redirectedUrl("/competition/123"));
+                .andExpect(redirectedUrl("/competition/123/applications"));
     	
     	verify(applicationFundingDecisionService, never()).makeApplicationFundingDecision(any(Long.class), any(Map.class));
     	verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("fundingNotDecidedForAllApplications"));
@@ -153,7 +153,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
     				.param("9", "N")
     				.param("action", "save")
     			)
-                .andExpect(redirectedUrl("/competition/123"));
+                .andExpect(redirectedUrl("/competition/123/applications"));
     	
     	verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(123L, fundingDecisons);
     }

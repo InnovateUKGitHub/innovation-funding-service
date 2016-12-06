@@ -108,7 +108,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     private void addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowItem costItem = toCostItem(cost);
         FinanceRowCostCategory financeRowCostCategory = costCategories.get(costType);
         financeRowCostCategory.addCost(costItem);

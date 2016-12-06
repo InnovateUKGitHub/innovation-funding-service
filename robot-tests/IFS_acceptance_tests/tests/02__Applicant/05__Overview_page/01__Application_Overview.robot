@@ -26,7 +26,7 @@ Review and submit button
     [Documentation]    -INFUND-195
     ...    -INFUND-214
     [Tags]
-    When the user clicks the button/link    link=Review & submit
+    When the user clicks the button/link    link=Review and submit
     Then the user redirects to the page    You will not be able to make changes to your application or resubmit after this point    Application Summary
 
 List with the sections

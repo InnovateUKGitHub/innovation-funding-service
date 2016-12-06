@@ -10,21 +10,26 @@ import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
+import com.worth.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
@@ -39,6 +44,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -81,7 +89,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 getSpendProfileStatus(project, financeChecksStatus),
                 getMonitoringOfficerStatus(project, projectDetailsStatus),
                 getOtherDocumentsStatus(project),
-                getGrantOfferLetterStatus(project));
+                getGrantOfferLetterStatus(project),
+                getRoleSpecificGrantOfferLetterState(project),
+                golWorkflowHandler.isSent(project));
     }
 
     private Integer getProjectPartnerCount(Long projectId){
@@ -156,6 +166,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){
 
+        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved() && project.getDocumentsSubmittedDate() != null) {
+            return REJECTED;
+        }
         if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
             return COMPLETE;
         }
@@ -192,5 +205,30 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         }
 
         return NOT_STARTED;
+    }
+
+    private Map<UserRoleType, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project) {
+        Map<UserRoleType, ProjectActivityStates> roleSpecificGolStates = new HashMap<UserRoleType, ProjectActivityStates>();
+
+        ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
+        ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus);
+        if(project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved() && COMPLETE.equals(spendProfileStatus)) {
+            if(golWorkflowHandler.isApproved(project)) {
+                roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
+            } else {
+                if(golWorkflowHandler.isReadyToApprove(project)) {
+                    roleSpecificGolStates.put(COMP_ADMIN, ACTION_REQUIRED);
+                } else {
+                    if(golWorkflowHandler.isSent(project)) {
+                        roleSpecificGolStates.put(COMP_ADMIN, PENDING);
+                    } else {
+                        roleSpecificGolStates.put(COMP_ADMIN, ACTION_REQUIRED);
+                    }
+                }
+            }
+        } else {
+            roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
+        }
+        return roleSpecificGolStates;
     }
 }

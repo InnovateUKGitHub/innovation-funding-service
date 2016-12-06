@@ -453,6 +453,17 @@ public class ProjectServiceImplTest {
     }
 
     @Test
+    public void testRemoveGeneratedGrantOfferLetter() {
+        long projectId = 123L;
+
+        when(projectRestService.removeGeneratedGrantOfferLetter(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testSubmitGrantOfferLetter() {
         long projectId = 123L;
 

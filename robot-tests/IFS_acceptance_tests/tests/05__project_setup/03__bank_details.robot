@@ -15,11 +15,17 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 
 Bank details page
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010 INFUND-6018
     [Tags]    HappyPath
     Given guest user log-in  steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
-    And the user clicks the button/link    link=Bank details
+    Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
+    And the user clicks the button/link     link=Project setup status
+    And the user clicks the button/link     link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
 
@@ -134,9 +140,21 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
 
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
 
 Bank details for non-lead partner
-    [Documentation]    INFUND-3010 , INFUND-4428
+    [Documentation]    INFUND-3010
     [Tags]    HappyPath
     Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
     When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}

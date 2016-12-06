@@ -6,7 +6,7 @@ Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding?
 ${email_success_message}    We are pleased to inform you that your application
 ${email_failure_message}    Unfortunately Innovate UK is unable to fund
@@ -124,10 +124,10 @@ The option to notify applicants is enabled
     the user should not see the element    css=#publish-funding-decision.button.disabled
 
 the successful application shows in the project setup section
-    Element Should Contain    css=section.projects-in-setup    Connected batteries step change - battery management in the off-grid energy sector
+    Element Should Contain    css=section.projects-in-setup    Sensing & Control network using the lighting infrastructure
 
 the successful application shows in the previous applications section
-    Element Should Contain    css=section.previous-applications    Connected batteries step change - battery management in the off-grid energy sector
+    Element Should Contain    css=section.previous-applications    Sensing & Control network using the lighting infrastructure
 
 the unsuccessful application shows in the previous applications section
-    Element Should Contain    css=section.previous-applications    Wireless remote collection of data from multiple in-field sensors
+    Element Should Contain    css=section.previous-applications    Matter - Planning for Web

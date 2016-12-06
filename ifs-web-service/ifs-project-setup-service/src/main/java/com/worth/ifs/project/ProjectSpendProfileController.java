@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static com.worth.ifs.project.util.ControllersUtil.isLeadPartner;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -71,6 +72,9 @@ public class ProjectSpendProfileController {
     @Autowired
     @Qualifier("spendProfileCostValidator")
     private SpendProfileCostValidator spendProfileCostValidator;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(method = GET)
@@ -215,10 +219,12 @@ public class ProjectSpendProfileController {
 
         boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectResource.getId(), organisationId, loggedInUser);
 
+        boolean leadPartner = isLeadPartner(partnerOrganisationService, projectResource.getId(), organisationId);
+
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
-                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation);
+                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()), leadPartner);
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {

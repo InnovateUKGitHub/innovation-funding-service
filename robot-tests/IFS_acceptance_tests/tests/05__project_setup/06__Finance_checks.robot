@@ -18,7 +18,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507
     [Tags]  HappyPath
-    [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=h2:contains("Finance Checks")
     And the user should see the text in the page  Overview
@@ -37,8 +37,9 @@ Status of the Eligibility column (workaround for private beta competition)
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
-    [Tags]
-    Given the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
+    [Tags]    HappyPath
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link     css=table:nth-child(7) tr:nth-child(1) a
     When the user enters text to a text field    name=costs[0].value    ${Empty}
     Then the user should see an error    Please enter a labour cost
     When the user enters text to a text field    name=costs[1].value    ${Empty}
@@ -62,8 +63,6 @@ Finance checks client-side validations
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
-    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    css=table:nth-child(7) tr:nth-child(1) a
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
@@ -98,6 +97,16 @@ Approve Eligibility: Academic partner organisation
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
+Project Finance user can view academic Jes form
+    [Documentation]     INFUND-5220
+    [Tags]    HappyPath
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    # note that we are viewing this file here rather than the same project as the other tests in this suite due to INFUND-6724
+    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
+    Then the user should see the text in the page    Download Je-S form
+    When the user clicks the button/link    link=jes-form53.pdf
+    Then the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page
+
 Project Finance user can export bank details
     [Documentation]    INFUND-5852
     [Tags]    Pending
@@ -108,14 +117,18 @@ Project Finance user can export bank details
     And the Project finance user downloads the excel
 
 
-Project Finance user to view Je-S Download form and then approve finances
-    [Documentation]     INFUND-5220
-    [Tags]    HappyPath    Pending
-    # TODO Pending due to INFUND-5879
-    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
-    Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
-    And the user downloads the file from the link  "testingDownload"  xpath = //*[@id="content"]/form/div[1]/a
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
@@ -188,7 +201,7 @@ the users fill out project details
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     And the user selects the radio button    projectManager    projectManager1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=Project address

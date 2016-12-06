@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.security;
 
 import com.worth.ifs.commons.BaseIntegrationTest;
+import com.worth.ifs.commons.BaseWebIntegrationTest;
 import com.worth.ifs.commons.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
 import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
@@ -33,7 +34,8 @@ import static org.mockito.Mockito.mock;
  * Subclasses of this base class are therefore able to test the security annotations of their various methods by verifying
  * that individual PermissionRule methods are being called (on their owning mocks)
  */
-public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
+
+public abstract class BaseMockSecurityTest extends BaseWebIntegrationTest {
 
     @Autowired
     protected GenericApplicationContext applicationContext;

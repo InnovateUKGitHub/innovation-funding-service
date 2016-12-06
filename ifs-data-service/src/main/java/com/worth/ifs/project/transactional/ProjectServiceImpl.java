@@ -9,6 +9,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -23,10 +24,7 @@ import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -173,7 +171,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         MONITORING_OFFICER_ASSIGNED,
         MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
-        INVITE_PROJECT_MANAGER
+        INVITE_PROJECT_MANAGER,
+        GRANT_OFFER_LETTER_PROJECT_MANAGER
     }
 
     @Override
@@ -322,7 +321,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
+    public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
 
         return validateMonitoringOfficer(projectId, monitoringOfficerResource).
                 andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
@@ -603,7 +602,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<Void> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
 
         return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
                 noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
@@ -611,18 +610,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         );
     }
 
-    private ServiceResult<Void> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
-        existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
-        existingMonitoringOfficer.setLastName(updateDetails.getLastName());
-        existingMonitoringOfficer.setEmail(updateDetails.getEmail());
-        existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
-        return serviceSuccess();
+    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+        return !existingMonitoringOfficer.getFirstName().equals(updateDetails.getFirstName()) ||
+                !existingMonitoringOfficer.getLastName().equals(updateDetails.getLastName()) ||
+                !existingMonitoringOfficer.getEmail().equals(updateDetails.getEmail()) ||
+                !existingMonitoringOfficer.getPhoneNumber().equals(updateDetails.getPhoneNumber());
     }
 
-    private ServiceResult<Void> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
+    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
+        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
+
+        if (isMonitoringOfficerDetailsChanged(existingMonitoringOfficer, updateDetails)) {
+            existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
+            existingMonitoringOfficer.setLastName(updateDetails.getLastName());
+            existingMonitoringOfficer.setEmail(updateDetails.getEmail());
+            existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
+        } else {
+            result.setMonitoringOfficerSaved(false);
+        }
+
+        return serviceSuccess(result);
+    }
+
+    private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
+        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
         MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
         monitoringOfficerRepository.save(monitoringOfficer);
-        return serviceSuccess();
+        return serviceSuccess(result);
     }
 
     @Override
@@ -699,7 +713,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(spendProfileStatus, otherDocumentsStatus, project);
 
         ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
@@ -999,5 +1013,62 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
+    }
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if (project.getGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
+            }
+
+            NotificationSource from = systemNotificationSource;
+            User projectManager = getExistingProjectManager(project).get().getUser();
+            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("dashboardUrl", webBaseUrl);
+
+            Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+
+            if (!notificationResult.isSuccess()) {
+                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+            }
+            return sendGrantOfferLetterSuccess(project);
+        });
+    }
+
+    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+        if (golWorkflowHandler.grantOfferLetterSent(project)) {
+            return serviceSuccess();
+        } else {
+            LOG.error(String.format("Set Grant Offer Letter workflow status to sent failed for project %s", project.getId()));
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isSendAllowed(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isAlreadySent(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
     }
 }

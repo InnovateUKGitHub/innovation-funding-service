@@ -19,20 +19,21 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.finance.domain.*;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import com.worth.ifs.finance.resource.ProjectFinanceResource;
-import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
@@ -64,7 +65,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 38;
+    private static final int EXPECTED_RESOURCES = 37;
 
     // The package to test
     private static final String POJO_PACKAGE = "com.worth.ifs";
@@ -80,6 +81,8 @@ public class POJOTest {
             AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
             AssessorFormInputResponseResource.class,
+            Assessment.class,
+            AssessmentTotalScoreResource.class,
             Address.class,
             OrganisationType.class,
             Application.class,
@@ -141,8 +144,9 @@ public class POJOTest {
             UserProfileStatusResource.class,
             AssessorCountOptionResource.class,
             CompetitionSetupQuestionResource.class,
-            GuidanceRowResource.class
-    );
+            GuidanceRowResource.class,
+            AssessmentSubmissionsResource.class
+            );
 
     @Before
     public void setup() {
@@ -187,10 +191,10 @@ public class POJOTest {
         public boolean include(PojoClass pojoClass) {
             return !pojoClass.getClazz().equals(ProcessOutcomeResource.class)
                     && !pojoClass.getClazz().equals(Token.class)
-                    && !pojoClass.getClazz().equals(FinanceRowMetaField.class)
-                    && !pojoClass.getClazz().equals(FinanceRowMetaValue.class)
                     && !pojoClass.getClazz().equals(TokenResource.class)
                     && !pojoClass.getClazz().equals(PageResource.class)
+                    && !pojoClass.getClazz().equals(FinanceRowMetaField.class)
+                    && !pojoClass.getClazz().equals(FinanceRowMetaValue.class)
                     && !pojoClass.getClazz().equals(Competition.class)
                     && (classes.stream().anyMatch(pojoClass.getClazz()::equals) || pojoClass.getClazz().getName().endsWith("Resource"))
                     && !Modifier.isAbstract(pojoClass.getClazz().getModifiers());

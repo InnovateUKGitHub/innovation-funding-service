@@ -5,7 +5,7 @@ IFS.core.formValidation = (function() {
     settings : {
       number : {
         fields : '[type="number"]:not([data-date])',
-        messageInvalid : 'This field should be a number'
+        messageInvalid : 'This field can only accept whole numbers'
       },
       min : {
         fields: '[min]:not([data-date])',
@@ -67,7 +67,7 @@ IFS.core.formValidation = (function() {
         }
       },
       pattern : {
-        fields : '[pattern]',
+        fields : '[pattern]:not([minlength])', //minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
         messageInvalid : "Please correct this field"
       },
       tel : {
@@ -326,6 +326,10 @@ IFS.core.formValidation = (function() {
               return true;
             }
           }
+        //HTML5 number input will return "" as val() if invalid number.
+        } else if (field.is(s.number.fields) && s.html5validationMode && field[0].validity.badInput) {
+          if(showMessage) { IFS.core.formValidation.setValid(field, errorMessage);}
+          return true;
         }
         else {
           if(field.val().length === 0){
@@ -577,7 +581,7 @@ IFS.core.formValidation = (function() {
         }
       }
 
-      if(jQuery('ul.error-summary-list [data-errorfield="'+name+'"]:contains('+message+')').length === 0){
+      if(jQuery('.error-summary-list [data-errorfield="'+name+'"]:contains('+message+'),.error-summary-list li:not([data-errorfield]):contains("'+message+'")').length === 0){
         jQuery('.error-summary-list').append('<li data-errorfield="'+name+'">'+message+'</li>');
       }
 

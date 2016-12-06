@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -198,4 +199,32 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                 ));
     }
 
+    @Test
+    public void closeAssessment() throws Exception {
+        Long competitionId = 2L;
+        when (competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/close-assessment", competitionId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition to close the assessment of")
+                        )
+                ));
+    }
+
+    @Test
+    public void notifyAssessors() throws Exception {
+        final Long competitionId = 1L;
+
+        when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition for the notifications")
+                        ))
+                );
+    }
 }

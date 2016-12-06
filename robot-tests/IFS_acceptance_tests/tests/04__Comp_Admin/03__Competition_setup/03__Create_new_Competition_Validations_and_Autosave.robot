@@ -11,13 +11,15 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
 ...
-...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
+...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial details section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
+...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding information section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
+...
+...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -31,7 +33,7 @@ Initial details: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user clicks the button/link    link=Initial Details
+    And The user clicks the button/link    link=Initial details
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
     And the user should see an error    Please select a competition type
@@ -64,7 +66,7 @@ Initial details: client-side validations
     When the user enters text to a text field    id=openingDateYear    2017
     #Then the user should not see the error any more    Please enter an opening year
     When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    Then the user should not see the error any more    Please select a lead technologist
+    Then the user should not see the error any more    Please select an Innovation Lead
     When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
@@ -74,7 +76,7 @@ Initial details: Autosave
     [Tags]    Pending
     # TODO pending due Ito NFUND-5367
     When the user clicks the button/link    link=Competition setup
-    and the user clicks the button/link    link=Initial Details
+    and the user clicks the button/link    link=Initial details
     Then the user should see the correct values in the initial details form
 
 Initial details: should not allow dates in the past
@@ -103,7 +105,7 @@ Funding information server-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
-    Given the user clicks the button/link    link=Funding Information
+    Given the user clicks the button/link    link=Funding information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a funder name
@@ -133,7 +135,7 @@ Funding information Autosave
     [Documentation]    INFUND-4581
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
-    And the user clicks the button/link    link=Funding Information
+    And the user clicks the button/link    link=Funding information
     Then the user should see the correct details in the funding information form
 
 Eligibility server-side validations
@@ -201,6 +203,23 @@ Milestones: Autosave
     When the user clicks the button/link    link=Competition setup
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
+
+Assessor: Server-side validation
+    [Documentation]    INFUND-5641
+    [Setup]    The user navigates to the Validation competition
+    Given the user clicks the button/link    link=Assessors
+    And The user enters text to a text field    id=assessorPay    ${EMPTY}
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see an error    Please enter how much assessors will be paid.
+
+Assessor: Client-side validation
+    [Documentation]    INFUND-5641
+    When The user enters text to a text field    id=assessorPay    1.1
+    And the user selects the checkbox    id=assessors-62
+    Then the user should see an error    This field can only accept whole numbers
+    When The user enters text to a text field    id=assessorPay    120
+    And the user selects the checkbox    id=assessors-62
+    Then The user should not see the text in the page    This field can only accept whole numbers
 
 *** Keywords ***
 the user moves focus and waits for autosave

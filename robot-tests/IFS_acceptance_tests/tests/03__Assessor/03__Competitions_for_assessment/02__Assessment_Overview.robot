@@ -13,18 +13,18 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Assessment overview should show the expected questions
+Assessment overview should show all the questions
     [Documentation]    INFUND-3400
     ...
     ...    INFUND-1188
-    [Tags]    HappyPath
+    [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    when the user clicks the button/link    link=Juggling is word that sounds funny to say
+    when the user clicks the button/link    link=Intelligent water system
     Then the user should see three sections
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    HappyPath
+    [Tags]
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2017-01-28
 
@@ -38,7 +38,7 @@ Reject application (Unable to assess this application)
     And the user fills in rejection details
     And the user clicks the button/link    jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And The user should not see the element    link=Juggling is word that sounds funny to say
+    And The user should not see the element    link=Intelligent water system
 
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188

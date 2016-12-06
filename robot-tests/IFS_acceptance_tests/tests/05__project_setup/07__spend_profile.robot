@@ -40,7 +40,7 @@ ${external_spendprofile_summary}    ${la_fromage_overview}/partner-organisation/
 Project Finance user generates the Spend Profile
     [Documentation]  INFUND-5194
     [Tags]    HappyPath
-    [Setup]  log in as user                 lee.bowman@innovateuk.test    Passw0rd
+    [Setup]  log in as user                   lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
@@ -71,7 +71,7 @@ Lead partner can view spend profile page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    Empire Ltd - Spend profile
 
 
@@ -129,7 +129,7 @@ Lead partner can edit his spend profile with invalid values
     Then the user should see the text in the page      This field should be 0 or higher
     When the user enters text to a text field          css=#row-40-2    35.25
     And the user moves focus to the element            css=#row-43-2
-    Then the user should see the text in the page      This field should be a number
+    Then the user should see the text in the page      This field can only accept whole numbers
     When the user enters text to a text field          css=#row-42-2    3333
     And the user moves focus to the element            css=#row-42-1
     And the user should not see the text in the page   This field should be 0 or higher
@@ -185,6 +185,19 @@ Lead partner marks spend profile as complete
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
+
 
 # TODO update the acc tests for Editing the Spend Profile by a non-lead partner  INFUND-5153
 
@@ -195,7 +208,7 @@ Non-lead partner can view spend profile page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    Ludlow - Spend profile
 
 Non-lead partner can see correct project start date and duration
@@ -208,7 +221,7 @@ Non-lead partner can see correct project start date and duration
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    When the user clicks the button/link            jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -219,7 +232,8 @@ Project Manager doesn't have the option to submit spend profiles until all partn
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
-    Then the user should not see the element    jQuery=.button:contains("Review and submit total project profile spend")
+    Then the user should not see the element    jQuery=.button:contains("Review and submit total project")
+    #The complete name of the button is anyways not selected. Please use the short version of it.
 
 
 Academic partner can view spend profile page
@@ -229,7 +243,7 @@ Academic partner can view spend profile page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
     Then the user should not see an error in the page
-    And the user should see the text in the page    Your project costs have been reviewed and confirmed by Innovate UK
+    And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    EGGS - Spend profile
 
 Academic partner can see correct project start date and duration
@@ -267,18 +281,19 @@ Academic partner spend profile client side validations
     Then the user should not see the text in the page    Your total costs are higher than your eligible costs
 
 
+
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3
-    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[2]/td[3]    5
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    5
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link            jQuery=.button:contains("Mark as complete")
+    When the user clicks the button/link            jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page   We have reviewed and confirmed your project costs
     And the user should not see the element         css=table a[type="number"]    # checking here that the table has become read-only
 

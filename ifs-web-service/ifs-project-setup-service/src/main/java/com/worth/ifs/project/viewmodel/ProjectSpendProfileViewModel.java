@@ -38,13 +38,17 @@ public class ProjectSpendProfileViewModel {
     private Map<Long, CostCategoryResource> costCategoryResourceMap;
     private boolean submitted;
     private boolean userPartOfThisOrganisation;
+    private boolean projectManager;
+    private boolean leadPartner;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
                                         Map<Long, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
-                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation) {
+                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation,
+                                        boolean isProjectManager,
+                                        boolean leadPartner) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -64,6 +68,8 @@ public class ProjectSpendProfileViewModel {
         this.research = research;
         this.submitted = submitted;
         this.userPartOfThisOrganisation = userPartOfThisOrganisation;
+        this.projectManager = isProjectManager;
+        this.leadPartner = leadPartner;
     }
 
     public Long getProjectId() {
@@ -202,8 +208,18 @@ public class ProjectSpendProfileViewModel {
         return userPartOfThisOrganisation;
     }
 
+    public boolean isProjectManager() { return projectManager; }
+
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public boolean isLeadPartner() {
+        return leadPartner;
+    }
+
+    public void setLeadPartner(boolean leadPartner) {
+        this.leadPartner = leadPartner;
     }
 
     @Override
@@ -235,6 +251,8 @@ public class ProjectSpendProfileViewModel {
                 .append(totalOfAllEligibleTotals, that.totalOfAllEligibleTotals)
                 .append(costCategoryGroupMap, that.costCategoryGroupMap)
                 .append(costCategoryResourceMap, that.costCategoryResourceMap)
+                .append(projectManager, that.projectManager)
+                .append(leadPartner, that.leadPartner)
                 .isEquals();
     }
 
@@ -261,6 +279,8 @@ public class ProjectSpendProfileViewModel {
                 .append(costCategoryResourceMap)
                 .append(submitted)
                 .append(userPartOfThisOrganisation)
+                .append(projectManager)
+                .append(leadPartner)
                 .toHashCode();
     }
 
@@ -287,6 +307,8 @@ public class ProjectSpendProfileViewModel {
                 .append("costCategoryResourceMap", costCategoryResourceMap)
                 .append("submitted", submitted)
                 .append("userPartOfThisOrganisation", userPartOfThisOrganisation)
+                .append("projectManager", projectManager)
+                .append("leadPartner", leadPartner)
                 .toString();
     }
 }

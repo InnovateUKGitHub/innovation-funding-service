@@ -186,8 +186,13 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/grant-offer?filename=" + originalFilename;
+        String url = projectRestURL + "/" + projectId + "/grant-offer/generate?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Void> removeGeneratedGrantOfferLetter(Long projectId) {
+        return deleteWithRestResult(projectRestURL + "/" + projectId + "/grant-offer");
     }
 
     @Override
@@ -229,4 +234,18 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-project-manager", inviteResource, Void.class);
     }
 
+    @Override
+    public RestResult<Void> sendGrantOfferLetter(Long projectId) {
+        return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/send", Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/is-send-grant-offer-letter-allowed", Boolean.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent", Boolean.class);
+    }
 }

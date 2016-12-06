@@ -5,7 +5,6 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 import static com.worth.ifs.project.constant.ProjectActivityStates.*;
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 
 /**
@@ -50,6 +49,10 @@ class ProjectSetupProgressChecker {
 
     public boolean isOtherDocumentsApproved() {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getOtherDocumentsStatus());
+    }
+
+    public boolean isGrantOfferLetterAvailable() {
+        return !NOT_REQUIRED.equals(projectTeamStatus.getLeadPartnerStatus().getGrantOfferLetterStatus());
     }
 
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {

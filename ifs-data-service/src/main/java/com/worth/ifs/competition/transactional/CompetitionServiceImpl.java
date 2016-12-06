@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,9 +38,9 @@ import static java.util.Optional.ofNullable;
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 
-	private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
 
-	public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
+    public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -56,7 +57,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         Competition competition = competitionRepository.findById(id);
-        if(competition == null) {
+        if (competition == null) {
             return serviceFailure(notFoundError(Competition.class, id));
         }
 
@@ -91,7 +92,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(
                 competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).map(this::addCategories).collect(Collectors.toList())
-            ));
+        ));
     }
 
     @Override
@@ -135,7 +136,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.getCompetitionStatus(),
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 projectRepository.findByApplicationCompetitionId(c.getId()).size()
-                );
+        );
     }
 
     @Override
@@ -143,5 +144,19 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
                 competitionRepository.countUpcoming(), 0L));
+    }
+
+    @Override
+    public ServiceResult<Void> closeAssessment(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.closeAssessment(LocalDateTime.now());
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> notifyAssessors(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.notifyAssessors(LocalDateTime.now());
+        return serviceSuccess();
     }
 }

@@ -8,17 +8,18 @@ import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -105,6 +106,17 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
         assertFileUploadProcess("/project/" + projectId + "/additional-contract/", projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
 
+    }
+
+    @Test
+    public void removeGrantOfferLetterFile() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectGrantOfferServiceMock.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
+                andExpect(status().isNoContent());
     }
 
     @Override
