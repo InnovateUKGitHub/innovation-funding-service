@@ -202,26 +202,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProject() {
         Long projectId = 2345L;
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
-
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
-        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -252,26 +233,8 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
         Long projectId = 2345L;
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, LocalDateTime.now());
 
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
-        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(Boolean.TRUE).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.TRUE);
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -303,28 +266,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolSent() {
         Long projectId = 2345L;
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
-
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
-        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(Boolean.TRUE).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isSent(project)).thenReturn(Boolean.TRUE);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -356,27 +298,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndSignedGolSubmitted() {
         Long projectId = 2345L;
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
-
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
-        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(Boolean.TRUE).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -408,28 +330,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolReadyToSend() {
         Long projectId = 2345L;
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
-
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
-        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(Boolean.TRUE).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isSent(project)).thenReturn(Boolean.FALSE);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -461,28 +362,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectOtherDocumentsRejected() {
         Long projectId = 2345L;
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
-
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
-        Project project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(Boolean.FALSE).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
-        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.FALSE);
-        when(golWorkflowHandlerMock.isSent(project)).thenReturn(Boolean.FALSE);
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -508,5 +388,39 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
+    }
+
+    private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus, Boolean otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved, LocalDateTime otherDocsSubmittedDate) {
+
+        Role role = newRole().build();
+        ProcessRole processRole = newProcessRole().withRole(role).build();
+        Application application = newApplication().withProcessRoles(processRole).build();
+
+        Organisation organisation = newOrganisation().build();
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
+        Project project;
+        if(otherDocsSubmittedDate != null)
+            project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(otherDocsApproved).withOtherDocumentsSubmittedDate(otherDocsSubmittedDate).build();
+        else
+            project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(otherDocsApproved).build();
+        BankDetails bankDetail = newBankDetails().withProject(project).build();
+        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
+        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(golIsApproved);
+        if(!golIsApproved) {
+            when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(golReadyToApprove);
+            if (!golReadyToApprove)
+                when(golWorkflowHandlerMock.isSent(project)).thenReturn(golIsSent);
+        }
+        return project;
     }
 }
