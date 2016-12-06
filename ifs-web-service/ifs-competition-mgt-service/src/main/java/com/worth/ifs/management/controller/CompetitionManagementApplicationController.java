@@ -4,7 +4,7 @@ import com.worth.ifs.BaseController;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationPrintPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
+import com.worth.ifs.application.model.OpenFinanceSectionModelPopulator;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -76,7 +76,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionSectionModelPopulator openFinanceSectionSectionModelPopulator;
+    private OpenFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
