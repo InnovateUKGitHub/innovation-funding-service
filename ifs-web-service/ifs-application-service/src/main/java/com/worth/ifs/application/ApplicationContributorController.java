@@ -190,7 +190,7 @@ public class ApplicationContributorController{
 
     private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId, ApplicationResource application, UserResource leadApplicant) {
 
-        String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
+        String json = CookieUtil.getInstance().getCookieValue(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !"".equals(json)) {
             ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
@@ -199,7 +199,7 @@ public class ApplicationContributorController{
                     // if the form was saved, validate and update cookie.
                     contributorsFormCookie.setTriedToSave(false);
                     String jsonState = JsonUtil.getSerializedObject(contributorsFormCookie);
-                    CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+                    CookieUtil.getInstance().saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
                     validator.validate(contributorsForm, bindingResult);
@@ -252,7 +252,7 @@ public class ApplicationContributorController{
             if (!bindingResult.hasErrors()) {
                 saveContributors(applicationId, contributorsForm, response);
                 // empty cookie, since the invites are saved.
-                CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
+                CookieUtil.getInstance().saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
                 if (newApplication != null && ApplicationStatusConstants.CREATED.getId().equals(application.getApplicationStatus())) {
                     applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
@@ -407,7 +407,7 @@ public class ApplicationContributorController{
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
         String jsonState = JsonUtil.getSerializedObject(contributorsForm);
-        CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+        CookieUtil.getInstance().saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {

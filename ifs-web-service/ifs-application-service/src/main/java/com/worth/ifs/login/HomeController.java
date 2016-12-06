@@ -5,7 +5,6 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.login.form.RoleSelectionForm;
 import com.worth.ifs.login.model.RoleSelectionModelPopulator;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -91,7 +89,7 @@ public class HomeController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
-            CookieUtil.saveToCookie(response, "role", form.getSelectedRole().getName());
+            CookieUtil.getInstance().saveToCookie(response, "role", form.getSelectedRole().getName());
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> redirectToChosenDashboard(user, form.getSelectedRole().getName()));
         });

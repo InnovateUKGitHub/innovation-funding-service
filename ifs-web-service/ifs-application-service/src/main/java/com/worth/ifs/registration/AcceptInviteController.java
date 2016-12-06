@@ -58,7 +58,7 @@ public class AcceptInviteController extends BaseController {
             HttpServletRequest request,
             Model model) {
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
         if (!invite.isSuccess()) {
             handleInvalidInvite(response);
@@ -68,7 +68,7 @@ public class AcceptInviteController extends BaseController {
             if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
                 return handleAcceptedInvite(cookieFlashMessageFilter, response);
             } else {
-                CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                CookieUtil.getInstance().saveToCookie(response, INVITE_HASH, hash);
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 // check if there already is a user with this emailaddress
@@ -85,7 +85,7 @@ public class AcceptInviteController extends BaseController {
     }
 
     protected static String handleAcceptedInvite(CookieFlashMessageFilter cookieFlashMessageFilter, HttpServletResponse response) {
-        CookieUtil.removeCookie(response, INVITE_HASH);
+        CookieUtil.getInstance().removeCookie(response, INVITE_HASH);
         cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
         return "redirect:/login";
     }
@@ -105,11 +105,11 @@ public class AcceptInviteController extends BaseController {
 
                     return "registration/accept-invite-failure";
                 }else{
-                    CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                    CookieUtil.getInstance().saveToCookie(response, INVITE_HASH, hash);
                     return "redirect:/accept-invite-authenticated/confirm-invited-organisation";
                 }
             }else{
-                CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                CookieUtil.getInstance().saveToCookie(response, INVITE_HASH, hash);
                 // just show the login link
             }
         }else{
@@ -128,7 +128,7 @@ public class AcceptInviteController extends BaseController {
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvitedOrganisation(HttpServletResponse response, HttpServletRequest request, Model model) {
-        String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -137,7 +137,7 @@ public class AcceptInviteController extends BaseController {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
-                CookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
+                CookieUtil.getInstance().saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
 
                 model.addAttribute("invite", inviteResource);
                 model.addAttribute("organisation", organisation);
@@ -154,7 +154,7 @@ public class AcceptInviteController extends BaseController {
     }
 
     protected static void handleInvalidInvite(HttpServletResponse response) throws InvalidURLException{
-        CookieUtil.removeCookie(response, INVITE_HASH);
+        CookieUtil.getInstance().removeCookie(response, INVITE_HASH);
         throw new InvalidURLException("Invite url is not valid", null);
     }
 

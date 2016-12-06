@@ -27,7 +27,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,7 +74,7 @@ public class RegistrationController {
     public String registrationSuccessful(
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
-        CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
+        CookieUtil.getInstance().removeCookie(response, AcceptInviteController.INVITE_HASH);
         if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
@@ -153,7 +152,7 @@ public class RegistrationController {
      * When the current user is a invitee, user the invite email-address in the registration flow.
      */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
-        String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
+        String inviteHash = CookieUtil.getInstance().getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
             if(invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())){
@@ -212,7 +211,7 @@ public class RegistrationController {
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
                 acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
-                CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+                CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
@@ -248,23 +247,23 @@ public class RegistrationController {
     }
 
     private void removeCompetitionIdCookie(HttpServletResponse response) {
-        CookieUtil.removeCookie(response, ApplicationCreationController.COMPETITION_ID);
+        CookieUtil.getInstance().removeCookie(response, ApplicationCreationController.COMPETITION_ID);
     }
 
     private Long getCompetitionId(HttpServletRequest request) {
         Long competitionId = null;
-        if(StringUtils.hasText(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
-            competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
+        if(StringUtils.hasText(CookieUtil.getInstance().getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
+            competitionId = Long.valueOf(CookieUtil.getInstance().getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
         }
         return competitionId;
     }
 
     private boolean acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
-        String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
+        String inviteHash = CookieUtil.getInstance().getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash, userResource.getId());
             if(restResult.isSuccess()){
-                CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
+                CookieUtil.getInstance().removeCookie(response, AcceptInviteController.INVITE_HASH);
             }
             return restResult.isSuccess();
         }
@@ -312,7 +311,7 @@ public class RegistrationController {
     }
 
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationParameter = CookieUtil.getCookieValue(request, ORGANISATION_ID_PARAMETER_NAME);
+        String organisationParameter = CookieUtil.getInstance().getCookieValue(request, ORGANISATION_ID_PARAMETER_NAME);
         Long organisationId = null;
 
         try {
@@ -329,12 +328,12 @@ public class RegistrationController {
     private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if(organisationId != null) {
-        	CookieUtil.saveToCookie(response, ORGANISATION_ID_PARAMETER_NAME, Long.toString(organisationId));
+        	CookieUtil.getInstance().saveToCookie(response, ORGANISATION_ID_PARAMETER_NAME, Long.toString(organisationId));
         }
     }
 
     private boolean hasVerifiedCookieSet(final HttpServletRequest request) {
-        final Optional<Cookie> cookie = CookieUtil.getCookie(request, "flashMessage");
+        final Optional<Cookie> cookie = CookieUtil.getInstance().getCookie(request, "flashMessage");
         return cookie.isPresent() && cookie.get().getValue().equals("verificationSuccessful");
     }
 }

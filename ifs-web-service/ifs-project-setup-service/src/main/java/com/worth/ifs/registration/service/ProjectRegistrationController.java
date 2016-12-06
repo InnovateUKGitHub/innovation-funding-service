@@ -9,11 +9,11 @@ import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +24,6 @@ import javax.validation.Valid;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.registration.service.AcceptProjectInviteController.*;
-import static com.worth.ifs.util.CookieUtil.getCookieValue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
@@ -55,7 +54,7 @@ public class ProjectRegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
@@ -74,7 +73,7 @@ public class ProjectRegistrationController {
                                      HttpServletRequest request,
                                      Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
             ValidationMessages errors = errorMessages(loggedInUser, invite);

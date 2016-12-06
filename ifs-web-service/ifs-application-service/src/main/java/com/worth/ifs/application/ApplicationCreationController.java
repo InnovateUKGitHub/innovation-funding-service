@@ -46,9 +46,9 @@ public class ApplicationCreationController {
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
         model.addAttribute(COMPETITION_ID, competitionId);
-        CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
-        CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+        CookieUtil.getInstance().saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
+        CookieUtil.getInstance().removeCookie(response, AcceptInviteController.INVITE_HASH);
+        CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
 
         return "create-application/check-eligibility";
     }
@@ -63,16 +63,16 @@ public class ApplicationCreationController {
                                         HttpServletResponse response) {
         log.info("get competition id");
 
-        Long competitionId = Long.valueOf(CookieUtil.getCookieValue(request, COMPETITION_ID));
+        Long competitionId = Long.valueOf(CookieUtil.getInstance().getCookieValue(request, COMPETITION_ID));
         log.info("get user id");
-        Long userId = Long.valueOf(CookieUtil.getCookieValue(request, USER_ID));
+        Long userId = Long.valueOf(CookieUtil.getInstance().getCookieValue(request, USER_ID));
 
         ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
         if (application == null || application.getId() == null) {
             log.error("Application not created with competitionID: " + competitionId);
             log.error("Application not created with userId: " + userId);
         } else {
-            CookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
+            CookieUtil.getInstance().saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
 
             // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place below
             if (userAuthenticationService.getAuthentication(request) == null) {

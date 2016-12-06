@@ -49,7 +49,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     public String confirmInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -71,12 +71,12 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                 model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
                 return "registration/confirm-registered-organisation";
             } else {
-                CookieUtil.removeCookie(response, INVITE_HASH);
+                CookieUtil.getInstance().removeCookie(response, INVITE_HASH);
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";
             }
         } else {
-            CookieUtil.removeCookie(response, INVITE_HASH);
+            CookieUtil.getInstance().removeCookie(response, INVITE_HASH);
             throw new InvalidURLException("Invite url is not valid", null);
         }
     }
@@ -85,7 +85,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     public String confirmedInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -101,7 +101,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                     return "registration/accept-invite-failure";
                 }
                 inviteRestService.acceptInvite(hash, loggedInUser.getId()).getSuccessObjectOrThrowException();
-                CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
+                CookieUtil.getInstance().removeCookie(response, AcceptInviteController.INVITE_HASH);
                 return "redirect:/application/"+ inviteResource.getApplication();
 
             } else {

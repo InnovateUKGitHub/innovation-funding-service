@@ -57,8 +57,8 @@ public class OrganisationTypeCreationController {
                                          @RequestParam(value = "invalid", required = false) String invalid
 
     ) {
-        String hash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        String hash = CookieUtil.getInstance().getCookieValue(request, AcceptInviteController.INVITE_HASH);
+        CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
@@ -99,19 +99,19 @@ public class OrganisationTypeCreationController {
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult
     ) {
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
             return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
         } else if (OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()) {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-            CookieUtil.saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
+            CookieUtil.getInstance().saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
             LOG.debug("redirect for organisation subtype");
             return "redirect:/organisation/create/type/new-account-organisation-type/?" + AcceptInviteController.ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
         } else {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-            CookieUtil.saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
+            CookieUtil.getInstance().saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
             LOG.debug("redirect for organisation creation");
             return "redirect:/organisation/create/find-organisation";
         }

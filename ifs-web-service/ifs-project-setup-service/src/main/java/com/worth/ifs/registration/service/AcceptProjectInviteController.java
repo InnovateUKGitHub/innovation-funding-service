@@ -8,6 +8,7 @@ import com.worth.ifs.invite.service.ProjectInviteRestService;
 import com.worth.ifs.project.viewmodel.JoinAProjectViewModel;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,6 @@ import java.util.function.Supplier;
 import static com.worth.ifs.commons.error.Error.globalError;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.constant.InviteStatus.SENT;
-import static com.worth.ifs.util.CookieUtil.getCookieValue;
-import static com.worth.ifs.util.CookieUtil.saveToCookie;
 import static com.worth.ifs.util.RestLookupCallbacks.find;
 
 /**
@@ -65,7 +64,7 @@ public class AcceptProjectInviteController extends BaseController {
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
-            saveToCookie(response, INVITE_HASH, hash);
+            CookieUtil.getInstance().saveToCookie(response, INVITE_HASH, hash);
             if (userExists && loggedInUser == null) {
                 return restSuccess(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW);
             } else if (userExists) {
@@ -93,7 +92,7 @@ public class AcceptProjectInviteController extends BaseController {
     }
 
     private String acceptInviteShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash)
             .andOnSuccess(invite -> {
 
@@ -121,7 +120,7 @@ public class AcceptProjectInviteController extends BaseController {
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
                                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                    Model model) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
