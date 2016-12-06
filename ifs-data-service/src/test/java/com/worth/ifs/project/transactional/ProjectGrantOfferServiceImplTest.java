@@ -24,6 +24,8 @@ import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -32,11 +34,13 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
 
@@ -209,6 +213,21 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertGenerateFile(
                 fileEntryResource ->
                         service.generateGrantOfferLetter(123L, fileEntryResource));
+    }
+
+    @Test
+    public void testRemoveGrantOfferLetterFileEntry() {
+
+        FileEntry existingGOLFile = newFileEntry().build();
+        project.setGrantOfferLetter(existingGOLFile);
+
+        when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
+
+        ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isSuccess());
+        assertNull(project.getGrantOfferLetter());
+        verify(fileServiceMock).deleteFile(existingGOLFile.getId());
     }
 
     @Override

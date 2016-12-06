@@ -263,6 +263,26 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+                getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                removeGrantOfferLetterFileFromProject(project))));
+    }
+
+    private ServiceResult<FileEntry> getGrantOfferLetterFileEntry(Project project) {
+        if (project.getGrantOfferLetter() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getGrantOfferLetter());
+        }
+    }
+
+    private void removeGrantOfferLetterFileFromProject(Project project) {
+        project.setGrantOfferLetter(null);
+    }
+
+    @Override
     public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).

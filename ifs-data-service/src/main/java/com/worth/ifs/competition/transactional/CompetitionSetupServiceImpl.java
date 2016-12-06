@@ -213,7 +213,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return copyFromCompetitionTemplate(competition, template);
 	}
 
-	private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
+    private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
         cleanUpCompetitionSections(competition);
 
         if(competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {

@@ -108,7 +108,8 @@ PM's dashboard should be updated
     [Tags]    Pending
     # TODO Pending due to INFUND-5998
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
+    # TODO - To be fixed when 'PM Submitting GOL' story is worked upon
+    # Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
 
 Internal Dashboard should be updated
     [Documentation]    INFUND-4851

@@ -41,4 +41,7 @@ public interface CompetitionService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionCountResource> countCompetitions();
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> notifyAssessors(Long competitionId);
 }

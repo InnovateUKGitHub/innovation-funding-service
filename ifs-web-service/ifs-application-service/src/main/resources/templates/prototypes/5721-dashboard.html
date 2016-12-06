@@ -14,8 +14,9 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=live'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${(param.status != null ? '/prototypes/3115-comp-dashboard?status=' + param.status[0] :'/prototypes/3115-comp-dashboard')})" th:unless="${param.status != null and param.status[0] == 'ready'}" th:remove="tag" />
 
+    <th:block th:if="${param.status != null and param.status[0] == 'ready'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=upcoming'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -60,8 +61,8 @@
             <dd>Paul Ray</dd>
           </dl>
 
-          <p>
-            <a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}">View and update competition setup</a>
+          <p th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
+            <a href="/prototypes/2469-comp-setup?compStatus=ready">View and update competition setup</a>
           </p>
         </div>
 

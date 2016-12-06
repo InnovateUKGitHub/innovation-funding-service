@@ -16,7 +16,8 @@ import org.mapstruct.Mappings;
         CompetitionMapper.class,
         FormInputResponseMapper.class,
         FormValidatorMapper.class,
-        QuestionMapper.class
+        QuestionMapper.class,
+        GuidanceRowMapper.class
     }
 )
 public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
