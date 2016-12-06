@@ -2,8 +2,6 @@ package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
@@ -13,19 +11,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 
-import java.util.List;
-
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
