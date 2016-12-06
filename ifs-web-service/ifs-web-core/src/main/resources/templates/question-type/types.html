@@ -218,9 +218,11 @@
                                          min="1"
                                          max="36"
                                          required="required"
-                                         th:attr="data-required-errormessage=#{validation.project.duration.range.invalid},
-                                         data-min-errormessage=#{validation.project.duration.range.invalid},
-                                         data-max-errormessage=#{validation.project.duration.range.invalid}" />
+                                         data-required-errormessage="Your project should last between 1 and 36 months.&zwj;"
+                                         data-min-errormessage="Your project should last between 1 and 36 months."
+                                         data-max-errormessage="&zwj;Your project should last between 1 and 36 months." />
+                                  <!--/* Note: Errormessages are appended or prepended with a Zero-width joiner (&zwj;).
+                                  This is so the Javascript validation logic can uniquely identify them for replacement due to a current technical limitation in the Javascript implementation */-->
                               </div>
                           </fieldset>
                       </div>

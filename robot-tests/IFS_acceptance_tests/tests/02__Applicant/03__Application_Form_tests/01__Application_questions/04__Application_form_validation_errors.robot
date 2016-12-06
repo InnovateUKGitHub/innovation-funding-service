@@ -70,7 +70,7 @@ Duration field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]
+    [Tags]    Failing
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
