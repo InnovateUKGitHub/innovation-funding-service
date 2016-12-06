@@ -14,18 +14,17 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.documentation.ProjectDocs.projectResourceFields;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Api documentation for grant offer letter using ASCII docs
@@ -55,6 +54,22 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
 
         assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer", projectGrantOfferServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
+    }
+
+    @Test
+    public void removeGrantOfferLetterFile() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectGrantOfferServiceMock.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
+                andExpect(status().isNoContent())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which Grant Offer Letter needs to be removed")
+                        )
+                ));
     }
 
     @Test

@@ -19,7 +19,7 @@
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Organisation details'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" th:remove="tag" />
 
         <form action="#">
 
@@ -157,10 +157,10 @@
         </form>
 
         <ul class="pagination">
-            <li class="next">
-                <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
-                    <span class="pagination-label">Next</span>
-                    <span class="pagination-part-title">Finances overview</span>
+            <li class="prev">
+                <a rel="next" title="Navigate to previous part" href="/prototypes/4600-your-finances">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Your project costs</span>
                 </a>
             </li>
         </ul>

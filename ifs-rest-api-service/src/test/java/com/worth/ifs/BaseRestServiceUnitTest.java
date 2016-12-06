@@ -21,9 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.ExecutionException;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -261,6 +259,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected ResponseEntity<Void> setupPutWithRestResultExpectations(String nonBaseUrl, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(), Void.class)).thenReturn(response);
         return response;
     }
 

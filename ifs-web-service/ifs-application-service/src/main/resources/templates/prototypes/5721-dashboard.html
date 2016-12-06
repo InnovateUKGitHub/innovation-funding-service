@@ -14,22 +14,23 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=live'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${(param.status != null ? '/prototypes/3115-comp-dashboard?status=' + param.status[0] :'/prototypes/3115-comp-dashboard')})" th:unless="${param.status != null and param.status[0] == 'ready'}" th:remove="tag" />
 
+    <th:block th:if="${param.status != null and param.status[0] == 'ready'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${'/prototypes/3115-comp-dashboard?section=upcoming'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-  <th:block th:if="${param.status == null or param.status[0] == 'Open'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, competition open'}, ${'Open'}, ${null})" />
+  <th:block th:if="${param.status == null or param.status[0] == 'Open'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Open'}, ${null})" />
 
-  <th:block th:if="${param.status != null and param.status[0] == 'Closed'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, competition closed'}, ${'Closed'}, ${null})" />
+  <th:block th:if="${param.status != null and param.status[0] == 'Closed'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Closed'}, ${null})" />
 
-  <th:block th:if="${param.status != null and param.status[0] == 'assessment'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, in assessment'}, ${'In assessment'}, ${null})" />
+  <th:block th:if="${param.status != null and param.status[0] == 'assessment'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'In assessment'}, ${null})" />
 
-	<th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, panel'}, ${'Panel'}, ${null})" />
+	<th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Panel'}, ${null})" />
 
-  <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, inform'}, ${'Inform'}, ${null})" />
+  <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Inform'}, ${null})" />
 
-  <th:block th:if="${param.status != null and param.status[0] == 'ready'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired, ready to open'}, ${'Ready to open'}, ${null})" />
+  <th:block th:if="${param.status != null and param.status[0] == 'ready'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Ready to open'}, ${null})" />
 
   <div class="no-constrain-width justify-left">
 
@@ -60,8 +61,8 @@
             <dd>Paul Ray</dd>
           </dl>
 
-          <p>
-            <a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}">View and update competition setup</a>
+          <p th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
+            <a href="/prototypes/2469-comp-setup?compStatus=ready">View and update competition setup</a>
           </p>
         </div>
 
@@ -135,7 +136,7 @@
               </th:block>
 
               <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                <span class="heading-large">4</span><br /><small>Asessors without applications</small>
+                <span class="heading-large">4</span><br /><small>Assessors without applications</small>
               </th:block>
 
               <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">

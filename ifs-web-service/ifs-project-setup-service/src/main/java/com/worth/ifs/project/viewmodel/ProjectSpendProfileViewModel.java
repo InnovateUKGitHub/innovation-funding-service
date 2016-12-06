@@ -39,6 +39,7 @@ public class ProjectSpendProfileViewModel {
     private boolean submitted;
     private boolean userPartOfThisOrganisation;
     private boolean projectManager;
+    private boolean leadPartner;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
@@ -46,7 +47,8 @@ public class ProjectSpendProfileViewModel {
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
                                         Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation,
-                                        boolean isProjectManager) {
+                                        boolean isProjectManager,
+                                        boolean leadPartner) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -67,6 +69,7 @@ public class ProjectSpendProfileViewModel {
         this.submitted = submitted;
         this.userPartOfThisOrganisation = userPartOfThisOrganisation;
         this.projectManager = isProjectManager;
+        this.leadPartner = leadPartner;
     }
 
     public Long getProjectId() {
@@ -211,6 +214,14 @@ public class ProjectSpendProfileViewModel {
         return applicationId;
     }
 
+    public boolean isLeadPartner() {
+        return leadPartner;
+    }
+
+    public void setLeadPartner(boolean leadPartner) {
+        this.leadPartner = leadPartner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -241,6 +252,7 @@ public class ProjectSpendProfileViewModel {
                 .append(costCategoryGroupMap, that.costCategoryGroupMap)
                 .append(costCategoryResourceMap, that.costCategoryResourceMap)
                 .append(projectManager, that.projectManager)
+                .append(leadPartner, that.leadPartner)
                 .isEquals();
     }
 
@@ -268,6 +280,7 @@ public class ProjectSpendProfileViewModel {
                 .append(submitted)
                 .append(userPartOfThisOrganisation)
                 .append(projectManager)
+                .append(leadPartner)
                 .toHashCode();
     }
 
@@ -295,6 +308,7 @@ public class ProjectSpendProfileViewModel {
                 .append("submitted", submitted)
                 .append("userPartOfThisOrganisation", userPartOfThisOrganisation)
                 .append("projectManager", projectManager)
+                .append("leadPartner", leadPartner)
                 .toString();
     }
 }

@@ -61,7 +61,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            Long sectionId = 3L;
             assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
