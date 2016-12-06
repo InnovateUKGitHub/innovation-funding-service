@@ -42,4 +42,10 @@ public class CompetitionManagementCompetitionController {
                 throw new IllegalStateException("Unexpected competition state for competition: " + competitionId);
         }
     }
+
+    @RequestMapping(value = "/{competitionId}/close-assessment", method = RequestMethod.POST)
+    public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
+        competitionService.closeAssessment(competitionId);
+        return "redirect:/dashboard/live";
+    }
 }

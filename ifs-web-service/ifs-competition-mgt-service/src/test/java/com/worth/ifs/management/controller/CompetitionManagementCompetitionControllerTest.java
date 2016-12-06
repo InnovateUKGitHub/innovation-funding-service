@@ -20,6 +20,8 @@ import static com.worth.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -83,5 +85,15 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals("Photonics for health", model.getCompetitionName());
 
         verify(competitionService, only()).getById(competition.getId());
+    }
+
+    @Test
+    public void closeAssessment() throws Exception {
+        Long competitionId = 1L;
+        mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/management/dashboard/live"));
+        verify(competitionService, only()).closeAssessment(competitionId);
     }
 }

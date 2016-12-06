@@ -23,6 +23,11 @@
                 <div class="column-third">
                     <a th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications</a>
                 </div>
+                <form action="#"
+                      th:action="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
+                      method="post">
+                    <button type="submit" class="button button-large">Close assessment</button>
+                </form>
             </div>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
