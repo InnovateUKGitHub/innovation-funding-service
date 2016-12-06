@@ -193,6 +193,16 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         checkUpdatedCompetitionCategories(savedCompetition);
     }
 
+    @Test
+    public void testCloseAssessment() throws Exception {
+        RestResult<Void> closeResult = controller.closeAssessment(COMPETITION_ID);
+        assertTrue("Assert close assessment is success", closeResult.isSuccess());
+        RestResult<CompetitionResource> getResult = controller.getCompetitionById(COMPETITION_ID);
+        assertTrue("Assert get is success", getResult.isSuccess());
+        CompetitionResource retrievedCompetition = getResult.getSuccessObject();
+        retrievedCompetition.getCompetitionStatus();
+    }
+
 
     @Test
     public void testUpdateCompetitionCoFunders() throws Exception {
@@ -311,6 +321,17 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competition.getId());
         competitionsResult.getSuccessObject().getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN);
+    }
+
+    @Test
+    public void testNotifyAssessors() throws Exception {
+        CompetitionResource closedCompetition = createWithDates(twoDaysAgo, oneDayAgo, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead, sevenDaysAhead);
+        RestResult<Void> notifyResult = controller.notifyAssessors(closedCompetition.getId());
+        assertTrue("Notify assessors is a success", notifyResult.isSuccess());
+        RestResult<CompetitionResource> getResult = controller.getCompetitionById(closedCompetition.getId());
+        assertTrue("Assert get is success", getResult.isSuccess());
+        CompetitionResource retrievedCompetition = getResult.getSuccessObject();
+        assertEquals(CompetitionStatus.IN_ASSESSMENT, retrievedCompetition.getCompetitionStatus());
     }
 
     @Test

@@ -19,15 +19,15 @@
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
 
         <ul class="list-overview">
-            <li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=essential' : '?section=essential')}">Initial details</a></h3></li>
-            <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=funding' : '?section=funding')}">Funding information</a></h3></li>
-            <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=eligibility' : '?section=eligibility')}">Eligibility</a></h3></li>
-            <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '?user=compExec&amp;section=milestones' : '?section=milestones')}">Milestones</a></h3></li>
-            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>
+            <li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></li>
+            <li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></li>
+            <li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></li>
+            <li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></li>
+            <li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>
             <!--<li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>-->
-            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/5090-assessors-required?user=compExec' : '/prototypes/5090-assessors-required')}">Assessment</a></h3></li>
+            <li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessment</a></h3></li>
             <!--<li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>-->
-        
+
         </ul>
 
         <div class="extra-margin">
@@ -43,66 +43,66 @@
 <div th:fragment="prototype-section-cta">
     <input type="hidden" id="section" name="section" th:value="${section}" />
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
-    <input type="hidden" id="user" name="user" th:value="${(param.user != null and param.user[0] == 'compExec' ? 'compExec' : '')}" />
+    <input type="hidden" id="compStatus" name="compStatus" th:value="${(param.compStatus != null and param.compStatus[0] == 'ready' ? 'ready' : '')}" />
     <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
-    <button formaction="/prototypes/2469-comp-setup" class="button" th:text="${param.status == null or param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
+    <button formaction="/prototypes/2469-comp-setup" class="button" th:text="${param.status != null and param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
     <!--<button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>-->
 </div>
 
 <!-- =================Section: Dashboard competitions =========================== -->
 
 <div th:fragment="prototype-dashboard-live">
-    
+
     <section>
-        
+
         <h2 class="heading-medium">Open (5)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Technology inspired'},
                     rowType=${'Programme'},
                     rowSector=${'Advanced materials'},
                     rowUrl=${'/prototypes/5721-dashboard'},
                     rowStatus=${'132 applications'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
                     rowType=${'Managed service'},
                     rowSector=${'Infrastructure'},
                     rowUrl=${'#'},
                     rowStatus=${'132 applications'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
                     rowType=${'SBRI'},
-                    rowSector=${'Advanced therapies'}, 
+                    rowSector=${'Advanced therapies'},
                     rowUrl=${'#'},
                     rowStatus=${'132 applications'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable renewable energy generation'},
                     rowType=${'Special'},
-                    rowSector=${'Nuclear'}, 
+                    rowSector=${'Nuclear'},
                     rowUrl=${'#'},
                     rowStatus=${'132 applications'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Managing energy on marine vessels'},
-                    rowType=${'Programme'}, 
+                    rowType=${'Programme'},
                     rowSector=${'Precision medicine'},
                     rowUrl=${'#'},
                     rowStatus=${'132 applications'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Energy catalyst'},
-                    rowType=${'Programme'}, 
+                    rowType=${'Programme'},
                     rowSector=${'Electronics, sensors and photonics'},
                     rowUrl=${'#'},
                     rowStatus=${'132 applications'}">
@@ -113,14 +113,14 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">Closed (1)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Portable renewable energy generation'},
                     rowType=${'Programme'},
                     rowSector=${'Emerging &#38; enabling technology'},
                     rowUrl=${'/prototypes/5721-dashboard?status=Closed'},
@@ -132,14 +132,14 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">In assessment (1)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Portable power station'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Portable power station'},
                     rowType=${'SBRI'},
                     rowSector=${'Emerging &#38; enabling technology'},
                     rowUrl=${'/prototypes/5721-dashboard?status=assessment'},
@@ -151,14 +151,14 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">Panel (1)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Portable renewable energy generation'},
                     rowType=${'Special'},
                     rowSector=${'Manufacturing &#38; materials'},
                     rowUrl=${'/prototypes/5721-dashboard?status=panel'},
@@ -170,14 +170,14 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">Inform (1)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
                     rowType=${'Managed service'},
                     rowSector=${'Health &#38; life sciences'},
                     rowUrl=${'/prototypes/5721-dashboard?status=Inform'},
@@ -191,24 +191,24 @@
 </div>
 
 <div th:fragment="prototype-dashboard-setup">
-    
+
     <section>
-        
+
         <h2 class="heading-medium">Project setup (2)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
                     rowType=${'Programme'},
                     rowSector=${'Manufacturing &#38; materials'},
                     rowUrl=${'/prototypes/4151-admin-competition-dash'},
                     rowStatus=${'12 projects'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
                     rowType=${'Managed service'},
                     rowSector=${'Open'},
                     rowUrl=${'/prototypes/4151-admin-competition-dash'},
@@ -224,31 +224,31 @@
 <div th:fragment="prototype-dashboard-upcoming">
 
     <section>
-        
+
         <h2 class="heading-medium">In preparation (3)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
+                <th:block
                     th:unless="${param.comp != null and param.comp[0] == 'saveOpen'}"
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
                     rowType=${'Special'},
-                    rowSector=${'Emerging tech &#38; industries'}, 
+                    rowSector=${'Emerging tech &#38; industries'},
                     rowUrl=${'/prototypes/2469-comp-setup?compStatus=draft'},
                     rowStatus=${' '}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
                     rowType=${'Programme'},
                     rowSector=${''},
                     rowUrl=${'#'},
                     rowStatus=${' '}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Portable renewable energy generation'},
                     rowType=${'Special'},
                     rowSector=${'Manufacturing &#38; materials'},
                     rowUrl=${'#'},
@@ -260,26 +260,26 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">Ready to open (1)</h2>
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
+                <th:block
                     th:unless="${param.comp != null and param.comp[0] == 'saveDraft' or param.comp == null}"
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
                     rowType=${'Special'},
-                    rowSector=${'Emerging tech &#38; industries'}, 
+                    rowSector=${'Emerging tech &#38; industries'},
                     rowUrl=${'/prototypes/2469-comp-setup?compStatus=ready'},
                     rowStatus=${' '}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Portable renewable energy generation'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Portable renewable energy generation'},
                     rowType=${'Managed service'},
-                    rowSector=${'Offshore renewable energy'}, 
-                    rowUrl=${'#'},
+                    rowSector=${'Offshore renewable energy'},
+                    rowUrl=${'/prototypes/5721-dashboard?status=ready'},
                     rowStatus=${'12/07/2016'}">
                 </th:block>
             </ul>
@@ -298,80 +298,80 @@
 
         <div class="table-overflow">
             <ul class="list-overview">
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
-                    rowType=${'Programme'}, 
-                    rowSector=${'Advanced therapies'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
+                    rowType=${'Programme'},
+                    rowSector=${'Advanced therapies'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-               <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+               <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
                     rowType=${'Managed service'},
-                    rowSector=${'Precision medicine'}, 
+                    rowSector=${'Precision medicine'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Here is one of the types of competition that has a stupidly long title because sometimes very clever people have trouble being concise'},
                     rowType=${'SBRI'},
-                    rowSector=${'Medicines technology'}, 
+                    rowSector=${'Medicines technology'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
                     rowType=${'Special'},
-                    rowSector=${'Bioscience'}, 
+                    rowSector=${'Bioscience'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Agri productivity'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
+                    rowType=${'Agri productivity'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
-                    rowType=${'Special'}, 
-                    rowSector=${'Enhanced food quality'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
-                    rowType=${'Programme'}, 
-                    rowSector=${'Transport systems'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
-                    rowType=${'Managed service'}, 
-                    rowSector=${'Urban living'}, 
-                    rowStatus=${'12/06/2016'}">
-                </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
                     rowType=${'Special'},
-                    rowSector=${'Health &#38; life sciences'},  
+                    rowSector=${'Enhanced food quality'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Solving problems with data'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
+                    rowType=${'Programme'},
+                    rowSector=${'Transport systems'},
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
+                    rowType=${'Managed service'},
+                    rowSector=${'Urban living'},
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
+                    rowType=${'Special'},
+                    rowSector=${'Health &#38; life sciences'},
+                    rowStatus=${'12/06/2016'}">
+                </th:block>
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Solving problems with data'},
                     rowType=${'SBRI'},
                     rowSector=${'Health &#38; life sciences'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
-                <th:block 
-                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                    th:with="rowTitle=${'Connected digital additive manufacturing'}, 
+                <th:block
+                    th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                    th:with="rowTitle=${'Connected digital additive manufacturing'},
                     rowType=${'Managed service'},
-                    rowType=${'Nuclear'}, 
+                    rowType=${'Nuclear'},
                     rowStatus=${'12/06/2016'}">
                 </th:block>
             </ul>
@@ -383,16 +383,16 @@
 <div th:fragment="prototype-dashboard-search">
 
     <p><span class="heading-xlarge">4</span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p>
-    
+
     <section>
-        
+
         <h2 class="heading-medium">Open competitions (1)</h2>
 
         <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${param.searchQuery[0] + ' 1'}, 
-                rowType=${'Advanced therapies'}, 
+            <th:block
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                th:with="rowTitle=${param.searchQuery[0] + ' 1'},
+                rowType=${'Advanced therapies'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -400,14 +400,14 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">In assessment (1)</h2>
 
         <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Another ' + param.searchQuery[0]}, 
-                rowType=${'Manufacturing readiness'}, 
+            <th:block
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                th:with="rowTitle=${'Another ' + param.searchQuery[0]},
+                rowType=${'Manufacturing readiness'},
                 rowStatus=${'132 applications'}">
             </th:block>
         </ul>
@@ -415,20 +415,20 @@
     </section>
 
     <section>
-        
+
         <h2 class="heading-medium">Archive (2)</h2>
 
         <ul class="list-overview">
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Old ' + param.searchQuery[0]}, 
-                rowType=${'Enhanced food quality'}, 
+            <th:block
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                th:with="rowTitle=${'Old ' + param.searchQuery[0]},
+                rowType=${'Enhanced food quality'},
                 rowStatus=${'Archived: 21/08/2015'}">
             </th:block>
-            <th:block 
-                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row" 
-                th:with="rowTitle=${'Really old ' + param.searchQuery[0]}, 
-                rowType=${'Bioscience'}, 
+            <th:block
+                th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
+                th:with="rowTitle=${'Really old ' + param.searchQuery[0]},
+                rowType=${'Bioscience'},
                 rowStatus=${'Archived: 13/04/2010'}">
             </th:block>
         </ul>
@@ -443,7 +443,7 @@
 <!-- =================Section: Dashboard item row=========================== -->
 
 <div th:fragment="prototype-dashboard-row">
-    
+
     <li>
         <h3 class="heading-small"><a th:href="${rowUrl}" th:text="${rowTitle}">ROW TITLE</a></h3>
         <p th:text="${rowType}">TYPE</p>
@@ -456,20 +456,20 @@
 <!-- =================Section: Blank index page=========================== -->
 
 <div th:fragment="prototype-section-index-page">
-    
+
 
 </div>
 
 <!-- =================Section: Essential information=========================== -->
 
 <div th:fragment="prototype-section-essential">
-    
+
     <div class="hgroup extra-margin-bottom">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
         <h1 class="heading-xlarge no-margin">Initial details</h1>
     </div>
 
-    <div th:unless="${(param.user != null and param.user[0] == 'compExec' )}" class="panel-indent">
+    <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="panel-indent">
         This will create a new competition. You can add more details as you progress.
     </div>
 
@@ -526,14 +526,14 @@
                 <label class="form-label" for="compTitle">
                     <span class="form-label-bold">Competition title</span>
                 </label>
-                <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
             </div>
 
             <div class="form-group">
                 <label class="form-label" for="compType">
                     <span class="form-label-bold">Competition type</span>
                 </label>
-                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Programme">Programme</option>
                     <option value="Managed services">Managed services</option>
@@ -555,7 +555,7 @@
                 <label class="form-label" for="compInnovationSector">
                     <span class="form-label-bold">Innovation sector</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="health">Health and life sciences</option>
                     <option value="materials">Materials and manufacturing</option>
@@ -569,12 +569,12 @@
                 <label class="form-label" for="compInnovationArea">
                     <span class="form-label-bold">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
                     <option value="Biosciences" class="health">Biosciences</option>
-                    
+
                     <option value="High value manufacturing" class="materials">High value manufacturing</option>
                     <option value="Resource efficiency" class="materials">Resource efficiency</option>
                     <option value="Advanced materials" class="materials">Advanced materials</option>
@@ -596,7 +596,7 @@
                 <label class="form-label" for="compInnovationArea2">
                     <span class="form-label-bold visuallyhidden">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec')}">
+                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -620,7 +620,7 @@
                 </select>
                 <a href="#" id="remove-innovation-area">Remove</a>
             </div>
-            <p th:unless="${(param.user != null and param.user[0] == 'compExec')}" id="add-innovation-area" class="section-1-edit">
+            <p th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" id="add-innovation-area" class="section-1-edit">
                 <a href="#">+ add another innovation area</a>
             </p>
 
@@ -633,21 +633,21 @@
                         <label class="form-label" for="startDay">
                                 <div>Day</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
+                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
                     </div>
 
                     <div class="month">
                         <label class="form-label" for="startMonth">
                                 <div>Month</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
+                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
                     </div>
 
                     <div class="year">
                         <label class="form-label" for="startYear">
                                 <div>Year</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.user != null and param.user[0] == 'compExec'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
+                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
                     </div>
                 </div>
             </fieldset>
@@ -707,7 +707,7 @@
     </form>
     <ul class="pagination">
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Funding information</span>
             </a>
@@ -728,7 +728,7 @@
     <form>
         <fieldset id="section-2-edit">
             <legend class="visuallyhidden">Funding information</legend>
-            
+
 
             <div class="grid-row" id="co-funder-row-1">
                 <div class="column-half">
@@ -791,36 +791,36 @@
             <hr />
 
             <fieldset>
-                
+
                 <legend class="heading-medium">Reporting fields</legend>
 
                 <div class="form-group">
                     <label class="form-label" for="compPaf">
                         <span class="form-label-bold">PAF number</span>
                     </label>
-                    <input class="form-control width-large" id="compPaf" name="compPaf" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                    <input class="form-control width-large" id="compPaf" name="compPaf" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
                <div class="form-group">
                     <label class="form-label" for="compBudgetCode">
                         <span class="form-label-bold">Budget code</span>
                     </label>
-                    <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                    <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
                 <div class="form-group extra-margin">
                     <label class="form-label" for="comp-activity-code">
                         <span class="form-label-bold">Activity code</span>
                     </label>
-                    <input class="form-control width-large" id="comp-activity-code" name="comp-activity-code" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+                    <input class="form-control width-large" id="comp-activity-code" name="comp-activity-code" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="compCode">
                         <span class="form-label-bold">Competition code</span>
                     </label>
-                    <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
-                    <a th:unless="${(param.user != null and param.user[0] == 'compExec')}" href="#" class="button button-secondary">Generate code</a>
+                    <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+                    <a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" href="#" class="button button-secondary">Generate code</a>
                 </div>
 
             </fieldset>
@@ -828,7 +828,7 @@
         </fieldset>
 
         <fieldset id="section-2-done">
-            
+
             <table class="section-2-done">
                 <thead>
                     <tr>
@@ -863,7 +863,7 @@
                 <dd>1243</dd>
             </dl>
         </fieldset>
-        
+
         <div class="extra-margin">
             <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=funding, sectionId=2" th:remove="tag" />
         </div>
@@ -871,13 +871,13 @@
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=essential' : '/prototypes/2469-comp-setup?section=essential'}">
+            <a rel="prev" title="Navigate to previous part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=essential' : '/prototypes/2469-comp-setup?section=essential'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Initial details</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
@@ -898,7 +898,7 @@
     <form>
         <fieldset id="section-3-edit">
             <legend class="visuallyhidden">Eligibility</legend>
-            
+
             <div class="form-group">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Does the competition have multiple streams?</legend>
@@ -921,7 +921,7 @@
 
 
         <fieldset id="section-3-done">
-            
+
             <dl class="standard-definition-list">
                 <dt>Multiple stream</dt>
                 <dd>Yes</dd>
@@ -934,32 +934,35 @@
                 <dt>Are resubmissions allowed?</dt>
                 <dd>No</dd>
             </dl>
-            
+
 
         </fieldset>
 
 
         <div class="grid-row ">
             <div class="column-half">
-                 <div th:unless="${(param.user != null and param.user[0] == 'compExec' )}" th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
+                 <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}" th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
             </div>
             <div class="column-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
             </div>
         </div>
 
+        <div class="extra-margin">
+            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
+        </div>
 
     </form>
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
+            <a rel="prev" title="Navigate to previous part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=funding' : '/prototypes/2469-comp-setup?section=funding'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Funding information</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=milestones' : '/prototypes/2469-comp-setup?section=milestones'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=milestones' : '/prototypes/2469-comp-setup?section=milestones'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Milestones</span>
             </a>
@@ -970,7 +973,7 @@
 <!-- =================Section: Eligibility stream data=========================== -->
 
 <div th:fragment="prototype-section-eligibility-stream">
-  
+
     <fieldset class="comp-stream-group extra-margin" style="display: none;">
         <div class="form-group">
             <label class="form-label" th:for="${'stream-'+streamNo+'-comp-stream'}">
@@ -978,7 +981,7 @@
             </label>
             <input class="form-control width-x-large" th:id="${'stream-'+streamNo+'-comp-stream'}" th:name="${'stream-'+streamNo+'-comp-stream'}" th:placeholder="${'Stream '+streamNo}" />
         </div>
-        
+
         <h3 class="heading-small">Project size (&pound;)</h3>
         <p>This indicates the size of the project based on the budget</p>
 
@@ -1105,11 +1108,11 @@
                 <input th:id="${'stream-'+streamNo+'-comp-resubmission-no'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="No" type="radio" />
             No
             </label>
-        </fieldset>  
+        </fieldset>
         <hr />
     </div>
 
- 
+
 
 </div>
 
@@ -1117,18 +1120,18 @@
 <!-- =================Section: Milestones=========================== -->
 
 <div th:fragment="prototype-section-milestones">
-    
+
     <div class="hgroup extra-margin-bottom">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
         <h1 class="heading-xlarge no-margin">Milestones</h1>
     </div>
-    
+
     <div class="panel-indent">
         Define the competition milestones. Once you enter a date into the 'submission date' field, this will automatically generate the other dates. You are able to edit these dates, but this will affect the overall calculation.
     </div>
 
     <form>
-        
+
         <fieldset id="section-4-edit">
 
             <table>
@@ -1201,13 +1204,13 @@
 
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
+            <a rel="prev" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready&amp;section=eligibility' : '/prototypes/2469-comp-setup?section=eligibility'}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec&amp;section=funding' : '/prototypes/5085-application-process'}">
+            <a rel="next" title="Navigate to next part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready&amp;section=funding' : '/prototypes/5085-application-process'}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Application</span>
             </a>
@@ -1221,7 +1224,7 @@
 
     <tr>
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
-        
+
         <th:block th:unless="${type=='readOnly'}">
             <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
             <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
@@ -1244,7 +1247,7 @@
 <!-- =================Section: Assessors=========================== -->
 
 <div th:fragment="prototype-section-assessors">
-    
+
     <div class="hgroup extra-margin-bottom">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
         <h1 class="heading-xlarge no-margin">Assessors</h1>
@@ -1257,7 +1260,7 @@
         </div>
 
     </form>
-    
+
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{'?section=milestones'}">
@@ -1279,12 +1282,12 @@
 <!-- =================Section: Application form=========================== -->
 
 <div th:fragment="prototype-section-application">
-    
+
     <div class="hgroup extra-margin-bottom">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
         <h1 class="heading-xlarge no-margin">Application questions</h1>
     </div>
-    
+
     <div class="panel-indent">
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
@@ -1292,7 +1295,7 @@
     <p>Template: Programme 10 questions</p>
 
     <h2 class="heading-large">Questions</h2>
-    
+
     <form>
 
         <ul class="list-overview application-questions">
@@ -1301,7 +1304,7 @@
             <li><h2 class="heading-medium">Project summary</h2></li>
             <li><h2 class="heading-medium">Public description</h2></li>
             <li><h2 class="heading-medium">Scope</h2></li>
-            
+
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
 
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" th:remove="tag"/>
@@ -1319,11 +1322,11 @@
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" th:remove="tag"/>
 
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" th:remove="tag"/>
-            
+
             <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
 
         </ul>
-        
+
          <div class="extra-margin">
             <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6" th:remove="tag" />
         </div>
@@ -1388,7 +1391,7 @@
 <!-- =================Section: Description=========================== -->
 
 <div th:fragment="prototype-section-description">
-    
+
     <div class="hgroup extra-margin-bottom">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
         <h1 class="heading-xlarge no-margin">Description &#38; brief</h1>
@@ -1401,7 +1404,7 @@
         </div>
 
     </form>
-    
+
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{'?section=assessors'}">
@@ -1626,4 +1629,3 @@
 
 
 </html>
-

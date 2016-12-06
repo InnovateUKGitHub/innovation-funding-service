@@ -172,6 +172,24 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return NOT_STARTED;
     }
 
+    protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates spendProfileState,
+                                                    final ProjectActivityStates otherDocumentsState,
+                                                    final Project project) {
+        if(COMPLETE.equals(spendProfileState) && COMPLETE.equals(otherDocumentsState)) {
+            if(project.getGrantOfferLetter() != null) {
+                if(project.getSignedGrantOfferLetter() != null) {
+                    if (project.getOfferSubmittedDate() != null) {
+                        return COMPLETE;
+                    }
+                    return PENDING;
+                }
+                return ACTION_REQUIRED;
+            }
+            return NOT_STARTED;
+        }
+        return NOT_REQUIRED;
+    }
+
     protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {
         return getCurrentlyLoggedInProjectUser(project, PROJECT_PARTNER);
     }

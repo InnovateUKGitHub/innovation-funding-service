@@ -13,6 +13,7 @@ import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.BankDetailsService;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -355,8 +356,8 @@ public class BaseUnitTest {
 
     public void setupCompetition() {
         competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
-                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
-                build();
+                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
+                .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());
 
@@ -409,7 +410,7 @@ public class BaseUnitTest {
 
         SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
-        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).build();
+        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withType(SectionType.FINANCE).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
 

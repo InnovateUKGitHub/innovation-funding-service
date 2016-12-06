@@ -1,9 +1,9 @@
-package com.worth.ifs.controller;
+package com.worth.ifs.management.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.model.ApplicationModelPopulator;
 import com.worth.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
-import com.worth.ifs.competition.controller.ApplicationManagementController;
+import com.worth.ifs.management.controller.CompetitionManagementApplicationController;
 import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationManagementControllerTest extends BaseControllerMockMVCTest<ApplicationManagementController> {
+public class CompetitionManagementApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationController> {
 
     @Spy
     @InjectMocks
@@ -181,7 +181,7 @@ public class ApplicationManagementControllerTest extends BaseControllerMockMVCTe
     }
 
     @Override
-    protected ApplicationManagementController supplyControllerUnderTest() {
-        return new ApplicationManagementController();
+    protected CompetitionManagementApplicationController supplyControllerUnderTest() {
+        return new CompetitionManagementApplicationController();
     }
 }

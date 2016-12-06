@@ -67,7 +67,7 @@ IFS.core.formValidation = (function() {
         }
       },
       pattern : {
-        fields : '[pattern]',
+        fields : '[pattern]:not([minlength])', //minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
         messageInvalid : "Please correct this field"
       },
       tel : {
