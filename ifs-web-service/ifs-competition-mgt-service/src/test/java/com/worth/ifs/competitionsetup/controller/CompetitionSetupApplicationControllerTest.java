@@ -19,7 +19,7 @@ import org.springframework.validation.Validator;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -214,6 +214,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationAssessedQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
                 .param("question.questionId", questionId.toString())
@@ -234,7 +236,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX));
 
-        verify(competitionSetupQuestionService).updateQuestion(isA(CompetitionSetupQuestionResource.class));
+        verify(competitionSetupService).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
 
     @Test

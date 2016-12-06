@@ -72,7 +72,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setAppendix(formInput.getActive());
                 break;
             case TEXTAREA:
-                setupResource.setGuidanceTitle(formInput.getGuidanceQuestion());
+                setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
                 setupResource.setGuidance(formInput.getGuidanceAnswer());
                 setupResource.setMaxWords(wordCountWithDefault(formInput.getWordCount()));
                 break;
@@ -84,7 +84,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case TEXTAREA:
                 setupResource.setWrittenFeedback(formInput.getActive());
                 setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
-                setupResource.setAssessmentGuidance(formInput.getGuidanceQuestion());
+                setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
                 setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
                 break;
             case ASSESSOR_SCORE:
@@ -113,7 +113,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
 
         FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA);
-        questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
+        questionFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
@@ -167,7 +167,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (writtenFeedbackFormInput != null && competitionSetupQuestionResource.getWrittenFeedback() != null) {
             writtenFeedbackFormInput.setActive(competitionSetupQuestionResource.getWrittenFeedback());
 
-            writtenFeedbackFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getAssessmentGuidance());
+            writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
 
             // Delete all existing guidance rows and replace with new list

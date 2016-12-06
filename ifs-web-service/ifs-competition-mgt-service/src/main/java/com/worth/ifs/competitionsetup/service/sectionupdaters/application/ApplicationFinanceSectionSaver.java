@@ -6,6 +6,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,6 @@ public class ApplicationFinanceSectionSaver implements CompetitionSetupSubsectio
 
 	@Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return ApplicationFormForm.class.equals(clazz);
+		return ApplicationFinanceForm.class.equals(clazz);
 	}
 }

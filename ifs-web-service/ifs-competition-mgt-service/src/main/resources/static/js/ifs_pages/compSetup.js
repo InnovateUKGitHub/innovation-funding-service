@@ -149,22 +149,22 @@ IFS.competitionManagement.setup = (function() {
       if(isAssessed){
         html+='<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-scorefrom"><span class="visuallyhidden">Score from</span></label>'+
-                '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score" data-min-errormessage="Please enter a valid number" id="guidancerow-'+idCount+'-scorefrom" name="guidanceRows['+count+'].scoreFrom" value="">'+
+                '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score." data-min-errormessage="Please enter a valid number." id="guidancerow-'+idCount+'-scorefrom" name="guidanceRows['+count+'].scoreFrom" value="">'+
               '</td>'+
               '<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-scoreto"><span class="visuallyhidden">Score to</span></label>'+
-                '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score" data-min-errormessage="Please enter a valid number" id="guidancerow-'+idCount+'-scoreto" name="guidanceRows['+count+'].scoreTo" value="">'+
+                '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score." data-min-errormessage="Please enter a valid number." id="guidancerow-'+idCount+'-scoreto" name="guidanceRows['+count+'].scoreTo" value="">'+
               '</td>';
       }
       else {
         html+='<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-subject"><span class="visuallyhidden">Subject</span></label>'+
-                '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters" data-required-errormessage="Please enter a subject" id="guidancerow-'+idCount+'-subject" name="question.guidanceRows['+count+'].subject" value="">'+
+                '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters." data-required-errormessage="Please enter a subject." id="guidancerow-'+idCount+'-subject" name="question.guidanceRows['+count+'].subject" value="">'+
               '</td>';
       }
       html+='<td class="form-group">'+
               '<label class="form-label" for="guidancerow-'+idCount+'-justification"><span class="visuallyhidden">Justification</span></label>'+
-              '<textarea required="required" rows="3" class="form-control width-full" data-required-errormessage="Please enter a justification" id="guidancerow-'+count+'-justification" name="'+(isAssessed ? '' : 'question.')+'guidanceRows['+count+'].justification"></textarea>'+
+              '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidancerow-'+count+'-justification" name="'+(isAssessed ? '' : 'question.')+'guidanceRows['+count+'].justification"></textarea>'+
             '</td>'+
             '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="'+count+'">Remove</button></td>';
       html+='</tr>';
@@ -188,7 +188,7 @@ IFS.competitionManagement.setup = (function() {
             jQuery('[name="removeGuidanceRow"]').val(inst.val());
             IFS.core.autoSave.fieldChanged('[name="removeGuidanceRow"]');
             inst.closest('tr').remove();
-            IFS.competitionManagement.setup.reindexRows('.form-group-row.guidance');
+            IFS.competitionManagement.setup.reindexRows('tr[id^="guidance-"]');
             break;
         }
 

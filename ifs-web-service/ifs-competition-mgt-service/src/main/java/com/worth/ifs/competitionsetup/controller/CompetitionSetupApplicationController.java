@@ -154,7 +154,6 @@ public class CompetitionSetupApplicationController {
             competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource,
                     CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS);
 
-            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
             return "redirect:/competition/setup/" + competitionId + "/section/application";
         } else {
             competitionSetupService.populateCompetitionSubsectionModelAttributes(model,

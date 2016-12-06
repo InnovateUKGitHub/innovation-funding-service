@@ -2,11 +2,22 @@ package com.worth.ifs.competition.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Size;
 
 public class GuidanceRowResource {
+
     private Long id;
+
+    @NotEmpty(message = "{validation.applicationquestionform.subject.required}")
+    @Size(max=255, message = "{validation.applicationquestionform.subject.max}")
     private String subject;
+
+    @NotEmpty(message = "{validation.applicationquestionform.justification.required}")
+    @Size(max=255, message = "{validation.applicationquestionform.justification.max}")
     private String justification;
+
     private Long formInput;
 
     public Long getId() {

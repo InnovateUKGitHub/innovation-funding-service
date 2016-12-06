@@ -68,14 +68,8 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
             question.getGuidanceRows().add(guidanceRowResource);
         });
 
-        try {
-            competitionSetupQuestionService.updateQuestion(question);
-        } catch (RuntimeException e) {
-            return makeErrorList();
-        }
-
-        return Collections.emptyList();
-	}
+        return competitionSetupQuestionService.updateQuestion(question).getErrors();
+    }
 
 	@Override
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName,
@@ -275,10 +269,8 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         }
     }
 
-
-
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return ApplicationFormForm.class.equals(clazz);
+		return ApplicationQuestionForm.class.equals(clazz);
 	}
 }

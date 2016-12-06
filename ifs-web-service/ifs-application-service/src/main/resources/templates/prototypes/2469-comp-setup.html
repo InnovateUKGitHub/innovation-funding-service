@@ -15,8 +15,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     
-    <div th:if="${(param.user == null)}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
-	<div th:if="${(param.user != null and param.user[0] == 'compExec')}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : '/prototypes/2469-comp-setup?user=compExec')})" th:remove="tag" />
+    <div th:if="${(param.compStatus == null)}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
+	<div th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : '/prototypes/2469-comp-setup?compStatus=ready')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -39,7 +39,7 @@
 
 		<div class="extra-margin" th:if="${param.section != null}">
 			<!--<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Return to setup overview</a>-->
-			<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}" class="button button-secondary">Return to setup overview</a>
+			<a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button button-secondary">Return to setup overview</a>
 		</div>
 
 
@@ -77,8 +77,7 @@
 	    var sectionId = $_GET('sectionId'),
 			status = $_GET('status'),
 			compType = $_GET('compType'),
-			compStatus = $_GET('compStatus'),
-			user = $_GET('user');
+			compStatus = $_GET('compStatus');
 
 
 		if(compType == 'Programme' || compType == 'Managed services' || compType == 'Sector competition'){

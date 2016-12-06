@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,8 +49,10 @@ public class ApplicationQuestionSectionSaverTest {
                 .withCompetitionCode("compcode").build();
 
         when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
+        when(competitionSetupQuestionService.updateQuestion(question)).thenReturn(serviceSuccess());
 
-        service.saveSection(competition, competitionSetupForm);
+        assertTrue(service.saveSection(competition, competitionSetupForm).isEmpty());
+        verify(competitionSetupQuestionService).updateQuestion(question);
     }
 
     @Test

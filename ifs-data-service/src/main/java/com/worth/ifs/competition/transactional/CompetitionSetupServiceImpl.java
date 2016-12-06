@@ -16,8 +16,8 @@ import com.worth.ifs.competition.mapper.CompetitionTypeMapper;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -86,20 +86,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
         Competition competition = competitionRepository.findById(id);
         String datePart = formatter.format(dateTime);
-        List<Competition> openingSameMonth = competitionRepository.findByCodeLike("%"+datePart+"%");
-        if(StringUtils.hasText(competition.getCode())){
+        List<Competition> openingSameMonth = competitionRepository.findByCodeLike("%" + datePart + "%");
+        if (StringUtils.hasText(competition.getCode())) {
             return serviceSuccess(competition.getCode());
-        }else if(openingSameMonth.isEmpty()){
+        } else if (openingSameMonth.isEmpty()) {
             String unusedCode = datePart + "-1";
             competition.setCode(unusedCode);
             competitionRepository.save(competition);
             return serviceSuccess(unusedCode);
-        }else{
-            List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : "+ c)).collect(Collectors.toList());
+        } else {
+            List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
             String unusedCode = "";
             for (int i = 1; i < 10000; i++) {
-                unusedCode = datePart+"-"+i;
-                if(!codes.contains(unusedCode)){
+                unusedCode = datePart + "-" + i;
+                if (!codes.contains(unusedCode)) {
                     break;
                 }
             }
@@ -138,19 +138,19 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Long areaId = competitionResource.getInnovationArea();
         saveCategoryLink(competitionResource, areaId, CategoryType.INNOVATION_AREA);
     }
-    
+
     private void saveResearchCategories(CompetitionResource competitionResource) {
         Set<Long> researchCategories = competitionResource.getResearchCategories();
         saveCategoryLinks(competitionResource, researchCategories, CategoryType.RESEARCH_CATEGORY);
     }
 
-	private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
+    private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
         categoryLinkService.updateCategoryLink(categoryId, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
     }
-	
+
     private void saveCategoryLinks(CompetitionResource competitionResource, Set<Long> categoryIds, CategoryType categoryType) {
-    	categoryLinkService.updateCategoryLinks(categoryIds, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
-	}
+        categoryLinkService.updateCategoryLinks(categoryIds, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
+    }
 
     @Override
     public ServiceResult<CompetitionResource> create() {
@@ -161,15 +161,15 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
-    	Competition competition = competitionRepository.findById(competitionId);
-    	competition.getSectionSetupStatus().put(section, Boolean.TRUE);
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.getSectionSetupStatus().put(section, Boolean.TRUE);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
-    	Competition competition = competitionRepository.findById(competitionId);
-    	competition.getSectionSetupStatus().put(section, Boolean.FALSE);
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.getSectionSetupStatus().put(section, Boolean.FALSE);
         return serviceSuccess();
     }
 
@@ -206,20 +206,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-	public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
+    public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
         Competition template = competitionRepository.findById(templateId);
         Competition competition = competitionRepository.findById(competitionId);
         return copyFromCompetitionTemplate(competition, template);
-	}
+    }
 
-	private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
+    private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
         cleanUpCompetitionSections(competition);
 
-        if(competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
+        if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if(template == null) {
+        if (template == null) {
             return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
         }
 
@@ -236,7 +236,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return serviceSuccess();
     }
 
-	private void cleanUpCompetitionSections(Competition competition) {
+    private void cleanUpCompetitionSections(Competition competition) {
         List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInputQuestionCompetitionId(competition.getId());
         guidanceRowRepository.delete(scoreRows);
 
@@ -253,72 +253,72 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
 
     private void attachSections(Competition competition, List<Section> sectionTemplates, Section parentSection) {
-		if(sectionTemplates == null) {
-			return;
-		}
-		new ArrayList<>(sectionTemplates).forEach(attachSection(competition, parentSection));
-	}
-	
-	private Consumer<Section> attachSection(Competition competition, Section parentSection) {
-		return (Section section) -> {
+        if (sectionTemplates == null) {
+            return;
+        }
+        new ArrayList<>(sectionTemplates).forEach(attachSection(competition, parentSection));
+    }
+
+    private Consumer<Section> attachSection(Competition competition, Section parentSection) {
+        return (Section section) -> {
             entityManager.detach(section);
-			section.setCompetition(competition);
+            section.setCompetition(competition);
             section.setId(null);
             sectionRepository.save(section);
-            if(!competition.getSections().contains(section)) {
+            if (!competition.getSections().contains(section)) {
                 competition.getSections().add(section);
             }
 
             section.setQuestions(createQuestions(competition, section, section.getQuestions()));
 
-			attachSections(competition, section.getChildSections(), section);
+            attachSections(competition, section.getChildSections(), section);
 
             section.setParentSection(parentSection);
-			if(parentSection != null) {
-				if(parentSection.getChildSections() == null) {
-					parentSection.setChildSections(new ArrayList<>());
-				}
-				if (!parentSection.getChildSections().contains(section)) {
+            if (parentSection != null) {
+                if (parentSection.getChildSections() == null) {
+                    parentSection.setChildSections(new ArrayList<>());
+                }
+                if (!parentSection.getChildSections().contains(section)) {
                     parentSection.getChildSections().add(section);
                 }
-			}
-		};
-	}
-	
-	private List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
-        return simpleMap(questions, createQuestion(competition, section));
-	}
+            }
+        };
+    }
 
-	private Function<Question, Question> createQuestion(Competition competition, Section section) {
-		return (Question question) -> {
+    private List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
+        return simpleMap(questions, createQuestion(competition, section));
+    }
+
+    private Function<Question, Question> createQuestion(Competition competition, Section section) {
+        return (Question question) -> {
             entityManager.detach(question);
-			question.setCompetition(competition);
-			question.setSection(section);
+            question.setCompetition(competition);
+            question.setSection(section);
             question.setId(null);
             questionRepository.save(question);
 
             question.setFormInputs(createFormInputs(competition, question, question.getFormInputs()));
-			return question;
-		};
-	}
+            return question;
+        };
+    }
 
 
     private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
         return simpleMap(formInputTemplates, createFormInput(competition, question));
-	}
-	
-	private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
-		return (FormInput formInput) -> {
+    }
+
+    private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
+        return (FormInput formInput) -> {
             entityManager.detach(formInput);
             formInput.setCompetition(competition);
-			formInput.setQuestion(question);
+            formInput.setQuestion(question);
             formInput.setId(null);
             formInputRepository.save(formInput);
 
             formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
-		};
-	}
+        };
+    }
 
 
     private Competition setDefaultAssessorPayAndCount(Competition competition) {

@@ -366,7 +366,9 @@
                                                    th:errorclass="field-error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
+                                                   maxlength="255"
                                                    data-required-errormessage="Please enter a justification"
+                                                   data-maxlength-errormessage="Justification has a maximum length of 255 characters"
                                                    rows="3" />
                                         </td>
                                         <td>
@@ -403,7 +405,9 @@
                                                    th:errorclass="field-error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-subject'}"
                                                    th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
-                                                   data-required-errormessage="Please enter a subject"/>
+                                                   maxlength="255"
+                                                   data-required-errormessage="Please enter a subject"
+                                                   data-maxlength-errormessage="Subject has a maximum length of 255 characters"/>
                                         </td>
                                         <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'error'">
                                             <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
@@ -418,7 +422,9 @@
                                                    th:errorclass="field-error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                    th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
-                                                   data-required-errormessage="Please enter a justification" />
+                                                   maxlength="255"
+                                                   data-required-errormessage="Please enter a justification"
+                                                   data-maxlength-errormessage="Justification has a maximum length of 255 characters"/>
                                         </td>
                                         <td>
                                             <button class="buttonlink alignright" data-remove-row="guidance" type="button" name="remove-guidance-row" th:value="${iteration.index}" th:id="'remove-guidance-row-' + ${iteration.index}">Remove</button>

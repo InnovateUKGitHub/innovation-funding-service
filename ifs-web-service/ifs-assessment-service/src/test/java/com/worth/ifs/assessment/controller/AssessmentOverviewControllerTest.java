@@ -74,9 +74,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<AssessmentOverviewController> {
 
-    @InjectMocks
-    private AssessmentOverviewController assessmentOverviewController;
-
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 

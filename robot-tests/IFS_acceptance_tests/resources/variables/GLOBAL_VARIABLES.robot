@@ -140,7 +140,7 @@ ${POSTCODE_LOOKUP_URL}    ${SERVER}/organisation/create/selected-organisation/05
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/contributors/invite
-${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}
+${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
@@ -169,7 +169,7 @@ ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
 ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${COMP_ADMINISTRATOR_OPEN}    ${SERVER}/management/competition/${OPEN_COMPETITION}
-${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}
+${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)

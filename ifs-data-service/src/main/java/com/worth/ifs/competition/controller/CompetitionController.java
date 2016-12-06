@@ -62,6 +62,11 @@ public class CompetitionController {
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
+
+    @RequestMapping(value = "/{id}/close-assessment", method = RequestMethod.PUT)
+    public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
+        return competitionService.closeAssessment(id).toPutResponse();
+    }
     
     @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
     public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
@@ -88,6 +93,7 @@ public class CompetitionController {
     public RestResult<Void> markAsSetup(@PathVariable("id") final Long competitionId) {
         return competitionSetupService.markAsSetup(competitionId).toPostResponse();
     }
+
     @RequestMapping(value = "/{id}/return-to-setup", method = RequestMethod.POST)
     public RestResult<Void> returnToSetup(@PathVariable("id") final Long competitionId) {
         return competitionSetupService.returnToSetup(competitionId).toPostResponse();
@@ -96,5 +102,10 @@ public class CompetitionController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public RestResult<CompetitionResource> create() {
         return competitionSetupService.create().toPostCreateResponse();
+    }
+
+    @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
+    public RestResult<Void> notifyAssessors(@PathVariable("id") final Long id) {
+        return competitionService.notifyAssessors(id).toPutResponse();
     }
 }

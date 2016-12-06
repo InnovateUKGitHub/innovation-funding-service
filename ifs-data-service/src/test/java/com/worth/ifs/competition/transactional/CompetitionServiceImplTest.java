@@ -7,6 +7,7 @@ import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.*;
@@ -15,10 +16,13 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Collections.singletonList;
@@ -176,5 +180,48 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
             assertEquals(originalCompetition.getId(), searchResult.getId());
             assertEquals(originalCompetition.getName(), searchResult.getName());
         });
+    }
+
+
+    @Test
+    public void test_closeAssessment() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
+                .build(2));
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+
+        service.closeAssessment(competitionId);
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL,competition.getCompetitionStatus());
+    }
+
+
+    @Test
+    public void test_notifyAssessors() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,SUBMISSION_DATE,ALLOCATE_ASSESSORS).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(ASSESSMENT_CLOSED)
+                .build(1));
+
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+
+        service.notifyAssessors(competitionId);
+
+        assertEquals(CompetitionStatus.IN_ASSESSMENT,competition.getCompetitionStatus());
     }
 }
