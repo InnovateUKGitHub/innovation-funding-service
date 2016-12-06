@@ -50,6 +50,11 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         this.competition = null;
     }
 
+    public CompetitionParticipant(CompetitionInvite invite) {
+        this(invite.getTarget(), invite);
+    }
+
+    // TODO can we remove competition from the constructor args since it's already part of Invite?
     public CompetitionParticipant(Competition competition, CompetitionInvite invite) {
         this(competition, null, invite);
     }

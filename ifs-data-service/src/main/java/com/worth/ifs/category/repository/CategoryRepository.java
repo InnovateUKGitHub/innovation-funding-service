@@ -13,5 +13,5 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     Set<Category> findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType researchCategory,
 			String competitionClassName, Long id);
     List<Category> findByType(CategoryType type);
-	
+    Category findByIdAndType(Long id, CategoryType type);
 }
