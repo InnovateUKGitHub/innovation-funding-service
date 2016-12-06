@@ -32,11 +32,21 @@
         </div>
     </th:block>
 
-    <th:block th:if="${!model.isSentToProjectTeam()}">
-        <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+    <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
+        <p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
     </th:block>
-    <th:block th:if="${model.isSentToProjectTeam()}">
-        <p>The grant offer letter is now available for review. Once all project partners are happy, please upload or send the signed original to Innovate UK.</p>
+    <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
+        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+            <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
+        </th:block>
+        <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+            <th:block th:if="${!model.isSentToProjectTeam()}">
+                <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+            </th:block>
+            <th:block th:if="${model.isSentToProjectTeam()}">
+                <p>The grant offer letter is now available for review. Once all project partners are happy, please upload or send the signed original to Innovate UK.</p>
+            </th:block>
+        </th:block>
     </th:block>
 
     <h2 th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
@@ -127,12 +137,14 @@
                     <a th:href="@{'/project/{id}/offer/grant-offer-letter/received-by-post'}" class="button">Confirm</a>
                 </div>
             </div>
-        </div> -->
+        </div>
+    </th:block>
+    -->
 
-        <th:block th:if="${model.isSentToProjectTeam()}" th:remove="tag">
+    <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}" th:remove="tag">
         <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
         <p>Do the documents supplied meet the requirements for the grant offer letter?</p>
-        <a href="#" data-js-modal="modal-accept-gol" class="button large">Accept signed grant offer letter</a>
+        <a href="#" data-js-modal="modal-accept-signed-gol" class="button large">Accept signed grant offer letter</a>
     </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

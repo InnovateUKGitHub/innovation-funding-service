@@ -90,6 +90,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/send")).
                 andExpect(view().name("project/grant-offer-letter-send")).
@@ -127,6 +128,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(projectService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
@@ -142,6 +144,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send")).
@@ -181,6 +184,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(projectService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
@@ -196,6 +200,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send")).
@@ -325,6 +330,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(annexFileEntryResource);
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(projectService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
@@ -366,6 +372,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(projectService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
@@ -406,6 +413,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(projectService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceSuccess());
 
@@ -421,6 +429,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed/" + ApprovalType.APPROVED)).
@@ -461,6 +470,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(projectService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
@@ -476,6 +486,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed/" + ApprovalType.APPROVED)).

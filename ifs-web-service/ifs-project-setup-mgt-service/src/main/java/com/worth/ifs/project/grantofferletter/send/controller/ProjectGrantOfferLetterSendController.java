@@ -187,6 +187,8 @@ public class ProjectGrantOfferLetterSendController {
 
         Boolean signedGrantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
 
+        Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+
         return new ProjectGrantOfferLetterSendViewModel(competitionSummary,
                                                         grantOfferFileDetails != null ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                                                         additionalContractFile != null ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
@@ -196,7 +198,9 @@ public class ProjectGrantOfferLetterSendController {
                                                         application.getId(),
                                                         grantOfferFileDetails != null ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
                                                         additionalContractFile != null ? additionalContractFile.isPresent() : Boolean.FALSE,
-                                                        signedGrantOfferLetterApproved);
+                                                        signedGrantOfferLetterApproved,
+                                                        signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE
+                );
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

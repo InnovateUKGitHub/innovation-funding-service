@@ -19,6 +19,7 @@ public class ProjectGrantOfferLetterSendViewModel {
     private Long applicationId;
     private Boolean grantOfferLetterFileContentAvailable;
     private Boolean additionalContractFileContentAvailable;
+    private Boolean signedGrantOfferLetterFileAvailable;
     private Boolean signedGrantOfferLetterApproved;
 
     public ProjectGrantOfferLetterSendViewModel(CompetitionSummaryResource competitionSummary,
@@ -30,7 +31,8 @@ public class ProjectGrantOfferLetterSendViewModel {
                                                 Long applicationId,
                                                 Boolean grantOfferLetterFileContentAvailable,
                                                 Boolean additionalContractFileContentAvailable,
-                                                Boolean signedGrantOfferLetterApproved) {
+                                                Boolean signedGrantOfferLetterApproved,
+                                                Boolean signedGrantOfferLetterFileAvailable) {
         this.competitionSummary = competitionSummary;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
@@ -41,16 +43,14 @@ public class ProjectGrantOfferLetterSendViewModel {
         this.grantOfferLetterFileContentAvailable = grantOfferLetterFileContentAvailable;
         this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
         this.signedGrantOfferLetterApproved = signedGrantOfferLetterApproved;
+        this.signedGrantOfferLetterFileAvailable = signedGrantOfferLetterFileAvailable;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
         return competitionSummary;
     }
 
-
     public Boolean isSentToProjectTeam() { return this.sentToProjectTeam; }
-
-
 
     public FileDetailsViewModel getGrantOfferLetterFile() { return grantOfferLetterFile; }
 
@@ -80,6 +80,8 @@ public class ProjectGrantOfferLetterSendViewModel {
 
     public Boolean getSignedGrantOfferLetterApproved() { return signedGrantOfferLetterApproved; }
 
+    public Boolean getSignedGrantOfferLetterFileAvailable() { return signedGrantOfferLetterFileAvailable; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,6 +101,7 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(grantOfferLetterFileContentAvailable, that.grantOfferLetterFileContentAvailable)
                 .append(additionalContractFileContentAvailable, that.additionalContractFileContentAvailable)
                 .append(signedGrantOfferLetterApproved, that.signedGrantOfferLetterApproved)
+                .append(signedGrantOfferLetterFileAvailable, that.signedGrantOfferLetterFileAvailable)
                 .isEquals();
     }
 
@@ -114,6 +117,7 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(grantOfferLetterFileContentAvailable)
                 .append(additionalContractFileContentAvailable)
                 .append(signedGrantOfferLetterApproved)
+                .append(signedGrantOfferLetterFileAvailable)
                 .toHashCode();
     }
 }
