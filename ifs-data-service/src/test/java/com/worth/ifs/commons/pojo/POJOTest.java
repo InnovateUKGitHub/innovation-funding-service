@@ -29,9 +29,8 @@ import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.FinanceRowMetaField;
-import com.worth.ifs.finance.domain.FinanceRowMetaValue;
+import com.worth.ifs.finance.domain.*;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.InviteOrganisation;
@@ -93,6 +92,7 @@ public class POJOTest {
             InviteOrganisation.class,
             Section.class,
             ApplicationFinance.class,
+            ProjectFinanceResource.class,
             Competition.class,
             CreateUserResource.class,
             UpdateUserResource.class,
