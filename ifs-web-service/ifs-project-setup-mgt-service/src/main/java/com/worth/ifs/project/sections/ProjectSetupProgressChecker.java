@@ -54,6 +54,11 @@ class ProjectSetupProgressChecker {
         return COMPLETE.equals(projectStatus.getOtherDocumentsStatus());
     }
 
+    public boolean isOtherDocumentsRejected() {
+        return REJECTED.equals(projectStatus.getOtherDocumentsStatus());
+    }
+
+
     public boolean isOrganisationRequiringFunding() {
         return !NOT_REQUIRED.equals(projectStatus.getBankDetailsStatus());
     }

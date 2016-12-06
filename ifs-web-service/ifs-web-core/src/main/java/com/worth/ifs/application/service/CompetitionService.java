@@ -51,5 +51,7 @@ public interface CompetitionService {
 
     List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId);
 
+    void closeAssessment(Long competitionId);
+
     void notifyAssessors(Long competitionId);
 }

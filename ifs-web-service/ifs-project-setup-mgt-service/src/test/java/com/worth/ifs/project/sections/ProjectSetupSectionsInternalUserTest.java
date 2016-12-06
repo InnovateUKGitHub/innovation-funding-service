@@ -138,6 +138,31 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToOtherDocumentsSectionHappyPath() {
         when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(false);
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+
+        verifyInteractions(
+                mock -> mock.isOtherDocumentsSubmitted()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToOtherDocumentsSectionDocsApproved() {
+        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+
+        verifyInteractions(
+                mock -> mock.isOtherDocumentsSubmitted()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToOtherDocumentsSectionDocsRejected() {
+        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
 
         verifyInteractions(
