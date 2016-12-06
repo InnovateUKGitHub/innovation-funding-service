@@ -14,10 +14,11 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 ...
 ...               INFUND-5806 As a partner (non-lead) I want the status indicator of the Other Documents section to show as pending before the lead has uploaded documents so that I am aware there is no action required by me
-Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+Suite Setup       Log in as user    ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
+Resource          PS_Variables.robot
 
 *** Variables ***
 
@@ -25,7 +26,8 @@ Resource          ../../resources/defaultResources.robot
 Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}
+    [Setup]  log in as a different user     ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
@@ -35,8 +37,8 @@ Non-lead partner cannot upload either document
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
+    Given log in as a different user       ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd
+    When the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     #Then the user should see the 2 Upload buttons
     And the user should see the element    jQuery=label[for="collaborationAgreement"]
@@ -47,9 +49,9 @@ PM cannot submit when both documents are not uploaded
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Other documents
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
+    And the user clicks the button/link      link=Other documents
     When the user uploads to the collaboration agreement question    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
@@ -74,7 +76,9 @@ Lead partner cannot remove either document
 
 Lead partner can upload both documents
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
@@ -83,40 +87,40 @@ Lead partner can upload both documents
 Lead partner can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user navigates to the page    ${project_in_setup_page}
+    And the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user should see the element    link=What's the status of each of my partners?
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
-    [Teardown]    the user navigates to the page    ${project_in_setup_page}
+    [Teardown]    the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
 
 Lead partner does not have the option to submit the mandatory documents
     [Documentation]    INFUND-3011
     [Tags]
-    [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
+    [Setup]    the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     When the user should not see an error in the page
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
 Non-lead partner can view both documents
     [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
+    Given log in as a different user          ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    When the user navigates to the page       ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     Then the user moves focus to the element  jQuery=ul li:nth-child(7)
-    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
+    And the user should see the element       jQuery=#content > ul > li:nth-child(7) > div.progress-status
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user navigates to the page    ${project_in_setup_page}
+    And the user navigates to the page      ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
@@ -132,15 +136,15 @@ Non-lead partner cannot remove or submit right
 PM can view both documents
     [Documentation]    INFUND-3011, INFUND-2621
     [Tags]
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
-    And the user navigates to the page    ${project_in_setup_page}
+    Given log in as a different user      ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd
+    And the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user navigates to the page    ${project_in_setup_page}
+    And the user navigates to the page      ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
@@ -148,14 +152,14 @@ PM can view both documents
 PM can remove the second document
     [Documentation]    INFUND-3011
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     When the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see an error in the page
 
 Non-lead partner can still view the first document
     [Documentation]    INFUND-4252
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    When the user navigates to the page      ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     Then the user should see the text in the page    ${valid_pdf}
 
@@ -163,25 +167,24 @@ Non-lead partner can still view the first document
 PM can remove the first document
     [Documentation]    INFUND-3011
     [Tags]
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
-    Given the user navigates to the page    ${project_in_setup_page}
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    name=removeCollaborationAgreementClicked
     Then the user should not see the text in the page    ${valid_pdf}
 
 Non-lead partner cannot view either document once removed
     [Documentation]    INFUND-4252
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    When the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    ${valid_pdf}
 
-
 PM can upload both documents
     [Documentation]    INFUND-3011
-    [Tags]    HappyPath
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
-    Given the user navigates to the page    ${project_in_setup_page}
+    [Tags]
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     When the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
@@ -199,9 +202,9 @@ Status in the dashboard remains action required after uploads
 Mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152
     [Tags]    HappyPath
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
@@ -210,16 +213,16 @@ Mandatory document submission
     When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Project setup status
-    Then the user should be redirected to the correct page    ${project_in_setup_page}
+    Then the user should be redirected to the correct page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user should see the element    jQuery=ul li.waiting:nth-child(7)
-    When the user navigates to the page    ${project_in_setup_page}
+    When the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=What's the status of each of my partners?
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
     [Documentation]    INFUND-3012
     [Tags]    HappyPath
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=Other documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
@@ -237,8 +240,8 @@ PM cannot remove the documents after submitting
 
 Lead partner cannot remove the documents after submission by PM
     [Documentation]    INFUND-3012
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
-    Given the user navigates to the page    ${project_in_setup_page}
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
@@ -256,8 +259,8 @@ Lead partner can still view both documents after submitting
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]    INFUND-3012
-    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
-    Given the user navigates to the page    ${project_in_setup_page}
+    [Setup]    log in as a different user    ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
@@ -271,30 +274,29 @@ Non-lead partner can still view both documents after submitting
     And the user goes back to the previous page
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
-    When the user navigates to the page    ${project_in_setup_page}
+    When the user navigates to the page    ${server}/project-setup/project/${PS_MD_APPLICATION_PROJECT}
     And the user clicks the button/link    link=What's the status of each of my partners?
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    When the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link      link=${PS_MD_Competition_Name}
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
     # Comp Admin should see the element as action needed instead of done TODO-INFUND-5601
-    When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(7) a
+    When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(4) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration Agreement
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(2)
     Then the user should see the file without error
 
-
 CompAdmin rejects other documents
     [Documentation]    INFUND-4620
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page     ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
@@ -309,25 +311,25 @@ Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424
     ...       This test Case has been deactivated for project id=1. Because the Other Documents are Approved instead.
     [Tags]    Failing
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd    #Project Manager
+    And the user navigates to the page      ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    Given log in as a different user    steve.smith@empire.com    Passw0rd    #Lead Partner
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd    #Lead Partner
+    And the user navigates to the page      ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    Given log in as a different user    pete.tom@egg.com    Passw0rd    #Academic Partner
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_ACADEMIC_EMAIL}    Passw0rd    #Academic Partner
+    And the user navigates to the page      ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
-    Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd    #Other Partner
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd    #Other Partner
+    And the user navigates to the page      ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
 
 
 Project Finance is able to Approve and Reject
     [Documentation]    INFUND-4621, INFUND-5440
     [Tags]
-    [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
+    [Setup]    Log in as a different user    &{internal_finance_credentials}
+    Given the user navigates to the page     ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the text in the page    Other documents
     And the user should see the element    jQuery=button:contains("Accept documents")
     And the user should see the element    jQuery=button:contains("Reject documents")
@@ -351,13 +353,13 @@ Project Finance user can click the link and go back to the Competition Dashboard
 CompAdmin approves other documents
     [Documentation]    INFUND-4621, INFUND-5507
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page     ${SERVER}/project-setup-management/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
-    And the user should see the text in the page    Empire Ltd
-    And the user should see the text in the page    Ludlow
-    And the user should see the text in the page    EGGS
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}
+    And the user should see the text in the page    Ooba
+    And the user should see the text in the page    Wordpedia
+    And the user should see the text in the page    Jabbertype
+    And the user should see the text in the page    ${PS_MD_APPLICATION_PM_EMAIL}
     Then the user should see the element    jQuery=button:contains("Accept documents")
     And the user should see the element    jQuery=button:contains("Reject documents")
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
@@ -372,40 +374,40 @@ CompAdmin approves other documents
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424
     [Tags]    HappyPath
-    Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as user                    ${PS_MD_APPLICATION_PM_EMAIL}    Passw0rd    #Project Manager
+    And the user navigates to the page      ${SERVER}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd    #Lead Partner
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd    #Lead Partner
+    And the user navigates to the page      ${SERVER}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}    Passw0rd    #Academic Partner
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_ACADEMIC_EMAIL}    Passw0rd    #Academic Partner
+    And the user navigates to the page      ${SERVER}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
-    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd    #Other Partner
-    And the user navigates to the page    ${project_in_setup_page}/partner/documents
+    Given log in as a different user        ${PS_MD_APPLICATION_PARTNER_EMAIL}    Passw0rd    #Other Partner
+    And the user navigates to the page      ${SERVER}/project-setup/project/${PS_MD_APPLICATION_PROJECT}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
 
 CompAdmin can see Project status updated
     [Documentation]    INFUND-2610
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link      link=${PS_MD_Competition_Name}
+    Then the user should see the element     jQuery=tr:nth-child(4):contains("${PS_MD_APPLICATION_TITLE}")
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td.status.ok:nth-of-type(6)
 
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049
     [Tags]    Experian
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_MD_Competition_Id}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(3).status.action
     # bank details are ok only when all 3 bank details are approved TODO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.action
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(6).status.ok
 
 *** Keywords ***
 the user uploads to the collaboration agreement question
