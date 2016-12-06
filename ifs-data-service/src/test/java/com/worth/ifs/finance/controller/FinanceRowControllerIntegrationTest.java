@@ -331,6 +331,32 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Rollback
     @Test
     public void testValidationCapitalUsageUpdateOverMaxAllowedValues(){
+        capitalUsage.setDescription("Desc");
+        capitalUsage.setExisting("Existing");
+        capitalUsage.setDeprecation(1000);
+        capitalUsage.setResidualValue(new BigDecimal("1000000"));
+        capitalUsage.setNpv(new BigDecimal("1000"));
+        capitalUsage.setUtilisation(200);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(capitalUsage.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+
+        List<Error> expectedErrors = singletonList(
+                fieldError("utilisation", 200, "validation.field.max.value.or.lower", 100));
+
+        assertErrorsAsExpected(messages, expectedErrors);
+    }
+
+    @Rollback
+    @Test
+    @Ignore("The original test that this came from could not have been actually flushing the session and forcing the " +
+            "save of the finance_row and finance_row_meta_values, because validation only occurs AFTER a successful " +
+            "save occurs in FinanceRowController - these values are over the max MySQL limit for the columns and so could " +
+            "never have resulted in a successful save")
+    public void testValidationCapitalUsageUpdateExistingAndDescriptionOverMaxAllowedValues(){
         capitalUsage.setDescription(overMaxAllowedTextSize);
         capitalUsage.setExisting(overMaxAllowedTextSize);
         capitalUsage.setDeprecation(1000);

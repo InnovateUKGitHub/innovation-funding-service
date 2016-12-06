@@ -204,7 +204,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
-        ApplicationFinance applicationFinance = newApplicationFinance().build();
+        ApplicationFinance applicationFinance = newApplicationFinance().
+                withOrganisationSize(organisation.getOrganisationSize()).
+                build();
 
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(
                 savedProject.getApplication().getId(), organisation.getId())).thenReturn(applicationFinance);

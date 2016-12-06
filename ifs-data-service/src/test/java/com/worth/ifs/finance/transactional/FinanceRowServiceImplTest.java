@@ -67,7 +67,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         Organisation organisation = newOrganisation().build();
         Application application = newApplication().build();
 
-        ApplicationFinance existingFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
+        ApplicationFinance existingFinance = newApplicationFinance().withOrganisationSize(organisation).withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
@@ -90,7 +90,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         Organisation organisation = newOrganisation().build();
         Application application = newApplication().build();
 
-        ApplicationFinance existingFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
+        ApplicationFinance existingFinance = newApplicationFinance().withOrganisationSize(organisation).withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().

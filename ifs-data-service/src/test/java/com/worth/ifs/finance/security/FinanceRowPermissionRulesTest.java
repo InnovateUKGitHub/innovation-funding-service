@@ -66,7 +66,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Long organisationId = 2L;
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
-            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
+            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisationSize(organisation).build();
             cost = newFinanceRow().withApplicationFinance(applicationFinance).build();
             costItem = new AcademicCost(cost.getId(), "", ZERO, "");
 
@@ -83,7 +83,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final long otherOrganisationId = 4l;
             final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
             final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
-            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisation(otherOrganisation).withApplication(otherApplication).build();
+            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisationSize(otherOrganisation).withApplication(otherApplication).build();
             otherCost = newFinanceRow().withApplicationFinance(otherApplicationFinance).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
