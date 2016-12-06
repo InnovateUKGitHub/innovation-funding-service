@@ -18,7 +18,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Navigation using previous button
     [Documentation]    INFUND-4264
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=Sustainable living models for the future
     And The user clicks the button/link    link=Products and Services Personalised
     When the user clicks the button/link    link=4. Economic benefit
@@ -153,7 +153,7 @@ Finance overview
 
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    The user navigates to the page    ${assessor_dashboard_url}
     When The user clicks the button/link    link=Sustainable living models for the future
     Then the status of the appllications should be correct    css=.boxed-list li:nth-child(2)    In progress
