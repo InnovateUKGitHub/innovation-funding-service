@@ -97,6 +97,37 @@ public class ProjectGrantOfferLetterSendController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @RequestMapping(value = "/grant-offer-letter", params = "uploadGrantOfferLetterClicked", method = POST)
+    public String uploadGrantOfferLetterFile(@PathVariable("projectId") final Long projectId,
+                                             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
+                                             @SuppressWarnings("unused") BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             Model model) {
+
+        MultipartFile file = form.getGrantOfferLetter();
+        ServiceResult<FileEntryResource> generateResult = projectService.addGeneratedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+                file.getOriginalFilename(), getMultipartFileBytes(file));
+
+        validationHandler.addAnyErrors(generateResult);
+
+        return doViewGrantOfferLetterSend(projectId, model, form);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @RequestMapping(value = "/grant-offer-letter", params = "removeGrantOfferLetterClicked", method = POST)
+    public String removeGrantOfferLetterFile(@PathVariable("projectId") final Long projectId,
+                                             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
+                                             @SuppressWarnings("unused") BindingResult bindingResult,
+                                             ValidationHandler validationHandler,
+                                             Model model) {
+
+        projectService.removeGeneratedGrantOfferLetter(projectId);
+
+        return doViewGrantOfferLetterSend(projectId, model, form);
+
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @RequestMapping(params = "uploadAnnexClicked", value = "/upload-annex", method = POST)
     public String uploadAnnexFile(
             @PathVariable("projectId") final Long projectId,

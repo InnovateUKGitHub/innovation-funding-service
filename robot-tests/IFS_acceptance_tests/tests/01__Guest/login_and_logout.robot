@@ -1,11 +1,13 @@
 *** Settings ***
-Documentation     INFUND-399: As a client, I would like to demo the system with real-like logins per user role
+Documentation     INFUND-399 As a client, I would like to demo the system with real-like logins per user role
 ...
 ...
-...               INFUND-171: As a user, I am able to sign in providing a emailaddress and password, so I have access to my data
+...               INFUND-171 As a user, I am able to sign in providing a emailaddress and password, so I have access to my data
 ...
 ...
-...               INFUND-2130: As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
+...               INFUND-2130 As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
+...
+...               INFUND-1479 As an assessor with an existing Applicant AND Assessor account I want to be able to choose the correct profile when I log in, so that I don't access the wrong profile information
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
@@ -45,12 +47,38 @@ Valid login as Collaborator
 Valid login as Assessor
     [Documentation]    INFUND-286
     [Tags]    HappyPath    Pending
-    #TODO INFUND-5990  Assessor bin slow in building
+    #TODO INFUND-5990    Assessor bin slow in building
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    Logout as user
+
+Valid login with double role as Applicant
+    [Documentation]    INFUND-1479
+    [Tags]    HappyPath
+    Given the user is not logged-in
+    When the guest user enters the log in credentials    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then The user should see the text in the page    Please choose the role you are signing in as today
+    And The user clicks the button/link    jquery=button:contains("Continue")
+    Then The user should see an error    Please select a role
+    And the user selects the radio button    selectedRole    APPLICANT
+    And The user clicks the button/link    jquery=button:contains("Continue")
+    Then the user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should see the element    link=Sign out
+    [Teardown]    Logout as user
+
+Valid login with Double role as Assessor
+    [Documentation]    INFUND-1479
+    Given the user is not logged-in
+    When the guest user enters the log in credentials    ${Multiple_user_credentials["email"]}    ${Multiple_user_credentials["password"]}
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    And the user selects the radio button    selectedRole    ASSESSOR
+    And The user clicks the button/link    jquery=button:contains("Continue")
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    And the user should see the element    link=Sign out
     [Teardown]    Logout as user
 
 Valid login as Comp Admin

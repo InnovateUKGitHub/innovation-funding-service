@@ -37,7 +37,6 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
-import static com.worth.ifs.competition.resource.MilestoneType.ASSESSOR_DEADLINE;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;

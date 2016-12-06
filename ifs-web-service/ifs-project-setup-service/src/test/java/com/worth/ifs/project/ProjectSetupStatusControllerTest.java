@@ -403,6 +403,135 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("spendProfileStatus", SectionStatus.TICK));
     }
 
+    @Test
+    public void testViewProjectSetupStatusWithGOLNotSent() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withGrantOfferStatus(NOT_STARTED).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withFinanceChecksStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withProjectDetailsStatus(COMPLETE).
+                        build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.TICK),
+                Pair.of("spendProfileStatus", SectionStatus.TICK),
+                Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithGOLSent() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withGrantOfferStatus(ACTION_REQUIRED).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withFinanceChecksStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withProjectDetailsStatus(COMPLETE).
+                        build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.TICK),
+                Pair.of("spendProfileStatus", SectionStatus.TICK),
+                Pair.of("grantOfferLetterStatus", SectionStatus.FLAG));
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithGOLReturned() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withGrantOfferStatus(PENDING).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withFinanceChecksStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withProjectDetailsStatus(COMPLETE).
+                        build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.TICK),
+                Pair.of("spendProfileStatus", SectionStatus.TICK),
+                Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithGOLApproved() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withGrantOfferStatus(COMPLETE).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withFinanceChecksStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withSpendProfileStatus(COMPLETE).
+                        withProjectDetailsStatus(COMPLETE).
+                        build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.TICK),
+                Pair.of("spendProfileStatus", SectionStatus.TICK),
+                Pair.of("grantOfferLetterStatus", SectionStatus.TICK));
+    }
+
+
     private ProjectSetupStatusViewModel performViewProjectStatusCallAndAssertBasicDetails(boolean expectedMonitoringOfficer) throws Exception {
 
         MvcResult result = performViewProjectStatusCall();

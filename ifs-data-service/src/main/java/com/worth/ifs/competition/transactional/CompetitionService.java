@@ -44,4 +44,7 @@ public interface CompetitionService {
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<Void> closeAssessment(Long competitionId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> notifyAssessors(Long competitionId);
 }

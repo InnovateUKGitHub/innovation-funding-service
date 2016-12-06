@@ -120,6 +120,7 @@ include::application-funding-decision.adoc[]
 [[assessor]]
 == Assessor
 include::assessor.adoc[]
+include::assessor-count-options.adoc[]
 
 [[assessorfeedback]]
 == AssessorFeedback

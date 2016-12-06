@@ -39,6 +39,7 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.service.FileTemplateRenderer;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -452,6 +453,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ContractMapper contractMapperMock;
+
+    @Mock
+    protected FileTemplateRenderer rendererMock;
 
     @Mock
     protected AssessorCountOptionMapper assessorCountOptionMapperMock;

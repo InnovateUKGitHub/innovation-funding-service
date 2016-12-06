@@ -111,4 +111,8 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
         return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
 
+    @Override
+    public RestResult<Void> notifyAssessors(Long competitionId) {
+        return putWithRestResult(String.format("%s/%s/notify-assessors", competitionsRestURL, competitionId), Void.class);
+    }
 }
