@@ -1,10 +1,9 @@
 package com.worth.ifs.project;
 
-import java.util.function.Consumer;
-
 import com.worth.ifs.user.resource.UserResource;
-
 import org.junit.Test;
+
+import java.util.function.Consumer;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -28,17 +27,18 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testViewFinanceContact() {
-        assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null));
+        assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null, null));
     }
 
     @Test
     public void testUpdateFinanceContact() {
+
         assertSecured(() -> classUnderTest.updateFinanceContact(123L, null, null, null, null, null));
     }
 
     @Test
     public void testViewProjectManager() {
-        assertSecured(() -> classUnderTest.viewProjectManager(123L, null, null));
+        assertSecured(() -> classUnderTest.viewProjectManager(123L, null, null, null));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testSearchAddress() {
-        assertSecured(() -> classUnderTest.searchAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.searchAddress(123L, null, null, null));
     }
 
     @Test

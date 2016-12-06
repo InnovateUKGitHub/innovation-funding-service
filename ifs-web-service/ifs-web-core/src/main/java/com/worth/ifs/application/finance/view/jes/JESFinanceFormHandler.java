@@ -14,6 +14,7 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.form.resource.FormInputType;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,13 +33,14 @@ import java.util.Map;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
 import static com.worth.ifs.commons.rest.ValidationMessages.noErrors;
+import static com.worth.ifs.form.resource.FormInputType.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
 	
 	private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
-	
+
     @Autowired
     private FinanceRowService financeRowService;
 
@@ -51,35 +53,35 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     private static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
 
     @Override
-    public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId) {
-        storeFinanceRowItems(request, userId, applicationId);
+    public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
+        storeFinanceRowItems(request, userId, applicationId, competitionId);
         return storeJESUpload(request, userId, applicationId);
     }
 
-    private void storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId) {
+    private void storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
         Enumeration<String> parameterNames = request.getParameterNames();
         while(parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
 
             if(parameterValues.length > 0) {
-                storeCost(userId, applicationId, parameter, parameterValues[0]);
+                storeCost(userId, applicationId, parameter, parameterValues[0], competitionId);
             }
         }
     }
 
     @Override
-    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value) {
+    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         if (fieldName != null && value != null) {
             if (fieldName.startsWith("cost-")) {
-                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
+                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId, competitionId);
             }
         }
         return null;
     }
 
-    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
-        FinanceFormField financeFormField = getCostFormField(fieldName, value);
+    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId, Long competitionId) {
+        FinanceFormField financeFormField = getCostFormField(competitionId, fieldName, value);
         if(financeFormField==null)
             return null;
 
@@ -96,11 +98,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
     }
 
-    private FinanceFormField getCostFormField(String costTypeKey, String value) {
+    private FinanceFormField getCostFormField(Long competitionId, String costTypeKey, String value) {
         // check for question id
         String[] keyParts = costTypeKey.split("-");
         if (keyParts.length == 2) {
-            Long questionId = getQuestionId(keyParts[1]);
+            Long questionId = getQuestionId(competitionId, keyParts[1]);
             return new FinanceFormField(costTypeKey, value, keyParts[0], String.valueOf(questionId), keyParts[1], "");
         }
         return null;
@@ -134,38 +136,38 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
     }
 
-    private Long getQuestionId(String costFieldName) {
+    private Long getQuestionId(Long competitionId, String costFieldName) {
         QuestionResource question;
         switch (costFieldName) {
             case "tsb_reference":
-                question = questionService.getQuestionByFormInputType("your_finance").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, YOUR_FINANCE).getSuccessObject();
                 break;
             case "incurred_staff":
-                question = questionService.getQuestionByFormInputType("labour").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, LABOUR).getSuccessObject();
                 break;
             case "incurred_travel_subsistence":
-                question = questionService.getQuestionByFormInputType("travel").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, TRAVEL).getSuccessObject();
                 break;
             case "incurred_other_costs":
-                question = questionService.getQuestionByFormInputType("materials").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, MATERIALS).getSuccessObject();
                 break;
             case "allocated_investigators":
-                question = questionService.getQuestionByFormInputType("labour").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, LABOUR).getSuccessObject();
                 break;
             case "allocated_estates_costs":
-                question = questionService.getQuestionByFormInputType("other_costs").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccessObject();
                 break;
             case "allocated_other_costs":
-                question = questionService.getQuestionByFormInputType("other_costs").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccessObject();
                 break;
             case "indirect_costs":
-                question = questionService.getQuestionByFormInputType("overheads").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OVERHEADS).getSuccessObject();
                 break;
             case "exceptions_staff":
-                question = questionService.getQuestionByFormInputType("labour").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, LABOUR).getSuccessObject();
                 break;
             case "exceptions_other_costs":
-                question = questionService.getQuestionByFormInputType("other_costs").getSuccessObject();
+                question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccessObject();
                 break;
             default:
             	question = null;

@@ -9,8 +9,6 @@ import com.worth.ifs.finance.repository.FinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -31,8 +29,6 @@ import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.O
  */
 @Component
 public class OtherFundingValidator implements Validator {
-
-    private static final Log LOG = LogFactory.getLog(OtherFundingValidator.class);
 
     private FinanceRowRepository financeRowRepository;
     private QuestionService questionService;
@@ -89,7 +85,8 @@ public class OtherFundingValidator implements Validator {
     private boolean userHasSelectedYes(final OtherFunding otherFunding) {
         FinanceRow cost = financeRowRepository.findOne(otherFunding.getId());
         ApplicationFinance applicationFinance = cost.getApplicationFinance();
-        ServiceResult<Question> question = questionService.getQuestionByFormInputType(FinanceRowType.OTHER_FUNDING.getType());
+        Long competitionId = applicationFinance.getApplication().getCompetition().getId();
+        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getFormInputType());
         List<FinanceRow> otherFundingRows = financeRowRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccessObject().getId());
         return otherFundingRows.size() > 0 && otherFundingRows.get(0).getItem().equals("Yes");
     }

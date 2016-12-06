@@ -47,7 +47,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     public Iterable<FinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
     	
     	if(costTypeSupportedByHandler(costType)) {
-	        Question question = getQuestionByCostType(costType);
+            Long competitionId = applicationFinance.getApplication().getCompetition().getId();
+            Question question = getQuestionByCostType(competitionId, costType);
 	        try{
 	            List<FinanceRow> cost = getCostHandler(costType).initializeCost();
 	            cost.forEach(c -> {
@@ -69,8 +70,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
 	// TODO DW - INFUND-1555 - handle rest result
-    private Question getQuestionByCostType(FinanceRowType costType) {
-        return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrThrowException();
+    private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
+        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -108,7 +109,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
      * @param cost FinanceRow to be added
      */
     private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
         FinanceRowCostCategory financeRowCostCategory = costCategories.get(costType);
@@ -146,7 +147,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public FinanceRowItem costToCostItem(FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         return financeRowHandler.toCostItem(cost);
     }

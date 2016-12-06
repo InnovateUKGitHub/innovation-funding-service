@@ -35,7 +35,6 @@ include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
 === Get all bank details for a competition as a csv export
 ==== Request
 include::{snippets}/competition/bank-details/export-bank-details/http-request.adoc[]
-include::{snippets}/competition/bank-details/export-bank-details/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/competition/bank-details/export-bank-details/http-response.adoc[]
@@ -43,3 +42,25 @@ include::{snippets}/competition/bank-details/export-bank-details/response-header
 
 ==== Curl Example
 include::{snippets}/competition/bank-details/export-bank-details/curl-request.adoc[]
+
+=== Notify assessors of assessment period
+==== Request
+include::{snippets}/competition/notify-assessors/http-request.adoc[]
+include::{snippets}/competition/notify-assessors/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/notify-assessors/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/notify-assessors/curl-request.adoc[]
+
+== Close assessment on a Competition
+=== Request
+include::{snippets}/competition/close-assessment/http-request.adoc[]
+include::{snippets}/competition/close-assessment/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/close-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/close-assessment/curl-request.adoc[]

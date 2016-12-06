@@ -1,6 +1,8 @@
 package com.worth.ifs.project.sections;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.user.builder.RoleResourceBuilder;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserRoleType;
@@ -8,13 +10,16 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
@@ -114,6 +119,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(null));
 
         verifyInteractions(
+                mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isSpendProfileSubmitted()
         );
     }
@@ -147,16 +153,56 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isGrantOfferLetterSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
+
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
 
-        verifyInteractions(mock -> mock.isGrantOfferLetterSubmitted());
+        verifyInteractions(mock -> mock.isGrantOfferLetterSent());
     }
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionButOtherSectionsAreIncomplete() {
-        when(projectSetupProgressCheckerMock.isGrantOfferLetterSubmitted()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
+    }
+    @Test
+    public void testCheckAccessToGrantOfferLetterSendSectionHappyPath() {
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+
+        Map<UserRoleType, ProjectActivityStates> roleSpecificActivityStates = new HashMap<UserRoleType, ProjectActivityStates>();
+        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
+        when(projectSetupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+
+        List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
+        UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
+
+        verifyInteractions(mock -> mock.isOtherDocumentsApproved(),
+                           mock -> mock.isSpendProfileApproved(),
+                           mock -> mock.getRoleSpecificActivityState());
+    }
+
+    @Test
+    public void testCheckFinanceUserGetsCompAdminActivityStates() {
+        Map<UserRoleType, ProjectActivityStates> roleSpecificActivityStates = new HashMap<UserRoleType, ProjectActivityStates>();
+        roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
+        when(projectSetupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+
+        List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(PROJECT_FINANCE).build(1);
+        UserResource financeUser = newUserResource().withRolesGlobal(roles).build();
+        assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(financeUser));
+
+        verifyInteractions(mock -> mock.getRoleSpecificActivityState());
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionSendButOtherSectionsAreIncomplete() {
+        List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
+        UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
     }
 
     @SafeVarargs

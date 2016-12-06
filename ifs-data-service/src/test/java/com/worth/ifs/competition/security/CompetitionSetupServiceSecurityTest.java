@@ -13,6 +13,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +61,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            Long sectionId = 3L;
             assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
@@ -122,7 +122,17 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             return null;
         }
 
-		@Override
+        @Override
+        public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
+            return null;
+        }
+
+        @Override
 		public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
@@ -142,9 +152,5 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             return null;
         }
 
-        @Override
-		public ServiceResult<Void> initialiseFormForCompetitionType(Long competitionId, Long competitionType) {
-			return null;
-		}
     }
 }

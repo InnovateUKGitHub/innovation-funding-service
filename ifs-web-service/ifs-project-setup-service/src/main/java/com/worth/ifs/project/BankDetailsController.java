@@ -1,15 +1,15 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.address.resource.OrganisationAddressType;
-import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
-import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
-import com.worth.ifs.bankdetails.form.BankDetailsForm;
+import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
+import com.worth.ifs.project.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.BankDetailsViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -73,6 +73,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         if (isNewAddressNotValid(form)) {
+            addAddressNotProvidedValidationError(bindingResult, validationHandler);
             return bankDetails(model, projectId, loggedInUser, form);
         }
 

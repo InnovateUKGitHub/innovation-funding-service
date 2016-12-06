@@ -2,14 +2,18 @@ apply plugin: 'war'
 
 war {
     baseName = 'project-setup'
-    version = '0.0.1-SNAPSHOT'
 }
+
+bootRepackage {
+    mainClass = 'com.worth.ifs.Application'
+}
+
 configurations {
     providedRuntime
 }
 
 dependencies {
-
+    compile project(':ifs-web-service:ifs-web-core')
 
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
@@ -17,14 +21,15 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
-    compile project(':ifs-web-service:ifs-web-core')
 
-    testCompile files('../libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
+    testCompile project(':ifs-resources').sourceSets.test.output
+    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
+    testCompile project(":ifs-commons").sourceSets.test.output
+
     testCompile "com.openpojo:openpojo:0.8.3"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile "net.sf.opencsv:opencsv:2.3"
-    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 }
 
 processResources {
@@ -51,11 +56,28 @@ task copyJsInPlace(type: Copy) {
     from 'src/main/resources/static/js/dest'
 }
 
-
 task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename '(.*).war', 'project-setup.war'
+}
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = 'project-setup-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn buildDocker
 }
 
 task cleanDeploy() {

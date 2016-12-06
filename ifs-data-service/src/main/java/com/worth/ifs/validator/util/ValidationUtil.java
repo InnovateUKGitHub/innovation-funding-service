@@ -145,7 +145,7 @@ public class ValidationUtil {
     public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> APPLICATION.equals(formInput.getScope()));
+        List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> formInput.getActive() && APPLICATION.equals(formInput.getScope()));
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
@@ -188,7 +188,7 @@ public class ValidationUtil {
 
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
-            FinanceRowType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
+            FinanceRowType.fromType(formInput.getType()); // this checks if formInput is CostType related.
             validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...

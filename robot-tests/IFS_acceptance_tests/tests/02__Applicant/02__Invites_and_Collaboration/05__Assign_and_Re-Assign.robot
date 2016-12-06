@@ -76,7 +76,7 @@ Collaborator should see the review button instead of the review and submit
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Assign test
-    Then the user should not see the element    jQuery=.button:contains("Review & submit")
+    Then the user should not see the element    jQuery=.button:contains("Review and submit")
     And the user clicks the button/link    jQuery=.button:contains("Review")
     And the user should see the text in the page    All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
     And the user should not see the element    jQuery=.button:contains("Submit application")
@@ -253,7 +253,7 @@ the user enters the funding level
     focus    jQuery=.button:contains("Mark all as complete")
 
 the applicant changes the name of the application
-    Given the user clicks the button/link    link= Connected digital additive manufacturing
+    Given the user clicks the button/link    link= ${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    link= Application details
     And the user enters text to a text field    id=application_details-title    Assign test
     And The user clicks the button/link    jQuery=button:contains("Save and return")

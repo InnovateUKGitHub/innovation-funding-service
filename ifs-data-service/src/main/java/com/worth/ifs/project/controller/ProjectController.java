@@ -4,6 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.invite.resource.InviteProjectResource;
@@ -14,6 +15,7 @@ import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
+import com.worth.ifs.project.transactional.SaveMonitoringOfficerResult;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,9 +137,15 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
-        return projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
-                .andOnSuccess(() -> projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource))
-                .toPutResponse();
+        final boolean[] sendNotification = new boolean[1];
+        ServiceResult<Boolean> result = projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
+                .andOnSuccessReturn(r -> r.isMonitoringOfficerSaved() ? (sendNotification[0] = true) : (sendNotification[0] = false));
+
+        if (sendNotification[0]) {
+            return projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource).toPutResponse();
+        }
+
+        return result.toPutResponse();
     }
 
     @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
@@ -269,12 +277,26 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/team-status", method = GET)
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
-                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId){
+                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 
     @RequestMapping(value = "/{projectId}/status", method = GET)
-    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId){
+    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/is-send-grant-offer-letter-allowed", method = GET)
+    public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
+        return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
+    }
+    @RequestMapping(value = "/{projectId}/grant-offer/send", method = POST)
+    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
+        return projectService.sendGrantOfferLetter(projectId).toPostResponse();
+    }
+
+    @RequestMapping(value= "/{projectId}/is-grant-offer-letter-already-sent", method = GET)
+    public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
+        return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }
 }

@@ -50,7 +50,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
 
     @Before
     public void setup(){
-        this.document = document("project/bank-details/{method-name}",
+        this.document = document("project/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
 
@@ -73,7 +73,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                         contentType(APPLICATION_JSON).
                         content(toJson(bankDetailsResource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),

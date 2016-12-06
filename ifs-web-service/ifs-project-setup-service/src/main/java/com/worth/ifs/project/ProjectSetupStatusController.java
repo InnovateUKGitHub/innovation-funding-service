@@ -7,6 +7,9 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
+import com.worth.ifs.project.sections.ProjectSetupSectionStatus;
+import com.worth.ifs.project.sections.SectionAccess;
+import com.worth.ifs.project.sections.SectionStatus;
 import com.worth.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -24,8 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static com.worth.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
+import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
 
@@ -77,11 +80,14 @@ public class ProjectSetupStatusController {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
 
+        ProjectActivityStates spendProfileState = ownOrganisation.getSpendProfileStatus();
+        ProjectActivityStates grantOfferLetterState = teamStatus.getLeadPartnerStatus().getGrantOfferLetterStatus();
+
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
-        boolean grantOfferLetterSubmitted = project.getOfferSubmittedDate() != null;
-        boolean spendProfilesSubmitted = project.getSpendProfileSubmittedDate() != null;
+        ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
+        boolean spendProfileApproved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -103,17 +109,26 @@ public class ProjectSetupStatusController {
 
         ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, bankDetailsState,
-                organisation.getId(), projectDetailsSubmitted, projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners,
-                leadPartner, allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved, grantOfferLetterSubmitted, spendProfilesSubmitted,
-                statusAccessor.canAccessCompaniesHouseSection(organisation),
-                statusAccessor.canAccessProjectDetailsSection(organisation),
-                statusAccessor.canAccessMonitoringOfficerSection(organisation),
-                statusAccessor.canAccessBankDetailsSection(organisation),
-                statusAccessor.canAccessFinanceChecksSection(organisation),
-                statusAccessor.canAccessSpendProfileSection(organisation),
-                statusAccessor.canAccessOtherDocumentsSection(organisation),
-                statusAccessor.canAccessGrantOfferLetterSection(organisation));
+        SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
+        SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
+        SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation);
+        SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
+        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
+        SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
+        SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
+        SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
+
+        SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, leadPartner);
+        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), projectDetailsSubmitted);
+        SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(bankDetailsState);
+        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
+        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState, spendProfileApproved);
+        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
+        SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
+
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation.getId(), leadPartner,
+                companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
+                projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
     }
 
     private boolean checkAllFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {

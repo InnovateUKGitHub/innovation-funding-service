@@ -19,12 +19,14 @@
 
             <p>You are invited to act as an assessor for the competition <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>.<!--/* Please read the information below and confirm whether you are available to assess applications for this competition./*/--></p>
 
-            <!--/*section class="boxed">
-                <h2 class="heading-medium no-margin">15 - 25 April - assessment period</h2>
-                <p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;100 per application.</p>
+            <section class="boxed">
+                <h2 class="heading-medium no-margin" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'dd MMMM yyyy' : 'dd MMMM'">
+                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)} - assessment period|" th:remove="tag"/>
+                </h2>
+                <!--/*p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;100 per application.</p>
 
-                <p>The assessor webinar briefing is mandatory and will last one hour, taking place on 21 March.</p>
-            </section/*/-->
+                <p>The assessor webinar briefing is mandatory and will last one hour, taking place on 21 March.</p*/-->
+            </section>
 
             <section>
                 <!--/*h2 class="heading-medium">Competition details - Technology Inspired</h2>
@@ -36,15 +38,19 @@
                 <ul class="list-bullet">
                     <li>you are unavailable for the assessment period dates</li>
                     <li>you are unable to meet the assessment deadlines</li>
-                    <li>this competition is outside your area of expertise</li>
+                    <li>this competition is not in your area of expertise</li>
                     <li>you have a direct conflict of interest, for example intending to apply to this competition yourself</li>
                 </ul>
             </section>
 
             <form th:action="@{/invite/competition/{inviteHash}/accept(inviteHash=${model.competitionInviteHash})}" method="POST">
-                <h2 class="heading-medium">Are you available to assess this competition?</h2>
-                <button class="button large extra-margin" type="submit">Accept</button>
-                <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">Reject</a>
+                <fieldset>
+                    <legend class="visuallyhidden">Are you available to assess this competition?</legend>
+                    <h2 class="heading-medium">Are you available to assess this competition?</h2>
+                    <p>If you are available you will be taken through the account creation process.</p>
+                    <button class="button large extra-margin" type="submit">Yes, create account</button>
+                    <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">No</a>
+                </fieldset>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

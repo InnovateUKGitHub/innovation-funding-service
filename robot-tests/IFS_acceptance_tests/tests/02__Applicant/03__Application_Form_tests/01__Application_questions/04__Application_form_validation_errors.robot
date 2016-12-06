@@ -8,9 +8,8 @@ Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Title field client side
-    [Documentation]    INFUND-43
-    ...
-    ...    INFUND-2843
+    [Documentation]    INFUND-43, INFUND-2843
+    [Tags]    HappyPath
     Given the user should see the text in the page    Application details
     When the user enters text to a text field    id=application_details-title    ${EMPTY}
     And the user should see an error    Please enter the full title of the project

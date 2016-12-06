@@ -1,9 +1,11 @@
 package com.worth.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.resource.FormInputScope;
+import com.worth.ifs.form.resource.FormInputType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,7 +21,7 @@ import java.util.Set;
  * for example, collaborative Application Forms
  */
 @Entity
-public class FormInput{
+public class FormInput {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,9 +30,8 @@ public class FormInput{
     @Column(length = 5000)
     private Integer wordCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "formInputTypeId", referencedColumnName = "id")
-    private FormInputType formInputType;
+    @Column(name = "form_input_type_id")
+    private FormInputType type;
 
     @OneToMany(mappedBy = "formInput")
     private List<FormInputResponse> responses;
@@ -50,7 +51,7 @@ public class FormInput{
     private Set<FormValidator> inputValidators;
 
     @Column(length=5000)
-    private String guidanceQuestion;
+    private String guidanceTitle;
 
     @Column(length=5000)
     private String guidanceAnswer;
@@ -65,6 +66,11 @@ public class FormInput{
     @NotNull
     @Enumerated(EnumType.STRING)
     private FormInputScope scope;
+
+    @OneToMany(mappedBy = "formInput")
+    private List<GuidanceRow> guidanceRows;
+
+    private boolean active = true;
 
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
@@ -95,12 +101,12 @@ public class FormInput{
         this.responses = responses;
     }
 
-    public FormInputType getFormInputType() {
-        return formInputType;
+    public FormInputType getType() {
+        return type;
     }
 
-    public void setFormInputType(FormInputType formInputType) {
-        this.formInputType = formInputType;
+    public void setType(FormInputType type) {
+        this.type = type;
     }
 
     public Boolean isIncludedInApplicationSummary() {
@@ -161,12 +167,12 @@ public class FormInput{
         this.question = question;
     }
 
-    public String getGuidanceQuestion() {
-        return guidanceQuestion;
+    public String getGuidanceTitle() {
+        return guidanceTitle;
     }
 
-    public void setGuidanceQuestion(final String guidanceQuestion) {
-        this.guidanceQuestion = guidanceQuestion;
+    public void setGuidanceTitle(final String guidanceTitle) {
+        this.guidanceTitle = guidanceTitle;
     }
 
     public String getGuidanceAnswer() {
@@ -191,5 +197,21 @@ public class FormInput{
 
     public void setScope(FormInputScope scope) {
         this.scope = scope;
+    }
+
+    public List<GuidanceRow> getGuidanceRows() {
+        return guidanceRows;
+    }
+
+    public void setGuidanceRows(List<GuidanceRow> guidanceRows) {
+        this.guidanceRows = guidanceRows;
+    }
+
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

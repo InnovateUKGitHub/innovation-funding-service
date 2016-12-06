@@ -48,7 +48,7 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules).onlyLeadApplicantCanMarkSectionAsComplete(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(sectionPermissionRules).onlyMemberOfProjectTeamCanMarkSectionAsComplete(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
@@ -60,7 +60,7 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules).onlyLeadApplicantCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(sectionPermissionRules).onlyMemberOfProjectTeamCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 

@@ -2,7 +2,7 @@ package com.worth.ifs.documentation;
 
 import com.worth.ifs.application.builder.ApplicationResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
@@ -42,7 +42,7 @@ public class ApplicationDocs {
             .withApplicationStatus(ApplicationStatusConstants.OPEN)
             .withCompetition(1L)
             .withCompetitionName("competition name")
-            .withCompetitionStatus(CompetitionResource.Status.PROJECT_SETUP)
+            .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
             .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L));
 }

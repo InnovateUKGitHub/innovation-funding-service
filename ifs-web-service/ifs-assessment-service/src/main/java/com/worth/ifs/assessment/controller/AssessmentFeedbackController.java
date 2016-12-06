@@ -2,7 +2,6 @@ package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -18,6 +17,7 @@ import com.worth.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
@@ -93,10 +92,12 @@ public class AssessmentFeedbackController {
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
-
-        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-        List<String> lookupUpMessages = lookupErrorMessageResourceBundleEntries(messageSource, result);
-        return createJsonObjectNode(result.isSuccess(), lookupUpMessages);
+        try {
+          ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+          return createJsonObjectNode(true);
+        } catch (Exception e) {
+            return createJsonObjectNode(false);
+        }
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
@@ -153,7 +154,7 @@ public class AssessmentFeedbackController {
 
     private boolean isApplicationDetailsQuestion(Long questionId) {
         List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
-        return applicationFormInputs.stream().anyMatch(formInputResource -> "application_details".equals(formInputResource.getFormInputTypeTitle()));
+        return applicationFormInputs.stream().anyMatch(formInputResource -> FormInputType.APPLICATION_DETAILS == formInputResource.getType());
     }
 
     private String getApplicationDetails(Model model, Long assessmentId, QuestionResource question) {
@@ -180,15 +181,11 @@ public class AssessmentFeedbackController {
         return simpleFilter(responses, responsePair -> formInputResourceMap.containsKey(responsePair.getLeft()));
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
+    private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
+
         return node;
     }
 }

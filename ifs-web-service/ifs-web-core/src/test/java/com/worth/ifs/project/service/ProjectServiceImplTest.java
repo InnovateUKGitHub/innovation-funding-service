@@ -29,7 +29,7 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -450,6 +450,17 @@ public class ProjectServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
+    }
+
+    @Test
+    public void testRemoveGeneratedGrantOfferLetter() {
+        long projectId = 123L;
+
+        when(projectRestService.removeGeneratedGrantOfferLetter(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
     }
 
     @Test

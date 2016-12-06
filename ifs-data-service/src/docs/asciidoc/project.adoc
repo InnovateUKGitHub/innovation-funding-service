@@ -150,24 +150,6 @@ include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-pro
 ====== Curl Example
 include::{snippets}/project/is-submit-allowed-returns-false-when-details-not-provided/curl-request.adoc[]
 
-=== Submit Banks Details
-==== Success
-===== Request
-include::{snippets}/project/submit-bank-details/http-request.adoc[]
-include::{snippets}/project/submit-bank-details/path-parameters.adoc[]
-include::{snippets}/project/submit-bank-details/request-fields.adoc[]
-
-===== Response
-include::{snippets}/project/submit-bank-details/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/submit-bank-details/curl-request.adoc[]
-
-==== Failure cases
-===== Update Bank Details with invalid input
-include::{snippets}/project/submit-invalid-bank-details/http-response.adoc[]
-
-
 === Upload Collaboration Agreement Document during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
@@ -463,19 +445,6 @@ include::{snippets}/project/get-team-status/response-fields.adoc[]
 ===== Curl Example
 include::{snippets}/project/get-team-status/curl-request.adoc[]
 
-=== Get Project Team Bank Details Status Summary
-==== Success
-===== Request
-include::{snippets}/project/get-bank-details-project-summary/http-request.adoc[]
-include::{snippets}/project/get-bank-details-project-summary/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/get-bank-details-project-summary/http-response.adoc[]
-include::{snippets}/project/get-bank-details-project-summary/response-fields.adoc[]
-
-===== Curl Example
-include::{snippets}/project/get-bank-details-project-summary/curl-request.adoc[]
-
 === Get current status for all projects in competition
 ==== Success
 ===== Request
@@ -576,3 +545,42 @@ include::{snippets}/project/get-spend-profile-csv-when-spend-profile-data-not-in
 
 ===== Exception thrown when generating the Spend Profile CSV
 include::{snippets}/project/get-spend-profile-csv-when-io-exception/http-response.adoc[]
+
+
+=== Send Grant Offer Letter notification
+==== Success
+===== Request
+include::{snippets}/project/send-grant-offer-letter/http-request.adoc[]
+include::{snippets}/project/send-grant-offer-letter/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/send-grant-offer-letter/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/send-grant-offer-letter/curl-request.adoc[]
+
+
+=== Is Grant Offer Letter notification already sent
+==== Success
+===== Request
+include::{snippets}/project/is-grant-offer-letter-already-sent/http-request.adoc[]
+include::{snippets}/project/is-grant-offer-letter-already-sent/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-grant-offer-letter-already-sent/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-grant-offer-letter-already-sent/curl-request.adoc[]
+
+
+=== Is Grant Offer Letter notification allowed
+==== Success
+===== Request
+include::{snippets}/project/is-send-grant-offer-letter-allowed/http-request.adoc[]
+include::{snippets}/project/is-send-grant-offer-letter-allowed/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-send-grant-offer-letter-allowed/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc[]

@@ -11,9 +11,9 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
-    <div class="hgroup">
-        <h1 class="heading-xlarge no-margin-bottom">Join an application</h1>
-        <p>You have been invited to join a new application into the competition '<span th:text="${invite.competitionName}" />'.</p>
+    <div class="page-title">
+        <h1 class="heading-xlarge">Join an application</h1>
+        <p>You have been invited to join an application into the competition '<th:block th:text="${invite.competitionName}" />'.</p>
     </div>
 
     <div class="grid-row">

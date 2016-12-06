@@ -3,10 +3,10 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName,
                                             String value, Optional<Long> objectId) {
 	    if(objectId.isPresent()) {
-            QuestionViewModel question = competitionSetupQuestionService.getQuestion(objectId.get());
+            CompetitionSetupQuestionResource question = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccessObjectOrThrowException();
 
             if(question == null) {
                 return makeErrorList();
@@ -59,16 +59,20 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
 
             competitionSetupQuestionService.updateQuestion(question);
         } else {
-            return makeErrorList("question.maxWords");
+            return makeErrorList();
         }
 
         return Collections.emptyList();
 	}
 
-	private List<Error> updateQuestionWithValueByFieldname(QuestionViewModel question, String fieldName, String value) {
+	private List<Error> updateQuestionWithValueByFieldname(CompetitionSetupQuestionResource question, String fieldName, String value) {
         switch (fieldName) {
             case "question.shortTitle" :
-                question.setShortTitle(value);
+                if (!value.isEmpty()) {
+                    question.setShortTitle(value);
+                } else {
+                    return makeErrorList("question.shortTitle", "This field cannot be left blank");
+                }
                 break;
             case "question.title" :
                 question.setTitle(value);
@@ -83,11 +87,16 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 question.setGuidance(value);
                 break;
             case "question.maxWords" :
+                Integer maxWords;
                 try {
-                    question.setMaxWords(Integer.parseInt(value));
+                    maxWords = Integer.parseInt(value);
                 } catch(NumberFormatException e) {
                     return makeErrorList("question.maxWords");
                 }
+                if (maxWords < 1) {
+                    return makeErrorList("question.maxWords", "javax.validation.constraints.Min.message", value);
+                }
+                question.setMaxWords(maxWords);
                 break;
             case "question.appendix" :
                 question.setAppendix(textToBoolean(value));
@@ -99,15 +108,25 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
         return Collections.emptyList();
     }
 
-	private List<Error> makeErrorList() {
-        return asList(fieldError("", null, "Unable to save question"));
+    private List<Error> makeErrorList() {
+        return makeErrorList("");
     }
 
     private List<Error> makeErrorList(String fieldName) {
-        return asList(fieldError("", fieldName, "Unable to save question"));
+        return makeErrorList(fieldName, "Unable to save question", "");
     }
 
-	@Override
+    private List<Error> makeErrorList(String fieldName, String error) {
+        return asList(fieldError(fieldName, "", error));
+    }
+
+    private List<Error> makeErrorList(String fieldName, String error, String rejectedValue) {
+        return asList(fieldError(fieldName, rejectedValue, error));
+    }
+
+
+
+    @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return ApplicationFormForm.class.equals(clazz);
 	}

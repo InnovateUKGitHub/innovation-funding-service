@@ -1,43 +1,49 @@
 package com.worth.ifs.competition.transactional;
 
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.competitiontemplate.builder.CompetitionTemplateBuilder.newCompetitionTemplate;
-import static com.worth.ifs.competitiontemplate.builder.FormInputTemplateBuilder.newFormInputTemplate;
-import static com.worth.ifs.competitiontemplate.builder.QuestionTemplateBuilder.newQuestionTemplate;
-import static com.worth.ifs.competitiontemplate.builder.SectionTemplateBuilder.newSectionTemplate;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
-import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.application.resource.SectionType;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.AssessorCountOption;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.CompetitionType;
+import com.worth.ifs.competition.domain.Milestone;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
+import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.repository.CompetitionTypeRepository;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.repository.FormInputRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionType;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.domain.CompetitionType;
-import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.competitiontemplate.domain.CompetitionTemplate;
-import com.worth.ifs.competitiontemplate.domain.SectionTemplate;
-import com.worth.ifs.competitiontemplate.repository.CompetitionTemplateRepository;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
+import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -49,13 +55,17 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private CompetitionTypeRepository competitionTypeRepository;
     @Mock
-    private CompetitionTemplateRepository competitionTemplateRepository;
-    @Mock
     private FormInputRepository formInputRepository;
     @Mock
     private QuestionRepository questionRepository;
-    @Mock
-    private SectionRepository sectionRepository;
+	@Mock
+	private SectionRepository sectionRepository;
+	@Mock
+	private GuidanceRowRepository assessmentScoreRowRepository;
+	@Mock
+	private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
+	@Mock
+	private EntityManager entityManager;
 
     @Before
 	public void setup() {
@@ -65,107 +75,68 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testInitialiseForm() {
-    	CompetitionType competitionType = new CompetitionType();
-    	FormInputType formInputType = new FormInputType();
-    	
+    public void copyFromCompetitionTypeTemplate() {
+		long typeId = 4L;
+		long competitionId = 2L;
+    	CompetitionType competitionType = newCompetitionType().withId(typeId).build();
     	Competition competition = newCompetition().build();
-    	CompetitionTemplate competitionTemplate = newCompetitionTemplate()
+    	Competition competitionTemplate = newCompetition()
     			.withCompetitionType(competitionType)
-    			.withSectionTemplates(asList(
-    						newSectionTemplate()
-    						.withName("section1")
-    						.withSectionType(SectionType.GENERAL)
-    						.withAssessorGuidanceDescription("assessorGuidanceDescription")
-    						.withDescription("description")
-    						.withQuestionTemplates(asList(
-    								newQuestionTemplate()
-    								.withAssessorGuidanceAnswer("assessorGuidanceAnswer")
-    								.withAssessorGuidanceQuestion("assessorGuidanceQuestion")
-    								.withDescription("description")
-    								.withName("name")
-    								.withShortName("shortName")
-    								.withFormInputTemplates(asList(
-    										newFormInputTemplate()
-    										.withDescription("description")
-    										.withFormInputType(formInputType)
-    										.withGuidanceAnswer("guidanceAnswer")
-    										.withGuidanceQuestion("guidanceQuestion")
-    										.withIncludedInApplicationSummary(true)
-    										.withInputValidators(new HashSet<>())
-    										.build(),
-    										newFormInputTemplate()
-    										.build()
-									))
-    								.build(),
-    								newQuestionTemplate()
-    								.build()
-    						))
-    						.build(),
-    						newSectionTemplate()
-    						.build()
-    					))
-    			.build();
-    	
-    	when(competitionRepository.findById(123L)).thenReturn(competition);
-    	when(competitionTemplateRepository.findByCompetitionTypeId(4L)).thenReturn(competitionTemplate);
-    	
-    	ServiceResult<Void> result = service.initialiseFormForCompetitionType(123L, 4L);
-    	
+    			.withSections(newSection()
+						.withSectionType(SectionType.GENERAL)
+						.withQuestions(newQuestion()
+								.withFormInputs(newFormInput()
+										.withGuidanceRows(newFormInputGuidanceRow().build(2)
+										).build(2)
+							).build(2)
+					).build(2)
+			).build();
+
+		competitionType.setTemplate(competitionTemplate);
+
+    	when(competitionRepository.findById(competitionId)).thenReturn(competition);
+		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
+		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
+
+		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
+
     	assertTrue(result.isSuccess());
-    	assertEquals(competitionType, competition.getCompetitionType());
-    	assertEquals(2, competition.getSections().size());
-    	Section section = competition.getSections().get(0);
-    	assertEquals("section1", section.getName());
-    	assertEquals(SectionType.GENERAL, section.getType());
-    	assertEquals("assessorGuidanceDescription", section.getAssessorGuidanceDescription());
-    	assertEquals("description", section.getDescription());
-    	assertEquals(2, section.getQuestions().size());
-    	Question question = section.getQuestions().get(0);
-    	//assertEquals("assessorGuidanceAnswer", question.getAssessorGuidanceAnswer());
-    	//assertEquals("assessorGuidanceQuestion", question.getAssessorGuidanceQuestion());
-    	assertEquals("description", question.getDescription());
-    	assertEquals("name", question.getName());
-    	assertEquals("shortName", question.getShortName());
-    	assertEquals(2, question.getFormInputs().size());
-    	FormInput formInput = question.getFormInputs().get(0);
-    	assertEquals("description", formInput.getDescription());
-    	assertEquals(formInputType, formInput.getFormInputType());
-    	assertEquals("guidanceAnswer", formInput.getGuidanceAnswer());
-    	assertEquals("guidanceQuestion", formInput.getGuidanceQuestion());
-    	assertTrue(formInput.getIncludedInApplicationSummary());
-    	assertEquals(new HashSet<>(), formInput.getInputValidators());
+		assertEquals(competition.getCompetitionType(), competitionType);
+		assertEquals(competition.getSections(), competitionTemplate.getSections());
     }
-    
+
     @Test
     public void testInitialiseFormWithSectionHierarchy() {
-    	
-    	SectionTemplate parent = newSectionTemplate()
+		Long typeId = 4L;
+    	Section parent = newSection()
 				.withName("parent")
 				.build();
-    	
-    	SectionTemplate child1 = newSectionTemplate()
+
+    	Section child1 = newSection()
 				.withName("child1")
-				.withParentSectionTemplate(parent)
+				.withParentSection(parent)
 				.build();
-    	SectionTemplate child2 = newSectionTemplate()
+		Section child2 = newSection()
 				.withName("child2")
-				.withParentSectionTemplate(parent)
+				.withParentSection(parent)
 				.build();
-    	parent.setChildSectionTemplates(asList(child1, child2));
-    	
-    	Competition competition = newCompetition().build();
-    	CompetitionTemplate competitionTemplate = newCompetitionTemplate()
-    			.withSectionTemplates(asList(
+    	parent.setChildSections(new ArrayList<>(asList(child1, child2)));
+
+		CompetitionType competitionType = newCompetitionType().withId(typeId).build();
+		Competition competition = newCompetition().build();
+    	Competition competitionTemplate = newCompetition()
+    			.withSections(asList(
     					parent, child1, child2
 				))
     			.build();
-    	
+
+		competitionType.setTemplate(competitionTemplate);
     	when(competitionRepository.findById(123L)).thenReturn(competition);
-    	when(competitionTemplateRepository.findByCompetitionTypeId(4L)).thenReturn(competitionTemplate);
-    	
-    	ServiceResult<Void> result = service.initialiseFormForCompetitionType(123L, 4L);
-    	
+    	when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
+		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
+
+		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(123L, 4L);
+
     	assertTrue(result.isSuccess());
     	assertEquals(3, competition.getSections().size());
     	Section parentSection = competition.getSections().get(0);
@@ -206,4 +177,66 @@ public class CompetitionSetupServiceImplTest {
 		assertFalse(comp.getSetupComplete());
 	}
 
+
+	@Test
+	public void copyFromCompetitionTypeTemplateAssessorCountAndPay() {
+		long typeId = 4L;
+		long competitionId = 2L;
+		CompetitionType competitionType = newCompetitionType().withId(typeId).build();
+		Competition competition = newCompetition().build();
+		Competition competitionTemplate = newCompetition()
+				.withCompetitionType(competitionType)
+				.withSections(newSection()
+						.withSectionType(SectionType.GENERAL)
+						.withQuestions(newQuestion()
+								.withFormInputs(newFormInput()
+										.build(2)
+								).build(2)
+						).build(2)
+				).build();
+
+		competitionType.setTemplate(competitionTemplate);
+
+		AssessorCountOption assessorOption = newAssessorCountOption().withId(1L)
+				.withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.TRUE).build();
+
+		when(competitionRepository.findById(competitionId)).thenReturn(competition);
+		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
+		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.of(assessorOption));
+		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
+
+		assertTrue(result.isSuccess());
+		assertEquals(competition.getCompetitionType(), competitionType);
+		assertEquals(Integer.valueOf(1), competition.getAssessorCount());
+		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
+	}
+
+	@Test
+	public void copyFromCompetitionTypeTemplateAssessorCountAndPayWithNoDefault() {
+		long typeId = 4L;
+		long competitionId = 2L;
+		CompetitionType competitionType = newCompetitionType().withId(typeId).build();
+		Competition competition = newCompetition().build();
+		Competition competitionTemplate = newCompetition()
+				.withCompetitionType(competitionType)
+				.withSections(newSection()
+						.withSectionType(SectionType.GENERAL)
+						.withQuestions(newQuestion()
+								.withFormInputs(newFormInput()
+										.build(2)
+								).build(2)
+						).build(2)
+				).build();
+
+		competitionType.setTemplate(competitionTemplate);
+
+		when(competitionRepository.findById(competitionId)).thenReturn(competition);
+		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
+		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
+		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
+
+		assertTrue(result.isSuccess());
+		assertNull(competition.getAssessorCount());
+		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
+	}
 }

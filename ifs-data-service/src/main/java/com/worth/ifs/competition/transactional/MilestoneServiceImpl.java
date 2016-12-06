@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.Comparator.comparing;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -78,6 +80,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
+        // TODO INFUND-6256 remove public default constructor for Milestone
         Milestone milestone = new Milestone();
         milestone.setType(type);
         milestone.setCompetition(competition);
@@ -85,10 +88,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     private ValidationMessages validate(List<MilestoneResource> milestones) {
-
         ValidationMessages vm = new ValidationMessages();
 
-        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
+        milestones.sort(comparing(MilestoneResource::getType));
 
         milestones.forEach(m -> {
         	if(m.getDate() == null) {
@@ -99,10 +101,13 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         		vm.addError(error);
         	}
         });
-        
-        for (int i = 1; i < milestones.size(); i++) {
-        	MilestoneResource previous = milestones.get(i - 1);
-        	MilestoneResource current = milestones.get(i);
+
+        // preset milestones must be in the correct order
+        List<MilestoneResource> presetMilestones = simpleFilter(milestones, milestoneResource -> milestoneResource.getType().isPresetDate());
+
+        for (int i = 1; i < presetMilestones.size(); i++) {
+        	MilestoneResource previous = presetMilestones.get(i - 1);
+        	MilestoneResource current = presetMilestones.get(i);
         	
         	if(current.getDate() != null && previous.getDate() != null) {
         		if(previous.getDate().isAfter(current.getDate())) {

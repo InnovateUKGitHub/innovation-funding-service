@@ -7,12 +7,14 @@
     <div class="form-group extra-margin">
         <label class="form-label" for="research-category">
             <span class="form-label-bold">Please select the research category for this project</span>
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
         </label>
         <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
             <option value="">Please select...</option>
-            <option value="Technical feasibility studies">Technical feasibility studies</option>
-            <option value="Industrial research">Industrial research</option>
-            <option value="Experimental development">Experimental development</option>
+            <option th:each="category : ${model.researchCategories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    value="1">Not available</option>
         </select>
     </div>
 </div>
@@ -26,17 +28,23 @@
             <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
         </label>
 
-        <details th:unless="${#strings.isEmpty(field.guidanceQuestion)}">
+        <details th:unless="${#strings.isEmpty(field.guidanceTitle)}">
             <summary>
-                <span class="summary" th:text="${field.guidanceQuestion}" />
+                <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
-            <div class="panel-indent" ifs:utext="${field.guidanceAnswer}" />
+            <div class="panel-indent">
+                <p th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
+                <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
+                    <tr th:each="guidance : ${field.guidanceRows}">
+                        <th scope="row" th:text="${guidance.subject}" />
+                        <td th:text="${guidance.justification}" />
+                    </tr>
+                </table>
+            </div>
         </details>
 
         <div class="textarea-wrapped word-count">
-            <textarea data-editor="md" th:field="*{formInput[__${field.id}__]}" th:attr="data-max_words=${field.wordCount}" th:id="'form-textarea-'+${field.id}">
-            </textarea>
-
+            <textarea data-editor="md" th:field="*{formInput[__${field.id}__]}" th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'}" th:id="'form-textarea-'+${field.id}"></textarea>
             <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}">
                 <div th:include="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})" th:remove="tag" />
             </div>

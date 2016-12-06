@@ -120,6 +120,7 @@ include::application-funding-decision.adoc[]
 [[assessor]]
 == Assessor
 include::assessor.adoc[]
+include::assessor-count-options.adoc[]
 
 [[assessorfeedback]]
 == AssessorFeedback
@@ -144,6 +145,14 @@ include::competition.adoc[]
 [[competitioninvite]]
 == Competition Invite
 include::competitionInvite.adoc[]
+
+[[competitionparticipant]]
+== Competition Participant
+include::competitionParticipant.adoc[]
+
+[[competitionSetupQuestion]]
+== Competition Setup Question
+include::competitionSetupQuestion.adoc[]
 
 [[assessment]]
 == Assessment
@@ -172,3 +181,9 @@ include::silstub.adoc[]
 [[project]]
 == Project
 include::project.adoc[]
+include::project-grant-offer.adoc[]
+include::bank-details.adoc[]
+
+[[processOutcome]]
+== ProcessOutcome
+include::processOutcome.adoc[]

@@ -7,19 +7,19 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFUND-3888 Rearrangement of Competitions setup
 ...
-...               INFUND-3000 As a competitions team member I want to be able to configure application form questions during Competition Setup so that correct details are provided for each competition
-...
 ...               INFUND-4682 Initial details can be saved with an opening date in the past
 ...
 ...               INFUND-2993 As a competitions team member I want to be able to add milestones when creating my competition so these can be used manage its progress
 ...
-...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial Details section in Competition Setup the so that I do not lose my changes
+...               INFUND-3001 As a Competitions team member I want the service to automatically save my edits while I work through Initial details section in Competition Setup the so that I do not lose my changes
 ...
-...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding Information section in Competition Setup the so that I do not lose my changes
+...               INFUND-4581 As a Competitions team member I want the service to automatically save my edits while I work through Funding information section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-4586 As a Competitions team member I want the service to automatically save my edits while I work through Application Questions section in Competition Setup the so that I do not lose my changes
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
+...
+...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -33,7 +33,7 @@ Initial details: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user clicks the button/link    link=Initial Details
+    And The user clicks the button/link    link=Initial details
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title
     And the user should see an error    Please select a competition type
@@ -65,9 +65,9 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening month
     When the user enters text to a text field    id=openingDateYear    2017
     #Then the user should not see the error any more    Please enter an opening year
-    When the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    Then the user should not see the error any more    Please select a lead technologist
-    When the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    Then the user should not see the error any more    Please select an Innovation Lead
+    When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
 
@@ -76,7 +76,7 @@ Initial details: Autosave
     [Tags]    Pending
     # TODO pending due Ito NFUND-5367
     When the user clicks the button/link    link=Competition setup
-    and the user clicks the button/link    link=Initial Details
+    and the user clicks the button/link    link=Initial details
     Then the user should see the correct values in the initial details form
 
 Initial details: should not allow dates in the past
@@ -105,7 +105,7 @@ Funding information server-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
-    Given the user clicks the button/link    link=Funding Information
+    Given the user clicks the button/link    link=Funding information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a funder name
@@ -135,7 +135,7 @@ Funding information Autosave
     [Documentation]    INFUND-4581
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Competition setup
-    And the user clicks the button/link    link=Funding Information
+    And the user clicks the button/link    link=Funding information
     Then the user should see the correct details in the funding information form
 
 Eligibility server-side validations
@@ -143,13 +143,10 @@ Eligibility server-side validations
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given The user clicks the button/link    link=Eligibility
-    And the user selects the radio button    multipleStream    yes
-    And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    Please select at least one research category
     And the user should see the text in the page    Please select a collaboration level
     And the user should see the text in the page    Please select a lead applicant type
-    And the user should see the text in the page    A stream name is required
     And the user should see the text in the page    Please select a resubmission option
 
 Eligibility client-side validations
@@ -159,7 +156,6 @@ Eligibility client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    Given the user selects the radio button    multipleStream    yes
     When the user selects the checkbox    id=research-categories-33
     And the user selects the checkbox    id=research-categories-34
     And the user selects the checkbox    id=research-categories-35
@@ -172,10 +168,10 @@ Eligibility client-side validations
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
-    And the user enters text to a text field    id=streamName    Test stream name
     And the user moves focus and waits for autosave
     And the user should not see the text in the page    A stream name is required
     And the user selects the radio button    resubmission    no
+    And the user moves focus and waits for autosave
     And the user should not see the text in the page    Please select a resubmission option
 
 Eligibility Autosave
@@ -208,73 +204,28 @@ Milestones: Autosave
     And the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
 
-Application: server side validations
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
+Assessor: Server-side validation
+    [Documentation]    INFUND-5641
     [Setup]    The user navigates to the Validation competition
-    # Pending INFUND-5629, INFUND-5632
-    Given The user should see the element    jQuery=.button[value="Save and close"]
-    When the user leaves all the question field empty
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
+    Given the user clicks the button/link    link=Assessors
+    And The user enters text to a text field    id=assessorPay    ${EMPTY}
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see an error    Please enter how much assessors will be paid.
 
-Application: Client side validations
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    # Pending INFUND-5629, INFUND-5632
-    Given the user fills the empty question fields
-    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-
-Application: Autosave
-    [Documentation]    INFUND-4586
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5632, 5639
-    Given the user moves focus and waits for autosave
-    When the user clicks the button/link    link=Competition setup
-    And The user clicks the button/link    link=Application Questions
-    Then the user should see the correct inputs in the Applications questions form
-
-Application: Mark as done and the Edit again
-    [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
-    [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
-    # Pending INFUND-5629, INFUND-5632
-    Given the user moves focus and waits for autosave
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then The user should see the text in the page    Test title
-    And the user should see the text in the page    Subtitle test
-    And the user should see the text in the page    Test guidance title
-    And the user should see the text in the page    Guidance text test
-    And the user should see the text in the page    150
-    And the user should see the text in the page    Yes
-    And The user clicks the button/link    jQuery=button:contains(Done)
-
-Application: should have a green check
-    [Tags]    HappyPath    Pending
-    # Pending INFUND-5629, INFUND-5632
-    When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=ul > li:nth-child(5) > img
+Assessor: Client-side validation
+    [Documentation]    INFUND-5641
+    When The user enters text to a text field    id=assessorPay    1.1
+    And the user selects the checkbox    id=assessors-62
+    Then the user should see an error    This field can only accept whole numbers
+    When The user enters text to a text field    id=assessorPay    120
+    And the user selects the checkbox    id=assessors-62
+    Then The user should not see the text in the page    This field can only accept whole numbers
 
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
     sleep    500ms
     Wait For Autosave
-
-the user should not see the error any more
-    [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
-    Focus    jQuery=.button:contains("Done")
-    Wait for autosave
-    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
-    sleep    500ms
 
 the user leaves all the question field empty
     Clear Element Text    css=.editor
@@ -413,8 +364,8 @@ the user should see the correct values in the initial details form
     Should Be Equal As Strings    ${input_value}    12
     ${input_value} =    Get Value    id=openingDateYear
     Should Be Equal As Strings    ${input_value}    2017
-    Page Should Contain    Competition Technologist One
-    page should contain    Competition Executive Two
+    Page Should Contain    Ian Cooper
+    page should contain    Toby Reader
 
 the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id=funders0.funder
@@ -429,9 +380,6 @@ the user should see the correct details in the funding information form
     Should Be Equal As Strings    ${input_value}    4242
 
 the user should see the correct details in the eligibility form
-    Radio Button Should Be Set To    multipleStream    yes
-    ${input_value} =    Get Value    id=streamName
-    Should Be Equal    ${input_value}    Test stream name
     the user sees that the radio button is selected    singleOrCollaborative    single
     Checkbox Should Be Selected    id=research-categories-33
     Checkbox Should Be Selected    id=research-categories-34
@@ -486,9 +434,17 @@ The user enters valid data in the initial details
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
-    And the user selects the option from the drop-down menu    Competition Technologist One    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Competition Executive Two    id=executiveUserId
+    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
 
 The user navigates to the Validation competition
     The user navigates to the page    ${SERVER}/management/dashboard/upcoming
     The user clicks the button/link    link=Validations Test
+
+the user should not see the error any more
+    [Arguments]    ${ERROR_TEXT}
+    run keyword and ignore error    mouse out    css=input
+    Focus    jQuery=.button:contains("Done")
+    Wait for autosave
+    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    sleep    500ms

@@ -7,6 +7,7 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.resource.FormInputType;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,10 +64,10 @@ public interface QuestionService {
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle);
+    ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
+    ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
     
     @PostFilter("hasPermission(filterObject, 'READ')")
 	ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId);

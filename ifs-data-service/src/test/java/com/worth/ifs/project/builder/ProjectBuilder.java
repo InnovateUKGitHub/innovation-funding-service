@@ -9,11 +9,13 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class
@@ -57,8 +59,12 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setExploitationPlan(exploitationPlan));
     }
 
-    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+    public ProjectBuilder withSignedGrantOfferLetter(FileEntry grantOfferLetter) {
         return with (project -> project.setSignedGrantOfferLetter(grantOfferLetter));
+    }
+
+    public ProjectBuilder withGrantOfferLetter(FileEntry grantOfferLetter) {
+        return with (project -> project.setGrantOfferLetter(grantOfferLetter));
     }
 
     public ProjectBuilder withAdditionalContractFile(FileEntry additionalContractFile) {
@@ -81,13 +87,21 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }
 
+    public ProjectBuilder withDateSubmitted(LocalDateTime... dates) {
+        return withArray((date, project) -> project.setSpendProfileSubmittedDate(date), dates);
+    }
+
 
     public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations) {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
     }
 
-    public ProjectBuilder withOtherDocumentsApproved(Boolean approved){
-        return with (project -> project.setOtherDocumentsApproved(approved));
+    public ProjectBuilder withOtherDocumentsApproved(Boolean... approved){
+        return withArray((approval, project) -> project.setOtherDocumentsApproved(approval), approved);
+    }
+
+    public ProjectBuilder withOfferSubmittedDate(LocalDateTime... dates){
+        return withArray ((date, project) -> project.setOfferSubmittedDate(date), dates);
     }
 
     @Override

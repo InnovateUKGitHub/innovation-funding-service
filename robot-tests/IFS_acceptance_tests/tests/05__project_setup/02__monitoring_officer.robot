@@ -14,15 +14,16 @@ Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/1/monitoring-officer
+${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
 
 *** Test Cases ***
+
 Before Monitoring Officer is assigned
     [Documentation]    INFUND-2634, INFUND-2621
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    And the user should see the text in the page    Innovate UK will assign the project a Monitoring Officer
+    And the user should see the text in the page    We will assign the project a Monitoring Officer.
     And the user should not see the element    jQuery=ul li.complete:nth-child(3)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
@@ -37,41 +38,43 @@ Comp admin can view the Supporting information details on MO page
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    Riff Street
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
+    And the user should see the text in the page    Empire Road
+    And the user should see the text in the page    Sheffield
+    And the user should see the text in the page    S1 2ED
     And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
-    And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
 
 
 
 Project finance user can view MO page, and go on to assign MO
-    [Documentation]    INFUND-5666
+    [Documentation]    INFUND-5666, INFUND-5507
     [Tags]    HappyPath
-    Given log in as a different user    project.finance1@innovateuk.test    Passw0rd
+    Given log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     When the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
-    And the user should see the text in the page    best riffs
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user should see the text in the page    Earth Observation
-    And the user should see the text in the page    Riff Street
-    And the user should see the text in the page    Bath
-    And the user should see the text in the page    BA1 5LR
+    And the user should see the text in the page    Empire Road
+    And the user should see the text in the page    Sheffield
+    And the user should see the text in the page    S1 2ED
     And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
-    And the user should see the text in the page    test twenty
-    And the user should see the text in the page    Vitruvius Stonework Limited
+    And the user should see the text in the page    Elmo Chenault
+    And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
+    [Teardown]  the user clicks the button/link     link=Competition dashboard
 
 
 MO server-side validation
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
+    Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name
     And the user should see an error    Please enter a last name
@@ -124,7 +127,7 @@ MO details(email step)
     [Tags]    Email    HappyPath
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email    ${test_mailbox_one}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    worth.email.test+projectlead@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Your Monitoring Officer    has now been assigned a Monitoring Officer
 
 MO details can be edited and viewed in the Project setup status page
     [Documentation]    INFUND-2630, INFUND-2621
@@ -156,7 +159,7 @@ MO details edit(email step)
     [Tags]    Email
     # Note that assigning a monitoring officer will send emails out to both the new MO and the PM - this test checks for both emails
     When the user reads his email from the second mailbox    ${test_mailbox_two}+monitoringofficer@gmail.com    New Monitoring Officer assignment    has been assigned to you
-    And the user reads his email from the default mailbox    worth.email.test+projectlead@gmail.com    Monitoring Officer assigned to your project    has been assigned a Monitoring Officer
+    And the user reads his email from the default mailbox    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Your Monitoring Officer    has now been assigned a Monitoring Officer
 
 MO details accessible/seen by all partners
     [Documentation]    INFUND-2634, INFUND-2621
@@ -185,6 +188,21 @@ MO details accessible/seen by all partners
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+
+
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]      HappyPath
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    Then the user should see the element    link = Monitoring Officer
+    And the user should see the element    link = Bank details
+    And the user should not see the element    link = Finance checks
+    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Grant offer letter
+
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049

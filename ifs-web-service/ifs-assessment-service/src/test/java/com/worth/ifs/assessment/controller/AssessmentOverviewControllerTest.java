@@ -24,6 +24,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.form.builder.FormInputResourceBuilder;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
@@ -43,7 +44,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -52,10 +53,11 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.lang.String.format;
 import static java.util.Collections.nCopies;
@@ -71,9 +73,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<AssessmentOverviewController> {
-
-    @InjectMocks
-    private AssessmentOverviewController assessmentOverviewController;
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -123,7 +122,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void AssessmentDetails() throws Exception {
-        String SCORE_INPUT_TYPE = "assessor_score";
         AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
@@ -140,7 +138,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         List<FormInputResource> formInputs = FormInputResourceBuilder.newFormInputResource()
                 .withId(1L, 2L, 3L, 4L)
-                .withFormInputTypeTitle(SCORE_INPUT_TYPE)
+                .withType(ASSESSOR_SCORE)
                 .build(4);
         List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource()
                 .withId(32L, 33L, 1L, 20L, 21L, 22L, 23L, 10L, 30L, 31L)

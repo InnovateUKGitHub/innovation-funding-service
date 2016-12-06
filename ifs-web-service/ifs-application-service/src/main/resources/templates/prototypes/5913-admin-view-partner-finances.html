@@ -12,9 +12,9 @@
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/5698-admin-readonly-application'})" th:remove="tag" />
 
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/5698-admin-readonly-application'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -26,7 +26,7 @@
   </h1>
 
 	<h2 class="heading-medium">Detailed finances</h2>
-  <p>These finances were orginally submitted bt the applicant.</p>
+  <p>These finances were orginally submitted by the applicant.</p>
 
 	<div class="collapsible section-overview extra-margin">
 
@@ -55,7 +55,7 @@
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:with="status=partnerView" th:remove="tag" />
 
-    	<h2>Travel &amp; subsistence
+    	<h2>Travel and subsistence
 	        <span data-mirror="#section-total-6">&pound; 0</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-travel" th:with="status=partnerView" th:remove="tag" />
@@ -70,7 +70,7 @@
 
 	<h3 class="heading-medium">Other funding</h3>
 
-	<p>This is any other applicable public sector funding that you have applied for or received for this project, that Innovate UK have been informed of.</p>
+	<p>This refers to other public funding that you have told us about.</p>
 
 	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" th:remove="tag" />
 

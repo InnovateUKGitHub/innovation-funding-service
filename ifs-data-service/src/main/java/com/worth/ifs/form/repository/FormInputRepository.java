@@ -2,6 +2,7 @@ package com.worth.ifs.form.repository;
 
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.resource.FormInputScope;
+import com.worth.ifs.form.resource.FormInputType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -14,8 +15,11 @@ import java.util.List;
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
     List<FormInput> findAll();
     List<FormInput> findByCompetitionId(Long competitionId);
-    List<FormInput> findByCompetitionIdOrderByPriorityAsc(Long competitionId);
-    List<FormInput> findByCompetitionIdAndScopeOrderByPriorityAsc(Long competitionId, FormInputScope scope);
-    List<FormInput> findByQuestionIdOrderByPriorityAsc(Long questionId);
-    List<FormInput> findByQuestionIdAndScopeOrderByPriorityAsc(Long questionId, FormInputScope scope);
+    FormInput findByQuestionIdAndScopeAndType(Long questionId, FormInputScope scope, FormInputType type);
+
+    //Return only active form inputs for FormInputService.
+    List<FormInput> findByCompetitionIdAndActiveTrueOrderByPriorityAsc(Long competitionId);
+    List<FormInput> findByCompetitionIdAndScopeAndActiveTrueOrderByPriorityAsc(Long competitionId, FormInputScope scope);
+    List<FormInput> findByQuestionIdAndActiveTrueOrderByPriorityAsc(Long questionId);
+    List<FormInput> findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(Long questionId, FormInputScope scope);
 }

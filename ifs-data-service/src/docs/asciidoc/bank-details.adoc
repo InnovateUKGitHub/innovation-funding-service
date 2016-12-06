@@ -1,0 +1,29 @@
+=== Submit Banks Details
+==== Success
+===== Request
+include::{snippets}/project/submit-bank-details/http-request.adoc[]
+include::{snippets}/project/submit-bank-details/path-parameters.adoc[]
+include::{snippets}/project/submit-bank-details/request-fields.adoc[]
+
+===== Response
+include::{snippets}/project/submit-bank-details/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/submit-bank-details/curl-request.adoc[]
+
+==== Failure cases
+===== Update Bank Details with invalid input
+include::{snippets}/project/submit-invalid-bank-details/http-response.adoc[]
+
+=== Get Project Team Bank Details Status Summary
+==== Success
+===== Request
+include::{snippets}/project/get-bank-details-project-summary/http-request.adoc[]
+include::{snippets}/project/get-bank-details-project-summary/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-bank-details-project-summary/http-response.adoc[]
+include::{snippets}/project/get-bank-details-project-summary/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-bank-details-project-summary/curl-request.adoc[]

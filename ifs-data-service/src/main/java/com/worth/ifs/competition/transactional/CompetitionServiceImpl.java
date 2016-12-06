@@ -12,6 +12,7 @@ import com.worth.ifs.competition.resource.CompetitionCountResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResult;
 import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,25 +37,27 @@ import static java.util.Optional.ofNullable;
  */
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
-    
-	private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
-	
-	public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
-    
+
+    private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
+
+    public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
+
     @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
-    
+
     @Autowired
     private CompetitionMapper competitionMapper;
 
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         Competition competition = competitionRepository.findById(id);
-        if(competition == null) {
+        if (competition == null) {
             return serviceFailure(notFoundError(Competition.class, id));
         }
 
@@ -78,7 +82,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Category category = categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId());
         competition.setInnovationArea(category);
     }
-    
+
     private void addResearchCategories(Competition competition) {
         Set<Category> categories = categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.RESEARCH_CATEGORY, COMPETITION_CLASS_NAME, competition.getId());
         competition.setResearchCategories(categories);
@@ -87,8 +91,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findAll().stream().map(this::addCategories).collect(Collectors.toList())
-            ));
+                competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).map(this::addCategories).collect(Collectors.toList())
+        ));
     }
 
     @Override
@@ -130,7 +134,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),
-                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null));
+                ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
+                projectRepository.findByApplicationCompetitionId(c.getId()).size()
+        );
     }
 
     @Override
@@ -138,5 +144,19 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
                 competitionRepository.countUpcoming(), 0L));
+    }
+
+    @Override
+    public ServiceResult<Void> closeAssessment(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.closeAssessment(LocalDateTime.now());
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> notifyAssessors(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.notifyAssessors(LocalDateTime.now());
+        return serviceSuccess();
     }
 }

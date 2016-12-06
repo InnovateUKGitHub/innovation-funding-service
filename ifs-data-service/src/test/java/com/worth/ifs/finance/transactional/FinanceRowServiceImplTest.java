@@ -5,7 +5,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRow;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -113,7 +113,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
     @Test
     public void testAddCost() {
         Organisation organisation = newOrganisation().withOrganisationType(new OrganisationType("Business", null)).build();
-        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         Application application = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
@@ -145,7 +145,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testAddWhenApplicationNotOpen() {
-        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
         Application application = newApplication().withCompetition(openCompetition).build();
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));

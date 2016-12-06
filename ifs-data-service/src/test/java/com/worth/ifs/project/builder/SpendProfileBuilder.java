@@ -10,8 +10,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileBuilder> {
@@ -52,5 +52,9 @@ public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileB
 
     public SpendProfileBuilder withApproval(ApprovalType... approvalTypes) {
         return withArray((approvalType, spendProfile) -> setField("approval", approvalType, spendProfile), approvalTypes);
+    }
+
+    public SpendProfileBuilder withMarkedComplete(Boolean... completed) {
+        return withArray((complete, spendProfile) -> setField("markedAsComplete", complete, spendProfile), completed);
     }
 }

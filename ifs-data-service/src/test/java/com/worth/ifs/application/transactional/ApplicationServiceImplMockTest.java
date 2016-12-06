@@ -13,13 +13,13 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -37,8 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.BuilderAmendFunctions.name;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -49,8 +49,8 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
-import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -94,9 +94,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void setUp() throws Exception {
         question = QuestionBuilder.newQuestion().build();
 
-        formInputType = new FormInputType(4L, "fileupload");
+        formInputType = FormInputType.FILEUPLOAD;
 
-        formInput = newFormInput().withFormInputType(formInputType).build();
+        formInput = newFormInput().withType(formInputType).build();
         formInput.setId(123L);
         formInput.setQuestion(question);
         question.setFormInputs(singletonList(formInput));
@@ -108,7 +108,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
         existingFormInputResponses = singletonList(existingFormInputResponse);
         unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
-        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
@@ -202,7 +202,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -357,7 +357,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -390,7 +390,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -469,7 +469,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -493,7 +493,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -525,7 +525,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));
@@ -545,7 +545,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void testGetFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
-        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        FormInput formInputLocal = newFormInput().withType(formInputType).build();
         formInputLocal.setId(123L);
         formInputLocal.setQuestion(question);
         question.setFormInputs(singletonList(formInputLocal));

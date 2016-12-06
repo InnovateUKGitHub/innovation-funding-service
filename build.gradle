@@ -2,14 +2,13 @@ allprojects {
     group 'worth'
     version '1.0-SNAPSHOT'
 
-    apply plugin: 'eclipse-wtp'
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'docker'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 }
-
 
 subprojects {
     apply plugin: 'spring-boot'
@@ -35,6 +34,12 @@ subprojects {
 
     dependencies {
         compile "org.springframework.boot:spring-boot-starter-web"
+        if (project.hasProperty("platform") && project.platform == "cloud") {
+            compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
+            compile "org.springframework.boot:spring-boot-starter-actuator"
+            compile "org.springframework.boot:spring-boot-actuator-docs"
+            compile "org.springframework.boot:spring-boot-devtools"
+        }
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
@@ -51,6 +56,10 @@ subprojects {
     repositories {
         maven { url "https://repo.spring.io/milestone" }
         mavenCentral()
+    }
+
+    jar {
+        manifest.attributes provider: 'gradle'
     }
 }
 
@@ -69,18 +78,22 @@ buildscript {
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:0.5.3.RELEASE"
+        classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
         classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
         classpath 'org.flywaydb:flyway-core:4.0'
         classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.0'
+        classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.13"
+        classpath "se.transmode.gradle:gradle-docker:1.2"
     }
 }
 
 
 apply plugin: "org.sonarqube"
+apply plugin: 'docker-compose'
+
 
 sonarqube {
     properties {
@@ -93,11 +106,26 @@ sonarqube {
     }
 }
 
+dockerCompose {
+    useComposeFiles = ['docker-compose-services.yml']
+    stopContainers = false
+    removeContainers = false
+    removeImages = "None" // Other accepted values are: "All" and "Local"
+    removeVolumes = false
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
 
-task cleanDeploy {
-    println "Starting clean deploy"
+task cleanDeployServices {
+    println "Starting clean deploy services"
 }
+
+//make sure that top level clean deploy services is run last
+rootProject.subprojects.each { subproject ->
+    subproject.tasks.matching { it.name == "cleanDeployServices" }.all { task ->
+        rootProject.tasks.findByName("cleanDeployServices").mustRunAfter task
+    }
+}
+

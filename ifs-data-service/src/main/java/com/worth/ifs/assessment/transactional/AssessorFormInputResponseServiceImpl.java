@@ -1,10 +1,16 @@
 package com.worth.ifs.assessment.transactional;
 
+import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
 import com.worth.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import com.worth.ifs.category.resource.CategoryResource;
+import com.worth.ifs.category.resource.CategoryType;
+import com.worth.ifs.category.transactional.CategoryService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +43,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private FormInputService formInputService;
 
+    @Autowired
+    private AssessmentWorkflowHandler assessmentWorkflowHandler;
+
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -49,7 +61,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
-        return validateWordCount(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
+        return validate(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
     }
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {
@@ -60,7 +72,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             assessorFormInputResponse.setUpdatedDate(now());
         }
         assessorFormInputResponse.setValue(value);
-        assessorFormInputResponseRepository.save(assessorFormInputResponseMapper.mapToDomain(assessorFormInputResponse));
+        saveAndNotifyWorkflowHandler(assessorFormInputResponse);
         return serviceSuccess();
     }
 
@@ -75,6 +87,16 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         );
     }
 
+    private ServiceResult<Void> validate(AssessorFormInputResponseResource response) {
+        ServiceResult<Void> result = validateWordCount(response);
+
+        if (result.isSuccess()) {
+            return validateResearchCategory(response);
+        }
+
+        return result;
+    }
+
     private ServiceResult<Void> validateWordCount(AssessorFormInputResponseResource response) {
         String value = response.getValue();
         FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
@@ -85,6 +107,27 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 return serviceFailure(fieldError("value", value, "validation.field.max.word.count", "", wordLimit));
             }
         }
+
         return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateResearchCategory(AssessorFormInputResponseResource response) {
+        String value = response.getValue();
+        FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
+
+        if (!StringUtils.isEmpty(value) && FormInputType.ASSESSOR_RESEARCH_CATEGORY == formInputResource.getType()) {
+            List<CategoryResource> categoryResources = categoryService.getByType(CategoryType.RESEARCH_CATEGORY).getSuccessObject();
+            if (categoryResources.stream().filter(category -> category.getId().equals(Long.parseLong(value))).count() == 0) {
+                return serviceFailure(fieldError("value", value, "com.worth.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value));
+            }
+        }
+
+        return serviceSuccess();
+    }
+
+    private void saveAndNotifyWorkflowHandler(AssessorFormInputResponseResource response) {
+        AssessorFormInputResponse assessorFormInputResponse = assessorFormInputResponseMapper.mapToDomain(response);
+        assessorFormInputResponseRepository.save(assessorFormInputResponse);
+        assessmentWorkflowHandler.feedback(assessorFormInputResponse.getAssessment());
     }
 }

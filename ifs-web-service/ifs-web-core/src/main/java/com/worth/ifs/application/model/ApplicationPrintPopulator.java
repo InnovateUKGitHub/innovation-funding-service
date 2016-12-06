@@ -1,8 +1,14 @@
 package com.worth.ifs.application.model;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -12,12 +18,10 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 @Component
 public class ApplicationPrintPopulator {
@@ -72,7 +76,7 @@ public class ApplicationPrintPopulator {
         applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
         financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
 
-        return "/application/print";
+        return "application/print";
     }
 
 }

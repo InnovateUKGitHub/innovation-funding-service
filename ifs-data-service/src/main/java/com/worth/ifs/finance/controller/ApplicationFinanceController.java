@@ -21,18 +21,17 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.worth.ifs.file.controller.FileControllerUtils.*;
+import static com.worth.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This RestController exposes CRUD operations to both the
- * {@link com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl} and other REST-API users
+ * {com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl} and other REST-API users
  * to manage {@link ApplicationFinance} related data.
  */
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
-
-    public static final String RESEARCH_PARTICIPATION_PERCENTAGE = "researchParticipationPercentage";
 
     @Autowired
     private FinanceRowService financeRowService;

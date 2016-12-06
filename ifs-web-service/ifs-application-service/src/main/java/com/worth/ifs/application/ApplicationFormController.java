@@ -3,7 +3,6 @@ package com.worth.ifs.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.FinanceRowService;
@@ -12,8 +11,6 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.model.*;
-import com.worth.ifs.application.model.ApplicationNavigationPopulator;
-import com.worth.ifs.application.model.OpenFinanceSectionSectionModelPopulator;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.error.Error;
@@ -29,6 +26,7 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
@@ -73,6 +71,7 @@ import static com.worth.ifs.commons.rest.ValidationMessages.*;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static com.worth.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static com.worth.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.HttpUtils.requestParameterPresent;
@@ -130,7 +129,7 @@ public class ApplicationFormController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionSectionModelPopulator openFinanceSectionModel;
+    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -360,16 +359,16 @@ public class ApplicationFormController {
                              @PathVariable(QUESTION_ID) final Long questionId,
                              HttpServletRequest request) {
         FinanceRowItem costItem = addCost(applicationId, questionId, request);
-        String type = costItem.getCostType().getType();
+        FinanceRowType costType = costItem.getCostType();
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row", type);
+        return String.format("finance/finance :: %s_row", costType.getType());
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")
@@ -433,7 +432,7 @@ public class ApplicationFormController {
 
         if(!isMarkSectionAsIncompleteRequest(params)) {
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId));
+            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId()));
         }
 
         if(isMarkQuestionRequest(params)) {
@@ -741,7 +740,7 @@ public class ApplicationFormController {
                             List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
                             formInputs
                                     .stream()
-                                    .filter(formInput1 -> !"fileupload".equals(formInput1.getFormInputTypeTitle()))
+                                    .filter(formInput1 -> FILEUPLOAD != formInput1.getType())
                                     .forEach(formInput -> {
 
                                         String formInputKey = "formInput[" + formInput.getId() + "]";
@@ -767,7 +766,7 @@ public class ApplicationFormController {
                     List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
                     formInputs
                             .stream()
-                            .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
+                            .filter(formInput1 -> FILEUPLOAD == formInput1.getType() && request instanceof StandardMultipartHttpServletRequest)
                             .forEach(formInput ->
                                 allErrors.addAll(processFormInput(formInput.getId(), params, applicationId, processRoleId, request))
                             );
@@ -873,11 +872,12 @@ public class ApplicationFormController {
      * This method is for supporting ajax saving from the application form.
      */
     @ProfileExecution
-    @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
+    @RequestMapping(value = "/{competitionId}/saveFormElement", method = RequestMethod.POST)
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                                                   @RequestParam("value") String value,
                                                   @PathVariable(APPLICATION_ID) Long applicationId,
+                                                  @PathVariable("competitionId") Long competitionId,
                                                   HttpServletRequest request) {
         List<String> errors = new ArrayList<>();
         Long fieldId = null;
@@ -886,20 +886,16 @@ public class ApplicationFormController {
             LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
+            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value);
 
-            errors = storeFieldResult.getErrors();
             fieldId = storeFieldResult.getFieldId();
 
-            if (!errors.isEmpty()) {
-                return this.createJsonObjectNode(false, errors, fieldId);
-            } else {
-                return this.createJsonObjectNode(true, null, fieldId);
-            }
+            return this.createJsonObjectNode(true, fieldId);
+
         } catch (Exception e) {
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             handleAutosaveException(errors, e, ex);
-            return this.createJsonObjectNode(false, errors, fieldId);
+            return this.createJsonObjectNode(false, fieldId);
         }
     }
 
@@ -909,13 +905,13 @@ public class ApplicationFormController {
         if(e.getClass().equals(IntegerNumberFormatException.class) || e.getClass().equals(BigDecimalNumberFormatException.class)){
             errors.add(lookupErrorMessageResourceBundleEntry(messageSource, e.getMessage(), args));
         }else{
-            LOG.error("Got a exception on autosave : "+ e.getMessage());
+            LOG.error("Got an exception on autosave : "+ e.getMessage());
             LOG.debug("Autosave exception: ", e);
             errors.add(ex.getErrorMessage());
         }
     }
 
-    private StoreFieldResult storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
@@ -926,7 +922,7 @@ public class ApplicationFormController {
             financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
+            ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
             
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
@@ -958,18 +954,13 @@ public class ApplicationFormController {
         return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
-    private ObjectNode createJsonObjectNode(boolean success, List<String> errors, Long fieldId) {
+    private ObjectNode createJsonObjectNode(boolean success, Long fieldId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", success ? "true" : "false");
-        if (!success) {
-            ArrayNode errorsNode = mapper.createArrayNode();
-            errors.stream().forEach(errorsNode::add);
-            node.set("validation_errors", errorsNode);
-        }
-        
+
         if(fieldId != null) {
-        	node.set("field_id", new LongNode(fieldId));
+        	node.set("fieldId", new LongNode(fieldId));
         }
         return node;
     }

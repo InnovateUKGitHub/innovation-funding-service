@@ -44,7 +44,7 @@
 <div th:fragment="header-links">
     <div th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" class="header-links">
         <ul class="navigation-list navigation-right">
-            <li>
+            <li th:unless="${hideDashboardLink} == 'true'">
                 <a th:href="${userDashboardLink}">My dashboard</a>
             </li>
             <li>

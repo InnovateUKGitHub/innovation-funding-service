@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in Connected digital additive manufacturing    participate in their project
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
@@ -10,7 +10,7 @@ Resource          ../../../../resources/defaultResources.robot
 # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
-${download_link}    ${SERVER}/application/1/form/question/8/forminput/18/download
+${download_link}    ${SERVER}/application/9/form/question/8/forminput/18/download
 ${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***

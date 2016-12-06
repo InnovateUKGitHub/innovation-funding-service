@@ -27,8 +27,6 @@ public class QuestionPermissionRulesTest extends BasePermissionRulesTest<Questio
         return new QuestionPermissionRules();
     }
 
-
-
     @Before
     public void setup() throws Exception {
         loggedInUser = newUserResource().build();
@@ -36,10 +34,14 @@ public class QuestionPermissionRulesTest extends BasePermissionRulesTest<Questio
         anonymousUser = (UserResource) ReflectionTestUtils.getField(new CustomPermissionEvaluator(), "ANONYMOUS_USER");
     }
 
-
     @Test
     public void testAllUsersCanSeeQuestions() {
         assertTrue(rules.loggedInUsersCanSeeAllQuestions(questionResource, loggedInUser));
         assertFalse(rules.loggedInUsersCanSeeAllQuestions(questionResource, anonymousUser));
+    }
+
+    @Test
+    public void testNoUserCanUpdateAny() {
+        assertFalse(rules.noUserCanUpdateAny(questionResource, loggedInUser));
     }
 }

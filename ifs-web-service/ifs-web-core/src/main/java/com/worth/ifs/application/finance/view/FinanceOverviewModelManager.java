@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -14,6 +13,7 @@ import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class FinanceOverviewModelManager {
     		return;
     	}
     	
-        sectionService.removeSectionsQuestionsWithType(section, "empty");
+        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
         model.addAttribute("financeSection", section);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);

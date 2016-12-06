@@ -6,6 +6,7 @@ import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import java.util.Set;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.QuestionDocs.questionBuilder;
 import static com.worth.ifs.documentation.QuestionDocs.questionFields;
+import static com.worth.ifs.form.resource.FormInputType.TEXTAREA;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.mockito.Mockito.when;
@@ -237,14 +239,16 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void getQuestionByFormInputType() throws Exception {
-        final String formInputType = "type";
+    public void getQuestionByCompetitionIdAndFormInputType() throws Exception {
+        FormInputType formInputType = TEXTAREA;
+        Long competitionId = 123L;
 
-        when(questionService.getQuestionResourceByFormInputType(formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
+        when(questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
-        mockMvc.perform(get("/question/getQuestionByFormInputType/{formInputType}", formInputType))
+        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}", competitionId, formInputType))
                 .andDo(this.document.snippets(
                         pathParameters(
+                                parameterWithName("competitionId").description("The id of the competition to which the returned Question will belong"),
                                 parameterWithName("formInputType").description("form input type")
                         ),
                         responseFields(questionFields)

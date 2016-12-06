@@ -12,16 +12,16 @@
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 	<div th:include="prototypes/fragments/layout :: prototype-sub-header-no-link" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application overview'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Application overview'})" th:remove="tag" />
 
 	<div class="grid-row">
 		 <div class="column-half">
-			
+
 			<dl class="dl-left extra-margin-bottom">
 	            <dd>Competition:</dd>
 	            <dt>Connected digital additive manufacturing</dt>
@@ -29,7 +29,7 @@
 	            <dt>Innovate UK</dt>
 	            <dd>Application deadline:</dd>
 	            <dt>
-	              12:00pm 
+	              12:00pm
 	              Thursday 9 September 2066
 	            </dt>
           </dl>
@@ -42,12 +42,12 @@
             	<li><a href="#">view conditions of grant offer</a></li>
             </ul>
         </div>
-        
+
     </div>
 
 	<form action="#" method="post" class="application-overview">
 
-		<h2 class="heading-medium no-margin-bottom">Project Details</h2>
+		<h2 class="heading-medium no-margin-bottom">Project details</h2>
 		<p>Please provide Innovate UK with information about your project. These sections are not scored but will provide background to the project.</p>
 		<ul class="list-overview">
 			<li class="section-status assigned-to-me">
@@ -63,7 +63,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#2">Project summary</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -71,7 +71,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#3">Public description</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -79,11 +79,11 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#4">Scope</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 		</ul>
-		
+
 		<h2 class="heading-medium no-margin-bottom">Application questions</h2>
 		<p>These are the 10 questions which will be marked by assessors. Each question is marked out of 10 points.</p>
 		<ul class="list-overview">
@@ -108,7 +108,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question3">3. Project exploitation</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 			<li class="section-status assigned-to-me">
@@ -148,7 +148,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question8">8. Project team</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -156,7 +156,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question9">9. Funding</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -164,7 +164,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question10">10. Adding value</a></h3>
 					</div>
-					
+
 				</div>
 			</li>
 		</ul>
@@ -175,7 +175,7 @@
 			<li class="section-status assigned-to-me">
 				<div class="grid-row">
 					<div class="column-two-thirds">
-						<h3 class="heading-small"><a href="/prototypes/631-finances-assigned-to-you">Your finances</a></h3>
+						<h3 class="heading-small"><a href="/prototypes/4600-finances">Your finances</a></h3>
 					</div>
 					<div th:include="prototypes/fragments/layout :: prototype-assign-question" th:remove="tag" />
 				</div>

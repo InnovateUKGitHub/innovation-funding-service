@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.QuestionType;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,9 +92,10 @@ public class QuestionController {
         return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
 
-    @RequestMapping("/getQuestionByFormInputType/{formInputType}")
-    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
-        return questionService.getQuestionResourceByFormInputType(formInputType).toGetResponse();
+    @RequestMapping("/getQuestionByCompetitionIdAndFormInputType/{competitionId}/{formInputType}")
+    public RestResult<QuestionResource> getQuestionByFormInputType(@PathVariable("competitionId") final Long competitionId,
+                                                                   @PathVariable("formInputType") final FormInputType formInputType) {
+        return questionService.getQuestionResourceByCompetitionIdAndFormInputType(competitionId, formInputType).toGetResponse();
     }
     
     @RequestMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")

@@ -43,13 +43,29 @@ function clearDownFileRepository() {
     docker exec ifs_data_1  rm -rf ${virusScanScannedFolder}
 }
 
-function addTestFiles() {
+function addTestFiles() { 
+
     clearDownFileRepository
     echo "***********Adding test files***************"
+    docker cp ../../../robot-tests/upload_files/testing.pdf ifs_data_1:/tmp/testing.pdf
+
     echo "***********Making the quarantined directory ***************"
     docker exec ifs_data_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker exec ifs_data_1 cp /tmp/ifs-local/8 ${virusScanQuarantinedFolder}/8
+    docker exec ifs_data_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+
+    echo "***********Adding standard file upload location ***********"
+    docker exec ifs_data_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+
+    echo "***********Creating file entry for each db entry***********" 
+    max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
+    for i in `seq 1 ${max_file_entry_id}`;
+    do 
+      if [ "${i}" != "8" ]
+      then
+        docker exec ifs_data_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+      fi
+    done
 }
 
 function resetLDAP() {
@@ -163,6 +179,20 @@ function runTests() {
       startPybot ${testDirectory}
     fi
 
+    if [[ $vnc -eq 1 ]]
+    then
+      local vncport="$(docker-compose -p robot port chrome 5900)"
+      vncport=${vncport:8:5}
+
+      if [ "$(uname)" == "Darwin" ];
+      then
+        open "vnc://root:secret@ifs-local-dev:"${vncport}
+      else
+        echo "**********For remote desktop please use this url in your vnc client**********"
+        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
+      fi
+    fi
+
     for job in `jobs -p`
     do
         wait $job
@@ -225,9 +255,10 @@ emails=0
 rerunFailed=0
 parallel=0
 stopGrid=0
+vnc=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :h :q :t :e :r :c :d:" opt ; do
+while getopts ":p :h :q :t :e :r :c :w :d:" opt ; do
     case $opt in
         p)
           parallel=1
@@ -253,6 +284,9 @@ while getopts ":p :h :q :t :e :r :c :d:" opt ; do
         ;;
         c)
           stopGrid=1
+        ;;
+        w)
+          vnc=1
         ;;
         \?)
            coloredEcho "Invalid option: -$OPTARG" red >&2

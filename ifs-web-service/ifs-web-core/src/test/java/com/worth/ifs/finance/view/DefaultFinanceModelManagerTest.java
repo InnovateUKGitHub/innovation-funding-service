@@ -21,6 +21,7 @@ import java.util.Map;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
+import com.worth.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.LabourCost;
@@ -98,7 +99,7 @@ public class DefaultFinanceModelManagerTest {
 	public void testAddOrganisationFinanceDetailsClosedCompetitionNotSubmittedApplication() {
 
 		ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
-		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.IN_ASSESSMENT).build();
+		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
 		
 		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
 		
@@ -115,7 +116,7 @@ public class DefaultFinanceModelManagerTest {
 	public void testAddOrganisationFinanceDetailsOpenCompetitionSubmittedApplication() {
 
 		ApplicationResource application = newApplicationResource().withCompetition(competitionId).withApplicationStatus(ApplicationStatusConstants.SUBMITTED).build();
-		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.OPEN).build();
+		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
 		
 		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
 		
@@ -132,7 +133,7 @@ public class DefaultFinanceModelManagerTest {
 	public void testAddOrganisationFinanceDetailsOpenCompetitionNotSubmittedApplication() {
 		
 		ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
-		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.OPEN).build();
+		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
 		
 		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);
 		
@@ -163,7 +164,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
-    	when(formInputService.findApplicationInputsByQuestion(isA(Long.class))).thenReturn(asList(newFormInputResource().withFormInputTypeTitle("labour").build()));
+    	when(formInputService.findApplicationInputsByQuestion(isA(Long.class))).thenReturn(asList(newFormInputResource().withType(FormInputType.LABOUR).build()));
 
 		FinanceRowItem costItem = new LabourCost();
 		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);

@@ -45,12 +45,12 @@ public class FundingDecisionController {
 		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
 		
 		if(!"notify".equals(action)) {
-			return "redirect:/competition/" + competitionId;
+			return "redirect:/competition/" + competitionId + "/applications";
 		}
 		
 		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
-			return "redirect:/competition/" + competitionId;
+			return "redirect:/competition/" + competitionId + "/applications";
 		}
 		
 		model.addAttribute("competitionId", competitionId);
@@ -70,12 +70,12 @@ public class FundingDecisionController {
 		
 		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
-			return "redirect:/competition/" + competitionId;
+			return "redirect:/competition/" + competitionId + "/applications";
 		}
 		
 		applicationFundingDecisionService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
 
-		return "redirect:/competition/" + competitionId;
+		return "redirect:/competition/" + competitionId + "/applications";
     }
 	
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {

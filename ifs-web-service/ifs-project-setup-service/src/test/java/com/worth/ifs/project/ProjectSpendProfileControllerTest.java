@@ -113,6 +113,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(Collections.emptyList()));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
 
@@ -120,6 +121,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
+
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
 
     }
 
@@ -216,6 +219,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
 
         when(projectFinanceService.markSpendProfile(projectResource.getId(), organisationId, true)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(Collections.emptyList()));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
@@ -226,6 +230,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
     }
 
     @Test
@@ -258,6 +263,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(Collections.emptyList()));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
@@ -270,6 +276,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("project/spend-profile"));
+
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
     }
 
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {
@@ -355,7 +363,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

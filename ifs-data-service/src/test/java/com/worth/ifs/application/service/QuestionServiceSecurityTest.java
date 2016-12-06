@@ -14,6 +14,7 @@ import com.worth.ifs.assessment.security.AssessmentLookupStrategy;
 import com.worth.ifs.assessment.security.AssessmentPermissionRules;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +28,7 @@ import static com.worth.ifs.application.service.QuestionServiceSecurityTest.Test
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in QuestionService interact with Spring Security
@@ -106,19 +105,17 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
     }
 
     @Test
-    public void testQuestionResourceByFormInputType() {
-        final String formInputTypeTitle = "test";
+    public void testQuestionResourceByCompetitionIdAndFormInputType() {
         assertAccessDenied(
-                () -> classUnderTest.getQuestionResourceByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionResourceByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class))
         );
     }
 
     @Test
-    public void testGetQuestionByFormInputType() {
-        final String formInputTypeTitle = "test";
+    public void testGetQuestionByCompetitionIdAndFormInputType() {
         assertAccessDenied(
-                () -> classUnderTest.getQuestionByFormInputType(formInputTypeTitle),
+                () -> classUnderTest.getQuestionByCompetitionIdAndFormInputType(null, null),
                 () -> verify(questionPermissionRules).loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
     }
@@ -223,12 +220,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle) {
+        public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
             return serviceSuccess(newQuestionResource().build());
         }
 
         @Override
-        public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
+        public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
             return serviceSuccess(newQuestion().build());
         }
 
@@ -262,12 +259,12 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
             return null;
         }
 
-		@Override
-		public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-			 return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-		}
+        @Override
+        public ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
+            return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
 
-		@Override
+        @Override
         public ServiceResult<QuestionResource> save(QuestionResource questionResource) {
             return null;
         }
