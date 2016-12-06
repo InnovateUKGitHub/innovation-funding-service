@@ -166,6 +166,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){
 
+        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved() && project.getDocumentsSubmittedDate() != null) {
+            return REJECTED;
+        }
         if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
             return COMPLETE;
         }
