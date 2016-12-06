@@ -182,6 +182,28 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         });
     }
 
+
+    @Test
+    public void test_closeAssessment() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
+                .build(2));
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+
+        service.closeAssessment(competitionId);
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL,competition.getCompetitionStatus());
+    }
+
+
     @Test
     public void test_notifyAssessors() throws Exception {
         Long competitionId = 1L;
