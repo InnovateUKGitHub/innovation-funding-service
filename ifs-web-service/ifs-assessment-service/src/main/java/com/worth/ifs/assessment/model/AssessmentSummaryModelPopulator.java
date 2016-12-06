@@ -7,13 +7,13 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.assessment.resource.AssessmentResource;
 import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputType;
 import com.worth.ifs.assessment.service.AssessmentService;
 import com.worth.ifs.assessment.service.AssessorFormInputResponseService;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryQuestionViewModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.form.service.FormInputService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.assessment.resource.AssessorFormInputType.*;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
+import static com.worth.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static com.worth.ifs.form.resource.FormInputType.TEXTAREA;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
@@ -87,14 +89,14 @@ public class AssessmentSummaryModelPopulator {
         return simpleMap(questions, question -> {
             List<FormInputResource> formInputsForQuestion = ofNullable(assessmentFormInputs.get(question.getId())).orElse(emptyList());
             List<AssessorFormInputResponseResource> responsesForQuestion = ofNullable(assessorResponses.get(question.getId())).orElse(emptyList());
-            Map<AssessorFormInputType, String> responsesByFieldType = getAssessorResponsesByFormInputType(formInputsForQuestion, responsesForQuestion);
+            Map<FormInputType, String> responsesByFieldType = getAssessorResponsesByFormInputType(formInputsForQuestion, responsesForQuestion);
             String displayLabel = getQuestionDisplayLabel(question);
             String displayLabelShort = getQuestionDisplayLabelShort(question);
-            boolean scoreFormInputExists = formInputsForQuestion.stream().anyMatch(formInput -> SCORE.getTitle().equals(formInput.getFormInputTypeTitle()));
-            Integer scoreGiven = ofNullable(responsesByFieldType.get(SCORE)).map(Integer::valueOf).orElse(null);
+            boolean scoreFormInputExists = formInputsForQuestion.stream().anyMatch(formInput -> ASSESSOR_SCORE == formInput.getType());
+            Integer scoreGiven = ofNullable(responsesByFieldType.get(ASSESSOR_SCORE)).map(Integer::valueOf).orElse(null);
             Integer scorePossible = scoreFormInputExists ? question.getAssessorMaximumScore() : null;
-            String feedback = responsesByFieldType.get(FEEDBACK);
-            Boolean applicationInScope = ofNullable(responsesByFieldType.get(APPLICATION_IN_SCOPE)).map(Boolean::valueOf).orElse(null);
+            String feedback = responsesByFieldType.get(TEXTAREA);
+            Boolean applicationInScope = ofNullable(responsesByFieldType.get(ASSESSOR_APPLICATION_IN_SCOPE)).map(Boolean::valueOf).orElse(null);
             boolean complete = isComplete(formInputsForQuestion, responsesForQuestion);
             return new AssessmentSummaryQuestionViewModel(question.getId(), displayLabel, displayLabelShort, scoreFormInputExists, scoreGiven, scorePossible, feedback, applicationInScope, complete);
         });
@@ -109,18 +111,14 @@ public class AssessmentSummaryModelPopulator {
         return assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
     }
 
-    private Map<AssessorFormInputType, String> getAssessorResponsesByFormInputType(List<FormInputResource> formInputs, List<AssessorFormInputResponseResource> responses) {
+    private Map<FormInputType, String> getAssessorResponsesByFormInputType(List<FormInputResource> formInputs, List<AssessorFormInputResponseResource> responses) {
         Map<Long, FormInputResource> formInputsMap = simpleToMap(formInputs, FormInputResource::getId);
-        return simpleToMap(simpleFilter(responses, response -> response.getValue() != null), response -> getFormInputType(formInputsMap.get(response.getFormInput())), AssessorFormInputResponseResource::getValue);
+        return simpleToMap(simpleFilter(responses, response -> response.getValue() != null), response -> formInputsMap.get(response.getFormInput()).getType(), AssessorFormInputResponseResource::getValue);
     }
 
     private Map<Long, List<FormInputResource>> getAssessmentFormInputs(Long competitionId) {
         List<FormInputResource> assessmentFormInputs = formInputService.findAssessmentInputsByCompetition(competitionId);
         return assessmentFormInputs.stream().collect(groupingBy(FormInputResource::getQuestion));
-    }
-
-    private AssessorFormInputType getFormInputType(FormInputResource formInput) {
-        return AssessorFormInputType.getByTitle(formInput.getFormInputTypeTitle());
     }
 
     private String getQuestionDisplayLabel(QuestionResource question) {

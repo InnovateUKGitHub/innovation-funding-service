@@ -120,6 +120,7 @@ include::application-funding-decision.adoc[]
 [[assessor]]
 == Assessor
 include::assessor.adoc[]
+include::assessor-count-options.adoc[]
 
 [[assessorfeedback]]
 == AssessorFeedback
@@ -182,3 +183,7 @@ include::silstub.adoc[]
 include::project.adoc[]
 include::project-grant-offer.adoc[]
 include::bank-details.adoc[]
+
+[[processOutcome]]
+== ProcessOutcome
+include::processOutcome.adoc[]

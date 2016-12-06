@@ -70,7 +70,7 @@
 			<table style="width: 480px; border-top: 9px solid #005ea5; font-size: 16px; line-height: 1.6em; margin: 0 auto; font-family: arial, sans-serif;" cellpadding="0" cellspacing="0" align="center" class="table-content">
 				<tr>
 					<td style="border-bottom: 1px solid #bfc1c3; width: 50%">
-						21st July 2016
+						21 July 2016
 					</td>
 					<td style="padding: 18px 0; text-align: right; border-bottom: 1px solid #bfc1c3; width: 50%">
 						<img src="https://assets.digital.cabinet-office.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" width="124" height="24" />
@@ -88,16 +88,23 @@
 
 						<p style="margin: 0 0 1em 0;">You have been invited by the Innovate UK team to assess for the competition 'Technology inspired'.</p>
 
+						<p style="margin: 0 0 1em 0;">The innovation area(s) you have been assigned are:</p>
+
+						<ul style="margin: 0 0 1em 0;">
+							<li>cheese specialist</li>
+							<li>guitar riff expert</li>
+						</ul>
+
 						<p style="margin: 0 0 1em 0;">We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications.</p>
 						
 						<p style="margin: 0 0 1em 0;">Assessment period: <b>21 August to 13 September 2016</b></p>
 
 						<p style="margin: 0 0 1em 0;">
 							<!--<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite')}">Please visit our new online Innovation funding service to respond to this request</a>-->
-
-							<a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite?version=v3')}">Please visit our new online Innovation funding service to respond to this request</a>
-							<a th:unless="${(param.version != null)}" href="/prototypes/865-assessor-comp-invite" class="button button-large">Please visit our new online Innovation funding service to respond to this request</a>
-
+							Please visit our new
+							<a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite?version=v3')}">online Innovation Funding Service</a>
+							<a th:unless="${(param.version != null)}" href="/prototypes/865-assessor-comp-invite" class="button button-large">online Innovation Funding Service</a>
+							to respond to this request.
 						</p>
 
 						<p style="margin: 0 0 1em 0;">Yours sincerely,</p>

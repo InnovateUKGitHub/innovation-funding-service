@@ -19,7 +19,7 @@
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Organisation details'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" th:remove="tag" />
 
         <form action="#">
 
@@ -53,7 +53,7 @@
               <p>Details relating to your projected growth for the next 5 years.</p>
 
               <details>
-                <summary><span class="summary">What is required from the projected growth?</span></summary>
+                <summary><span class="summary">What we need from the projected growth?</span></summary>
                 <div class="panel-indent">
                   <p>
                     GUIDANCE TEXT REQUIRED
@@ -132,7 +132,7 @@
 
       	  <fieldset class="extra-margin">
             <legend class="heading-large no-margin-bottom">Organisation size</legend>
-      		  <p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
+      		  <p class="form-hint">In order to work out how much funding you are able to receive, please provide your business size using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
         		<div class="form-block">
         			<label class="block-label" for="radio-1">
         				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
@@ -157,10 +157,10 @@
         </form>
 
         <ul class="pagination">
-            <li class="next">
-                <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
-                    <span class="pagination-label">Next</span>
-                    <span class="pagination-part-title">Finances overview</span>
+            <li class="prev">
+                <a rel="next" title="Navigate to previous part" href="/prototypes/4600-your-finances">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Your project costs</span>
                 </a>
             </li>
         </ul>

@@ -24,6 +24,7 @@ import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.resource.FormInputScope.ASSESSMENT;
+import static com.worth.ifs.form.resource.FormInputType.TEXTAREA;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
@@ -77,6 +78,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withId(null, null)
                 .withQuestion(questions.get(0), questions.get(1))
                 .withPriority(0, 0)
+                .withType(TEXTAREA, TEXTAREA)
                 .withScope(ASSESSMENT, ASSESSMENT)
                 .build(2).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
 
@@ -119,6 +121,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withId(null, null)
                 .withQuestion(questions.get(0), questions.get(1), questions.get(0), questions.get(1))
                 .withPriority(0, 1, 0, 1)
+                .withType(TEXTAREA, TEXTAREA, TEXTAREA, TEXTAREA)
                 .withScope(ASSESSMENT, ASSESSMENT, ASSESSMENT, ASSESSMENT)
                 .build(4).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
 
@@ -162,6 +165,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withId(null, null, null, null)
                 .withQuestion(questions.get(0), questions.get(0), questions.get(1), questions.get(1))
                 .withPriority(0, 1, 0, 1)
+                .withType(TEXTAREA, TEXTAREA, TEXTAREA, TEXTAREA)
                 .withScope(ASSESSMENT, ASSESSMENT, ASSESSMENT, ASSESSMENT)
                 .build(4).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
 
@@ -208,6 +212,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withId(null, null)
                 .withQuestion(question, question)
                 .withPriority(0, 1)
+                .withType(TEXTAREA, TEXTAREA)
                 .withScope(ASSESSMENT, ASSESSMENT)
                 .build(2).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
 

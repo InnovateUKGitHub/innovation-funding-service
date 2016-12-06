@@ -1,20 +1,23 @@
 package com.worth.ifs.form.resource;
 
+import com.worth.ifs.competition.resource.GuidanceRowResource;
+
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class FormInputResource {
     private Long id;
     private Integer wordCount;
-    private Long formInputType;
-    private String formInputTypeTitle;
+    private FormInputType type;
     private Long question;
     private Long competition;
     private Set<Long> inputValidators;
     private String description;
     private Boolean includedInApplicationSummary = false;
-    private String guidanceQuestion;
+    private String guidanceTitle;
     private String guidanceAnswer;
+    private List<GuidanceRowResource> guidanceRows;
     private Integer priority;
     private FormInputScope scope;
 
@@ -30,8 +33,8 @@ public class FormInputResource {
         return wordCount != null ? wordCount : 0;
     }
 
-    public Long getFormInputType() {
-        return formInputType;
+    public FormInputType getType() {
+        return type;
     }
 
     public Boolean isIncludedInApplicationSummary() {
@@ -62,12 +65,8 @@ public class FormInputResource {
         this.wordCount = wordCount;
     }
 
-    public void setFormInputType(Long formInputType) {
-        this.formInputType = formInputType;
-    }
-
-    public void setFormInputTypeTitle(String formInputTypeTitle) {
-        this.formInputTypeTitle = formInputTypeTitle;
+    public void setType(FormInputType type) {
+        this.type = type;
     }
 
     public Long getCompetition() {
@@ -80,10 +79,6 @@ public class FormInputResource {
 
     public Set<Long> getInputValidators() {
         return this.inputValidators;
-    }
-
-    public String getFormInputTypeTitle() {
-        return formInputTypeTitle;
     }
 
     public void setInputValidators(Set<Long> inputValidators) {
@@ -110,12 +105,12 @@ public class FormInputResource {
         this.question = question;
     }
 
-    public String getGuidanceQuestion() {
-        return guidanceQuestion;
+    public String getGuidanceTitle() {
+        return guidanceTitle;
     }
 
-    public void setGuidanceQuestion(final String guidanceQuestion) {
-        this.guidanceQuestion = guidanceQuestion;
+    public void setGuidanceTitle(final String guidanceTitle) {
+        this.guidanceTitle = guidanceTitle;
     }
 
     public String getGuidanceAnswer() {
@@ -124,6 +119,14 @@ public class FormInputResource {
 
     public void setGuidanceAnswer(final String guidanceAnswer) {
         this.guidanceAnswer = guidanceAnswer;
+    }
+
+    public List<GuidanceRowResource> getGuidanceRows() {
+        return guidanceRows;
+    }
+
+    public void setGuidanceRows(List<GuidanceRowResource> guidanceRows) {
+        this.guidanceRows = guidanceRows;
     }
 
     public Integer getPriority() {

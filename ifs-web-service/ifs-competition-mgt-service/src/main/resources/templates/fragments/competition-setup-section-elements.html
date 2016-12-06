@@ -9,14 +9,17 @@
                 <dt class="column-third">Question heading</dt>
                 <dd class="column-two-thirds" th:text="${question.shortTitle}"></dd>
                 <dt class="column-third">Question title</dt>
-                <dd class="column-two-thirds" th:text="${question.title}"></dd>
+                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
+                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.title)}" th:text="${question.title}"></dd>
                 <dt class="column-third">Question subtitle</dt>
                 <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
                 <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}" th:text="${question.subTitle}"></dd>
                 <dt class="column-third">Guidance title</dt>
-                <dd class="column-two-thirds" th:text="${question.guidanceTitle}"></dd>
+                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
+                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}" th:text="${question.guidanceTitle}"></dd>
                 <dt class="column-third">Guidance</dt>
-                <dd class="column-two-thirds" ifs:utext="${question.guidance}"></dd>
+                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
+                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.guidance)}" ifs:utext="${question.guidance}"></dd>
                 <dt class="column-third">Max word count</dt>
                 <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
@@ -82,6 +85,10 @@
             <input type="hidden"
                th:name="question.questionId"
                th:value="${question.questionId}" />
+            <input type="hidden"
+                   th:name="question.shortTitleEditable"
+                   th:value="${question.shortTitleEditable}" />
+
             <div class="question">
                 <div th:class="${#fields.hasErrors('question.shortTitle')}? 'form-group error':'form-group'">
                     <label class="form-label" for="question.shortTitle">
@@ -97,7 +104,7 @@
                            id="question.shortTitle"
                            th:name="question.shortTitle"
                            th:value="${question.shortTitle}"
-                           readonly="readonly"
+                           th:readonly="${!question.shortTitleEditable}"
                            maxlength="255"/>
                 </div>
                 <div th:class="${#fields.hasErrors('question.title')}? 'form-group error':'form-group'">
@@ -181,7 +188,7 @@
                            th:name="question.maxWords"
                            th:value="${question.maxWords}"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:if="${question.appendix != null}">
                     <fieldset class="inline">
                         <legend class="form-label-bold">Appendix</legend>
                         <label class="block-label">

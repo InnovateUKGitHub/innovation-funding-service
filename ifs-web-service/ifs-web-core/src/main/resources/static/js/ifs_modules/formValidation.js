@@ -67,7 +67,7 @@ IFS.core.formValidation = (function() {
         }
       },
       pattern : {
-        fields : '[pattern]',
+        fields : '[pattern]:not([minlength])', //minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
         messageInvalid : "Please correct this field"
       },
       tel : {
@@ -326,6 +326,10 @@ IFS.core.formValidation = (function() {
               return true;
             }
           }
+        //HTML5 number input will return "" as val() if invalid number.
+        } else if (field.is(s.number.fields) && s.html5validationMode && field[0].validity.badInput) {
+          if(showMessage) { IFS.core.formValidation.setValid(field, errorMessage);}
+          return true;
         }
         else {
           if(field.val().length === 0){

@@ -15,22 +15,22 @@ import java.util.function.Supplier;
  **/
 public interface ProjectGrantOfferService {
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_SIGNED_GRANT_OFFER')")
@@ -39,6 +39,14 @@ public interface ProjectGrantOfferService {
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a grant offer letter" )
     ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a grant offer letter" )
+    ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource);
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )
+    ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a additional contract for Appendix 2 if any")

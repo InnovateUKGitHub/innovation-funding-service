@@ -1,5 +1,0 @@
-ext.serverPort=8080
-ext.activeProfile="local"
-ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-web/webapps"
-ext.ifsDataServiceRestBaseURL="http://localhost:8090"
-ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"

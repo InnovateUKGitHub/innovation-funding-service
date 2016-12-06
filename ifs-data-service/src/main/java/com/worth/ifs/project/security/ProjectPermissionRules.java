@@ -200,4 +200,11 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(
+            value = "SEND_GRANT_OFFER_LETTER",
+            description = "Comp admins & project finance can send the Grant Offer Letter notification")
+    public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user){
+        return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
 }
