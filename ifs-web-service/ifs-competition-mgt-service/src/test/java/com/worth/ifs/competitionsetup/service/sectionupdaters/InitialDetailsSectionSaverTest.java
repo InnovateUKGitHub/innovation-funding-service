@@ -75,8 +75,9 @@ public class InitialDetailsSectionSaverTest {
         when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
         when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
-        service.saveSection(competition, competitionSetupForm, true);
+        service.saveSection(competition, competitionSetupForm, false);
 
         assertEquals("title", competition.getName());
         assertEquals(Long.valueOf(1L), competition.getExecutive());
@@ -96,24 +97,12 @@ public class InitialDetailsSectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "openingDate", "20-10-2020", null);
 
         assertTrue(errors.isSuccess());
         verify(competitionService).update(competition);
-    }
-
-    @Test
-    public void testAutoSaveCompetitionSetupSectionErrors() {
-        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-
-        CompetitionResource competition = newCompetitionResource().build();
-        competition.setMilestones(asList(10L));
-
-        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "openingDate", "20-10-2000", null);
-
-        assertTrue(!errors.isSuccess());
-        verify(competitionService, never()).update(competition);
     }
 
     @Test

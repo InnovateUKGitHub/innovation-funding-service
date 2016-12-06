@@ -6,7 +6,6 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.http.HttpStatus;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -26,10 +25,8 @@ public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
             Class<?> propertyType = getPropertyType(form, fieldName);
             setNestedProperty(form, fieldName, convert(value, propertyType));
             return saveSection(competitionResource, form, true);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return handleIrregularAutosaveCase(competitionResource, fieldName, value);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
         }
     }
 

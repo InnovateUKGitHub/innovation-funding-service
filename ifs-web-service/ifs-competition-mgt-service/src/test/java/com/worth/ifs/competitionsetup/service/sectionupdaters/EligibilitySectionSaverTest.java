@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.util.CollectionFunctions;
@@ -12,10 +13,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EligibilitySectionSaverTest {
@@ -54,131 +60,47 @@ public class EligibilitySectionSaverTest {
 		verify(competitionService).update(competition);
 	}
 
-//	@Test
-//	public void testAutoSaveResearchCategoryCheck() {
-//		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-//
-//		Set<Long> researchCategories = new HashSet<>();
-//		researchCategories.add(33L);
-//		researchCategories.add(34L);
-//
-//		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-//		competition.setMilestones(asList(10L));
-//
-//		List<Error> errors = service.autoSaveSectionField(competition, "researchCategoryId", "35", null);
-//
-//		assertTrue(errors.isEmpty());
-//		verify(competitionService).update(competition);
-//
-//		assertTrue(competition.getResearchCategories().contains(35L));
-//	}
-//
-//	@Test
-//	public void testAutoSaveResearchCategoryUncheck() {
-//		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-//
-//		Set<Long> researchCategories = new HashSet<>();
-//		researchCategories.add(33L);
-//		researchCategories.add(34L);
-//		researchCategories.add(35L);
-//
-//		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-//		competition.setMilestones(asList(10L));
-//
-//		List<Error> errors = service.autoSaveSectionField(competition, "researchCategoryId", "35", null);
-//
-//		assertTrue(errors.isEmpty());
-//		verify(competitionService).update(competition);
-//
-//		assertTrue(!competition.getResearchCategories().contains(35L));
-//	}
+	@Test
+	public void testAutoSaveResearchCategoryCheck() {
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		EligibilityForm form = new EligibilityForm();
+		Set<Long> researchCategories = new HashSet<>();
+		researchCategories.add(33L);
+		researchCategories.add(34L);
 
-//	@Test
-//	public void testAutoSaveMultipleStreamYes() {
-//		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-//
-//		Set<Long> researchCategories = new HashSet<>();
-//		researchCategories.add(33L);
-//		researchCategories.add(34L);
-//		researchCategories.add(35L);
-//
-//		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-//		competition.setMilestones(asList(10L));
-//		competition.setMultiStream(false);
-//
-//		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "yes", null);
-//
-//		assertTrue(errors.isEmpty());
-//		verify(competitionService).update(competition);
-//
-//		assertTrue(competition.isMultiStream());
-//	}
 
-//	@Test
-//	public void testAutoSaveMultipleStreamNo() {
-//		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-//
-//		Set<Long> researchCategories = new HashSet<>();
-//		researchCategories.add(33L);
-//		researchCategories.add(34L);
-//		researchCategories.add(35L);
-//
-//		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-//		competition.setMilestones(asList(10L));
-//		competition.setMultiStream(true);
-//
-//		List<Error> errors = service.autoSaveSectionField(competition, "multipleStream", "no", null);
-//
-//		assertTrue(errors.isEmpty());
-//		verify(competitionService).update(competition);
-//
-//		assertTrue(!competition.isMultiStream());
-//	}
+		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
+		competition.setMilestones(asList(10L));
+		when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
-//	@Test
-//	public void testAutoSaveSingleOrCollaborative() {
-//		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-//
-//		Set<Long> researchCategories = new HashSet<>();
-//		researchCategories.add(33L);
-//		researchCategories.add(34L);
-//		researchCategories.add(35L);
-//
-//		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-//		competition.setMilestones(asList(10L));
-//		competition.setMultiStream(true);
-//		competition.setCollaborationLevel(CollaborationLevel.COLLABORATIVE);
-//
-//		List<Error> errors = service.autoSaveSectionField(competition, "singleOrCollaborative", "single", null);
-//
-//		assertTrue(errors.isEmpty());
-//		verify(competitionService).update(competition);
-//
-//		assertEquals(competition.getCollaborationLevel(), CollaborationLevel.SINGLE);
-//	}
+		ServiceResult<Void> result = service.autoSaveSectionField(competition, form, "researchCategoryId", "35", null);
 
-//	@Test
-//	public void testAutoSaveResearchParticipationAmountId() {
-//		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-//
-//		Set<Long> researchCategories = new HashSet<>();
-//		researchCategories.add(33L);
-//		researchCategories.add(34L);
-//		researchCategories.add(35L);
-//
-//		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-//		competition.setMilestones(asList(10L));
-//		competition.setMultiStream(true);
-//		competition.setCollaborationLevel(CollaborationLevel.COLLABORATIVE);
-//		competition.setMaxResearchRatio(Integer.valueOf(50));
-//
-//		List<Error> errors = service.autoSaveSectionField(competition, "researchParticipationAmountId", "1", null);
-//
-//		assertTrue(errors.isEmpty());
-//		verify(competitionService).update(competition);
-//
-//		assertEquals(competition.getMaxResearchRatio(), Integer.valueOf(30));
-//	}
+		assertTrue(result.isSuccess());
+		verify(competitionService).update(competition);
+
+		assertTrue(competition.getResearchCategories().contains(35L));
+	}
+
+	@Test
+	public void testAutoSaveResearchCategoryUncheck() {
+		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		EligibilityForm form = new EligibilityForm();
+		Set<Long> researchCategories = new HashSet<>();
+		researchCategories.add(33L);
+		researchCategories.add(34L);
+		researchCategories.add(35L);
+
+		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
+		competition.setMilestones(asList(10L));
+		when(competitionService.update(competition)).thenReturn(serviceSuccess());
+
+		ServiceResult<Void> result = service.autoSaveSectionField(competition, form, "researchCategoryId", "35", null);
+
+		assertTrue(result.isSuccess());
+		verify(competitionService).update(competition);
+
+		assertTrue(!competition.getResearchCategories().contains(35L));
+	}
 
 	private MilestoneResource getMilestone(){
 		MilestoneResource milestone = new MilestoneResource();

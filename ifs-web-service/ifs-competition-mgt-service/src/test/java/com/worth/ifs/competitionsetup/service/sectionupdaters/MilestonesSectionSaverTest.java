@@ -2,6 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
@@ -17,7 +18,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
@@ -81,33 +84,34 @@ public class MilestonesSectionSaverTest {
         return milestoneList;
     }
 
-//    @Test
-//    public void testAutoSaveCompetitionSetupSection() throws ParseException {
-//        List<Error> errors = new ArrayList<>();
-//        String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
-//        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
-//
-//        CompetitionResource competition = newCompetitionResource().build();
-//        competition.setMilestones(Arrays.asList(10L));
-//
-//        service.updateCompetitionResourceWithAutoSave(errors, competition, fieldName, "20-10-2020");
-//
-//        assertTrue(errors.isEmpty());
-//    }
+    @Test
+    public void testAutoSaveCompetitionSetupSection() {
+        List<Error> errors = new ArrayList<>();
+        String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
+        MilestonesForm form = new MilestonesForm();
 
-//    @Test
-//    public void testAutoSaveCompetitionSetupSectionDateNotInFuture() throws ParseException {
-//        String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
-//        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
-//
-//        CompetitionResource competition = newCompetitionResource().withId(1L).build();
-//        competition.setMilestones(Arrays.asList(10L));
-//
-//        List<Error> errors = service.autoSaveSectionField(competition, fieldName, "20-10-2015", null);
-//
-//        assertTrue(!errors.isEmpty());
-//        assertEquals(errors.get(0).getErrorKey(), "error.milestone.invalid");
-//    }
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setMilestones(Arrays.asList(10L));
+
+        service.autoSaveSectionField(competition, form, fieldName, "20-10-2020", Optional.empty());
+
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    public void testAutoSaveCompetitionSetupSectionDateNotInFuture() {
+        String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
+        MilestonesForm form = new MilestonesForm();
+        CompetitionResource competition = newCompetitionResource().withId(1L).build();
+        competition.setMilestones(Arrays.asList(10L));
+
+        ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "20-10-2015", null);
+
+        assertTrue(!result.isSuccess());
+        assertEquals(result.getErrors().get(0).getErrorKey(), "error.milestone.invalid");
+    }
 
     private MilestoneResource getBriefingEventMilestone(){
         return newMilestoneResource()

@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -237,6 +238,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
         				.param("executiveUserId", "1")
@@ -275,6 +277,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ELIGIBILITY))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
         				.param("multipleStream", "yes")
@@ -322,6 +325,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withId(8L).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSection(any(AdditionalInfoForm.class),
+                any(CompetitionResource.class), any(CompetitionSetupSection.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional")
                 .param("activityCode", "a123")
@@ -422,6 +427,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.ASSESSORS))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
                 .param("assessorCount", "1")
