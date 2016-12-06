@@ -97,6 +97,16 @@ Approve Eligibility: Academic partner organisation
     Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
+Project Finance user can view academic Jes form
+    [Documentation]     INFUND-5220
+    [Tags]    HappyPath
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    # note that we are viewing this file here rather than the same project as the other tests in this suite due to INFUND-6724
+    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
+    Then the user should see the text in the page    Download Je-S form
+    When the user clicks the button/link    link=jes-form53.pdf
+    Then the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page
+
 Project Finance user can export bank details
     [Documentation]    INFUND-5852
     [Tags]    Pending
@@ -106,15 +116,6 @@ Project Finance user can export bank details
     And the user clicks the button/link          link = Export all bank details
     And the Project finance user downloads the excel
 
-
-Project Finance user to view Je-S Download form and then approve finances
-    [Documentation]     INFUND-5220
-    [Tags]    HappyPath    Pending
-    # TODO Pending due to INFUND-5879
-    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    xpath =//*[@id="content"]/table[2]/tbody/tr[2]/td/a
-    Then the user should see the element    xpath = //*[@id="content"]/form/div[1]/h3
-    And the user downloads the file from the link  "testingDownload"  xpath = //*[@id="content"]/form/div[1]/a
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -156,7 +157,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
     the user selects the option from the drop-down menu    Yes    id=fund24
     the user selects the option from the drop-down menu    No    id=fund25
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
@@ -166,7 +167,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user uploads the file    ${valid_pdf}
     the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
     the user uploads the file    ${valid_pdf}
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
     the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
     the user clicks the button/link    name=publish
 
