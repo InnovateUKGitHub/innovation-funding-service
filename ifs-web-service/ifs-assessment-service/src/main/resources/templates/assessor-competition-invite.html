@@ -26,7 +26,9 @@
                 <p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;
                     <span th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
 
-                <p th:if="${model.briefingDate != null}">The assessor webinar briefing is mandatory and will last one hour, taking place on <span th:text="${#temporals.format(model.briefingDate,dateFormat)}" th:remove="tag">21 March</span>.</p>
+                <p th:if="${model.briefingDate}">The assessor webinar briefing is mandatory and will last one hour,
+                    taking place on <span th:text="${#temporals.format(model.briefingDate,dateFormat)}" th:remove="tag">21 March</span>.
+                </p>
             </section>
 
             <section>

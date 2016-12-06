@@ -27,7 +27,9 @@
                     application response. Our assessment fee for this competition is &pound;<span
                             th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
 
-                <p th:if="${model.assessorBriefingDate != null}">The assessor briefing is mandatory. It will consist of a one hour webinar on <span th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}" th:remove="tag">21 March 2017</span>.</p>
+                <p th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
+                    hour webinar on <span th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}"
+                                          th:remove="tag">21 March 2017</span>.</p>
             </section>
 
             <section>
