@@ -17,6 +17,8 @@ public class CompetitionInviteDocs {
             fieldWithPath("status").description("Status of the competition invite"),
             fieldWithPath("acceptsDate").description("Date of assessor accepting"),
             fieldWithPath("deadlineDate").description("Date of assessor deadline"),
+            fieldWithPath("briefingDate").description("Date of assessor briefing"),
+            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
             fieldWithPath("innovationArea").description("Innovation area of the invitee")
     };
 
