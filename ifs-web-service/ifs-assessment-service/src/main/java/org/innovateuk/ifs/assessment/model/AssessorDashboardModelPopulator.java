@@ -78,6 +78,7 @@ public class AssessorDashboardModelPopulator {
         return participantResourceList.stream()
                 .filter(CompetitionParticipantResource::isPending)
                 .map(cpr -> new AssessorDashboardPendingInviteViewModel(
+                        cpr.getCompetitionId(),
                         cpr.getCompetitionName(),
                         cpr.getAssessorAcceptsDate().toLocalDate(),
                         cpr.getAssessorDeadlineDate().toLocalDate()

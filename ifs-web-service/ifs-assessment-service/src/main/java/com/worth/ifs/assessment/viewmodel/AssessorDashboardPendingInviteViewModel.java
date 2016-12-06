@@ -10,19 +10,25 @@ import java.time.LocalDate;
  */
 public class AssessorDashboardPendingInviteViewModel {
 
+    private long competitionId;
     private final String displayLabel;
     private final LocalDate assessmentPeriodDateFrom;
     private final LocalDate assessmentPeriodDateTo;
 
     public AssessorDashboardPendingInviteViewModel(
+            long competitionId,
             String displayLabel,
             LocalDate assessmentPeriodDateFrom,
             LocalDate assessmentPeriodDateTo
     ) {
-
+        this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public String getDisplayLabel() {
@@ -46,6 +52,7 @@ public class AssessorDashboardPendingInviteViewModel {
         AssessorDashboardPendingInviteViewModel that = (AssessorDashboardPendingInviteViewModel) o;
 
         return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
                 .append(displayLabel, that.displayLabel)
                 .append(assessmentPeriodDateFrom, that.assessmentPeriodDateFrom)
                 .append(assessmentPeriodDateTo, that.assessmentPeriodDateTo)
@@ -55,6 +62,7 @@ public class AssessorDashboardPendingInviteViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(competitionId)
                 .append(displayLabel)
                 .append(assessmentPeriodDateFrom)
                 .append(assessmentPeriodDateTo)

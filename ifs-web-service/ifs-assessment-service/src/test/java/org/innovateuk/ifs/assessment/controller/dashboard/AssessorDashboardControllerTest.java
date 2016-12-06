@@ -353,6 +353,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = singletonList(new AssessorDashboardPendingInviteViewModel(
+                2L,
                 "Juggling Craziness",
                 now().plusDays(10).toLocalDate(),
                 now().plusDays(20).toLocalDate()
