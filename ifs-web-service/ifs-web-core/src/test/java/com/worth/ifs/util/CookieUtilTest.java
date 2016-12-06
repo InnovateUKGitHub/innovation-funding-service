@@ -44,7 +44,7 @@ public class CookieUtilTest {
 
     @Test
     public void getInstance() throws Exception {
-        assertEquals(CookieUtilHelper.class, CookieUtil.getInstance().getClass());
+        assertEquals(CookieUtil.class, CookieUtil.getInstance().getClass());
         assertNotEquals(null, CookieUtil.getInstance());
     }
 
