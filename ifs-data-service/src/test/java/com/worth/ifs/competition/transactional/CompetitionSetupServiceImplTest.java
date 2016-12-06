@@ -9,9 +9,11 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.repository.FormInputRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +23,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
@@ -30,6 +34,8 @@ import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -230,5 +236,4 @@ public class CompetitionSetupServiceImplTest {
 		assertNull(competition.getAssessorCount());
 		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
 	}
-
 }

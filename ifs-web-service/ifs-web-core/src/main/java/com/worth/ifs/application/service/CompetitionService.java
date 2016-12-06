@@ -50,4 +50,6 @@ public interface CompetitionService {
     void markAsSetup(Long competitionId);
 
     List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId);
+
+    void notifyAssessors(Long competitionId);
 }

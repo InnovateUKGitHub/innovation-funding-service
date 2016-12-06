@@ -145,9 +145,9 @@ Scope: on click guidance section should expand and collapse
     [Documentation]    INFUND-4142
     [Tags]
     When the user clicks the button/link    css=details summary
-    Then the user should see the element    css=#details-content-0 p:nth-child(1)
+    Then the user should see the element    css=#details-content-0
     When the user clicks the button/link    css=details summary
-    Then The user should not see the element    css=#details-content-0 p:nth-child(1)
+    Then The user should not see the element    css=#details-content-0
 
 Scope: Status in the overview
     [Documentation]    INFUND-1483

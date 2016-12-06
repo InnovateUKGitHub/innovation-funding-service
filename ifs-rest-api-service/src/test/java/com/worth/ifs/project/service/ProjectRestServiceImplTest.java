@@ -493,6 +493,21 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     }
 
     @Test
+    public void testRemoveGeneratedGrantOfferLetter() {
+
+        Long projectId = 123L;
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer";
+
+        setupDeleteWithRestResultExpectations(nonBaseUrl);
+
+        RestResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+
+        setupDeleteWithRestResultVerifications(nonBaseUrl);
+    }
+
+    @Test
     public void testSubmitGrantOfferLetter() {
         long projectId = 123L;
         String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/submit";

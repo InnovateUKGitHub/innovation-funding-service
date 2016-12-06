@@ -14,7 +14,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -48,7 +48,7 @@
 						<span class="form-label-bold">Assessor payment per application</span>
 						<span class="form-hint">This information will be distributed in the assessor invites.</span>
 					</label>
-					<input class="form-control width-medium" id="remittance" name="remittance" value="£100" type="text" th:readonly="${(param.user != null and param.user[0] == 'compExec')}" />
+					<input class="form-control width-medium" id="remittance" name="remittance" value="£100" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
 
 
@@ -66,13 +66,13 @@
 
 
 	<div class="extra-margin">
-		<a th:if="${(param.user != null and param.user[0] == 'compExec')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?user=compExec' : '/prototypes/5090-assessors-required?user=compExec&amp;status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
-		<a th:unless="${(param.user != null and param.user[0] == 'compExec')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?' : '/prototypes/5090-assessors-required?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
+		<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required?compStatus=ready&amp;status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
+		<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?' : '/prototypes/5090-assessors-required?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
 	</div>
 
 	<ul class="pagination">
 		<li class="prev">
-			<a rel="next" title="Navigate to previous part" th:href="${param.user != null and param.user[0] == 'compExec' ? '/prototypes/5085-application-process?user=compExec' : '/prototypes/5085-application-process'}">
+			<a rel="next" title="Navigate to previous part" th:href="${param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process'}">
 				<span class="pagination-label">Previous</span>
 				<span class="pagination-part-title">Application</span>
 			</a>
@@ -80,7 +80,7 @@
 	</ul>
 
 	<div class="extra-margin">
-		<a th:href="${(param.user != null and param.user[0] == 'compExec' ? '/prototypes/2469-comp-setup?user=compExec' : '/prototypes/2469-comp-setup')}" class="button-secondary">Return to setup overview</a>
+		<a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button-secondary">Return to setup overview</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
