@@ -78,7 +78,7 @@ Duration field client side
     When the user enters text to a text field    id=application_details-duration    -1
     Then the user should see an error    Your project should last between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    Then the user should see an error    Please enter a valid value
+    Then the user should see an error    Your project should last between 1 and 36 months
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -154,4 +154,4 @@ the applicant should not see the validation error of the duration any more
     Run Keyword And Ignore Error    mouse out    css=.editor
     Focus    css=.app-submit-btn
     sleep    300ms
-    The user should not see the text in the page    Please enter a valid value
+    The user should not see the text in the page    Your project should last between 1 and 36 months
