@@ -86,6 +86,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
                 setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
                 setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
+                setupResource.setAssessmentGuidanceTitle(formInput.getDescription());
                 break;
             case ASSESSOR_SCORE:
                 setupResource.setScored(formInput.getActive());
@@ -169,6 +170,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
             writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
+            writtenFeedbackFormInput.setDescription(competitionSetupQuestionResource.getAssessmentGuidanceTitle());
 
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));

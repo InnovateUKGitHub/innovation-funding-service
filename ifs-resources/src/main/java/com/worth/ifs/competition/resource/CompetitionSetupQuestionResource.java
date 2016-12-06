@@ -33,6 +33,8 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
     private Boolean appendix;
 
+    @NotBlank
+    private String assessmentGuidanceTitle;
     private String assessmentGuidance;
     private Integer assessmentMaxWords;
 
@@ -197,6 +199,14 @@ public class CompetitionSetupQuestionResource {
         this.scope = scope;
     }
 
+    public String getAssessmentGuidanceTitle() {
+        return assessmentGuidanceTitle;
+    }
+
+    public void setAssessmentGuidanceTitle(String assessmentGuidanceTitle) {
+        this.assessmentGuidanceTitle = assessmentGuidanceTitle;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -217,6 +227,7 @@ public class CompetitionSetupQuestionResource {
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
                 .append(assessmentGuidance, that.assessmentGuidance)
+                .append(assessmentGuidanceTitle, that.assessmentGuidanceTitle)
                 .append(assessmentMaxWords, that.assessmentMaxWords)
                 .append(scored, that.scored)
                 .append(scoreTotal, that.scoreTotal)
@@ -241,6 +252,7 @@ public class CompetitionSetupQuestionResource {
                 .append(maxWords)
                 .append(appendix)
                 .append(assessmentGuidance)
+                .append(assessmentGuidanceTitle)
                 .append(assessmentMaxWords)
                 .append(scored)
                 .append(scoreTotal)

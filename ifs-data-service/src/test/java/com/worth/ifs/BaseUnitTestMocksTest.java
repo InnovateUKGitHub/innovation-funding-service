@@ -463,6 +463,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected AssessorCountOptionRepository assessorCountOptionRepositoryMock;
 
+    @Mock
+    protected GuidanceRowRepository guidanceRowRepositoryMock;
+
     @Before
     public void setupMockInjection() {
         // Process mock annotations

@@ -47,6 +47,8 @@
                     <dt class="column-third">Written feedback</dt>
                     <dd class="column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.writtenFeedback}">
+                        <dt class="column-third">Guidance Title</dt>
+                        <dd class="column-two-thirds" th:text="${question.assessmentGuidanceTitle}">Feedback</dd>
                         <dt class="column-third">Guidance</dt>
                         <dd class="column-two-thirds">
                             <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
@@ -287,6 +289,21 @@
                                 No
                             </label>
                         </fieldset>
+                    </div>
+
+                    <div th:class="${#fields.hasErrors('question.assessmentGuidanceTitle')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="question.assessmentGuidanceTitle">
+                            <span class="form-label-bold">Guidance Title</span>
+                            <span th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}" th:text="${err}" />
+                                </span>
+                        </label>
+                        <input th:class="${#fields.hasErrors('question.assessmentGuidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                               type="text"
+                               id="question.assessmentGuidanceTitle"
+                               th:name="question.assessmentGuidanceTitle"
+                               th:value="${question.assessmentGuidanceTitle}"
+                               required="required"/>
                     </div>
 
                     <div th:class="${#fields.hasErrors('question.assessmentGuidance')}? 'form-group error':'form-group'">

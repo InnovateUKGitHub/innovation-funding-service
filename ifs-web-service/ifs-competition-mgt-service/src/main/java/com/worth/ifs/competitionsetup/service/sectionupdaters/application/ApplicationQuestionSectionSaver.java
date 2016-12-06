@@ -2,15 +2,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
@@ -132,6 +124,9 @@ public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsecti
                 break;
             case "question.assessmentGuidance" :
                 question.setAssessmentGuidance(value);
+                break;
+            case "question.assessmentGuidanceTitle" :
+                question.setAssessmentGuidanceTitle(value);
                 break;
             case "question.scored" :
                 question.setScored(Boolean.parseBoolean(value));

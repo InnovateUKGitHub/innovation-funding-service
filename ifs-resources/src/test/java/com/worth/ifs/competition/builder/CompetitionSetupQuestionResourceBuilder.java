@@ -55,6 +55,10 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setAppendix(appendix));
     }
 
+    public CompetitionSetupQuestionResourceBuilder withAssessmentGuidanceTitle(String assessmentGuidanceTitle) {
+        return with(competition -> competition.setAssessmentGuidanceTitle(assessmentGuidanceTitle));
+    }
+
     public CompetitionSetupQuestionResourceBuilder withAssessmentGuidance(String assessmentGuidance) {
         return with(competition -> competition.setAssessmentGuidance(assessmentGuidance));
     }

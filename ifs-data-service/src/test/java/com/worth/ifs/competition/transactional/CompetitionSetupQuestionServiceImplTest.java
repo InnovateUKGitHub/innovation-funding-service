@@ -50,6 +50,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     private static String guidance = "guidance";
     private static Integer maxWords = 1;
     private static String assessmentGuidance = "assessmentGuidance";
+    private static String assessmentGuidanceTitle = "assessmentGuidanceTitle";
     private static Integer assessmentMaxWords = 2;
     private static Integer scoreTotal = 10;
 
@@ -162,6 +163,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                 .withSubTitle(subTitle)
                 .withQuestionId(questionId)
                 .withAssessmentGuidance(assessmentGuidance)
+                .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
                 .withAssessmentMaxWords(assessmentMaxWords)
                 .withGuidanceRows(guidanceRows)
                 .withScored(true)
@@ -199,6 +201,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(questionFormInput.getGuidanceTitle(), guidanceTitle);
         assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
         assertEquals(questionFormInput.getWordCount(), maxWords);
+        assertEquals(writtenFeedbackFormInput.getDescription(), assessmentGuidanceTitle);
         //Short name shouldn't be set on SCOPE question.
         assertNotEquals(question.getShortName(), newShortTitle);
         assertEquals(question.getShortName(), shortTitle);

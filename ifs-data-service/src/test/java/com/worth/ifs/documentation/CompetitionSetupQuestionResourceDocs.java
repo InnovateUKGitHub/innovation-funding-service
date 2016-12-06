@@ -18,7 +18,8 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidance").description("The content of the guidance for the question"),
             fieldWithPath("maxWords").description("The maximum words allowed for the question response"),
             fieldWithPath("appendix").description("Does the question include an appendix section"),
-            fieldWithPath("assessmentGuidance").description("Guidance title for the assessor"),
+            fieldWithPath("assessmentGuidance").description("Guidance for the assessor"),
+            fieldWithPath("assessmentGuidanceTitle").description("Guidance title for the assessor"),
             fieldWithPath("assessmentMaxWords").description("Maximum words for the assessors feedback"),
             fieldWithPath("scored").description("Should the assessor see the score section"),
             fieldWithPath("scoreTotal").description("What is the question scored out of for the assessor"),
@@ -48,6 +49,7 @@ public class CompetitionSetupQuestionResourceDocs {
             .withSubTitle("subTitle")
             .withAssessmentMaxWords(1)
             .withAssessmentGuidance("blah")
+            .withAssessmentGuidanceTitle("assessmentGuidanceTitle")
             .withScoreTotal(1)
             .withGuidanceRows(
                     newFormInputGuidanceRowResourceBuilder()
