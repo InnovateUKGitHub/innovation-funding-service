@@ -212,6 +212,7 @@ public class RegistrationController {
         String destination = "registration-register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
 
         if(!bindingResult.hasErrors()) {
             //TODO : INFUND-3691
@@ -231,8 +232,6 @@ public class RegistrationController {
         } else {
             if (!processOrganisation(request, model)) {
                 destination = "redirect:/";
-            } else {
-                model.addAttribute("ethnicityOptions", getEthnicityOptions());
             }
         }
 
