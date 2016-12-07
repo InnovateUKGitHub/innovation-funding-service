@@ -1,13 +1,13 @@
 package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationProjectForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -126,8 +126,8 @@ public class CompetitionSetupApplicationController {
 
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST)
-    public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "ASSESSED_QUESTION")
+    public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
@@ -138,6 +138,43 @@ public class CompetitionSetupApplicationController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
+    }
+
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "SCOPE")
+    public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+                                            BindingResult bindingResult,
+                                               ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
+
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
+
+
+    }
+
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PUBLIC_DESCRIPTION")
+    public String submitPublicDescriptionQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return submitProjectDetailsQuestion(competitionSetupForm, bindingResult, validationHandler, competitionId, model);
+    }
+
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PROJECT_SUMMARY")
+    public String submitProjectSummary(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+
+        return submitProjectDetailsQuestion(competitionSetupForm, bindingResult, validationHandler, competitionId, model);
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
@@ -185,7 +222,19 @@ public class CompetitionSetupApplicationController {
             return "redirect:/dashboard";
         }
 
-        setupQuestionToModel(competitionResource, Optional.of(questionId), model, QUESTIONS, isEditable, form);
+
+        ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
+
+        CompetitionSetupQuestionType type = questionResource.getSuccessObject().getType();
+        CompetitionSetupSubsection setupSubsection;
+
+        if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+            setupSubsection =  CompetitionSetupSubsection.QUESTIONS;
+        } else {
+            setupSubsection =  CompetitionSetupSubsection.PROJECT_DETAILS;
+        }
+
+        setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);
 
         return questionView;
     }

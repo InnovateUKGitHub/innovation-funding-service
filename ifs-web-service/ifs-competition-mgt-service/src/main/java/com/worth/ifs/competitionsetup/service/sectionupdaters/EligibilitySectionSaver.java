@@ -13,6 +13,8 @@ import com.worth.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Competition setup section saver for the eligibility section.
  */
@@ -59,12 +61,12 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	}
 
 	@Override
-	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         if("researchCategoryId".equals(fieldName)) {
             processResearchCategoryForAutoSave(value, competitionResource);
             return competitionService.update(competitionResource);
         }
-		return super.handleIrregularAutosaveCase(competitionResource, fieldName, value);
+		return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
 	}
 
 	private void processResearchCategoryForAutoSave(String inputValue, CompetitionResource competitionResource) {

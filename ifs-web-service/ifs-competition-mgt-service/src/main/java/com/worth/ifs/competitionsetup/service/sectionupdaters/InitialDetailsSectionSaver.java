@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
@@ -154,7 +155,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
     @Override
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         if("openingDate".equals(fieldName)) {
             try {
                 String[] dateParts = value.split("-");
@@ -177,7 +178,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
         }
-        return super.handleIrregularAutosaveCase(competitionResource, fieldName, value);
+        return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
     }
 
 	@Override

@@ -19,19 +19,19 @@ import static org.apache.commons.beanutils.PropertyUtils.setNestedProperty;
 public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
 
     @Override
-    public ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> ObjectId) {
+    public ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> questionId) {
         try {
             form.setMarkAsCompleteAction(false);
             Class<?> propertyType = getPropertyType(form, fieldName);
             setNestedProperty(form, fieldName, convert(value, propertyType));
             return saveSection(competitionResource, form);
         } catch (Exception e) {
-            return handleIrregularAutosaveCase(competitionResource, fieldName, value);
+            return handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
         }
     }
 
 
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
     }
 

@@ -42,9 +42,9 @@ import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.service.FileTemplateRenderer;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.*;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -273,7 +273,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserProfileService userProfileServiceMock;
 
     @Mock
-    protected FinanceRowRepository financeRowRepositoryMock;
+    protected ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
@@ -466,6 +466,18 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessorCountOptionRepository assessorCountOptionRepositoryMock;
+
+    @Mock
+    protected ProjectFinanceRepository projectFinanceRepositoryMock;
+
+    @Mock
+    protected ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
+
+    @Mock
+    protected FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
+
+    @Mock
+    protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
 
     @Before
     public void setupMockInjection() {

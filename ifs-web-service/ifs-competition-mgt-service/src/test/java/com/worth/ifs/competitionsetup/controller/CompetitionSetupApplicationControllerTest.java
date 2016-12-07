@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.junit.Before;
@@ -26,6 +27,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -133,7 +135,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void submitSectionApplicationQuestionWithErrors() throws Exception {
+    public void submitSectionApplicationAssessedQuestionWithErrors() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -141,7 +143,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         question.setQuestionId(questionId);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
 
-        mockMvc.perform(post(URL_PREFIX +"/question")
+        mockMvc.perform(post(URL_PREFIX +"/question?ASSESSED_QUESTION=true")
                 .param("question.questionId", questionId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
@@ -149,19 +151,128 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void submitSectionApplicationQuestionWithoutErrors() throws Exception {
+    public void submitSectionApplicationScopeQuestionWithErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+
+        mockMvc.perform(post(URL_PREFIX +"/question?SCOPE=true")
+                .param("question.questionId", questionId.toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"));
+
+        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+    }
+
+    @Test
+    public void submitSectionApplicationAssessedQuestionWithGuidanceRowErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+
+        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentMaxWords", "200")
+                .param("question.type", "")
+                .param("guidanceRows[0].scoreFrom", "")
+                .param("guidanceRows[0].scoreTo", "")
+                .param("guidanceRows[0].justification", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"));
+
+        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+    }
+
+    @Test
+    public void submitSectionApplicationScopeQuestionWithGuidanceRowErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+
+        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentMaxWords", "200")
+                .param("question.type", "Scope")
+                .param("guidanceRows[0].subject", "")
+                .param("guidanceRows[0].justification", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/setup/question"));
+
+        verify(competitionSetupQuestionService, never()).updateQuestion(question);
+    }
+
+    @Test
+    public void submitSectionApplicationAssessedQuestionWithoutErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.shortTitle", "My Short Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentMaxWords", "200")
+                .param("guidanceRows[0].scoreFrom", "1")
+                .param("guidanceRows[0].scoreTo", "10")
+                .param("guidanceRows[0].justification", "My justification"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX));
+
+        verify(competitionSetupService).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
+    }
+
+    @Test
+    public void submitSectionApplicationScopeQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL_PREFIX + "/question")
-                .param("question.id", questionId.toString())
+        mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
+                .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.shortTitle", "Title")
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
-                .param("question.maxWords", "400"))
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentMaxWords", "200")
+                .param("question.guidanceRows[0].subject", "YES")
+                .param("question.guidanceRows[0].justification", "My justification")
+                .param("question.guidanceRows[1].subject", "NO")
+                .param("question.guidanceRows[1].justification", "My justification"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX));
 
