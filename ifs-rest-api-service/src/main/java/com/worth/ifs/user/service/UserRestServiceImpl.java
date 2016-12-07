@@ -159,9 +159,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setEmail(email);
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
-        user.setGender(Gender.valueOf(gender));
+        if(!StringUtils.isEmpty(gender)) {
+            user.setGender(Gender.valueOf(gender));
+        }
         user.setEthnicity(ethnicity);
-        user.setDisability(Disability.valueOf(disability));
+        if(!StringUtils.isEmpty(disability)) {
+            user.setDisability(Disability.valueOf(disability));
+        }
 
         String url;
         if(competitionId != null){
@@ -189,9 +193,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setLastName(lastName);
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
-        user.setGender(Gender.valueOf(gender));
+        if(!StringUtils.isEmpty(gender)) {
+            user.setGender(Gender.valueOf(gender));
+        }
         user.setEthnicity(ethnicity);
-        user.setDisability(Disability.valueOf(disability));
+        if(!StringUtils.isEmpty(disability)) {
+            user.setDisability(Disability.valueOf(disability));
+        }
         String url = userRestURL + "/updateDetails";
         return postWithRestResult(url, user, UserResource.class);
     }
