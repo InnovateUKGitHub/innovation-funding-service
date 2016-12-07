@@ -3,12 +3,11 @@ package com.worth.ifs.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,8 @@ import static com.worth.ifs.user.builder.ProfileSkillsResourceBuilder.newProfile
 import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.UserRelatedURLs.*;
+import static com.worth.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
+import static com.worth.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static com.worth.ifs.user.resource.UserStatus.INACTIVE;
 import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static java.time.LocalDateTime.now;
@@ -296,6 +296,24 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isOk());
 
         verify(userProfileServiceMock, only()).updateProfileSkills(userId, profileSkills);
+    }
+
+    @Test
+    public void updateProfileSkills_invalid() throws Exception {
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withSkillsAreas(RandomStringUtils.random(5001))
+                .build();
+
+        Long userId = 1L;
+
+        when(userProfileServiceMock.updateProfileSkills(userId, profileSkills)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
+                .contentType(APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(profileSkills)))
+                .andExpect(status().isNotAcceptable());
+
+        verify(userProfileServiceMock, never()).updateProfileSkills(userId, profileSkills);
     }
 
     @Test

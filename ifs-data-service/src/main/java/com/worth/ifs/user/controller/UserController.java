@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -159,7 +160,7 @@ public class UserController {
 
     @RequestMapping(value = "/id/{userId}/updateProfileSkills", method = PUT)
     public RestResult<Void> updateProfileSkills(@PathVariable("userId") Long id,
-                                                @RequestBody ProfileSkillsResource profileSkills) {
+                                                @Valid @RequestBody ProfileSkillsResource profileSkills) {
         return userProfileService.updateProfileSkills(id, profileSkills).toPutResponse();
     }
 
