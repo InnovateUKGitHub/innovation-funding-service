@@ -65,7 +65,7 @@ Finance checks client-side validations
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193, INFUND-6149
     [Tags]    HappyPath
-    Given the user should see the element    link=mailto:worth.email.test+fundsuccess@gmail.com
+    Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
