@@ -18,6 +18,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
             fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
             fieldWithPath("assessorDeadlineDate").description("date by which assessors should submit their application feedback"),
+            fieldWithPath("assessorBriefingDate").description("date on which assessors will be briefed on the competition"),
             fieldWithPath("fundersPanelDate").description("date on which the funders panel begins"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),

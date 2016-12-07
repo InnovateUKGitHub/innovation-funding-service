@@ -24,23 +24,22 @@ import com.worth.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import com.worth.ifs.assessment.transactional.*;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
-import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
-import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
-import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
-import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.category.mapper.CategoryLinkMapper;
 import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.category.repository.CategoryLinkRepository;
 import com.worth.ifs.category.repository.CategoryRepository;
 import com.worth.ifs.category.transactional.CategoryLinkService;
 import com.worth.ifs.category.transactional.CategoryService;
-import com.worth.ifs.commons.test.BaseTest;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.test.BaseTest;
+import com.worth.ifs.competition.mapper.AssessorCountOptionMapper;
+import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionFunderRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.mapper.FileEntryMapper;
+import com.worth.ifs.file.service.FileTemplateRenderer;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -59,6 +58,9 @@ import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
+import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
+import com.worth.ifs.project.bankdetails.repository.BankDetailsRepository;
+import com.worth.ifs.project.bankdetails.transactional.BankDetailsService;
 import com.worth.ifs.project.finance.repository.*;
 import com.worth.ifs.project.finance.transactional.FinanceCheckService;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
@@ -75,6 +77,7 @@ import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.users.ProjectUsersHelper;
+import com.worth.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -83,6 +86,7 @@ import com.worth.ifs.user.mapper.*;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.*;
 import com.worth.ifs.workflow.mapper.ProcessOutcomeMapper;
+import com.worth.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -159,6 +163,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    protected CompetitionService competitionServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
@@ -249,6 +256,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
+
+    @Mock
+    protected ProcessOutcomeService processOutcomeServiceMock;
 
     @Mock
     protected ProcessOutcomeMapper processOutcomeMapperMock;
@@ -425,6 +435,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected GOLWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
+    protected ProjectWorkflowHandler projectWorkflowHandlerMock;
+
+    @Mock
     protected PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
@@ -444,6 +457,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ContractMapper contractMapperMock;
+
+    @Mock
+    protected FileTemplateRenderer rendererMock;
 
     @Mock
     protected AssessorCountOptionMapper assessorCountOptionMapperMock;

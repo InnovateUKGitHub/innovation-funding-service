@@ -15,7 +15,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
 
-    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -39,7 +39,7 @@
 
 	<form>
 
-		<fieldset>
+		<fieldset th:unless="${param.status != null and param.status[0] == 'signed'}">
 
 			<legend class="visuallyhidden">Confirm terms and conditions</legend>
 

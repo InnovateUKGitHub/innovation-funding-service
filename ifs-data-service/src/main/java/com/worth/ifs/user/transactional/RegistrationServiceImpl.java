@@ -16,6 +16,7 @@ import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.mapper.EthnicityMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.repository.ProjectFinanceEmailRepository;
@@ -86,6 +87,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private PasswordPolicyValidator passwordPolicyValidator;
+
+    @Autowired
+    private EthnicityMapper ethnicityMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -198,6 +202,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setEmail(userResource.getEmail());
         newUser.setTitle(userResource.getTitle());
         newUser.setPhoneNumber(userResource.getPhoneNumber());
+        newUser.setDisability(userResource.getDisability());
+        newUser.setGender(userResource.getGender());
+        newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
 
         return newUser;
     }

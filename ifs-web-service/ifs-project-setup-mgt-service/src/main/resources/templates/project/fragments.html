@@ -52,6 +52,14 @@
             <span class="visuallyhidden">Awaiting review from Innovate UK</span>
           </th:block>
         </td>
+        <td th:case="'REJECTED'" class="status rejected">
+            <th:block th:if="${url}">
+                <a th:href="${url}"><span class="visuallyhidden">Stage rejected - requires action</span></a>
+            </th:block>
+            <th:block th:unless="${url}">
+                <span class="visuallyhidden">Stage rejected</span>
+            </th:block>
+        </td>
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
 </th:block>

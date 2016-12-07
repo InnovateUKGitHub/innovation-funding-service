@@ -154,7 +154,7 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
-		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.FALSE);
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -202,7 +202,7 @@ public class CompetitionSetupServiceImplTest {
 		testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
 		testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
-		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.TRUE);
+		testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.FALSE);
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
 				.build();

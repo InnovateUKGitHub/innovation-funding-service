@@ -65,7 +65,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setAppendix(formInput.getActive());
                 break;
             case TEXTAREA:
-                setupResource.setGuidanceTitle(formInput.getGuidanceQuestion());
+                setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
                 setupResource.setGuidance(formInput.getGuidanceAnswer());
                 setupResource.setMaxWords(wordCountWithDefault(formInput.getWordCount()));
                 break;
@@ -77,7 +77,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case TEXTAREA:
                 setupResource.setWrittenFeedback(formInput.getActive());
                 setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
-                setupResource.setAssessmentGuidance(formInput.getGuidanceQuestion());
+                setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
                 setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
                 break;
             case ASSESSOR_SCORE:
@@ -105,7 +105,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
 
         FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA);
-        questionFormInput.setGuidanceQuestion(competitionSetupQuestionResource.getGuidanceTitle());
+        questionFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 

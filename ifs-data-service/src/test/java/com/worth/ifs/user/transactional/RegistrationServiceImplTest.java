@@ -16,7 +16,9 @@ import com.worth.ifs.registration.resource.UserRegistrationResource;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.resource.TokenType;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.Disability;
 import com.worth.ifs.user.resource.EthnicityResource;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +32,18 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static com.worth.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
+import static com.worth.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static com.worth.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
@@ -176,11 +178,15 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
                 withTitle("Mr").
+                withDisability(Disability.YES).
+                withGender(Gender.MALE).
+                withEthnicity(2L).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
         Role applicantRole = newRole().build();
 
+        when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
@@ -196,6 +202,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("01234 567890", user.getPhoneNumber());
             assertEquals("Mr", user.getTitle());
             assertEquals("new-uid", user.getUid());
+            assertEquals(Gender.MALE, user.getGender());
+            assertEquals(Disability.YES, user.getDisability());
+            assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertEquals(applicantRole, user.getRoles().get(0));
             assertEquals(1, user.getOrganisations().size());

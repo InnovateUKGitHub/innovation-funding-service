@@ -55,4 +55,8 @@ public class BankDetailsBuilder extends BaseBuilder<BankDetails, BankDetailsBuil
     public BankDetailsBuilder withProject(Project... projects) {
         return withArray((project, bankDetails) -> setField("project", project, bankDetails), projects);
     }
+
+    public BankDetailsBuilder withApproval(Boolean... approvals) {
+        return withArray((approval, bankDetails) -> setField("manualApproval", approval, bankDetails), approvals);
+    }
 }
