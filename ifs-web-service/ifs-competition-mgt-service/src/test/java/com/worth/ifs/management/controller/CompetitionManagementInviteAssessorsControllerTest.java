@@ -8,6 +8,7 @@ import com.worth.ifs.management.model.InviteAssessorsOverviewModelPopulator;
 import com.worth.ifs.management.viewmodel.InviteAssessorsFindViewModel;
 import com.worth.ifs.management.viewmodel.InviteAssessorsInviteViewModel;
 import com.worth.ifs.management.viewmodel.InviteAssessorsOverviewViewModel;
+import com.worth.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -70,8 +71,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         InviteAssessorsFindViewModel model = (InviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(competition.getId(), model.getCompetitionId());
-        assertEquals("Technology inspired", model.getCompetitionName());
+        checkCompetitionDetails(competition, model);
 
         verify(competitionService, only()).getById(competition.getId());
     }
@@ -93,8 +93,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         InviteAssessorsInviteViewModel model = (InviteAssessorsInviteViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(competition.getId(), model.getCompetitionId());
-        assertEquals("Technology inspired", model.getCompetitionName());
+        checkCompetitionDetails(competition, model);
 
         verify(competitionService, only()).getById(competition.getId());
     }
@@ -116,10 +115,28 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         InviteAssessorsOverviewViewModel model = (InviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(competition.getId(), model.getCompetitionId());
-        assertEquals("Technology inspired", model.getCompetitionName());
+        checkCompetitionDetails(competition, model);
 
         verify(competitionService, only()).getById(competition.getId());
+    }
+
+    private void checkCompetitionDetails(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
+        assertEquals(expectedCompetition.getId(), model.getCompetitionId());
+        assertEquals(expectedCompetition.getName(), model.getCompetitionName());
+        checkInnovationSectorAndArea(model);
+        checkStatistics(model);
+    }
+
+    private void checkInnovationSectorAndArea(InviteAssessorsViewModel model) {
+        assertEquals("Health and life sciences", model.getInnovationSector());
+        assertEquals("Agriculture and food", model.getInnovationArea());
+    }
+
+    private void checkStatistics(InviteAssessorsViewModel model) {
+        assertEquals(60, model.getAssessorsInvited());
+        assertEquals(23, model.getAssessorsAccepted());
+        assertEquals(3, model.getAssessorsDeclined());
+        assertEquals(6, model.getAssessorsStaged());
     }
 
 }
