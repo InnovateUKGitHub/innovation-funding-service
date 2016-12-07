@@ -17,16 +17,17 @@
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
-
-        <div class="error-summary" aria-hidden="true">
-           <h2 class="heading-medium error-summary-heading">
-               Unable to submit spend profile.
-           </h2>
-           Please review
-           <ul class="error-summary-list">
-               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-           </ul>
-       </div>
+        <form th:if="${form != null}" th:object="${form}">
+            <div class="error-summary" aria-hidden="true">
+               <h2 class="heading-medium error-summary-heading">
+                   Unable to submit spend profile.
+               </h2>
+               Please review
+               <ul class="error-summary-list">
+                   <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+               </ul>
+           </div>
+        </form>
 
       <div class="error-summary"  th:if="${form == null}" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
         <h2 class="heading-medium error-summary-heading">
