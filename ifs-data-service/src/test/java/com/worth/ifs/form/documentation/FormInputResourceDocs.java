@@ -18,8 +18,9 @@ public class FormInputResourceDocs {
         fieldWithPath("description").description("description"),
         fieldWithPath("includedInApplicationSummary").description("whether the input should be included in the application summary"),
         fieldWithPath("formValidators").description("list of formValidator ids"),
-        fieldWithPath("guidanceQuestion").description("question on which the guidance for this input is based"),
-        fieldWithPath("guidanceAnswer").description("answer to the guidanceQuestion"),
+        fieldWithPath("guidanceTitle").description("question on which the guidance for this input is based"),
+        fieldWithPath("guidanceAnswer").description("answer to the guidanceTitle"),
+        fieldWithPath("guidanceRows").description("breakdown of guidance by score"),
         fieldWithPath("priority").description("priority of the input, used for rendering purposes only"),
         fieldWithPath("scope").description("the scope for which the input should be rendered")
     };

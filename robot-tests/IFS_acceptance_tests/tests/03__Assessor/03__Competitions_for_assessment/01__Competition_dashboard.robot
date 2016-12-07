@@ -32,6 +32,7 @@ Calculation of the applications for assessment should be correct
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
+    [Tags]    HappyPath
     Then the user should see the text in the page    Competition
     And the user should see the text in the page    Innovation Lead
     And the user should see the text in the page    Ian Cooper
@@ -55,7 +56,7 @@ Accept an application for assessment
     [Documentation]    INFUND-1180
     ...
     ...    INFUND-4128
-    [Tags]
+    [Tags]    HappyPath
     Given the user should see the text in the page    Pending
     When The user clicks the button/link    jQuery=li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
