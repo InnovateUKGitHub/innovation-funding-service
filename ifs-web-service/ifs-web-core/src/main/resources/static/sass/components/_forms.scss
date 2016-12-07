@@ -151,7 +151,7 @@ tr.form-group-row.error {
   .error-message {
     display: none;
   }
-  th:first-of-type{
+  > *:first-child{
     @extend .warning-alert;
     background-position: 10px 50%;
     padding-left: 40px;

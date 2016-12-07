@@ -20,10 +20,10 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationQuestionModelPopulatorTest {
+public class ApplicationProjectModelPopulatorTest {
 
 	@InjectMocks
-	private ApplicationQuestionModelPopulator populator;
+	private ApplicationProjectModelPopulator populator;
 
 	@Mock
 	private CompetitionService competitionService;
@@ -35,7 +35,7 @@ public class ApplicationQuestionModelPopulatorTest {
 	public void testSectionToPopulateModel() {
 		CompetitionSetupSubsection result = populator.sectionToPopulateModel();
 		
-		assertEquals(CompetitionSetupSubsection.QUESTIONS, result);
+		assertEquals(CompetitionSetupSubsection.PROJECT_DETAILS, result);
 	}
 	
 	@Test
