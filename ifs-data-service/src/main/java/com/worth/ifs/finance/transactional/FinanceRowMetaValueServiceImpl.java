@@ -2,7 +2,6 @@ package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
-import com.worth.ifs.finance.resource.FinanceRowMetaValueId;
 import com.worth.ifs.finance.mapper.FinanceRowMetaValueMapper;
 import com.worth.ifs.finance.repository.FinanceRowMetaValueRepository;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
@@ -23,7 +22,7 @@ public class FinanceRowMetaValueServiceImpl extends BaseTransactionalService imp
     private FinanceRowMetaValueMapper mapper;
 
     @Override
-    public ServiceResult<FinanceRowMetaValueResource> findOne(FinanceRowMetaValueId id) {
+    public ServiceResult<FinanceRowMetaValueResource> findOne(Long id) {
         return find(repository.findOne(id), notFoundError(FinanceRowMetaValue.class)).andOnSuccessReturn(mapper::mapToResource);
     }
 }

@@ -8,13 +8,11 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.mapper.CostCategoryTypeMapper;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
 import com.worth.ifs.project.finance.repository.CostCategoryTypeRepository;
 import com.worth.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.resource.CostCategoryResource;
-import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.*;
@@ -82,9 +80,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;
-
-    @Autowired
-    private CostCategoryTypeMapper costCategoryTypeMapper;
 
     @Autowired
     private CostCategoryRepository costCategoryRepository;
@@ -287,12 +282,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         } else {
             return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
         }
-    }
-
-    @Override
-    public ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId) {
-        return find(costCategoryTypeRepository.findByCostCategoryGroupId(costCategoryGroupId), notFoundError(CostCategoryType.class, costCategoryGroupId)).
-                andOnSuccessReturn(costCategoryTypeMapper::mapToResource);
     }
 
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {

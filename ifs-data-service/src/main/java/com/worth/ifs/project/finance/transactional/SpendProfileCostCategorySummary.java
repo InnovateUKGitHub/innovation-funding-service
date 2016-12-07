@@ -1,9 +1,6 @@
 package com.worth.ifs.project.finance.transactional;
 
-import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.project.finance.domain.CostCategory;
-import com.worth.ifs.project.finance.resource.CostCategoryResource;
-import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 
 import java.math.BigDecimal;
 
@@ -14,12 +11,12 @@ import static java.math.RoundingMode.HALF_EVEN;
  */
 class SpendProfileCostCategorySummary {
 
-    private CostCategoryResource category;
+    private CostCategory category;
     private BigDecimal total;
     private BigDecimal firstMonthSpend;
     private BigDecimal otherMonthsSpend;
 
-    SpendProfileCostCategorySummary(CostCategoryResource category, BigDecimal total, long projectDurationInMonths) {
+    SpendProfileCostCategorySummary(CostCategory category, BigDecimal total, long projectDurationInMonths) {
         this.category = category;
         this.total = total;
 
@@ -31,7 +28,7 @@ class SpendProfileCostCategorySummary {
         this.otherMonthsSpend = monthlyCost;
     }
 
-    public CostCategoryResource getCategory() {
+    public CostCategory getCategory() {
         return category;
     }
 

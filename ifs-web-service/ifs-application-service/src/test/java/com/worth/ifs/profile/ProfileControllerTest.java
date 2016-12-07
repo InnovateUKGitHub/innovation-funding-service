@@ -192,9 +192,9 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("firstName", "newfirstname")
                 .param("lastName", "newlastname")
                 .param("phoneNumber", "0987654321")
-                .param("gender", "MALE")
+                .param("gender", Gender.MALE.toString())
                 .param("ethnicity", "2")
-                .param("disability", "NO")
+                .param("disability", Disability.NO.toString())
 
         );
 
@@ -205,9 +205,9 @@ public class ProfileControllerTest extends BaseUnitTest {
                 "newlastname",
                 "Mrs",
                 "0987654321",
-                "MALE",
+                Gender.MALE.toString(),
                 2L,
-                "NO");
+                Disability.NO.toString());
     }
 
     @Test

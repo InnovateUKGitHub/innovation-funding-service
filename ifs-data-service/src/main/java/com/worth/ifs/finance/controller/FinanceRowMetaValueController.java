@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.finance.resource.FinanceRowMetaValueId;
 import com.worth.ifs.finance.resource.FinanceRowMetaValueResource;
 import com.worth.ifs.finance.transactional.FinanceRowMetaValueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class FinanceRowMetaValueController {
     private FinanceRowMetaValueService service;
 
     @RequestMapping("/{id}")
-    public RestResult<FinanceRowMetaValueResource> findById(@PathVariable("id") final FinanceRowMetaValueId id) {
+    public RestResult<FinanceRowMetaValueResource> findById(@PathVariable("id") final Long id) {
         return service.findOne(id).toGetResponse();
     }
 }
