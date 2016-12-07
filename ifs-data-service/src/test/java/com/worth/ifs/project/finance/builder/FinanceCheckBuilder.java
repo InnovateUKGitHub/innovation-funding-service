@@ -23,14 +23,8 @@ public class FinanceCheckBuilder extends BaseBuilder<FinanceCheck, FinanceCheckB
         return new FinanceCheckBuilder(emptyList()).with(uniqueIds());
     }
 
-    @Override
-    protected FinanceCheckBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FinanceCheck>> actions) {
-        return new FinanceCheckBuilder(actions);
-    }
-
-    @Override
-    protected FinanceCheck createInitial() {
-        return new FinanceCheck();
+    public FinanceCheckBuilder withId(Long... id) {
+        return withArraySetFieldByReflection("id", id);
     }
 
     public FinanceCheckBuilder withOrganisation(Organisation... organisations) {
@@ -44,4 +38,15 @@ public class FinanceCheckBuilder extends BaseBuilder<FinanceCheck, FinanceCheckB
     public FinanceCheckBuilder withCostGroup(CostGroup... costGroups) {
         return withArray((costGroup, financeCheckResource) -> setField("costGroup", costGroup, financeCheckResource), costGroups);
     }
+
+    @Override
+    protected FinanceCheckBuilder createNewBuilderWithActions(List<BiConsumer<Integer, FinanceCheck>> actions) {
+        return new FinanceCheckBuilder(actions);
+    }
+
+    @Override
+    protected FinanceCheck createInitial() {
+        return new FinanceCheck();
+    }
+
 }

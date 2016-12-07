@@ -7,8 +7,6 @@ import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-
 public abstract class AbstractFinanceRowCostCategoryBuilder<T extends FinanceRowCostCategory, S extends AbstractFinanceRowCostCategoryBuilder> extends BaseBuilder<T, S> {
 
     protected AbstractFinanceRowCostCategoryBuilder(List<BiConsumer<Integer, T>> newMultiActions) {
@@ -16,10 +14,6 @@ public abstract class AbstractFinanceRowCostCategoryBuilder<T extends FinanceRow
     }
 
     public S withCosts(List<? extends FinanceRowItem>... costs) {
-        return withArray((cost, financeRowCostCategoryBuilder) -> setField("costs", cost, financeRowCostCategoryBuilder), costs);
+        return withArray((cost, financeRow) -> cost.forEach(financeRow::addCost), costs);
     }
-
-
-
-
 }

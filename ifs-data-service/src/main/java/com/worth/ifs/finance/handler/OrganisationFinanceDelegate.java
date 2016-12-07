@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrganisationFinanceDelegate {
+
+    public static final String UNIVERSITY_HEI = "University (HEI)";
+
     @Autowired
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
 
@@ -12,11 +15,19 @@ public class OrganisationFinanceDelegate {
     private OrganisationJESFinance organisationJESFinance;
 
     public OrganisationFinanceHandler getOrganisationFinanceHandler(String organisationType) {
+        if (isUsingJesFinances(organisationType)) {
+            return organisationJESFinance;
+        } else {
+            return organisationFinanceDefaultHandler;
+        }
+    }
+
+    public boolean isUsingJesFinances(String organisationType) {
         switch(organisationType) {
-            case "University (HEI)":
-                return organisationJESFinance;
+            case UNIVERSITY_HEI:
+                return true;
             default:
-                return organisationFinanceDefaultHandler;
+                return false;
         }
     }
 }

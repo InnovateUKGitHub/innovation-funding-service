@@ -1,16 +1,16 @@
 package com.worth.ifs.validator;
 
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.domain.FinanceRow;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 
@@ -21,7 +21,7 @@ import static com.worth.ifs.commons.rest.ValidationMessages.rejectValue;
 public class GrantClaimValidator implements Validator {
 
     @Autowired
-    private FinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository financeRowRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -33,13 +33,13 @@ public class GrantClaimValidator implements Validator {
         GrantClaim response = (GrantClaim) target;
         FinanceRow cost = financeRowRepository.findOne(response.getId());
 
-        OrganisationType organisationType = cost.getApplicationFinance().getOrganisation().getOrganisationType();
+        OrganisationType organisationType = ((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType();
         
         int max;
         
         if(isAcademicOrBusiness(organisationType)) {
         	
-            OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
+            OrganisationSize size = ((ApplicationFinanceRow)cost).getTarget().getOrganisationSize();
 
         	if(size == null) {
                 rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
