@@ -83,7 +83,7 @@ public interface FinanceRowService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
             description = "Internal users can access the finance checks details")
-    ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId);
+    ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);
