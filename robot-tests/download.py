@@ -6,7 +6,7 @@ import sys
 import urllib
 from urlparse import urlparse
 from HTMLParser import HTMLParser
- 
+
 
 # Implement bash commands inside python
 def shell(command):
@@ -14,7 +14,7 @@ def shell(command):
   output = process.communicate()[0]
   return output
 
-# Work out the base url from the download url 
+# Work out the base url from the download url
 def getBaseUrl(downloadUrl):
   o = urlparse(downloadUrl)
   baseUrl = o.scheme + "://" + o.netloc
@@ -84,14 +84,14 @@ def downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocat
 # Log a user in and download a file.
 # Example use case:
 # ./download.py john.doe@innovateuk.test Passw0rd https://ifs-local-dev/management/competition/1/download /tmp/file.xlsx
-# Note that repeated use in quick succession on various non developer environments will cause failure due to - most likely - to automatic lockup. 
+# Note that repeated use in quick succession on various non developer environments will cause failure due to - most likely - to automatic lockup.
 def main():
   user = sys.argv[1] # e.g. john.doe@innovateuk.test
   password = sys.argv[2] # e.g. Passw0rd
   downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
   downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
-  
-  baseUrl = getBaseUrl(downloadUrl) 
+
+  baseUrl = getBaseUrl(downloadUrl)
   loginPostUrl, baseAuthUrl = getBaseAuthUrlAndPortUrl(baseUrl)
   sAMLResponse, relayState = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
   shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl)
