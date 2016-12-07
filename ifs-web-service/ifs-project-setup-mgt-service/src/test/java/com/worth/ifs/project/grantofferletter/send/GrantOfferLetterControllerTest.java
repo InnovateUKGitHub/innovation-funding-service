@@ -71,6 +71,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
 
@@ -126,6 +127,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         assertTrue(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
@@ -182,6 +184,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.FALSE, golViewModel.isSentToProjectTeam());
@@ -278,6 +281,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         ProjectGrantOfferLetterSendViewModel model = (ProjectGrantOfferLetterSendViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(new FileDetailsViewModel(createdFileDetails), model.getGrantOfferLetterFile());
+        assertEquals(null, model.getSignedGrantOfferLetterFile());
         assertTrue(model.getGrantOfferLetterFileContentAvailable());
 
     }
@@ -499,6 +503,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         assertTrue(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
@@ -556,6 +561,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         assertTrue(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
@@ -563,6 +569,50 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         ProjectGrantOfferLetterSendForm form = (ProjectGrantOfferLetterSendForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
+    }
+
+    @Test
+    public void testDownloadSignedGrantOfferLetterSuccess() throws Exception {
+
+        Long projectId = 1L;
+
+        FileEntryResource annexFileEntryResource = FileEntryResourceBuilder.newFileEntryResource()
+                .withName("annex-file.pdf")
+                .build();
+        byte[] content = "HelloWorld".getBytes();
+        ByteArrayResource annexByteArrayResource = new ByteArrayResource(content);
+
+        when(projectService.getSignedGrantOfferLetterFile(projectId)).thenReturn(Optional.of(annexByteArrayResource));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(annexFileEntryResource));
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/signed-grant-offer-letter"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+        assertEquals("HelloWorld", response.getContentAsString());
+        assertEquals("inline; filename=\"annex-file.pdf\"", response.getHeader("Content-Disposition"));
+        assertEquals(10, response.getContentLength());
+    }
+
+    @Test
+    public void testDownloadSignedGrantOfferLetterFileEntryNotPresent() throws Exception {
+
+        Long projectId = 1L;
+
+        when(projectService.getSignedGrantOfferLetterFile(projectId)).thenReturn(Optional.empty());
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/signed-grant-offer-letter"))
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        // Assert that there is no content
+        assertEquals("", response.getContentAsString());
+        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertEquals(0, response.getContentLength());
     }
 
     @Override

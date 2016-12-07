@@ -110,11 +110,16 @@
                         <button name="uploadAnnexClicked" class="button-secondary" type="submit"
                                 data-for-file-upload="annex">Save
                         </button>
-                        <p>The Annex should:</p>
-                        <ul class="list-bullet">
-                            <li>be in a portable document format (.pdf)</li>
-                            <li>be less than 1mb in size</li>
-                        </ul>
+                        <details>
+                            <summary><span class="summary">What are the requirements for upload?</span></summary>
+                            <div class="panel-indent">
+                                <p>The Annex should:</p>
+                                <ul class="list-bullet">
+                                    <li>be in a portable document format (.pdf)</li>
+                                    <li>be less than 1mb in size</li>
+                                </ul>
+                            </div>
+                        </details>
                     </div>
                 </form>
             </div>
@@ -165,6 +170,10 @@
     </th:block>
     -->
 
+    <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+        <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
+        <p><a th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a></p>
+    </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}" th:remove="tag">
         <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
         <p>Do the documents supplied meet the requirements for the grant offer letter?</p>

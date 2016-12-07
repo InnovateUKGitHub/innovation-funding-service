@@ -65,6 +65,12 @@ public class GrantOfferLetterSendControllerSecurityTest extends BaseProjectSetup
     public void testApproceOrRejectSignedGrantOfferLetter() {
         assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(123L, ApprovalType.APPROVED, null, null, null, null));
     }
+
+    @Test
+    public void testDownloadSignedGrantOfferLetterFile() {
+        assertSecured(() -> classUnderTest.downloadSignedGrantOfferLetterFile(123L));
+    }
+
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.internalCanAccessGrantOfferLetterSendSection(eq(123L), isA(UserResource.class));

@@ -91,54 +91,20 @@ public class ProjectGrantOfferLetterController {
             ValidationHandler validationHandler,
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectGrantOfferLetterViewModel viewModel = populateGrantOfferLetterViewModel(projectId, loggedInUser);
+        if(viewModel.isProjectManager() && !viewModel.isSubmitted() && viewModel.getGrantOfferLetterFile() != null) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
+            return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
 
-            MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
+                MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
 
-            return projectService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
-                    signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
-        });
+                return projectService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
+                        signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
+            });
+        } else {
+            return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
+        }
     }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
-    @RequestMapping(params = "uploadGeneratedOfferLetterClicked", method = POST)
-    public String uploadGeneratedGrantOfferLetterFile(
-            @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "grantOfferLetter", form, () -> {
-
-            MultipartFile grantOfferLetter = form.getGrantOfferLetter();
-
-            return projectService.addGeneratedGrantOfferLetter(projectId, grantOfferLetter.getContentType(), grantOfferLetter.getSize(),
-                    grantOfferLetter.getOriginalFilename(), getMultipartFileBytes(grantOfferLetter));
-        });
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
-    @RequestMapping(params = "uploadAdditionalContractClicked", method = POST)
-    public String uploadAdditionalContractFile(
-            @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "additionalContractFile", form, () -> {
-
-            MultipartFile additionalContract = form.getAdditionalContract();
-
-            return projectService.addGeneratedGrantOfferLetter(projectId, additionalContract.getContentType(), additionalContract.getSize(),
-                    additionalContract.getOriginalFilename(), getMultipartFileBytes(additionalContract));
-        });
-    }
-
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/grant-offer-letter", method = GET)
@@ -201,9 +167,10 @@ public class ProjectGrantOfferLetterController {
                 .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
-                leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
-                signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
-                additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
+                leadPartner,
+                grantOfferFileDetails != null ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
+                signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                additionalContractFile != null ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
                 project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
     }

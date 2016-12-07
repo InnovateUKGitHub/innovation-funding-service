@@ -106,7 +106,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
         this.offerAccepted = offerAccepted;
     }
 
-    public boolean isShowSubmitButton() { return projectManager && !isSubmitted() && isOfferSigned(); }
+    public boolean isShowSubmitButton() { return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null; }
 
     public boolean isShowDisabledSubmitButton() { return leadPartner && (!isOfferSigned() || !projectManager); }
 

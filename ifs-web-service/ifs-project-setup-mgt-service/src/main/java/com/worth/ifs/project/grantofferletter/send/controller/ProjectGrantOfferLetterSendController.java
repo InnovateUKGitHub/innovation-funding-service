@@ -186,6 +186,19 @@ public class ProjectGrantOfferLetterSendController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @RequestMapping(value = "/signed-grant-offer-letter", method = GET)
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadSignedGrantOfferLetterFile(
+            @PathVariable("projectId") final Long projectId) {
+
+        final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @RequestMapping(params = "uploadAnnexClicked", value = "/upload-annex", method = POST)
     public String uploadAnnexFile(
             @PathVariable("projectId") final Long projectId,
@@ -229,7 +242,8 @@ public class ProjectGrantOfferLetterSendController {
                                                         grantOfferFileDetails != null ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
                                                         additionalContractFile != null ? additionalContractFile.isPresent() : Boolean.FALSE,
                                                         signedGrantOfferLetterApproved,
-                                                        signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE
+                                                        signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE,
+                                                        signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
                 );
     }
 
