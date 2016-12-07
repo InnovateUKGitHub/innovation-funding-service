@@ -47,11 +47,11 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}" />
                         </span>
                 </legend>
-                <label class="block-label" for="use-resubmission-question-yes">
+                <label class="block-label selection-button-radio" for="use-resubmission-question-yes">
                     <input id="use-resubmission-question-yes" value="true" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
                     Yes
                 </label>
-                <label class="block-label" for="use-resubmission-question-no">
+                <label class="block-label selection-button-radio" for="use-resubmission-question-no">
                     <input id="use-resubmission-question-no" value="false" type="radio" th:field="*{useResubmissionQuestion}" required="required" />
                     No
                 </label>

@@ -67,7 +67,7 @@
                                     <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}" />
                                 </span>
                             </legend>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input
                                 value="true"
                                 type="radio"
@@ -77,7 +77,7 @@
                                 data-conditionally-remove-required="#feedback" />
                                 Yes
                             </label>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input
                                 value="false"
                                 type="radio"

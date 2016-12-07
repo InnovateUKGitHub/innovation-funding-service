@@ -71,7 +71,7 @@
     <fieldset class="inline">
         <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
-            <label class="block-label" th:each="option : ${ { true, false } }">
+            <label class="block-label selection-button-radio" th:each="option : ${ { true, false } }">
                 <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
             </label>

@@ -467,11 +467,11 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <label class="block-label" for="comp-stream-yes" data-target="competition-stream-name-fields">
+                        <label class="block-label selection-button-radio" for="comp-stream-yes" data-target="competition-stream-name-fields">
                             <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
                         Yes
                         </label>
-                        <label class="block-label" for="comp-stream-no">
+                        <label class="block-label selection-button-radio" for="comp-stream-no">
                             <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
                         No
                         </label>
@@ -510,7 +510,7 @@
 	                    </span>
                     </legend>
 
-                    <label th:each="collaborationLevel : ${collaborationLevels}" class="block-label" th:for="${'single-or-collaborative-' + collaborationLevel.code}">
+                    <label th:each="collaborationLevel : ${collaborationLevels}" class="block-label selection-button-radio" th:for="${'single-or-collaborative-' + collaborationLevel.code}">
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}" required="required" data-required-errormessage="Please select a collaboration level"></input>
                         <span th:text="${collaborationLevel.name}" th:remove="tag" />
                     </label>
@@ -528,7 +528,7 @@
 	                    </span>
 	                </legend>
 
-		            <label class="block-label" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
+		            <label class="block-label selection-button-checkbox" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
 		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
@@ -547,7 +547,7 @@
 					   </span>
 					</legend>
 
-					 <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label" th:for="${'lead-applicant-type-' + leadApplicantType.code}">
+					 <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label selection-button-radio" th:for="${'lead-applicant-type-' + leadApplicantType.code}">
 					    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}" required="required" data-required-errormessage="Please select a lead applicant type" />
 					    <span th:text="${leadApplicantType.name}" th:remove="tag" />
 					 </label>
@@ -578,11 +578,11 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}" />
 		                </span>
                     </legend>
-                    <label class="block-label" for="comp-resubmissions-yes">
+                    <label class="block-label selection-button-radio" for="comp-resubmissions-yes">
                         <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         Yes
                     </label>
-                    <label class="block-label" for="comp-resubmissions-no">
+                    <label class="block-label selection-button-radio" for="comp-resubmissions-no">
                         <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         No
                     </label>
@@ -858,7 +858,7 @@
                     <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
                     </span>
-                    <label th:each="assessorOption : ${assessorOptions}" class="block-label" th:for="${'assessors-' + '__${assessorOption.id}__'}">
+                    <label th:each="assessorOption : ${assessorOptions}" class="block-label selection-button-radio" th:for="${'assessors-' + '__${assessorOption.id}__'}">
                      <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                             th:value="${assessorOption.optionValue}" type="radio"
                             th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />

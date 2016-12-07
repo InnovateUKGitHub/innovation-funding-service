@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finance contact'})" th:remove="tag" />
-	
+
 	<!--<form action="/prototypes/1575-project-details">-->
 	<form action="#">
 
@@ -40,22 +40,22 @@
 
 
 			<div class="form-group extra-margin">
-				<label for="finances-name-1" class="block-label">
+				<label for="finances-name-1" class="block-label selection-button-radio">
 					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
 					John Smith
 				</label>
 
-				<label for="finances-name-2" class="block-label">
+				<label for="finances-name-2" class="block-label selection-button-radio">
 					<input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
 					Ann Jones
 				</label>
 
-				<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+				<label for="finances-name-invite" class="block-label selection-button-radio" id="invited-finance-contact" style="display: none">
 					<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
 					<span id="finance-name">Ann Jones (pending)</span>
 				</label>
 
-				<label for="add-finance-contact" class="block-label">
+				<label for="add-finance-contact" class="block-label selection-button-radio">
 					<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
 					Add new team member
 					<span class="form-hint">A new team member will be invited to join the project</span>
@@ -71,7 +71,7 @@
 
 		<!-- <fieldset class="extra-margin">
 			<legend class="visuallyhidden">Organisation details</legend>
-				
+
 			<div class="form-group">
 				<label class="form-label-bold" for="finance-turnover">Turnover (&pound;)
 					<span class="form-hint">Income during the previous year from the sale of products or the provision of services. Turnover should not include value added tax (VAT) or other indirect taxes.</span>
@@ -135,7 +135,7 @@
 
 	</form>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -240,7 +240,7 @@
 //			}
 //		});
 
-		
+
 
 	});
 	// ]]>

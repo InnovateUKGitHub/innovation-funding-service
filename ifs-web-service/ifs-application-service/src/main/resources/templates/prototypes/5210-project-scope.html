@@ -12,7 +12,7 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-	
+
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
 
@@ -114,11 +114,11 @@ Once you have submitted your application, you should not change this section unl
 					<fieldset class="inline">
 						<h3 class="heading-small">Appendix</h3>
 						<legend class="visuallyhidden">Appendix</legend>
-						<label class="block-label" for="appendix-yes">
+						<label class="block-label selection-button-radio" for="appendix-yes">
 							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" />
 							Yes
 						</label>
-						<label class="block-label" for="appendix-no">
+						<label class="block-label selection-button-radio" for="appendix-no">
 							<input id="appendix-no" name="appendix-group" value="No" type="radio" checked="checked" />
 							No
 						</label>
@@ -143,11 +143,11 @@ Once you have submitted your application, you should not change this section unl
 					<fieldset class="inline">
 						<h3 class="heading-small">Research category question</h3>
 						<legend class="visuallyhidden">Research category question</legend>
-						<label class="block-label" for="research-question-yes">
+						<label class="block-label selection-button-radio" for="research-question-yes">
 							<input id="research-question-yes" name="research-question-group" value="Yes" type="radio" checked="checked" />
 							Yes
 						</label>
-						<label class="block-label" for="research-question-no">
+						<label class="block-label selection-button-radio" for="research-question-no">
 							<input id="research-question-no" name="research-question-group" value="No" type="radio" />
 							No
 						</label>
@@ -157,11 +157,11 @@ Once you have submitted your application, you should not change this section unl
 					<fieldset class="inline">
 						<h3 class="heading-small">Scored</h3>
 						<legend class="visuallyhidden">Scored</legend>
-						<label class="block-label" for="scored-yes">
+						<label class="block-label selection-button-radio" for="scored-yes">
 							<input id="scored-yes" name="scored-group" value="Yes" type="radio" />
 							Yes
 						</label>
-						<label class="block-label" for="scored-no">
+						<label class="block-label selection-button-radio" for="scored-no">
 							<input id="scored-no" name="scored-group" value="No" type="radio" checked="checked" />
 							No
 						</label>
@@ -171,11 +171,11 @@ Once you have submitted your application, you should not change this section unl
 					<fieldset class="inline">
 						<h3 class="heading-small">Scope 'Y/N' question</h3>
 						<legend class="visuallyhidden">Scope 'Y/N' question</legend>
-						<label class="block-label" for="scope-question-yes">
+						<label class="block-label selection-button-radio" for="scope-question-yes">
 							<input id="scope-question-yes" name="scope-question-group" value="Yes" type="radio" checked="checked" />
 							Yes
 						</label>
-						<label class="block-label" for="scope-question-no">
+						<label class="block-label selection-button-radio" for="scope-question-no">
 							<input id="scope-question-no" name="scope-question-group" value="No" type="radio" />
 							No
 						</label>

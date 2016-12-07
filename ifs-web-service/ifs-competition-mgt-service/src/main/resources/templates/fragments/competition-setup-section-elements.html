@@ -191,11 +191,11 @@
                 <div class="form-group" th:if="${question.appendix != null}">
                     <fieldset class="inline">
                         <legend class="form-label-bold">Appendix</legend>
-                        <label class="block-label">
+                        <label class="block-label selection-button-radio">
                             <input th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio" />
                             Yes
                         </label>
-                        <label class="block-label">
+                        <label class="block-label selection-button-radio">
                             <input th:name="question.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                             No
                         </label>

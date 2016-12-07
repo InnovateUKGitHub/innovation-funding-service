@@ -183,7 +183,7 @@
         <span th:if="${#fields.hasErrors('termsAgreed')}" th:remove="tag">
             <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
         </span>
-		<label class="block-label" for="agree-terms-page">
+		<label class="block-label selection-button-checkbox" for="agree-terms-page">
         	<input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-disable-button-until-checked="#mark-all-as-complete" />
             As a member of this consortium I agree to the funding <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> set out by Innovate UK.
 		</label>
@@ -196,7 +196,7 @@
         <span th:if="${#fields.hasErrors('stateAidAgreed')}" th:remove="tag">
             <span class="error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
         </span>
-        <label class="block-label" for="agree-state-aid-page">
+        <label class="block-label selection-button-checkbox" for="agree-state-aid-page">
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-disable-button-until-checked="#mark-all-as-complete" />
             I confirm that the project costs entered for my organisation are all eligible.
         </label>
