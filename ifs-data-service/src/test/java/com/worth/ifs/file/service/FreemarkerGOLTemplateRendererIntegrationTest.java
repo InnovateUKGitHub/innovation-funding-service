@@ -4,6 +4,7 @@ import com.worth.ifs.commons.BaseIntegrationTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.gol.YearlyGOLProfileTable;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,6 +26,14 @@ import static org.junit.Assert.assertTrue;
  *
  **/
 public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegrationTest {
+
+    private static final String DATE_PREFIX = "Date: ";
+    private static final String DATE_TODAY = DATE_PREFIX + DateFormatUtils.format(new Date(), "MM/dd/yyyy");
+    private static final String DUMMY_PROJECT_START_DATE = "2016-12-26T15:23:02.409";
+    private static final String GOL_HTML_TEMPLATE_NAME = "grant_offer_letter.html";
+    private static final String EXPECTED_GOL_HTML_NAME = "dummy_full_grant_offer_letter.html";
+    private static final String PATH_TO_GOL_HTML_TEMPLATE = "common" + separator + "grantoffer" + separator;
+    private static final String PATH_TO_EXPECTED_GOL_HTML = "expectedtemplates" + separator + "common" + separator + "grantoffer" + separator;
 
     @Autowired
     private FileTemplateRenderer renderer;
@@ -39,30 +49,32 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
                 "Address3", "Address3",
                 "TownCity", "TownCity",
                 "PostCode", "PostCode",
-                "Date", LocalDateTime.now().toString(),
-                "CompetitionName", "CompetitionName",
-                "ProjectTitle", "ProjectTitle",
-                "ProjectStartDate", LocalDateTime.now().toString(),
+                "CompetitionName", "Steps to the future",
+                "ProjectTitle", "Time Machine & Teleportation",
+                "ProjectStartDate", DUMMY_PROJECT_START_DATE,
                 "ProjectLength", "3",
                 "ApplicationNumber", "12334",
                 "TableData", getYearlyGOLProfileTable()
         );
-        assertRenderedGOLFileExpectedLines("grant_offer_letter.html", templateArguments);
+        assertRenderedGOLFileExpectedLines(GOL_HTML_TEMPLATE_NAME, templateArguments);
     }
-
 
     private void assertRenderedGOLFileExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
-        ServiceResult<String> renderResult = renderer.renderTemplate("common" + separator + "grantoffer" + separator + templateName, templateArguments);
+        ServiceResult<String> renderResult = renderer.renderTemplate(PATH_TO_GOL_HTML_TEMPLATE + templateName, templateArguments);
         assertTrue(renderResult.isSuccess());
         String processedTemplate = renderResult.getSuccessObject();
 
-        List<String> expectedMainLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource("expectedtemplates" + separator + "common" + separator + "grantoffer" + separator + templateName).toURI()).toPath());
+        List<String> expectedMainLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource(PATH_TO_EXPECTED_GOL_HTML + EXPECTED_GOL_HTML_NAME).toURI()).toPath());
+        expectedMainLines.replaceAll(line -> {
+            if (line.contains(DATE_PREFIX)) {
+                return DATE_TODAY;
+            }
+            return line;
+        });
 
         simpleFilterNot(expectedMainLines, StringUtils::isEmpty).forEach(expectedLine -> {
-            if (!expectedLine.contains("import")
-                    && !expectedLine.contains("css")
-                    && !expectedLine.contains("pages")) {
+            if (!processedTemplate.contains(expectedLine.trim())) {
                 assertTrue("Expected to find the following line in the rendered template: " + expectedLine + "\n\nActually got:\n\n" + processedTemplate,
                         processedTemplate.contains(expectedLine));
             }

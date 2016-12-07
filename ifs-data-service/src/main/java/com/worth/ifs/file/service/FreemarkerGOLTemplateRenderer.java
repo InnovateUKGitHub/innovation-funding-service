@@ -25,6 +25,9 @@ import static com.worth.ifs.commons.service.ServiceResult.*;
 @Component
 public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
 
+    private static final String AMPERSAND = "&";
+    private static final String AMPERSAND_ENCODE = "&amp;";
+
     @Autowired
     private Configuration configuration;
     private static final Log LOG = LogFactory.getLog(FreemarkerGOLTemplateRenderer.class);
@@ -47,9 +50,21 @@ public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
 
     private ServiceResult<String> getStringServiceResult(String templatePath, Map<String, Object> replacementsWithCommonObjects) throws IOException, TemplateException {
         Template temp = configuration.getTemplate(templatePath);
+
         StringWriter writer = new StringWriter();
+        preProcessReplacements(replacementsWithCommonObjects);
         temp.process(replacementsWithCommonObjects, writer);
         return serviceSuccess(writer.getBuffer().toString());
+    }
+
+    private void preProcessReplacements(final Map<String, Object> replacementsWithCommonObjects) {
+        for (Map.Entry<String, Object> entry : replacementsWithCommonObjects.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                String valueStr = (String)value;
+                entry.setValue(valueStr.replaceAll(AMPERSAND, AMPERSAND_ENCODE));
+            }
+        }
     }
 
 }
