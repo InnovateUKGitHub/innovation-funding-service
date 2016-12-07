@@ -373,8 +373,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 .map(organisation -> organisationMapper.mapToResource(organisation))
                 .forEach(organisation -> {
 
-            financeRowService.financeDetails(organisation.getId(), project.getApplication().getId())
-                    .andOnSuccess(applicationFinanceResource -> grantPercentagePerOrganisation(applicationFinanceResource,
+            financeRowService.financeDetails(project.getApplication().getId(), organisation.getId())
+                    .andOnSuccessReturn(applicationFinanceResource -> grantPercentagePerOrganisation(applicationFinanceResource,
                             organisation.getName(),
                             organisationAndGrantPercentageMap));
 

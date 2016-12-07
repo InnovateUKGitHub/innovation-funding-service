@@ -7,6 +7,7 @@ import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -117,7 +118,9 @@ public class SpendProfileTableCalculator {
                                     FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
                                     if (year == financialYearDate.getFiscalYear()) {
                                         totalForYear = totalForYear.add(values.get(i));
-                                        totalForYear.multiply(BigDecimal.valueOf(organisationAndGrantPercent.get(key)));
+                                        totalForYear = totalForYear.multiply(BigDecimal.valueOf(organisationAndGrantPercent.get(key)))
+                                                .divide(BigDecimal.valueOf(100))
+                                                .setScale(1, RoundingMode.CEILING);
                                         yearGrantAllocationTotal.put(String.valueOf(year), totalForYear);
                                     }
                                 }
@@ -167,7 +170,8 @@ public class SpendProfileTableCalculator {
                             BigDecimal totalForYear = BigDecimal.ZERO;
 
                             totalForYear = getEligibleCostMonthlyTotal(monthlyCost, months, year, totalForYear);
-                            totalForYear.multiply(BigDecimal.valueOf(grantPercentage));
+                            totalForYear = totalForYear.multiply(BigDecimal.valueOf(grantPercentage)).divide(BigDecimal.valueOf(100))
+                                    .setScale(1, RoundingMode.CEILING);
                             return grantAllocationPerYear.add(totalForYear);
                         }
 

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.commons.rest.LocalDateResource;
-import com.worth.ifs.project.builder.ProjectResourceBuilder;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
 import org.junit.Test;
@@ -14,17 +13,23 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpendProfileTableCalculatorTest extends BaseUnitTest {
 
     private static final Long ROW_NAME_1 = 1L;
     private static final Long ROW_NAME_2 = 2L;
+
+    private static final String ROW_NAME_3 = "test1";
+    private static final String ROW_NAME_4 = "test2";
+
 
     private static final BigDecimal CELL_1_1 = new BigDecimal("10.19");
     private static final BigDecimal CELL_1_2 = new BigDecimal("15.49");
@@ -45,6 +50,12 @@ public class SpendProfileTableCalculatorTest extends BaseUnitTest {
             .put(ROW_NAME_1, Lists.newArrayList(CELL_1_1, CELL_1_2))
             .put(ROW_NAME_2, Lists.newArrayList(CELL_2_1, CELL_2_2))
             .build();
+
+    private static final Map<String, List<BigDecimal>> TABLE_DATA2 = ImmutableMap.<String, List<BigDecimal>>builder()
+            .put(ROW_NAME_3, Lists.newArrayList(CELL_1_1, CELL_1_2))
+            .put(ROW_NAME_4, Lists.newArrayList(CELL_2_1, CELL_2_2))
+            .build();
+
 
     //Use row totals as eligible costs for this test.
     private static final Map<Long, BigDecimal> ELIGIBLE_DATA = ImmutableMap.<Long, BigDecimal>builder()
@@ -91,7 +102,7 @@ public class SpendProfileTableCalculatorTest extends BaseUnitTest {
 
     @Test
     public void testCreateSpendProfileSummary() {
-        ProjectResource project = ProjectResourceBuilder.newProjectResource()
+        ProjectResource project = newProjectResource()
                 .withTargetStartDate(LocalDate.of(2019, 3, 1))
                 .withDuration(2L)
                 .build();
@@ -107,5 +118,122 @@ public class SpendProfileTableCalculatorTest extends BaseUnitTest {
         assertThat(result.getYears().get(0).getAmount(), equalTo(COLUMN_1_EXPECTED_TOTAL.toPlainString()));
         assertThat(result.getYears().get(1).getAmount(), equalTo(COLUMN_2_EXPECTED_TOTAL.toPlainString()));
     }
+
+    @Test
+    public void testCalculateEligibleCostPerYear() {
+        ProjectResource projectResource = newProjectResource()
+                .withTargetStartDate(LocalDate.of(2019, 3, 1))
+                .withDuration(2L)
+                .build();
+
+        LinkedList<BigDecimal> monthlyCosts = new LinkedList<>();
+        monthlyCosts.add(BigDecimal.valueOf(300));
+        monthlyCosts.add(BigDecimal.valueOf(100));
+        monthlyCosts.add(BigDecimal.valueOf(400));
+
+        LocalDateResource localDateResource1 = new LocalDateResource(1, 3, 2019);
+        LocalDateResource localDateResource2 = new LocalDateResource(1, 4, 2019);
+        LocalDateResource localDateResource3 = new LocalDateResource(1, 5, 2019);
+
+        List<LocalDateResource> months = new ArrayList<>();
+        months.add(localDateResource1);
+        months.add(localDateResource2);
+        months.add(localDateResource3);
+
+        List<BigDecimal> eligibleCostPerYear = spendProfileTableCalculator.calculateEligibleCostPerYear(projectResource, monthlyCosts, months);
+
+        assertTrue(eligibleCostPerYear.size() == 2);
+        assertEquals(eligibleCostPerYear.get(0), BigDecimal.valueOf(300));
+        assertEquals(eligibleCostPerYear.get(1), BigDecimal.valueOf(500));
+    }
+
+    @Test
+    public void testCalculateGrantAllocationPerYear() {
+        ProjectResource projectResource = newProjectResource()
+                .withTargetStartDate(LocalDate.of(2019, 3, 1))
+                .withDuration(2L)
+                .build();
+
+        LinkedList<BigDecimal> monthlyCosts = new LinkedList<>();
+        monthlyCosts.add(BigDecimal.valueOf(300));
+        monthlyCosts.add(BigDecimal.valueOf(100));
+        monthlyCosts.add(BigDecimal.valueOf(400));
+
+        LocalDateResource localDateResource1 = new LocalDateResource(1, 3, 2019);
+        LocalDateResource localDateResource2 = new LocalDateResource(1, 4, 2019);
+        LocalDateResource localDateResource3 = new LocalDateResource(1, 5, 2019);
+
+        List<LocalDateResource> months = new ArrayList<>();
+        months.add(localDateResource1);
+        months.add(localDateResource2);
+        months.add(localDateResource3);
+
+        List<BigDecimal> grantAllocationPerYear = spendProfileTableCalculator.calculateGrantAllocationPerYear(projectResource, monthlyCosts, months, 30);
+
+        assertTrue(grantAllocationPerYear.size() == 2);
+        assertEquals(grantAllocationPerYear.get(0), BigDecimal.valueOf(90.0));
+        assertEquals(grantAllocationPerYear.get(1), BigDecimal.valueOf(150.0));
+    }
+
+    @Test
+    public void testCreateYearlyEligibleCostTotal() {
+        ProjectResource projectResource = newProjectResource()
+                .withTargetStartDate(LocalDate.of(2019, 3, 1))
+                .withDuration(2L)
+                .build();
+
+        LinkedList<BigDecimal> monthlyCosts = new LinkedList<>();
+        monthlyCosts.add(BigDecimal.valueOf(300));
+        monthlyCosts.add(BigDecimal.valueOf(100));
+        monthlyCosts.add(BigDecimal.valueOf(400));
+
+        LocalDateResource localDateResource1 = new LocalDateResource(1, 3, 2019);
+        LocalDateResource localDateResource2 = new LocalDateResource(1, 4, 2019);
+        LocalDateResource localDateResource3 = new LocalDateResource(1, 5, 2019);
+
+        List<LocalDateResource> months = new ArrayList<>();
+        months.add(localDateResource1);
+        months.add(localDateResource2);
+        months.add(localDateResource3);
+
+        Map<String, BigDecimal> yearlyEligibleCostTotal = spendProfileTableCalculator.createYearlyEligibleCostTotal(projectResource, TABLE_DATA2, months);
+
+        assertTrue(yearlyEligibleCostTotal.size() == 2);
+        assertEquals(yearlyEligibleCostTotal.get("2019"), BigDecimal.valueOf(36.81));
+        assertEquals(yearlyEligibleCostTotal.get("2018"), BigDecimal.valueOf(50.31));
+    }
+
+    @Test
+    public void testCreateYearlyGrantAllocationTotal() {
+        ProjectResource projectResource = newProjectResource()
+                .withTargetStartDate(LocalDate.of(2019, 3, 1))
+                .withDuration(2L)
+                .build();
+
+        LinkedList<BigDecimal> monthlyCosts = new LinkedList<>();
+        monthlyCosts.add(BigDecimal.valueOf(300));
+        monthlyCosts.add(BigDecimal.valueOf(100));
+        monthlyCosts.add(BigDecimal.valueOf(400));
+
+        LocalDateResource localDateResource1 = new LocalDateResource(1, 3, 2019);
+        LocalDateResource localDateResource2 = new LocalDateResource(1, 4, 2019);
+        LocalDateResource localDateResource3 = new LocalDateResource(1, 5, 2019);
+
+        List<LocalDateResource> months = new ArrayList<>();
+        months.add(localDateResource1);
+        months.add(localDateResource2);
+        months.add(localDateResource3);
+
+        Map<String, Integer> organisationAndGrantAllocations = new HashMap<>();
+        organisationAndGrantAllocations.put(ROW_NAME_3, 30);
+        organisationAndGrantAllocations.put(ROW_NAME_4, 20);
+
+        Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectResource, TABLE_DATA2, months, organisationAndGrantAllocations);
+
+        assertTrue(yearlyGrantAllocationTotal.size() == 2);
+        assertEquals(yearlyGrantAllocationTotal.get("2019"), BigDecimal.valueOf(5.3));
+        assertEquals(yearlyGrantAllocationTotal.get("2018"), BigDecimal.valueOf(8.7));
+    }
+
 
 }
