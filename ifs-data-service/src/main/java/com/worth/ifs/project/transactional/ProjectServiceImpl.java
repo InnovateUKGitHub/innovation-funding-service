@@ -47,6 +47,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -151,6 +152,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
+
+    @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
@@ -926,8 +930,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess, projectProcess);
     }
 
     private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -950,6 +955,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> createGOLProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
         if (golWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+        }
+    }
+
+    private ServiceResult<Void> createProjectProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
+        if (projectWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);

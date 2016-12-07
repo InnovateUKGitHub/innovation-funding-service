@@ -17,7 +17,7 @@ import com.worth.ifs.application.finance.model.QuestionStatusModel;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.login.form.ResetPasswordForm;
 import com.worth.ifs.login.form.ResetPasswordRequestForm;
-import com.worth.ifs.profile.UserDetailsForm;
+import com.worth.ifs.profile.form.UserDetailsForm;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

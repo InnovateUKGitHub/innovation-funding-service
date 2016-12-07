@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- =========================== Create code snippet - show example and code =========================== -->
+
+<div th:fragment="prot-snippet(element)">
+
+  <div class="result">
+    <th:block th:include="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
+  </div>
+
+  <pre>
+    <code class="language-markup">
+      <xmp>
+        <th:block th:include="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
+      </xmp>
+    </code>
+  </pre>
+
+</div>
+
+<!-- =========================== Test =========================== -->
+
+<div th:fragment="prot-test">
+  <p>This is just an <strong>example</strong></p>
+</div>
+
+<!-- =========================== Tabs =========================== -->
+
+<div th:fragment="prot-tabs">
+  <ul class="inline-nav extra-margin">
+    <li class="selected"><a href="#">Page 1</a></li>
+    <li><a href="#">Page 2</a></li>
+    <li><a href="#">Page 3</a></li>
+    <li><a href="#">Page 4</a></li>
+  </ul>
+</div>
+
+
+</html>

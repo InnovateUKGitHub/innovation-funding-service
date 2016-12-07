@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 
