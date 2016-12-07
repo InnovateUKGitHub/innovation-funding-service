@@ -4,10 +4,9 @@ import com.google.common.collect.Lists;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.category.builder.CategoryResourceBuilder;
 import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
@@ -23,14 +22,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitialDetailsSectionSaverTest {
@@ -128,6 +127,24 @@ public class InitialDetailsSectionSaverTest {
 
         assertTrue(!errors.isEmpty());
         verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testCompleteCompetitionCannotSetFields() {
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setSetupComplete(true);
+        competition.setStartDate(LocalDateTime.now().minusDays(1));
+        InitialDetailsForm form = new InitialDetailsForm();
+        String newTitle = "New title";
+        Long newExec = 1L;
+        form.setTitle(newTitle);
+        form.setExecutiveUserId(newExec);
+
+        service.saveSection(competition, form);
+
+        assertThat(competition.getName(), is(not(equalTo(newTitle))));
+        assertThat(competition.getExecutive(), is(equalTo(newExec)));
+
     }
 
     private MilestoneResource getMilestone(){

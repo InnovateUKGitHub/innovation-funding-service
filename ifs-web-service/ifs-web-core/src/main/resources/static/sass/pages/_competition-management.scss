@@ -110,3 +110,10 @@
     margin-bottom: 15px;
   }
 }
+.competition-setup {
+    select[disabled] {
+        background:  $grey-4;
+        border: 1px solid $border-colour;
+        color: $black;
+    }
+}

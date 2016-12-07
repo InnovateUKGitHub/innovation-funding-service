@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 import static com.worth.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static java.util.stream.Collectors.toList;
 
@@ -90,15 +89,8 @@ public class CompetitionSetupController {
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-        	LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-
         model.addAttribute(READY_TO_OPEN_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         return "competition/setup";
     }
@@ -131,12 +123,6 @@ public class CompetitionSetupController {
         }
 
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-        	LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
 
@@ -340,11 +326,6 @@ public class CompetitionSetupController {
 
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-        	LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
 
         if (isSuccessfulSaved(competitionSetupForm, competition, section, bindingResult)) {
             return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();

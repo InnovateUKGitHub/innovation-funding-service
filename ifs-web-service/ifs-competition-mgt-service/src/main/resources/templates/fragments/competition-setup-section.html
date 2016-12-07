@@ -9,7 +9,8 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'initial/edit')}"
-          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="initial"
+          th:attrappend="data-autosave=${competition.setupComplete != true}?compSetup"
+          th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-1-edit">
@@ -22,11 +23,13 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
                     </span>
                 </label>
-                <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                <input id="competitionSetupForm.title"
+                       th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        th:field="${competitionSetupForm.title}"
                        required="required"
-                       data-required-errormessage="Please enter a title" />
+                       data-required-errormessage="Please enter a title"
+                       th:readonly="${competition.isSetupAndLive()}" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
@@ -36,12 +39,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
+                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or competition.isSetupAndLive()}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
-                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
-
+                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or competition.isSetupAndLive()}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
 
 
@@ -53,12 +55,13 @@
                     </span>
                 </label>
 
-                <select class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
+                <select th:disabled="${competition.isSetupAndLive()}" th:readonly="${competition.isSetupAndLive()}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
                         data-required-errormessage="Please select an innovation sector"
                         data-autosave-disabled="">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
+                <input th:if="${competition.isSetupAndLive()}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -68,10 +71,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
+                <select th:disabled="${competition.isSetupAndLive()}" class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
                     <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
+                <input type="hidden" th:if="${competition.isSetupAndLive()}" th:field="${competitionSetupForm.innovationAreaCategoryId}" />
             </div>
 
 
@@ -90,7 +94,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
                           </label>
-                          <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
                                  required="required"
@@ -104,7 +108,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateMonth">
                               <span>Month</span>
                           </label>
-                          <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
@@ -118,7 +122,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateYear">
                               <span>Year</span>
                           </label>
-                          <input th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
@@ -138,7 +142,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select an Innovation Lead">
+                <select th:readonly="${competition.isSetupAndAfterNotifications()}" class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select an Innovation Lead">
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Innovation Lead</option>
                 </select>
@@ -151,7 +155,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-medium" name="executiveUserId" id="executiveUserId" required="required" data-required-errormessage="Please select a competition executive">
+                <select th:readonly="${competition.isSetupAndAfterNotifications()}" class="form-control width-medium" name="executiveUserId" id="executiveUserId" required="required" data-required-errormessage="Please select a competition executive">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
                     <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>

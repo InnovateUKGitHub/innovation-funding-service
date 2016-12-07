@@ -25,10 +25,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.*;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -109,17 +106,9 @@ public class CompetitionSetupApplicationController {
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          @PathVariable("questionId") Long questionId,
                                          Model model) {
-
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-            LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         setupQuestionToModel(competition, questionId, model);
         model.addAttribute("editable", false);
-
         return questionView;
     }
 
@@ -127,17 +116,9 @@ public class CompetitionSetupApplicationController {
     public String editQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
-
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-            LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         setupQuestionToModel(competition, questionId, model);
         model.addAttribute("editable", true);
-
         return questionView;
     }
 

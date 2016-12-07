@@ -6,10 +6,9 @@ import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionTypeResource;
-import com.worth.ifs.competitionsetup.controller.CompetitionSetupController;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
@@ -21,10 +20,8 @@ import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -37,8 +34,6 @@ import static com.worth.ifs.competitionsetup.service.sectionupdaters.InitialDeta
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -344,25 +339,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
 
         verify(validator).validate(any(AdditionalInfoForm.class), any(BindingResult.class));
-    }
-
-    @Test
-    public void testSendToDashboard() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withActivityCode("Activity Code")
-                .withInnovateBudget("Innovate Budget")
-                .withCompetitionCode("c123")
-                .withPafCode("p123")
-                .withBudgetCode("b123")
-                .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withFunders(CompetitionFundersFixture.getTestCoFunders())
-                .withId(COMPETITION_ID).build();
-
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/dashboard"));
     }
 
     @Test

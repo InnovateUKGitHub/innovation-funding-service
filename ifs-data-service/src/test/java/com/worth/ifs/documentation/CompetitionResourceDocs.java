@@ -52,7 +52,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("includeGrowthTable").description("should applications include a full project growth table"),
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
-            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess")
+            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
+            fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

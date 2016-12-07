@@ -4,8 +4,8 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
@@ -252,6 +252,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 	}
+
 
 	private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
         if(!section.getSubsections().contains(subsection)) {
