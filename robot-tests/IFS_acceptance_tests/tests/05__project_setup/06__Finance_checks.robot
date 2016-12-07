@@ -29,17 +29,17 @@ Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then The user should not see the text in the page    Viability
+    Then The user should see the text in the page    Viability
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
-    When the user should see the element    link=review
+    When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.button:contains("Generate Spend Profile")
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link     css=table:nth-child(7) tr:nth-child(1) a
+    And the user clicks the button/link     css=a.eligibility-0
     When the user enters text to a text field    name=costs[0].value    ${Empty}
     Then the user should see an error    Please enter a labour cost
     When the user enters text to a text field    name=costs[1].value    ${Empty}
@@ -69,39 +69,39 @@ Approve Eligibility: Lead partner organisation
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
-    Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(1) a    approved
+    Then the user sees the text in the element    css=a.eligibility-0    Approved
 
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
-    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(2) a
+    When the user clicks the button/link    css=a.eligibility-1
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
-    Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(2) a    approved
+    Then the user sees the text in the element    css=a.eligibility-1    Approved
 
 
 Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
-    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
+    When the user clicks the button/link    css=a.eligibility-2
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
-    Then the user sees the text in the element    css=table:nth-child(7) tr:nth-child(3) a    approved
+    Then the user sees the text in the element    css=a.eligibility-2    Approved
     And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    # note that we are viewing this file here rather than the same project as the other tests in this suite due to INFUND-6724
-    When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
+    When the user clicks the button/link    css=a.eligibility-2
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form53.pdf
     Then the user should not see an error in the page
