@@ -109,7 +109,10 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
 
     private CostCategory findAcademicCostCategoryForName(CostCategoryType costCategoryType, String costCategoryName) {
         AcademicCostCategoryGenerator academicCostCategoryMatch = AcademicCostCategoryGenerator.fromFinanceRowName(costCategoryName);
-        return simpleFindFirst(costCategoryType.getCostCategories(), cat -> cat.getName().equals(academicCostCategoryMatch.getName())).get();
+        return simpleFindFirst(costCategoryType.getCostCategories(), cat ->
+                        cat.getName().equals(academicCostCategoryMatch.getName()) &&
+                        cat.getLabel().equals(academicCostCategoryMatch.getLabel())).
+                get();
     }
 
     private CostCategory findIndustrialCostCategoryForName(CostCategoryType costCategoryType, String costCategoryName) {
