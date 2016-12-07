@@ -126,7 +126,7 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
 
         @Override
         public boolean matches(HttpServletRequest request) {
-            return !allowedMethods.matcher(request.getMethod()).matches();
+            return !(allowedMethods.matcher(request.getMethod()).matches() || request.getRequestURI().contains("/.~~spring-boot!~"));
 
         }
     }
