@@ -170,7 +170,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			throw new IllegalArgumentException();
 		}
 		
-		return saver.saveSection(competitionResource, competitionSetupForm, false).andOnSuccess(() -> {
+		return saver.saveSection(competitionResource, competitionSetupForm).andOnSuccess(() -> {
 			if (competitionSetupForm.isMarkAsCompleteAction()) {
 				return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
 			}
@@ -190,7 +190,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
             throw new IllegalArgumentException();
         }
 
-        return saver.saveSection(competitionResource, competitionSetupForm, false);
+        return saver.saveSection(competitionResource, competitionSetupForm);
     }
 
 	@Override

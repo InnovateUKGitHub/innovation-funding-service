@@ -58,23 +58,20 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean allowInvalidData) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 
 		competition.setName(initialDetailsForm.getTitle());
 		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
 
-        if (!(initialDetailsForm.getOpeningDateYear() == null
-                || initialDetailsForm.getOpeningDateMonth() == null
-                || initialDetailsForm.getOpeningDateDay() == null
-                && allowInvalidData)) {
+        if (shouldTryToSaveStartDate(initialDetailsForm)) {
             try {
                 LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
                         initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
                 competition.setStartDate(startDate);
 
-                List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), allowInvalidData);
+                List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
                 if(!errors.isEmpty()) {
                     return serviceFailure(errors);
                 }
@@ -96,7 +93,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             List<CategoryResource> matchingChild =
                     children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
 
-            if (matchingChild.isEmpty() && !allowInvalidData) {
+            if (matchingChild.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
                 return serviceFailure(asList(fieldError("innovationAreaCategoryId",
                         initialDetailsForm.getInnovationAreaCategoryId(),
                         "competition.setup.innovation.area.must.be.selected",
@@ -114,6 +111,13 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         });
    }
 
+   private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
+       return initialDetailsForm.isMarkAsCompleteAction() ||
+               (initialDetailsForm.getOpeningDateYear() != null &&
+               initialDetailsForm.getOpeningDateMonth() != null &&
+               initialDetailsForm.getOpeningDateDay() != null);
+   }
+
 	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
 	    if(openingDate.getYear() > 9999) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
@@ -126,8 +130,8 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         return Collections.emptyList();
     }
 
-	private List<Error> saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId, boolean allowInvalidData) {
-		if (!allowInvalidData) {
+	private List<Error> saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
+		if (isMarkAsCompleteAction) {
 			List<Error> errors = validateOpeningDate(openingDate);
 			if (!errors.isEmpty()) {
 				return errors;
@@ -162,7 +166,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competitionResource.setStartDate(startDate);
 
 
-                List<Error> errors = saveOpeningDateAsMilestone(startDate, competitionResource.getId(), true);
+                List<Error> errors = saveOpeningDateAsMilestone(startDate, competitionResource.getId(), false);
                 if(!errors.isEmpty()) {
                     return serviceFailure(errors);
                 } else {

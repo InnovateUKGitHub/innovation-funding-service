@@ -24,7 +24,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean allowInvalidData) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 		

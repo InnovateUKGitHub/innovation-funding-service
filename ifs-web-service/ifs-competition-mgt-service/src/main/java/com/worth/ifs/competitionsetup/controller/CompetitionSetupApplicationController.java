@@ -67,7 +67,6 @@ public class CompetitionSetupApplicationController {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         Supplier<String> failureView = () -> {
-            LOG.debug("Form errors");
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
             return "competition/setup";
@@ -198,15 +197,13 @@ public class CompetitionSetupApplicationController {
         competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
                 subsection, questionId);
 
-        CompetitionSetupForm competitionSetupForm;
+        CompetitionSetupForm competitionSetupForm  = form;
         if (form == null) {
             competitionSetupForm = competitionSetupService.getSubsectionFormData(
                     competition,
                     section,
                     subsection,
                     questionId);
-        } else {
-            competitionSetupForm = form;
         }
 
         model.addAttribute(COMPETITION_NAME_KEY, competition.getName());

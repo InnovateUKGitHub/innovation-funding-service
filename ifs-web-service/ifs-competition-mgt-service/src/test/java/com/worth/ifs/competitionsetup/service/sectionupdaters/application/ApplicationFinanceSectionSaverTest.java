@@ -3,6 +3,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.junit.Test;
@@ -38,6 +39,12 @@ public class ApplicationFinanceSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
 
-        service.saveSection(competition, competitionSetupForm, false);
+        service.saveSection(competition, competitionSetupForm);
+    }
+
+    @Test
+    public void testsSupportsForm() {
+        assertTrue(service.supportsForm(ApplicationFinanceForm.class));
+        assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
 }

@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.hamcrest.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +40,7 @@ public class AdditionalInfoSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
-		service.saveSection(competition, competitionSetupForm, false);
+		service.saveSection(competition, competitionSetupForm);
 
 		assertEquals("Activity", competition.getActivityCode());
 		assertEquals("Innovate", competition.getInnovateBudget());
@@ -102,4 +103,11 @@ public class AdditionalInfoSectionSaverTest {
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(2));
 		assertFalse(result.isSuccess());
 	}
+
+	@Test
+	public void testsSupportsForm() {
+		assertTrue(service.supportsForm(AdditionalInfoForm.class));
+		assertFalse(service.supportsForm(CompetitionSetupForm.class));
+	}
+
 }

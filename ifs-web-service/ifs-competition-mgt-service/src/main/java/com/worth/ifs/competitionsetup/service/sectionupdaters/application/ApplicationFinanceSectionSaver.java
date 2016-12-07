@@ -26,7 +26,7 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean allowInvalidData) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
 		competition.setIncludeGrowthTable(form.isIncludeGrowthTable());
 		competition.setFullApplicationFinance(form.isFullApplicationFinance());

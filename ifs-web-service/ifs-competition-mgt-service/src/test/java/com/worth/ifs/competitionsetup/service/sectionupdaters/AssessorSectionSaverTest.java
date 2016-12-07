@@ -3,6 +3,7 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competitionsetup.form.AssessorsForm;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,11 +34,17 @@ public class AssessorSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
-		saver.saveSection(competition, competitionSetupForm, false);
+		saver.saveSection(competition, competitionSetupForm);
 
 		assertEquals(Integer.valueOf(1), competition.getAssessorCount());
 		assertEquals(BigDecimal.TEN, competition.getAssessorPay());
 
 		verify(competitionService).update(competition);
+	}
+
+	@Test
+	public void testsSupportsForm() {
+		assertTrue(saver.supportsForm(AssessorsForm.class));
+		assertFalse(saver.supportsForm(CompetitionSetupForm.class));
 	}
 }

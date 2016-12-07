@@ -136,14 +136,14 @@ public class CompetitionSetupServiceImplTest {
 		when(otherSaver.sectionToSave()).thenReturn(CompetitionSetupSection.APPLICATION_FORM);
 		when(otherSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(false);
 
-		when(matchingSaver.saveSection(competitionResource, competitionSetupForm, false)).thenReturn(serviceSuccess());
+		when(matchingSaver.saveSection(competitionResource, competitionSetupForm)).thenReturn(serviceSuccess());
 
 		service.setCompetitionSetupSectionSavers(asList(matchingSaver, otherSaver));
 		
 		service.saveCompetitionSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
 		
-		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm, false);
-		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm, false);
+		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm);
+		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
 	}
 
 	@Test

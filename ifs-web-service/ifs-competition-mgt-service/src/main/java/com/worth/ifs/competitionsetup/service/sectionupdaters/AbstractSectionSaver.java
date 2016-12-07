@@ -24,7 +24,7 @@ public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
             form.setMarkAsCompleteAction(false);
             Class<?> propertyType = getPropertyType(form, fieldName);
             setNestedProperty(form, fieldName, convert(value, propertyType));
-            return saveSection(competitionResource, form, true);
+            return saveSection(competitionResource, form);
         } catch (Exception e) {
             return handleIrregularAutosaveCase(competitionResource, fieldName, value);
         }

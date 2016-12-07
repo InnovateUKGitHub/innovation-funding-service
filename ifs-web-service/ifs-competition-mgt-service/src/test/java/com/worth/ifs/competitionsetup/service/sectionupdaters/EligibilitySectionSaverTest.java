@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.EligibilityForm;
 import com.worth.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -48,7 +49,7 @@ public class EligibilitySectionSaverTest {
 		
 		CompetitionResource competition = newCompetitionResource().build();
 
-		service.saveSection(competition, competitionSetupForm, false);
+		service.saveSection(competition, competitionSetupForm);
 		
 		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
 		assertTrue(competition.isMultiStream());
@@ -109,6 +110,12 @@ public class EligibilitySectionSaverTest {
 		milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
 		milestone.setCompetition(1L);
 		return milestone;
+	}
+
+	@Test
+	public void testsSupportsForm() {
+		assertTrue(service.supportsForm(EligibilityForm.class));
+		assertFalse(service.supportsForm(CompetitionSetupForm.class));
 	}
 
 }

@@ -26,7 +26,7 @@ public class ApplicationQuestionSectionSaver extends AbstractSectionSaver implem
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm, boolean allowInvalidData) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		ApplicationQuestionForm form = (ApplicationQuestionForm) competitionSetupForm;
 		return competitionSetupQuestionService.updateQuestion(form.getQuestion());
 	}

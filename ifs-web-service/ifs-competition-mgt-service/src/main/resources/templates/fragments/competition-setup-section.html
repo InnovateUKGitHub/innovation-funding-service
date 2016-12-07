@@ -794,11 +794,11 @@
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">
-                Unable to save section
+                Unable to complete section.
             </h2>
 
             <ul class="error-summary-list">
-                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+                <li>Please address errors in each of the questions.</li>
             </ul>
         </div>
 

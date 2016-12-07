@@ -10,6 +10,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class InitialDetailsSectionSaverTest {
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
-        service.saveSection(competition, competitionSetupForm, false);
+        service.saveSection(competition, competitionSetupForm);
 
         assertEquals("title", competition.getName());
         assertEquals(Long.valueOf(1L), competition.getExecutive());
@@ -122,5 +123,11 @@ public class InitialDetailsSectionSaverTest {
         milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
         milestone.setCompetition(1L);
         return milestone;
+    }
+
+    @Test
+    public void testsSupportsForm() {
+        assertTrue(service.supportsForm(InitialDetailsForm.class));
+        assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
 }
