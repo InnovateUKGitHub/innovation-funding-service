@@ -17,13 +17,13 @@
 
             <legend class="visuallyhidden">Initial details</legend>
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                <label class="form-label" for="competitionSetupForm.title">
+                <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
                     <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
                     </span>
                 </label>
-                <input id="competitionSetupForm.title"
+                <input id="title"
                        th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        th:field="${competitionSetupForm.title}"
