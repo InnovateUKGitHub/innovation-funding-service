@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrganisationFinanceDelegate {
+
+    public static final String UNIVERSITY_HEI = "University (HEI)";
+
     @Autowired
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
 
@@ -21,7 +24,7 @@ public class OrganisationFinanceDelegate {
 
     public boolean isUsingJesFinances(String organisationType) {
         switch(organisationType) {
-            case "University (HEI)":
+            case UNIVERSITY_HEI:
                 return true;
             default:
                 return false;

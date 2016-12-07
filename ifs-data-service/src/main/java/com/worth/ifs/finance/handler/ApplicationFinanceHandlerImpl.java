@@ -51,7 +51,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
         ApplicationFinanceResource applicationFinanceResource = null;
 
-        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
         if(applicationFinance!=null) {
             applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             setApplicationFinanceDetails(applicationFinanceResource);
@@ -65,7 +65,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
                 projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId());
         ProjectFinanceResource projectFinanceResource = null;
 
-        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a buch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
         if(projectFinance!=null) {
             projectFinanceResource = projectFinanceMapper.mapToResource(projectFinance);
             setProjectFinanceDetails(projectFinanceResource);
