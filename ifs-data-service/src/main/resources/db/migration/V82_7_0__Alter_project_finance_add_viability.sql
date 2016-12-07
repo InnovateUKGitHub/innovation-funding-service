@@ -1,0 +1,1 @@
+ALTER TABLE project_finance ADD COLUMN `viability` ENUM('GREEN', 'AMBER', 'RED') NULL DEFAULT NULL;

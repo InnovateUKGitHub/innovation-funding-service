@@ -2,6 +2,7 @@ package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.project.domain.Project;
+import com.worth.ifs.project.finance.resource.Viability;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationSize;
 
@@ -21,6 +22,8 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
 
+    private Viability viability;
+
     public ProjectFinance() {
     }
 
@@ -36,5 +39,13 @@ public class ProjectFinance extends Finance {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Viability getViability() {
+        return viability;
+    }
+
+    public void setViability(Viability viability) {
+        this.viability = viability;
     }
 }

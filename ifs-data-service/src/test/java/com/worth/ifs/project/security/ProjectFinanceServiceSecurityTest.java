@@ -2,6 +2,7 @@ package com.worth.ifs.project.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.project.finance.resource.Viability;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.resource.RoleResource;
@@ -223,6 +224,16 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability) {
             return null;
         }
 

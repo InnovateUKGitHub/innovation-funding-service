@@ -1,6 +1,7 @@
 package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.project.finance.resource.Viability;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -86,5 +87,21 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/complete-spend-profiles-review", method = POST)
     public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
         return projectFinanceService.completeSpendProfilesReview(projectId).toPostResponse();
+    }
+
+    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/viability")
+    public RestResult<Viability> getViability(@PathVariable("projectId") final Long projectId,
+                                              @PathVariable("organisationId") final Long organisationId) {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.getViability(projectOrganisationCompositeId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
+    public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
+                                          @PathVariable("organisationId") final Long organisationId,
+                                          @PathVariable("viability") final Viability viability) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.saveViability(projectOrganisationCompositeId, viability).toPostResponse();
     }
 }
