@@ -3362,7 +3362,7 @@ ol.inline-nav:after {
 
 /* SG
 # IFS/Collapsible
-The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable
+The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable 
 
 ```
 <div class="collapsible">

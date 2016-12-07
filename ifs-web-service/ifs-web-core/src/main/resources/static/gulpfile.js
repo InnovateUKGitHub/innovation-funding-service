@@ -7,13 +7,12 @@ var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var sassLint = require('gulp-sass-lint');
 var replace = require('gulp-replace');
-
 var compass = require('compass-importer');
 
-var repo_root = __dirname + '/../../../../../';
-var govuk_frontend_toolkit_root =  repo_root + 'node_modules/govuk_frontend_toolkit/stylesheets';
-var govuk_template_toolkit_root =  repo_root + 'node_modules/govuk_template_jinja/assets/stylesheets';
-var govuk_elements_sass_root =  repo_root + 'node_modules/govuk-elements-sass/public/sass';
+var node_modules_path = __dirname + '/../../../../../node_modules/';
+var govuk_frontend_toolkit_path =  node_modules_path + 'govuk_frontend_toolkit/stylesheets';
+var govuk_template_toolkit_path =  node_modules_path + 'govuk_template_jinja/assets/stylesheets';
+var govuk_elements_sass_root =  node_modules_path + 'govuk-elements-sass/public/sass';
 
 gulp.task('default',['js','css']);
 
@@ -32,8 +31,8 @@ gulp.task('css', function () {
     .pipe(sassLint.format())
     // .pipe(sassLint.failOnError())
     .pipe(sass({includePaths: [
-          govuk_frontend_toolkit_root,
-          govuk_template_toolkit_root,
+          govuk_frontend_toolkit_path,
+          govuk_template_toolkit_path,
           govuk_elements_sass_root
         ],
         importer: compass,
@@ -45,6 +44,22 @@ gulp.task('css', function () {
 
 //build all js
 gulp.task('js',['vendor','ifs-js']);
+
+//concat and minify all the vendor files
+gulp.task('vendor',function(){
+  return gulp.src([
+    node_modules_path + 'jquery/dist/jquery.js',
+    node_modules_path + 'js-cookie/src/js.cookie.js',
+    'js/vendor/jquery-ui/jquery-ui.min.js',
+    'js/vendor/govuk/*.js',
+    '!js/vendor/govuk/ie.js',
+    'js/vendor/wysiwyg-editor/*.js',
+    '!js/vendor/wysiwyg-editor/hallo-src/*.js',
+  ])
+  .pipe(concat('vendor.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('js/dest'))
+});
 
 //concat and minify all the ifs files
 gulp.task('ifs-js', function () {
@@ -61,21 +76,6 @@ gulp.task('ifs-js', function () {
   .pipe(jscs.reporter())
   // .pipe(jscs.reporter('fail'))
   .pipe(concat('ifs.min.js'))
-  .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
-});
-
-//concat and minify all the vendor files
-gulp.task('vendor',function(){
-  return gulp.src([
-    'js/vendor/cookie/*.js',
-    'js/vendor/jquery/jquery-ui.min.js',
-    'js/vendor/govuk/*.js',
-    '!js/vendor/govuk/ie.js',
-    'js/vendor/wysiwyg-editor/*.js',
-    '!js/vendor/wysiwyg-editor/hallo-src/*.js',
-  ])
-  .pipe(concat('vendor.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
 });
