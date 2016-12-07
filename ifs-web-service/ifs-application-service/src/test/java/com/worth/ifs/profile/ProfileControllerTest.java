@@ -262,9 +262,9 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
-                .param("gender", "illegalcharacters:!@#$%^&*()")
-                .param("ethnicity", "illegalcharacters:!@#$%^&*()")
-                .param("disability", "illegalcharacters:!@#$%^&*()")
+                .param("gender", "")
+                .param("ethnicity", "")
+                .param("disability", "")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("profile/edit-user-profile"));
