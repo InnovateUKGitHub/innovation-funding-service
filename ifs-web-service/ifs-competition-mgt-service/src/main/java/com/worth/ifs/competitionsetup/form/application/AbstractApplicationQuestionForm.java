@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Abstract class for common functionality in application question and application project forms.
  */
-abstract class AbstractApplicationQuestionForm extends CompetitionSetupForm {
+public abstract class AbstractApplicationQuestionForm extends CompetitionSetupForm {
 
     @Valid
     @NotNull
