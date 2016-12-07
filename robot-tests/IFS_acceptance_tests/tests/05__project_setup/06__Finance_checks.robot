@@ -6,6 +6,8 @@ Documentation     INFUND-5190: As a member of Project Finance I want to view an 
 ...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
 ...
 ...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
+...
+...               INFUND-6149: mailto link is broken on the internal finance eligibility page
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -61,8 +63,9 @@ Finance checks client-side validations
 
 
 Approve Eligibility: Lead partner organisation
-    [Documentation]    INFUND-5193
+    [Documentation]    INFUND-5193, INFUND-6149
     [Tags]    HappyPath
+    Given the user should see the element    link=mailto:worth.email.test+fundsuccess@gmail.com
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
