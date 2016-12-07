@@ -294,6 +294,14 @@ public class Competition implements ProcessActivity {
     	setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
 	}
 
+	public LocalDateTime getAssessorBriefingDate() {
+        return getMilestoneDate(MilestoneType.ASSESSOR_BRIEFING).orElse(null);
+    }
+
+    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+        setMilestoneDate(MilestoneType.ASSESSOR_BRIEFING, assessorBriefingDate);
+    }
+
     private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
             Milestone m = new Milestone();
