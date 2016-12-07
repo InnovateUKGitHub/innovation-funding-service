@@ -17,30 +17,32 @@
     <hr/>
 
     <h2 class="heading-medium no-margin-bottom">Your details <small><a href="/profile/edit"> Edit your details</a></small></h2>
-    <!--/*/ <th:block th:object="${userDetailsForm}">/*/-->
     <h3 class="heading-small">Your organisation</h3>
-    <p th:text="*{organisationName}" />
+    <p th:text="${model.organisationName}" />
     <h3 class="heading-small">Registration number</h3>
-    <p th:text="*{companyHouseNumber}" />
+    <p th:text="${model.registrationNumber}" />
     <h3 class="heading-small">Address</h3>
-    <div th:text="*{addressLine1}" />
-    <div th:text="*{addressLine2}" />
-    <div th:text="*{addressLine3}" />
-    <div th:text="*{town}" />
-    <div th:text="*{county}" />
-    <div th:text="*{postcode}" />
+    <div th:text="${model.addressLine1}" />
+    <div th:text="${model.addressLine2}" />
+    <div th:text="${model.addressLine3}" />
+    <div th:text="${model.town}" />
+    <div th:text="${model.county}" />
+    <div th:text="${model.postcode}" />
     
     <h3 class="heading-small">Your name</h3>
     <p>
-        <span th:text="*{title}" th:remove="tag" />
-        <span th:text="*{firstName}" th:remove="tag" />
-        <span th:text="*{lastName}" th:remove="tag" />
+        <span th:text="${model.name}" th:remove="tag" />
     </p>
+    <h3 class="heading-small">Gender</h3>
+    <p th:text="${model.gender}" />
+    <h3 class="heading-small">Ethnicity</h3>
+    <p th:text="${model.ethnicity}" />
+    <h3 class="heading-small">Disability</h3>
+    <p th:text="${model.disability}" />
     <h3 class="heading-small">Phone number</h3>
-    <p th:text="*{phoneNumber}" />
+    <p th:text="${model.phoneNumber}" />
     <h3 class="heading-small">Email address</h3>
-    <p th:text="*{email}" />
-    <!--/*/ </th:block> /*/-->
+    <p th:text="${model.emailAddress}" />
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
