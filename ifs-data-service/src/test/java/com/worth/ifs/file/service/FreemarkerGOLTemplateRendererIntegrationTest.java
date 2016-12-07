@@ -81,8 +81,6 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
         List<BigDecimal> grantPerYear = new LinkedList<>();
         Map<String, BigDecimal> yearEligibleCostTotal = new HashMap();
         Map<String, BigDecimal> yearGrantAllocationTotal = new HashMap();
-        BigDecimal eligibleCostGrandTotal = BigDecimal.valueOf(10000);
-        BigDecimal grantAllocationGrandTotal = BigDecimal.valueOf(10000);
 
         organisationAndGrantPercentageMap.put("Empire Ltd", 20);
         organisationAndGrantPercentageMap.put("Ludlow", 30);
@@ -120,7 +118,7 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearGrantAllocationTotal, eligibleCostGrandTotal, grantAllocationGrandTotal);
+                yearEligibleCostTotal, yearGrantAllocationTotal);
     }
 
 

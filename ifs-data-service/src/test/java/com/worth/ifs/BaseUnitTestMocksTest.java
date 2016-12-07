@@ -56,6 +56,7 @@ import com.worth.ifs.invite.transactional.InviteProjectService;
 import com.worth.ifs.invite.transactional.RejectionReasonService;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -78,6 +79,7 @@ import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.users.ProjectUsersHelper;
 import com.worth.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import com.worth.ifs.project.util.SpendProfileTableCalculator;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -318,6 +320,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
+    protected OrganisationMapper organisationMapperMock;
+
+    @Mock
     protected AddressMapper addressMapperMock;
 
     @Mock
@@ -478,6 +483,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Before
     public void setupMockInjection() {
