@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,6 @@ import static com.worth.ifs.commons.service.ServiceResult.*;
  */
 @Component
 public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
-
-    private static final String AMPERSAND = "&";
-    private static final String AMPERSAND_ENCODE = "&amp;";
 
     @Autowired
     private Configuration configuration;
@@ -62,7 +60,7 @@ public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
             Object value = entry.getValue();
             if (value instanceof String) {
                 String valueStr = (String)value;
-                entry.setValue(valueStr.replaceAll(AMPERSAND, AMPERSAND_ENCODE));
+                entry.setValue(StringEscapeUtils.escapeHtml4(valueStr));
             }
         }
     }

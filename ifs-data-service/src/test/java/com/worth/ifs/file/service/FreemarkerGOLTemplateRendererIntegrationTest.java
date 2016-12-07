@@ -50,7 +50,7 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
                 "TownCity", "TownCity",
                 "PostCode", "PostCode",
                 "CompetitionName", "Steps to the future",
-                "ProjectTitle", "Time Machine & Teleportation",
+                "ProjectTitle", "<Time Machine> & \"Teleportation\"", // test escape html
                 "ProjectStartDate", DUMMY_PROJECT_START_DATE,
                 "ProjectLength", "3",
                 "ApplicationNumber", "12334",
