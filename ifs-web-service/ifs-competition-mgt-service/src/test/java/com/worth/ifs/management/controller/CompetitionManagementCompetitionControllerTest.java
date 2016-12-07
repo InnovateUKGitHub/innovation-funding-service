@@ -91,7 +91,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         Long competitionId = 1L;
         mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dashboard/live"));
+                .andExpect(redirectedUrl("/dashboard"));
         verify(competitionService, only()).closeAssessment(competitionId);
     }
 }
