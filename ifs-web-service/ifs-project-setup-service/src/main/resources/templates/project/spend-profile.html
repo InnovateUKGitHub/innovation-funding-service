@@ -116,7 +116,7 @@
                                      th:attr="aria-labelledby=${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+' month'+status.index}"
                                      th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"
                                      th:id="${'row-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+'-'+status.index}"
-                                     th:value="${#numbers.formatInteger(cost,1,'NONE')}"
+                                     th:value="${cost != null ? #numbers.formatInteger(cost,1,'NONE') : ''}"
                                      type="number"
                                      min="0"
                                      required="required" />
