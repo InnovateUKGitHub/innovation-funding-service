@@ -44,6 +44,9 @@ public class ProjectRegistrationController {
     @Autowired
     protected OrganisationRestService organisationRestService;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     private final static String EMAIL_FIELD_NAME = "email";
     public static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
@@ -54,7 +57,7 @@ public class ProjectRegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
@@ -73,7 +76,7 @@ public class ProjectRegistrationController {
                                      HttpServletRequest request,
                                      Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
             ValidationMessages errors = errorMessages(loggedInUser, invite);

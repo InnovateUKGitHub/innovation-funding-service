@@ -65,6 +65,8 @@ public class ApplicationContributorController{
     private OrganisationService organisationService;
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @Autowired
     private Validator validator;
@@ -190,7 +192,7 @@ public class ApplicationContributorController{
 
     private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId, ApplicationResource application, UserResource leadApplicant) {
 
-        String json = CookieUtil.getInstance().getCookieValue(request, CONTRIBUTORS_COOKIE);
+        String json = cookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !"".equals(json)) {
             ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
@@ -199,7 +201,7 @@ public class ApplicationContributorController{
                     // if the form was saved, validate and update cookie.
                     contributorsFormCookie.setTriedToSave(false);
                     String jsonState = JsonUtil.getSerializedObject(contributorsFormCookie);
-                    CookieUtil.getInstance().saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+                    cookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
                     validator.validate(contributorsForm, bindingResult);
@@ -252,7 +254,7 @@ public class ApplicationContributorController{
             if (!bindingResult.hasErrors()) {
                 saveContributors(applicationId, contributorsForm, response);
                 // empty cookie, since the invites are saved.
-                CookieUtil.getInstance().saveToCookie(response, CONTRIBUTORS_COOKIE, "");
+                cookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
                 if (newApplication != null && ApplicationStatusConstants.CREATED.getId().equals(application.getApplicationStatus())) {
                     applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
@@ -407,7 +409,7 @@ public class ApplicationContributorController{
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
         String jsonState = JsonUtil.getSerializedObject(contributorsForm);
-        CookieUtil.getInstance().saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+        cookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {

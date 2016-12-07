@@ -28,28 +28,38 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.worth.ifs.util.InviteUtils.INVITE_HASH;
+import static com.worth.ifs.util.InviteUtils.handleAcceptedInvite;
+import static com.worth.ifs.util.InviteUtils.handleInvalidInvite;
+
 /**
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
 public class AcceptInviteAuthenticatedController extends BaseController{
-    public static final String INVITE_HASH = "invite_hash";
     @Autowired
     private InviteRestService inviteRestService;
+
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     @Autowired
     private OrganisationService organisationService;
+
     @Autowired
     private RegistrationService registrationService;
+
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -71,12 +81,12 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                 model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
                 return "registration/confirm-registered-organisation";
             } else {
-                CookieUtil.getInstance().removeCookie(response, INVITE_HASH);
+                cookieUtil.removeCookie(response, INVITE_HASH);
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";
             }
         } else {
-            CookieUtil.getInstance().removeCookie(response, INVITE_HASH);
+            cookieUtil.removeCookie(response, INVITE_HASH);
             throw new InvalidURLException("Invite url is not valid", null);
         }
     }
@@ -85,7 +95,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     public String confirmedInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -101,14 +111,14 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                     return "registration/accept-invite-failure";
                 }
                 inviteRestService.acceptInvite(hash, loggedInUser.getId()).getSuccessObjectOrThrowException();
-                CookieUtil.getInstance().removeCookie(response, AcceptInviteController.INVITE_HASH);
+                cookieUtil.removeCookie(response, INVITE_HASH);
                 return "redirect:/application/"+ inviteResource.getApplication();
 
             } else {
-                return AcceptInviteController.handleAcceptedInvite(cookieFlashMessageFilter, response);
+                return handleAcceptedInvite(cookieFlashMessageFilter, response, cookieUtil);
             }
         } else {
-            AcceptInviteController.handleInvalidInvite(response);
+            handleInvalidInvite(response, cookieUtil);
         }
         return "";
     }

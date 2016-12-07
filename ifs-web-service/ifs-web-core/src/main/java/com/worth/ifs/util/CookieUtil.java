@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.WebUtils;
 
@@ -19,13 +20,14 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Optional;
 
+@Service
 @Configurable
-public final class CookieUtil {
+public class CookieUtil {
     private static final Log LOG = LogFactory.getLog(CookieUtil.class);
 
     private static final Integer COOKIE_LIFETIME = 3600;
 
-    private static CookieUtil cookieUtilHelper;
+    private static CookieUtil cookieUtil;
 
     private TextEncryptor encryptor;
 
@@ -44,12 +46,6 @@ public final class CookieUtil {
     @PostConstruct
     public void init() {
         encryptor = Encryptors.text(encryptionPassword, encryptionSalt);
-    }
-
-    public static CookieUtil getInstance() {
-        if(null ==  cookieUtilHelper) cookieUtilHelper = new CookieUtil();
-
-        return cookieUtilHelper;
     }
 
     public void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {

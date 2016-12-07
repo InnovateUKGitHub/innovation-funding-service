@@ -48,7 +48,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
     public void testChooseOrganisationType() throws Exception {
         mockMvc.perform(
                 get("/organisation/create/type/new-account-organisation-type")
-                .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                .cookie(new Cookie(INVITE_HASH, INVITE_HASH))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/organisation-type"))
@@ -60,7 +60,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
     public void testChooseOrganisationTypeResearchSelected() throws Exception {
         mockMvc.perform(
                 get("/organisation/create/type/new-account-organisation-type").param("organisationType", "2")
-                        .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(INVITE_HASH, INVITE_HASH))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/organisation-type"))
@@ -76,7 +76,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
     public void chooseOrganisationTypePostBusiness() throws Exception {
         mockMvc.perform(
                 post("/organisation/create/type/new-account-organisation-type")
-                        .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(INVITE_HASH, INVITE_HASH))
                         .param("organisationType", "1")
 
         )
@@ -93,7 +93,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
     public void chooseOrganisationTypePostResearch() throws Exception {
         mockMvc.perform(
                 post("/organisation/create/type/new-account-organisation-type")
-                        .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(INVITE_HASH, INVITE_HASH))
                         .param("organisationType", "2")
 
         )

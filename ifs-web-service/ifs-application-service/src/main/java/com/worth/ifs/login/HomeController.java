@@ -41,6 +41,9 @@ public class HomeController {
     @Autowired
     private RoleSelectionModelPopulator roleSelectionModelPopulator;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     public static String getRedirectUrlForUser(UserResource user) {
 
         String roleUrl = !user.getRoles().isEmpty() ? user.getRoles().get(0).getUrl() : "";
@@ -89,7 +92,7 @@ public class HomeController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
-            CookieUtil.getInstance().saveToCookie(response, "role", form.getSelectedRole().getName());
+            cookieUtil.saveToCookie(response, "role", form.getSelectedRole().getName());
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> redirectToChosenDashboard(user, form.getSelectedRole().getName()));
         });

@@ -34,10 +34,13 @@ import static com.worth.ifs.util.RestLookupCallbacks.find;
 public class AcceptProjectInviteController extends BaseController {
 
     public static final String INVITE_HASH = "project_invite_hash";
+
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
     @Autowired
     private OrganisationRestService organisationRestService;
+    @Autowired
+    private CookieUtil cookieUtil;
 
     public static final String ACCEPT_INVITE_MAPPING = "/accept-invite/";
     public static final String ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-does-not-yet-exist-show-project";
@@ -64,7 +67,7 @@ public class AcceptProjectInviteController extends BaseController {
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
-            CookieUtil.getInstance().saveToCookie(response, INVITE_HASH, hash);
+            cookieUtil.saveToCookie(response, INVITE_HASH, hash);
             if (userExists && loggedInUser == null) {
                 return restSuccess(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW);
             } else if (userExists) {
@@ -92,7 +95,7 @@ public class AcceptProjectInviteController extends BaseController {
     }
 
     private String acceptInviteShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
-        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash)
             .andOnSuccess(invite -> {
 
@@ -120,7 +123,7 @@ public class AcceptProjectInviteController extends BaseController {
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
                                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                    Model model) {
-        String hash = CookieUtil.getInstance().getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {

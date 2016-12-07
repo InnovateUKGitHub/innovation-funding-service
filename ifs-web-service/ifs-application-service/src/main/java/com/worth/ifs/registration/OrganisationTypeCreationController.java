@@ -4,7 +4,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.OrganisationTypeForm;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
@@ -31,6 +30,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.util.InviteUtils.INVITE_HASH;
+import static com.worth.ifs.util.InviteUtils.ORGANISATION_TYPE;
+
 @Controller
 @RequestMapping("/organisation/create/type/")
 public class OrganisationTypeCreationController {
@@ -40,12 +42,18 @@ public class OrganisationTypeCreationController {
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
+
     @Autowired
     private InviteRestService inviteRestService;
+
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
+
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @RequestMapping(value = "/new-account-organisation-type", method = RequestMethod.GET)
     public String chooseOrganisationType(HttpServletRequest request,
@@ -53,12 +61,12 @@ public class OrganisationTypeCreationController {
                                          @ModelAttribute OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
-                                         @RequestParam(value = AcceptInviteController.ORGANISATION_TYPE, required = false) Long organisationTypeId,
+                                         @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid
 
     ) {
-        String hash = CookieUtil.getInstance().getCookieValue(request, AcceptInviteController.INVITE_HASH);
-        CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
+        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
@@ -99,19 +107,19 @@ public class OrganisationTypeCreationController {
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult
     ) {
-        CookieUtil.getInstance().removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
             return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
         } else if (OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()) {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-            CookieUtil.getInstance().saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
+            cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
             LOG.debug("redirect for organisation subtype");
-            return "redirect:/organisation/create/type/new-account-organisation-type/?" + AcceptInviteController.ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
+            return "redirect:/organisation/create/type/new-account-organisation-type/?" + ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
         } else {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-            CookieUtil.getInstance().saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
+            cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
             LOG.debug("redirect for organisation creation");
             return "redirect:/organisation/create/find-organisation";
         }

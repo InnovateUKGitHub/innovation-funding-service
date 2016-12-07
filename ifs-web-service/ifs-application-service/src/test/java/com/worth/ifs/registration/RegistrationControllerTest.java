@@ -81,8 +81,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restSuccess(new UserResource()));
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
 
-        inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
-        usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
+        inviteHashCookie = new Cookie(INVITE_HASH, INVITE_HASH);
+        usedInviteHashCookie = new Cookie(INVITE_HASH, ACCEPTED_INVITE_HASH);
         organisationCookie = new Cookie("organisationId", "1");
     }
 
