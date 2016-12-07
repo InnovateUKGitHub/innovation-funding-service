@@ -99,7 +99,6 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         when(rendererMock.renderTemplate(any(String.class), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
         when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
-     //   when(spendProfileTableCalculatorMock.calculateMonthlyTotals(createdFile)).thenReturn(fileEntryResource);
 
         ServiceResult<FileEntryResource> result = generateFileFn.apply(fileEntryResource);
         assertTrue(result.isSuccess());

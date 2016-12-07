@@ -3,10 +3,12 @@ package com.worth.ifs.project.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
@@ -22,35 +24,38 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static com.worth.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.worth.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static com.worth.ifs.project.resource.SpendProfileTableResourceBuilder.newSpendProfileTableResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.util.MapFunctions.asMap;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
+import static org.mockito.Mockito.*;
 
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
 
@@ -69,11 +74,39 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private PartnerOrganisation partnerOrganisation;
     private Project project;
     private OrganisationResource organisationResource;
-    private SpendProfileTableResource spendProfileTableResource;
+    private SpendProfileTableResource table;
 
     @Before
     public void setUp() {
-        spendProfileTableResource = newSpendProfileTableResource().build();
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30).withApplication(456L).withOrganisation(3L)
+                .build();
+        table = new SpendProfileTableResource();
+
+        table.setMonthlyCostsPerCategoryMap(asMap(
+                1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
+
+        table.setCostCategoryGroupMap(asMap(
+            LABOUR,  asList(asMap(
+                        1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
+                        2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
+                        3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31")))
+                )));
+
+        table.setEligibleCostPerCategoryMap(asMap(
+                1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
+                2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
+                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))
+        ));
+        table.setCostCategoryResourceMap(asMap(
+                1L, newCostCategoryResource(),
+                2L, newCostCategoryResource()
+        ));
+        table.setMonths(asList(
+                new LocalDateResource(1, 3, 2019),new LocalDateResource(1, 4, 2019)));
+
         organisation = newOrganisation().build();
         organisationResource = newOrganisationResource().build();
 
@@ -133,8 +166,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationMapperMock.mapToResource(organisation)).thenReturn(organisationResource);
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), 3L)).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
-                .thenReturn(ServiceResult.serviceSuccess(spendProfileTableResource));
+                .thenReturn(ServiceResult.serviceSuccess(table));
     }
 
     @Test
@@ -231,7 +265,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Assert.assertThat(project.getOfferSubmittedDate(), notNullValue());
     }
 
-//    @Test
+    @Test
     public void testGenerateGrantOfferLetter() {
         assertGenerateFile(
                 fileEntryResource ->
