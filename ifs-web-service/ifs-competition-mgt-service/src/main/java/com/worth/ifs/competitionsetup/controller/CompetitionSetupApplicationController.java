@@ -262,7 +262,6 @@ public class CompetitionSetupApplicationController {
 
         if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
             setupSubsection =  CompetitionSetupSubsection.QUESTIONS;
-
         } else {
             setupSubsection =  CompetitionSetupSubsection.PROJECT_DETAILS;
         }
