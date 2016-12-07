@@ -2,7 +2,6 @@ package com.worth.ifs.finance.repository;
 
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -14,5 +13,5 @@ import java.util.List;
 public interface FinanceRowMetaValueRepository extends PagingAndSortingRepository<FinanceRowMetaValue, Long> {
 	@Override
     List<FinanceRowMetaValue> findAll();
-    void deleteByFinanceRowId(@Param("financeRowId") Long financeRowId);
+    void deleteByFinanceRowId(Long financeRowId);
 }
