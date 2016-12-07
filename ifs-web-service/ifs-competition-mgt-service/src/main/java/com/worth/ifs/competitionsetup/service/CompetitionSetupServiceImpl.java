@@ -227,8 +227,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		competitionService.returnToSetup(competitionId);
 	}
 
-
-
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
 		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
 		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
