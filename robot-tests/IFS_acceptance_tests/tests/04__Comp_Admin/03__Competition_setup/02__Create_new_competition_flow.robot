@@ -95,7 +95,7 @@ Initial details: correct state aid status
     ...    INFUND-4979
     [Tags]    Pending
     [Setup]
-    #TODO This ticket marked as pending because atm there is no SBRI competition type. We should recheck this in sprint18
+    #TODO This ticket marked as pending because atm there is no SBRI competition type.
     #Change the test setup
     Given the user should not see the element    css=#stateAid
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
@@ -449,9 +449,8 @@ Assessor: Should have a Green Check
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]    Pending
+    [Tags]
     [Setup]
-    #TO DO Pending due to /INFUND-6068
     Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
     When The user clicks the button/link    link=Initial details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
@@ -465,8 +464,7 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468
     ...
     ...    INFUND-3002
-    [Tags]    HappyPath    Pending
-    #TO DO Pending due to /INFUND-6068
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3

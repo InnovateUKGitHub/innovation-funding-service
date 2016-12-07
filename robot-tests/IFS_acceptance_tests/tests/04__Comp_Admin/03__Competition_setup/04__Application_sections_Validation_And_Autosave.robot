@@ -8,7 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Business opportunity Server-side validations
     [Documentation]    INFUND-5629
-    [Tags]
+    [Tags]    HappyPath
     Given The user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
@@ -21,6 +21,7 @@ Business opportunity Server-side validations
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629
+    [Tags]    HappyPath
     When the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -39,7 +40,7 @@ Business opportunity: Autosave
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]
+    [Tags]    HappyPath
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
