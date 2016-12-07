@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -60,13 +61,13 @@ public class RegistrationForm {
     })
     private String lastName;
 
-    @NotEmpty(message = "{validation.standard.gender.selectionrequired}")
+    @NotNull(message = "{validation.standard.gender.selectionrequired}")
     private String gender;
 
-    @NotEmpty(message = "{validation.standard.ethnicity.selectionrequired}")
+    @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
     private String ethnicity;
 
-    @NotEmpty(message = "{validation.standard.disability.selectionrequired}")
+    @NotNull(message = "{validation.standard.disability.selectionrequired}")
     private String disability;
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
