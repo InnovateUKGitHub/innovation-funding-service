@@ -71,7 +71,7 @@ Internal users can see Project Details not yet completed
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Tags]      HappyPath Pending
+    [Tags]      HappyPath Failing
     log in as a different user   &{Comp_admin1_credentials}
     #The test fails due to INFUND-6642
     When the user navigates to the page    ${internal_project_summary}
@@ -306,7 +306,6 @@ Lead partner selects a project manager
     ...    INFUND-2996
     ...    INFUND-5610
     [Tags]    HappyPath
-    [Setup]  log in as user      steve.smith@empire.com    password=Passw0rd
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
