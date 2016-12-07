@@ -6,6 +6,9 @@ import com.worth.ifs.project.finance.domain.CostCategory;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
+import static java.util.Arrays.asList;
+
 /**
  * TODO INFUND-5192
  * There is not currently a good way of generating {@link com.worth.ifs.project.finance.domain.CostCategory} for academic partners in an extendable way.
@@ -51,7 +54,11 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
         return financeRowName;
     }
 
-    public static BigDecimal findCost(CostCategory academicCostCategory, List<FinanceRow> rows){
+    public static AcademicCostCategoryGenerator fromFinanceRowName(String financeRowName) {
+        return simpleFindFirst(asList(values()), cc -> cc.getFinanceRowName().equals(financeRowName)).orElse(null);
+    }
+
+    public static BigDecimal findCost(CostCategory academicCostCategory, List<? extends FinanceRow> rows){
         String financeRowName = from(academicCostCategory).getFinanceRowName();
         return rows.stream().filter(row -> financeRowName.equals(row.getName())).findFirst().map(row -> row.getCost()).orElseGet(() -> BigDecimal.ZERO);
     }
