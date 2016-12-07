@@ -108,12 +108,12 @@
             	<div th:with="readonly=${readonly} or ${markedAsComplete?.contains(question.id)
             							 or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
         		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
-        	        <div class="form-group">
+        	        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
         	            <label class="form-label form-label-bold" th:for="application_details-title">
         	                  <span>Project title</span>
         	                  <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
-        	                  <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
         	            </label>
+                        <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" th:remove="tag" />
                         <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
                         <input class="form-control width-full"
                              th:readonly="${readonly}"
@@ -122,15 +122,16 @@
                              th:field="*{__application.name__}"
                              th:attr="data-required-errormessage='Please enter the full title of the project'"
                              required="required"
+                             th:errorclass="field-error"
                               />
                     </div>
 
                         <fieldset>
-                            <div class="form-group">
+                            <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                                 <legend>
                                     <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
                                     <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:remove="tag" />
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-resubmissione')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" th:remove="tag" />
                                 </legend>
 
                                 <label th:class="${'block-label selection-button-radio '  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
@@ -141,7 +142,7 @@
                                            th:field="*{__application.resubmission__}"
                                            value="true"
                                            required="required"
-                                           th:disabled="${readonly}"
+                                           th:readonly="${readonly}"
                                            th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
                                     />
                                     Yes
@@ -151,7 +152,7 @@
                                     <input type="radio"
                                            th:id="resubmission-no"
                                            th:field="*{__application.resubmission__}"
-                                           th:disabled="${readonly}"
+                                           th:readonly="${readonly}"
                                            value="false"
                                            required="required"
                                            th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
@@ -161,13 +162,12 @@
                             </div>
                         </fieldset>
                         <div id="resubmission-details">
-                            <div class="form-group">
-                                <h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label form-label-bold" th:for="application_details-previousapplicationnumber">
+                            <h2 class="heading-medium">Please provide the details of this previous application</h2>
+
+                            <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'error'">
+                                <label class="form-label" th:for="application_details-previousapplicationnumber">
                                     <span>Previous application number</span>
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-previousapplicationnumber')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')" th:remove="tag" />
                                 </label>
                                 <input class="form-control width-full"
                                        th:readonly="${readonly}"
@@ -175,12 +175,14 @@
                                        id="application_details-previousapplicationnumber"
                                        th:field="*{__application.previousApplicationNumber__}"
                                        required="required"
+                                       th:errorclass="field-error"
+                                       th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}"
                                 />
                             </div>
-                            <div class="form-group">
-                                <label class="form-label form-label-bold" th:for="application_details-previousapplicationtitle">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
+                                <label class="form-label" th:for="application_details-previousapplicationtitle">
                                     <span>Previous application title</span>
-                                    <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-previousapplicationtitle')" th:remove="tag" />
+                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" th:remove="tag" />
                                 </label>
                                 <input class="form-control width-full"
                                        th:readonly="${readonly}"
@@ -188,23 +190,25 @@
                                        id="application_details-previousapplicationtitle"
                                        th:field="*{__application.previousApplicationTitle__}"
                                        required="required"
+                                       th:errorclass="field-error"
+                                       th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}"
                                 />
                             </div>
                         </div>
                             <fieldset>
-                                <div class="form-group">
+                                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'error'">
                                      <legend>
                                          <span class="form-label form-label-bold">Estimated timescales</span>
                                          <span>Project start date</span>
-                                         <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
                                          <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
+                                         <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')" th:remove="tag" />
                                      </legend>
 
                                   <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" th:remove="tag" /><br/>
                               </div>
-                              <div class="form-group" th:with="id='application_details-duration', field='application.durationInMonths',readonly=${readonly}">
+                              <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'" th:with="id='application_details-duration', field='application.durationInMonths',readonly=${readonly}">
                                   <th:block th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
-                                  <th:block th:include="question-type/form-elements :: form-validation-messages (id=${id})"  />
+                                  <th:block th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
                                   <input class="form-control width-extra-small"
                                          th:classAppend="${readonly == true ? 'js-visited':''}"
                                          th:readonly="${readonly}"
@@ -214,18 +218,41 @@
                                          min="1"
                                          max="36"
                                          required="required"
-                                         data-required-errormessage="Please enter a valid value"
-                                         data-min-errormessage="Your project should last between 1 and 36 months"
-                                         data-max-errormessage="Your project should last between 1 and 36 months " />
+                                         data-required-errormessage="Your project should last between 1 and 36 months.&zwj;"
+                                         data-min-errormessage="Your project should last between 1 and 36 months."
+                                         data-max-errormessage="&zwj;Your project should last between 1 and 36 months." />
+                                  <!--/* Note: Errormessages are appended or prepended with a Zero-width joiner (&zwj;).
+                                  This is so the Javascript validation logic can uniquely identify them for replacement due to a current technical limitation in the Javascript implementation */-->
                               </div>
                           </fieldset>
                       </div>
-                        <div class="form-group">
-                            <h2 class="heading-medium no-margin">Lead organisation</h2>
-                            <div th:text="${leadOrganisation.name}" />
+                        <h2 class="heading-medium no-margin">Lead organisation</h2>
+                        <div th:text="${leadOrganisation.name}" />
+                        <h2 class="heading-medium no-margin-bottom extra-margin">Partners</h2>
+                        <ul class="list-bullet">
+                            <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
+                                <span th:text="${organisation.getName()}"></span>
+                            </li>
+                            <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
+                                <span th:text="${pendingOrganisationName}"></span>
+                                <small>(pending)</small>
+                            </li>
+                        </ul>
+                        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
+                                                 (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
+                            <p>
+                                <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
+                                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                            </p>
                         </div>
-                        <div class="form-group">
-                            <h2 class="heading-medium no-margin">Partners</h2>
+                        </div>
+                        <div class="grid-row" th:if="${appIsClosed}">
+                          <div class="column-half">
+                            <h3 class="heading-small">Project title</h3>
+                            <p th:text="${currentApplication.name}" />
+                            <h3 class="heading-small">Lead organisation</h3>
+                            <p th:text="${leadOrganisation.name}" />
+                            <h3 class="heading-small">Partners</h3>
                             <ul class="list-bullet">
                                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                                     <span th:text="${organisation.getName()}"></span>
@@ -235,42 +262,14 @@
                                     <small>(pending)</small>
                                 </li>
                             </ul>
-                        </div>
-                        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
-                                                 (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
-                            <p>
-                                <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
-                                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-                            </p>
-                        </div>
-                        </div>
-                        <div th:if="${appIsClosed}" th:remove="tag">
-                            <div class="grid-row">
-                              <div class="column-half">
-                                <h3 class="heading-small">Project title</h3>
-                                <p th:text="${currentApplication.name}" />
-                                <h3 class="heading-small">Lead organisation</h3>
-                                <p th:text="${leadOrganisation.name}" />
-                                <h3 class="heading-small">Partners</h3>
-                                <ul class="list-bullet">
-                                    <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
-                                        <span th:text="${organisation.getName()}"></span>
-                                    </li>
-                                    <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
-                                        <span th:text="${pendingOrganisationName}"></span>
-                                        <small>(pending)</small>
-                                    </li>
-                                </ul>
-                              </div>
-                              <div class="column-half">
-                                  <h3 class="heading-small">Project timescales</h3>
-                                  <p>Project start date:<br/>
-                                    <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
-                                  </p>
-                                  <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
-                              </div>
-                            </div>
-
+                          </div>
+                          <div class="column-half">
+                              <h3 class="heading-small">Project timescales</h3>
+                              <p>Project start date:<br/>
+                                <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
+                              </p>
+                              <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+                          </div>
                         </div>
                     </div>
                     <!-- ===========================Form: empty / no question =========================== -->

@@ -165,7 +165,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_markAsSetup() {
         long competitionId = 1L;
-        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/mark-as-setup", Void.class, null, null, HttpStatus.OK);
+        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/mark-as-setup", HttpStatus.OK);
 
         RestResult<Void> result = service.markAsSetup(competitionId);
         assertTrue(result.isSuccess());
@@ -174,9 +174,18 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_returnToSetup() {
         long competitionId = 1L;
-        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/return-to-setup", Void.class, null, null, HttpStatus.OK);
+        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/return-to-setup", HttpStatus.OK);
 
         RestResult<Void> result = service.returnToSetup(competitionId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void test_closeAssessment() {
+        long competitionId = 1L;
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/close-assessment",HttpStatus.OK);
+
+        RestResult<Void> result = service.closeAssessment(competitionId);
         assertTrue(result.isSuccess());
     }
 

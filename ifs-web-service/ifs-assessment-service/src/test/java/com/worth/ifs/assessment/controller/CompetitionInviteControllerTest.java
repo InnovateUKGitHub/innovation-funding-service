@@ -17,11 +17,13 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -86,12 +88,16 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         setLoggedInUser(null);
         LocalDateTime acceptsDate = LocalDateTime.now();
         LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
+        LocalDateTime briefingDate = LocalDateTime.now().plusDays(2);
+        BigDecimal assessorPay = BigDecimal.TEN;
 
         CompetitionInviteResource inviteResource = newCompetitionInviteResource()
                 .withCompetitionName("my competition")
-                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
+                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
+                .withBriefingDate(briefingDate).withAssessorPay(assessorPay)
+                .build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource);
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
@@ -145,10 +151,13 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void openInvite() throws Exception {
         LocalDateTime acceptsDate = LocalDateTime.now();
         LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
+        LocalDateTime briefingDate = LocalDateTime.now().plusDays(2);
+        BigDecimal assessorPay = BigDecimal.TEN;
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
-                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
+                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
+                .withBriefingDate(briefingDate).withAssessorPay(assessorPay).build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource);
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))

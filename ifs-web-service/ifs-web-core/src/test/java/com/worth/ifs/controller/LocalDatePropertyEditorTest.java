@@ -53,7 +53,7 @@ public class LocalDatePropertyEditorTest {
     @Test
     public void testSetAsTextWithInvalidValuesForYearDefaultsToThisYear() {
 
-        int thisYear = LocalDate.now().getYear();
+        int thisYear = LocalDate.MIN.getYear();
 
         MockHttpServletRequest request = createMockRequestWithDate("hello", "3", "5");
 

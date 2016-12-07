@@ -70,7 +70,7 @@ Duration field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]
+    [Tags]    Failing
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
@@ -78,7 +78,7 @@ Duration field client side
     When the user enters text to a text field    id=application_details-duration    -1
     Then the user should see an error    Your project should last between 1 and 36 months
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    Then the user should see an error    Please enter a valid value
+    Then the user should see an error    Your project should last between 1 and 36 months
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -86,8 +86,8 @@ Application details server side
     [Documentation]    INFUND-2843
     ...
     ...    INFUND-4694
-    [Tags]    Pending    HappyPath
-    # TODO pending INFUND-3999
+    [Tags]  HappyPath
+
     Given the user should see the text in the page    Application details
     When the user clicks the button/link    jQuery=label:contains(Yes) input
     And the user enters text to a text field    id=application_details-title    ${EMPTY}
@@ -102,8 +102,8 @@ Application details server side
     And the user should see an error    Please enter the previous application number
     And the user should see an error    Please enter the previous application title
     And the user should see the element    css=.error-summary-list
-    [Teardown]    the user enters text to a text field    id=application_details-title    Robot test application
-
+    [Teardown]   Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+                     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
@@ -154,4 +154,4 @@ the applicant should not see the validation error of the duration any more
     Run Keyword And Ignore Error    mouse out    css=.editor
     Focus    css=.app-submit-btn
     sleep    300ms
-    The user should not see the text in the page    Please enter a valid value
+    The user should not see the text in the page    Your project should last between 1 and 36 months

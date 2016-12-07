@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
@@ -106,6 +104,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<Void> returnToSetup(Long competitionId) {
         return postWithRestResult(String.format("%s/%s/return-to-setup", competitionsRestURL, competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> closeAssessment(Long competitionId) {
+        return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
 
     @Override
