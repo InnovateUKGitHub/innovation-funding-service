@@ -6,6 +6,8 @@ Documentation     INFUND-5190: As a member of Project Finance I want to view an 
 ...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
 ...
 ...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
+...
+...               INFUND-6149: mailto link is broken on the internal finance eligibility page
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -61,8 +63,9 @@ Finance checks client-side validations
 
 
 Approve Eligibility: Lead partner organisation
-    [Documentation]    INFUND-5193
+    [Documentation]    INFUND-5193, INFUND-6149
     [Tags]    HappyPath
+    Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
     And the user selects the checkbox    id=costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
@@ -100,7 +103,8 @@ Approve Eligibility: Academic partner organisation
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    # note that we are viewing this file here rather than the same project as the other tests in this suite due to INFUND-6724
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
+    # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form53.pdf
@@ -129,6 +133,20 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
     And the user should not see the element    link = Grant offer letter
+
+Status updates correctly for internal user's table
+     [Documentation]    INFUND-4049,INFUND-5543
+     [Tags]      HappyPath   Pending
+     [Setup]    log in as a different user   &{Comp_admin1_credentials}
+     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting      # MO
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks are approved
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.waiting  # Spend Profile
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
