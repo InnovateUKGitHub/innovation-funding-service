@@ -6,7 +6,7 @@ var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var sassLint = require('gulp-sass-lint');
-var urlAdjuster = require('gulp-css-url-adjuster');
+var replace = require('gulp-replace');
 
 var compass = require('compass-importer');
 
@@ -39,9 +39,7 @@ gulp.task('css', function () {
         importer: compass,
         outputStyle: 'expanded'
       }).on('error', sass.logError))
-      .pipe(urlAdjuster({
-        prepend: '/'
-      }))
+    .pipe(replace('url(images/', 'url(/images/'))
     .pipe(gulp.dest('./css'));
 });
 
