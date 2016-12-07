@@ -35,7 +35,7 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
 
     private ViewModelType populateCompetitionInnovationSectorAndArea(ViewModelType model) {
         model.setInnovationSector("Health and life sciences");
-        model.setInnovationSector("Agriculture and food");
+        model.setInnovationArea("Agriculture and food");
         return model;
     }
 }
