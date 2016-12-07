@@ -14,4 +14,5 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
 			String competitionClassName, Long id);
     List<Category> findByType(CategoryType type);
     Category findByIdAndType(Long id, CategoryType type);
+    Category findByNameAndType(String name, CategoryType type);
 }
