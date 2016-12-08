@@ -750,31 +750,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetViabilityWhenNotSet() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Viability> result = service.getViability(projectOrganisationCompositeId);
-
-        assertTrue(result.isSuccess());
-
-        assertEquals(Viability.UNSET, result.getSuccessObject());
-
-    }
-
-    @Test
     public void testGetViabilitySuccess() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setViability(Viability.AMBER);
+        projectFinanceInDB.setViability(Viability.APPROVED);
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -782,7 +764,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.AMBER, result.getSuccessObject());
+        assertEquals(Viability.APPROVED, result.getSuccessObject());
 
     }
 
@@ -796,11 +778,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.GREEN);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.GREEN, projectFinanceInDB.getViability());
+        assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
 
     }

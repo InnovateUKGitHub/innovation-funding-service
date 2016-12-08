@@ -310,13 +310,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        Viability viability = projectFinance.getViability();
+        return serviceSuccess(projectFinance.getViability());
 
-        if (viability == null) {
-            return serviceSuccess(Viability.UNSET);
-        } else {
-            return serviceSuccess(viability);
-        }
     }
 
     @Override

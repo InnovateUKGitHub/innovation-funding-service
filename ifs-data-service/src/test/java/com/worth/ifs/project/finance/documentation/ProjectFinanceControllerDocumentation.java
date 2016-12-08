@@ -336,7 +336,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        Viability expectedViability = Viability.AMBER;
+        Viability expectedViability = Viability.APPROVED;
         when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViability));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
@@ -355,7 +355,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         Long projectId = 1L;
         Long organisationId = 1L;
-        Viability viability = Viability.GREEN;
+        Viability viability = Viability.APPROVED;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
