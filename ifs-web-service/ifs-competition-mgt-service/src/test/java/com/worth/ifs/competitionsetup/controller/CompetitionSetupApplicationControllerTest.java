@@ -187,6 +187,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().isOk())
+                .andExpect(model().attribute("editable", true))
                 .andExpect(view().name("competition/setup/question"));
 
         verify(competitionSetupQuestionService, never()).updateQuestion(question);
@@ -215,6 +216,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].subject", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().isOk())
+                .andExpect(model().attribute("editable", true))
                 .andExpect(view().name("competition/setup/question"));
 
         verify(competitionSetupQuestionService, never()).updateQuestion(question);
@@ -268,6 +270,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
@@ -295,6 +298,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
@@ -321,6 +325,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidanceRows[0].subject", "")
                 .param("question.guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
@@ -346,6 +351,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidanceRows[0].subject", "")
                 .param("question.guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
@@ -364,7 +370,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.shortTitle", "Title")
-
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")

@@ -167,6 +167,8 @@ public class CompetitionSetupApplicationController {
 
             competitionSetupForm.getQuestion().setType(CompetitionSetupQuestionType.ASSESSED_QUESTION);
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+
+            model.addAttribute("editable", true);
             return questionView;
         }
     }
@@ -188,6 +190,8 @@ public class CompetitionSetupApplicationController {
 
             competitionSetupForm.getQuestion().setType(CompetitionSetupQuestionType.SCOPE);
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+
+            model.addAttribute("editable", true);
             return questionView;
         }
     }
