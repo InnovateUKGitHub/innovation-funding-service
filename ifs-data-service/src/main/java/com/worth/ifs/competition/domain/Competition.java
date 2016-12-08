@@ -60,7 +60,7 @@ public class Competition implements ProcessActivity {
 
     private BigDecimal assessorPay;
 
-    @OneToMany(mappedBy = "competition")
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST)
     private List<Milestone> milestones = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

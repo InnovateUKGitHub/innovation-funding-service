@@ -11,6 +11,7 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -26,6 +27,8 @@ import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl>{
@@ -52,21 +55,21 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	
 	@Test
 	public void testUpdateMilestones() {
-		Competition competition = newCompetition().build();
-		when(competitionRepository.findById(1L)).thenReturn(competition);
-		
 		List<MilestoneResource> milestones = newMilestoneResource()
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(ASSESSMENT_PANEL, competition.getMilestones().get(0).getType());
-		assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), competition.getMilestones().get(0).getDate());
-		assertEquals(FUNDERS_PANEL, competition.getMilestones().get(1).getType());
-		assertEquals(LocalDateTime.of(2050, 3, 11, 0, 0), competition.getMilestones().get(1).getDate());
+		ArgumentCaptor<Milestone> milestoneCaptor = ArgumentCaptor.forClass(Milestone.class);
+		verify(milestoneRepository,times(2)).save(milestoneCaptor.capture());
+		List<Milestone> capturedMilestones = milestoneCaptor.getAllValues();
+		assertEquals(ASSESSMENT_PANEL, capturedMilestones.get(0).getType());
+		assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), capturedMilestones.get(0).getDate());
+		assertEquals(FUNDERS_PANEL, capturedMilestones.get(1).getType());
+		assertEquals(LocalDateTime.of(2050, 3, 11, 0, 0), capturedMilestones.get(1).getDate());
 	}
 	
 	@Test
@@ -79,7 +82,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 10, 0, 0), LocalDateTime.of(2050, 3, 11, 0, 0))
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
@@ -97,7 +100,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), null)
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
@@ -115,7 +118,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(1985, 3, 10, 0, 0))
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
@@ -132,7 +135,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL, ALLOCATE_ASSESSORS, ASSESSOR_ACCEPTS)
                 .build(4);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
