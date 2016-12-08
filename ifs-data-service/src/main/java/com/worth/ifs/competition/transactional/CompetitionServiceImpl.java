@@ -96,17 +96,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
-        return serviceSuccess(simpleMap(competitionRepository.findLive(), this::searchResultFromCompetition));
+        List<Competition> competitions = competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return serviceSuccess(simpleMap(competitionRepository.findProjectSetup(), this::searchResultFromCompetition));
+        List<Competition> competitions = competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
-        return serviceSuccess(simpleMap(competitionRepository.findUpcoming(), this::searchResultFromCompetition));
+        List<Competition> competitions = competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
@@ -116,7 +119,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
 
         CompetitionSearchResult result = new CompetitionSearchResult();
-        List<Competition> competitions = pageResult.getContent();
+        List<Competition> competitions = pageResult.getContent().stream().map(this::addCategories).collect(Collectors.toList());
         result.setContent(simpleMap(competitions, this::searchResultFromCompetition));
         result.setNumber(pageRequest.getPageNumber());
         result.setSize(size);
