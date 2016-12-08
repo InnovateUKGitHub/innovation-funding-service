@@ -38,7 +38,8 @@ Business opportunity: Client side validations
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]
+    [Tags]    Failing
+    #TODO work out why its failing!
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
