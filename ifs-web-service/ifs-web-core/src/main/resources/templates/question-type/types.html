@@ -214,15 +214,13 @@
                                          th:readonly="${readonly}"
                                          th:id="${id}"
                                          th:field="*{__${field}__}"
-                                         type="number"
-                                         min="1"
-                                         max="36"
+                                         th:errorclass="field-error"
+                                         type="text"
+                                         pattern="^[1-9]|[0-2][0-9]|3[0-6]$"
                                          required="required"
-                                         data-required-errormessage="Your project should last between 1 and 36 months.&zwj;"
-                                         data-min-errormessage="Your project should last between 1 and 36 months."
-                                         data-max-errormessage="&zwj;Your project should last between 1 and 36 months." />
-                                  <!--/* Note: Errormessages are appended or prepended with a Zero-width joiner (&zwj;).
-                                  This is so the Javascript validation logic can uniquely identify them for replacement due to a current technical limitation in the Javascript implementation */-->
+                                         data-pattern-errormessage="Your project should last between 1 and 36 months." />
+                                        <!--/* this is solved with a pattern because setting a number and min="" and max="" doesn't support one message (your project should last between 1 and 36 months).
+                                        This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                               </div>
                           </fieldset>
                       </div>
