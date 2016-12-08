@@ -77,6 +77,20 @@
                 </div>
             </div>
 
+            <ul>
+                <li th:each="assessor : ${model.assessors}">
+                    <span th:text="${assessor.name}"></span>
+                    <form method="POST" th:action="@{/competition/{competitionId}/assessors/inviteUser(competitionId=${model.competitionId})}" th:unless="${assessor.added}">
+                        <input type="hidden" name="email" th:value="${assessor.email}"/>
+                        <button>Add</button>
+                    </form>
+                    <form method="POST" th:action="@{/competition/{competitionId}/assessors/deleteInvite(competitionId=${model.competitionId})}" th:if="${assessor.added}">
+                        <input type="hidden" name="email" th:value="${assessor.email}"/>
+                        <button>Remove</button>
+                    </form>
+                </li>
+            </ul>
+
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>
 

@@ -3,6 +3,7 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.mapper.CompetitionInviteMapper;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.category.repository.CategoryRepository;
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
@@ -13,10 +14,7 @@ import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
 import com.worth.ifs.invite.repository.CompetitionParticipantRepository;
 import com.worth.ifs.invite.repository.RejectionReasonRepository;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
-import com.worth.ifs.invite.resource.ExistingUserStagedInviteResource;
-import com.worth.ifs.invite.resource.NewUserStagedInviteResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -25,10 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.worth.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -38,8 +34,11 @@ import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
 
 /**
@@ -112,6 +111,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
+    public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
+        // TODO INFUND-6775
+        return serviceSuccess(asList(new AvailableAssessorResource(1L, "Dave", "Smith", "dave@email.com", BUSINESS, new CategoryResource(null, "Earth Observation", null, null, null), true, true),
+                new AvailableAssessorResource(2L, "John", "Barnes", "john@email.com", ACADEMIC, new CategoryResource(null, "Healthcare, Analytical science", null, null, null), false, false)));
+    }
+
+    @Override
     public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
         return getInnovationArea(stagedInvite.getInnovationCategoryId())
                 .andOnSuccess(innovationArea -> getCompetition(stagedInvite.getCompetitionId())
@@ -140,7 +146,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private ServiceResult<CompetitionInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> competitionInviteRepository.save( new CompetitionInvite(user, generateHash(), competition) )
+                        competition -> competitionInviteRepository.save(new CompetitionInvite(user, generateHash(), competition))
                 );
     }
 
@@ -154,7 +160,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private ServiceResult<User> getUserByEmail(String email) {
-        return find( userRepository.findByEmail(email), notFoundError(User.class, email) );
+        return find(userRepository.findByEmail(email), notFoundError(User.class, email));
     }
 
     @Override
@@ -163,13 +169,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private ServiceResult<Void> sendInvite(CompetitionInvite invite) {
-        competitionParticipantRepository.save( new CompetitionParticipant(invite.send()) );
+        competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
         return serviceSuccess();
     }
 
     @Override
-    public ServiceResult<Void> deleteInvite(long inviteId) {
-        return getById(inviteId).andOnSuccess(this::deleteInvite);
+    public ServiceResult<Void> deleteInvite(String email, long competitionId) {
+        return getByEmailAndCompetition(email, competitionId).andOnSuccess(this::deleteInvite);
     }
 
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {
@@ -177,7 +183,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private ServiceResult<CompetitionInvite> getById(long id) {
-        return find(competitionInviteRepository.findOne(id) , notFoundError(CompetitionInvite.class, id));
+        return find(competitionInviteRepository.findOne(id), notFoundError(CompetitionInvite.class, id));
+    }
+
+    private ServiceResult<CompetitionInvite> getByEmailAndCompetition(String email, long competitionId) {
+        return find(competitionInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionInvite.class, email, competitionId));
     }
 
     private ServiceResult<Void> deleteInvite(CompetitionInvite invite) {
