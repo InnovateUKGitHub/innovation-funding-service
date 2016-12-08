@@ -8,7 +8,7 @@ public abstract class StagedInviteResource {
     private String email;
     private long competitionId;
 
-    public StagedInviteResource() {
+    protected StagedInviteResource() {
     }
 
     protected StagedInviteResource(String email, long competitionId) {
