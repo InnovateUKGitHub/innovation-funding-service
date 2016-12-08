@@ -350,7 +350,7 @@ public class RegistrationController {
     }
 
     private boolean hasVerifiedCookieSet(final HttpServletRequest request) {
-        final Optional<Cookie> cookie = cookieUtil.getCookie(request, "flashMessage");
-        return cookie.isPresent() && cookie.get().getValue().equals("verificationSuccessful");
+        final Optional<Cookie> cookie = cookieUtil.getCookie(request, CookieFlashMessageFilter.COOKIE_NAME);
+        return cookie.isPresent() && cookieUtil.getCookieValue(request, CookieFlashMessageFilter.COOKIE_NAME).equals("verificationSuccessful");
     }
 }
