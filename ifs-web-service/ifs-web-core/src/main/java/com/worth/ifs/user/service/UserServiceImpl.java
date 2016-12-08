@@ -1,6 +1,5 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
@@ -10,7 +9,6 @@ import com.worth.ifs.user.resource.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -93,12 +91,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, null, null, null, organisationId);
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId) {
-        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, competitionId);
+    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
+                                                                                        String title, String phoneNumber,
+                                                                                        String gender, Long ethnicity, String disability,
+                                                                                        Long organisationId, Long competitionId) {
+        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, competitionId);
     }
 
     @Override
@@ -109,8 +110,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
+    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability);
     }
 
     @Override

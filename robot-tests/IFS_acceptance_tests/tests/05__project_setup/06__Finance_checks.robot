@@ -103,7 +103,8 @@ Approve Eligibility: Academic partner organisation
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    # note that we are viewing this file here rather than the same project as the other tests in this suite due to INFUND-6724
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
+    # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     When the user clicks the button/link    css=table:nth-child(7) tr:nth-child(3) a
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form53.pdf
@@ -139,7 +140,7 @@ Status updates correctly for internal user's table
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks are approved
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.waiting  # Spend Profile

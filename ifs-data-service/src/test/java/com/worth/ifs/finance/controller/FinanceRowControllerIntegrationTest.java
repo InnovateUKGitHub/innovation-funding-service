@@ -8,8 +8,9 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.*;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -56,7 +57,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     private BindingResult bindingResult;
 
     @Autowired
-    private FinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
     private FinanceRow grandClaimCost;
     private ApplicationFinance applicationFinance;
     private long leadApplicantId;
@@ -75,8 +76,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Before
     public void prepare(){
         loginSteveSmith();
-        grandClaimCost = financeRowRepository.findOne(48L);
-        applicationFinance = grandClaimCost.getApplicationFinance();
+        grandClaimCost = applicationFinanceRowRepository.findOne(48L);
+        applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
         grantClaim = (GrantClaim) controller.get(48L).getSuccessObject();
         materials = (Materials) controller.get(12L).getSuccessObject();
@@ -330,6 +331,32 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Rollback
     @Test
     public void testValidationCapitalUsageUpdateOverMaxAllowedValues(){
+        capitalUsage.setDescription("Desc");
+        capitalUsage.setExisting("Existing");
+        capitalUsage.setDeprecation(1000);
+        capitalUsage.setResidualValue(new BigDecimal("1000000"));
+        capitalUsage.setNpv(new BigDecimal("1000"));
+        capitalUsage.setUtilisation(200);
+
+        RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
+        ValidationMessages messages = validationMessages.getSuccessObject();
+
+        assertEquals(capitalUsage.getId(), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+
+        List<Error> expectedErrors = singletonList(
+                fieldError("utilisation", 200, "validation.field.max.value.or.lower", 100));
+
+        assertErrorsAsExpected(messages, expectedErrors);
+    }
+
+    @Rollback
+    @Test
+    @Ignore("The original test that this came from could not have been actually flushing the session and forcing the " +
+            "save of the finance_row and finance_row_meta_values, because validation only occurs AFTER a successful " +
+            "save occurs in FinanceRowController - these values are over the max MySQL limit for the columns and so could " +
+            "never have resulted in a successful save")
+    public void testValidationCapitalUsageUpdateExistingAndDescriptionOverMaxAllowedValues(){
         capitalUsage.setDescription(overMaxAllowedTextSize);
         capitalUsage.setExisting(overMaxAllowedTextSize);
         capitalUsage.setDeprecation(1000);

@@ -10,6 +10,7 @@ import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -59,6 +60,10 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected ApplicationRepository applicationRepository;
+
+    @Autowired
+    protected ProjectRepository projectRepository;
+
     @Autowired
     protected SectionRepository sectionRepository;
 

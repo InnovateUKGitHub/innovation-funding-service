@@ -3,10 +3,12 @@ package com.worth.ifs.competition.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionType;
+import com.worth.ifs.competition.resource.GuidanceRowResource;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.mapper.GuidanceRowMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -19,11 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static com.worth.ifs.application.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +62,9 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     @Mock
     private GuidanceRowMapper guidanceRowMapper;
 
+    @Mock
+    private GuidanceRowRepository guidanceRowRepository;
+
     @Test
     public void test_getByQuestionId() {
         Long questionId = 1L;
@@ -79,7 +86,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
                                 .withWordCount(assessmentMaxWords)
-                                .withGuidanceAnswer(assessmentGuidance)
+                                .withGuidanceTitle(assessmentGuidance)
                                 .withGuidanceRows(guidanceRows)
                                 .build(),
                         newFormInput()
@@ -120,8 +127,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getWrittenFeedback(), true);
         assertEquals(resource.getScope(), true);
         assertEquals(resource.getResearchCategoryQuestion(), true);
-
-
         assertEquals(resource.getAssessmentGuidance(), assessmentGuidance);
         assertEquals(resource.getAssessmentMaxWords(), assessmentMaxWords);
         assertEquals(resource.getGuidanceTitle(), guidanceTitle);
@@ -143,6 +148,9 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     public void test_save() {
         long questionId = 1L;
 
+        List<GuidanceRowResource> guidanceRows = newFormInputGuidanceRowResourceBuilder().build(1);
+        when(guidanceRowMapper.mapToDomain(guidanceRows)).thenReturn(new ArrayList<>());
+
         CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
                 .withAppendix(false)
                 .withGuidance(guidance)
@@ -153,6 +161,12 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                 .withShortTitle(newShortTitle)
                 .withSubTitle(subTitle)
                 .withQuestionId(questionId)
+                .withAssessmentGuidance(assessmentGuidance)
+                .withAssessmentMaxWords(assessmentMaxWords)
+                .withGuidanceRows(guidanceRows)
+                .withScored(true)
+                .withScoreTotal(scoreTotal)
+                .withWrittenFeedback(true)
                 .build();
 
         Question question = newQuestion().
@@ -160,10 +174,21 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
+        FormInput researchCategoryQuestionFormInput = newFormInput().build();
+        FormInput scopeQuestionFormInput = newFormInput().build();
+        FormInput scoredQuestionFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput().build();
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
         when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
+
+        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.save(resource);
 
@@ -179,5 +204,12 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(question.getShortName(), shortTitle);
 
         assertEquals(appendixFormInput.getActive(), false);
+
+        assertEquals(researchCategoryQuestionFormInput.getActive(), true);
+        assertEquals(scopeQuestionFormInput.getActive(), true);
+        assertEquals(scoredQuestionFormInput.getActive(), true);
+        assertEquals(writtenFeedbackFormInput.getActive(), true);
+
+        verify(guidanceRowMapper).mapToDomain(guidanceRows);
     }
 }
