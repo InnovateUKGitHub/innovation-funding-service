@@ -3,12 +3,15 @@ package com.worth.ifs.user.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.Size;
+
 /**
  * Profile Skills Data Transfer Object
  */
 public class ProfileSkillsResource {
 
     private Long user;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String skillsAreas;
     private BusinessType businessType;
 
