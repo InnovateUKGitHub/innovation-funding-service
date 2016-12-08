@@ -35,6 +35,15 @@ function addUserToShibboleth {
 
 export -f addUserToShibboleth
 
+cat <<'END'
+              SINKING THE SHIP!!!
+                   ,:',:`,:' 
+                __||_||_||_||___
+           ____[""""""""""""""""]___
+           \ " '''''''''''''''''''' \ 
+    ~~^~^~^~^~^^~^~^~^~^~^~^~^~~^~^~^~^~~^~^
+END
+
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
@@ -45,3 +54,15 @@ done
 docker-compose exec -T shib /tmp/_delete-shib-users-remote.sh
 
 mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
+
+cat <<'END'
+     
+          ____
+     ,' ._|    \
+     :__: :    |
+      --: :    |\o
+~~^~^~~~^~^~^^~~~~^~^~^~~
+
+       SHIP SUNK! 
+      YOU MONSTER!!
+END
