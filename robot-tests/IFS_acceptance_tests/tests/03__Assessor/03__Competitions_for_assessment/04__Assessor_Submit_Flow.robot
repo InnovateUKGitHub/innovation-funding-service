@@ -177,6 +177,7 @@ Summary:Word count check(Your feedback)
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
+    [Setup]    browser validations have been disabled
     When the user enters multiple strings into a text field    id=feedback    test    5001
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    This field cannot contain more than 5,000 characters

@@ -54,6 +54,7 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.finance.handler.OrganisationFinanceDelegate.UNIVERSITY_HEI;
 import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static com.worth.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -736,13 +737,13 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
-                    invite.name, invite.hash, existingUser);
+                    invite.name, invite.hash, existingUser, invite.innovationAreaName);
         }
 
         String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
 
         AssessorDataBuilder baseBuilder = builder.
-                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser);
+                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser, null);
 
         if (!existingUser.isPresent()) {
             baseBuilder = baseBuilder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
@@ -760,7 +761,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
         assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash,
-                userRepository.findByEmail(line.email)).build();
+                userRepository.findByEmail(line.email), line.innovationAreaName).build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {
@@ -801,7 +802,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
+            case UNIVERSITY_HEI : return OrganisationTypeEnum.ACADEMIC;
             default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }
     }

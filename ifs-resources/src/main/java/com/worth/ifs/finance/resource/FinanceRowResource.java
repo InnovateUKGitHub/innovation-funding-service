@@ -9,6 +9,7 @@ public class FinanceRowResource {
     private String description;
     private Integer quantity;
     private BigDecimal cost;
+    private Long linkedFinanceRow;
 
     public Long getId() {
         return id;
@@ -56,5 +57,13 @@ public class FinanceRowResource {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public Long getLinkedFinanceRow() {
+        return linkedFinanceRow;
+    }
+
+    public void setLinkedFinanceRow(Long linkedFinanceRow) {
+        this.linkedFinanceRow = linkedFinanceRow;
     }
 }

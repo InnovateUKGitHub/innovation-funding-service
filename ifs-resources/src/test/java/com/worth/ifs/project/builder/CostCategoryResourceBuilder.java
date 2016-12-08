@@ -13,6 +13,18 @@ import static java.util.Collections.emptyList;
 
 public class CostCategoryResourceBuilder extends BaseBuilder<CostCategoryResource, CostCategoryResourceBuilder> {
 
+    public CostCategoryResourceBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
+    }
+
+    public CostCategoryResourceBuilder withName(String... names) {
+        return withArray((name, costCategory) -> setField("name", name, costCategory), names);
+    }
+
+    public CostCategoryResourceBuilder withCostCategoryGroup(CostCategoryGroupResource... costCategoryGroupResources) {
+        return withArray((costCategoryGroupResource, costCategory) -> setField("costCategoryGroup", costCategoryGroupResource, costCategory), costCategoryGroupResources);
+    }
+
     private CostCategoryResourceBuilder(List<BiConsumer<Integer, CostCategoryResource>> multiActions) {
         super(multiActions);
     }
@@ -30,14 +42,4 @@ public class CostCategoryResourceBuilder extends BaseBuilder<CostCategoryResourc
     protected CostCategoryResource createInitial() {
         return new CostCategoryResource();
     }
-
-
-    public CostCategoryResourceBuilder withName(String... names) {
-        return withArray((name, costCategory) -> setField("name", name, costCategory), names);
-    }
-
-    public CostCategoryResourceBuilder withCostCategoryGroup(CostCategoryGroupResource... costCategoryGroupResources) {
-        return withArray((costCategoryGroupResource, costCategory) -> setField("costCategoryGroup", costCategoryGroupResource, costCategory), costCategoryGroupResources);
-    }
-
 }

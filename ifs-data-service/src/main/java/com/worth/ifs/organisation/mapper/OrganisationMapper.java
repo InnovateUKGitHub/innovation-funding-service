@@ -2,7 +2,6 @@ package com.worth.ifs.organisation.mapper;
 
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
-import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.mapper.OrganisationTypeMapper;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
@@ -16,7 +15,6 @@ import org.mapstruct.Mappings;
     config = GlobalMapperConfig.class,
     uses = {
         ProcessRoleMapper.class,
-        ApplicationFinanceMapper.class,
         OrganisationAddressMapper.class,
         OrganisationTypeMapper.class,
         UserMapper.class
@@ -26,6 +24,7 @@ public abstract class OrganisationMapper extends BaseMapper<Organisation, Organi
 
     @Mappings({
             @Mapping(source = "organisationType.name", target = "organisationTypeName"),
+            @Mapping(target = "applicationFinances", ignore = true)
     })
     @Override
     public abstract OrganisationResource mapToResource(Organisation domain);

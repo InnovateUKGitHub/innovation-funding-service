@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata.builders;
 
+import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
@@ -12,18 +13,21 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static com.worth.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static java.util.Collections.emptyList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Generates assessor invites and gives the ability to accept them
  */
 public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInviteDataBuilder> {
 
-    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser) {
+    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser, String innovationAreaName) {
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
             final Competition competition = retrieveCompetitionByName(competitionName);
+            final Category innovationArea =  retrieveInnovationAreaByName(innovationAreaName);
 
             final CompetitionInvite invite = newCompetitionInvite().
                     withCompetition(competition).
@@ -32,6 +36,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     withHash(inviteHash).
                     withName(name).
                     withUser(existingUser.orElse(null)).
+                    withInnovationArea(innovationArea).
                     build();
 
             CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
@@ -68,5 +73,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
         return null;
     }
 
-
+    private Category retrieveInnovationAreaByName(String name) {
+        return !isBlank(name) ? categoryRepository.findByNameAndType(name, INNOVATION_AREA) : null;
+    }
 }

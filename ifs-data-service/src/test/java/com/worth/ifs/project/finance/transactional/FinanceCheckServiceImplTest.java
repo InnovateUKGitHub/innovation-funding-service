@@ -19,6 +19,7 @@ import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.workflow.domain.ActivityState;
 import com.worth.ifs.workflow.resource.State;
@@ -235,7 +236,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
-        Organisation organisation = newOrganisation().build();
+        Organisation organisation = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withProject(project).withOrganisation(organisation).build(3);
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
@@ -258,7 +259,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(2).getId())).thenReturn(process);
         when(projectUserMapperMock.mapToResource(process.getParticipant())).thenReturn(projectUser);
         when(userMapperMock.mapToResource(process.getInternalParticipant())).thenReturn(user);
-
+        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationType().getName())).thenReturn(true);
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
     }
