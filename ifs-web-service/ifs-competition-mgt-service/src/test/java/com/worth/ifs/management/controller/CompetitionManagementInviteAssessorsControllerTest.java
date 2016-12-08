@@ -188,6 +188,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
+                .withUserId(1L, 2L)
                 .withFirstName("Dave", "John")
                 .withLastName("Smith", "Barnes")
                 .withEmail("dave@email.com", "john@email.com")
