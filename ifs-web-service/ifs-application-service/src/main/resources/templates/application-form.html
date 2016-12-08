@@ -20,10 +20,9 @@
         <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
                 th:with="appIsClosed=${!currentCompetition.isOpen() or !currentApplication.isOpen()}, readonly=${!currentCompetition.isOpen() or !currentApplication.isOpen()}" novalidate="novalidate">
             <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                <h1 class="heading-medium error-summary-heading">
-                    Invalid input provided
-                </h1>
+                <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
                 <ul class="error-summary-list">
                     <th:block th:each="err : ${#fields.errors('*')}" th:with="markAsCompleteError=#{application.validation.MarkAsCompleteFailed}">
                         <li th:classappend="${err.equals(markAsCompleteError)} ? 'list-header' : ''" th:text="${err}"></li>
@@ -33,7 +32,7 @@
 
             <div class="question" th:each="formInput, status : ${questionFormInputs?.get(currentQuestion?.id)}" th:id="'form-input-'+${formInput.id}"
                  th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
-                <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
+                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
 
             <div th:if="${currentSection}" th:remove="tag">
@@ -47,9 +46,9 @@
                     <th:block th:if="${financeView != null}">
                         <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
                              th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                            <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
-                            <div th:replace="'finance/'+${financeView} :: ${formInput.formInputTypeTitle}" />
-                            <div th:replace="finance/finance-summary :: ${formInput.formInputTypeTitle}" />
+                            <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                            <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
+                            <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
                         </div>
                     </th:block>
                 </div>

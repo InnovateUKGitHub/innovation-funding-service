@@ -16,14 +16,15 @@ Server-side validations
     [Documentation]    INFUND-1481
     ...
     ...    INFUND-5432
-    [Tags]
-    Given The user should see the element    link=your contract    #his checks the alert message on the top od the page
+    [Tags]    HappyPath
+    Given The user should see the element    link=your contract    #his checks the alert message on the top of the page
     And the user clicks the button/link    jQuery=a:contains("your contract")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should see an error    Please agree to the terms and conditions
 
 Terms and Conditions
     [Documentation]    INFUND-1481
+    [Tags]
     When the user clicks the button/link    link=Download terms of contract
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf
     And The user goes back to the previous page
@@ -41,12 +42,12 @@ Review Annexes
     And the user should see the text in the page    Information management
     And the user clicks the button/link    link=Back to your terms of contract
 
-Client-side validations and redirect to dashboard
+Client-side validations and Submit
     [Documentation]    INFUND-1481
     ...
     ...
     ...    INFUND-5432
-    [Tags]
+    [Tags]    HappyPath
     When the user selects the checkbox    id=agreesToTerms1
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and continue")

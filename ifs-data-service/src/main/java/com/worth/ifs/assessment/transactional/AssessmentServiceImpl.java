@@ -3,9 +3,7 @@ package com.worth.ifs.assessment.transactional;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.mapper.AssessmentMapper;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -13,7 +11,10 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -21,6 +22,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service providing operations around {@link com.worth.ifs.assessment.domain.Assessment} data.
@@ -53,6 +55,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
+        return serviceSuccess(assessmentRepository.getTotalScore(assessmentId));
+    }
+
+    @Override
     public ServiceResult<Void> recommend(Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecision)) {
@@ -80,5 +87,33 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             }
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissionsResource) {
+        List<Assessment> assessments = assessmentRepository.findAll(assessmentSubmissionsResource.getAssessmentIds());
+        List<Error> failures = new ArrayList<>();
+        Set<Long> foundAssessmentIds = new HashSet<>();
+
+        assessments.forEach(assessment -> {
+            foundAssessmentIds.add(assessment.getId());
+
+            if (!assessmentWorkflowHandler.submit(assessment) || !assessment.isInState(AssessmentStates.SUBMITTED)) {
+                failures.add(new Error(ASSESSMENT_SUBMIT_FAILED, assessment.getId(), assessment.getTarget().getName()));
+            }
+        });
+
+        failures.addAll(
+                assessmentSubmissionsResource.getAssessmentIds().stream()
+                        .filter(assessmentId -> !foundAssessmentIds.contains(assessmentId))
+                        .map(assessmentId -> notFoundError(Assessment.class, assessmentId))
+                        .collect(toList())
+        );
+
+        if (!failures.isEmpty()) {
+            return serviceFailure(failures);
+        }
+
+        return serviceSuccess();
     }
 }

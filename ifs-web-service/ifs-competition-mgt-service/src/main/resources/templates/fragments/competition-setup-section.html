@@ -146,7 +146,7 @@
 
             <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="executiveUserId">
-                    <span class="form-label-bold">Competition executive</span>
+                    <span class="form-label-bold">Competition Executive</span>
                     <span th:if="${#fields.hasErrors('executiveUserId')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
                     </span>
@@ -194,7 +194,7 @@
                 <dt>Competition Innovation Lead</dt>
                 <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.leadTechnologistUserId}">Innovation Lead</dd>
 
-                <dt>Competition executive</dt>
+                <dt>Competition Executive</dt>
                 <dd th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
 
                <dt>State aid</dt>
@@ -290,7 +290,7 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}"/>
 
-                        <button th:if="${iteration.index != 0}" class="buttonlink alignright remove-funder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -306,8 +306,7 @@
 
                     <div class="alignright">
                         <input type="hidden" name="removeFunder" />
-                        <input type="hidden" name="funderCount" id="co-funder-count" th:value="${competitionSetupForm.fundersCount}" />
-                        <button class="buttonlink" name="add-cofunder" id="add-cofunder">+Add co-funder</button>
+                        <button class="buttonlink" name="add-cofunder" data-add-row="cofunder">+Add co-funder</button>
                     </div>
                 </div>
             </div>
@@ -528,7 +527,7 @@
 	                    </span>
 	                </legend>
 
-		            <label class="block-label selected" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
+		            <label class="block-label" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
 		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
@@ -810,6 +809,7 @@
             <div class="grey-box">
                 <h3 class="heading-small no-margin">Application details</h3>
                 <ol class="list-number">
+                    <li><a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application details</a></li>
                     <li th:each="question : ${projectDetails}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
                 </ol>
             </div>
@@ -853,7 +853,7 @@
             <h2 class="heading-small">How many assessors are required for each application?</h2>
             <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
-                    <legend>How many assessors are required for each application?</legend>
+                    <legend class="visuallyhidden">How many assessors are required for each application?</legend>
                     <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
                     </span>
@@ -874,11 +874,12 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}" />
                     </span>
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0"
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
 
                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
-                       data-required-errormessage="Please enter how much assessors will be paid"
-                       data-min-errormessage="Please enter how much assessors will be paid"
+                       data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
+                                     data-min-errormessage=#{validation.assessorsform.assessorPay.min},
+                                     data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
                        th:errorclass="field-error"/>
             </div>
 
@@ -909,4 +910,3 @@
         </li>
     </ul>
 </th:block>
-

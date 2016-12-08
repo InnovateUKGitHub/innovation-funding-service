@@ -71,13 +71,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
 
     public static class TestFormInputService implements FormInputService {
 
-
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
-
-        @Override
-        public ServiceResult<FormInputTypeResource> findFormInputType(Long id) {
-            return null;
-        }
 
         @Override
         public ServiceResult<FormInputResource> findFormInput(Long id) {

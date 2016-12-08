@@ -1,5 +1,7 @@
 package com.worth.ifs.login;
 
+import com.worth.ifs.login.form.ResetPasswordForm;
+import com.worth.ifs.login.form.ResetPasswordRequestForm;
 import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.InvalidURLException;

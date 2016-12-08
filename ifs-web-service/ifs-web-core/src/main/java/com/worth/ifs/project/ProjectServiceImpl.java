@@ -268,6 +268,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> removeGeneratedGrantOfferLetter(Long projectId) {
+        return projectRestService.removeGeneratedGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return projectRestService.submitGrantOfferLetter(projectId).toServiceResult();
     }
@@ -296,4 +301,25 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+        return projectRestService.sendGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+        return projectRestService.isSendGrantOfferLetterAllowed(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return projectRestService.isGrantOfferLetterAlreadySent(projectId).toServiceResult();
+    }
+
 }

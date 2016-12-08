@@ -1,19 +1,21 @@
 package com.worth.ifs.competition.security;
 
-import com.worth.ifs.*;
-import com.worth.ifs.commons.service.*;
-import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competition.transactional.*;
-import com.worth.ifs.user.resource.*;
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.transactional.CompetitionSetupQuestionService;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
-import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.*;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.*;
-import static com.worth.ifs.user.builder.UserResourceBuilder.*;
-import static com.worth.ifs.user.resource.UserRoleType.*;
+import static com.worth.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;

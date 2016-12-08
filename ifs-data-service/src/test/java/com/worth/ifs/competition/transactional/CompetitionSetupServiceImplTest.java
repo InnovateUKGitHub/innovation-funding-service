@@ -1,6 +1,7 @@
 package com.worth.ifs.competition.transactional;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.repository.GuidanceRowRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionType;
@@ -8,47 +9,40 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.AssessorCountOption;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.domain.CompetitionType;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.AssessorCountOptionRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.repository.CompetitionTypeRepository;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.form.repository.FormInputRepository;
-
-import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.repository.*;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.commons.service.*;
-import com.worth.ifs.competition.domain.*;
-import com.worth.ifs.competition.repository.*;
-import com.worth.ifs.form.repository.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
-import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-
-import static com.worth.ifs.application.builder.GuidanceRowBuilder.*;
-import static com.worth.ifs.application.builder.QuestionBuilder.*;
-import static com.worth.ifs.application.builder.SectionBuilder.*;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.*;
-import static com.worth.ifs.form.builder.FormInputBuilder.*;
-
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -92,7 +86,7 @@ public class CompetitionSetupServiceImplTest {
 						.withSectionType(SectionType.GENERAL)
 						.withQuestions(newQuestion()
 								.withFormInputs(newFormInput()
-										.withFormInputGuidanceRows(newFormInputGuidanceRow().build(2)
+										.withGuidanceRows(newFormInputGuidanceRow().build(2)
 										).build(2)
 							).build(2)
 					).build(2)
@@ -245,5 +239,4 @@ public class CompetitionSetupServiceImplTest {
 		assertNull(competition.getAssessorCount());
 		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
 	}
-
 }

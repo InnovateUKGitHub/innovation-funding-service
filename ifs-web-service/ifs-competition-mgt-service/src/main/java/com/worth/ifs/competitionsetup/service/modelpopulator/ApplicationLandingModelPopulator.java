@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionType;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,10 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
 
     private List<QuestionResource> getSortedProjectDetails(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Project details")).findFirst();
-        return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
+        return section.isPresent() ? questionResources.stream()
+                .filter(questionResource ->  section.get().getQuestions().contains(questionResource.getId()))
+                .filter(questionResource -> !questionResource.getShortName().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS.getShortName()))
+                .collect(Collectors.toList())
                 : new ArrayList<>();
     }
 }

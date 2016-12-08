@@ -7,16 +7,26 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.transactional.ProjectGrantOfferService;
+import com.worth.ifs.user.resource.UserRoleType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static org.mockito.Mockito.*;
 
 public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTest<ProjectGrantOfferService> {
 
@@ -39,6 +49,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -54,6 +67,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -70,6 +86,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -99,6 +118,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -114,6 +136,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -129,6 +154,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -140,6 +168,29 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId), () -> {
             verify(projectGrantOfferPermissionRules).projectManagerSubmitGrantOfferLetter(projectId, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
+    public void testGenerateGrantOfferLetterDeniedIfNotCorrectGlobalRoles() {
+
+        final Long projectId = 1L;
+
+        FileEntryResource fileEntryResource = newFileEntryResource().build();
+
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+                .collect(toList());
+
+        nonCompAdminRoles.forEach(role -> {
+
+            setLoggedInUser(
+                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                classUnderTest.generateGrantOfferLetter(projectId, fileEntryResource);
+                Assert.fail("Should not have been able to generate GOL without the global Comp Admin role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
         });
     }
 
@@ -192,6 +243,16 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
+        public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
@@ -205,5 +266,6 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
             return null;
         }
+
     }
 }

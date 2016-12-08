@@ -5,40 +5,46 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.builder.MonitoringOfficerBuilder;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.finance.domain.CostCategoryType;
 import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.UserRoleType;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -48,7 +54,6 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static com.worth.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -63,6 +68,10 @@ import static com.worth.ifs.invite.builder.ProjectInviteResourceBuilder.newInvit
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
+import static com.worth.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
+import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
+import static com.worth.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
+import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static com.worth.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static com.worth.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
@@ -80,6 +89,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static com.worth.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -92,6 +102,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
+
+    @Mock
+    private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
+
+    @Mock
+    private FinanceChecksGenerator financeChecksGeneratorMock;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -111,7 +127,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Before
     public void setUp() {
 
-        organisation = newOrganisation().build();
+        organisation = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
 
         leadApplicantRole = newRole(LEADAPPLICANT).build();
         projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
@@ -172,7 +191,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withLeadOrganisation(true).
                 build();
 
-        Project savedProject = newProject().withApplication(application).
+        Project savedProject = newProject().
+                withId(newProjectResource.getId()).
+                withApplication(application).
                 withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
@@ -182,9 +203,22 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
+
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
+                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess());
+
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
+        when(projectWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
         when(projectMapperMock.mapToResource(savedProject)).thenReturn(newProjectResource);
 
@@ -192,8 +226,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccessObject());
 
+        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
+        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
+        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
+
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
+        verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
+        verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
+        verify(projectMapperMock).mapToResource(savedProject);
     }
 
     @Test
@@ -665,7 +706,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testUpdateProjectAddressToNewProjectAddress() {
 
-        Organisation leadOrganisation = newOrganisation().withId(1L).build();
+        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress().build();
         AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
@@ -730,7 +771,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withPhoneNumber("078323455")
                 .build();
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE));
     }
@@ -744,7 +785,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectid)).thenReturn(projectInDB);
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
         assertTrue(result.getFailure().is(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
     }
@@ -769,7 +810,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
         // Assert that the MO in DB is updated with the correct values from MO Resource
         Assert.assertEquals("First name of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getFirstName(), monitoringOfficerResource.getFirstName());
@@ -777,6 +818,37 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Assert.assertEquals("Email of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getEmail(), monitoringOfficerResource.getEmail());
         Assert.assertEquals("Phone number of MO in DB should be updated with the value from MO Resource", monitoringOfficerInDB.getPhoneNumber(), monitoringOfficerResource.getPhoneNumber());
 
+        Optional<SaveMonitoringOfficerResult> successResult = result.getOptionalSuccessObject();
+        assertTrue(successResult.isPresent());
+        assertTrue(successResult.get().isMonitoringOfficerSaved());
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveMOWhenMODetailsRemainsTheSame() {
+
+        Long projectId = 1L;
+
+        // The details for the MO is set to the same as in resource
+        MonitoringOfficer monitoringOfficerInDB = MonitoringOfficerBuilder.newMonitoringOfficer()
+                .withFirstName("abc")
+                .withLastName("xyz")
+                .withEmail("abc.xyz@gmail.com")
+                .withPhoneNumber("078323455")
+                .build();
+
+
+        Project projectInDB = newProject().withId(1L).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(monitoringOfficerInDB);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
+
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectId, monitoringOfficerResource);
+
+        Optional<SaveMonitoringOfficerResult> successResult = result.getOptionalSuccessObject();
+        assertTrue(successResult.isPresent());
+        assertFalse(successResult.get().isMonitoringOfficerSaved());
         assertTrue(result.isSuccess());
     }
 
@@ -791,8 +863,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(monitoringOfficerRepositoryMock.findOneByProjectId(monitoringOfficerResource.getProject())).thenReturn(null);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
 
-        ServiceResult<Void> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
+        ServiceResult<SaveMonitoringOfficerResult> result = service.saveMonitoringOfficer(projectid, monitoringOfficerResource);
 
+        Optional<SaveMonitoringOfficerResult> successResult = result.getOptionalSuccessObject();
+        assertTrue(successResult.isPresent());
+        assertTrue(successResult.get().isMonitoringOfficerSaved());
         assertTrue(result.isSuccess());
     }
 
@@ -1239,7 +1314,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
-                withGrantOfferStatus(NOT_STARTED).
+                withGrantOfferStatus(NOT_REQUIRED).
                 build();
 
         List<ProjectPartnerStatusResource> expectedFullPartnerStatuses = newProjectPartnerStatusResource().
@@ -1302,6 +1377,270 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     }
 
+    @Test
+    public void testSendGrantOfferLetterNoGol(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testSendGrantOfferLetterSendFails(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        FileEntry golFile = newFileEntry().withMediaType("application/pdf").withFilesizeBytes(10).build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testSendGrantOfferLetterNoProject(){
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+    @Test
+    public void testSendGrantOfferLetterSuccess(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(golWorkflowHandlerMock.grantOfferLetterSent(any())).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSendGrantOfferLetterFailure(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(golWorkflowHandlerMock.grantOfferLetterSent(any())).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowed() {
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isSendAllowed(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowedFails() {
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isSendAllowed(p)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowedNoProject() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySent() {
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySentFails() {
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterActionRequired() {
+
+        Role partnerRole = newRole().withType(FINANCE_CONTACT).build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+
+        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        Organisation o = application.getLeadOrganisation();
+        o.setOrganisationType(businessOrganisationType);
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).build();
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isSent(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+    }
+
+    @Test
+    public void testIsGrantOfferLetterIsPending() {
+
+        Role partnerRole = newRole().withType(FINANCE_CONTACT).build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+
+        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        Organisation o = application.getLeadOrganisation();
+        o.setOrganisationType(businessOrganisationType);
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isSent(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+
+        assertTrue(result.isSuccess() && PENDING.equals(result.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+    }
+
+    @Test
+    public void testIsGrantOfferLetterComplete() {
+
+        Role partnerRole = newRole().withType(FINANCE_CONTACT).build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+
+        OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        Organisation o = application.getLeadOrganisation();
+        o.setOrganisationType(businessOrganisationType);
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(LocalDateTime.now()).build();
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isSent(p)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+
+        assertTrue(result.isSuccess() && COMPLETE.equals(result.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySentNoProject() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
                                                                    Consumer<FileEntry> fileSetter2,
                                                                    Supplier<ServiceResult<Boolean>> getConditionFn) {
@@ -1350,26 +1689,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccessObject());
-
-    }
-
-    private void assertUploadedFilesExist(Consumer<FileEntry> fileSetter1, Consumer<FileEntry> fileSetter2,
-                                          Supplier<List<ServiceResult<FileAndContents>>> getFileContentsFnForFiles) {
-
-
-        Supplier<InputStream> inputStreamSupplier1 = () -> null;
-        Supplier<InputStream> inputStreamSupplier2 = () -> null;
-
-        List<FileEntryResource> fileEntryResourcesToGet = getFileEntryResources(fileSetter1, fileSetter2, inputStreamSupplier1, inputStreamSupplier2);
-
-        List<ServiceResult<FileAndContents>> results = getFileContentsFnForFiles.get();
-
-        assertTrue(results.get(0).isSuccess());
-        assertTrue(results.get(1).isSuccess());
-        assertEquals(fileEntryResourcesToGet.get(0), results.get(0).getSuccessObject().getFileEntry());
-        assertEquals(fileEntryResourcesToGet.get(1), results.get(1).getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier1, results.get(0).getSuccessObject().getContentsSupplier());
-        assertEquals(inputStreamSupplier2, results.get(1).getSuccessObject().getContentsSupplier());
 
     }
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.repository;
 
 import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
 import com.worth.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -19,6 +20,10 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Set<Assessment> findAll();
 
+    @Override
+    List<Assessment> findAll(Iterable<Long> assessmentIds);
+
+    @Override
     Assessment findOneByParticipantId(Long participantId);
 
     List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
@@ -45,6 +50,20 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             "          AND p.id = :id" +
             ")" +
             "      AND fi.scope = 'ASSESSMENT'" +
+            "      AND fi.active = TRUE" +
             "      AND p.id = :id", nativeQuery = true)
     boolean isFeedbackComplete(@Param("id") Long id);
+
+    @Query(value = "SELECT NEW com.worth.ifs.assessment.resource.AssessmentTotalScoreResource(" +
+            "  CAST(COALESCE(SUM(afir.value),0) AS int)," +
+            "  CAST(SUM(q.assessorMaximumScore) AS int)) " +
+            "FROM Assessment a" +
+            "  JOIN a.target.competition.questions q" +
+            "  JOIN q.formInputs fi" +
+            "  LEFT JOIN a.responses afir" +
+            "    ON afir.formInput.id = fi " +
+            "WHERE fi.type = com.worth.ifs.form.resource.FormInputType.ASSESSOR_SCORE" +
+            "  AND fi.active = TRUE" +
+            "  AND a.id = :id")
+    AssessmentTotalScoreResource getTotalScore(@Param("id") Long id);
 }

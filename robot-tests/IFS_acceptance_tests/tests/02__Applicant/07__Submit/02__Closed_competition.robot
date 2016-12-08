@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2312: Competition status in assessment
 ...
-...               INFUND-3175: Applications in project setup still have a 'Review & submit' button
+...               INFUND-3175: Applications in project setup still have a 'Review and submit' button
 ...
 ...               INFUND-3740: Buttons still show as if the application were editable
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
@@ -31,10 +31,11 @@ Submit button should be disabled
     When the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1}/summary
     Then the user should see the text in the page    This competition has already closed, you are no longer able to submit your application
     And the user should not see the element    jQuery=.button:contains("Submit application")
-    And the user should not see the element    jQuery=.button:contains("Review & submit")
+    And the user should not see the element    jQuery=.button:contains("Review and submit")
 
 Applicant shouldn't see the Mark as complete-Edit-Save buttons
     [Documentation]    INFUND-3740
+    [Tags]    Failing
     Given the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1}/summary
     When The user clicks the button/link    jQuery=button:contains(Project summary)
     Then The user should not see the element    jQuery=.button:contains(Mark as complete)

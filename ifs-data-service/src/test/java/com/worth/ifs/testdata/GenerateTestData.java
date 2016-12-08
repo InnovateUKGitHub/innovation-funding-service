@@ -1,5 +1,6 @@
 package com.worth.ifs.testdata;
 
+import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -18,6 +19,7 @@ import com.worth.ifs.sil.experian.resource.VerificationResult;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.testdata.builders.*;
 import com.worth.ifs.testdata.builders.data.BaseUserData;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.*;
@@ -52,6 +54,7 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.finance.handler.OrganisationFinanceDelegate.UNIVERSITY_HEI;
 import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static com.worth.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -624,10 +627,12 @@ public class GenerateTestData extends BaseIntegrationTest {
         CompetitionDataBuilder basicInformation =
                 existingCompetitionId.map(id -> competitionDataBuilder.
                         withExistingCompetition(1L).
-                        withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory)
+                        withBasicData(line.name, line.description, line.type, line.innovationArea,
+                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive)
                 ).orElse(competitionDataBuilder.
                         createCompetition().
-                        withBasicData(line.name, line.description, line.type, line.innovationArea, line.innovationSector, line.researchCategory).
+                        withBasicData(line.name, line.description, line.type, line.innovationArea,
+                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
                 withOpenDate(line.openDate).
@@ -635,7 +640,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
                 withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorEndDate(line.assessorEndDate);
+                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                withAssessorEndDate(line.assessorEndDate).
+                withAssessmentClosedDate(line.assessmentClosedDate);
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
@@ -726,27 +733,35 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         AssessorDataBuilder builder = assessorUserBuilder;
 
+        Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
+
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
-                    invite.name, invite.hash);
+                    invite.name, invite.hash, existingUser);
         }
 
         String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
 
-        AssessorDataBuilder builderWithUserRegistration = builder.
-                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash).
-                registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
-                        line.ethnicity, line.gender, line.disability, inviteHash);
+        AssessorDataBuilder baseBuilder = builder.
+                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser);
+
+        if (!existingUser.isPresent()) {
+            baseBuilder = baseBuilder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
+                    line.ethnicity, line.gender, line.disability, inviteHash);
+        } else {
+            baseBuilder = baseBuilder.addAssessorRole();
+        }
 
         if (InviteStatus.OPENED.equals(line.inviteStatus)) {
-            builderWithUserRegistration.acceptInvite(inviteHash).build();
+            baseBuilder.acceptInvite(inviteHash).build();
         } else {
-            builderWithUserRegistration.build();
+            baseBuilder.build();
         }
     }
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
-        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash).build();
+        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash,
+                userRepository.findByEmail(line.email)).build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {
@@ -764,8 +779,8 @@ public class GenerateTestData extends BaseIntegrationTest {
             OrganisationDataBuilder organisation = organisationBuilder.
                     createOrganisation(line.organisationName, matchingOrganisationDetails.companyRegistrationNumber, lookupOrganisationType(matchingOrganisationDetails.organisationType));
 
-            if (matchingOrganisationDetails.addressType != null) {
-                organisation = organisation.withAddress(matchingOrganisationDetails.addressType,
+            for (OrganisationAddressType organisationType : matchingOrganisationDetails.addressType) {
+                organisation = organisation.withAddress(organisationType,
                         matchingOrganisationDetails.addressLine1, matchingOrganisationDetails.addressLine2,
                         matchingOrganisationDetails.addressLine3, matchingOrganisationDetails.town,
                         matchingOrganisationDetails.postcode, matchingOrganisationDetails.county);
@@ -787,7 +802,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
+            case UNIVERSITY_HEI : return OrganisationTypeEnum.ACADEMIC;
             default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }
     }

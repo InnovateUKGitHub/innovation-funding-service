@@ -66,10 +66,10 @@
                     <option value="Assigned assessors">Assigned assessors</option>
                 </select>
                 <select th:if="${sortByType==2}" name="sort-by" id="sort-by" class="form-control">
-                    <option value="Title">Assessor Name</option>
+                    <option value="Title">Assessor name</option>
                     <option value="Employer">Employer</option>
                     <option value="Type">Type</option>
-                    <option value="Innovation Area">Innovation Area</option>
+                    <option value="Innovation Area">Innovation area</option>
                     <option value="Total applications">Total applications</option>
                     <option value="Applications this competition">Applications this competition</option>
                 </select>
@@ -86,7 +86,7 @@
                     <option value="Title">Assessor Name</option>
                     <option value="Employer">Employer</option>
                     <option value="Type">Type</option>
-                    <option value="Innovation Area">Innovation Area</option>
+                    <option value="Innovation Area">Innovation area</option>
                     <option value="Total applications">Total applications</option>
                     <option value="Assigned applications">Assigned applications</option>
                     <option value="Accepted applications">Accepted applications</option>
@@ -96,7 +96,7 @@
                 <select th:if="${sortByType==5}" name="sort-by" id="sort-by" class="form-control">
                     <option value="Title">Assessor Name</option>
                     <option value="Type">Type</option>
-                    <option value="Innovation Area">Innovation Area</option>
+                    <option value="Innovation Area">Innovation area</option>
                     <option value="Total applications">Total applications</option>
                     <option value="Assigned applications">Assigned applications</option>
                     <option value="Accepted applications">Accepted applications</option>
@@ -127,13 +127,13 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
                     <th scope="col">Innovation area</th>
                     <th scope="col">Lead organisation</th>
 
                     <th:block th:unless="${status == 'removed'}">
-                        <th class="aligncentre" scope="col">Assigned assessors</th>
+                        <th class="aligncentre" scope="col">Assessors</th>
                         <th scope="col"><span class="visuallyhidden">Assign</span></th>
                     </th:block>
 
@@ -239,10 +239,10 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Lead Organisation</th>
-                    <th class="aligncentre" scope="col">Assessor</th>
+                    <th scope="col">Lead organisation</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <!--<th class="aligncentre" scope="col">Started</th>-->
                     <th class="aligncentre" scope="col">Completed</th>
@@ -321,10 +321,11 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
                     <th scope="col">Lead organisation</th>
-                    <th class="aligncentre" scope="col">Assigned assessors</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
+                    <th class="aligncentre" scope="col">Notified</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Submitted</th>
@@ -337,9 +338,10 @@
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Wessex University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"><strong class="show-mobile">Submitted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="alignright">
                         <a href="/prototypes/545-application-feedback?internal">Review</a>
                     </td>
@@ -349,6 +351,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
@@ -361,8 +364,9 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                    <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-application">Remove</a>
@@ -373,6 +377,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
@@ -385,6 +390,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
@@ -403,10 +409,10 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
                     <th scope="col">Lead organisation</th>
-                    <th class="aligncentre" scope="col">Assigned assessors</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
                     <th scope="col">Reason</th>
                 </tr>
             </thead>
@@ -431,12 +437,11 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Lead Organisation</th>
-                    <th class="aligncentre" scope="col">Assigned</th>
+                    <th scope="col">Lead organisation</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
                     <th class="aligncentre" scope="col">Accepted</th>
-                    <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Submitted</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
                 </tr>
@@ -446,7 +451,6 @@
                     <td><a href="#">10001000000</a></td>
                     <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td>Wessex University</td>
-                    <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
@@ -461,7 +465,6 @@
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td class="aligncentre">1</td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin">Assign</a>
                     </td>
@@ -470,7 +473,6 @@
                     <td><a href="#">10001000002</a></td>
                     <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td>Horizon Ltd</td>
-                    <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
@@ -484,7 +486,6 @@
                     <td>Zodiac Industries Ltd</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td class="aligncentre">5</td>
                     <td class="aligncentre">2</td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin">Assign</a>
@@ -494,7 +495,6 @@
                     <td><a href="#">10001000004</a></td>
                     <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td>Durham University</td>
-                    <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
@@ -514,9 +514,9 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Lead Organisation</th>
+                    <th scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th scope="col">Remove</th>
                 </tr>
@@ -552,7 +552,7 @@
         <table id="application-list">
             <thead>
             <tr>
-                <th scope="col">App No</th>
+                <th scope="col">Application number</th>
                 <th scope="col">Title</th>
                 <th scope="col">Lead Organisation</th>
                 <th class="aligncentre" scope="col">Assigned</th>
@@ -617,10 +617,11 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">App No</th>
+                    <th scope="col">Application number</th>
                     <th scope="col">Title</th>
                     <th scope="col">Lead organisation</th>
-                    <th class="aligncentre" scope="col">Assigned assessors</th>
+                    <th class="aligncentre" scope="col">Assessors</th>
+                    <th class="aligncentre" scope="col">Notified</th>
                     <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
                 </tr>
             </thead>
@@ -633,6 +634,7 @@
                     <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
                     <td>Zodiac Industries Ltd</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin" id="prototype-row-one-reassign">Re-assign</a>
                     </td>
@@ -642,6 +644,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin" id="prototype-row-two-reassign">Re-assign</a>
                     </td>
@@ -651,6 +654,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin" id="prototype-row-three-reassign">Re-assign</a>
                     </td>
@@ -660,6 +664,7 @@
                     <td>Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td>Plymouth University</td>
                     <td class="aligncentre">4</td>
+                    <td class="aligncentre">-</td>
                     <td class="alignright">
                         <a href="#" class="button-secondary no-margin" id="prototype-row-four-reassign">Re-assign</a>
                     </td>
@@ -739,12 +744,12 @@
         <table id="application-list">
             <thead>
                 <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Lead organisation</th>
-                    <th scope="col">Lead applicant</th>
-                    <th scope="col">Include in group inform</th>
-                    <th scope="col">Inform applicant</th>
+                    <th scope="col" class="width-10-percent">Application number</th>
+                    <th scope="col" class="width-45-percent">Name</th>
+                    <th scope="col" class="width-10-percent">Lead organisation</th>
+                    <th scope="col" class="width-10-percent">Lead applicant</th>
+                    <th scope="col" class="width-10-percent"><span class="visuallyhidden">Include in group inform</span></th>
+                    <th scope="col" class="width-15-percent"><span class="visuallyhidden">Inform</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -759,7 +764,7 @@
                             Include in group inform
                         </label>
                     </td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button">Inform applicant</a>
                     </td>
                 </tr>
@@ -769,7 +774,7 @@
                     <td>Wessex University</td>
                     <td>James Brown</td>
                     <td>-</td>
-                    <td><strong>Informed</strong></td>
+                    <td class="alignright"><strong>Informed</strong></td>
                 </tr>
                 <tr>
                     <td><a href="#">10001000003</a></td>
@@ -782,7 +787,7 @@
                             Include in group inform
                         </label>
                     </td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button">Inform applicant</a>
                     </td>
                 </tr>
@@ -792,7 +797,7 @@
                     <td>Wessex University</td>
                     <td>James Brown</td>
                     <td>-</td>
-                    <td><strong>Informed</strong></td>
+                    <td class="alignright"><strong>Informed</strong></td>
                 </tr>
                 <tr>
                     <td><a href="#">10001000003</a></td>
@@ -805,7 +810,7 @@
                             Include in group inform
                         </label>
                     </td>
-                    <td>
+                    <td class="alignright">
                         <a href="#" class="button">Inform applicant</a>
                     </td>
                 </tr>
@@ -875,7 +880,7 @@
                 <tr>
                     <th scope="col">Assessor</th>
                     <th scope="col">Type</th>
-                    <th scope="col">Innovation Area</th>
+                    <th scope="col">Innovation area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Applications this competition</th>
                     <th scope="col"><span class="visuallyhidden">Assign</span></th>
@@ -1077,7 +1082,7 @@
                 <tr>
                     <th scope="col">Assessor</th>
                     <th scope="col">Type</th>
-                    <th scope="col">Innovation Area</th>
+                    <th scope="col">Innovation area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Notified</th>
@@ -1356,7 +1361,7 @@
                 <tr>
                     <th scope="col">Assessor</th>
                     <th scope="col">Type</th>
-                    <th scope="col">Innovation Area</th>
+                    <th scope="col">Innovation area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Notified</th>

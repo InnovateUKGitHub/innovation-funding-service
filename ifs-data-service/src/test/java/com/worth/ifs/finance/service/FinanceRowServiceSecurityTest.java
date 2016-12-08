@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.service;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
@@ -14,6 +13,7 @@ import com.worth.ifs.finance.handler.item.FinanceRowHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.security.*;
@@ -31,9 +31,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static com.worth.ifs.finance.builder.FinanceRowBuilder.newFinanceRow;
+import static com.worth.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static com.worth.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static com.worth.ifs.finance.service.FinanceRowServiceSecurityTest.TestFinanceRowService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -47,7 +48,7 @@ import static org.mockito.Mockito.*;
 public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<FinanceRowService> {
 
     private FinanceRowMetaFieldPermissionsRules financeRowMetaFieldPermissionsRules;
-    private FinanceRowPermissionRules costPermissionsRules;
+    private ApplicationFinanceRowPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
@@ -60,7 +61,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Before
     public void lookupPermissionRules() {
         financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
-        costPermissionsRules = getMockPermissionRulesBean(FinanceRowPermissionRules.class);
+        costPermissionsRules = getMockPermissionRulesBean(ApplicationFinanceRowPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
@@ -146,7 +147,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testUpdateCost() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.updateCost(costId, new AcademicCost()),
                 () -> {
@@ -168,7 +169,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     @Test
     public void testDeleteCost() {
         final Long costId = 1L;
-        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newFinanceRow().with(id(costId)).build());
+        when(financeRowLookupStrategy.getFinanceRow(costId)).thenReturn(newApplicationFinanceRow().with(id(costId)).build());
         assertAccessDenied(
                 () -> classUnderTest.deleteCost(costId),
                 () -> {
@@ -366,8 +367,8 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         }
 
         @Override
-        public ServiceResult<List<FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
-            return serviceSuccess(newFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        public ServiceResult<List<? extends FinanceRow>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
+            return serviceSuccess(newApplicationFinanceRow().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
@@ -468,6 +469,15 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
             return null;
         }
 
+        @Override
+        public ServiceResult<ProjectFinanceResource> updateProjectCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId) {
+            return null;
+        }
     }
 }
 

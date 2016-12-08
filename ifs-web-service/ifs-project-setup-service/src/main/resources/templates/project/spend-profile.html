@@ -38,18 +38,18 @@
       </div>
 
 
-        <th:block th:if ="${model.markedAsComplete and form == null and !model.submitted}">
+        <th:block th:if ="${model.markedAsComplete and form == null and !model.submitted and !model.projectManager}">
             <div class="success-alert extra-margin-bottom">
-                <p>We have reviewed and confirmed your project costs.
-                   You should now develop a spend profile together with your project partners.
-                   This is so we can plan the allocation of the grant funding to your project.
+                <p>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
                 </p>
             </div>
         </th:block>
-        <p>Your project costs have been reviewed and confirmed by Innovate UK.
-           We now require a <strong>spend profile</strong> from you so that we can plan allocation of the grant funding to your project.
-           This spend profile should be developed collaboratively with your project partners.
-        </p>
+        <th:block th:if ="${model.markedAsComplete and !model.submitted and model.projectManager and model.userPartOfThisOrganisation}">
+            <div class="success-alert extra-margin-bottom">
+                <p>Your spend profile is marked as complete. You can still edit this page. When all partners have submitted their spend profiles you can submit them to us.</p>
+            </div>
+        </th:block>
+        <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
         <dl class="standard-definition-list">
           <dt>Project start date</dt>
           <dd>
@@ -253,12 +253,16 @@
         <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
         <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-        <th:block th:unless="${model.markedAsComplete or !model.userPartOfThisOrganisation}">
-            <p class="extra-margin">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
-            <form method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" >
-                <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
-            </form>
-        </th:block>
+        <form th:unless="${model.markedAsComplete or !model.userPartOfThisOrganisation}" method="post" th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
+          <th:block th:if="${model.leadPartner}">
+              <p class="extra-margin">When you are satisfied with the spend profile, mark the section as complete. This will allow you to submit the spend profile for the project to Innovate UK. You can still return to edit this page before you choose to submit.</p>
+              <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
+          </th:block>
+          <th:block th:unless="${model.leadPartner}">
+              <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
+              <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Submit to lead partner</button>
+          </th:block>
+        </form>
       </div>
 
     </th:block>

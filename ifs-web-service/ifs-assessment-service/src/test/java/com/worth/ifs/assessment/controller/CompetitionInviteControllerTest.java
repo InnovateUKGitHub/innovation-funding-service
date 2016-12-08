@@ -17,17 +17,20 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -85,12 +88,16 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         setLoggedInUser(null);
         LocalDateTime acceptsDate = LocalDateTime.now();
         LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
+        LocalDateTime briefingDate = LocalDateTime.now().plusDays(2);
+        BigDecimal assessorPay = BigDecimal.TEN;
 
         CompetitionInviteResource inviteResource = newCompetitionInviteResource()
                 .withCompetitionName("my competition")
-                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
+                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
+                .withBriefingDate(briefingDate).withAssessorPay(assessorPay)
+                .build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource);
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
@@ -120,13 +127,37 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void confirmAcceptInvite() throws Exception {
+        when(competitionInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
+
+        mockMvc.perform(get("/invite-accept/competition/{inviteHash}/accept", "hash"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessor/dashboard"));
+
+        verify(competitionInviteRestService).acceptInvite("hash");
+    }
+
+    @Test
+    public void confirmAcceptInvite_hashNotExists() throws Exception {
+        when(competitionInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get("/invite-accept/competition/{inviteHash}/accept", "notExistHash"))
+                .andExpect(status().isNotFound());
+
+        verify(competitionInviteRestService).acceptInvite("notExistHash");
+    }
+
+    @Test
     public void openInvite() throws Exception {
         LocalDateTime acceptsDate = LocalDateTime.now();
         LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
+        LocalDateTime briefingDate = LocalDateTime.now().plusDays(2);
+        BigDecimal assessorPay = BigDecimal.TEN;
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
-                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate).build();
+                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
+                .withBriefingDate(briefingDate).withAssessorPay(assessorPay).build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", "my competition", acceptsDate, deadlineDate);
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource);
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))

@@ -27,5 +27,6 @@ public interface CompetitionsRestService {
     RestResult<Void> initApplicationForm(Long competitionId, Long competitionTypeId);
     RestResult<Void> markAsSetup(Long competitionId);
     RestResult<Void> returnToSetup(Long competitionId);
-
+    RestResult<Void> closeAssessment(Long competitionId);
+    RestResult<Void> notifyAssessors(Long competitionId);
 }

@@ -10,19 +10,19 @@ View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
     When the user navigates to the page    ${DASHBOARD_URL}
-    Then the user should see the element    link=View and edit your profile details
+    Then the user should see the element    link=view and edit your profile details
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
-    When the user clicks the button/link    link=View and edit your profile details
+    When the user clicks the button/link    link=view and edit your profile details
     Then the user should see the element    link=Edit your details
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=View and edit your profile details
+    When the user clicks the button/link    link=view and edit your profile details
     And the user clicks the button/link    link=Edit your details
     And the user enters profile details
     Then the user should see the text in the page    Chris
@@ -34,7 +34,7 @@ Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=View and edit your profile details
+    And the user clicks the button/link    link=view and edit your profile details
     And the user clicks the button/link    link=Edit your details
     When the user enters profile details
     And the user navigates to the page    ${APPLICATION_TEAM_URL}
@@ -96,6 +96,9 @@ the user enters profile details
     The user enters text to a text field    id=firstName    Chris
     The user enters text to a text field    id=lastName    Brown
     The user enters text to a text field    id=phoneNumber    +-0123456789
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the first name
@@ -122,7 +125,7 @@ the user fills in the phone field
 the user can change their details back again
     Guest user log-in    &{lead_applicant_credentials}
     the user navigates to the page    ${DASHBOARD_URL}
-    The user clicks the button/link    link=View and edit your profile details
+    The user clicks the button/link    link=view and edit your profile details
     The user clicks the button/link    link=Edit your details
     the user enters their old profile details
 

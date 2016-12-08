@@ -3,12 +3,12 @@ package com.worth.ifs.finance.handler;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.domain.FinanceRowMetaField;
+import com.worth.ifs.finance.domain.*;
 import com.worth.ifs.finance.handler.item.*;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.ProjectFinanceRowRepository;
 import com.worth.ifs.finance.resource.category.*;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
@@ -23,19 +23,25 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * OrganisationFinanceDefaultHandler maintains the finances from
  * an organisation's perspective and calculates the totals
  */
 @Component
 public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
+
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
 
     @Autowired
     private QuestionService questionService;
 
     @Autowired
-    private FinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository applicationFinanceRowRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
@@ -43,20 +49,23 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     @Autowired
     private AutowireCapableBeanFactory beanFactory;
 
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
+
     @Override
-    public Iterable<FinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
+    public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
     	
     	if(costTypeSupportedByHandler(costType)) {
             Long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
 	        try{
-	            List<FinanceRow> cost = getCostHandler(costType).initializeCost();
+	            List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost();
 	            cost.forEach(c -> {
 	                c.setQuestion(question);
-	                c.setApplicationFinance(applicationFinance);
+	                c.setTarget(applicationFinance);
 	            });
 	            if(!cost.isEmpty()){
-	                financeRowRepository.save(cost);
+	                applicationFinanceRowRepository.save(cost);
 	                return cost;
 	            }else{
 	                return new ArrayList<>();
@@ -71,16 +80,41 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
 	// TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
-        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getType()).getSuccessObjectOrThrowException();
+        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId) {
     	Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
-        List<FinanceRow> costs = financeRowRepository.findByApplicationFinanceId(applicationFinanceId);
+        List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
         return costCategories;
+    }
+
+    @Override
+    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId) {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
+        List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+        costCategories = addCostsToCategories(costCategories, toApplicationFinanceRows(costs));
+        costCategories = calculateTotals(costCategories);
+        return costCategories;
+    }
+
+    private List<ApplicationFinanceRow> toApplicationFinanceRows(List<ProjectFinanceRow> costs) {
+        return simpleMap(costs, cost -> {
+
+            Long applicationId = cost.getTarget().getProject().getApplication().getId();
+            Long organisationId = cost.getTarget().getOrganisation().getId();
+            ApplicationFinance applicationFinance =
+                    applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+
+            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
+                    cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+
+            applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
+            return applicationFinanceRow;
+        });
     }
 
     @Override
@@ -98,7 +132,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costCategories;
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<FinanceRow> costs) {
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<ApplicationFinanceRow> costs) {
         costs.stream().forEach(c -> addCostToCategory(costCategories, c));
         return costCategories;
     }
@@ -106,10 +140,10 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     /**
      * The costs are converted to a representation based on its type that can be used in the view and
      * are added to a specific Category (e.g. labour).
-     * @param cost FinanceRow to be added
+     * @param cost ApplicationFinanceRow to be added
      */
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, ApplicationFinanceRow cost) {
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
         FinanceRowCostCategory financeRowCostCategory = costCategories.get(costType);
@@ -138,7 +172,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public FinanceRow costItemToCost(FinanceRowItem costItem) {
+    public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
         FinanceRowHandler financeRowHandler = getCostHandler(costItem.getCostType());
         List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
         financeRowHandler.setCostFields(financeRowMetaFields);
@@ -146,14 +180,14 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public FinanceRowItem costToCostItem(FinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+    public FinanceRowItem costToCostItem(ApplicationFinanceRow cost) {
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         return financeRowHandler.toCostItem(cost);
     }
 
     @Override
-    public List<FinanceRowItem> costToCostItem(List<FinanceRow> costs) {
+    public List<FinanceRowItem> costToCostItem(List<ApplicationFinanceRow> costs) {
         List<FinanceRowItem> costItems = new ArrayList<>();
         costs.stream()
                 .forEach(cost -> costItems.add(costToCostItem(cost)));
@@ -161,11 +195,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public List<FinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
-        List<FinanceRow> costs = new ArrayList<>();
-        costItems.stream()
-                .forEach(costItem -> costs.add(costItemToCost(costItem)));
-        return costs;
+    public List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems) {
+        return simpleMap(costItems, this::costItemToCost);
     }
 
     private boolean costTypeSupportedByHandler(FinanceRowType costType) {

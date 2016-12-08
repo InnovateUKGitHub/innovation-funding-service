@@ -1,13 +1,8 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.project.finance.domain.CostCategoryType;
-import com.worth.ifs.project.finance.resource.CostCategoryResource;
-import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 
-import java.math.BigDecimal;
 import java.util.List;
-
-import static java.math.RoundingMode.HALF_EVEN;
 
 /**
  * Holder of summary information used to generate Spend Profiles
@@ -15,9 +10,9 @@ import static java.math.RoundingMode.HALF_EVEN;
 class SpendProfileCostCategorySummaries {
 
     private List<SpendProfileCostCategorySummary> costs;
-    private CostCategoryTypeResource costCategoryType;
+    private CostCategoryType costCategoryType;
 
-    public SpendProfileCostCategorySummaries(List<SpendProfileCostCategorySummary> costs, CostCategoryTypeResource costCategoryType) {
+    public SpendProfileCostCategorySummaries(List<SpendProfileCostCategorySummary> costs, CostCategoryType costCategoryType) {
         this.costs = costs;
         this.costCategoryType = costCategoryType;
     }
@@ -30,11 +25,11 @@ class SpendProfileCostCategorySummaries {
         this.costs = costs;
     }
 
-    public CostCategoryTypeResource getCostCategoryType() {
+    public CostCategoryType getCostCategoryType() {
         return costCategoryType;
     }
 
-    public void setCostCategoryType(CostCategoryTypeResource costCategoryType) {
+    public void setCostCategoryType(CostCategoryType costCategoryType) {
         this.costCategoryType = costCategoryType;
     }
 }

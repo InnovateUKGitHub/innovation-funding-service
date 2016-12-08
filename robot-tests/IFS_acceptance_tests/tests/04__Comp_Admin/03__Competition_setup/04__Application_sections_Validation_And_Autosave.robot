@@ -16,8 +16,8 @@ Business opportunity Server-side validations
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
-    #And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    # Remove the above comment a soon as inf-5980 is done
+    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629
@@ -30,17 +30,16 @@ Business opportunity: Client side validations
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629
-    [Tags]    Pending
-    # Pending Infund-5980
+    [Tags]
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user should see the correct inputs in the Applications questions form
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]    Pending
-    #TO DO pending due to INFUND-6242
+    [Tags]
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
@@ -83,7 +82,7 @@ the user should see the correct inputs in the Applications questions form
     Should Be Equal    ${input_value}    Subtitle test
     ${input_value} =    Get Value    id=question.guidanceTitle
     Should Be Equal    ${input_value}    Test guidance title
-    ${input_value} =    Get Value    css=.editor
+    ${input_value} =    Get Value    id=question.guidance
     Should Be Equal    ${input_value}    Guidance text test
     ${input_value} =    Get Value    id=question.maxWords
     Should Be Equal    ${input_value}    150
@@ -91,7 +90,7 @@ the user should see the correct inputs in the Applications questions form
 User creates a new competition for Application tests
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And the user clicks the button/link    link=Initial Details
+    And the user clicks the button/link    link=Initial details
     And the user enters text to a text field    id=title    Test competition
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId

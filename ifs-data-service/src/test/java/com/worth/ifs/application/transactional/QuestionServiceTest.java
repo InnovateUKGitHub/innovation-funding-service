@@ -10,6 +10,7 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -19,22 +20,24 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.List;
 
-
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.same;
@@ -363,5 +366,40 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
         assertTrue(result.isSuccess());
         assertEquals(expectedQuestions, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetQuestionByCompetitionIdAndFormInputTypeSuccess() {
+        long competitionId = 1L;
+
+        Question matchingQuestion = newQuestion().withFormInputs(asList(
+                newFormInput().withType(FormInputType.TEXTAREA).build())
+        ).build();
+
+        Question notMatchingQuestion = newQuestion().withFormInputs(asList(
+                newFormInput().withActive(false).withType(FormInputType.TEXTAREA).build())
+        ).build();
+
+        when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(matchingQuestion, notMatchingQuestion));
+
+        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
+
+        assertThat(question.isSuccess(), is(equalTo(true)));
+        assertThat(question.getSuccessObject(), is(equalTo(matchingQuestion)));
+    }
+
+    @Test
+    public void testGetQuestionByCompetitionIdAndFormInputTypeFailure() {
+        long competitionId = 1L;
+
+        Question notMatchingQuestion = newQuestion().withFormInputs(asList(
+                newFormInput().withActive(false).withType(FormInputType.TEXTAREA).build())
+        ).build();
+
+        when(questionRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(notMatchingQuestion));
+
+        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
+
+        assertThat(question.isFailure(), is(equalTo(true)));
     }
 }

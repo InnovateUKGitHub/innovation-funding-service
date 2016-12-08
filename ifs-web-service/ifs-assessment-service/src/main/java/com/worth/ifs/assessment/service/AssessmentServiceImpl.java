@@ -1,8 +1,6 @@
 package com.worth.ifs.assessment.service;
 
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResourceBuilder;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public AssessmentTotalScoreResource getTotalScore(Long assessmentId) {
+        return assessmentRestService.getTotalScore(assessmentId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment) {
         return assessmentRestService.recommend(assessmentId, new AssessmentFundingDecisionResourceBuilder()
                 .setFundingConfirmation(fundingConfirmation)
@@ -55,5 +58,13 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public ServiceResult<Void> acceptInvitation(Long assessmentId) {
         return assessmentRestService.acceptInvitation(assessmentId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> submitAssessments(List<Long> assessmentIds) {
+        AssessmentSubmissionsResource assessmentSubmissions = new AssessmentSubmissionsResource();
+        assessmentSubmissions.setAssessmentIds(assessmentIds);
+
+        return assessmentRestService.submitAssessments(assessmentSubmissions).toServiceResult();
     }
 }

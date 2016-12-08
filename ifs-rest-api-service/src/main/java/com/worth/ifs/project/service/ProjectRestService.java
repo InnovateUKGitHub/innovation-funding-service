@@ -75,6 +75,8 @@ public interface ProjectRestService {
 
     RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
+    RestResult<Void> removeGeneratedGrantOfferLetter(Long projectId);
+
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
 
     RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
@@ -94,4 +96,10 @@ public interface ProjectRestService {
     RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
     RestResult<ProjectStatusResource> getProjectStatus(Long projectId);
+
+    RestResult<Void> sendGrantOfferLetter(Long projectId);
+
+    RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
+
+    RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
 }

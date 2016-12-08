@@ -181,7 +181,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         checkIfSubsectionIsInSection(section, subsection);
 
-        CompetitionSetupSubsectionSaver saver = subsectionSavers.get(section);
+        CompetitionSetupSubsectionSaver saver = subsectionSavers.get(subsection);
         if(saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
             LOG.error("unable to save subsection " + subsection);
             throw new IllegalArgumentException();
@@ -231,7 +231,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
 		requiredSections.add(CompetitionSetupSection.MILESTONES);
 		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
-		requiredSections.add(CompetitionSetupSection.ASSESSORS);
 		return requiredSections;
 	}
 

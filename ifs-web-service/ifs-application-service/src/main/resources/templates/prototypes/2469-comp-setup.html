@@ -15,7 +15,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'All competitions' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
+    <div th:if="${(param.compStatus == null)}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
+	<div th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : '/prototypes/2469-comp-setup?compStatus=ready')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -37,7 +38,8 @@
 		<div th:include="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'index-page' : param.section[0])}" th:remove="tag"/>
 
 		<div class="extra-margin" th:if="${param.section != null}">
-			<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Return to setup overview</a>
+			<!--<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Return to setup overview</a>-->
+			<a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button button-secondary">Return to setup overview</a>
 		</div>
 
 
@@ -101,7 +103,7 @@
 		var sectionCount = 0;
 		var sectionNumber = jQuery(".list-overview li").length+1; // count number of sections based on tab;e
 
-		for(i = 1; i < sectionNumber; i++) {
+		for(var i = 1; i < sectionNumber; i++) {
 			
 			if(sectionId == i && status == 'done'){
 
@@ -127,7 +129,7 @@
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
 				jQuery('#section-'+i).addClass('marked-as-complete');
-				
+
 				jQuery('#section-'+i+'-done').show();
 				jQuery('#section-'+i+'-edit').hide();
 
@@ -138,6 +140,7 @@
 
 				jQuery('#section-'+i+'-done').hide();
 				jQuery('#section-'+i+'-edit').show();
+
 
 			}
 

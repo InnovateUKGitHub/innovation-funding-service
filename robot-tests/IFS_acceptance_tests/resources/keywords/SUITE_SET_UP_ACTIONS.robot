@@ -177,7 +177,7 @@ The user redirects to the page
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Review & submit
+    And the user clicks the button/link    link=Review and submit
 
 The user navigates to the overview page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}

@@ -15,7 +15,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
+  	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -66,15 +66,20 @@
 	</div>
 
 	<div class="grid-row sorting">
-		<div class="column-two-thirds">
+		<div class="column-half">
 			<h4><span class="heading-xlarge no-margin available">20</span> <strong>Applications</strong></h4>
 		</div>
-		<div class="column-third alignright">
-			<div class="form-group">
-				<label class="form-checkbox" for="group-inform-one">
+	</div>
+
+	<div class="table-actions-header">
+		<div class="table-actions-header-content">
+			<div>
+				<label class="form-checkbox form-label-bold" for="group-inform-one">
 					<input id="group-inform-one" value="group-inform-one" type="checkbox" />
 					Include all for group inform
 				</label>
+			</div>
+			<div>
 				<a href="#" class="button-secondary">Inform group</a>
 			</div>
 		</div>

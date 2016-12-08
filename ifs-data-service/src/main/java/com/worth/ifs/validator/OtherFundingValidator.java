@@ -4,13 +4,12 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
 import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -32,9 +31,7 @@ import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.O
 @Component
 public class OtherFundingValidator implements Validator {
 
-    private static final Log LOG = LogFactory.getLog(OtherFundingValidator.class);
-
-    private FinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository financeRowRepository;
     private QuestionService questionService;
 
     @Override
@@ -43,7 +40,7 @@ public class OtherFundingValidator implements Validator {
     }
 
     @Autowired
-    public OtherFundingValidator(FinanceRowRepository financeRowRepository, QuestionService questionService) {
+    public OtherFundingValidator(ApplicationFinanceRowRepository financeRowRepository, QuestionService questionService) {
         this.financeRowRepository = financeRowRepository;
         this.questionService = questionService;
     }
@@ -88,10 +85,10 @@ public class OtherFundingValidator implements Validator {
 
     private boolean userHasSelectedYes(final OtherFunding otherFunding) {
         FinanceRow cost = financeRowRepository.findOne(otherFunding.getId());
-        ApplicationFinance applicationFinance = cost.getApplicationFinance();
+        ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
         Long competitionId = applicationFinance.getApplication().getCompetition().getId();
-        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getType());
-        List<FinanceRow> otherFundingRows = financeRowRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccessObject().getId());
+        ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getFormInputType());
+        List<ApplicationFinanceRow> otherFundingRows = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccessObject().getId());
         return otherFundingRows.size() > 0 && otherFundingRows.get(0).getItem().equals("Yes");
     }
 

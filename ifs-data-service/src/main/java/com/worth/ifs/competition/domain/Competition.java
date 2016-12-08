@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 
@@ -98,7 +99,7 @@ public class Competition implements ProcessActivity {
     private CollaborationLevel collaborationLevel;
     @Enumerated(EnumType.STRING)
     private LeadApplicantType leadApplicantType;
-    
+
     @ElementCollection
     @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
     @MapKeyEnumerated(EnumType.STRING)
@@ -110,6 +111,8 @@ public class Competition implements ProcessActivity {
     private boolean includeGrowthTable = true;
 
     private Boolean setupComplete;
+
+    private boolean useResubmissionQuestion = true;
 
     private boolean template = false;
 
@@ -292,6 +295,14 @@ public class Competition implements ProcessActivity {
     	setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
 	}
 
+	public LocalDateTime getAssessorBriefingDate() {
+        return getMilestoneDate(MilestoneType.ASSESSOR_BRIEFING).orElse(null);
+    }
+
+    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+        setMilestoneDate(MilestoneType.ASSESSOR_BRIEFING, assessorBriefingDate);
+    }
+
     private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
             Milestone m = new Milestone();
@@ -425,11 +436,11 @@ public class Competition implements ProcessActivity {
     public void setInnovationArea(Category innovationArea) {
         this.innovationArea = innovationArea;
     }
-    
+
     public Set<Category> getResearchCategories() {
 		return researchCategories;
 	}
-    
+
     public void setResearchCategories(Set<Category> researchCategories) {
 		this.researchCategories = researchCategories;
 	}
@@ -441,11 +452,11 @@ public class Competition implements ProcessActivity {
     public void setMilestones(List<Milestone> milestones) {
         this.milestones = milestones;
     }
-    
+
     public boolean isMultiStream() {
 		return multiStream;
 	}
-    
+
     public void setMultiStream(boolean multiStream) {
 		this.multiStream = multiStream;
 	}
@@ -461,27 +472,27 @@ public class Competition implements ProcessActivity {
     public String getStreamName() {
 		return streamName;
 	}
-    
+
     public void setStreamName(String streamName) {
 		this.streamName = streamName;
 	}
-    
+
     public CollaborationLevel getCollaborationLevel() {
 		return collaborationLevel;
 	}
-    
+
     public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
 		this.collaborationLevel = collaborationLevel;
 	}
-    
+
     public LeadApplicantType getLeadApplicantType() {
 		return leadApplicantType;
 	}
-    
+
     public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
 		this.leadApplicantType = leadApplicantType;
 	}
-    
+
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
 		return sectionSetupStatus;
 	}
@@ -560,6 +571,15 @@ public class Competition implements ProcessActivity {
     public void setTemplate(boolean template) {
         this.template = template;
     }
+
+    public boolean isUseResubmissionQuestion() {
+        return useResubmissionQuestion;
+    }
+
+    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+        this.useResubmissionQuestion = useResubmissionQuestion;
+    }
+
 
     public void notifyAssessors(LocalDateTime date) {
         if (getCompetitionStatus() != CompetitionStatus.CLOSED) {

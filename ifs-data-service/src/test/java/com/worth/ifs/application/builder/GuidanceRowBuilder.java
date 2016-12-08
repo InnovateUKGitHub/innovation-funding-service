@@ -1,14 +1,14 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.GuidanceRow;
 import com.worth.ifs.form.domain.FormInput;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class GuidanceRowBuilder extends BaseBuilder<GuidanceRow, GuidanceRowBuilder> {
@@ -37,6 +37,10 @@ public class GuidanceRowBuilder extends BaseBuilder<GuidanceRow, GuidanceRowBuil
 
     public GuidanceRowBuilder withJustification(String justification) {
         return with(guidanceRow -> setField("justification", justification, guidanceRow));
+    }
+
+    public GuidanceRowBuilder withPriority(Integer priority) {
+        return with(guidanceRow -> setField("priority", priority, guidanceRow));
     }
 
     @Override

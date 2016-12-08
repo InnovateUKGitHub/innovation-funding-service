@@ -1,10 +1,4 @@
-if (project.hasProperty("profile")) {
-    apply from: "${project.profile}-build.gradle"
-} else {
-    apply from: "dev-build.gradle"
-}
-
-def targetBuild = hasProperty('profile') ? profile : 'dev';
+def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
 
@@ -13,9 +7,21 @@ apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
 
+task('copyFreemarkerResources', type: Copy) {
+//Copy freemarker resources to build path to support running as a jar.
+    from 'src/main/java/com/worth/ifs/notifications/templates'
+        into 'build/classes/main/com/worth/ifs/notifications/templates'
+        include '**/*'
+}
+
+compileJava.dependsOn copyFreemarkerResources
+
+
+
 war {
     baseName = 'ifs-data-service'
 }
+
 
 configurations {
     providedRuntime
@@ -94,9 +100,14 @@ dependencies {
     compile "commons-io:commons-io:2.4"
     compile 'org.jsoup:jsoup:1.9.1'
     compile "net.sf.opencsv:opencsv:2.3"
+    compile "org.xhtmlrenderer:flying-saucer-core:9.1.0"
+    compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.0"
 
+
+    compile project(":ifs-resources")
+    testCompile project(':ifs-resources').sourceSets.test.output
     compile project(":ifs-commons")
-    testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(":ifs-commons").sourceSets.test.output
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -109,6 +120,22 @@ test {
     outputs.dir snippetsDir
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
+    }
+}
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = 'data-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy{
+            from war
+            into stageDir
+        }
+        copy{
+            from file('src/main/docker/certificate')
+            into stageDir
+        }
     }
 }
 
@@ -166,6 +193,7 @@ watch {
     }
 }
 
+
 //noinspection GroovyMissingReturnStatement
 processResources {
     filesMatching("*.properties") {
@@ -179,14 +207,54 @@ processTestResources {
     }
 }
 
+task startMySql(type:Exec) {
+    workingDir '../'
+    commandLine 'docker-compose', 'up', '-d', 'mysql'
+    doLast {
+        exec {
+            //wait for sql container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
+}
+
+task syncShib(type:Exec) {
+    workingDir '../setup-files/scripts/docker'
+    commandLine './syncShibServices.sh'
+}
+
+task upgradeShib(type:Exec) {
+    workingDir '../setup-files/scripts/docker'
+    commandLine './upgradeShib.sh'
+}
+
+
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
+
+
 task cleanDeploy() {
     build.mustRunAfter clean
     deployToTomcat.mustRunAfter build
+
     dependsOn clean
     dependsOn build
     dependsOn deployToTomcat
+}
+
+task cleanDeployServices() {
+    buildDocker.mustRunAfter clean
+    flywayClean.mustRunAfter buildDocker
+    flywayClean.mustRunAfter startMySql
+    flywayMigrate.mustRunAfter flywayClean
+
+    dependsOn clean
+    dependsOn buildDocker
+    dependsOn startMySql
+    dependsOn flywayClean
+    dependsOn flywayMigrate
 }

@@ -1,9 +1,9 @@
 
 package com.worth.ifs.competition.service;
 
-import com.worth.ifs.*;
-import com.worth.ifs.commons.rest.*;
-import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.junit.Assert;
 import org.junit.Test;
 
