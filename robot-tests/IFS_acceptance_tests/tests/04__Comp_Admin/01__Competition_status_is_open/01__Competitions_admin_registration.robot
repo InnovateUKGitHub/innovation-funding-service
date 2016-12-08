@@ -19,9 +19,8 @@ If user from the list is not registered shouldn't be able to login
 
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
-    [Tags]    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    Delete the emails from both default test mailboxes
-    #TODO Failing due to diversity questions.
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
@@ -40,7 +39,7 @@ User creates new account verifies email and login
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email from the default mailbox and clicks the link     ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    If you did not request an account with us
+    the user reads his email from the default mailbox and clicks the link    ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    If you did not request an account with us
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
@@ -54,5 +53,8 @@ the user enters the details and clicks the create account
     Input Text    id=email    ${CREATE_ACCOUNT_EMAIL}
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     Select Checkbox    termsAndConditions
     Submit Form
