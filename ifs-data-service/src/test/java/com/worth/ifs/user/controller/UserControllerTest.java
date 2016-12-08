@@ -285,7 +285,10 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updateProfileSkills() throws Exception {
-        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+                .withSkillsAreas(RandomStringUtils.random(5000))
+                .build();
+
         Long userId = 1L;
 
         when(userProfileServiceMock.updateProfileSkills(userId, profileSkills)).thenReturn(serviceSuccess());
