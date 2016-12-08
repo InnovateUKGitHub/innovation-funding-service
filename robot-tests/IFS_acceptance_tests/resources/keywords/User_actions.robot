@@ -631,6 +631,12 @@ The user fills the empty question fields
     The user enters text to a text field    css=.editor    Guidance text test
     The user enters text to a text field    id=question.maxWords    150
 
+The user fills the empty assessment fields
+    The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
+    The user enters text to a text field    id=guidanceRow-0-scorefrom    30
+    The user enters text to a text field    id=guidanceRow-0-scoreto    35
+    The user enters text to a text field    id=guidanceRow-0-justification    This is a justification
+
 The user checks the question fields
     The user should see the text in the page    Test title
     The user should see the text in the page    Subtitle test
@@ -638,6 +644,12 @@ The user checks the question fields
     The user should see the text in the page    Guidance text test
     The user should see the text in the page    150
     The user should see the text in the page    No
+
+The user checks the assessment fields
+    The user should see the text in the page    Business opportunity guidance
+    The user should see the text in the page    30
+    The user should see the text in the page    35
+    The user should see the text in the page    This is  justification
 
 The user should see the text in the element
     [Arguments]    ${element}    ${text}

@@ -333,11 +333,17 @@ Application: Application process Page
     And the user should see the element    link=Finances
 
 Application: Business opportunity
-    [Documentation]    INFUND-5632
+    [Documentation]    INFUND-5632 IN-5685 IN-5630
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
-    And the user should see the element    jQuery=a:contains("Edit this question")
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user edits the assessed question information
+    And the user clicks the button/link    id=remove-guidance-row-2
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Business opportunity
+    And the user sees the correct assessed question information
+    And the user should not see the text in the page    The business opportunity is plausible
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Application details
@@ -602,4 +608,22 @@ the user checks the scope assessment questions
     The user should see the text in the page    Scope 'Y/N' question
     The user should see the text in the page    Research category question
 
+the user edits the assessed question information
+    the user enters text to a text field    id=question.scoreTotal    100
+    the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
+    the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    the user enters text to a text field    id=guidancerow-5-scorefrom    11
+    the user enters text to a text field    id=guidancerow-5-scoreto    12
+    the user enters text to a text field    id=guidancerow-5-justification    This is a justification
 
+the user sees the correct assessed question information
+    the user should see the text in the page    Assessment of this question
+    #the user should see the text in the page    Business opportunity guidance
+    the user should see the text in the page    11
+    the user should see the text in the page    12
+    the user should see the text in the page    This is a justification
+    the user should see the text in the page    100
+    the user should see the text in the page    Written feedback
+    the user should see the text in the page    Scored
+    the user should see the text in the page    Out of
+    the user should not see the text in the page    The business opportunity is plausible
