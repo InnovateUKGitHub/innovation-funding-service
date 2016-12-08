@@ -9,6 +9,11 @@ public class FinanceChecksViabilityViewModel {
 
     private String organisationName;
     private boolean leadPartnerOrganisation;
+    private Integer totalCosts;
+    private Integer percentageGrant;
+    private Integer fundingSought;
+    private Integer otherPublicSectorFunding;
+    private Integer contributionToProject;
     private String companyRegistrationNumber;
 
     // currently always null
@@ -22,9 +27,19 @@ public class FinanceChecksViabilityViewModel {
     private boolean creditReportVerified;
     private boolean viabilityApproved;
 
-    public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, String companyRegistrationNumber, Integer turnover, Integer headCount, OrganisationSize organisationSize, boolean creditReportVerified, boolean viabilityApproved) {
+    public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
+                                           Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
+                                           Integer contributionToProject, String companyRegistrationNumber,
+                                           Integer turnover, Integer headCount, OrganisationSize organisationSize,
+                                           boolean creditReportVerified, boolean viabilityApproved) {
+
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
+        this.totalCosts = totalCosts;
+        this.percentageGrant = percentageGrant;
+        this.fundingSought = fundingSought;
+        this.otherPublicSectorFunding = otherPublicSectorFunding;
+        this.contributionToProject = contributionToProject;
         this.companyRegistrationNumber = companyRegistrationNumber;
         this.turnover = turnover;
         this.headCount = headCount;
@@ -63,5 +78,25 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isViabilityApproved() {
         return viabilityApproved;
+    }
+
+    public Integer getTotalCosts() {
+        return totalCosts;
+    }
+
+    public Integer getPercentageGrant() {
+        return percentageGrant;
+    }
+
+    public Integer getFundingSought() {
+        return fundingSought;
+    }
+
+    public Integer getOtherPublicSectorFunding() {
+        return otherPublicSectorFunding;
+    }
+
+    public Integer getContributionToProject() {
+        return contributionToProject;
     }
 }

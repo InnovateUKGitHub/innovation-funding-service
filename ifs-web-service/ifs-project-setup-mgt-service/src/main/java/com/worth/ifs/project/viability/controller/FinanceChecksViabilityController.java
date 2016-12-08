@@ -28,6 +28,13 @@ public class FinanceChecksViabilityController {
 
         String organisationName = "My organisation";
         boolean leadPartnerOrganisation = true;
+
+        Integer totalCosts = 286283;
+        Integer percentageGrant = 55;
+        Integer fundingSought = 180339;
+        Integer otherPublicSectorFunding = 20000;
+        Integer contributionToProject = 85885;
+
         String companyRegistrationNumber = "123456789";
         Integer turnover = null;
         Integer headCount = null;
@@ -36,6 +43,7 @@ public class FinanceChecksViabilityController {
         boolean viabilityApproved = false;
 
         model.addAttribute("model", new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
+                totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
                 companyRegistrationNumber, turnover, headCount, organisationSize, creditReportVerified, viabilityApproved));
     }
 }
