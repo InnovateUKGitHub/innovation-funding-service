@@ -2,12 +2,13 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
-the user downloads the file from the link
-    [Arguments]    ${filename}    ${download_link}
-    ${ALL_COOKIES} =    Get Cookies
-    Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${download_link}    ${filename}
+The user downloads the file
+    [Documentation]    Makes use of a download script that logs in, grabs a cookie and downloads
+    ...     the file all in one package
+    [Arguments]    ${user}    ${password}    ${url}    ${filename}
+    Run and Return RC    ./download.py ${user} ${password} ${url} ${filename}
     wait until keyword succeeds    300ms    1 seconds    Download should be done
+
 
 Download should be done
     [Documentation]    Verifies that the directory has only one folder

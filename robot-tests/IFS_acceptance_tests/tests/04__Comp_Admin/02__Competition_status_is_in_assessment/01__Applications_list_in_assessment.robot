@@ -89,10 +89,7 @@ Non submitted applications from this competition should be visible
 
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
-    [Tags]    HappyPath    Pending
-    #TODO Pending due to INFUND-6187
-    # TODO we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
-    Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
+    [Tags]    HappyPath    Download    Pending
     When the admin downloads the excel
     And user opens the excel and checks the content
     [Teardown]    Empty the download directory
@@ -130,25 +127,19 @@ Both calculations in the page should show the same
 Empty the download directory
     Empty Directory    ${DOWNLOAD_FOLDER}
 
-Download File
-    [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
-    log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
 
 the admin downloads the excel
-    ${ALL_COOKIES} =    Get Cookies
-    Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${server}/management/competition/${OPEN_COMPETITION}/download    submitted_applications.xlsx
-    wait until keyword succeeds    300ms    1 seconds    Download should be done
+    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${OPEN_COMPETITION_APPLICATION_5_NUMBER}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
     ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
     Should Be Equal    ${APPLICATION_ID_1}    ${OPEN_COMPETITION_APPLICATION_5_NUMBER}
     ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
-    should be equal    ${APPLICATION_TITLE_1}    A new innovative solution
-    ${LEAD_ORRGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4
-    should be equal    ${LEAD_ORRGANISATION_1}    Empire Ltd
+    should be equal    ${APPLICATION_TITLE_1}
+    ${LEAD_ORGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4
+    should be equal    ${LEAD_ORGANISATION_1}    Empire Ltd
     ${FIRST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    D4
     should be equal    ${FIRST_NAME_1}    Steve
     ${LAST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    E4
