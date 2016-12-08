@@ -366,6 +366,20 @@ Application: Scope
     And the user clicks the button/link    link=Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
+
+
+Application: Scope Assessment questions
+    [Documentation]    INFUND
+    Given the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user fills the scope assessment questions
+    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then the user checks the scope assessment questions
+    And the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user selects the radio button    question.writtenFeedback    0
+    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then the user should not see the text in the page    Guidance for assessing scope section
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Project Summary
@@ -571,3 +585,21 @@ The competition should show in the correct section
 The finance information should be correct
     the user should see the text in the page    Light finances
     the user should see the text in the page    No
+
+the user fills the scope assessment questions
+    The user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    The user enters text to a text field    id=guidancerow-2-subject    New subject
+    The user enters text to a text field    id=guidancerow-2-justification    This is a justification
+    The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
+    The user clicks the button/link    id=remove-guidance-row-0
+
+the user checks the scope assessment questions
+    The user should see the text in the page    New subject
+    The user should see the text in the page    This is a justification
+    The user should not see the text in the page    One or more of the above requirements have not been satisfied.
+    The user should see the text in the page    Written feedback
+    The user should see the text in the page    Guidance for assessing scope section
+    The user should see the text in the page    Scope 'Y/N' question
+    The user should see the text in the page    Research category question
+
+
