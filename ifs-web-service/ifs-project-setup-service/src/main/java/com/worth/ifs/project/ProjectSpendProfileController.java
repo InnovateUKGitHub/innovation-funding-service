@@ -1,6 +1,7 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -87,17 +88,19 @@ public class ProjectSpendProfileController {
         if (userHasProjectManagerRole(loggedInUser, projectId)) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
-        return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
+        return reviewSpendProfilePage(model, form, projectId, organisationId, loggedInUser);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/review", method = GET)
     public String reviewSpendProfilePage(Model model,
+                                         @ModelAttribute(FORM_ATTR_NAME) ErrorSummaryForm form,
                                          @PathVariable("projectId") final Long projectId,
                                          @PathVariable("organisationId") final Long organisationId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
+        model.addAttribute(FORM_ATTR_NAME, form);
         return BASE_DIR + "/spend-profile";
     }
 
