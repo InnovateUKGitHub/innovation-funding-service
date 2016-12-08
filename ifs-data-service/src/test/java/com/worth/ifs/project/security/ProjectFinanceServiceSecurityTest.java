@@ -186,6 +186,34 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
                 });
     }
 
+    @Test
+    public void testGetViability() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getViability(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSaveViability() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.GREEN),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
     @Override
     protected Class<TestProjectFinanceService> getClassUnderTest() {
         return TestProjectFinanceService.class;

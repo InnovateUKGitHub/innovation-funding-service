@@ -8,6 +8,7 @@ import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.project.builder.SpendProfileResourceBuilder;
 import com.worth.ifs.project.controller.ProjectFinanceController;
 import com.worth.ifs.project.finance.domain.SpendProfile;
+import com.worth.ifs.project.finance.resource.Viability;
 import com.worth.ifs.project.resource.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileResourceF
 import static com.worth.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.JsonMappingUtil.toJson;
 import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
@@ -323,6 +325,50 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as complete"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete"),
                                 parameterWithName("complete").description("Flag to indicate if the Spend Profile can be marked as complete or not")
+                        )
+                ));
+    }
+    @Test
+    public void getViability() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        Viability expectedViability = Viability.AMBER;
+        when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViability));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedViability)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which viability is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which viability is being retrieved")
+                        )
+                ));
+    }
+
+    @Test
+    public void saveViability() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        Viability viability = Viability.GREEN;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}", projectId, organisationId, viability)
+        )
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which viability is being saved"),
+                                parameterWithName("organisationId").description("Organisation Id for which viability is being saved"),
+                                parameterWithName("viability").description("the viability being saved")
                         )
                 ));
     }

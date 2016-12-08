@@ -51,6 +51,40 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         assertTrue(rules.projectManagerCanCompleteSpendProfile(project.getId(), user));
     }
 
+    @Test
+    public void testProjectFinanceUserCanViewViability() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanViewViability(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewViability(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void testProjectFinanceUserCanSaveViability() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectFinancePermissionRules();

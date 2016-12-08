@@ -3,12 +3,14 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.domain.ProjectFinance;
 import com.worth.ifs.project.builder.ProjectBuilder;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.CostCategoryTypeResource;
 import com.worth.ifs.project.finance.resource.TimeUnit;
+import com.worth.ifs.project.finance.resource.Viability;
 import com.worth.ifs.project.resource.*;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -746,6 +748,63 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isFailure());
     }
+
+    @Test
+    public void testGetViabilityWhenNotSet() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Viability> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.UNSET, result.getSuccessObject());
+
+    }
+
+    @Test
+    public void testGetViabilitySuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViability(Viability.AMBER);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Viability> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.AMBER, result.getSuccessObject());
+
+    }
+
+    @Test
+    public void testSaveViabilitySuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.GREEN);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.GREEN, projectFinanceInDB.getViability());
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+
+    }
+
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {
         CostCategoryType costCategoryType = createCostCategoryType();
