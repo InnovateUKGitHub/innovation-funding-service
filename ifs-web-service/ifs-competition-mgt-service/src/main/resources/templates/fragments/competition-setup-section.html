@@ -146,7 +146,7 @@
 
             <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="executiveUserId">
-                    <span class="form-label-bold">Competition executive</span>
+                    <span class="form-label-bold">Competition Executive</span>
                     <span th:if="${#fields.hasErrors('executiveUserId')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
                     </span>
@@ -194,7 +194,7 @@
                 <dt>Competition Innovation Lead</dt>
                 <dd th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:if="${competitionLeadTechUser.id == competitionSetupForm.leadTechnologistUserId}">Innovation Lead</dd>
 
-                <dt>Competition executive</dt>
+                <dt>Competition Executive</dt>
                 <dd th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
 
                <dt>State aid</dt>
@@ -290,7 +290,7 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}"/>
 
-                        <button th:if="${iteration.index != 0}" class="buttonlink alignright remove-funder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -306,8 +306,7 @@
 
                     <div class="alignright">
                         <input type="hidden" name="removeFunder" />
-                        <input type="hidden" name="funderCount" id="co-funder-count" th:value="${competitionSetupForm.fundersCount}" />
-                        <button class="buttonlink" name="add-cofunder" id="add-cofunder">+Add co-funder</button>
+                        <button class="buttonlink" name="add-cofunder" data-add-row="cofunder">+Add co-funder</button>
                     </div>
                 </div>
             </div>

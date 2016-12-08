@@ -53,7 +53,6 @@ public class ApplicationQuestionModelPopulatorTest {
 		form.setFullApplicationFinance(competitionResource.isFullApplicationFinance());
 		form.setIncludeGrowthTable(competitionResource.isIncludeGrowthTable());
 
-
 		populator.populateModel(model, competitionResource, Optional.empty());
 		assertEquals(0, model.asMap().size());
 	}

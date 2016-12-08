@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Spend profile intro area  =========================== --> 
+<!-- ===========================Spend profile intro area  =========================== -->
 <div th:fragment="prototype-academic-form">
     <form>
         <fieldset>
-            
+
             <th:block th:if="${user == 'partner'}">
 
                 <h2 class="heading-medium">Innovate UK funding</h2>
                 <legend class="visuallyhidden">Innovate UK funding</legend>
                 <p>Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
-                
+
                 <p>To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="#">Je-S website</a>.</p>
 
                 <p>You cannot submit this application into a competition if there are any outstanding finances at the competition deadline.</p>
@@ -108,13 +108,13 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="investigators">
-                    <span>Investigators
+                <label class="form-label" for="investigations">
+                    <span>Investigations
                     </span>
                 </label>
-                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}"/>
+                <input class="form-control" id="investigations" type="text" th:value="${(user == 'internal' ? '&pound;2,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}"/>
 
-                <input class="form-control" id="investigators" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:unless="${type != 'checks'}" />
+                <input class="form-control" id="investigations" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
             <div class="form-group">
@@ -174,7 +174,7 @@
                     </span>
                 </span>
             </div>
-        
+
             <div class="form-group">
                 <label class="form-label" for="exceptions-staff">
                     <span>Staff
@@ -216,11 +216,11 @@
             </div>
 
           </fieldset>
-            
+
         <th:block th:if="${user == 'partner'}" th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-8-jes'}, ${'lead'}, ${'assigned'})" th:remove="tag" />
 
     </form>
-    
+
     <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner' or type == 'partnerView' or type == 'checks'}">
         <th:block th:if="${param.status == null or param.status[0] != 'edit-academic'}">
             <a th:href="@{'?status=edit-academic'}" class="button button-secondary">Edit</a>

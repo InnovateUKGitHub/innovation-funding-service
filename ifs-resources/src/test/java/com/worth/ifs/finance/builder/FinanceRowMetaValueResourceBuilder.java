@@ -13,11 +13,23 @@ import static java.util.Collections.emptyList;
  */
 public class FinanceRowMetaValueResourceBuilder extends BaseBuilder<FinanceRowMetaValueResource, FinanceRowMetaValueResourceBuilder> {
 
+    public FinanceRowMetaValueResourceBuilder withFinanceRowMetaField(final Long... costFieldId){
+        return withArray((v, metaValue) -> metaValue.setFinanceRowMetaField(v), costFieldId);
+    }
+
+    public FinanceRowMetaValueResourceBuilder withFinanceRow(final Long... costId) {
+        return withArray((v, metaValue) -> metaValue.setFinanceRowId(v), costId);
+    }
+
+    public FinanceRowMetaValueResourceBuilder withValue(final String... value) {
+        return withArray((v, metaValue) -> metaValue.setValue(v), value);
+    }
+
     private FinanceRowMetaValueResourceBuilder(List<BiConsumer<Integer, FinanceRowMetaValueResource>> newMultiActions) {
         super(newMultiActions);
     }
 
-    public static FinanceRowMetaValueResourceBuilder newFinanceRowMetaValue() {
+    public static FinanceRowMetaValueResourceBuilder newFinanceRowMetaValueResource() {
         return new FinanceRowMetaValueResourceBuilder(emptyList());
     }
 
@@ -29,13 +41,5 @@ public class FinanceRowMetaValueResourceBuilder extends BaseBuilder<FinanceRowMe
     @Override
     protected FinanceRowMetaValueResource createInitial() {
         return new FinanceRowMetaValueResource();
-    }
-
-    public FinanceRowMetaValueResourceBuilder withCostField(final Long costFieldId){
-        return with(costValue -> costValue.setFinanceRowMetaField(costFieldId));
-    }
-
-    public FinanceRowMetaValueResourceBuilder withCost(final Long costId) {
-        return with(costValue -> costValue.setFinanceRow(costId));
     }
 }

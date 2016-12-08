@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.invite.domain.ProcessActivity;
 import com.worth.ifs.user.domain.User;
 
@@ -293,6 +294,14 @@ public class Competition implements ProcessActivity {
     public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
     	setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
 	}
+
+	public LocalDateTime getAssessorBriefingDate() {
+        return getMilestoneDate(MilestoneType.ASSESSOR_BRIEFING).orElse(null);
+    }
+
+    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+        setMilestoneDate(MilestoneType.ASSESSOR_BRIEFING, assessorBriefingDate);
+    }
 
     private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {

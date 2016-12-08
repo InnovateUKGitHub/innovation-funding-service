@@ -39,6 +39,10 @@ public class GuidanceRowBuilder extends BaseBuilder<GuidanceRow, GuidanceRowBuil
         return with(guidanceRow -> setField("justification", justification, guidanceRow));
     }
 
+    public GuidanceRowBuilder withPriority(Integer priority) {
+        return with(guidanceRow -> setField("priority", priority, guidanceRow));
+    }
+
     @Override
     protected GuidanceRow createInitial() {
         return new GuidanceRow();

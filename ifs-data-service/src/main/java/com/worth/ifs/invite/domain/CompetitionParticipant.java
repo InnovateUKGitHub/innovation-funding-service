@@ -50,17 +50,17 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         this.competition = null;
     }
 
-    public CompetitionParticipant(Competition competition, CompetitionInvite invite) {
-        this(competition, null, invite);
+    public CompetitionParticipant(CompetitionInvite invite) {
+        this(null, invite);
     }
 
-    public CompetitionParticipant(Competition competition, User user, CompetitionInvite invite) {
+    public CompetitionParticipant(User user, CompetitionInvite invite) {
         super();
-        if (competition == null) throw new NullPointerException("competition cannot be null");
         if (invite == null) throw new NullPointerException("invite cannot be null");
+        if (invite.getTarget() == null) throw new NullPointerException("invite.target cannot be null");
 
-        this.competition = competition;
         this.user = user;
+        this.competition = invite.getTarget();
         this.invite = invite;
         this.role = CompetitionParticipantRole.ASSESSOR;
     }
@@ -99,15 +99,20 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     private CompetitionParticipant accept() {
-        if (user == null) throw new IllegalStateException("Illegal attempt to accept a CompetitionParticipant with no User");
+        if (user == null) {
+            throw new IllegalStateException("Illegal attempt to accept a CompetitionParticipant with no User");
+        }
 
-        if (getInvite().getStatus() != OPENED)
+        if (getInvite().getStatus() != OPENED) {
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
+        }
 
-        if (getStatus() == REJECTED)
+        if (getStatus() == REJECTED) {
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that has been rejected");
-        if (getStatus() == ACCEPTED)
+        }
+        if (getStatus() == ACCEPTED) {
             throw new IllegalStateException("CompetitionParticipant has already been accepted");
+        }
 
         setStatus(ACCEPTED);
 
@@ -115,23 +120,33 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     public CompetitionParticipant acceptAndAssignUser(User user) {
-        if (user == null) throw new NullPointerException("user cannot be null");
-        if (this.user != null) throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
+        if (user == null) {
+            throw new NullPointerException("user cannot be null");
+        }
+        if (this.user != null) {
+            throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
+        }
         this.user = user;
         return accept();
     }
 
     public CompetitionParticipant reject(RejectionReason rejectionReason, Optional<String> rejectionComment) {
-        if (rejectionReason == null) throw new NullPointerException("rejectionReason cannot be null");
-        if (rejectionComment == null) throw new NullPointerException("rejectionComment cannot be null");
+        if (rejectionReason == null) {
+            throw new NullPointerException("rejectionReason cannot be null");
+        }
+        if (rejectionComment == null) {
+            throw new NullPointerException("rejectionComment cannot be null");
+        }
 
-        if (getInvite().getStatus() != OPENED)
+        if (getInvite().getStatus() != OPENED) {
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that hasn't been opened");
-
-        if (getStatus() == ACCEPTED)
+        }
+        if (getStatus() == ACCEPTED) {
             throw new IllegalStateException("Cannot reject a CompetitionParticipant that has been accepted");
-        if (getStatus() == REJECTED)
+        }
+        if (getStatus() == REJECTED) {
             throw new IllegalStateException("CompetitionParticipant has already been rejected");
+        }
 
         this.rejectionReason = rejectionReason;
         this.rejectionReasonComment = rejectionComment.orElse(null);

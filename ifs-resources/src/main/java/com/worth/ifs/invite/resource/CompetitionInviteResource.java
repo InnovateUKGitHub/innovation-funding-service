@@ -1,9 +1,11 @@
 package com.worth.ifs.invite.resource;
 
+import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -19,9 +21,15 @@ public class CompetitionInviteResource extends InviteResource {
 
     private LocalDateTime deadlineDate;
 
+    private LocalDateTime briefingDate;
+
+    private BigDecimal assessorPay;
+
     private String email;
 
     private InviteStatus status;
+
+    private CategoryResource innovationArea;
 
     public String getCompetitionName() {
         return competitionName;
@@ -71,6 +79,30 @@ public class CompetitionInviteResource extends InviteResource {
         this.deadlineDate = deadlineDate;
     }
 
+    public LocalDateTime getBriefingDate() {
+        return briefingDate;
+    }
+
+    public void setBriefingDate(LocalDateTime briefingDate) {
+        this.briefingDate = briefingDate;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
+    }
+
+    public CategoryResource getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(CategoryResource innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +118,9 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(status, that.status)
                 .append(acceptsDate, that.acceptsDate)
                 .append(deadlineDate, that.deadlineDate)
+                .append(briefingDate, that.briefingDate)
+                .append(assessorPay, that.assessorPay)
+                .append(innovationArea, that.innovationArea)
                 .isEquals();
     }
 
@@ -98,6 +133,9 @@ public class CompetitionInviteResource extends InviteResource {
                 .append(status)
                 .append(acceptsDate)
                 .append(deadlineDate)
+                .append(briefingDate)
+                .append(assessorPay)
+                .append(innovationArea)
                 .toHashCode();
     }
 }

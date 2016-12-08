@@ -114,12 +114,29 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         });
     }
 
-
     @Test
     public void testSearchCompetitions() {
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.searchCompetitions("string", 1, 1), () -> {
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void testCloseAssessment() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.closeAssessment(1L), () -> {
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void testNotifyAssessors() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.notifyAssessors(1L), () -> {
             verifyNoMoreInteractions(rules);
         });
     }
@@ -166,6 +183,16 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<CompetitionCountResource> countCompetitions() {
             return serviceSuccess(new CompetitionCountResource());
+        }
+
+        @Override
+        public ServiceResult<Void> closeAssessment(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> notifyAssessors(Long competitionId) {
+            return null;
         }
 
     }
