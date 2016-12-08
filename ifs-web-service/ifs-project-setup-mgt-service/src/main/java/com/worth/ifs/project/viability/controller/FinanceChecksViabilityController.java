@@ -1,7 +1,11 @@
 package com.worth.ifs.project.viability.controller;
 
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.project.ProjectService;
 import com.worth.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,17 +21,26 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/viability")
 public class FinanceChecksViabilityController {
 
-    @RequestMapping(method = GET)
-    public String viewViability(@PathVariable Long organisationId, Model model) {
+    @Autowired
+    private ProjectService projectService;
 
-        populateViewModel(model);
+    @Autowired
+    private OrganisationService organisationService;
+
+    @RequestMapping(method = GET)
+    public String viewViability(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId, Model model) {
+
+        populateViewModel(projectId, organisationId, model);
         return "project/financecheck/viability";
     }
 
-    private void populateViewModel(Model model) {
+    private void populateViewModel(Long projectId, Long organisationId, Model model) {
 
-        String organisationName = "My organisation";
-        boolean leadPartnerOrganisation = true;
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+
+        String organisationName = organisation.getName();
+        boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
         Integer totalCosts = 286283;
         Integer percentageGrant = 55;
@@ -35,10 +48,10 @@ public class FinanceChecksViabilityController {
         Integer otherPublicSectorFunding = 20000;
         Integer contributionToProject = 85885;
 
-        String companyRegistrationNumber = "123456789";
+        String companyRegistrationNumber = organisation.getCompanyHouseNumber();
         Integer turnover = null;
         Integer headCount = null;
-        OrganisationSize organisationSize = OrganisationSize.MEDIUM;
+        OrganisationSize organisationSize = organisation.getOrganisationSize();
         boolean creditReportVerified = false;
         boolean viabilityApproved = false;
 
