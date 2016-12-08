@@ -54,7 +54,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<Void> updateMilestones(Long id, List<MilestoneResource> milestones) {
+    public ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones) {
     	ValidationMessages messages = validate(milestones);
         
         if (!messages.hasErrors()) {

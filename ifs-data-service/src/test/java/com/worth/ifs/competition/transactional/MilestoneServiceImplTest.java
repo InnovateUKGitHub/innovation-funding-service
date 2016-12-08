@@ -60,7 +60,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertTrue(result.isSuccess());
 		ArgumentCaptor<Milestone> milestoneCaptor = ArgumentCaptor.forClass(Milestone.class);
@@ -82,7 +82,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 10, 0, 0), LocalDateTime.of(2050, 3, 11, 0, 0))
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
@@ -100,7 +100,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), null)
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
@@ -118,7 +118,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(1985, 3, 10, 0, 0))
                 .build(2);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
@@ -135,7 +135,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL, ALLOCATE_ASSESSORS, ASSESSOR_ACCEPTS)
                 .build(4);
 
-		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
+		ServiceResult<Void> result = service.updateMilestones(milestones);
 		
 		assertFalse(result.isSuccess());
 		assertEquals(1, result.getFailure().getErrors().size());
