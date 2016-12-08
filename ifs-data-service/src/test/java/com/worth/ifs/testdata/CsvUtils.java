@@ -219,6 +219,7 @@ class CsvUtils {
         String type;
         String targetName;
         String ownerName;
+        String innovationAreaName;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -229,6 +230,7 @@ class CsvUtils {
             type = line.get(i++);
             targetName = line.get(i++);
             ownerName = line.get(i++);
+            innovationAreaName = line.get(i++);
         }
     }
 
