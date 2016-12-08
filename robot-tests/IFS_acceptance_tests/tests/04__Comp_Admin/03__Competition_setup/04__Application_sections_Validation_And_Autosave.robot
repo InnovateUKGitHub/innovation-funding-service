@@ -32,14 +32,14 @@ Business opportunity: Client side validations
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
     And the user should not see the text in the page   Please enter a from score
     And the user should not see the text in the page   Please enter a to score
     And the user should not see the text in the page   Please enter a justification
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]    Failing
-    #TODO work out why its failing!
+    [Tags]
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
@@ -49,7 +49,7 @@ Business opportunity: Autosave
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
