@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.category.resource.CategoryType;
 import com.worth.ifs.competition.domain.CompetitionType;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.testdata.builders.data.CompetitionData;
@@ -108,7 +109,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withSetupComplete() {
-        return asCompAdmin(data -> competitionSetupService.markAsSetup(data.getCompetition().getId()));
+        return asCompAdmin(data -> {
+            asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+                competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
+            });
+            competitionSetupService.markAsSetup(data.getCompetition().getId());
+        });
     }
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
