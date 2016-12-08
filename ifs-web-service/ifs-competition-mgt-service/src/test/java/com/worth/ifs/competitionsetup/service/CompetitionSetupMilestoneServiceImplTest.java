@@ -60,7 +60,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
         MilestoneViewModel milestoneViewModel = new MilestoneViewModel(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
         newMilestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneViewModel);
 
-        when(milestoneService.updateMilestones(anyListOf(MilestoneResource.class), anyLong())).thenReturn(Collections.emptyList());
+        when(milestoneService.updateMilestones(anyListOf(MilestoneResource.class))).thenReturn(Collections.emptyList());
 
         List<Error> result = service.updateMilestonesForCompetition(oldMilestones, newMilestones, 123L);
 

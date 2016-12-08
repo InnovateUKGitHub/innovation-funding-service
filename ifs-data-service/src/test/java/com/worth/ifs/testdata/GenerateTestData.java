@@ -639,6 +639,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withSubmissionDate(line.submissionDate).
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
+                withAssessorBriefingDate(line.assessorBriefingDate).
                 withAssessorAcceptsDate(line.assessorAcceptsDate).
                 withAssessorsNotifiedDate(line.assessorsNotifiedDate).
                 withAssessorEndDate(line.assessorEndDate).

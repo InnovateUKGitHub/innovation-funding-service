@@ -73,8 +73,7 @@ Initial details: client-side validations
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
-    [Tags]    Pending
-    # TODO pending due Ito NFUND-5367
+    [Tags]
     When the user clicks the button/link    link=Competition setup
     and the user clicks the button/link    link=Initial details
     Then the user should see the correct values in the initial details form
