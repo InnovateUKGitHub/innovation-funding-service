@@ -2,15 +2,13 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.commons.security.NotSecured;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
-import com.worth.ifs.invite.resource.ExistingUserStagedInviteResource;
-import com.worth.ifs.invite.resource.NewUserStagedInviteResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,6 +46,8 @@ public interface CompetitionInviteService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite);
@@ -59,5 +59,5 @@ public interface CompetitionInviteService {
     ServiceResult<Void> sendInvite(long inviteId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<Void> deleteInvite(long inviteId);
+    ServiceResult<Void> deleteInvite(String email, long competitionId);
 }
