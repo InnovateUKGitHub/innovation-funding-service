@@ -1,14 +1,14 @@
 package com.worth.ifs.competitionsetup.service.formpopulator.application;
 
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.*;
-import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.competition.resource.*;
-import com.worth.ifs.competitionsetup.form.*;
-import com.worth.ifs.competitionsetup.form.application.*;
-import com.worth.ifs.competitionsetup.service.*;
-import com.worth.ifs.competitionsetup.service.formpopulator.*;
-import com.worth.ifs.form.service.*;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
+import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,6 @@ import java.util.Optional;
 public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
 	@Autowired
-	private QuestionService questionService;
-
-	@Autowired
-	private FormInputService formInputService;
-
-	@Autowired
 	private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Override
@@ -36,22 +30,23 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
+
 		ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
 
 		if(objectId.isPresent()) {
-            QuestionResource questionResource = questionService.getById(objectId.get());
-            competitionSetupForm.setQuestion(initQuestionForForm(questionResource));
+			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccessObjectOrThrowException();
+			competitionSetupForm.setQuestion(questionResource);
+
+			competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource ->  {
+				GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
+				competitionSetupForm.getGuidanceRows().add(grvm);
+			});
+
         } else {
             throw new ObjectNotFoundException();
         }
 
 		return competitionSetupForm;
 	}
-
-	private CompetitionSetupQuestionResource initQuestionForForm(QuestionResource questionResource) {
-		return competitionSetupQuestionService.getQuestion(questionResource.getId()).getSuccessObjectOrThrowException();
-	}
-
-
 
 }

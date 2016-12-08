@@ -1,8 +1,8 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.domain.ApplicationFinanceRow;
+import com.worth.ifs.finance.repository.ApplicationFinanceRowRepository;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -28,7 +28,7 @@ public class GrantClaimValidatorTest {
 	private GrantClaimValidator validator;
 
 	@Mock
-	private FinanceRowRepository financeRowRepository;
+	private ApplicationFinanceRowRepository financeRowRepository;
 	
 	private GrantClaim claim;
 	private BindingResult bindingResult;
@@ -271,8 +271,8 @@ public class GrantClaimValidatorTest {
     	ApplicationFinance applicationFinance = new ApplicationFinance();
     	applicationFinance.setOrganisation(organisation);
     	applicationFinance.setOrganisationSize(organisationSize);
-    	FinanceRow cost = new FinanceRow();
-    	cost.setApplicationFinance(applicationFinance);
+        ApplicationFinanceRow cost = new ApplicationFinanceRow();
+    	cost.setTarget(applicationFinance);
     	when(financeRowRepository.findOne(any(Long.class))).thenReturn(cost);
     }
     

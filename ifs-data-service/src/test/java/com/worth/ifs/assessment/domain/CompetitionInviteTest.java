@@ -1,11 +1,14 @@
 package com.worth.ifs.assessment.domain;
 
-import com.worth.ifs.competition.builder.CompetitionBuilder;
+import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.worth.ifs.category.builder.CategoryBuilder.newCategory;
+import static com.worth.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.constant.InviteStatus.SENT;
@@ -15,11 +18,13 @@ public class CompetitionInviteTest {
 
     private CompetitionInvite invite;
     private Competition competition;
+    private Category innovationArea;
 
     @Before
     public void setup() {
-        competition = CompetitionBuilder.newCompetition().build();
-        invite = new CompetitionInvite("invite name", "email", "hash", competition);
+        competition = newCompetition().build();
+        innovationArea = newCategory().withType(INNOVATION_AREA).build();
+        invite = new CompetitionInvite("invite name", "email", "hash", competition, innovationArea);
     }
 
     @Test

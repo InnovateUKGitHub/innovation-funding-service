@@ -82,6 +82,17 @@ public final class MapFunctions {
     }
 
     /**
+     * Converts the given pair list to a map
+     *
+     * @param list
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> Map<T, R> toMap(List<Pair<T, R>> list) {
+        return simpleToMap(list, Pair::getLeft, Pair::getRight);
+    }
+    /**
      * Given 2 maps, this method will return a non-null Map containing all the elements of both.  If however map2 contains duplicate
      * keys with map1, the returned Map will contain map2's versions of these
      *

@@ -3,9 +3,7 @@ package com.worth.ifs.assessment.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -147,6 +145,26 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> sendInvite(long inviteId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteInvite(long inviteId) {
             return null;
         }
     }
