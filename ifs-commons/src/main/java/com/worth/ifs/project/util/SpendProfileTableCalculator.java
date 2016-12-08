@@ -92,10 +92,11 @@ public class SpendProfileTableCalculator {
                                     FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
                                     if (year == financialYearDate.getFiscalYear()) {
                                         totalForYear = totalForYear.add(values.get(i));
-                                        yearEligibleCostTotal.put(String.valueOf(year), totalForYear);
+
                                     }
                                 }
                             }
+                            yearEligibleCostTotal.put(String.valueOf(year), totalForYear);
                         }
                 );
         return yearEligibleCostTotal;
@@ -125,6 +126,7 @@ public class SpendProfileTableCalculator {
                                     }
                                 }
                             }
+                            yearGrantAllocationTotal.put(String.valueOf(year), totalForYear);
                         }
                 );
         return yearGrantAllocationTotal;
