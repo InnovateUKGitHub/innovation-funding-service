@@ -9,6 +9,7 @@ import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
+import com.worth.ifs.util.InviteUtil;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -27,6 +28,7 @@ import org.springframework.validation.Validator;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -76,6 +78,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         super.setup();
 
         this.setupInvites();
+        this.setupCookieUtil();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
@@ -87,12 +90,12 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(RestResult.restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(RestResult.restSuccess(true));
 
-        organisationTypeBusiness = new Cookie("organisationType", "{\"organisationType\":1}");
-        organisationForm = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
-        organisationFormWithPostcodeInput = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
-        organisationFormWithSelectedPostcode = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":\"0\",\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
-        organisationFormWithEmptyPostcodeInput = new Cookie("organisationForm", "{\"addressForm\":{\"triedToSearch\":true,\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}");
-        inviteHash = new Cookie(INVITE_HASH, INVITE_HASH);
+        organisationTypeBusiness = new Cookie("organisationType", encryptor.encrypt("{\"organisationType\":1}"));
+        organisationForm = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
+        organisationFormWithPostcodeInput = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
+        organisationFormWithSelectedPostcode = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":\"0\",\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
+        organisationFormWithEmptyPostcodeInput = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSearch\":true,\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
+        inviteHash = new Cookie(InviteUtil.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
     }
 
     @Test
@@ -112,10 +115,9 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         assertEquals(2, cookies.length);
         assertNotNull(cookies[0]);
         assertNotNull(cookies[1]);
-        assertEquals("flashMessage", cookies[0].getName());
-        assertEquals("", cookies[0].getValue());
-        assertEquals("organisationType", cookies[1].getName());
-        assertEquals(URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8), cookies[1].getValue());
+        assertEquals("", Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("flashMessage")).findAny().get().getValue());
+        assertEquals(URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(cookies, "organisationType"));
     }
 
     @Test
@@ -334,7 +336,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
 
     @Test
     public void testSaveOrganisation() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/save-organisation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/save-organisation")
                 .param("searchOrganisationId", COMPANY_ID)
                 .cookie(organisationTypeBusiness)
                 .cookie(organisationForm)
@@ -342,12 +344,14 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/registration/register"))
                 .andExpect(cookie().exists("organisationId"))
-                .andExpect(cookie().value("organisationId", "5"));
+                .andReturn();
+        
+        assertEquals("5", getDecryptedCookieValue(result.getResponse().getCookies(), "organisationId"));
     }
 
     @Test
     public void testSaveOrganisationWithInvite() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/save-organisation")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/save-organisation")
                 .param("searchOrganisationId", COMPANY_ID)
                 .cookie(organisationTypeBusiness)
                 .cookie(organisationForm)
@@ -356,7 +360,9 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/registration/register"))
                 .andExpect(cookie().exists("organisationId"))
-                .andExpect(cookie().value("organisationId", "5"));
+                .andReturn();
+
+        assertEquals("5", getDecryptedCookieValue(result.getResponse().getCookies(), "organisationId"));
     }
 
     @Test
