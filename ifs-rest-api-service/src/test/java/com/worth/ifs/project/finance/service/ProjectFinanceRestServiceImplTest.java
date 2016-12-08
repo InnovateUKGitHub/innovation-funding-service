@@ -53,12 +53,11 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         Long projectId = 1L;
         Long organisationId = 1L;
-        Boolean complete = true;
 
-        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete/" + complete,
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete",
                 OK);
 
-        RestResult<Void> result = service.markSpendProfile(projectId, organisationId,  complete);
+        RestResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
 
         assertTrue(result.isSuccess());
     }

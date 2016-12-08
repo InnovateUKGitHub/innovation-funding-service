@@ -167,7 +167,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.markSpendProfile(projectOrganisationCompositeId, true),
+        assertAccessDenied(() -> classUnderTest.markSpendProfileComplete(projectOrganisationCompositeId),
                 () -> {
 
                     verify(projectFinancePermissionRules).partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, getLoggedInUser());
@@ -219,7 +219,12 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+        public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
 

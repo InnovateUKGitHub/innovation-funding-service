@@ -51,6 +51,30 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         assertTrue(rules.projectManagerCanCompleteSpendProfile(project.getId(), user));
     }
 
+    @Test
+    public void testProjectManagerCanIncompleteAnySpendProfile() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setUpUserAsProjectManager(project, user);
+
+        assertTrue(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void testPartnerCannotIncompleteSpendProfile() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setUpUserNotAsProjectManager(user);
+
+        assertFalse(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
+    }
+
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectFinancePermissionRules();

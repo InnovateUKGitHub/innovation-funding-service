@@ -48,11 +48,10 @@ public class ProjectFinanceServiceImplTest {
 
         Long projectId = 1L;
         Long organisationId = 1L;
-        Boolean complete = true;
 
-        when(projectFinanceRestService.markSpendProfile(projectId, organisationId, complete)).thenReturn(restSuccess());
+        when(projectFinanceRestService.markSpendProfileComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.markSpendProfile(projectId, organisationId, complete);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
 
         assertTrue(result.isSuccess());
 

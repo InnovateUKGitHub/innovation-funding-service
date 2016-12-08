@@ -106,7 +106,7 @@ public class ProjectMonitoringOfficerController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION') && hasAu")
     @RequestMapping(value = "/assign", method = POST)
     public String updateMonitoringOfficerDetails(Model model,
                                                  @PathVariable("projectId") final Long projectId,

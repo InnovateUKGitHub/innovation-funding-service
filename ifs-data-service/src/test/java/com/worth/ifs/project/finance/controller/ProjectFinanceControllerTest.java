@@ -151,9 +151,9 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.markSpendProfile(projectOrganisationCompositeId, true)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", projectId, organisationId, true)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId, true)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
                 .andExpect(status().isOk());

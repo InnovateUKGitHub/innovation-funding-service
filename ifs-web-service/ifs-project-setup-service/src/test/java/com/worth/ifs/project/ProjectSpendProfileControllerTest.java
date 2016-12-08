@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -215,7 +216,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
 
-        when(projectFinanceService.markSpendProfile(projectResource.getId(), organisationId, true)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
+        when(projectFinanceService.markSpendProfileComplete(projectResource.getId(), organisationId)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
@@ -234,9 +235,37 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        when(projectFinanceService.markSpendProfile(projectId, organisationId, true)).thenReturn(serviceSuccess());
+        when(projectFinanceService.markSpendProfileComplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
+    }
+
+    @Test
+    public void markAsIncompleteSpendProfileSuccess() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
+    }
+
+    @Test
+    public void markAsIncompleteSpendProfileFailure() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
@@ -270,6 +299,38 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("project/spend-profile"));
+    }
+
+    @Test
+    public void partnerCannotEditAfterSubmission() throws Exception {
+        Long organisationId = 1L;
+        Long projectId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .build();
+
+        SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
+        table.setMarkedAsComplete(true);
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+
+        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+
+        when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
+
+        SpendProfileForm expectedForm = new SpendProfileForm();
+        expectedForm.setTable(table);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectResource.getId(), organisationId)
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(view().name("project/spend-profile"));
+
     }
 
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {

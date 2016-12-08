@@ -37,7 +37,10 @@ public interface ProjectFinanceService {
     ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
-    ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete);
+    ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
+    ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<CostCategoryTypeResource> findByCostCategoryGroupId(Long costCategoryGroupId);

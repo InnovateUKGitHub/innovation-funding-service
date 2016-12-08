@@ -651,7 +651,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
-        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
@@ -694,7 +694,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
-        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
 

@@ -87,6 +87,12 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection);
     }
 
+    @PermissionRule(value = "PROJECT_MANAGER_ACCESS", description = "A project manager can access certain methods which are unavailable to others")
+    public boolean userIsProjectManager(Long projectId, UserResource user) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> user.getId().equals(pu.getUser()) && UserRoleType.PROJECT_MANAGER.getName().equals(pu.getRoleName())) != null;
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
