@@ -1,12 +1,8 @@
 package com.worth.ifs.competitionsetup.form.application;
 
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
-import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowViewModel;
-import org.hibernate.validator.constraints.NotEmpty;
+import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowForm;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +13,13 @@ import java.util.List;
 public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
 
     @Valid
-    private List<GuidanceRowViewModel> guidanceRows = new ArrayList<>();
+    private List<GuidanceRowForm> guidanceRows = new ArrayList<>();
 
-    public List<GuidanceRowViewModel> getGuidanceRows() {
+    public List<GuidanceRowForm> getGuidanceRows() {
         return guidanceRows;
     }
 
-    public void setGuidanceRows(List<GuidanceRowViewModel> guidanceRows) {
+    public void setGuidanceRows(List<GuidanceRowForm> guidanceRows) {
         this.guidanceRows = guidanceRows;
     }
 }
