@@ -11,6 +11,7 @@ import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -26,6 +27,8 @@ import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl>{
@@ -52,9 +55,6 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	
 	@Test
 	public void testUpdateMilestones() {
-		Competition competition = newCompetition().build();
-		when(competitionRepository.findById(1L)).thenReturn(competition);
-		
 		List<MilestoneResource> milestones = newMilestoneResource()
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
@@ -63,10 +63,13 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		ServiceResult<Void> result = service.updateMilestones(1L, milestones);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(ASSESSMENT_PANEL, competition.getMilestones().get(0).getType());
-		assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), competition.getMilestones().get(0).getDate());
-		assertEquals(FUNDERS_PANEL, competition.getMilestones().get(1).getType());
-		assertEquals(LocalDateTime.of(2050, 3, 11, 0, 0), competition.getMilestones().get(1).getDate());
+		ArgumentCaptor<Milestone> milestoneCaptor = ArgumentCaptor.forClass(Milestone.class);
+		verify(milestoneRepository,times(2)).save(milestoneCaptor.capture());
+		List<Milestone> capturedMilestones = milestoneCaptor.getAllValues();
+		assertEquals(ASSESSMENT_PANEL, capturedMilestones.get(0).getType());
+		assertEquals(LocalDateTime.of(2050, 3, 10, 0, 0), capturedMilestones.get(0).getDate());
+		assertEquals(FUNDERS_PANEL, capturedMilestones.get(1).getType());
+		assertEquals(LocalDateTime.of(2050, 3, 11, 0, 0), capturedMilestones.get(1).getDate());
 	}
 	
 	@Test
