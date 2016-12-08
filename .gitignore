@@ -21,6 +21,8 @@ bin/
 
 
 # ignore properties
+**/gradle-wrapper.properties
+**/gradle-wrapper.jar
 **/*-build.gradle
 **/application-*.properties
 !**/application-local.properties
