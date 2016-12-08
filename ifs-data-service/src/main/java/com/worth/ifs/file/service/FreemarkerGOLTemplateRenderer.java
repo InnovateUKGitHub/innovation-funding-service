@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,21 @@ public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
 
     private ServiceResult<String> getStringServiceResult(String templatePath, Map<String, Object> replacementsWithCommonObjects) throws IOException, TemplateException {
         Template temp = configuration.getTemplate(templatePath);
+
         StringWriter writer = new StringWriter();
+        preProcessReplacements(replacementsWithCommonObjects);
         temp.process(replacementsWithCommonObjects, writer);
         return serviceSuccess(writer.getBuffer().toString());
+    }
+
+    private void preProcessReplacements(final Map<String, Object> replacementsWithCommonObjects) {
+        for (Map.Entry<String, Object> entry : replacementsWithCommonObjects.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                String valueStr = (String)value;
+                entry.setValue(StringEscapeUtils.escapeHtml4(valueStr));
+            }
+        }
     }
 
 }

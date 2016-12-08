@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompetitionSetupQuestionResource {
@@ -38,7 +39,7 @@ public class CompetitionSetupQuestionResource {
     private Boolean scored;
     private Integer scoreTotal;
     private Boolean writtenFeedback;
-    private List<GuidanceRowResource> guidanceRows;
+    private List<GuidanceRowResource> guidanceRows = new ArrayList<>();
 
     private Boolean researchCategoryQuestion;
     private Boolean scope;

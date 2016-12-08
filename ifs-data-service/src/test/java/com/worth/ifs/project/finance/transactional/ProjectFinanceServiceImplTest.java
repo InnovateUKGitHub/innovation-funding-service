@@ -84,10 +84,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         // First cost category type and everything that goes with it.
         CostCategory type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
-        CostCategoryResource type1Cat1Resource = newCostCategoryResource().withName(type1Cat1.getName()).with(id(type1Cat1.getId())).build();
-
         CostCategory type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
-        CostCategoryResource type1Cat2Resource = newCostCategoryResource().withName(type1Cat2.getName()).with(id(type1Cat2.getId())).build();
 
         CostCategoryType costCategoryType1 =
                 newCostCategoryType()
@@ -139,14 +136,14 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
                 new SpendProfileCostCategorySummaries(
                         asList(
-                                new SpendProfileCostCategorySummary(type1Cat1Resource, new BigDecimal("100.00"), project.getDurationInMonths()),
-                                new SpendProfileCostCategorySummary(type1Cat2Resource, new BigDecimal("200.00"), project.getDurationInMonths())),
-                        costCategoryType1Resource)));
+                                new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
+                                new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
+                        costCategoryType1)));
 
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
                 new SpendProfileCostCategorySummaries(
-                        singletonList(new SpendProfileCostCategorySummary(type2Cat1Resource, new BigDecimal("300.66"), project.getDurationInMonths())),
-                        costCategoryType2Resource)));
+                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
+                        costCategoryType2)));
 
         List<Cost> expectedOrganisation1EligibleCosts = asList(
                 new Cost("100").withCategory(type1Cat1),
@@ -264,14 +261,14 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
                 new SpendProfileCostCategorySummaries(
                         asList(
-                                new SpendProfileCostCategorySummary(type1Cat1Resource, new BigDecimal("100.00"), project.getDurationInMonths()),
-                                new SpendProfileCostCategorySummary(type1Cat2Resource, new BigDecimal("200.00"), project.getDurationInMonths())),
-                        costCategoryType1Resource)));
+                                new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
+                                new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
+                        costCategoryType1)));
 
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
                 new SpendProfileCostCategorySummaries(
-                        singletonList(new SpendProfileCostCategorySummary(type2Cat1Resource, new BigDecimal("300.66"), project.getDurationInMonths())),
-                        costCategoryType2Resource)));
+                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
+                        costCategoryType2)));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());

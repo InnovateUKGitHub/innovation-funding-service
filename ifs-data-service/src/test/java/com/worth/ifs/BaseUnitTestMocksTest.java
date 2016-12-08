@@ -42,9 +42,9 @@ import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.file.service.FileTemplateRenderer;
 import com.worth.ifs.file.transactional.FileHttpHeadersValidator;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
+import com.worth.ifs.finance.repository.*;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -77,6 +77,7 @@ import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.project.transactional.ProjectStatusService;
 import com.worth.ifs.project.users.ProjectUsersHelper;
+import com.worth.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.sil.experian.service.SilExperianEndpoint;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -272,7 +273,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserProfileService userProfileServiceMock;
 
     @Mock
-    protected FinanceRowRepository financeRowRepositoryMock;
+    protected ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
 
     @Mock
     protected AssessmentRepository assessmentRepositoryMock;
@@ -434,6 +435,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected GOLWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
+    protected ProjectWorkflowHandler projectWorkflowHandlerMock;
+
+    @Mock
     protected PartnerOrganisationRepository partnerOrganisationRepositoryMock;
 
     @Mock
@@ -462,6 +466,18 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessorCountOptionRepository assessorCountOptionRepositoryMock;
+
+    @Mock
+    protected ProjectFinanceRepository projectFinanceRepositoryMock;
+
+    @Mock
+    protected ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
+
+    @Mock
+    protected FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
+
+    @Mock
+    protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
 
     @Before
     public void setupMockInjection() {

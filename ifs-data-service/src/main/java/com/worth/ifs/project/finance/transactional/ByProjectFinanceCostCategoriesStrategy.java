@@ -1,7 +1,7 @@
 package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.finance.resource.cost.CostCategoryGenerator;
@@ -34,7 +34,7 @@ import static java.util.EnumSet.allOf;
  * to search for an existing CostCategoryType that supports its Cost Categories
  */
 @Component
-public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryTypeStrategy {
+public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeStrategy {
 
     @Autowired
     private OrganisationService organisationService;
@@ -54,7 +54,7 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {
         return find(project(projectId), organisation(organisationId)).
                 andOnSuccess((project, organisation) ->
-                        find(applicationFinanceResource(project.getApplication(), organisation.getId())).
+                        find(projectFinanceResource(project.getId(), organisation.getId())).
                                 andOnSuccess((finances) -> {
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
                                     if (!isResearch(organisation.getOrganisationType())) {
@@ -106,10 +106,9 @@ public class ByApplicationFinanceCostCategoriesStrategy implements CostCategoryT
         return () -> organisationService.findById(organisationId);
     }
 
-    private Supplier<ServiceResult<ApplicationFinanceResource>> applicationFinanceResource(Long applicationId, Long organisationId) {
-        return () -> financeRowService.financeDetails(applicationId, organisationId);
+    private Supplier<ServiceResult<ProjectFinanceResource>> projectFinanceResource(Long projectId, Long organisationId) {
+        return () -> financeRowService.financeChecksDetails(projectId, organisationId);
     }
-
 
     /**
      * Convenience method to determine if a {@link CostCategory} is equal to a {@link CostCategoryGenerator} and so needs to be generated

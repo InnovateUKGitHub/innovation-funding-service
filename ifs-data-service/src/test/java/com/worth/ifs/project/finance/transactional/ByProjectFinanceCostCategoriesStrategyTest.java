@@ -3,7 +3,7 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.finance.resource.cost.FinanceRowType;
@@ -20,18 +20,18 @@ import java.util.Map;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static com.worth.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static com.worth.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static com.worth.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
 import static com.worth.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static com.worth.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static com.worth.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.project.finance.transactional.ByApplicationFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
+import static com.worth.ifs.project.finance.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static com.worth.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByApplicationFinanceCostCategoriesStrategy> {
+public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategoriesStrategy> {
 
     @Test
     public void testIndustrialCreate() {
@@ -55,7 +55,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         FinanceRowCostCategory materialsFrcc = newDefaultCostCategory().withCosts(newMaterials().build(1)).build();
         fod.put(LABOUR, labourFrcc);
         fod.put(FinanceRowType.MATERIALS, materialsFrcc);
-        ApplicationFinanceResource afr = newApplicationFinanceResource().withFinanceOrganisationDetails(fod).build();
+        ProjectFinanceResource projectFinance = newProjectFinanceResource().withFinanceOrganisationDetails(fod).build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + LABOUR.getName() + ", " + MATERIALS.getName()).
                 withCostCategoryGroup(newCostCategoryGroup().
@@ -67,7 +67,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
+        when(financeRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         // Method under test
@@ -83,7 +83,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
-        ApplicationFinanceResource afr = newApplicationFinanceResource().build();
+        ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName("A name that will not match - we care only about the contained CostCategories").
                 withCostCategoryGroup(newCostCategoryGroup().
@@ -96,7 +96,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
+        when(financeRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(asList(expectedCct)); // This is the one already created and should be returned
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
@@ -110,7 +110,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
         OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
-        ApplicationFinanceResource afr = newApplicationFinanceResource().build();
+        ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + simpleJoiner(sorted(allOf(AcademicCostCategoryGenerator.class)), AcademicCostCategoryGenerator::getName, ", ")).
                 withCostCategoryGroup(newCostCategoryGroup().
@@ -123,7 +123,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(financeRowServiceMock.financeDetails(ar.getId(), or.getId())).thenReturn(serviceSuccess(afr));
+        when(financeRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         // Method under test
@@ -142,7 +142,7 @@ public class ByApplicationFinanceCostCategoriesStrategyTest extends BaseServiceU
     }
 
     @Override
-    protected ByApplicationFinanceCostCategoriesStrategy supplyServiceUnderTest() {
-        return new ByApplicationFinanceCostCategoriesStrategy();
+    protected ByProjectFinanceCostCategoriesStrategy supplyServiceUnderTest() {
+        return new ByProjectFinanceCostCategoriesStrategy();
     }
 }
