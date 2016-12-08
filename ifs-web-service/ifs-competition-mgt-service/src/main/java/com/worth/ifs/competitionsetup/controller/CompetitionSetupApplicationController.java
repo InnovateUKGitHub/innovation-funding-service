@@ -1,11 +1,13 @@
 package com.worth.ifs.competitionsetup.controller;
 
-import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.form.application.*;
+import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationProjectForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.competitionsetup.viewmodel.GuidanceRowViewModel;
@@ -16,19 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.*;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
@@ -51,6 +52,9 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Autowired
+    private Validator validator;
 
     @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
@@ -147,6 +151,7 @@ public class CompetitionSetupApplicationController {
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
+        validateGuidanceRows(competitionSetupForm, bindingResult);
 
         if(!bindingResult.hasErrors()) {
 
@@ -232,6 +237,12 @@ public class CompetitionSetupApplicationController {
         competitionService.update(resource);
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
+
+    private void validateGuidanceRows(ApplicationQuestionForm applicationProjectForm, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
+            ValidationUtils.invokeValidator( validator,applicationProjectForm, bindingResult, GuidanceRowViewModel.GuidanceRowViewGroup.class);
+        }
     }
 
     private String getDetailsPage(Model model, Long competitionId, boolean isEditable) {

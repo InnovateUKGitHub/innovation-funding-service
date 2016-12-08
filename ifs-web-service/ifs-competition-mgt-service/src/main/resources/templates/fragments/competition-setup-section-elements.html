@@ -48,7 +48,8 @@
                     <dd class="column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.writtenFeedback}">
                         <dt class="column-third">Guidance Title</dt>
-                        <dd class="column-two-thirds" th:text="${question.assessmentGuidanceTitle}">Feedback</dd>
+                        <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">None</dd>
+                        <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}" ifs:utext="${question.assessmentGuidanceTitle}"></dd>
                         <dt class="column-third">Guidance</dt>
                         <dd class="column-two-thirds">
                             <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
