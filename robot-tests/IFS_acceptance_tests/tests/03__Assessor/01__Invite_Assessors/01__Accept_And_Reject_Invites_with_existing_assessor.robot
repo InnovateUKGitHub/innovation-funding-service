@@ -23,6 +23,7 @@ Resource          ../../../resources/defaultResources.robot
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e
 ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 28 January
 
@@ -104,6 +105,13 @@ Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL    HappyPath
     Then the total calculation in dashboard should be correct    Competitions for assessment    //div[3]/ul/li
+
+Registered user should not allowed to accept other assessor invite
+    [Documentation]    INFUND-4895
+    [Tags]
+    Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
+    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    Then The user should see permissions error message
 
 The user should not be able to accept or reject the same applications
     [Documentation]    NFUND-5165
