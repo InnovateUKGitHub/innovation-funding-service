@@ -30,8 +30,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.util.InviteUtils.INVITE_HASH;
-import static com.worth.ifs.util.InviteUtils.ORGANISATION_TYPE;
+import static com.worth.ifs.util.InviteUtil.INVITE_HASH;
+import static com.worth.ifs.util.InviteUtil.ORGANISATION_TYPE;
 
 @Controller
 @RequestMapping("/organisation/create/type/")

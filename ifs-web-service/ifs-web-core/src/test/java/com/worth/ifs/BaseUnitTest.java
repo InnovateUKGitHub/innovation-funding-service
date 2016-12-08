@@ -13,10 +13,8 @@ import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.bankdetails.BankDetailsService;
-import com.worth.ifs.competition.resource.CompetitionStatus;
-import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
-import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.commons.security.authentication.user.UserAuthentication;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.contract.service.ContractService;
@@ -37,6 +35,7 @@ import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.organisation.service.OrganisationAddressRestService;
 import com.worth.ifs.project.PartnerOrganisationService;
 import com.worth.ifs.project.ProjectService;
+import com.worth.ifs.project.bankdetails.service.BankDetailsRestService;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.financecheck.FinanceCheckService;
 import com.worth.ifs.project.service.ProjectRestService;
@@ -46,6 +45,7 @@ import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.workflow.ProcessOutcomeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,22 +56,27 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
@@ -84,12 +89,15 @@ import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRo
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
@@ -104,6 +112,7 @@ public class BaseUnitTest {
     public UserResource applicantUser;
 
     public UserAuthentication loggedInUserAuthentication;
+    public TextEncryptor encryptor;
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -193,6 +202,8 @@ public class BaseUnitTest {
     public ProjectStatusService projectStatusServiceMock;
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
+    @Mock
+    public CookieUtil cookieUtil;
 
     @Spy
     @InjectMocks
@@ -356,8 +367,8 @@ public class BaseUnitTest {
 
     public void setupCompetition() {
         competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
-                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
-                .build();
+                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
+                build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());
 
@@ -410,7 +421,7 @@ public class BaseUnitTest {
 
         SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
-        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withType(SectionType.FINANCE).build();
+        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
 
@@ -689,6 +700,35 @@ public class BaseUnitTest {
                 }).build(1);
 
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(1l, application.getId())).thenReturn(questionStatusResources);
+    }
+
+    public void setupCookieUtil() {
+        String password = "mysecretpassword";
+        String salt = "109240124012412412";
+        encryptor = Encryptors.text(password, salt);
+
+        ReflectionTestUtils.setField(cookieUtil, "cookieSecure", TRUE);
+        ReflectionTestUtils.setField(cookieUtil, "cookieHttpOnly", FALSE);
+        ReflectionTestUtils.setField(cookieUtil, "encryptionPassword", password);
+        ReflectionTestUtils.setField(cookieUtil, "encryptionSalt", salt);
+        ReflectionTestUtils.setField(cookieUtil, "encryptor", encryptor);
+
+        doCallRealMethod().when(cookieUtil).saveToCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).removeCookie(any(HttpServletResponse.class), any(String.class));
+    }
+
+    public String getDecryptedCookieValue(Cookie[] cookies, String cookieName) {
+        Optional<Cookie> cookieFound = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(cookieName))
+                .findAny();
+
+        if(cookieFound.isPresent()) {
+            return encryptor.decrypt(cookieFound.get().getValue());
+        }
+
+        return null;
     }
 
     private QuestionResource setupQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  */
-public class InviteUtils {
+public class InviteUtil {
     public static final String INVITE_HASH = "invite_hash";
     public static final String ORGANISATION_TYPE = "organisationType";
 

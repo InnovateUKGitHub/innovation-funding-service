@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
-import static com.worth.ifs.util.InviteUtils.INVITE_HASH;
+import static com.worth.ifs.util.InviteUtil.INVITE_HASH;
 
 @Controller
 @RequestMapping("/registration")

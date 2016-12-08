@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 import org.springframework.validation.Validator;
 
@@ -20,6 +21,7 @@ import javax.servlet.http.Cookie;
 import static com.worth.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,6 +53,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         mockMvc = setupMockMvc(applicationCreationController, () -> loggedInUser, env, messageSource);
 
         super.setup();
+        setupCookieUtil();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
@@ -62,19 +65,22 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
 
     @Test
     public void testCheckEligibility() throws Exception {
-        mockMvc.perform(get("/application/create/check-eligibility/1"))
+        MvcResult result = mockMvc.perform(get("/application/create/check-eligibility/1"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("create-application/check-eligibility"))
-                .andExpect(cookie().value("competitionId", "1"))
-                .andExpect(cookie().value("invite_hash", ""));
+                .andExpect(cookie().exists("competitionId"))
+                .andExpect(cookie().value("invite_hash", ""))
+                .andReturn();
+
+        assertEquals("1", getDecryptedCookieValue(result.getResponse().getCookies(), "competitionId"));
     }
 
 
     @Test
     public void testInitializeApplication() throws Exception {
         mockMvc.perform(get("/application/create/initialize-application")
-                        .cookie(new Cookie(ApplicationCreationController.COMPETITION_ID, "1"))
-                        .cookie(new Cookie(ApplicationCreationController.USER_ID, "1"))
+                        .cookie(new Cookie(ApplicationCreationController.COMPETITION_ID, encryptor.encrypt("1")))
+                        .cookie(new Cookie(ApplicationCreationController.USER_ID, encryptor.encrypt("1")))
         )
                 .andExpect(status().is3xxRedirection())
 //                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite?newApplication"));

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.util.InviteUtils.*;
+import static com.worth.ifs.util.InviteUtil.*;
 
 
 /**

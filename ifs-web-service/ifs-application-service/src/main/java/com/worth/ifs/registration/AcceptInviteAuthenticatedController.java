@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.util.InviteUtils.INVITE_HASH;
-import static com.worth.ifs.util.InviteUtils.handleAcceptedInvite;
-import static com.worth.ifs.util.InviteUtils.handleInvalidInvite;
+import static com.worth.ifs.util.InviteUtil.INVITE_HASH;
+import static com.worth.ifs.util.InviteUtil.handleAcceptedInvite;
+import static com.worth.ifs.util.InviteUtil.handleInvalidInvite;
 
 /**
  * This class is use as an entry point to accept a invite, to a application.

@@ -27,8 +27,6 @@ public class CookieUtil {
 
     private static final Integer COOKIE_LIFETIME = 3600;
 
-    private static CookieUtil cookieUtil;
-
     private TextEncryptor encryptor;
 
     @Value("${server.session.cookie.secure}")
@@ -50,7 +48,7 @@ public class CookieUtil {
 
     public void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
         if (StringUtils.hasText(fieldName)) {
-            Cookie cookie = null;
+            Cookie cookie;
             try {
                 cookie = new Cookie(fieldName, encodeCookieValue(fieldValue));
             } catch (UnsupportedEncodingException e) {

@@ -46,8 +46,8 @@ import java.util.Locale;
 import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.util.InviteUtils.INVITE_HASH;
-import static com.worth.ifs.util.InviteUtils.ORGANISATION_TYPE;
+import static com.worth.ifs.util.InviteUtil.INVITE_HASH;
+import static com.worth.ifs.util.InviteUtil.ORGANISATION_TYPE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
