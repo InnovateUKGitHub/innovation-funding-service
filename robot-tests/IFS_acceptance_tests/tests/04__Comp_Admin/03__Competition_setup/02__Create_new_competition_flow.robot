@@ -369,7 +369,7 @@ Application: Scope
 
 
 Application: Scope Assessment questions
-    [Documentation]    INFUND
+    [Documentation]    INFUND-5631    INFUND-6044
     Given the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user fills the scope assessment questions
     When the user clicks the button/link    jQuery=.button[value="Save and close"]
