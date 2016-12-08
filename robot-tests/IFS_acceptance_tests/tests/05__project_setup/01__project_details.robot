@@ -584,7 +584,8 @@ Non-lead partner cannot change any project details
 Internal user can see the Project details as sumbmitted
     [Documentation]  INFUND-5856
     [Tags]
-    [Setup]  the user navigates to the page  ${internal_project_summary}
+    [Setup]  log in as a different user  &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${internal_project_summary}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td.status.ok a
     Then the user should see the element     jQuery=#project-details
     And the user can see all project details completed
