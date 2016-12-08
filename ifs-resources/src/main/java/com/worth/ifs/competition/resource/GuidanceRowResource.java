@@ -7,15 +7,16 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class GuidanceRowResource {
+    public interface GuidanceRowGroup { }
 
     private Long id;
 
-    @NotEmpty(message = "{validation.applicationquestionform.subject.required}")
-    @Size(max=255, message = "{validation.applicationquestionform.subject.max}")
+    @NotEmpty(message = "{validation.applicationquestionform.subject.required}", groups = GuidanceRowResource.GuidanceRowGroup.class)
+    @Size(max=255, message = "{validation.applicationquestionform.subject.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String subject;
 
-    @NotEmpty(message = "{validation.applicationquestionform.justification.required}")
-    @Size(max=255, message = "{validation.applicationquestionform.justification.max}")
+    @NotEmpty(message = "{validation.applicationquestionform.justification.required}", groups = GuidanceRowResource.GuidanceRowGroup.class)
+    @Size(max=255, message = "{validation.applicationquestionform.justification.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String justification;
 
     private Long formInput;

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class CompetitionSetupQuestionResource {
     private Boolean scored;
     private Integer scoreTotal;
     private Boolean writtenFeedback;
+
+    @Valid
     private List<GuidanceRowResource> guidanceRows = new ArrayList<>();
 
     private Boolean researchCategoryQuestion;

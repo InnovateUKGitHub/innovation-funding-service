@@ -151,7 +151,7 @@ public class CompetitionSetupApplicationController {
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
-        validateGuidanceRows(competitionSetupForm, bindingResult);
+        validateAssessmentGuidanceRows(competitionSetupForm, bindingResult);
 
         if(!bindingResult.hasErrors()) {
 
@@ -176,6 +176,7 @@ public class CompetitionSetupApplicationController {
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
+        validateScopeGuidanceRows(competitionSetupForm, bindingResult);
 
         if(!bindingResult.hasErrors()) {
             competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
@@ -239,9 +240,15 @@ public class CompetitionSetupApplicationController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private void validateGuidanceRows(ApplicationQuestionForm applicationProjectForm, BindingResult bindingResult) {
+    private void validateAssessmentGuidanceRows(ApplicationQuestionForm applicationQuestionForm, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(applicationQuestionForm.getQuestion().getWrittenFeedback())) {
+            ValidationUtils.invokeValidator(validator, applicationQuestionForm, bindingResult, GuidanceRowViewModel.GuidanceRowViewGroup.class);
+        }
+    }
+
+    private void validateScopeGuidanceRows(ApplicationProjectForm applicationProjectForm, BindingResult bindingResult) {
         if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
-            ValidationUtils.invokeValidator( validator,applicationProjectForm, bindingResult, GuidanceRowViewModel.GuidanceRowViewGroup.class);
+            ValidationUtils.invokeValidator(validator, applicationProjectForm, bindingResult, GuidanceRowResource.GuidanceRowGroup.class);
         }
     }
 

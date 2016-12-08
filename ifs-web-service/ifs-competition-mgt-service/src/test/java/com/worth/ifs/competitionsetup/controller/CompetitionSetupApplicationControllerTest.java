@@ -307,6 +307,56 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void submitSectionApplicationScopeQuestionWithCheckedOptionsShouldResultInError() throws Exception {
+        Long questionId = 4L;
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidanceTitle", "")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "")
+                .param("question.guidanceRows[0].subject", "")
+                .param("question.guidanceRows[0].justification", ""))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.scoreTotal").getCode());
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.assessmentGuidanceTitle").getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldError("question.guidanceRows[0].justification").getCode());
+        assertEquals("NotEmpty", bindingResult.getFieldError("question.guidanceRows[0].subject").getCode());
+    }
+
+    @Test
+    public void submitSectionApplicationScopeQuestionWithUncheckedOptionsShouldNotResultInError() throws Exception {
+        Long questionId = 4L;
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
+                .param("question.questionId", questionId.toString())
+                .param("question.writtenGuidance", "false")
+                .param("question.guidanceTitle", "")
+                .param("question.scored", "false")
+                .param("question.scoreTotal", "")
+                .param("question.guidanceRows[0].subject", "")
+                .param("question.guidanceRows[0].justification", ""))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+
+        assertNull(bindingResult.getFieldError("question.scoreTotal"));
+        assertNull(bindingResult.getFieldError("question.assessmentGuidanceTitle"));
+        assertNull(bindingResult.getFieldError("question.guidanceRows[0].justification"));
+        assertNull(bindingResult.getFieldError("quesiton.guidanceRows[0].subject"));
+    }
+
+    @Test
     public void submitSectionApplicationScopeQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
 
