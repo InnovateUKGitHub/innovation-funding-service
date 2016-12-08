@@ -92,6 +92,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
+                .withEthnicity(null)
+                .withDisability(null)
                 .build();
 
         Long organisationId = 1L;
@@ -104,13 +106,127 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                userResource.getGender().toString(),
+                userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
-                userResource.getDisability().toString(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId
         ).getSuccessObject();
 
         assertEquals(userResource, receivedResource);
+    }
+
+    @Test
+    public void createLeadApplicantForOrganisationWithDiversity() {
+
+        setLoggedInUser(null);
+
+        UserResource userResource = newUserResource()
+                .with(id(null))
+                .withEmail("testemail@test.test")
+                .withTitle("testTitle")
+                .withFirstName("testFirstName")
+                .withLastName("testLastName")
+                .withPassword("testPassword")
+                .withPhoneNumber("1234567890")
+                .withGender(Gender.MALE)
+                .withEthnicity(2L)
+                .withDisability(Disability.YES)
+                .build();
+
+        Long organisationId = 1L;
+
+        setupPostWithRestResultAnonymousExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId, UserResource.class, userResource, userResource, OK);
+
+        UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                userResource.getGender() != null ? userResource.getGender().toString() : null,
+                userResource.getEthnicity(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
+                organisationId
+        ).getSuccessObject();
+
+        assertEquals(userResource, receivedResource);
+    }
+
+    @Test
+    public void createLeadApplicantForOrganisationWithCompetitionId() {
+        setLoggedInUser(null);
+
+        UserResource userResource = newUserResource()
+                .with(id(null))
+                .withEmail("testemail@test.test")
+                .withTitle("testTitle")
+                .withFirstName("testFirstName")
+                .withLastName("testLastName")
+                .withPassword("testPassword")
+                .withPhoneNumber("1234567890")
+                .withEthnicity(null)
+                .withDisability(null)
+                .build();
+
+        Long organisationId = 1L;
+        Long competitionId = 1L;
+
+        setupPostWithRestResultAnonymousExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
+
+        UserResource receivedResource = service.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                userResource.getGender() != null ? userResource.getGender().toString() : "",
+                userResource.getEthnicity(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : "",
+                organisationId,
+                competitionId
+        ).getSuccessObject();
+
+        assertEquals(userResource, receivedResource);
+
+    }
+
+    @Test
+    public void createLeadApplicantForOrganisationWithCompetitionIdWithDiversity() {
+        setLoggedInUser(null);
+
+        UserResource userResource = newUserResource()
+                .with(id(null))
+                .withEmail("testemail@test.test")
+                .withTitle("testTitle")
+                .withFirstName("testFirstName")
+                .withLastName("testLastName")
+                .withPassword("testPassword")
+                .withPhoneNumber("1234567890")
+                .withDisability(Disability.YES)
+                .withEthnicity(2L)
+                .withGender(Gender.FEMALE)
+                .build();
+
+        Long organisationId = 1L;
+        Long competitionId = 1L;
+
+        setupPostWithRestResultAnonymousExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
+
+        UserResource receivedResource = service.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                userResource.getGender() != null ? userResource.getGender().toString() : "",
+                userResource.getEthnicity(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : "",
+                organisationId,
+                competitionId
+        ).getSuccessObject();
+
+        assertEquals(userResource, receivedResource);
+
     }
 
     @Test
