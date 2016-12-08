@@ -13,6 +13,10 @@ import static java.util.Collections.emptyList;
  */
 public class ProjectFinanceResourceBuilder extends BaseFinanceResourceBuilder<ProjectFinanceResource, ProjectFinanceResourceBuilder> {
 
+    public ProjectFinanceResourceBuilder withProject(Long... projectId) {
+        return withArray((id, finance) -> finance.setProject(id), projectId);
+    }
+
     private ProjectFinanceResourceBuilder(List<BiConsumer<Integer, ProjectFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

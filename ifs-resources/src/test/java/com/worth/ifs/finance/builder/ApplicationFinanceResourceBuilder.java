@@ -17,6 +17,10 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
         return with(finance -> finance.setFinanceFileEntry(financeFileEntry));
     }
 
+    public ApplicationFinanceResourceBuilder withApplication(Long... applicationIds) {
+        return withArray((applicationId, applicationFinanceResource) -> applicationFinanceResource.setApplication(applicationId), applicationIds);
+    }
+
     private ApplicationFinanceResourceBuilder(List<BiConsumer<Integer, ApplicationFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

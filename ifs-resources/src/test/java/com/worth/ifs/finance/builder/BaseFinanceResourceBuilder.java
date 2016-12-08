@@ -21,10 +21,6 @@ import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends BaseFinanceResource, S extends BaseFinanceResourceBuilder<FinanceResourceType, S>>
         extends BaseBuilder<FinanceResourceType, S> {
 
-    public S withApplication(Long... applicationIds) {
-        return withArray((applicationId, applicationFinanceResource) -> setField("application", applicationId, applicationFinanceResource), applicationIds);
-    }
-
     public S withOrganisation(Long... organisationIds) {
         return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
     }
