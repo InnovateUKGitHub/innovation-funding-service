@@ -98,7 +98,7 @@ Application details server side
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then The user should see an error    Please enter the full title of the project
     And the user should see an error    Please enter a future date
-    And the user should see an error    Your project should last between 1 and 36 months.
+    And the user should see an error    This field cannot be left blank
     And the user should see an error    Please enter the previous application number
     And the user should see an error    Please enter the previous application title
     And the user should see the element    css=.error-summary-list
