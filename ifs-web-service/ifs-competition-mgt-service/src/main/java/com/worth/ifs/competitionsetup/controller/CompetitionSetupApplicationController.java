@@ -126,7 +126,7 @@ public class CompetitionSetupApplicationController {
 
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "ASSESSED_QUESTION")
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
@@ -140,7 +140,7 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "SCOPE")
+    @RequestMapping(value = "/question", method = RequestMethod.POST)
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                             BindingResult bindingResult,
                                                ValidationHandler validationHandler,
@@ -155,26 +155,6 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
 
 
-    }
-
-    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PUBLIC_DESCRIPTION")
-    public String submitPublicDescriptionQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
-                                                  BindingResult bindingResult,
-                                                  ValidationHandler validationHandler,
-                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                                  Model model) {
-
-        return submitProjectDetailsQuestion(competitionSetupForm, bindingResult, validationHandler, competitionId, model);
-    }
-
-    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PROJECT_SUMMARY")
-    public String submitProjectSummary(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
-                                                  BindingResult bindingResult,
-                                                  ValidationHandler validationHandler,
-                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                                  Model model) {
-
-        return submitProjectDetailsQuestion(competitionSetupForm, bindingResult, validationHandler, competitionId, model);
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
@@ -222,10 +202,9 @@ public class CompetitionSetupApplicationController {
             return "redirect:/dashboard";
         }
 
-
         ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
 
-        CompetitionSetupQuestionType type = questionResource.getSuccessObject().getType();
+        CompetitionSetupQuestionType type = questionResource.getSuccessObjectOrThrowException().getType();
         CompetitionSetupSubsection setupSubsection;
 
         if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
@@ -246,7 +225,7 @@ public class CompetitionSetupApplicationController {
         competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
                 subsection, questionId);
 
-        CompetitionSetupForm competitionSetupForm  = form;
+        CompetitionSetupForm competitionSetupForm = form;
         if (form == null) {
             competitionSetupForm = competitionSetupService.getSubsectionFormData(
                     competition,

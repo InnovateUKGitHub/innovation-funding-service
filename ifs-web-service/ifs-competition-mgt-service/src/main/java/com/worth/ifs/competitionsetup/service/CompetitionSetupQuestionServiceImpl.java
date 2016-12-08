@@ -14,8 +14,8 @@ import com.worth.ifs.competition.service.CompetitionSetupQuestionRestService;
 import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.formpopulator.application.ApplicationDetailsFormPopulator;
+import com.worth.ifs.competitionsetup.service.formpopulator.application.ApplicationProjectFormPopulator;
 import com.worth.ifs.competitionsetup.service.formpopulator.application.ApplicationQuestionFormPopulator;
 import com.worth.ifs.competitionsetup.service.formpopulator.application.FinancesFormPopulator;
 import org.apache.commons.logging.Log;
@@ -56,6 +56,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     @Autowired
     private ApplicationQuestionFormPopulator applicationQuestionFormPopulator;
     @Autowired
+    private ApplicationProjectFormPopulator applicationProjectFormPopulator;
+    @Autowired
     private ApplicationDetailsFormPopulator applicationDetailsFormPopulator;
     @Autowired
     private FinancesFormPopulator financesFormPopulator;
@@ -74,18 +76,30 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     public ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult bindingResult) {
         List<QuestionResource> questionResources = questionService.findByCompetition(competitionResource.getId());
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
-        Set<Long> validateableSections = sections.stream().filter(sectionResource ->
-                sectionResource.getParentSection() == null &&
-                        (sectionResource.getName().equals("Project details")
-                                || sectionResource.getName().equals("Application questions")))
+        Set<SectionResource> parentSections = sections.stream()
+                .filter(sectionResource -> sectionResource.getParentSection() == null)
+                .collect(Collectors.toSet());
+
+        Set<Long> projectDetailsSections = parentSections.stream()
+                .filter(sectionResource -> sectionResource.getName().equals("Project details"))
                 .map(SectionResource::getId)
                 .collect(Collectors.toSet());
 
-        form.setQuestion(questionResources.stream()
-                .filter(question -> validateableSections.contains(question.getSection()))
+        Set<Long> applicationSections = parentSections.stream()
+                .filter(sectionResource -> sectionResource.getName().equals("Application questions"))
+                .map(SectionResource::getId)
+                .collect(Collectors.toSet());
+
+        form.setQuestions(questionResources.stream()
+                .filter(question -> projectDetailsSections.contains(question.getSection()))
                 //Application details question has its own form.
                 .filter(questionResource -> !CompetitionSetupQuestionType.APPLICATION_DETAILS.getShortName().equals(questionResource.getShortName()))
-                .map(questionResource -> (ApplicationQuestionForm) applicationQuestionFormPopulator.populateForm(competitionResource, Optional.of(questionResource.getId())))
+                .map(questionResource -> applicationProjectFormPopulator.populateForm(competitionResource, Optional.of(questionResource.getId())))
+                .collect(Collectors.toList()));
+
+        form.getQuestions().addAll(questionResources.stream()
+                .filter(question -> applicationSections.contains(question.getSection()))
+                .map(questionResource -> applicationQuestionFormPopulator.populateForm(competitionResource, Optional.of(questionResource.getId())))
                 .collect(Collectors.toList()));
 
         form.setDetailsForm((ApplicationDetailsForm) applicationDetailsFormPopulator.populateForm(competitionResource, Optional.empty()));

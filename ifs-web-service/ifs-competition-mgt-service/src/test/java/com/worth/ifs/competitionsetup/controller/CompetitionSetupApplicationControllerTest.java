@@ -25,6 +25,8 @@ import java.util.Optional;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.competition.resource.CompetitionSetupQuestionType.ASSESSED_QUESTION;
+import static com.worth.ifs.competition.resource.CompetitionSetupQuestionType.SCOPE;
 import static com.worth.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.mockito.Matchers.isA;
@@ -141,9 +143,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
+        question.setType(ASSESSED_QUESTION);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
-
-        mockMvc.perform(post(URL_PREFIX +"/question?ASSESSED_QUESTION=true")
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        mockMvc.perform(post(URL_PREFIX +"/question")
+                .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
@@ -155,9 +159,16 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Long questionId = 4L;
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
+        question.setType(SCOPE);
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX +"/question?SCOPE=true")
-                .param("question.questionId", questionId.toString()))
+
+        mockMvc.perform(post(URL_PREFIX +"/question")
+                .param("question.questionId", questionId.toString())
+                .param("question.type", SCOPE.name()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
@@ -169,8 +180,14 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Long questionId = 4L;
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
+        question.setType(ASSESSED_QUESTION);
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+        mockMvc.perform(post(URL_PREFIX + "/question")
+                .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.guidanceTitle", "My Title")
@@ -197,8 +214,15 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Long questionId = 4L;
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
+        question.setType(SCOPE);
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+
+        mockMvc.perform(post(URL_PREFIX + "/question")
+                .param("question.type", SCOPE.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.guidanceTitle", "My Title")
@@ -223,9 +247,15 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     public void submitSectionApplicationAssessedQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+        question.setType(ASSESSED_QUESTION);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+        mockMvc.perform(post(URL_PREFIX + "/question")
+                .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.shortTitle", "My Short Title")
@@ -254,9 +284,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(PROJECT_DETAILS))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
+        mockMvc.perform(post(URL_PREFIX + "/question")
+                .param("question.type", SCOPE.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
                 .param("question.shortTitle", "Title")
@@ -276,7 +307,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX));
 
-        verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS));
+        verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(PROJECT_DETAILS));
 
     }
 

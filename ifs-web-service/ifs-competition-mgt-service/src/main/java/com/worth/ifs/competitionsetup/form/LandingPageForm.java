@@ -2,7 +2,6 @@ package com.worth.ifs.competitionsetup.form;
 
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 public class LandingPageForm extends CompetitionSetupForm {
 
     @Valid
-    private List<ApplicationQuestionForm> question;
+    private List<CompetitionSetupForm> questions;
 
     @Valid
     private ApplicationFinanceForm financeForm;
@@ -21,12 +20,12 @@ public class LandingPageForm extends CompetitionSetupForm {
     @Valid
     private ApplicationDetailsForm detailsForm;
 
-    public List<ApplicationQuestionForm> getQuestion() {
-        return question;
+    public List<CompetitionSetupForm> getQuestions() {
+        return questions;
     }
 
-    public void setQuestion(List<ApplicationQuestionForm> question) {
-        this.question = question;
+    public void setQuestions(List<CompetitionSetupForm> questions) {
+        this.questions = questions;
     }
 
     public ApplicationFinanceForm getFinanceForm() {

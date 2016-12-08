@@ -69,8 +69,10 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
 		if("removeFunder".equals(fieldName)) {
 			return removeFunder(competitionResource, fieldName, value);
-		} else {
+		} else if (fieldName.contains("funder")) {
 			return tryUpdateFunders(competitionResource, fieldName, value);
+		} else {
+			return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
 		}
 	}
 
@@ -90,33 +92,20 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	private ServiceResult<Void> tryUpdateFunders(CompetitionResource competitionResource, String fieldName, String value) {
-		Integer index;
+		Integer index = getFunderIndex(fieldName);
 		CompetitionFunderResource funder;
 
-		try {
-			index = getFunderIndex(fieldName);
-			if(index >= competitionResource.getFunders().size()) {
-				addNotSavedFunders(competitionResource, index);
-			}
+		if(index >= competitionResource.getFunders().size()) {
+			addNotSavedFunders(competitionResource, index);
+		}
 
-			funder = competitionResource.getFunders().get(index);
+		funder = competitionResource.getFunders().get(index);
 
-			if (fieldName.endsWith("funder")) {
-				funder.setFunder(value);
-			} else if(fieldName.endsWith("funderBudget")) {
-				BigDecimal funderBudget = new BigDecimal(value);
-				if (funderBudget.compareTo(BigDecimal.ZERO) < 0) {
-					return serviceFailure(new Error("validation.additionalinfoform.funderbudget.min", HttpStatus.BAD_REQUEST));
-				}
-				if (new BigDecimal("99999999.99").compareTo(funderBudget) > 0 && funderBudget.scale() <= 2) {
-					funder.setFunderBudget(funderBudget);
-				} else {
-					return serviceFailure(new Error("validation.additionalinfoform.funderbudget.invalid", HttpStatus.BAD_REQUEST));
-				}
-			} else {
-				return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
-			}
-		} catch (NumberFormatException e) {
+		if (fieldName.endsWith("funder")) {
+			funder.setFunder(value);
+		} else if(fieldName.endsWith("funderBudget")) {
+			funder.setFunderBudget(new BigDecimal(value));
+		} else {
 			return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
 		}
 

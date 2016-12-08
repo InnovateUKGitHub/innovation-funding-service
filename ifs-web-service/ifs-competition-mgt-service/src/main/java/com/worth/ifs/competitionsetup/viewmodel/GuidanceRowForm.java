@@ -1,6 +1,5 @@
 package com.worth.ifs.competitionsetup.viewmodel;
 
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionType;
 import com.worth.ifs.competition.resource.GuidanceRowResource;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -9,10 +8,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * View model for guidance rows in order that the subject field can be split into score from and score to elements
+ * Form for guidance rows in order that the subject field can be split into score from and score to elements
  * and validated accordingly.
  */
-public class GuidanceRowViewModel {
+public class GuidanceRowForm {
 
     @NotEmpty(message = "{validation.applicationquestionform.justification.required}")
     @Size(max=255, message = "{validation.applicationquestionform.justification.max}")
@@ -28,15 +27,25 @@ public class GuidanceRowViewModel {
 
     private Integer priority;
 
-    public GuidanceRowViewModel() {
+    public GuidanceRowForm() {
     }
 
-    public GuidanceRowViewModel(GuidanceRowResource guidanceRowResource) {
+    public GuidanceRowForm(GuidanceRowResource guidanceRowResource) {
 
         this.setJustification(guidanceRowResource.getJustification());
-        String[] score = guidanceRowResource.getSubject().split(",");
-        this.setScoreFrom(Integer.parseInt(score[0]));
-        this.setScoreTo(Integer.parseInt(score[1]));
+        if (guidanceRowResource.getSubject() != null) {
+            String[] score = guidanceRowResource.getSubject().split(",");
+            try {
+                this.setScoreFrom(Integer.parseInt(score[0]));
+            } catch (NumberFormatException e) {
+                //Cannot set from field.
+            }
+            try {
+                this.setScoreTo(Integer.parseInt(score[1]));
+            } catch (NumberFormatException e) {
+                //Cannot set to field.
+            }
+        }
         this.setPriority(guidanceRowResource.getPriority());
     }
 
