@@ -53,6 +53,10 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
         return withArraySetFieldByReflection("email", emails);
     }
 
+    public CompetitionInviteResourceBuilder withHash(String... hashes) {
+        return withArraySetFieldByReflection("hash", hashes);
+    }
+
     public CompetitionInviteResourceBuilder withStatus(InviteStatus... statuses) {
         return withArraySetFieldByReflection("status", statuses);
     }

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
@@ -324,7 +326,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard_pendingInvites() throws Exception {
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource()
+                .withHash("inviteHash")
+                .build();
+
         CompetitionParticipantResource participantResource = newCompetitionParticipantResource()
+                .withInvite(inviteResource)
                 .withCompetitionParticipantRole(ASSESSOR)
                 .withStatus(PENDING)
                 .withUser(3L)
@@ -353,7 +360,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = singletonList(new AssessorDashboardPendingInviteViewModel(
-                2L,
+                "inviteHash",
                 "Juggling Craziness",
                 now().plusDays(10).toLocalDate(),
                 now().plusDays(20).toLocalDate()
