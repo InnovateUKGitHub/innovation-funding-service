@@ -1,10 +1,13 @@
 package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
+
+import java.util.List;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -28,4 +31,6 @@ public interface ProjectFinanceRestService {
     RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
 
     RestResult<Void> completeSpendProfilesReview(Long projectId);
+
+    RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long projectId);
 }

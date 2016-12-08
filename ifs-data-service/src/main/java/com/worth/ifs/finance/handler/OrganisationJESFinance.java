@@ -43,26 +43,37 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
-        costCategories = addCostsToCategories(costCategories, costs);
-        costCategories = calculateTotals(costCategories);
-        return costCategories;
+        return addCostsAndTotalsToCategories(costs);
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId) {
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+        return addCostsAndTotalsToCategories(costs);
+    }
+
+    @Override
+    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
+    	Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
+        return updateCostCategoryValuesForTotals(competition, costCategories);
+    }
+
+    @Override
+    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition) {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = getProjectOrganisationFinances(projectFinanceId);
+        return updateCostCategoryValuesForTotals(competition, costCategories);
+    }
+
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
         return costCategories;
     }
 
-    @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-    	Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
-    	costCategories = setGrantClaimPercentage(costCategories, competition);
-    	costCategories = calculateTotals(costCategories);
+    private Map<FinanceRowType, FinanceRowCostCategory> updateCostCategoryValuesForTotals(Competition competition, Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
+        costCategories = setGrantClaimPercentage(costCategories, competition);
+        costCategories = calculateTotals(costCategories);
         return resetCosts(costCategories);
     }
 

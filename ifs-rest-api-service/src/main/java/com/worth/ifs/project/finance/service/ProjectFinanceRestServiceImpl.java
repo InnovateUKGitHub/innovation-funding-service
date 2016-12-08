@@ -2,11 +2,16 @@ package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -63,5 +68,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     @Override
     public RestResult<Void> completeSpendProfilesReview(Long projectId) {
         return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/complete-spend-profiles-review/", Void.class);
+    }
+
+    @Override
+    public RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long projectId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/project-finance/totals", projectFinanceResourceListType());
     }
 }

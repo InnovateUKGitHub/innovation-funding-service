@@ -1,17 +1,16 @@
 package com.worth.ifs.project.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
-import com.worth.ifs.project.resource.ApprovalType;
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.project.resource.SpendProfileCSVResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -86,5 +85,10 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/complete-spend-profiles-review", method = POST)
     public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
         return projectFinanceService.completeSpendProfilesReview(projectId).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/project-finance/totals", method = GET)
+    public RestResult<List<ProjectFinanceResource>> getProjectFinanceTotals(@PathVariable("projectId") final Long projectId) {
+        return projectFinanceService.getProjectFinanceTotals(projectId).toGetResponse();
     }
 }

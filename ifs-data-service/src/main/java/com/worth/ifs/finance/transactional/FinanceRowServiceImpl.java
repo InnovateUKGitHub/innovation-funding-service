@@ -330,6 +330,11 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
+        return find(applicationFinanceHandler.getFinanceChecksTotals(projectId), notFoundError(ProjectFinance.class, projectId));
+    }
+
+    @Override
     public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
 

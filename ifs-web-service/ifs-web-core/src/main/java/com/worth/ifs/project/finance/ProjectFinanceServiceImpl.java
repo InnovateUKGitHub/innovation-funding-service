@@ -1,6 +1,7 @@
 package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.finance.service.ProjectFinanceRestService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
@@ -9,6 +10,7 @@ import com.worth.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,5 +65,10 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return projectFinanceRestService.completeSpendProfilesReview(projectId).toServiceResult();
+    }
+
+    @Override
+    public List<ProjectFinanceResource> getFinanceTotals(Long projectId) {
+        return projectFinanceRestService.getFinanceTotals(projectId).getSuccessObjectOrThrowException();
     }
 }

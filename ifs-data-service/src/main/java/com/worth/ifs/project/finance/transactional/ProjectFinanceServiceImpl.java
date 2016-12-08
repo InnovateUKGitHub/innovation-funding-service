@@ -5,7 +5,9 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.domain.*;
 import com.worth.ifs.project.finance.repository.CostCategoryRepository;
@@ -86,6 +88,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     @Autowired
     private UserMapper userMapper;
@@ -284,6 +289,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfileSubmittedDate() != null) {
@@ -297,6 +303,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<List<ProjectFinanceResource>> getProjectFinanceTotals(Long projectId) {
+        return financeRowService.financeChecksTotals(projectId);
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {

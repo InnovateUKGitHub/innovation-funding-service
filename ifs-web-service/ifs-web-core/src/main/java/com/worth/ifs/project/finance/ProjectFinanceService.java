@@ -1,12 +1,13 @@
 package com.worth.ifs.project.finance;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,4 +32,6 @@ public interface ProjectFinanceService {
     ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
 
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
+
+    List<ProjectFinanceResource> getFinanceTotals(Long projectId);
 }

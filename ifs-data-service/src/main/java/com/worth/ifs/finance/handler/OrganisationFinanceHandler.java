@@ -18,6 +18,7 @@ public interface OrganisationFinanceHandler {
     Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType);
     Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId);
     Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinanceTotals(Long id, Competition competition);
+
     ApplicationFinanceRow costItemToCost(FinanceRowItem costItem);
     FinanceRowItem costToCostItem(ApplicationFinanceRow cost);
     FinanceRowHandler getCostHandler(FinanceRowType costType);
@@ -26,4 +27,5 @@ public interface OrganisationFinanceHandler {
     List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems);
 
     Map<FinanceRowType,FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId);
+    Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition);
 }

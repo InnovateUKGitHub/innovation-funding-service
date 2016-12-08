@@ -2,8 +2,11 @@ package com.worth.ifs.project.finance.transactional;
 
 import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 /**
  * Service dealing with Project finance operations
@@ -39,4 +42,9 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
+            description = "Project Finance users can view financial overviews of Organisations on Projects")
+    ServiceResult<List<ProjectFinanceResource>> getProjectFinanceTotals(Long projectId);
 }

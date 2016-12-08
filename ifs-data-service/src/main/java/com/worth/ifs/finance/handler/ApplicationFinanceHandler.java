@@ -23,7 +23,14 @@ public interface ApplicationFinanceHandler {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
+    // TODO DW - INFUND-4825 - is this permission too broad?
     @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-    @SecuredBySpring(value = "READ", description = "Internal users can view the Project Finances during the Finance Checks process")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Internal users can view the Project Finances during the Finance Checks process")
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users " +
+            "can view the overall Project Finances for a Project during the Finance Checks process")
+    List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId);
+
 }

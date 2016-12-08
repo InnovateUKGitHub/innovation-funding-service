@@ -113,6 +113,21 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
+    @Override
+    public List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId) {
+        List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
+        List<ProjectFinanceResource> financeResources = new ArrayList<>();
+
+        for(ProjectFinance finance : finances) {
+            ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getName());
+            EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(), finance.getProject().getApplication().getCompetition()));
+            financeResource.setFinanceOrganisationDetails(costs);
+            financeResources.add(financeResource);
+        }
+        return financeResources;
+    }
+
     private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());

@@ -14,6 +14,7 @@ import com.worth.ifs.competition.resource.*;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.FinanceRowMetaFieldResource;
 import com.worth.ifs.finance.resource.FinanceRowResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
@@ -142,6 +143,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationFinanceResource>> applicationFinanceResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationFinanceResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ProjectFinanceResource>> projectFinanceResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectFinanceResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<OrganisationTypeResource>> organisationTypeResourceListType() {

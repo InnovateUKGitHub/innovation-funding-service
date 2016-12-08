@@ -1,13 +1,12 @@
 package com.worth.ifs.application.finance.service;
 
-import java.util.List;
-
-import org.springframework.core.io.ByteArrayResource;
-
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import org.springframework.core.io.ByteArrayResource;
+
+import java.util.List;
 
 /**
  * {@code FinanceService} handles the finances for each of the applications. These finances

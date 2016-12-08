@@ -108,4 +108,9 @@ public interface FinanceRowService {
      */
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
     ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
+            description = "Project Finance users can view financial overviews of Organisations on Projects")
+    ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
 }
