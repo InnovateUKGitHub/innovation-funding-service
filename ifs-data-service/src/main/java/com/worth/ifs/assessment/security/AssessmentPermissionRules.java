@@ -46,7 +46,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ASSIGN", description = "Assessors can only accept or reject assessments that are pending")
     public boolean userCanAssignAssessment(AssessmentResource assessment, UserResource user) {
-        List<AssessmentStates> allowedAssignStates = Collections.singletonList(PENDING);
+        Set<AssessmentStates> allowedAssignStates = Collections.singleton(PENDING);
         return isAssessorForAssessment(assessment, user, allowedAssignStates);
     }
 

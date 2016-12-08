@@ -6,6 +6,7 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
@@ -17,6 +18,9 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
