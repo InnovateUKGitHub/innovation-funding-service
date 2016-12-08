@@ -134,25 +134,23 @@ the admin downloads the excel
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
-    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
-    Should Be Equal    ${APPLICATION_ID_1}    ${OPEN_COMPETITION_APPLICATION_5_NUMBER}
-    ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
-    should be equal    ${APPLICATION_TITLE_1}
-    ${LEAD_ORGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4
-    should be equal    ${LEAD_ORGANISATION_1}    Empire Ltd
-    ${FIRST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    D4
-    should be equal    ${FIRST_NAME_1}    Steve
-    ${LAST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    E4
-    should be equal    ${LAST_NAME_1}    Smith
-    ${EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
-    should be equal    ${EMAIL_1}    steve.smith@empire.com
-    ${DURATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    G4
-    Should Be Equal As Numbers    ${DURATION_1}    20.0
-    ${NUMBER_OF_PARTNERS_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    H4
-    Should Be Equal As Numbers    ${NUMBER_OF_PARTNERS_1}    4.0
-    ${SUMMARY_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    I4
-    Should contain    ${SUMMARY_1}    The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years.
-    ${TOTAL_COST_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    J4
-    Should Be Equal    ${TOTAL_COST_1}    £398,324.29
-    ${FUNDING_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    K4
-    Should Be Equal    ${FUNDING_1}    £8,000.00
+    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A2
+    Should Be Equal    ${APPLICATION_ID_1}    ${IN_ASSESSMENT_APPLICATION_4_NUMBER}
+    ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B2
+    should be equal    ${APPLICATION_TITLE_1}    ${IN_ASSESSMENT_APPLICATION_4_TITLE}
+    ${LEAD_ORGANISATION_EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F2
+    should be equal    ${LEAD_ORGANISATION_EMAIL_1}    ${IN_ASSESSMENT_APPLICATION_4_LEAD_PARTNER_EMAIL}
+    ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    ${APPLICATION_ID_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A3
+    Should Be Equal    ${APPLICATION_ID_2}    ${IN_ASSESSMENT_APPLICATION_5_NUMBER}
+    ${APPLICATION_TITLE_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B3
+    should be equal    ${APPLICATION_TITLE_2}    ${IN_ASSESSMENT_APPLICATION_5_TITLE}
+    ${LEAD_ORGANISATION_EMAIL_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F3
+    should be equal    ${LEAD_ORGANISATION_EMAIL_2}    ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}
+    ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    ${APPLICATION_ID_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
+    Should Be Equal    ${APPLICATION_ID_3}    ${IN_ASSESSMENT_APPLICATION_3_NUMBER}
+    ${APPLICATION_TITLE_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
+    should be equal    ${APPLICATION_TITLE_3}    ${IN_ASSESSMENT_APPLICATION_3_TITLE}
+    ${LEAD_ORGANISATION_EMAIL_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
+    should be equal    ${LEAD_ORGANISATION_EMAIL_3}    ${IN_ASSESSMENT_APPLICATION_3_LEAD_PARTNER_EMAIL}
