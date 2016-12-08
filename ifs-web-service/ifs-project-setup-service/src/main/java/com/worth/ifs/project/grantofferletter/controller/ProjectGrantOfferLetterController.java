@@ -91,19 +91,13 @@ public class ProjectGrantOfferLetterController {
             ValidationHandler validationHandler,
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectGrantOfferLetterViewModel viewModel = populateGrantOfferLetterViewModel(projectId, loggedInUser);
-        if(viewModel.isProjectManager() && !viewModel.isSubmitted() && viewModel.getGrantOfferLetterFile() != null) {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
 
-            return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
+            MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
 
-                MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
-
-                return projectService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
-                        signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
-            });
-        } else {
-            return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
-        }
+            return projectService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
+                    signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
+        });
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")

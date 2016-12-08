@@ -3,6 +3,7 @@ package com.worth.ifs.project.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
@@ -15,15 +16,20 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -39,9 +45,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -191,10 +195,25 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testUpdateSignedGrantOfferLetterFileEntry() {
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.TRUE);
         assertUpdateFile(
                 project::getSignedGrantOfferLetter,
                 (fileToUpdate, inputStreamSupplier) ->
                         service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testUpdateSignedGrantOfferLetterFileEntryGolNotSent() {
+
+        FileEntryResource fileToUpdate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
+        assertTrue(result.isFailure());
+        assertEquals(result.getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY.toString());
+
     }
 
     @Test

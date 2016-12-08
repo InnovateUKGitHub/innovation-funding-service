@@ -1,6 +1,7 @@
 package com.worth.ifs.project.grantofferletter.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -164,6 +166,31 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 andExpect(view().name("redirect:/project/123/offer"));
     }
 
+    @Test
+    public void testUploadSignedGrantOfferLetterGolNotSent() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("signedGrantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
+
+        ProjectResource project = newProjectResource().withId(123L).build();
+
+        ProjectUserResource pmUser = newProjectUserResource().withRoleName(UserRoleType.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
+        List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
+
+        when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
+        when(projectService.getGeneratedGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
+
+        mockMvc.perform(
+                fileUpload("/project/123/offer").
+                        file(uploadedFile).
+                        param("uploadSignedGrantOfferLetterClicked", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter"));
+    }
     @Test
     public void testConfirmationView() throws Exception {
         mockMvc.perform(get("/project/123/offer/confirmation")).

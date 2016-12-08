@@ -296,8 +296,15 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
+                andOnSuccess(project ->
+                {
+                    if(golWorkflowHandler.isSent(project)){
+                        return fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                            andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true));
+                    } else {
+                        return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY);
+                    }
+                });
     }
 
     @Override
