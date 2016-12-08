@@ -69,6 +69,17 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
+    public void getByEmailAndTargetId() {
+        CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition, innovationArea);
+        CompetitionInvite saved = repository.save(invite);
+
+        CompetitionInvite retrievedInvite = repository.getByEmailAndCompetitionId("tom@poly.io", competition.getId());
+        assertNotNull(retrievedInvite);
+
+        assertEquals(saved, retrievedInvite);
+    }
+
+    @Test
     public void save() {
         CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition, innovationArea);
         repository.save(invite);
