@@ -71,9 +71,9 @@ Internal users can see Project Details not yet completed
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Tags]      HappyPath Failing
+    [Tags]      HappyPath    Pending
     log in as a different user   &{Comp_admin1_credentials}
-    #The test fails due to INFUND-6642
+    #TODO The test fails due to INFUND-6642
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting     #Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status              #MO
