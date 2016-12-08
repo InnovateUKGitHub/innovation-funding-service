@@ -3,22 +3,30 @@ package com.worth.ifs.project.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.project.builder.PartnerOrganisationBuilder;
+import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserRoleType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.address.builder.AddressBuilder.newAddress;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -26,6 +34,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static com.worth.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static com.worth.ifs.project.builder.ProjectBuilder.newProject;
 import static com.worth.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -34,8 +43,11 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -230,7 +242,186 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(fileServiceMock).deleteFile(existingGOLFile.getId());
     }
 
-    @Override
+    @Test
+    public void testGenerateGrantOfferLetterIfReadySuccess() {
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
+        FileEntry createdFile = newFileEntry().build();
+        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<html dir=\"ltr\" lang=\"en\">\n")
+                .append("<head>\n")
+                .append("<meta charset=\"UTF-8\"></meta>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("<p>\n")
+                .append("${LeadContact}<br/>\n")
+                .append("</p>\n")
+                .append("</body>\n")
+                .append("</html>\n").toString();
+
+        Competition comp = newCompetition().withName("Test Comp").build();
+        Organisation o = newOrganisation().withName("Org1").build();
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        User u = newUser().withFirstName("ab").withLastName("cd").build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o).withUser(u).withRole(leadAppRole).build();
+        Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
+        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
+        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
+        Project project = newProject().withOtherDocumentsApproved(Boolean.TRUE).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(rendererMock.renderTemplate(any(String.class), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
+        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
+        FileEntry createdFile = newFileEntry().build();
+        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<html dir=\"ltr\" lang=\"en\">\n")
+                .append("<head>\n")
+                .append("<meta charset=\"UTF-8\"></meta>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("<p>\n")
+                .append("${LeadContact}<br/>\n")
+                .append("</p>\n")
+                .append("</body>\n")
+                .append("</html>\n").toString();
+
+        Competition comp = newCompetition().withName("Test Comp").build();
+        Organisation o = newOrganisation().withName("Org1").build();
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        User u = newUser().withFirstName("ab").withLastName("cd").build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o).withUser(u).withRole(leadAppRole).build();
+        Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
+        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
+        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
+        Project project = newProject().withOtherDocumentsApproved(Boolean.TRUE).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(rendererMock.renderTemplate(any(String.class), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
+        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+        assertTrue(!result.isSuccess());
+        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE.toString());
+    }
+
+
+    @Test
+    public void testGenerateGrantOfferLetterOtherDocsNotApproved() {
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
+        FileEntry createdFile = newFileEntry().build();
+        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<html dir=\"ltr\" lang=\"en\">\n")
+                .append("<head>\n")
+                .append("<meta charset=\"UTF-8\"></meta>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("<p>\n")
+                .append("${LeadContact}<br/>\n")
+                .append("</p>\n")
+                .append("</body>\n")
+                .append("</html>\n").toString();
+
+        Competition comp = newCompetition().withName("Test Comp").build();
+        Organisation o = newOrganisation().withName("Org1").build();
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        User u = newUser().withFirstName("ab").withLastName("cd").build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o).withUser(u).withRole(leadAppRole).build();
+        Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
+        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
+        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
+        Project project = newProject().withOtherDocumentsApproved(Boolean.FALSE).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(rendererMock.renderTemplate(any(String.class), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
+        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+        assertTrue(!result.isSuccess());
+        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE.toString());
+    }
+
+    @Test
+    public void testGenerateGrantOfferLetterNoProject() {
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
+        FileEntry createdFile = newFileEntry().build();
+        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<html dir=\"ltr\" lang=\"en\">\n")
+                .append("<head>\n")
+                .append("<meta charset=\"UTF-8\"></meta>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("<p>\n")
+                .append("${LeadContact}<br/>\n")
+                .append("</p>\n")
+                .append("</body>\n")
+                .append("</html>\n").toString();
+
+        Competition comp = newCompetition().withName("Test Comp").build();
+        Organisation o = newOrganisation().withName("Org1").build();
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
+        User u = newUser().withFirstName("ab").withLastName("cd").build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o).withUser(u).withRole(leadAppRole).build();
+        Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
+        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
+        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
+        Project project = newProject().withOtherDocumentsApproved(Boolean.FALSE).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
+        when(rendererMock.renderTemplate(any(String.class), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
+        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+        assertTrue(!result.isSuccess());
+        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), CommonFailureKeys.GENERAL_NOT_FOUND.toString());
+    }
+        @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {
         return new ProjectGrantOfferServiceImpl();
     }

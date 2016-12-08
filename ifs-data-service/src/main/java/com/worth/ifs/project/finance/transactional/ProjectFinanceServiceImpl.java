@@ -16,6 +16,7 @@ import com.worth.ifs.project.finance.resource.CostCategoryResource;
 import com.worth.ifs.project.finance.resource.FinanceCheckState;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.transactional.ProjectGrantOfferService;
 import com.worth.ifs.project.transactional.ProjectService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
@@ -90,9 +91,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private UserMapper userMapper;
 
-
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferLetterService;
 
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
@@ -100,7 +103,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS.getLabel());
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
-
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -132,7 +134,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         updateApprovalOfSpendProfile(projectId, approvalType);
-        return serviceSuccess();
+        return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId);
     }
 
     @Override

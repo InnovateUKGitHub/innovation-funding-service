@@ -267,5 +267,8 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
             return null;
         }
 
+        @Override
+        public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) { return null; }
+
     }
 }

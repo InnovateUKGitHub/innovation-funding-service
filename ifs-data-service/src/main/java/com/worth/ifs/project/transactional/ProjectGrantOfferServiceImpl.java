@@ -19,6 +19,7 @@ import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.finance.transactional.ProjectFinanceService;
 import com.worth.ifs.project.gol.YearlyGOLProfileTable;
 import com.worth.ifs.project.repository.ProjectRepository;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -53,6 +54,12 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
+    public static final String GOL_CONTENT_TYPE = "application/pdf";
+
+    public static final String DEFAULT_GOL_NAME = "grant_offer_letter.pdf";
+
+    public static final Long DEFAULT_GOL_SIZE = 1L;
+
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
 
     @Autowired
@@ -69,6 +76,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FileTemplateRenderer fileTemplateRenderer;
+
+    @Autowired
+    private ProjectService projectService;
 
 
     @Override
@@ -181,6 +191,26 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
+    @Override
+    public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
+        if(projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject() == ApprovalType.APPROVED) {
+            return getProject(projectId).andOnSuccess( project -> {
+                if (project.getOtherDocumentsApproved()) {
+
+                    FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
+                    return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
+                            .andOnSuccess( () -> serviceSuccess()).
+                                    andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+                } else {
+                    return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE);
+                }
+            });
+        } else {
+            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE);
+        }
+    }
+
+
     private Map<String, Object> getTemplateData(Project project) {
         Map<String, Object> templateReplacements = new HashMap<>();
         List<String> addresses = getAddresses(project);
@@ -220,10 +250,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         try {
             pdfSupplier = createPDF("", inputStreamSupplier, fileEntryResource);
         } catch (IOException e) {
-            LOG.error("An IO Exception occured" +e);
+            LOG.error("An IO Exception occurred" +e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
         } catch (DocumentException e) {
-            LOG.error("A Document Exception occured" +e);
+            LOG.error("A Document Exception occurred" +e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
         }
         return pdfSupplier;

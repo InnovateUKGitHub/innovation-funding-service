@@ -168,6 +168,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private FinanceChecksGenerator financeChecksGenerator;
 
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferLetterService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -464,7 +467,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
                     }
                     project.setOtherDocumentsApproved(approved);
-                    return serviceSuccess();
+                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId);
                 });
     }
 
