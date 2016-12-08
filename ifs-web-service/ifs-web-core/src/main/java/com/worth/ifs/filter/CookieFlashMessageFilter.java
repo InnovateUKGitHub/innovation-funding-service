@@ -2,13 +2,17 @@ package com.worth.ifs.filter;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.util.WebUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -32,18 +36,33 @@ import java.util.List;
 @Configurable
 public class CookieFlashMessageFilter extends GenericFilterBean {
     public static final String COOKIE_NAME = "flashMessage";
+    private static final Integer COOKIE_LIFETIME = 60;
+
+    private TextEncryptor encryptor;
 
     @Value("${server.session.cookie.secure}")
     private boolean cookieSecure;
 
     @Value("${server.session.cookie.http-only}")
     private boolean cookieHttpOnly;
+
+    @Value("${ifs.web.security.csrf.encryption.password}")
+    private String encryptionPassword;
+
+    @Value("${ifs.web.security.csrf.encryption.salt}")
+    private String encryptionSalt;
+
+    @PostConstruct
+    public void init() {
+        encryptor = Encryptors.text(encryptionPassword, encryptionSalt);
+    }
+
     /**
      * Cookie is set, just for after redirecting, so the lifetime should be short.
      */
     public void setFlashMessage(HttpServletResponse response, String name){
-        Cookie cookie = new Cookie(COOKIE_NAME, name);
-        cookie.setMaxAge(60); // in seconds
+        Cookie cookie = new Cookie(COOKIE_NAME, encryptor.encrypt(name));
+        cookie.setMaxAge(COOKIE_LIFETIME); // in seconds
         cookie.setSecure(cookieSecure);
         cookie.setHttpOnly(cookieHttpOnly);
         cookie.setPath("/");
@@ -67,8 +86,8 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
 
         if(!ignoreRequest(httpRequest)) {
             Cookie cookie = WebUtils.getCookie(httpRequest, COOKIE_NAME);
-            if(cookie != null){
-                request.setAttribute(cookie.getValue(), true);
+            if(cookie != null && !StringUtils.isEmpty(cookie.getValue())){
+                request.setAttribute(encryptor.decrypt(cookie.getValue()), true);
             }
         }
 

@@ -1,9 +1,5 @@
 package com.worth.ifs.application.model;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.worth.ifs.application.ApplicationFormController;
 import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
@@ -11,12 +7,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.QuestionStatusRestService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionStatus;
@@ -25,20 +16,22 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatus;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.ApplicationFormController.*;
 
@@ -137,7 +130,7 @@ public class QuestionModelPopulator {
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
-        if(competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
+        if(null != competition.getCompetitionStatus() && competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
             Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
             return questionStatuses.size() > 0 &&
                     (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
