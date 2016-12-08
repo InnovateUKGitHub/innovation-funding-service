@@ -235,5 +235,18 @@ public class SpendProfileTableCalculatorTest extends BaseUnitTest {
         assertEquals(yearlyGrantAllocationTotal.get("2018"), BigDecimal.valueOf(8.7));
     }
 
+    @Test
+    public void testGenerateSpendProfileYears() {
+        ProjectResource projectResource = newProjectResource()
+                .withTargetStartDate(LocalDate.of(2019, 3, 1))
+                .withDuration(2L)
+                .build();
+
+        List<String> profileYears = spendProfileTableCalculator.generateSpendProfileYears(projectResource);
+
+        assertTrue(profileYears.size() == 2);
+        assertEquals(profileYears.get(0), "2018");
+        assertEquals(profileYears.get(1), "2019");
+    }
 
 }

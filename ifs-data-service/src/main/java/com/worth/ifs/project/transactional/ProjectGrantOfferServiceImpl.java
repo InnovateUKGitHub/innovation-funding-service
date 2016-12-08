@@ -353,6 +353,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Map<String, List<BigDecimal>> organisationEligibleCostTotal = new HashMap<>();
         Map<String, List<BigDecimal>> organisationGrantAllocationTotal = new HashMap<>();
 
+        List<String> projectYears = spendProfileTableCalculator.generateSpendProfileYears(projectMapper.mapToResource(project));
+
         List<Organisation> organisations = project.getOrganisations();
         Map<String, SpendProfileTableResource> organisationSpendProfiles = organisations.stream()
                 .map(organisation -> organisationMapper.mapToResource(organisation))
@@ -385,6 +387,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
                 organisationEligibleCostTotal.put(organisation.getName(), eligibleCostPerYear);
                 organisationGrantAllocationTotal.put(organisation.getName(), grantAllocationPerYear);
+                organisationYearsMap.put(organisation.getName(), projectYears);
             });
         });
 
@@ -397,7 +400,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, String name, Map<String, Integer> organisationAndGrantPercentageMap) {
-        organisationAndGrantPercentageMap.put(name, applicationFinanceResource.getGrantClaimPercentage());
+        organisationAndGrantPercentageMap.put(name, applicationFinanceResource.getGrantClaimPercentage() == 0 ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
     }
 }
