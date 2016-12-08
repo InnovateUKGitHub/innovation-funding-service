@@ -167,7 +167,7 @@ public class CompetitionSetupApplicationController {
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "SCOPE")
-    public String submitScopeQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
+    public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
@@ -192,7 +192,7 @@ public class CompetitionSetupApplicationController {
                                                   @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                   Model model) {
 
-        return submitScopeQuestion(competitionSetupForm, bindingResult, competitionId, model);
+        return submitProjectDetailsQuestion(competitionSetupForm, bindingResult, competitionId, model);
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "PROJECT_SUMMARY")
@@ -201,7 +201,7 @@ public class CompetitionSetupApplicationController {
                                                   @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                   Model model) {
 
-        return submitScopeQuestion(competitionSetupForm, bindingResult, competitionId, model);
+        return submitProjectDetailsQuestion(competitionSetupForm, bindingResult, competitionId, model);
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
@@ -262,7 +262,6 @@ public class CompetitionSetupApplicationController {
 
         if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
             setupSubsection =  CompetitionSetupSubsection.QUESTIONS;
-
         } else {
             setupSubsection =  CompetitionSetupSubsection.PROJECT_DETAILS;
         }

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -84,7 +85,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case TEXTAREA:
                 setupResource.setWrittenFeedback(formInput.getActive());
                 setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
-                setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
+                setupResource.setAssessmentGuidance(formInput.getGuidanceTitle());
                 setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
                 setupResource.setAssessmentGuidanceTitle(formInput.getDescription());
                 break;
@@ -118,23 +119,23 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
 
-        markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
-        markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource, question, questionFormInput);
+        markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markWrittenFeedbackAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource);
 
         return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
     }
 
-    private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
         }
     }
 
-    private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
 
         FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE);
 
@@ -143,7 +144,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-    private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
 
         FormInput researchCategoryQuestionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY);
 
@@ -152,7 +153,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-    private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
 
         FormInput scopeFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE);
 
@@ -161,7 +162,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         }
     }
 
-    private void markWrittenFeedbackAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource, Question question, FormInput questionFormInput) {
+    private void markWrittenFeedbackAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
 
         FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA);
 
@@ -174,8 +175,13 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
-            // Ensure form input set against newly added rows
-            newRows.stream().forEach(row -> row.setFormInput(writtenFeedbackFormInput));
+            // Ensure form input and priority set against newly added rows
+            AtomicInteger ai = new AtomicInteger(0);
+            newRows.stream().forEach(row -> {
+                row.setFormInput(writtenFeedbackFormInput);
+                row.setPriority(ai.get());
+                ai.getAndIncrement();
+            });
             guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
             guidanceRowRepository.save(newRows);
             writtenFeedbackFormInput.setGuidanceRows(newRows);

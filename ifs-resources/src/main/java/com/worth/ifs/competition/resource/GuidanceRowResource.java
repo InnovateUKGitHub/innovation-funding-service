@@ -19,6 +19,7 @@ public class GuidanceRowResource {
     private String justification;
 
     private Long formInput;
+    private Integer priority;
 
     public Long getId() {
         return id;
@@ -50,6 +51,14 @@ public class GuidanceRowResource {
 
     public void setFormInput(Long formInput) {
         this.formInput = formInput;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     @Override

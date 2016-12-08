@@ -119,9 +119,14 @@ IFS.competitionManagement.setup = (function() {
       });
     },
     addCoFunder: function() {
-      var count = parseInt(jQuery('.funder-row').length, 10); //name attribute has to be 0,1,2,3
-      //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-      var idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10)+1;
+      var count = 0;
+      var idCount = 0;
+
+      if(jQuery('.funder-row').length){
+        count = parseInt(jQuery('.funder-row').length, 10); //name attribute has to be 0,1,2,3
+        //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10)+1;
+      }
       var html = '<div class="grid-row funder-row" id="funder-row-'+ idCount +'">'+
                     '<div class="column-half">'+
                       '<div class="form-group">'+
@@ -140,12 +145,16 @@ IFS.competitionManagement.setup = (function() {
     addGuidanceRow : function() {
       var table = jQuery('#guidance-table');
       var isAssessed = table.hasClass('assessed-guidance');
-      var tableBody = table.find('tbody tr');
+      var count = 0;
+      var idCount = 0;
 
-      var count = parseInt(tableBody.length, 10); //name attribute has to be 0,1,2,3
-      //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-      var idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10)+1;
+      if(table.find('tbody tr').length){
+        count = parseInt(table.find('tbody tr').length, 10); //name attribute has to be 0,1,2,3
+        //id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10)+1;
+      }
       var html = '<tr id="guidance-'+idCount+'">';
+
       if(isAssessed){
         html+='<td class="form-group">'+
                 '<label class="form-label" for="guidancerow-'+idCount+'-scorefrom"><span class="visuallyhidden">Score from</span></label>'+
@@ -168,7 +177,7 @@ IFS.competitionManagement.setup = (function() {
             '</td>'+
             '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="'+count+'">Remove</button></td>';
       html+='</tr>';
-      tableBody.parent().append(html);
+      table.find('tbody').append(html);
     },
     // remove row
     handleRemoveRow : function() {

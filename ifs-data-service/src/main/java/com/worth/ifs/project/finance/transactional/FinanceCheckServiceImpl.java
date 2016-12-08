@@ -5,6 +5,7 @@ import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.project.domain.PartnerOrganisation;
@@ -71,6 +72,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -154,10 +158,20 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return mapWithIndex(partnerOrganisations, (i, org) -> {
                     FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
                     boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
-                    return new FinanceCheckPartnerStatusResource(
+
+            FinanceCheckPartnerStatusResource.Viability viabilityStatus =
+                    organisationFinanceDelegate.isUsingJesFinances(org.getOrganisation().getOrganisationType().getName()) ?
+                            FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE :
+                            FinanceCheckPartnerStatusResource.Viability.REVIEW;
+
+            FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
+                    FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
+                    FinanceCheckPartnerStatusResource.Eligibility.REVIEW;
+
+            return new FinanceCheckPartnerStatusResource(
                             org.getOrganisation().getId(),
                             org.getOrganisation().getName(),
-                            financeChecksApproved ? FinanceCheckPartnerStatusResource.Eligibility.APPROVED : FinanceCheckPartnerStatusResource.Eligibility.REVIEW);
+                            viabilityStatus, eligibilityStatus);
                 }
         );
     }

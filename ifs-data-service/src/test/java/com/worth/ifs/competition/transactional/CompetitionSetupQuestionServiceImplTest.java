@@ -87,7 +87,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
                                 .withWordCount(assessmentMaxWords)
-                                .withGuidanceAnswer(assessmentGuidance)
+                                .withGuidanceTitle(assessmentGuidance)
                                 .withGuidanceRows(guidanceRows)
                                 .build(),
                         newFormInput()

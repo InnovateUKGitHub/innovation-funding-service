@@ -26,6 +26,8 @@ public class GuidanceRowViewModel {
     @NotNull(message = "{validation.applicationquestionform.scoreto.required}")
     private Integer scoreTo;
 
+    private Integer priority;
+
     public GuidanceRowViewModel() {
     }
 
@@ -35,6 +37,7 @@ public class GuidanceRowViewModel {
         String[] score = guidanceRowResource.getSubject().split(",");
         this.setScoreFrom(Integer.parseInt(score[0]));
         this.setScoreTo(Integer.parseInt(score[1]));
+        this.setPriority(guidanceRowResource.getPriority());
     }
 
     public String getJustification() {
@@ -59,5 +62,13 @@ public class GuidanceRowViewModel {
 
     public void setScoreTo(Integer scoreTo) {
         this.scoreTo = scoreTo;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }
