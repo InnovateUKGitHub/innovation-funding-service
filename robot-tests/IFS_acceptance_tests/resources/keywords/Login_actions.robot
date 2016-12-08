@@ -86,3 +86,6 @@ the user cannot login with their new details
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your username/password combination doesn't seem to work
+
+the user logs out if they are logged in
+    run keyword and ignore error    log out as user

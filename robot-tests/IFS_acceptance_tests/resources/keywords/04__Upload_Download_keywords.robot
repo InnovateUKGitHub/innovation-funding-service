@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../defaultResources.robot
+
 *** Keywords ***
 the user downloads the file from the link
     [Arguments]    ${filename}    ${download_link}

@@ -207,3 +207,10 @@ the applicant adds some content and marks this section as complete
 the applicant edits the "economic benefit" question
     the user clicks the button/link    name=mark_as_incomplete
     the user should see the element    name=mark_as_complete
+
+The user enters multiple strings into a text field
+    [Arguments]    ${field}    ${string}    ${multiplicity}
+    #Keyword uses custom IfsLibrary keyword "repeat string"
+    ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
+    Wait Until Element Is Visible    ${field}
+    wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
