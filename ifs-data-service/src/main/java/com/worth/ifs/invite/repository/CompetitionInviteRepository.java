@@ -2,7 +2,6 @@ package com.worth.ifs.invite.repository;
 
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -11,7 +10,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface CompetitionInviteRepository extends CrudRepository<CompetitionInvite, Long> {
 
-    CompetitionInvite getByEmailAndCompetitionId(@Param("email") String email, @Param("competitionId") Long competitionId);
+    CompetitionInvite getByEmailAndCompetitionId(String email, long competitionId);
 
-    CompetitionInvite getByHash(@Param("hash") String hash);
+    CompetitionInvite getByHash(String hash);
 }

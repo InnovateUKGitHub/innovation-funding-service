@@ -48,7 +48,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(Long competitionId) {
+    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getAvailableAssessors", competitionId), availableAssessorResourceListType());
     }
 
@@ -58,7 +58,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> deleteInvite(String email, Long competitionId) {
+    public RestResult<Void> deleteInvite(String email, long competitionId) {
         return postWithRestResult(format("%s/%s", competitionInviteRestUrl, "/deleteInvite"), asMap("email", email, "competitionId", competitionId), Void.class);
     }
 }

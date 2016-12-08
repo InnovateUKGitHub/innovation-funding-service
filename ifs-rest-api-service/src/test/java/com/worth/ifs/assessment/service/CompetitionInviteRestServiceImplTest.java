@@ -79,7 +79,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         List<AvailableAssessorResource> expected = newAvailableAssessorResource().build(2);
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "/getAvailableAssessors", competitionId), availableAssessorResourceListType(), expected);
@@ -102,7 +102,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void deleteInvite() {
         String email = "firstname.lastname@example.com";
-        Long competitionId = 1L;
+        long competitionId = 1L;
 
         setupPostWithRestResultExpectations(format("%s/%s", restUrl, "/deleteInvite"), asMap("email", email, "competitionId", competitionId), OK);
 

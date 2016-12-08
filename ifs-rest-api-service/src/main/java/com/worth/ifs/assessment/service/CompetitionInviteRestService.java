@@ -23,9 +23,9 @@ public interface CompetitionInviteRestService {
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
-    RestResult<List<AvailableAssessorResource>> getAvailableAssessors(Long competitionId);
+    RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
-    RestResult<Void> deleteInvite(String email, Long competitionId);
+    RestResult<Void> deleteInvite(String email, long competitionId);
 }
