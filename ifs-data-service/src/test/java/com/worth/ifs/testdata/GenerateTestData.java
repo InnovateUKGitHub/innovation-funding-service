@@ -54,6 +54,7 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.finance.handler.OrganisationFinanceDelegate.UNIVERSITY_HEI;
 import static com.worth.ifs.testdata.CsvUtils.*;
 import static com.worth.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static com.worth.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -801,7 +802,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case "University (HEI)" : return OrganisationTypeEnum.ACADEMIC;
+            case UNIVERSITY_HEI : return OrganisationTypeEnum.ACADEMIC;
             default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }
     }

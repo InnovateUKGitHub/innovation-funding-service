@@ -149,7 +149,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId) {
+    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
+                                                                                        String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -158,6 +159,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setEmail(email);
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
+        if(!StringUtils.isEmpty(gender)) {
+            user.setGender(Gender.valueOf(gender));
+        }
+        user.setEthnicity(ethnicity);
+        if(!StringUtils.isEmpty(disability)) {
+            user.setDisability(Disability.valueOf(disability));
+        }
 
         String url;
         if(competitionId != null){
@@ -170,12 +178,14 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null);
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
+                                                                       String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId) {
+        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, null);
     }
 
     @Override
-    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
+    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber,
+                                                  String gender, Long ethnicity, String disability) {
         UserResource user = new UserResource();
         user.setId(id);
         user.setEmail(email);
@@ -183,6 +193,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setLastName(lastName);
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
+        if(!StringUtils.isEmpty(gender)) {
+            user.setGender(Gender.valueOf(gender));
+        }
+        user.setEthnicity(ethnicity);
+        if(!StringUtils.isEmpty(disability)) {
+            user.setDisability(Disability.valueOf(disability));
+        }
         String url = userRestURL + "/updateDetails";
         return postWithRestResult(url, user, UserResource.class);
     }

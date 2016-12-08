@@ -1,6 +1,5 @@
 package com.worth.ifs.finance.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.StringUtils;
@@ -18,8 +17,9 @@ import static com.worth.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH_MESS
  * FinanceRow defines database relations and a model to use client side and server side.
  */
 @Entity
-public class FinanceRow {
-
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "row_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class FinanceRow<FinanceType> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,19 +30,14 @@ public class FinanceRow {
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String description;
 
-    Integer quantity;
+    private Integer quantity;
     private BigDecimal cost;
 
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @OneToMany(mappedBy="financeRow")
-    private List<FinanceRowMetaValue> costValues = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationFinanceId", referencedColumnName="id")
-    private ApplicationFinance applicationFinance;
-
+    @OneToMany(mappedBy="financeRowId")
+    private List<FinanceRowMetaValue> financeRowMetadata = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -55,30 +50,26 @@ public class FinanceRow {
     /**
      * Constructor used to add a new and empty cost object.
      */
-    public FinanceRow(ApplicationFinance applicationFinance, Question question) {
+    public FinanceRow(Question question) {
         this.name = "";
         this.item = "";
         this.description = "";
         this.quantity = null;
         this.cost = null;
-        this.applicationFinance = applicationFinance;
         this.question = question;
     }
 
-    public FinanceRow(String name, String item, String description, Integer quantity, BigDecimal cost,
-                      ApplicationFinance applicationFinance, Question question) {
+    public FinanceRow(String name, String item, String description, Integer quantity, BigDecimal cost, Question question) {
         this.name = name;
         this.item = item;
         this.description = description;
         this.quantity = quantity;
         this.cost = cost;
-        this.applicationFinance = applicationFinance;
         this.question = question;
     }
 
-    public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost,
-                      ApplicationFinance applicationFinance, Question question) {
-        this(name, item ,description, quantity, cost, applicationFinance, question);
+    public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost, Question question) {
+        this(name, item ,description, quantity, cost, question);
         this.id = id;
     }
 
@@ -109,20 +100,16 @@ public class FinanceRow {
         return cost;
     }
 
-    public void setApplicationFinance(ApplicationFinance applicationFinance) {
-        this.applicationFinance = applicationFinance;
+    public List<FinanceRowMetaValue> getFinanceRowMetadata() {
+        return financeRowMetadata;
     }
 
-    public List<FinanceRowMetaValue> getCostValues() {
-        return costValues;
-    }
-
-    public void setCostValues(List<FinanceRowMetaValue> costValues) {
-        this.costValues = costValues;
+    public void setFinanceRowMetadata(List<FinanceRowMetaValue> costValues) {
+        this.financeRowMetadata = costValues;
     }
     
     public void addCostValues(FinanceRowMetaValue... c) {
-        Collections.addAll(this.costValues, c);
+        Collections.addAll(this.financeRowMetadata, c);
     }
 
     public Question getQuestion() {
@@ -153,8 +140,11 @@ public class FinanceRow {
         this.question = question;
     }
 
-    @JsonIgnore
-    public ApplicationFinance getApplicationFinance() {
-        return this.applicationFinance;
+    public abstract void setTarget(FinanceType target);
+
+    public abstract FinanceType getTarget();
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

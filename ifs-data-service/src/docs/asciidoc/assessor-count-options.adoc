@@ -1,0 +1,11 @@
+=== Get all assessor count options based on the competition type
+==== Request
+include::{snippets}/assessor-count-options/get-all-by-competition-type/http-request.adoc[]
+include::{snippets}/assessor-count-options/get-all-by-competition-type/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor-count-options/get-all-by-competition-type/http-response.adoc[]
+include::{snippets}/assessor-count-options/get-all-by-competition-type/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-count-options/get-all-by-competition-type/curl-request.adoc[]

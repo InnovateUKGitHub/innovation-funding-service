@@ -9,7 +9,7 @@ Force Tags        Upload    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${assessor_feedback_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+${assessor_feedback_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
 ${successful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
 ${unsuccessful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
 ${project_setup_status_view}    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status

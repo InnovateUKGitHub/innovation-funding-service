@@ -43,9 +43,9 @@ Project Finance user generates the Spend Profile
     [Setup]  log in as user                   lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
-    And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
-    And the user should see the element     jQuery=.table-progress tr:nth-child(3) td:contains("approved")
+    Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
+    And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
+    And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 Project Finance cancels the generation of the Spend Profile
@@ -232,7 +232,8 @@ Project Manager doesn't have the option to submit spend profiles until all partn
     [Setup]    log in as a different user    worth.email.test+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Spend profile
-    Then the user should not see the element    jQuery=.button:contains("Review and submit total project profile spend")
+    Then the user should not see the element    jQuery=.button:contains("Review and submit total project")
+    #The complete name of the button is anyways not selected. Please use the short version of it.
 
 
 Academic partner can view spend profile page
@@ -286,8 +287,8 @@ Academic partner edits spend profile and this updates on the table
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[1]/td[1]    3
-    And element should contain    xpath=/html/body/main/form/div[1]/div[2]/table/tbody/tr[2]/td[3]    5
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    5
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
