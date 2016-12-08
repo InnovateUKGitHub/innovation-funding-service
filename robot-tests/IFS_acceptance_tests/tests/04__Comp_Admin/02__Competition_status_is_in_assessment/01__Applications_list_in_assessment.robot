@@ -89,7 +89,7 @@ Non submitted applications from this competition should be visible
 
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
-    [Tags]    HappyPath    Download    Pending
+    [Tags]    HappyPath    Download
     When the admin downloads the excel
     And user opens the excel and checks the content
     [Teardown]    Empty the download directory
@@ -129,7 +129,7 @@ Empty the download directory
 
 
 the admin downloads the excel
-    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${OPEN_COMPETITION_APPLICATION_5_NUMBER}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
 
 
 User opens the excel and checks the content
