@@ -5,9 +5,9 @@ import com.worth.ifs.user.resource.BusinessType;
 /**
  * Holder of model attributes for the assessors shown in the 'Invite Assessors' view.
  */
-public class AssessorViewModel {
+public class AvailableAssessorViewModel {
 
-    private Long userId;
+    private long userId;
     private String name;
     private String email;
     private BusinessType businessType;
@@ -15,7 +15,7 @@ public class AssessorViewModel {
     private boolean compliant;
     private boolean added;
 
-    public AssessorViewModel(Long userId, String name, String email, BusinessType businessType, String innovationArea, boolean compliant, boolean added) {
+    public AvailableAssessorViewModel(long userId, String name, String email, BusinessType businessType, String innovationArea, boolean compliant, boolean added) {
         this.userId = userId;
         this.name = name;
         this.email = email;
@@ -25,7 +25,7 @@ public class AssessorViewModel {
         this.added = added;
     }
 
-    public Long getUserId() {
+    public long getUserId() {
         return userId;
     }
 

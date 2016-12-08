@@ -3,7 +3,7 @@ package com.worth.ifs.management.model;
 import com.worth.ifs.assessment.service.CompetitionInviteRestService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.AvailableAssessorResource;
-import com.worth.ifs.management.viewmodel.AssessorViewModel;
+import com.worth.ifs.management.viewmodel.AvailableAssessorViewModel;
 import com.worth.ifs.management.viewmodel.InviteAssessorsFindViewModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +31,17 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
         return model;
     }
 
-    private List<AssessorViewModel> getAssessors(CompetitionResource competition) {
+    private List<AvailableAssessorViewModel> getAssessors(CompetitionResource competition) {
         return competitionInviteRestService.getAvailableAssessors(competition.getId()).getSuccessObjectOrThrowException()
                 .stream()
                 .map(this::getAssessorViewModel)
                 .collect(toList());
     }
 
-    private AssessorViewModel getAssessorViewModel(AvailableAssessorResource assessor) {
+    private AvailableAssessorViewModel getAssessorViewModel(AvailableAssessorResource assessor) {
         String name = Stream.of(assessor.getFirstName(), assessor.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
         String innovationArea = assessor.getInnovationArea().getName();
-        return new AssessorViewModel(assessor.getUserId(), name, assessor.getEmail(), assessor.getBusinessType(), innovationArea, assessor.isCompliant(), assessor.isAdded());
+        return new AvailableAssessorViewModel(assessor.getUserId(), name, assessor.getEmail(), assessor.getBusinessType(), innovationArea, assessor.isCompliant(), assessor.isAdded());
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.worth.ifs.invite.resource.ExistingUserStagedInviteResource;
 import com.worth.ifs.management.model.InviteAssessorsFindModelPopulator;
 import com.worth.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import com.worth.ifs.management.model.InviteAssessorsOverviewModelPopulator;
-import com.worth.ifs.management.viewmodel.AssessorViewModel;
+import com.worth.ifs.management.viewmodel.AvailableAssessorViewModel;
 import com.worth.ifs.management.viewmodel.InviteAssessorsFindViewModel;
 import com.worth.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.junit.Before;
@@ -228,14 +228,14 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(expectedAvailableAssessors.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedAvailableAssessors, (i, assessorAvailableResource) -> {
-            AssessorViewModel assessorViewModel = model.getAssessors().get(i);
+            AvailableAssessorViewModel availableAssessorViewModel = model.getAssessors().get(i);
             String expectedName = assessorAvailableResource.getFirstName() + " " + assessorAvailableResource.getLastName();
-            assertEquals(expectedName, assessorViewModel.getName());
-            assertEquals(assessorAvailableResource.getEmail(), assessorViewModel.getEmail());
-            assertEquals(assessorAvailableResource.getBusinessType(), assessorViewModel.getBusinessType());
-            assertEquals(assessorAvailableResource.getInnovationArea().getName(), assessorViewModel.getInnovationArea());
-            assertEquals(assessorAvailableResource.isCompliant(), assessorViewModel.isCompliant());
-            assertEquals(assessorAvailableResource.isAdded(), assessorViewModel.isAdded());
+            assertEquals(expectedName, availableAssessorViewModel.getName());
+            assertEquals(assessorAvailableResource.getEmail(), availableAssessorViewModel.getEmail());
+            assertEquals(assessorAvailableResource.getBusinessType(), availableAssessorViewModel.getBusinessType());
+            assertEquals(assessorAvailableResource.getInnovationArea().getName(), availableAssessorViewModel.getInnovationArea());
+            assertEquals(assessorAvailableResource.isCompliant(), availableAssessorViewModel.isCompliant());
+            assertEquals(assessorAvailableResource.isAdded(), availableAssessorViewModel.isAdded());
         });
     }
 }

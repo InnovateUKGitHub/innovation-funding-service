@@ -7,13 +7,13 @@ import java.util.List;
  */
 public class InviteAssessorsFindViewModel extends InviteAssessorsViewModel {
 
-    private List<AssessorViewModel> assessors;
+    private List<AvailableAssessorViewModel> assessors;
 
-    public List<AssessorViewModel> getAssessors() {
+    public List<AvailableAssessorViewModel> getAssessors() {
         return assessors;
     }
 
-    public void setAssessors(List<AssessorViewModel> assessors) {
+    public void setAssessors(List<AvailableAssessorViewModel> assessors) {
         this.assessors = assessors;
     }
 }
