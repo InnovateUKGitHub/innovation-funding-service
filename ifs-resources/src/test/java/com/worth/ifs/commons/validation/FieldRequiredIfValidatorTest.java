@@ -80,6 +80,55 @@ public class FieldRequiredIfValidatorTest {
     }
 
     @Test
+    public void isValid_integerFieldIsRequiredAndNotEmpty() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasCats", "true")
+                .param("catQuantity", "10"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("success"));
+    }
+
+    @Test
+    public void isValid_integerFieldIsRequiredAndEmpty() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasCats", "true")
+                .param("catQuantity", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_integerFieldIsRequiredAndWhitespace() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasCats", "true")
+                .param("catQuantity", "  "))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_integerFieldIsRequiredAndNull() throws Exception {
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("hasCats", "true"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrors("form", "catQuantity"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
     public void isValid_collectionFieldIsRequiredAndNotEmpty() throws Exception {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -108,7 +157,8 @@ public class FieldRequiredIfValidatorTest {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("hasFoodAllergies", "false")
-                .param("anythingElseToDeclare", "false"))
+                .param("anythingElseToDeclare", "false")
+                .param("hasCats", "false"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("success"));
@@ -116,12 +166,17 @@ public class FieldRequiredIfValidatorTest {
 
     @FieldRequiredIf(required = "foodAllergies", argument = "hasFoodAllergies", predicate = true, message = "{validation.testform.foodAllergies.required}")
     @FieldRequiredIf(required = "pleaseGiveFurtherDetails", argument = "anythingElseToDeclare", predicate = true, message = "{validation.testform.pleasegivefurtherdetails.required}")
+    @FieldRequiredIf(required = "catQuantity", argument = "hasCats", predicate = true, message="{validation.testform.catquantity.required}")
     public static class TestForm {
 
         private Boolean hasFoodAllergies;
         private List<String> foodAllergies;
+
         private Boolean anythingElseToDeclare;
         private String pleaseGiveFurtherDetails;
+
+        private Boolean hasCats;
+        private Integer catQuantity;
 
         public TestForm() {
         }
@@ -156,6 +211,22 @@ public class FieldRequiredIfValidatorTest {
 
         public void setPleaseGiveFurtherDetails(String pleaseGiveFurtherDetails) {
             this.pleaseGiveFurtherDetails = pleaseGiveFurtherDetails;
+        }
+
+        public Boolean getHasCats() {
+            return hasCats;
+        }
+
+        public void setHasCats(Boolean hasCats) {
+            this.hasCats = hasCats;
+        }
+
+        public Integer getCatQuantity() {
+            return catQuantity;
+        }
+
+        public void setCatQuantity(Integer catQuantity) {
+            this.catQuantity = catQuantity;
         }
     }
 

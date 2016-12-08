@@ -64,7 +64,15 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
             return isRequiredFieldValueBlank((Collection) requiredFieldValue);
         }
 
+        if (requiredFieldValue instanceof Integer) {
+            return isRequiredFieldValueBlank((Integer) requiredFieldValue);
+        }
+
         throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String or Collection. Found " + requiredFieldValue.getClass().getName());
+    }
+
+    private boolean isRequiredFieldValueBlank(Integer requiredFieldValue) {
+        return requiredFieldValue==null;
     }
 
     private boolean isRequiredFieldValueBlank(String requiredFieldValue) {
