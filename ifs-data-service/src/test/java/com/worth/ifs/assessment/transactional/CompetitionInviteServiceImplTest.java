@@ -1,7 +1,6 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
@@ -37,7 +36,6 @@ import static com.worth.ifs.invite.builder.RejectionReasonBuilder.newRejectionRe
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -570,21 +568,22 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getAvailableAssessors() throws Exception {
+        Long competitionId = 1L;
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
-                .withUserId(1L, 2L)
-                .withFirstName("Dave", "John")
-                .withLastName("Smith", "Barnes")
-                .withEmail("dave@email.com", "john@email.com")
-                .withBusinessType(BUSINESS, ACADEMIC)
+                .withUserId(77L)
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withEmail("worth.email.test+assessor1@gmail.com")
+                .withBusinessType(BUSINESS)
                 .withInnovationArea(newCategoryResource()
                         .with(id(null))
-                        .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, CategoryResource.class))
-                .withCompliant(TRUE, FALSE)
-                .withAdded(TRUE, FALSE)
-                .build(2);
+                        .withName("Earth Observation")
+                        .build())
+                .withCompliant(TRUE)
+                .withAdded(FALSE)
+                .build(1);
 
-        List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(0L).getSuccessObjectOrThrowException();
+        List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
     }
 }

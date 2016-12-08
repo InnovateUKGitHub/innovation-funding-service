@@ -34,7 +34,6 @@ import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
-import static com.worth.ifs.user.resource.BusinessType.ACADEMIC;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Boolean.TRUE;
@@ -113,8 +112,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
         // TODO INFUND-6775
-        return serviceSuccess(asList(new AvailableAssessorResource(1L, "Dave", "Smith", "dave@email.com", BUSINESS, new CategoryResource(null, "Earth Observation", null, null, null), true, true),
-                new AvailableAssessorResource(2L, "John", "Barnes", "john@email.com", ACADEMIC, new CategoryResource(null, "Healthcare, Analytical science", null, null, null), false, false)));
+        return serviceSuccess(
+                asList(new AvailableAssessorResource(77L, "Jeremy", "Alufson", "worth.email.test+assessor1@gmail.com", BUSINESS,
+                        new CategoryResource(null, "Earth Observation", null, null, null), true, false)));
     }
 
     @Override

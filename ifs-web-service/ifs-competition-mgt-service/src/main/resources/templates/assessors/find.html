@@ -152,9 +152,12 @@
                 <tbody>
                     <tr th:each="assessor : ${model.assessors}">
                         <td><span th:text="${assessor.name}">John Barnes</span></td>
-                        <td>Industry</td>
-                        <td>Electronics, sensors &amp; photonics, Materials</td>
-                        <td><span class="yes">Yes</span></td>
+                        <td><span th:text="${assessor.businessType.displayName}">Industry</span></td>
+                        <td><span th:text="${assessor.innovationArea}">Electronics, sensors &amp; photonics, Materials</span></td>
+                        <td>
+                            <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                            <span class="no" th:unless="${assessor.compliant}">No</span>
+                        </td>
                         <td class="alignright">
                             <form method="POST" th:action="@{/competition/{competitionId}/assessors/inviteUser(competitionId=${model.competitionId})}" th:unless="${assessor.added}">
                                 <input type="hidden" name="email" th:value="${assessor.email}"/>
