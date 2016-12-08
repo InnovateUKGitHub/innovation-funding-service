@@ -134,7 +134,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
-            invite.generateHash();
+            invite.setHash(generateHash());
             applicationInviteRepository.save(invite);
 
             ServiceResult<Void> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
@@ -541,5 +541,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if(!processRoles.isEmpty()) {
             processRoleRepository.delete(processRoles);
         }
+    }
+
+    private static String generateHash() {
+        return UUID.randomUUID().toString();
     }
 }

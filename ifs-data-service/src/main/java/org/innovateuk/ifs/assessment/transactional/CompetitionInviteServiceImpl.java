@@ -154,7 +154,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
     }
 
-    // TODO INFUND-6725 this needs to be replaced with an alternate token generator
     private static String generateHash() {
         return randomUUID().toString();
     }
