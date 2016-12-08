@@ -57,7 +57,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        verifyNoMoreInteractions(financeRowRepositoryMock);
+        verifyNoMoreInteractions(applicationFinanceRowRepositoryMock);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
                 .contentType(MediaType.TEXT_PLAIN))
                 .andExpect(status().isUnsupportedMediaType());
 
-        verifyNoMoreInteractions(financeRowRepositoryMock);
+        verifyNoMoreInteractions(applicationFinanceRowRepositoryMock);
     }
 
     @Test

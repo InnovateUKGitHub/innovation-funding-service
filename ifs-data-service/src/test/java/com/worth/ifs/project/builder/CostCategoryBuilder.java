@@ -2,7 +2,7 @@ package com.worth.ifs.project.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.project.finance.domain.CostCategory;
-import com.worth.ifs.project.finance.resource.CostCategoryResource;
+import com.worth.ifs.project.finance.domain.CostCategoryGroup;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -21,6 +21,18 @@ public class CostCategoryBuilder extends BaseBuilder<CostCategory, CostCategoryB
         return new CostCategoryBuilder(emptyList()).with(uniqueIds());
     }
 
+    public CostCategoryBuilder withName(String... names) {
+        return withArray((name, costCategory) -> setField("name", name, costCategory), names);
+    }
+
+    public CostCategoryBuilder withLabel(String... labels) {
+        return withArray((label, costCategory) -> setField("label", label, costCategory), labels);
+    }
+
+    public CostCategoryBuilder withCostCategoryGroup(CostCategoryGroup... value) {
+        return withArray((v, costCategory) -> costCategory.setCostCategoryGroup(v), value);
+    }
+
     @Override
     protected CostCategoryBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CostCategory>> actions) {
         return new CostCategoryBuilder(actions);
@@ -30,16 +42,5 @@ public class CostCategoryBuilder extends BaseBuilder<CostCategory, CostCategoryB
     protected CostCategory createInitial() {
         return new CostCategory();
     }
-
-
-    public CostCategoryBuilder withName(String... names) {
-        return withArray((name, costCategory) -> setField("name", name, costCategory), names);
-    }
-
-    public CostCategoryBuilder withLabel(String... labels) {
-        return withArray((label, costCategory) -> setField("label", label, costCategory), labels);
-    }
-
-
 
 }

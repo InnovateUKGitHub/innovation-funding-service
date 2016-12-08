@@ -43,9 +43,9 @@ Project Finance user generates the Spend Profile
     [Setup]  log in as user                   lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
-    And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
-    And the user should see the element     jQuery=.table-progress tr:nth-child(3) td:contains("approved")
+    Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
+    And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
+    And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 Project Finance cancels the generation of the Spend Profile
