@@ -51,7 +51,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             }
         });
 
-        return milestoneService.updateMilestones(updatedMilestones, competitionId);
+        return milestoneService.updateMilestones(updatedMilestones);
     }
 
     @Override
