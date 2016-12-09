@@ -7,6 +7,8 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +24,8 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
 
-    private Viability viability;
+    @Enumerated(EnumType.STRING)
+    private Viability viability = Viability.PENDING;
 
     public ProjectFinance() {
     }
