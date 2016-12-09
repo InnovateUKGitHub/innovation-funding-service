@@ -21,9 +21,9 @@
 
             <section class="boxed" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'dd MMMM yyyy' : 'dd MMMM'">
                 <h2 class="heading-medium no-margin">
-                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)} - assessment period|" th:remove="tag"/>
+                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)}: assessment period|" th:remove="tag"/>
                 </h2>
-                <p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;
+                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;
                     <span th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
 
                 <p th:if="${model.briefingDate}">The assessor webinar briefing is mandatory and will last one hour,
@@ -50,8 +50,9 @@
                 <fieldset>
                     <legend class="visuallyhidden">Are you available to assess this competition?</legend>
                     <h2 class="heading-medium">Are you available to assess this competition?</h2>
-                    <p>If you are available you will be taken through the account creation process.</p>
-                    <button class="button large extra-margin" type="submit">Yes, create account</button>
+                    <p th:if="${!model.userLoggedIn}">If you are available you will be taken through the account creation process.</p>
+
+                    <button class="button large extra-margin" type="submit" th:text="${model.userLoggedIn} ? 'Yes' : 'Yes, create account'">Yes, create account</button>
                     <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">No</a>
                 </fieldset>
             </form>
