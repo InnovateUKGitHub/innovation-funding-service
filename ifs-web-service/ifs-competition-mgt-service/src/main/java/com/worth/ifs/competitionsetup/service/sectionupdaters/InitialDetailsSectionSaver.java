@@ -31,6 +31,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Collections.singletonList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * Competition setup section saver for the initial details section.
@@ -62,58 +63,63 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
-        competition.setExecutive(initialDetailsForm.getExecutiveUserId());
-        competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+        if (!competition.isSetupAndAfterNotifications()) {
+            competition.setExecutive(initialDetailsForm.getExecutiveUserId());
+            competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
 
-        if (!Boolean.TRUE.equals(competition.getSetupComplete())) {
+            if (!Boolean.TRUE.equals(competition.getSetupComplete())) {
 
-            competition.setName(initialDetailsForm.getTitle());
+                competition.setName(initialDetailsForm.getTitle());
 
-            if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                try {
-                    LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
-                            initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
-                    competition.setStartDate(startDate);
+                if (shouldTryToSaveStartDate(initialDetailsForm)) {
+                    try {
+                        LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
+                                initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
+                        competition.setStartDate(startDate);
 
-                    List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
-                    if (!errors.isEmpty()) {
-                        return serviceFailure(errors);
+                        List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
+                        if (!errors.isEmpty()) {
+                            return serviceFailure(errors);
+                        }
+
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage());
+
+                        return serviceFailure(asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save")));
                     }
-
-                } catch (Exception e) {
-                    LOG.error(e.getMessage());
-
-                    return serviceFailure(asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save")));
                 }
+
+
+                competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
+                competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+
+
+                if (competition.getInnovationSector() != null) {
+                    List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
+                    List<CategoryResource> matchingChild =
+                            children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
+
+                    if (matchingChild.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
+                        return serviceFailure(asList(fieldError("innovationAreaCategoryId",
+                                initialDetailsForm.getInnovationAreaCategoryId(),
+                                "competition.setup.innovation.area.must.be.selected",
+                                singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))))));
+                    }
+                }
+                competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
             }
 
 
-            competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
-            competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
-
-
-            if (competition.getInnovationSector() != null) {
-                List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
-                List<CategoryResource> matchingChild =
-                        children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
-
-                if (matchingChild.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
-                    return serviceFailure(asList(fieldError("innovationAreaCategoryId",
-                            initialDetailsForm.getInnovationAreaCategoryId(),
-                            "competition.setup.innovation.area.must.be.selected",
-                            singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))))));
+            return competitionService.update(competition).andOnSuccess(() -> {
+                if (initialDetailsForm.isMarkAsCompleteAction() && Boolean.FALSE.equals(competition.getSetupComplete())) {
+                    return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
+                } else {
+                    return serviceSuccess();
                 }
-            }
-            competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
+            });
+        } else {
+            return serviceFailure(new Error("Initial details section is not editable after notifications", BAD_REQUEST));
         }
-
-		return competitionService.update(competition).andOnSuccess(() -> {
-            if (initialDetailsForm.isMarkAsCompleteAction()) {
-                return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
-            } else {
-                return serviceSuccess();
-            }
-        });
    }
 
    private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {

@@ -104,13 +104,12 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isSetupAndLive() {
-        return Boolean.TRUE.equals(setupComplete) && startDate.isBefore(LocalDateTime.now())
-                && fundersPanelDate.isAfter(LocalDateTime.now());
+        return Boolean.TRUE.equals(setupComplete) && startDate.isBefore(LocalDateTime.now());
     }
 
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
-        return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isAfter(LocalDateTime.now());
+        return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(LocalDateTime.now());
     }
 
     public CompetitionStatus getCompetitionStatus() {

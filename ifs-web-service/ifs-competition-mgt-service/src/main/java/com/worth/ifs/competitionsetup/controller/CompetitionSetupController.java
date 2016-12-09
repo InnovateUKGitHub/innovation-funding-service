@@ -104,8 +104,16 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
     	}
 
+        CompetitionResource competition = competitionService.getById(competitionId);
+    	if(section.preventEdit(competition)) {
+            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s edited: ", competitionId, section));
+            return "redirect:/dashboard";
+        }
+
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
-        competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
+        if(!competition.isSetupAndLive()) {
+            competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
+        }
 
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
     }
@@ -122,6 +130,7 @@ public class CompetitionSetupController {
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
         }
+
 
         CompetitionResource competition = competitionService.getById(competitionId);
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);

@@ -142,7 +142,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select th:readonly="${competition.isSetupAndAfterNotifications()}" class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select an Innovation Lead">
+                <select class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select an Innovation Lead">
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Innovation Lead</option>
                 </select>
@@ -155,7 +155,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select th:readonly="${competition.isSetupAndAfterNotifications()}" class="form-control width-medium" name="executiveUserId" id="executiveUserId" required="required" data-required-errormessage="Please select a competition executive">
+                <select class="form-control width-medium" name="executiveUserId" id="executiveUserId" required="required" data-required-errormessage="Please select a competition executive">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
                     <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>
@@ -210,7 +210,7 @@
                 </dd>
                </dl>
 
-            <button type="submit" class="button">Edit</button>
+            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -426,7 +426,7 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button type="submit" class="button">Edit</button>
+            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -626,7 +626,7 @@
 
             </dl>
 
-            <button type="submit" class="button">Edit</button>
+            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -764,7 +764,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button type="submit" class="button extra-margin">Edit</button>
+            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
@@ -912,7 +912,7 @@
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
             </dl>
 
-            <button class="button">Edit</button>
+           <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
