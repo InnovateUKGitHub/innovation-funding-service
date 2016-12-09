@@ -70,7 +70,7 @@ public class FinanceChecksViabilityController {
 
         model.addAttribute("model", new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, creditReportVerified, viabilityApproved));
+                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, creditReportVerified, viabilityApproved));
     }
 
     private int toZeroScaleInt(BigDecimal value) {
