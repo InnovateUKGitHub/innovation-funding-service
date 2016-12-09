@@ -85,9 +85,9 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         milestone.setDate(milestone.getDate().plusDays(7));
         response.set(0, milestone);
 
-        setupPutWithRestResultExpectations(milestonesRestURL + "/" + competitionId, Void.class, response, null, HttpStatus.OK);
-        service.updateMilestones(response, competitionId);
-        setupPutWithRestResultVerifications(milestonesRestURL + "/" + competitionId, Void.class, response);
+        setupPutWithRestResultExpectations(milestonesRestURL + "/many", Void.class, response, null, HttpStatus.OK);
+        service.updateMilestones(response);
+        setupPutWithRestResultVerifications(milestonesRestURL + "/many", Void.class, response);
     }
 
     @Test
