@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
@@ -43,6 +44,10 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     @Enumerated(EnumType.STRING)
     private InviteStatus status;
+
+    public static String generateHash() {
+        return UUID.randomUUID().toString();
+    }
 
     Invite() {
     	// no-arg constructor

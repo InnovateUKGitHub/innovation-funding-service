@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
-import static com.innovateuk.ifs.invite.transactional.InviteServiceImpl.generateHash;
+import static com.innovateuk.ifs.invite.domain.Invite.generateHash;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Boolean.TRUE;
