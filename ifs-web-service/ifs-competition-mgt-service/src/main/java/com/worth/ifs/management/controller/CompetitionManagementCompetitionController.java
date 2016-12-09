@@ -48,4 +48,10 @@ public class CompetitionManagementCompetitionController {
         competitionService.closeAssessment(competitionId);
         return "redirect:/dashboard";
     }
+
+    @RequestMapping(value = "/{competitionId}/notify-assessors", method = RequestMethod.POST)
+    public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
+        competitionService.notifyAssessors(competitionId);
+        return "redirect:/dashboard";
+    }
 }
