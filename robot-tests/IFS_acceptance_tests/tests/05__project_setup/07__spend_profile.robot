@@ -43,9 +43,9 @@ Project Finance user generates the Spend Profile
     [Setup]  log in as user                   lee.bowman@innovateuk.test    Passw0rd
     Given the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element    jQuery=.table-progress tr:nth-child(1) td:contains("approved")
-    And the user should see the element     jQuery=.table-progress tr:nth-child(2) td:contains("approved")
-    And the user should see the element     jQuery=.table-progress tr:nth-child(3) td:contains("approved")
+    Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
+    And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
+    And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
 
 Project Finance cancels the generation of the Spend Profile
@@ -383,17 +383,6 @@ Partners can see the Spend Profile section completed
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
 
-Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049
-    [Tags]    Experian
-    [Setup]  Log in as a different user     john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
-
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
     [Tags]    HappyPath
@@ -451,6 +440,19 @@ Comp Admin can download the Spend Profile csv
     When the user clicks the button/link       link=EGGS-spend-profile.csv
     Then the user should not see an error in the page
     #TODO update ticket along with INFND-6187
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049 ,INFUND-5543
+    [Tags]    Experian  HappyPath   Pending
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
+    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting       # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action   # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617

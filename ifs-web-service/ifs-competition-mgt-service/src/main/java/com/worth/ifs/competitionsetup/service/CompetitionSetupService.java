@@ -1,13 +1,12 @@
 package com.worth.ifs.competitionsetup.service;
 
-import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.ui.Model;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,16 +29,16 @@ public interface CompetitionSetupService {
 											CompetitionSetupSubsection subsection,
                                                Optional<Long> objectId);
 
-    List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
+	ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
                                                 String fieldName, String value, Optional<Long> objectId);
 
-	List<Error> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
+	ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
 												   CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId);
 
-    List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-                                            CompetitionResource competitionResource, CompetitionSetupSection section);
+    ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+													CompetitionResource competitionResource, CompetitionSetupSection section);
 
-	List<Error> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
+	ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
 											   CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection);
 
 	boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);

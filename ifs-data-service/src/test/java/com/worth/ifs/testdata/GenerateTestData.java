@@ -639,6 +639,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withSubmissionDate(line.submissionDate).
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
+                withAssessorBriefingDate(line.assessorBriefingDate).
                 withAssessorAcceptsDate(line.assessorAcceptsDate).
                 withAssessorsNotifiedDate(line.assessorsNotifiedDate).
                 withAssessorEndDate(line.assessorEndDate).
@@ -737,13 +738,13 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
-                    invite.name, invite.hash, existingUser);
+                    invite.name, invite.hash, existingUser, invite.innovationAreaName);
         }
 
         String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
 
         AssessorDataBuilder baseBuilder = builder.
-                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser);
+                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser, null);
 
         if (!existingUser.isPresent()) {
             baseBuilder = baseBuilder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
@@ -761,7 +762,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
         assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash,
-                userRepository.findByEmail(line.email)).build();
+                userRepository.findByEmail(line.email), line.innovationAreaName).build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {

@@ -2,14 +2,15 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.MilestonesForm;
-import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import com.worth.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
@@ -47,7 +50,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 	}
 
 	@Override
-	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         LinkedMap<String, MilestoneViewModel> milestoneEntries = milestonesForm.getMilestoneEntries();
@@ -55,15 +58,10 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition.getId());
         if(!errors.isEmpty()) {
             competitionSetupMilestoneService.sortMilestones(milestonesForm);
-            return errors;
+            return serviceFailure(errors);
         }
 
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> ObjectId) {
-        return updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
+        return serviceSuccess();
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneViewModel> milestoneEntries, Long competitionId){
@@ -81,10 +79,14 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
 
-    @Override
-    protected List<Error> updateCompetitionResourceWithAutoSave(List<Error> errors, CompetitionResource competitionResource, String fieldName, String value) {
-      return  Collections.emptyList();
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+        List<Error> errors = updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
+        if (!errors.isEmpty()) {
+            return serviceFailure(errors);
+        }
+        return serviceSuccess();
     }
+
 
     private List<Error> updateMilestoneWithValueByFieldname(CompetitionResource competitionResource, String fieldName, String value) {
         List<Error> errors = new ArrayList<>();
@@ -132,4 +134,5 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         typeMatcher.find();
         return typeMatcher.group(1);
     }
+
 }

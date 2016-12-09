@@ -54,15 +54,11 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<Void> updateMilestones(Long id, List<MilestoneResource> milestones) {
-        
-    	Competition competition = competitionRepository.findById(id);
-    	
+    public ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones) {
     	ValidationMessages messages = validate(milestones);
         
         if (!messages.hasErrors()) {
             List<Milestone> milestoneEntities = milestones.stream().map(milestoneMapper::mapToDomain).collect(Collectors.toList());
-            competition.setMilestones(milestoneEntities);
             milestoneEntities.forEach(m -> milestoneRepository.save(m));
             return serviceSuccess();
         }
