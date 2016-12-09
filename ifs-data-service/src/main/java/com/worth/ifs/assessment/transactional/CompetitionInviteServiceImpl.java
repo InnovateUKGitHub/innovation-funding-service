@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
@@ -99,7 +100,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private ServiceResult<CompetitionInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
-            if (!EnumSet.of(CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.CLOSED).contains(invite.getTarget().getCompetitionStatus())) {
+            if (!EnumSet.of(READY_TO_OPEN,IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 

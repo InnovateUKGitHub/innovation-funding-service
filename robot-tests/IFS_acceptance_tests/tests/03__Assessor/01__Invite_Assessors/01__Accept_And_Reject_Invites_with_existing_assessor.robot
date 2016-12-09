@@ -43,8 +43,6 @@ Existing assessor: Reject invitation
     ...
     ...    INFUND-5157
     [Tags]    HappyPath
-    [Setup]  The accept deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the future
-    [Teardown]  The accept deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} is reset
     Given the user navigates to the page    ${Invitation_existing_assessor1}
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
