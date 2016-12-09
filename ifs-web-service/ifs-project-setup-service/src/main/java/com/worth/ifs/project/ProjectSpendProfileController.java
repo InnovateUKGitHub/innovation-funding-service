@@ -279,11 +279,7 @@ public class ProjectSpendProfileController {
 
     private boolean isApproved(final Long projectId) {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
-        boolean approved = false;
-        if(teamStatus != null) {
-            approved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
-        }
-        return approved;
+            return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
