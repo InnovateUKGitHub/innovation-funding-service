@@ -10,6 +10,7 @@ import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
 import com.worth.ifs.invite.domain.ParticipantStatus;
 import com.worth.ifs.invite.domain.RejectionReason;
+import com.worth.ifs.invite.resource.AvailableAssessorResource;
 import com.worth.ifs.invite.resource.CompetitionInviteResource;
 import com.worth.ifs.invite.resource.RejectionReasonResource;
 import com.worth.ifs.user.domain.User;
@@ -25,11 +26,14 @@ import java.util.Optional;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.worth.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.competition.resource.MilestoneType.ASSESSOR_DEADLINE;
@@ -37,6 +41,9 @@ import static com.worth.ifs.invite.builder.RejectionReasonBuilder.newRejectionRe
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -63,7 +70,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2));
         Competition competition = newCompetition().withName("my competition").withMilestones(milestones).withSetupComplete(true).build();
         CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
-        competitionParticipant = new CompetitionParticipant(competition, competitionInvite);
+        competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(7L).build();
@@ -585,5 +592,26 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
         inOrder.verify(userServiceMock).findByEmail("test@test.com");
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getAvailableAssessors() throws Exception {
+        Long competitionId = 1L;
+        List<AvailableAssessorResource> expected = newAvailableAssessorResource()
+                .withUserId(77L)
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withEmail("worth.email.test+assessor1@gmail.com")
+                .withBusinessType(BUSINESS)
+                .withInnovationArea(newCategoryResource()
+                        .with(id(null))
+                        .withName("Earth Observation")
+                        .build())
+                .withCompliant(TRUE)
+                .withAdded(FALSE)
+                .build(1);
+
+        List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
+        assertEquals(expected, actual);
     }
 }

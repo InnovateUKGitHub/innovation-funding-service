@@ -35,7 +35,7 @@
     <form th:if="${editable}"
           method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/' + ${competition.id} + '/section/application/question'  (${competitionSetupForm.question.type}) }" novalidate="novalidate"
+          th:action="@{'/competition/setup/{competitionId}/section/application/question'(competitionId=${competition.id}) }" novalidate="novalidate"
           data-autosave="compSetup" data-th-attr="data-competition=${competition.id}, data-objectId=${competitionSetupForm.question.questionId}"
           data-section="application"
           data-subsection="question">

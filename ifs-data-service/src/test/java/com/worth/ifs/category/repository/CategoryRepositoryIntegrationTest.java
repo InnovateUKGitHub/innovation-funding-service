@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.worth.ifs.category.builder.CategoryBuilder.newCategory;
+import static com.worth.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static com.worth.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.junit.Assert.assertEquals;
 
 public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CategoryRepository> {
@@ -20,20 +23,39 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
 
 
     @Test
-    public void test_findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk() throws Exception {
-        Category found = repository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_SECTOR, "com.worth.ifs.competition.domain.Competition", 7L);
+    public void findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk() throws Exception {
+        Category found = repository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(INNOVATION_SECTOR, "com.worth.ifs.competition.domain.Competition", 7L);
 
         assertEquals(Long.valueOf(1L), found.getId());
-        assertEquals(CategoryType.INNOVATION_SECTOR, found.getType());
+        assertEquals(INNOVATION_SECTOR, found.getType());
         assertEquals("Health and life sciences", found.getName());
     }
 
     @Test
-    public void test_findByType() throws Exception {
-        List<Category> found = repository.findByType(CategoryType.INNOVATION_SECTOR);
+    public void findByType() throws Exception {
+        List<Category> found = repository.findByType(INNOVATION_SECTOR);
 
         assertEquals(4, found.size());
         assertEquals(Long.valueOf(4L), found.get(3).getId());
     }
 
+    @Test
+    public void findByIdAndType() {
+        String innovationAreaName = "Machine learning";
+        Category savedCategory = repository.save(newCategory().withType(INNOVATION_AREA).withName(innovationAreaName).build());
+
+        Category retrievedCategory = repository.findByIdAndType(savedCategory.getId(), INNOVATION_AREA);
+
+        assertEquals(savedCategory, retrievedCategory);
+    }
+
+    @Test
+    public void findByNameAndType() {
+        String innovationAreaName = "Machine learning";
+        Category savedCategory = repository.save(newCategory().withType(INNOVATION_AREA).withName(innovationAreaName).build());
+
+        Category retrievedCategory = repository.findByNameAndType(innovationAreaName, INNOVATION_AREA);
+
+        assertEquals(savedCategory, retrievedCategory);
+    }
 }

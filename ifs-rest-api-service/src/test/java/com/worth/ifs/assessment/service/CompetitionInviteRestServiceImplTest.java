@@ -2,20 +2,23 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
-import com.worth.ifs.invite.resource.CompetitionRejectionResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
-import org.junit.Assert;
+import com.worth.ifs.invite.resource.*;
 import org.junit.Test;
 
+import java.util.List;
 
-
+import static com.worth.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.availableAssessorResourceListType;
+import static com.worth.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionInviteRestServiceImpl> {
+
     private static final String restUrl = "/competitioninvite";
 
     @Override
@@ -30,7 +33,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         expected.setCompetitionName("my competition");
         setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/getInvite", "hash"), CompetitionInviteResource.class, expected);
         CompetitionInviteResource actual = service.getInvite("hash").getSuccessObject();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -39,7 +42,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         expected.setCompetitionName("my competition");
         setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/openInvite", "hash"), CompetitionInviteResource.class, null, expected, OK);
         CompetitionInviteResource actual = service.openInvite("hash").getSuccessObject();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -72,5 +75,38 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     public void checkExistingUser() {
         setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "/checkExistingUser", "hash"), Boolean.class, Boolean.TRUE);
         assertTrue(service.checkExistingUser("hash").getSuccessObject());
+    }
+
+    @Test
+    public void getAvailableAssessors() throws Exception {
+        long competitionId = 1L;
+        List<AvailableAssessorResource> expected = newAvailableAssessorResource().build(2);
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "/getAvailableAssessors", competitionId), availableAssessorResourceListType(), expected);
+
+        List<AvailableAssessorResource> actual = service.getAvailableAssessors(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void inviteUser() {
+        ExistingUserStagedInviteResource existingUserStagesInviteResource = new ExistingUserStagedInviteResource("firstname.example@example.com", 1L);
+        CompetitionInviteResource expected = newCompetitionInviteResource().build();
+
+        setupPostWithRestResultExpectations(format("%s/%s", restUrl, "/inviteUser"), CompetitionInviteResource.class, existingUserStagesInviteResource, expected, OK);
+
+        CompetitionInviteResource actual = service.inviteUser(existingUserStagesInviteResource).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void deleteInvite() {
+        String email = "firstname.lastname@example.com";
+        long competitionId = 1L;
+
+        setupPostWithRestResultExpectations(format("%s/%s", restUrl, "/deleteInvite"), asMap("email", email, "competitionId", competitionId), OK);
+
+        RestResult<Void> resultResult = service.deleteInvite(email, competitionId);
+        assertTrue(resultResult.isSuccess());
     }
 }
