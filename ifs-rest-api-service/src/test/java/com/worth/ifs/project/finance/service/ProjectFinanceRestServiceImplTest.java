@@ -2,12 +2,16 @@ package com.worth.ifs.project.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileCSVResource;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
-import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
+import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -23,7 +27,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void test() {
+    public void testGenerateSpendProfile() {
 
         setupPostWithRestResultExpectations("/project/123/spend-profile/generate", Void.class, null, null, CREATED);
         service.generateSpendProfile(123L);
@@ -110,6 +114,20 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        Assert.assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetFinanceTotals() {
+
+        Long projectId = 123L;
+
+        List<ProjectFinanceResource> results = newProjectFinanceResource().build(2);
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/project-finance/totals", projectFinanceResourceListType(), results);
+
+        RestResult<List<ProjectFinanceResource>> result = service.getFinanceTotals(projectId);
+
+        assertEquals(results, result.getSuccessObject());
     }
 }
