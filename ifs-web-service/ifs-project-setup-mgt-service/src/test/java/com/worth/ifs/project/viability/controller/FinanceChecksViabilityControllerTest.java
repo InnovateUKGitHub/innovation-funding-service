@@ -21,8 +21,11 @@ import static com.worth.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGra
 import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static com.worth.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static com.worth.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static com.worth.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
+import static com.worth.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static com.worth.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
+import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.util.MapFunctions.asMap;
@@ -59,6 +62,13 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                         newGrantClaim().
                                 withGrantClaimPercentage(30).
                                 build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "Some source of funding").
+                                withFundingAmount(null, BigDecimal.valueOf(1000)).
+                                build(2)).
                         build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
                         newMaterials().
@@ -104,10 +114,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertTrue(viewModel.isLeadPartnerOrganisation());
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
-        assertEquals(null, viewModel.getPercentageGrant());
-        assertEquals(null, viewModel.getFundingSought());
-        assertEquals(null, viewModel.getOtherPublicSectorFunding());
-        assertEquals(null, viewModel.getContributionToProject());
+        assertEquals(Integer.valueOf(30), viewModel.getPercentageGrant());
+        assertEquals(Integer.valueOf(1004), viewModel.getFundingSought());
+        assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
+        assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
 
         assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
