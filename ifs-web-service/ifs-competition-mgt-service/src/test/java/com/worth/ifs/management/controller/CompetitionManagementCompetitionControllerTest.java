@@ -94,4 +94,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .andExpect(redirectedUrl("/dashboard"));
         verify(competitionService, only()).closeAssessment(competitionId);
     }
+
+    @Test
+    public void notifyAssessors() throws Exception {
+        Long competitionId = 1L;
+        mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard"));
+        verify(competitionService, only()).notifyAssessors(competitionId);
+    }
 }

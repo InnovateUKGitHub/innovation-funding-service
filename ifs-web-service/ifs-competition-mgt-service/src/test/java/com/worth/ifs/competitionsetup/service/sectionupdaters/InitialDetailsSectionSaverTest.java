@@ -6,10 +6,11 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
 import com.worth.ifs.category.builder.CategoryResourceBuilder;
 import com.worth.ifs.category.resource.CategoryResource;
-import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.junit.Test;
@@ -74,10 +75,12 @@ public class InitialDetailsSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("compcode").build();
         competition.setMilestones(milestonesIds);
+        competition.setSetupComplete(false);
 
         when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
         when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -99,33 +102,21 @@ public class InitialDetailsSectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
-        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2020", null);
+        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "openingDate", "20-10-2020", null);
 
-        assertTrue(errors.isEmpty());
+        assertTrue(errors.isSuccess());
         verify(competitionService).update(competition);
-    }
-
-    @Test
-    public void testAutoSaveCompetitionSetupSectionErrors() {
-        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-
-        CompetitionResource competition = newCompetitionResource().build();
-        competition.setMilestones(asList(10L));
-
-        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2000", null);
-
-        assertTrue(!errors.isEmpty());
-        verify(competitionService, never()).update(competition);
     }
 
     @Test
     public void testAutoSaveCompetitionSetupSectionUnknown() {
         CompetitionResource competition = newCompetitionResource().build();
 
-        List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value", null);
+        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "notExisting", "Strange!@#1Value", null);
 
-        assertTrue(!errors.isEmpty());
+        assertTrue(!errors.isSuccess());
         verify(competitionService, never()).update(competition);
     }
 
@@ -139,6 +130,7 @@ public class InitialDetailsSectionSaverTest {
         Long newExec = 1L;
         form.setTitle(newTitle);
         form.setExecutiveUserId(newExec);
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, form);
 
@@ -154,5 +146,11 @@ public class InitialDetailsSectionSaverTest {
         milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
         milestone.setCompetition(1L);
         return milestone;
+    }
+
+    @Test
+    public void testsSupportsForm() {
+        assertTrue(service.supportsForm(InitialDetailsForm.class));
+        assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
 }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -135,6 +136,7 @@ public class CompetitionSetupServiceImplTest {
 		when(otherSaver.sectionToSave()).thenReturn(CompetitionSetupSection.APPLICATION_FORM);
 		when(otherSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(false);
 
+		when(matchingSaver.saveSection(competitionResource, competitionSetupForm)).thenReturn(serviceSuccess());
 
 		service.setCompetitionSetupSectionSavers(asList(matchingSaver, otherSaver));
 		

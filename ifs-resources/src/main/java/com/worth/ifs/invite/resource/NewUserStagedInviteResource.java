@@ -4,8 +4,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class NewUserStagedInviteResource extends StagedInviteResource {
+
     private String name;
     private long innovationCategoryId;
+
+    public NewUserStagedInviteResource() {
+    }
+
+    public NewUserStagedInviteResource(String email, long competitionId, String name, long innovationCategoryId) {
+        super(email, competitionId);
+        this.name = name;
+        this.innovationCategoryId = innovationCategoryId;
+    }
 
     public String getName() {
         return name;

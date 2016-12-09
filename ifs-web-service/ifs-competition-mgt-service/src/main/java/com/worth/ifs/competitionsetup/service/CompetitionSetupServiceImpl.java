@@ -1,7 +1,7 @@
 package com.worth.ifs.competitionsetup.service;
 
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupSection;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -130,35 +132,37 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 
 	@Override
-	public List<Error> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
+	public ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
                                                        String fieldName, String value, Optional<Long> objectId) {
 
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
-		if(saver == null) {
+		CompetitionSetupFormPopulator populator = formPopulators.get(section);
+		if(saver == null || populator == null) {
 			LOG.error("unable to save section " + section);
 			throw new IllegalArgumentException();
 		}
 
-        return saver.autoSaveSectionField(competitionResource, fieldName, value, objectId);
+        return saver.autoSaveSectionField(competitionResource, populator.populateForm(competitionResource), fieldName, value, objectId);
 	}
 
     @Override
-    public List<Error> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
+    public ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
                                                           CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId) {
 
         checkIfSubsectionIsInSection(section, subsection);
         CompetitionSetupSubsectionSaver saver = subsectionSavers.get(subsection);
-        if(saver == null) {
+		CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
+        if(saver == null || populator == null) {
             LOG.error("unable to save subsection " + subsection);
             throw new IllegalArgumentException();
         }
 
-        return saver.autoSaveSectionField(competitionResource, fieldName, value, objectId);
+        return saver.autoSaveSectionField(competitionResource, populator.populateForm(competitionResource, objectId), fieldName, value, objectId);
     }
 
 	@Override
-	public List<Error> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-			CompetitionResource competitionResource, CompetitionSetupSection section) {
+	public ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+														   CompetitionResource competitionResource, CompetitionSetupSection section) {
 		
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
 		if(saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
@@ -166,17 +170,16 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			throw new IllegalArgumentException();
 		}
 		
-		List<Error> errors = saver.saveSection(competitionResource, competitionSetupForm);
-		
-		if(errors.isEmpty() && competitionSetupForm.isMarkAsCompleteAction()) {
-			competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
-		}
-		
-		return errors;
+		return saver.saveSection(competitionResource, competitionSetupForm).andOnSuccess(() -> {
+			if (competitionSetupForm.isMarkAsCompleteAction()) {
+				return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
+			}
+			return serviceSuccess();
+		});
 	}
 
     @Override
-    public List<Error> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
+    public ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
                                                       CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
 
         checkIfSubsectionIsInSection(section, subsection);

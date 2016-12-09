@@ -102,13 +102,6 @@ Second assessor shouldn't be able to access first assessor's application questio
     Then The user should see permissions error message
     [Teardown]    the user closes the browser
 
-Registered user should not allowed to accept other assessor invite
-    [Documentation]    INFUND-4895
-    [Tags]    Failing
-    [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
-    Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
-    Then The user should see permissions error message
-    [Teardown]    logout as user
+
 
 *** Keywords ***

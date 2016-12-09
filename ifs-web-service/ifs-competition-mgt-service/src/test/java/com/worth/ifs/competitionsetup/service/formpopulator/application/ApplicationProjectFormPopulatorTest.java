@@ -7,7 +7,6 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationProjectForm;
-import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.form.service.FormInputService;
 import org.junit.Test;
@@ -20,8 +19,7 @@ import java.util.Optional;
 
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -60,7 +58,7 @@ public class ApplicationProjectFormPopulatorTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithErrors() {
-        when(questionService.getById(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
+        when(competitionSetupQuestionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
         assertEquals(null, result);
     }

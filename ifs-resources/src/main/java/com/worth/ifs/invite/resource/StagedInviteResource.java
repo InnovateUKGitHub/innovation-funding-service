@@ -8,6 +8,14 @@ public abstract class StagedInviteResource {
     private String email;
     private long competitionId;
 
+    protected StagedInviteResource() {
+    }
+
+    protected StagedInviteResource(String email, long competitionId) {
+        this.email = email;
+        this.competitionId = competitionId;
+    }
+
     public String getEmail() {
         return email;
     }
