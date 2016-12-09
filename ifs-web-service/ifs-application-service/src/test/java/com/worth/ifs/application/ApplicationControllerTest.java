@@ -14,9 +14,11 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.ApplicationInviteResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.model.OrganisationDetailsModelPopulator;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
@@ -43,9 +45,11 @@ import java.util.stream.Collectors;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.resource.CompetitionStatus.*;
 import static com.worth.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
@@ -76,9 +80,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private ApplicationPrintPopulator applicationPrintPopulator;
 
-    @Spy
-    @InjectMocks
+    @Mock
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Mock
+    OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {
@@ -550,4 +556,71 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(HttpServletRequest.class));
     }
 
+    /*
+    @Test
+    public void testAssignQuestionAndReturnSectionFragment() throws Exception {
+
+        ApplicationResource app = applications.get(0);
+        SectionResource section = sectionResources.get(0);
+        CompetitionResource competition = competitionResources.get(0);
+        QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
+        List<FormInputResource> formInputs = newFormInputResource().with(id((Long) 1L)).build(1);
+        List<SectionResource> allSections = sectionResources;
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
+        when(competitionService.getById(app.getCompetition())).thenReturn(competition);
+
+        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
+
+        when(applicationSectionAndQuestionModelPopulator.getSectionByIds(competition.getId(), Optional.ofNullable(section.getId()), true)).thenReturn(Optional.ofNullable(section));
+        when(questionService.extractQuestionProcessRoleIdFromAssignSubmit(any())).thenReturn(1L);
+        when(questionService.getById(question.getId())).thenReturn(question);
+        when(sectionService.getById(section.getId())).thenReturn(section);
+        when(formInputService.findApplicationInputsByQuestion(question.getId())).thenReturn(formInputs);
+
+        mockMvc.perform(post("/application/" + app.getId() + "?singleFragment=true")
+                .param("sectionId", "1"))
+                .andExpect(view().name("application/single-section-details"));;
+
+        verify(applicationModelPopulator, times(1)).addOrganisationAndUserFinanceDetails(eq(competition.getId()), eq(app.getId()), user, any(), any());
+        verify(organisationDetailsModelPopulator, times(1)).populateModel(any(), eq(app.getId()));
+        verify(applicationModelPopulator, times(1)).addApplicationAndSections(eq(app), eq(competition), eq(user.getId()), any(), any(), any(), any());
+        verify(questionService, times(1)).assignQuestion(eq(app.getId()), any(), any());
+    }
+
+    @Test
+    public void testAssignQuestionAndReturnSectionFragmentIndividualSection() throws Exception {
+
+        ApplicationResource app = applications.get(0);
+        SectionResource section = sectionResources.get(0);
+        CompetitionResource competition = competitionResources.get(0);
+        QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
+        List<FormInputResource> formInputs = newFormInputResource().with(id((Long) 1L)).build(1);
+        List<SectionResource> allSections = sectionResources;
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
+        when(competitionService.getById(app.getCompetition())).thenReturn(competition);
+
+        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
+
+        when(applicationSectionAndQuestionModelPopulator.getSectionByIds(competition.getId(), Optional.ofNullable(section.getId()), true)).thenReturn(Optional.ofNullable(section));
+        when(questionService.extractQuestionProcessRoleIdFromAssignSubmit(any())).thenReturn(1L);
+        when(questionService.getById(question.getId())).thenReturn(question);
+        when(sectionService.getById(section.getId())).thenReturn(section);
+        when(formInputService.findApplicationInputsByQuestion(question.getId())).thenReturn(formInputs);
+
+        mockMvc.perform(post("/application/" + app.getId() + "/section/1?singleFragment=true")
+                .param("sectionId", "1"))
+                .andExpect(view().name("application/single-section-details"));
+
+        verify(applicationModelPopulator, times(1)).addOrganisationAndUserFinanceDetails(eq(competition.getId()), eq(app.getId()), user, any(), any());
+        verify(organisationDetailsModelPopulator, times(1)).populateModel(any(), eq(app.getId()));
+        verify(applicationModelPopulator, times(1)).addApplicationAndSections(eq(app), eq(competition), eq(user.getId()), any(), any(), any(), any());
+        verify(questionService, times(1)).assignQuestion(eq(app.getId()), any(), any());
+    }
+    */
 }
