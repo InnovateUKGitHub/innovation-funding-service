@@ -5,8 +5,8 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.competition.resource.CompetitionStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.RejectionReason;
 import com.worth.ifs.invite.repository.CompetitionInviteRepository;
@@ -19,15 +19,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static com.worth.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
 import static com.worth.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static com.worth.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static com.worth.ifs.invite.domain.ParticipantStatus.PENDING;
@@ -60,8 +63,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Before
     public void setup() {
         loginSystemRegistrationUser();
-
-        competition = competitionRepository.findOne(1L);
+        competition = competitionRepository.save(newCompetition().withSetupComplete(true).withName("Invite Competition").build());
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
+                .build(2));
+        competition.setMilestones(milestones);
     }
 
     @Test
@@ -79,7 +89,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertTrue(serviceResult.isSuccess());
 
         CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
-        assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
+        assertEquals("Invite Competition", inviteResource.getCompetitionName());
     }
 
     @Test
@@ -104,7 +114,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertTrue(serviceResult.isSuccess());
 
         CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
-        assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
+        assertEquals("Invite Competition", inviteResource.getCompetitionName());
     }
 
     @Test
@@ -323,7 +333,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Connected digital additive manufacturing")));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "Invite Competition")));
     }
 
     @Test
@@ -354,7 +364,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> acceptResult = controller.acceptInvite("hash");
 
         assertTrue(acceptResult.isFailure());
-        assertTrue(acceptResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "Connected digital additive manufacturing")));
+        assertTrue(acceptResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "Invite Competition")));
     }
 
     @Test
@@ -435,7 +445,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> rejectResult = controller.rejectInvite("hash", competitionRejectionResource);
 
         assertTrue(rejectResult.isFailure());
-        assertTrue(rejectResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "Connected digital additive manufacturing")));
+        assertTrue(rejectResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "Invite Competition")));
     }
 
     @Test
@@ -460,7 +470,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "Connected digital additive manufacturing")));
+        assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "Invite Competition")));
     }
 
     @Test

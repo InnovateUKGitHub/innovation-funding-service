@@ -4,6 +4,7 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.domain.Milestone;
 import com.worth.ifs.invite.builder.RejectionReasonResourceBuilder;
 import com.worth.ifs.invite.domain.CompetitionInvite;
 import com.worth.ifs.invite.domain.CompetitionParticipant;
@@ -19,6 +20,7 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -28,6 +30,9 @@ import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static com.worth.ifs.competition.resource.MilestoneType.*;
+import static com.worth.ifs.competition.resource.MilestoneType.ASSESSOR_DEADLINE;
 import static com.worth.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -49,7 +54,14 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setUp() {
-        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(LocalDateTime.now().plusDays(1)).build();
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
+                .build(2));
+        Competition competition = newCompetition().withName("my competition").withMilestones(milestones).withSetupComplete(true).build();
         CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
         competitionParticipant = new CompetitionParticipant(competition, competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
