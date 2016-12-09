@@ -39,42 +39,6 @@ task deployToTomcat(type: Copy) {
     rename '(.*).war', 'ROOT.war'
 }
 
-task copyTemplatesInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/templates"
-    from 'src/main/resources/templates'
-}
-
-task copyCssInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/static/css"
-    from 'src/main/resources/static/css'
-}
-
-task copyJsInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/ROOT/WEB-INF/classes/static/js/dest"
-    from 'src/main/resources/static/js/dest'
-}
-
-watch {
-    java {
-        files files('src/main/java')
-        tasks('deployToTomcat')
-    }
-
-    templates {
-        files files('src/main/resources/templates')
-        tasks 'copyTemplatesInPlace'
-    }
-
-    css {
-        files files('src/main/resources/static/css')
-        tasks 'copyCssInPlace'
-    }
-    js {
-        files files('src/main/resources/static/js/dest')
-        tasks 'copyJsInPlace'
-    }
-}
-
 processResources {
     filesMatching("*.properties") {
         expand project.properties

@@ -12,7 +12,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'spring-boot'
-    apply plugin: 'com.bluepapa32.watch'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
@@ -87,13 +86,15 @@ buildscript {
         classpath 'org.owasp:dependency-check-gradle:1.4.0'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.13"
         classpath "se.transmode.gradle:gradle-docker:1.2"
+        classpath 'cz.malohlava:visteg:1.0.0'
     }
+
 }
 
 
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
-
+apply plugin: 'cz.malohlava.visteg'
 
 sonarqube {
     properties {
@@ -104,6 +105,18 @@ sonarqube {
         // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
+}
+
+visteg {
+    enabled        = true
+    colouredNodes  = true
+    colouredEdges  = true
+    destination    = 'build/reports/visteg.dot'
+    exporter       = 'dot'
+    colorscheme    = 'spectral11'
+    nodeShape      = 'box'
+    startNodeShape = 'hexagon'
+    endNodeShape   = 'doubleoctagon'
 }
 
 dockerCompose {
