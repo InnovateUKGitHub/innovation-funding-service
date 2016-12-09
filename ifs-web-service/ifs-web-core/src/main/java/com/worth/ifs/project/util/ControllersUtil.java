@@ -16,7 +16,7 @@ public class ControllersUtil {
 
     public static boolean isLeadPartner(final PartnerOrganisationService partnerOrganisationService, final Long projectId, final Long organisationId) {
         ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
-        if(result.isSuccess()) {
+        if(null != result && result.isSuccess()) {
             Optional<PartnerOrganisationResource> partnerOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
             return partnerOrganisationResource.isPresent() && partnerOrganisationResource.get().getOrganisation().equals(organisationId);
         } else {

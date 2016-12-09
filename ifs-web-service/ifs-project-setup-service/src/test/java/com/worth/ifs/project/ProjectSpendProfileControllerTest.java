@@ -217,7 +217,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         verify(projectService).getById(projectId);
         verify(projectFinanceService, times(2)).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
-        verify(projectService).getProjectUsersForProject(projectResource.getId());
+        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
 
     }
 
