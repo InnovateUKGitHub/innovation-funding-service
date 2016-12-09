@@ -100,13 +100,14 @@ Calculations in the spend profile table
     And the sum of tds equals the total    div.spend-profile-table    6    38    10000    # Travel & subsistence
     And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other Costs
 
-#Lead Partner can see Spend profile summary
-#    [Documentation]    INFUND-3971
-#    [Tags]    HappyPath
-#    Given the user navigates to the page            ${external_spendprofile_summary}/review
-#    And the user should see the text in the page    Project costs for financial year
-#    And the user moves focus to the element         jQuery=.grid-container table
-#    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
+Lead Partner can see Spend profile summary
+    [Documentation]    INFUND-3971
+    [Tags]    Failing
+    #TODO this test case needs to be moved, to another project where the PM != Lead partner.
+    Given the user navigates to the page            ${external_spendprofile_summary}/review
+    And the user should see the text in the page    Project costs for financial year
+    And the user moves focus to the element         jQuery=.grid-container table
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765
