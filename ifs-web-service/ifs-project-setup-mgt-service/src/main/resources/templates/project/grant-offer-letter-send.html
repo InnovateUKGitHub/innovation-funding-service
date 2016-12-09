@@ -33,7 +33,7 @@
     </th:block>
 
     <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
-        <p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
+        <p>A signed copy of the grant offer letter produced by us has been received and approved. Project setup is complete.</p>
     </th:block>
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
