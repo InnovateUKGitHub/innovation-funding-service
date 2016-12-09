@@ -17,7 +17,7 @@ public interface MilestoneService {
 
     MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 
-    List<Error> updateMilestones(List<MilestoneResource> milestones, Long competitionId);
+    List<Error> updateMilestones(List<MilestoneResource> milestones);
 
     List<Error> updateMilestone(MilestoneResource milestone);
 

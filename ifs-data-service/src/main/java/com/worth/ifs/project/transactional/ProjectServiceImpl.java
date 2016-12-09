@@ -10,8 +10,6 @@ import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.CommonFailureKeys;
-import com.worth.ifs.notifications.resource.*;
-import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -21,31 +19,23 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.BasicFileAndContents;
 import com.worth.ifs.file.service.FileAndContents;
 import com.worth.ifs.file.transactional.FileService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.FinanceRow;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.FinanceRowRepository;
-import com.worth.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import com.worth.ifs.invite.domain.ProjectInvite;
 import com.worth.ifs.invite.domain.ProjectParticipantRole;
 import com.worth.ifs.invite.mapper.InviteProjectMapper;
 import com.worth.ifs.invite.repository.InviteProjectRepository;
 import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.OrganisationAddressRepository;
+import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.constant.ProjectActivityStates;
 import com.worth.ifs.project.domain.MonitoringOfficer;
 import com.worth.ifs.project.domain.PartnerOrganisation;
 import com.worth.ifs.project.domain.Project;
 import com.worth.ifs.project.domain.ProjectUser;
-import com.worth.ifs.project.finance.domain.*;
-import com.worth.ifs.project.finance.repository.FinanceCheckRepository;
+import com.worth.ifs.project.finance.domain.SpendProfile;
 import com.worth.ifs.project.finance.repository.SpendProfileRepository;
 import com.worth.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import com.worth.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
@@ -57,6 +47,7 @@ import com.worth.ifs.project.repository.MonitoringOfficerRepository;
 import com.worth.ifs.project.repository.ProjectRepository;
 import com.worth.ifs.project.repository.ProjectUserRepository;
 import com.worth.ifs.project.resource.*;
+import com.worth.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import com.worth.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -68,17 +59,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -93,7 +84,8 @@ import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -164,22 +156,19 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private GOLWorkflowHandler golWorkflowHandler;
 
     @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
+
+    @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
-
-    @Autowired
-    private FinanceCheckRepository financeCheckRepository;
-
-    @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private FinanceRowRepository financeRowRepository;
 
     @Autowired
     private InviteProjectRepository inviteProjectRepository;
 
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
+
+    @Autowired
+    private FinanceChecksGenerator financeChecksGenerator;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -701,7 +690,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 userId -> simpleFindFirst(project.getProjectUsers(),
                         pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
 
-        List<Organisation> allPartnerOrganisations = getPartnerOrganisations(projectId);
+        List<Organisation> allPartnerOrganisations = project.getOrganisations();
         List<Organisation> partnerOrganisationsToInclude =
                 simpleFilter(allPartnerOrganisations, partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
@@ -943,8 +932,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess, projectProcess);
     }
 
     private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -973,43 +963,23 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         }
     }
 
-    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
-        List<Organisation> organisations = getPartnerOrganisations(newProject.getId());
-
-        organisations.forEach(organisation -> costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).
-                andOnSuccessReturn(costCategoryType -> createFinanceCheckFrom(newProject, organisation, costCategoryType)).
-                andOnSuccessReturn(this::populateFinanceCheck));
-        return serviceSuccess();
-    }
-
-    private FinanceCheck createFinanceCheckFrom(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
-        List<Cost> costs = new ArrayList<>();
-        List<CostCategory> costCategories = costCategoryType.getCostCategories();
-        CostGroup costGroup = new CostGroup("finance-check", costs);
-        costCategories.forEach(costCategory -> {
-            Cost cost = new Cost(new BigDecimal(0.0));
-            costs.add(cost);
-            cost.setCostCategory(costCategory);
-        });
-        costGroup.setCosts(costs);
-
-        FinanceCheck financeCheck = new FinanceCheck(newProject, costGroup);
-        financeCheck.setOrganisation(organisation);
-        financeCheck.setProject(newProject);
-        return financeCheckRepository.save(financeCheck);
-    }
-
-    private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
-        Organisation organisation = financeCheck.getOrganisation();
-        Application application = financeCheck.getProject().getApplication();
-        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-            List<FinanceRow> financeRows = financeRowRepository.findByApplicationFinanceId(applicationFinance.getId());
-            financeCheck.getCostGroup().getCosts().forEach(
-                    c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
-            );
+    private ServiceResult<Void> createProjectProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
+        if (projectWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
         }
-        return financeCheckRepository.save(financeCheck);
+    }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = newProject.getOrganisations();
+
+        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
+            financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
+            costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+            financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
+
+        return processAnyFailuresOrSucceed(financeCheckResults);
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
@@ -1058,26 +1028,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
-    }
-
-    private List<Organisation> getPartnerOrganisations(Long projectId) {
-        List<ProjectUser> projectUserObjs = getProjectUsersByProjectId(projectId);
-        List<ProjectUserResource> projectRoles = simpleMap(projectUserObjs, projectUserMapper::mapToResource);
-        return getPartnerOrganisations(projectRoles);
-    }
-
-    private List<Organisation> getPartnerOrganisations(List<ProjectUserResource> projectRoles) {
-        final Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-
-        final Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<Organisation> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PROJECT_PARTNER.getName()))
-                .map(uar -> organisationRepository.findOne(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
-
-        return new ArrayList<>(organisationSet);
     }
 
     @Override

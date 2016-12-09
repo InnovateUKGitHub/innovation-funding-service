@@ -2,11 +2,12 @@ package com.worth.ifs.competitionsetup.service.sectionupdaters;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionFunderResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competitionsetup.form.AdditionalInfoForm;
-import org.hamcrest.CoreMatchers;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.hamcrest.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,12 +16,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdditionalInfoSectionSaverTest {
@@ -53,29 +55,17 @@ public class AdditionalInfoSectionSaverTest {
 		int expectedFunders = competition.getFunders().size() + 3;
 		int lastIndex = expectedFunders - 1;
 		String validBudget = "199122.02";
+		AdditionalInfoForm form = new AdditionalInfoForm();
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
 		//Test that auto save will fill in the blank funders.
-		List<Error> errors = service.autoSaveSectionField(competition,
+		ServiceResult<Void> result = service.autoSaveSectionField(competition, form,
 				"funder["+ lastIndex +"].funderBudget", validBudget, Optional.empty());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(expectedFunders));
 		assertThat(competition.getFunders().get(lastIndex).getFunderBudget(), CoreMatchers.equalTo(new BigDecimal(validBudget)));
-		assertTrue(errors.isEmpty());
+		assertTrue(result.isSuccess());
 
-		//Test funder budget that is too large.
-		errors = service.autoSaveSectionField(competition,
-				"funder["+ lastIndex +"].funderBudget", "9123213123123123.00", Optional.empty());
-		assertFalse(errors.isEmpty());
-
-		//Test funder budget with invalid decimal places.
-		errors = service.autoSaveSectionField(competition,
-				"funder["+ lastIndex +"].funderBudget", "123.001", Optional.empty());
-		assertFalse(errors.isEmpty());
-
-		//Test funder budget with a negative number.
-		errors = service.autoSaveSectionField(competition,
-				"funder["+ lastIndex +"].funderBudget", "-1", Optional.empty());
-		assertFalse(errors.isEmpty());
 	}
 
 
@@ -86,28 +76,38 @@ public class AdditionalInfoSectionSaverTest {
 				new CompetitionFunderResource(),
 				new CompetitionFunderResource()
 		)).build();
+		AdditionalInfoForm form = new AdditionalInfoForm();
+
+		when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(3));
 
 		//Test that out of range request to remove funders will leave the competition unchanged.
-		List<Error> errors = service.autoSaveSectionField(competition,
+		ServiceResult<Void> result = service.autoSaveSectionField(competition, form,
 				"removeFunder", "4", Optional.empty());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(3));
-		assertTrue(errors.isEmpty());
-		
+		assertTrue(result.isSuccess());
+
 		//Test that a valid index can be removed.
-		errors = service.autoSaveSectionField(competition,
+		result = service.autoSaveSectionField(competition, form,
 				"removeFunder", "2", Optional.empty());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(2));
-		assertTrue(errors.isEmpty());
+		assertTrue(result.isSuccess());
 
 		//Test trying to remove 0th funder will fail with error.
-		errors = service.autoSaveSectionField(competition,
+		result = service.autoSaveSectionField(competition, form,
 				"removeFunder", "0", Optional.empty());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(2));
-		assertFalse(errors.isEmpty());
+		assertFalse(result.isSuccess());
 	}
+
+	@Test
+	public void testsSupportsForm() {
+		assertTrue(service.supportsForm(AdditionalInfoForm.class));
+		assertFalse(service.supportsForm(CompetitionSetupForm.class));
+	}
+
 }

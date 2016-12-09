@@ -17,10 +17,7 @@ import com.worth.ifs.finance.resource.FinanceRowResource;
 import com.worth.ifs.finance.resource.cost.FinanceRowItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.project.resource.PartnerOrganisationResource;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -70,6 +67,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
+        return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {

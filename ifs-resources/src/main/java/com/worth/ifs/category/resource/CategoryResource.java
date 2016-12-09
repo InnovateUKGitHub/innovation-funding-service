@@ -1,5 +1,8 @@
 package com.worth.ifs.category.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.Set;
 
 /**
@@ -62,5 +65,37 @@ public class CategoryResource {
 
     public void setChildren(Set<Long> children) {
         this.children = children;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        CategoryResource that = (CategoryResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(type, that.type)
+                .append(parent, that.parent)
+                .append(children, that.children)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(type)
+                .append(parent)
+                .append(children)
+                .toHashCode();
     }
 }

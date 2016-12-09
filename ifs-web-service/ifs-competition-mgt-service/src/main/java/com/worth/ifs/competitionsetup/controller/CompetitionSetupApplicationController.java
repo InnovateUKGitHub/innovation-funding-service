@@ -1,11 +1,13 @@
 package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
+import com.worth.ifs.competitionsetup.form.LandingPageForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationFinanceForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationProjectForm;
 import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
@@ -25,9 +27,9 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
-import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
+import static com.worth.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
+import static com.worth.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static com.worth.ifs.competitionsetup.controller.CompetitionSetupController.*;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
@@ -54,31 +56,40 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, CompetitionSetupSection.APPLICATION_FORM);
+        competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
     }
 
-    @RequestMapping(value = "/mark-as-complete", method = RequestMethod.GET)
-    public String setApplicationProcessAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
-        competitionService.setSetupSectionMarkedAsComplete(competitionId, CompetitionSetupSection.APPLICATION_FORM);
-        return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+    @RequestMapping(value = "/landing-page", method = RequestMethod.POST)
+    public String setApplicationProcessAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm form, BindingResult bindingResult, ValidationHandler validationHandler) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+
+        Supplier<String> failureView = () -> {
+            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
+            model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
+            return "competition/setup";
+        };
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () ->
+                competitionSetupQuestionService.validateApplicationQuestions(competitionResource, form, bindingResult));
     }
 
     @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
     public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        String view = getFinancePage(model, competitionId);
-        model.addAttribute("editable", false);
-        return view;
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        return getFinancePage(model, competitionResource, false, null);
     }
 
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        String view = getFinancePage(model, competitionId);
-        model.addAttribute("editable", true);
-        return view;
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        return getFinancePage(model, competitionResource, true, null);
     }
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
@@ -88,89 +99,76 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
-        Supplier<String> failureView = () -> getFinancePage(model, competitionId);
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        Supplier<String> failureView = () -> getFinancePage(model, competitionResource, true, form);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
-        CompetitionResource resource = competitionService.getById(competitionId);
-        resource.setFullApplicationFinance(form.isFullApplicationFinance());
-        resource.setIncludeGrowthTable(form.isIncludeGrowthTable());
-        competitionService.update(resource);
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
 
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
-    }
-
-    private String getFinancePage(Model model, Long competitionId) {
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competitionService.getById(competitionId),
-                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.FINANCES, Optional.empty());
-        return "competition/finances";
     }
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          @PathVariable("questionId") Long questionId,
                                          Model model) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        return getQuestionPage(model, competitionResource, questionId, false, null);
 
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-            LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
-        setupQuestionToModel(competition, questionId, model);
-        model.addAttribute("editable", false);
-
-        return questionView;
     }
 
     @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.GET)
     public String editQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        return getQuestionPage(model, competitionResource, questionId, true, null);
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+    }
 
-        if(isSendToDashboard(competition)) {
-            LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
+    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
+    public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
+                                            BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
 
-        setupQuestionToModel(competition, questionId, model);
-        model.addAttribute("editable", true);
-
-        return questionView;
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST)
-    public String submitApplicationQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
+    public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                             BindingResult bindingResult,
+                                               ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
 
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
 
-        if(!bindingResult.hasErrors()) {
-            competitionSetupQuestionService.updateQuestion(competitionSetupForm.getQuestion());
-            return "redirect:/competition/setup/" + competitionId + "/section/application";
-        } else {
-            competitionSetupService.populateCompetitionSubsectionModelAttributes(model,
-                    competitionService.getById(competitionId), CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.QUESTIONS,
-                    Optional.of(competitionSetupForm.getQuestion().getQuestionId()));
-            model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
-            return questionView;
-        }
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
+
+
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                         Model model) {
-
-        return getDetailsPage(model, competitionId, false);
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        return getDetailsPage(model, competitionResource, false, null);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
-        return getDetailsPage(model, competitionId, true);
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        return getDetailsPage(model, competitionResource, true, null);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
@@ -179,47 +177,65 @@ public class CompetitionSetupApplicationController {
                                             ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
-
-        Supplier<String> failureView = () -> getDetailsPage(model, competitionId, true);
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        Supplier<String> failureView = () -> getDetailsPage(model, competitionResource, true, form);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
-        CompetitionResource resource = competitionService.getById(competitionId);
-        resource.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
-        competitionService.update(resource);
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, APPLICATION_DETAILS));
 
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private String getDetailsPage(Model model, Long competitionId, boolean isEditable) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition,
-                CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSubsection.APPLICATION_DETAILS, Optional.empty());
+    private String getFinancePage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
+        setupQuestionToModel(competitionResource, Optional.empty(), model, FINANCES, isEditable, form);
+        return "competition/finances";
+    }
 
-        ApplicationDetailsForm competitionSetupForm = (ApplicationDetailsForm) competitionSetupService.getSubsectionFormData(
-                competition,
-                CompetitionSetupSection.APPLICATION_FORM,
-                CompetitionSetupSubsection.APPLICATION_DETAILS,
-                null);
-
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
-        model.addAttribute("editable", isEditable);
+    private String getDetailsPage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
+        setupQuestionToModel(competitionResource, Optional.empty(), model, APPLICATION_DETAILS, isEditable, form);
         return "competition/application-details";
     }
 
+    private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
+        if(isSendToDashboard(competitionResource)) {
+            LOG.error("Competition is not found in setup state");
+            return "redirect:/dashboard";
+        }
 
-    private void setupQuestionToModel(final CompetitionResource competition, final Long questionId, Model model) {
-        CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
+
+        CompetitionSetupQuestionType type = questionResource.getSuccessObjectOrThrowException().getType();
+        CompetitionSetupSubsection setupSubsection;
+
+        if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+            setupSubsection =  CompetitionSetupSubsection.QUESTIONS;
+        } else {
+            setupSubsection =  CompetitionSetupSubsection.PROJECT_DETAILS;
+        }
+
+        setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);
+
+        return questionView;
+    }
+
+
+    private void setupQuestionToModel(final CompetitionResource competition, final Optional<Long> questionId, Model model, CompetitionSetupSubsection subsection, boolean isEditable, CompetitionSetupForm form) {
+        CompetitionSetupSection section = APPLICATION_FORM;
 
         competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
-                CompetitionSetupSubsection.QUESTIONS, Optional.of(questionId));
-        ApplicationQuestionForm competitionSetupForm =
-                (ApplicationQuestionForm) competitionSetupService.getSubsectionFormData(
-                        competition,
-                        section,
-                        CompetitionSetupSubsection.QUESTIONS,
-                        Optional.of(questionId));
+                subsection, questionId);
+
+        CompetitionSetupForm competitionSetupForm = form;
+        if (form == null) {
+            competitionSetupForm = competitionSetupService.getSubsectionFormData(
+                    competition,
+                    section,
+                    subsection,
+                    questionId);
+        }
 
         model.addAttribute(COMPETITION_NAME_KEY, competition.getName());
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+        model.addAttribute("editable", isEditable);
     }
 }

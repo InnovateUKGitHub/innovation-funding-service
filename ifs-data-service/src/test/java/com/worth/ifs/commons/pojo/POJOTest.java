@@ -21,11 +21,7 @@ import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessorFormInputResponse;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
-import com.worth.ifs.assessment.resource.AssessmentTotalScoreResource;
-import com.worth.ifs.assessment.resource.AssessorFormInputResponseResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.commons.rest.LocalDateResource;
@@ -35,11 +31,11 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.FinanceRowMetaField;
 import com.worth.ifs.finance.domain.FinanceRowMetaValue;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -86,20 +82,20 @@ public class POJOTest {
             AssessorFormInputResponseResource.class,
             Assessment.class,
             AssessmentTotalScoreResource.class,
+            AvailableAssessorResource.class,
             Address.class,
             OrganisationType.class,
             Application.class,
             ApplicationStatus.class,
             FileEntry.class,
-            FinanceRowMetaField.class,
             FormValidator.class,
             FormInputType.class,
             OrganisationAddress.class,
-            FinanceRowMetaValue.class,
             Token.class,
             InviteOrganisation.class,
             Section.class,
             ApplicationFinance.class,
+            ProjectFinanceResource.class,
             Competition.class,
             CreateUserResource.class,
             UpdateUserResource.class,
@@ -149,7 +145,9 @@ public class POJOTest {
             AssessorCountOptionResource.class,
             CompetitionSetupQuestionResource.class,
             GuidanceRowResource.class,
-            AssessmentSubmissionsResource.class
+            AssessmentSubmissionsResource.class,
+            NewUserStagedInviteResource.class,
+            ExistingUserStagedInviteResource.class
             );
 
     @Before
@@ -197,6 +195,8 @@ public class POJOTest {
                     && !pojoClass.getClazz().equals(Token.class)
                     && !pojoClass.getClazz().equals(TokenResource.class)
                     && !pojoClass.getClazz().equals(PageResource.class)
+                    && !pojoClass.getClazz().equals(FinanceRowMetaField.class)
+                    && !pojoClass.getClazz().equals(FinanceRowMetaValue.class)
                     && !pojoClass.getClazz().equals(Competition.class)
                     && (classes.stream().anyMatch(pojoClass.getClazz()::equals) || pojoClass.getClazz().getName().endsWith("Resource"))
                     && !Modifier.isAbstract(pojoClass.getClazz().getModifiers());

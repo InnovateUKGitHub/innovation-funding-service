@@ -1,16 +1,14 @@
 package com.worth.ifs.project.security;
 
-import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
-import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
+import com.worth.ifs.project.resource.ProjectOrganisationCompositeId;
+import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
-import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @PermissionRules
-@Component
 public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(

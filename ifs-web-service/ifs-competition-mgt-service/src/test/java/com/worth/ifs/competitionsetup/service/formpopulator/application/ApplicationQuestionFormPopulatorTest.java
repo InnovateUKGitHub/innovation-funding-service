@@ -58,7 +58,7 @@ public class ApplicationQuestionFormPopulatorTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithErrors() {
-        when(questionService.getById(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
+        when(competitionSetupQuestionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
         assertEquals(null, result);
     }

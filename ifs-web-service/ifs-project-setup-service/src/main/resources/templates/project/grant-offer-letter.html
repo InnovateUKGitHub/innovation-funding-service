@@ -50,7 +50,7 @@
             <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
             <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
-            <div th:unless="${model.submitted and model.getGrantOfferLetterFile() != null}" class="upload-section">
+            <div th:if="${!model.submitted and model.getGrantOfferLetterFile() != null}" class="upload-section">
                 <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
                 The Project Manager is required to provide a signed copy of the grant offer letter.
                 <details>
