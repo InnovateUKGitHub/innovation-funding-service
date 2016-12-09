@@ -60,6 +60,10 @@ def downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocat
 # Note that repeated use in quick succession on various non developer environments will cause failure due to - most likely - to automatic lockup.
 
 def main():
+  if len(sys.argv) != 4:
+    print "[*] Usage: ./download.py [test_user] [password] [download_url] [filename]"
+    print "[*] eg ./download.py john.doe@innovateuk.test Passw0rd https://ifs-local-dev/management/competition/10/applications/download downloaded_files/submitted_applications.xlsx"
+    sys.exit()
   user = sys.argv[1] # e.g. john.doe@innovateuk.test
   password = sys.argv[2] # e.g. Passw0rd
   downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
