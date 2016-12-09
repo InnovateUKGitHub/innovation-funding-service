@@ -1,7 +1,6 @@
 package com.worth.ifs.project;
 
 import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -89,7 +88,7 @@ public class ProjectSpendProfileController {
         if (userHasProjectManagerRole(loggedInUser, projectId)) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
-        return reviewSpendProfilePage(model, form, projectId, organisationId, loggedInUser);
+        return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
@@ -100,7 +99,7 @@ public class ProjectSpendProfileController {
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
-        model.addAttribute(FORM_ATTR_NAME, form);
+//        model.addAttribute(FORM_ATTR_NAME, form);
         return BASE_DIR + "/spend-profile";
     }
 
@@ -118,7 +117,7 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> reviewSpendProfilePage(model, reviewForm, projectId, organisationId, loggedInUser);
+        Supplier<String> failureView = () -> reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
 
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
