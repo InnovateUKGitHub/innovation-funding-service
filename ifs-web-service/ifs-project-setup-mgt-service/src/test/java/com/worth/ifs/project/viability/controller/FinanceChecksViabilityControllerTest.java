@@ -8,6 +8,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationSize;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -21,6 +22,7 @@ import static com.worth.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGra
 import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static com.worth.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static com.worth.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static com.worth.ifs.finance.builder.OtherCostBuilder.newOtherCost;
 import static com.worth.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static com.worth.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -32,76 +34,100 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCTest<FinanceChecksViabilityController> {
 
+    private OrganisationResource industrialOrganisation = newOrganisationResource().
+            withName("Industrial Org").
+            withOrganisationSize(OrganisationSize.MEDIUM).
+            withCompanyHouseNumber("123456789").
+            build();
+
+    private OrganisationResource academicOrganisation = newOrganisationResource().
+            withName("Academic Org").
+            withOrganisationSize(OrganisationSize.LARGE).
+            withCompanyHouseNumber("987654321").
+            build();
+
+    private ProjectResource project = newProjectResource().build();
+
+    private Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
+            FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                    newLabourCost().
+                            withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                            withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
+                            withLabourDays(100, 120, 250).
+                            build(3)).
+                    build(),
+            FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                    newMaterials().
+                            withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                            withQuantity(1, 2).
+                            build(2)).
+                    build(),
+            FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                    newGrantClaim().
+                            withGrantClaimPercentage(30).
+                            build(1)).
+                    build(),
+            FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                    newOtherFunding().
+                            withOtherPublicFunding("Yes", "").
+                            withFundingSource(OTHER_FUNDING, "Some source of funding").
+                            withFundingAmount(null, BigDecimal.valueOf(1000)).
+                            build(2)).
+                    build());
+
+    private Map<FinanceRowType, FinanceRowCostCategory> academicOrganisationFinances = asMap(
+            FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                    newLabourCost().
+                            withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
+                            withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
+                            withLabourDays(100, 120, 120, 250).
+                            withName("direct_staff", "direct_staff", "exceptions_staff").
+                            build(4)).
+                    build(),
+            FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                    newOtherCost().
+                            withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                            withName("direct_costs", "exceptions_costs").
+                            build(2)).
+                    build(),
+            FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                    newGrantClaim().
+                            withGrantClaimPercentage(100).
+                            build(1)).
+                    build(),
+            FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                    newOtherFunding().
+                            withOtherPublicFunding("Yes", "").
+                            withFundingSource(OTHER_FUNDING, "Some source of funding").
+                            withFundingAmount(null, BigDecimal.valueOf(1000)).
+                            build(2)).
+                    build());
+
+    private List<ProjectFinanceResource> projectFinances = newProjectFinanceResource().
+            withProject(project.getId()).
+            withOrganisation(academicOrganisation.getId(), industrialOrganisation.getId()).
+            withFinanceOrganisationDetails(academicOrganisationFinances, industrialOrganisationFinances).
+            build(2);
+
+    @Before
+    public void setupFinanceTotals() {
+        industrialOrganisationFinances.forEach((type, category) -> category.calculateTotal());
+        academicOrganisationFinances.forEach((type, category) -> category.calculateTotal());
+    }
+
     @Test
-    public void testViewViability() throws Exception {
+    public void testViewViabilityIndustrial() throws Exception {
 
-        OrganisationResource organisation = newOrganisationResource().
-                withName("My Org name").
-                withOrganisationSize(OrganisationSize.MEDIUM).
-                withCompanyHouseNumber("123456789").
-                build();
-
-        OrganisationResource anotherOrganisation = newOrganisationResource().build();
-        ProjectResource project = newProjectResource().build();
-
-        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = asMap(
-                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
-                        newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
-                                withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
-                                withLabourDays(100, 120, 250).
-                                build(3)).
-                        build(),
-                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
-                                withGrantClaimPercentage(30).
-                                build(1)).
-                        build(),
-                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
-                        newOtherFunding().
-                                withOtherPublicFunding("Yes", "").
-                                withFundingSource(OTHER_FUNDING, "Some source of funding").
-                                withFundingAmount(null, BigDecimal.valueOf(1000)).
-                                build(2)).
-                        build(),
-                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
-                        newMaterials().
-                                withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
-                                withQuantity(1, 2).
-                                build(2)).
-                        build());
-
-        Map<FinanceRowType, FinanceRowCostCategory> anotherOrganisationFinances = asMap(
-                FinanceRowType.LABOUR, newLabourCostCategory().
-                        withCosts(
-                                newLabourCost().
-                                        withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
-                                        withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
-                                        withLabourDays(100, 120, 250).
-                                        build(3)).
-                        build());
-
-        organisationFinances.forEach((type, category) -> category.calculateTotal());
-        anotherOrganisationFinances.forEach((type, category) -> category.calculateTotal());
-
-        List<ProjectFinanceResource> projectFinances = newProjectFinanceResource().
-                withProject(project.getId()).
-                withOrganisation(anotherOrganisation.getId(), organisation.getId()).
-                withFinanceOrganisationDetails(anotherOrganisationFinances, organisationFinances).
-                build(2);
-
-        when(organisationService.getOrganisationById(organisation.getId())).thenReturn(organisation);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisation);
+        when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getFinanceTotals(project.getId())).thenReturn(projectFinances);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
-                project.getId(), organisation.getId())).
+                project.getId(), industrialOrganisation.getId())).
                 andExpect(status().isOk()).
                 andExpect(model().attributeExists("model")).
                 andExpect(view().name("project/financecheck/viability")).
@@ -110,8 +136,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityViewModel viewModel =
                 (FinanceChecksViabilityViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(organisation.getName(), viewModel.getOrganisationName());
         assertTrue(viewModel.isLeadPartnerOrganisation());
+        assertOrganisationDetails(industrialOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
         assertEquals(Integer.valueOf(30), viewModel.getPercentageGrant());
@@ -119,11 +145,45 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
 
+        assertFalse(viewModel.isCreditReportVerified());
+        assertFalse(viewModel.isViabilityApproved());
+    }
+
+    private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
+        assertEquals(organisation.getName(), viewModel.getOrganisationName());
         assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
         assertNull(viewModel.getHeadCount());
         assertNull(viewModel.getTurnover());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
+    }
+
+    @Test
+    public void testViewViabilityAcademic() throws Exception {
+
+        when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(projectFinanceService.getFinanceTotals(project.getId())).thenReturn(projectFinances);
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
+                project.getId(), academicOrganisation.getId())).
+                andExpect(status().isOk()).
+                andExpect(model().attributeExists("model")).
+                andExpect(view().name("project/financecheck/viability")).
+                andReturn();
+
+        FinanceChecksViabilityViewModel viewModel =
+                (FinanceChecksViabilityViewModel) result.getModelAndView().getModel().get("model");
+
+        assertFalse(viewModel.isLeadPartnerOrganisation());
+        assertOrganisationDetails(academicOrganisation, viewModel);
+
+        assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
+        assertEquals(Integer.valueOf(100), viewModel.getPercentageGrant());
+        assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
+        assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
+        assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
+
         assertFalse(viewModel.isCreditReportVerified());
         assertFalse(viewModel.isViabilityApproved());
     }
