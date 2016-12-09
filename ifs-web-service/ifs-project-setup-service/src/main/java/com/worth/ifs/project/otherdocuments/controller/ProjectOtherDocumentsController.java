@@ -71,7 +71,7 @@ public class ProjectOtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
-    public String submitPatnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
+    public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
         projectService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToOtherDocumentsPage(projectId);
     }

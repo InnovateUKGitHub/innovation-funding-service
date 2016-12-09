@@ -327,8 +327,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-        assertTrue(!result.isSuccess());
-        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE.toString());
+        assertTrue(result.isSuccess());
     }
 
 
@@ -373,8 +372,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-        assertTrue(!result.isSuccess());
-        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE.toString());
+        assertTrue(result.isSuccess());
     }
 
     @Test

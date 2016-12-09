@@ -195,18 +195,18 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
         if(projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject() == ApprovalType.APPROVED) {
             return getProject(projectId).andOnSuccess( project -> {
-                if (project.getOtherDocumentsApproved()) {
+                if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
 
                     FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
                     return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
                             .andOnSuccess( () -> serviceSuccess()).
                                     andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
                 } else {
-                    return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE);
+                    return serviceSuccess();
                 }
             });
         } else {
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_GENERATE);
+            return serviceSuccess();
         }
     }
 

@@ -45,7 +45,7 @@ public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetu
 
     @Test
     public void testSubmitPatnerDocuments() {
-        assertSecured(() -> classUnderTest.submitPatnerDocuments(null, 123L));
+        assertSecured(() -> classUnderTest.submitPartnerDocuments(null, 123L));
     }
 
     @Test

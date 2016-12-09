@@ -60,7 +60,7 @@ public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
             Object value = entry.getValue();
             if (value instanceof String) {
                 String valueStr = (String)value;
-                entry.setValue(StringEscapeUtils.escapeHtml4(valueStr));
+                entry.setValue(StringEscapeUtils.escapeXml10(valueStr));
             }
         }
     }

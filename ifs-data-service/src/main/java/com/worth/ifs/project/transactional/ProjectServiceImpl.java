@@ -467,7 +467,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
                     }
                     project.setOtherDocumentsApproved(approved);
-                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId);
+                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceSuccess());
                 });
     }
 
