@@ -3,6 +3,7 @@ package com.worth.ifs.application.domain;
 import com.worth.ifs.form.domain.FormInput;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * GuidanceRow defines database relations and columns for a row of guidance displayed next to a form input.
@@ -19,8 +20,10 @@ public class GuidanceRow {
     private FormInput formInput;
 
     private String subject;
-
     private String justification;
+
+    @NotNull
+    private Integer priority;
 
     public Long getId() {
         return id;
@@ -52,5 +55,13 @@ public class GuidanceRow {
 
     public void setJustification(String justification) {
         this.justification = justification;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }
