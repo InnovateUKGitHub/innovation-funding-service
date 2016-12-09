@@ -31,7 +31,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
@@ -40,6 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static com.innovateuk.ifs.invite.transactional.InviteServiceImpl.generateHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.String.format;
@@ -196,9 +196,5 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     private ServiceResult<ProjectInvite> getByHash(String hash) {
         return find(inviteProjectRepository.getByHash(hash), notFoundError(ProjectInvite.class, hash));
-    }
-
-    private static String generateHash() {
-        return UUID.randomUUID().toString();
     }
 }

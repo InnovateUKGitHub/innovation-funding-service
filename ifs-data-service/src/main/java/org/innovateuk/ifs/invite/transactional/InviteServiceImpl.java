@@ -111,6 +111,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         validator.afterPropertiesSet();
     }
 
+    public static String generateHash() {
+        return UUID.randomUUID().toString();
+    }
+
     @Override
     public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
         return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(Collectors.toList());
@@ -541,9 +545,5 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if(!processRoles.isEmpty()) {
             processRoleRepository.delete(processRoles);
         }
-    }
-
-    private static String generateHash() {
-        return UUID.randomUUID().toString();
     }
 }

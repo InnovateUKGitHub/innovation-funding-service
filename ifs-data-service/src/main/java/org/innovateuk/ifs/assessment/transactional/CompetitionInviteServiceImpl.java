@@ -34,11 +34,11 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static com.innovateuk.ifs.invite.transactional.InviteServiceImpl.generateHash;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static java.util.UUID.randomUUID;
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
@@ -152,10 +152,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
-    }
-
-    private static String generateHash() {
-        return randomUUID().toString();
     }
 
     private ServiceResult<User> getUserByEmail(String email) {
