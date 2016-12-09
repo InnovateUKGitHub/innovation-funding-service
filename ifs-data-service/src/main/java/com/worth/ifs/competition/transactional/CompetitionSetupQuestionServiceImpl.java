@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -174,11 +173,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
             // Ensure form input and priority set against newly added rows
-            AtomicInteger ai = new AtomicInteger(0);
-            newRows.stream().forEach(row -> {
+            newRows.forEach(row -> {
                 row.setFormInput(writtenFeedbackFormInput);
-                row.setPriority(ai.get());
-                ai.getAndIncrement();
+                row.setPriority(newRows.indexOf(row));
             });
             guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
             guidanceRowRepository.save(newRows);

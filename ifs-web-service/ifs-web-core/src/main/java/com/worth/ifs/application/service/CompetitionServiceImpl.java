@@ -101,13 +101,13 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void update(CompetitionResource competition) {
-        competitionsRestService.update(competition).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> update(CompetitionResource competition) {
+        return competitionsRestService.update(competition).toServiceResult();
     }
 
     @Override
-    public void setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section) {
-        competitionsRestService.markSectionComplete(competitionId, section).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section) {
+        return competitionsRestService.markSectionComplete(competitionId, section).toServiceResult();
     }
 
     @Override

@@ -1,3 +1,10 @@
+.grid-row {
+
+  &.sorting {
+    border-bottom: 1px solid $secondary-text-colour;
+  }
+}
+
 .column-fifth {
   @include grid-column(1/5);
 }

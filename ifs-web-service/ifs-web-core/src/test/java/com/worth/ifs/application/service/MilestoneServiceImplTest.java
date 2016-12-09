@@ -83,9 +83,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         milestonesList.add(getNewOpenDateMilestone(milestoneDate));
         milestonesList.get(0).setId(2L);
 
-        when(milestoneRestService.updateMilestones(milestonesList, 1L)).thenReturn(restSuccess());
+        when(milestoneRestService.updateMilestones(milestonesList)).thenReturn(restSuccess());
 
-        List<Error> errorList = service.updateMilestones(milestonesList, 1L);
+        List<Error> errorList = service.updateMilestones(milestonesList);
         assertTrue(errorList.isEmpty());
     }
 

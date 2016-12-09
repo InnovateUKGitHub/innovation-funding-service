@@ -139,7 +139,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         milestone = milestones.get(5);
         milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0));
 
-        RestResult<Void> milestoneResult = controller.saveMilestones(milestones, COMPETITION_ID_VALID);
+        RestResult<Void> milestoneResult = controller.saveMilestones(milestones);
         assertTrue(milestoneResult.isSuccess());
         assertTrue(milestoneResult.getErrors().isEmpty());
     }
@@ -158,7 +158,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
             milestone.setDate(milestoneDate.plusDays(1));
         });
 
-        RestResult<Void> milestoneResult = controller.saveMilestones(milestones, COMPETITION_ID_UPDATE);
+        RestResult<Void> milestoneResult = controller.saveMilestones(milestones);
         assertTrue(milestoneResult.isSuccess());
     }
 

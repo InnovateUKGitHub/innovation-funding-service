@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.mapper;
 
+import com.worth.ifs.category.mapper.CategoryMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.invite.domain.CompetitionInvite;
@@ -13,7 +14,7 @@ import org.mapstruct.Mappings;
  */
 @Mapper(
         config = GlobalMapperConfig.class,
-        uses = {}
+        uses = { CategoryMapper.class }
 )
 public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvite, CompetitionInviteResource, Long> {
 
