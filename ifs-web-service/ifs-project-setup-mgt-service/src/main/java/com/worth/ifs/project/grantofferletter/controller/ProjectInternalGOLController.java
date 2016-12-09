@@ -95,7 +95,7 @@ public class ProjectInternalGOLController {
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) throws IOException {
 
-        return new ResponseEntity<>(projectService.addGeneratedGrantOfferLetter(projectId, CONTENT_TYPE, 26845, "grant-offer-letter", new byte[26845]).getSuccessObject(), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.addGrantOfferLetter(projectId, CONTENT_TYPE, 26845, "grant-offer-letter", new byte[26845]).getSuccessObject(), HttpStatus.OK);
     }
 
     private String getHeaderAttachment(String fileName) {

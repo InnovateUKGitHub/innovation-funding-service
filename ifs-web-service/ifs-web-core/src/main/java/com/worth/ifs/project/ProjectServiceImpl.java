@@ -260,12 +260,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+    public ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
         return projectRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> removeGeneratedGrantOfferLetter(Long projectId) {
+    public ServiceResult<Void> removeGrantOfferLetter(Long projectId) {
         return projectRestService.removeGeneratedGrantOfferLetter(projectId).toServiceResult();
     }
 

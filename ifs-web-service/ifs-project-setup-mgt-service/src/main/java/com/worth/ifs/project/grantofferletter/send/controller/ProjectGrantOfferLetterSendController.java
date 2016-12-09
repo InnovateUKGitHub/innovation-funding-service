@@ -4,8 +4,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.commons.error.exception.FileAwaitingVirusScanException;
-import com.worth.ifs.commons.error.exception.FileQuarantinedException;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
@@ -108,7 +106,7 @@ public class ProjectGrantOfferLetterSendController {
                                              Model model) {
 
         MultipartFile file = form.getGrantOfferLetter();
-        ServiceResult<FileEntryResource> generateResult = projectService.addGeneratedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+        ServiceResult<FileEntryResource> generateResult = projectService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
         validationHandler.addAnyErrors(generateResult);
@@ -124,7 +122,7 @@ public class ProjectGrantOfferLetterSendController {
                                              ValidationHandler validationHandler,
                                              Model model) {
 
-        projectService.removeGeneratedGrantOfferLetter(projectId);
+        projectService.removeGrantOfferLetter(projectId);
 
         return doViewGrantOfferLetterSend(projectId, model, form);
     }

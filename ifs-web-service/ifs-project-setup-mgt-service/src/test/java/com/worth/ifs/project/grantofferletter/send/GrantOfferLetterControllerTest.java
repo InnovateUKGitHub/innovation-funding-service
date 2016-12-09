@@ -264,7 +264,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
 
-        when(projectService.addGeneratedGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes())).
+        when(projectService.addGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
@@ -309,7 +309,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(null);
 
 
-        when(projectService.removeGeneratedGrantOfferLetter(123L)).
+        when(projectService.removeGrantOfferLetter(123L)).
                 thenReturn(serviceSuccess());
 
         MockMultipartFile fileToDelete = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
