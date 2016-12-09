@@ -57,9 +57,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         }));
     }
 
-    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser) {
+    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser, String innovationAreaName) {
         return with(data -> {
-            newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash, existingUser).build();
+            newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash, existingUser, innovationAreaName).build();
             data.setEmail(emailAddress);
         });
     }

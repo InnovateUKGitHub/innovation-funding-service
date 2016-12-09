@@ -34,6 +34,7 @@ Server-side validations
     When the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+    And browser validations have been disabled
     And the user enters multiple strings into a text field    id=skillAreas    e    5001
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see an error    This field cannot contain more than 5,000 characters

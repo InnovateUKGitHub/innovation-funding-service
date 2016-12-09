@@ -50,7 +50,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
         Competition competition = newCompetition().withName("my competition").build();
         CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
-        competitionParticipant = new CompetitionParticipant(competition, competitionInvite);
+        competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(7L).build();

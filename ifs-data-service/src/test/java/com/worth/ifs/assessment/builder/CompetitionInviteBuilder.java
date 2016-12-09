@@ -4,6 +4,7 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.base.amend.BaseBuilderAmendFunctions;
+import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
@@ -56,15 +57,15 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
     }
 
     public CompetitionInviteBuilder withName(String... names) {
-        return withArray((name, invite) -> setField("name", name, invite), names);
+        return withArraySetFieldByReflection("name", names);
     }
 
     public CompetitionInviteBuilder withEmail(String... emails) {
-        return withArray((email, invite) -> setField("email", email, invite), emails);
+        return withArraySetFieldByReflection("email", emails);
     }
 
     public CompetitionInviteBuilder withStatus(InviteStatus... statuses) {
-        return withArray((status, invite) -> setField("status", status, invite), statuses);
+        return  withArraySetFieldByReflection("status", statuses);
     }
 
     public CompetitionInviteBuilder withUser(User... users) {
@@ -76,6 +77,10 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
     }
 
     public CompetitionInviteBuilder withHash(String... hashes) {
-        return withArray((hash, invite) -> setField("hash", hash, invite), hashes);
+        return withArraySetFieldByReflection("hash", hashes);
+    }
+
+    public CompetitionInviteBuilder withInnovationArea(Category... innovationAreas) {
+        return withArraySetFieldByReflection("innovationArea", innovationAreas);
     }
 }
