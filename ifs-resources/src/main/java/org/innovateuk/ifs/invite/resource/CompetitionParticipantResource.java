@@ -7,9 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDateTime;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
@@ -171,7 +169,7 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public boolean isInAssessment() {
-        return this.competitionStatus == CompetitionStatus.IN_ASSESSMENT;
+        return competitionStatus == IN_ASSESSMENT;
     }
 
     @JsonIgnore
