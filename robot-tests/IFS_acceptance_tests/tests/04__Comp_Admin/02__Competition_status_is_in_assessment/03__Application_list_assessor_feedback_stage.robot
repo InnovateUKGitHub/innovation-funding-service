@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 Status and applications are correct
     [Documentation]    INFUND-2606
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}
+    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the text in the page    Matter - Planning for Web
     And the user should see the text in the page    Sensing & Control network using the lighting infrastructure

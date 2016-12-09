@@ -69,7 +69,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isOtherDocumentsSubmitted()) {
+        if(!projectSetupProgressChecker.isOtherDocumentsSubmitted() && !(projectSetupProgressChecker.isOtherDocumentsApproved() || projectSetupProgressChecker.isOtherDocumentsRejected())) {
             return NOT_ACCESSIBLE;
         }
 

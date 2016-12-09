@@ -4,13 +4,13 @@ import com.google.common.collect.Lists;
 import com.worth.ifs.application.service.CategoryService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.MilestoneService;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.category.builder.CategoryResourceBuilder;
 import com.worth.ifs.category.resource.CategoryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.MilestoneResource;
 import com.worth.ifs.competition.resource.MilestoneType;
+import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
 import com.worth.ifs.competitionsetup.form.InitialDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.junit.Test;
@@ -23,14 +23,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitialDetailsSectionSaverTest {
@@ -79,6 +76,7 @@ public class InitialDetailsSectionSaverTest {
         when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
         when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -100,33 +98,21 @@ public class InitialDetailsSectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
-        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2020", null);
+        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "openingDate", "20-10-2020", null);
 
-        assertTrue(errors.isEmpty());
+        assertTrue(errors.isSuccess());
         verify(competitionService).update(competition);
-    }
-
-    @Test
-    public void testAutoSaveCompetitionSetupSectionErrors() {
-        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-
-        CompetitionResource competition = newCompetitionResource().build();
-        competition.setMilestones(asList(10L));
-
-        List<Error> errors = service.autoSaveSectionField(competition, "openingDate", "20-10-2000", null);
-
-        assertTrue(!errors.isEmpty());
-        verify(competitionService, never()).update(competition);
     }
 
     @Test
     public void testAutoSaveCompetitionSetupSectionUnknown() {
         CompetitionResource competition = newCompetitionResource().build();
 
-        List<Error> errors = service.autoSaveSectionField(competition, "notExisting", "Strange!@#1Value", null);
+        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "notExisting", "Strange!@#1Value", null);
 
-        assertTrue(!errors.isEmpty());
+        assertTrue(!errors.isSuccess());
         verify(competitionService, never()).update(competition);
     }
 
@@ -137,5 +123,11 @@ public class InitialDetailsSectionSaverTest {
         milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
         milestone.setCompetition(1L);
         return milestone;
+    }
+
+    @Test
+    public void testsSupportsForm() {
+        assertTrue(service.supportsForm(InitialDetailsForm.class));
+        assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
 }

@@ -1,133 +1,73 @@
 package com.worth.ifs.competitionsetup.service.sectionupdaters.application;
 
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionSetupQuestionResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionSetupSubsection;
-import com.worth.ifs.competitionsetup.form.ApplicationFormForm;
+import com.worth.ifs.competition.resource.GuidanceRowResource;
 import com.worth.ifs.competitionsetup.form.CompetitionSetupForm;
-import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import com.worth.ifs.competitionsetup.form.application.AbstractApplicationQuestionForm;
+import com.worth.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import com.worth.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
-import static com.worth.ifs.commons.error.Error.fieldError;
-import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.textToBoolean;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Competition setup section saver for the application form section.
  */
 @Service
-public class ApplicationQuestionSectionSaver implements CompetitionSetupSubsectionSaver {
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private CompetitionSetupQuestionService competitionSetupQuestionService;
+public class ApplicationQuestionSectionSaver extends AbstractApplicationSectionSaver implements CompetitionSetupSubsectionSaver {
 
 	@Override
 	public CompetitionSetupSubsection sectionToSave() {
 		return CompetitionSetupSubsection.QUESTIONS;
 	}
 
-	@Override
-	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        return Collections.emptyList();
-	}
-
-	@Override
-	public List<Error> autoSaveSectionField(CompetitionResource competitionResource, String fieldName,
-                                            String value, Optional<Long> objectId) {
-	    if(objectId.isPresent()) {
-            CompetitionSetupQuestionResource question = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccessObjectOrThrowException();
-
-            if(question == null) {
-                return makeErrorList();
-            }
-
-            List<Error> errors = updateQuestionWithValueByFieldname(question, fieldName, value);
-            if(!errors.isEmpty()) {
-                return errors;
-            }
-
-            competitionSetupQuestionService.updateQuestion(question);
-        } else {
-            return makeErrorList();
-        }
-
-        return Collections.emptyList();
-	}
-
-	private List<Error> updateQuestionWithValueByFieldname(CompetitionSetupQuestionResource question, String fieldName, String value) {
-        switch (fieldName) {
-            case "question.shortTitle" :
-                if (!value.isEmpty()) {
-                    question.setShortTitle(value);
-                } else {
-                    return makeErrorList("question.shortTitle", "This field cannot be left blank");
-                }
-                break;
-            case "question.title" :
-                question.setTitle(value);
-                break;
-            case "question.subTitle" :
-                question.setSubTitle(value);
-                break;
-            case "question.guidanceTitle" :
-                question.setGuidanceTitle(value);
-                break;
-            case "question.guidance" :
-                question.setGuidance(value);
-                break;
-            case "question.maxWords" :
-                Integer maxWords;
-                try {
-                    maxWords = Integer.parseInt(value);
-                } catch(NumberFormatException e) {
-                    return makeErrorList("question.maxWords");
-                }
-                if (maxWords < 1) {
-                    return makeErrorList("question.maxWords", "javax.validation.constraints.Min.message", value);
-                }
-                question.setMaxWords(maxWords);
-                break;
-            case "question.appendix" :
-                question.setAppendix(textToBoolean(value));
-                break;
-            default:
-                return makeErrorList();
-        }
-
-        return Collections.emptyList();
-    }
-
-    private List<Error> makeErrorList() {
-        return makeErrorList("");
-    }
-
-    private List<Error> makeErrorList(String fieldName) {
-        return makeErrorList(fieldName, "Unable to save question", "");
-    }
-
-    private List<Error> makeErrorList(String fieldName, String error) {
-        return asList(fieldError(fieldName, "", error));
-    }
-
-    private List<Error> makeErrorList(String fieldName, String error, String rejectedValue) {
-        return asList(fieldError(fieldName, rejectedValue, error));
-    }
-
-
-
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return ApplicationFormForm.class.equals(clazz);
+		return ApplicationQuestionForm.class.equals(clazz);
 	}
+
+    @Override
+    protected void mapGuidanceRows(AbstractApplicationQuestionForm abstractApplicationQuestionForm) {
+        ApplicationQuestionForm form = (ApplicationQuestionForm) abstractApplicationQuestionForm;
+        form.getQuestion().setGuidanceRows(new ArrayList<>());
+        form.getGuidanceRows().forEach(guidanceRow -> {
+            GuidanceRowResource guidanceRowResource = new GuidanceRowResource();
+            guidanceRowResource.setJustification(guidanceRow.getJustification());
+            guidanceRowResource.setSubject(guidanceRow.getScoreFrom() + "," + guidanceRow.getScoreTo());
+            form.getQuestion().getGuidanceRows().add(guidanceRowResource);
+        });
+    }
+
+    @Override
+    protected ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value) {
+        if (fieldName.endsWith("scoreFrom")) {
+            guidanceRow.setSubject(modifySubject(guidanceRow.getSubject(), value, null));
+            return serviceSuccess();
+        } else if (fieldName.endsWith("scoreTo")) {
+            guidanceRow.setSubject(modifySubject(guidanceRow.getSubject(), null, value));
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    private String modifySubject(String subject, String value1, String value2) {
+        // Initialise subject for newly created guidance rows as will be null
+        if (subject == null) {
+            subject = "";
+        }
+        String[] splitSubject = subject.split(",");
+        if (value2 == null) {
+            return value1 + "," + (splitSubject.length > 1 ? splitSubject[1] : 0);
+        } else {
+            return (splitSubject.length > 1 ? splitSubject[0] : 0) + "," + value2;
+        }
+    }
+
 }

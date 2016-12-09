@@ -22,7 +22,8 @@ import org.mapstruct.Mappings;
 public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFinance, ApplicationFinanceResource, Long> {
 
     @Mappings({
-        @Mapping(target = "financeOrganisationDetails", ignore = true )
+        @Mapping(target = "financeOrganisationDetails", ignore = true ),
+        @Mapping(source = "application", target = "target")
     })
     
     @Override

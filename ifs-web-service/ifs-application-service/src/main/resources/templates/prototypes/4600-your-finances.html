@@ -19,7 +19,7 @@
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your finances'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your project costs'})" th:remove="tag" />
 
         <h2 class="heading-medium extra-margin">Provide the project costs for 'Empire Ltd'</h2>
 
@@ -30,7 +30,7 @@
             <h2>Labour<span data-mirror="#section-total-1">&pound; 126,207</span></h2>
             <div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
 
-            <h2>Administration support costs <span data-mirror="#section-total-2">&pound; 0</span></h2>
+            <h2>Overheads <span data-mirror="#section-total-2">&pound; 0</span></h2>
             <div th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:remove="tag" />
 
             <h2>Materials<span data-mirror="#section-total-3">&pound; 10,076</span></h2>
@@ -68,9 +68,9 @@
 
         <ul class="pagination">
             <li class="next">
-                <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-overview">
+                <a rel="next" title="Navigate to next part" href="/prototypes/4600-your-org">
                     <span class="pagination-label">Next</span>
-                    <span class="pagination-part-title">Finances overview</span>
+                    <span class="pagination-part-title">Your organisation</span>
                 </a>
             </li>
         </ul>

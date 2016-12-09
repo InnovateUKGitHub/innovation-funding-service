@@ -5,6 +5,10 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.service.EthnicityRestService;
+import com.worth.ifs.user.builder.EthnicityResourceBuilder;
+import com.worth.ifs.user.resource.Disability;
+import com.worth.ifs.user.resource.Gender;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -55,6 +59,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
+    private EthnicityRestService ethnicityRestService;
+
+    @Mock
     private Validator validator;
     
     private Cookie inviteHashCookie;
@@ -77,9 +84,12 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
+
+
         when(userService.findUserByEmail(anyString())).thenReturn(restSuccess(new UserResource()));
         when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restSuccess(new UserResource()));
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
         usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
@@ -316,7 +326,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restFailure(notFoundError(UserResource.class, testEmailAddress)));
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong())).thenReturn(restFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong())).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -329,6 +339,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("termsAndConditions", "1")
                 .param("password", "Password123")
                 .param("retypedPassword", "Password123")
+                .param("gender", Gender.MALE.toString())
+                .param("ethnicity", "3")
+                .param("disability", Disability.NO.toString())
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration-register"))
@@ -377,6 +390,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
                 .withId(1L)
+                .withEthnicity(2L)
+                .withDisability(Disability.NO)
+                .withGender(Gender.FEMALE)
                 .build();
 
 
@@ -387,6 +403,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
+                userResource.getGender() != null ? userResource.getGender().toString() : null,
+                userResource.getEthnicity(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 1L,
                 null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(UserResource.class, "test@test.test")));
@@ -402,6 +421,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
                 .param("termsAndConditions", "1")
+                .param("gender", userResource.getGender().toString())
+                .param("ethnicity", userResource.getEthnicity().toString())
+                .param("disability", userResource.getDisability().toString())
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/success"));
@@ -420,6 +442,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPhoneNumber("0123456789")
                 .withEmail("invited@email.com")
                 .withId(1L)
+                .withGender(Gender.MALE)
+                .withDisability(Disability.NOT_STATED)
+                .withEthnicity(2L)
                 .build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
@@ -429,6 +454,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
+                userResource.getGender() != null ? userResource.getGender().toString() : null,
+                userResource.getEthnicity(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 1L,
                 null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(UserResource.class, "invited@email.com")));
@@ -444,6 +472,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
                 .param("termsAndConditions", "1")
+                .param("ethnicity", userResource.getEthnicity().toString())
+                .param("disability", userResource.getDisability().toString())
+                .param("gender", userResource.getGender().toString())
         )
                 .andExpect(view().name("redirect:/registration/success"))
                 .andExpect(status().is3xxRedirection());
@@ -515,6 +546,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
+                userResource.getGender() != null ? userResource.getGender().toString() : null,
+                userResource.getEthnicity(),
+                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 1L, null)).thenReturn(restFailure(error));
         
         mockMvc.perform(post("/registration/register")

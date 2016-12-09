@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.builder;
 
+import com.worth.ifs.category.domain.Category;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.domain.CompetitionInvite;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.worth.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static com.worth.ifs.category.builder.CategoryBuilder.newCategory;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.constant.InviteStatus.SENT;
@@ -26,7 +28,7 @@ public class CompetitionInviteBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         String expectedHash = "68656c6c6f";
         String expectedName = "paul plum";
-
+        Category expectedInnovationArea = newCategory().withName("Machine Learning").build();
 
         CompetitionInvite invite = newCompetitionInvite()
                 .withId(expectedId)
@@ -36,6 +38,7 @@ public class CompetitionInviteBuilderTest {
                 .withCompetition(expectedCompetition)
                 .withHash(expectedHash)
                 .withName(expectedName)
+                .withInnovationArea(expectedInnovationArea)
                 .build();
 
         assertEquals(expectedId, invite.getId());
@@ -45,6 +48,8 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetition, invite.getTarget());
         assertEquals(expectedHash, invite.getHash());
         assertEquals(expectedName, invite.getName());
+        assertEquals(expectedName, invite.getName());
+        assertEquals(expectedInnovationArea, invite.getInnovationArea());
     }
 
     @Test
@@ -56,6 +61,7 @@ public class CompetitionInviteBuilderTest {
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
         String[] expectedHashes = { "68656c6c6f", "776f726c64" };
         String[] expectedNames = { "paul plum", "steve smith" };
+        Category[] expectedInnovationAreas = newCategory().withName("Machine Learning", "Photonics").buildArray(2, Category.class);
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withId(expectedIds)
@@ -65,6 +71,7 @@ public class CompetitionInviteBuilderTest {
                 .withCompetition(expectedCompetitions)
                 .withHash(expectedHashes)
                 .withName(expectedNames)
+                .withInnovationArea(expectedInnovationAreas)
                 .build(2);
 
         CompetitionInvite first = invites.get(0);
@@ -75,6 +82,7 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetitions[0], first.getTarget());
         assertEquals(expectedHashes[0], first.getHash());
         assertEquals(expectedNames[0], first.getName());
+        assertEquals(expectedInnovationAreas[0], first.getInnovationArea());
 
         CompetitionInvite second = invites.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -84,5 +92,6 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetitions[1], second.getTarget());
         assertEquals(expectedHashes[1], second.getHash());
         assertEquals(expectedNames[1], second.getName());
+        assertEquals(expectedInnovationAreas[1], second.getInnovationArea());
     }
 }

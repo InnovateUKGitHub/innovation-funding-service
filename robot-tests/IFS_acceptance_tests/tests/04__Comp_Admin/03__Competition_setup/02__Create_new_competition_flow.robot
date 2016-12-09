@@ -21,7 +21,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4468 As a Competitions team member I want to include additional criteria in Competitions Setup so that the "Ready to Open" state cannot be set until these conditions are met
 ...
-...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial Details section so that I can access the correct details in the other sections in Competition Setup.
+...               INFUND-4725 As a Competitions team member I want to be guided to complete all mandatory information in the Initial details section so that I can access the correct details in the other sections in Competition Setup.
 ...
 ...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
 ...
@@ -71,7 +71,7 @@ User can create a new competition
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user should not see the element    jQuery('.button:contains("Save as Ready To Open")
-    And The user should not see the element    link=Funding Information
+    And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
     And The user should not see the element    link=Application Questions
@@ -95,7 +95,7 @@ Initial details: correct state aid status
     ...    INFUND-4979
     [Tags]    Pending
     [Setup]
-    #TODO This ticket marked as pending because atm there is no SBRI competition type. We should recheck this in sprint18
+    #TODO This ticket marked as pending because atm there is no SBRI competition type.
     #Change the test setup
     Given the user should not see the element    css=#stateAid
     When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
@@ -115,7 +115,7 @@ Initial details: User enters valid values and marks as done
     ...    INFUND-2983
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given The user clicks the button/link    link=Initial Details
+    Given The user clicks the button/link    link=Initial details
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -159,7 +159,7 @@ Initial details: should have a green check
 User should have access to all the sections
     [Documentation]    INFUND-4725
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Then The user should see the element    link=Funding Information
+    Then The user should see the element    link=Funding information
     And The user should see the element    link=Eligibility
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application
@@ -178,7 +178,7 @@ Funding information: calculations
     ...    INFUND-4894
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Funding Information
+    Given the user clicks the button/link    link=Funding information
     And the user clicks the button/link    jQuery=.button:contains("Generate code")
     And the user enters text to a text field    id=funders0.funder    FunderName
     And the user enters text to a text field    id=0-funderBudget    20000
@@ -194,7 +194,7 @@ Funding information: calculations
     When the user clicks the button/link    jQuery=Button:contains("Remove")
     Then the total should be correct    £ 20,000
 
-Funding Information: can be saved
+Funding information: can be saved
     [Documentation]    INFUND-3182
     [Tags]    HappyPath
     Given the user moves focus and waits for autosave
@@ -207,7 +207,7 @@ Funding Information: can be saved
     And the user should see the text in the page    1712-1
     And the user should see the element    jQuery=.button:contains("Edit")
 
-Funding Information: can be edited
+Funding information: can be edited
     [Documentation]    INFUND-3002
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Edit")
@@ -333,11 +333,17 @@ Application: Application process Page
     And the user should see the element    link=Finances
 
 Application: Business opportunity
-    [Documentation]    INFUND-5632
+    [Documentation]    INFUND-5632 IN-5685 IN-5630
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
-    And the user should see the element    jQuery=a:contains("Edit this question")
+    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user edits the assessed question information
+    And the user clicks the button/link    id=remove-guidance-row-2
+    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Business opportunity
+    And the user sees the correct assessed question information
+    And the user should not see the text in the page    The business opportunity is plausible
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Application details
@@ -366,6 +372,20 @@ Application: Scope
     And the user clicks the button/link    link=Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
+
+
+Application: Scope Assessment questions
+    [Documentation]    INFUND-5631    INFUND-6044
+    Given the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user fills the scope assessment questions
+    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then the user checks the scope assessment questions
+    And the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user selects the radio button    question.writtenFeedback    0
+    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Scope
+    Then the user should not see the text in the page    Guidance for assessing scope section
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Project Summary
@@ -413,7 +433,7 @@ Application: Mark as done and the Edit again
 
 Application: should have a green check
     [Tags]    HappyPath
-    When The user clicks the button/link    jQuery=a:contains("Done")
+    When The user clicks the button/link    jQuery=.button:contains("Done")
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
     And The user should see the element    jQuery=.button:contains("Save as Ready To Open")
@@ -449,15 +469,14 @@ Assessor: Should have a Green Check
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]    Pending
+    [Tags]
     [Setup]
-    #TO DO Pending due to /INFUND-6068
     Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
-    When The user clicks the button/link    link=Initial Details
+    When The user clicks the button/link    link=Initial details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user clicks the button/link    link=Competition setup
     Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
-    [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial Details
+    [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial details
     ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
     ...    AND    And The user clicks the button/link    link=Competition setup
 
@@ -465,8 +484,7 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468
     ...
     ...    INFUND-3002
-    [Tags]    HappyPath    Pending
-    #TO DO Pending due to /INFUND-6068
+    [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
@@ -573,3 +591,39 @@ The competition should show in the correct section
 The finance information should be correct
     the user should see the text in the page    Light finances
     the user should see the text in the page    No
+
+the user fills the scope assessment questions
+    The user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    The user enters text to a text field    id=guidancerow-2-subject    New subject
+    The user enters text to a text field    id=guidancerow-2-justification    This is a justification
+    The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section
+    The user clicks the button/link    id=remove-guidance-row-0
+
+the user checks the scope assessment questions
+    The user should see the text in the page    New subject
+    The user should see the text in the page    This is a justification
+    The user should not see the text in the page    One or more of the above requirements have not been satisfied.
+    The user should see the text in the page    Written feedback
+    The user should see the text in the page    Guidance for assessing scope section
+    The user should see the text in the page    Scope 'Y/N' question
+    The user should see the text in the page    Research category question
+
+the user edits the assessed question information
+    the user enters text to a text field    id=question.scoreTotal    100
+    the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
+    the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    the user enters text to a text field    id=guidancerow-5-scorefrom    11
+    the user enters text to a text field    id=guidancerow-5-scoreto    12
+    the user enters text to a text field    id=guidancerow-5-justification    This is a justification
+
+the user sees the correct assessed question information
+    the user should see the text in the page    Assessment of this question
+    #the user should see the text in the page    Business opportunity guidance
+    the user should see the text in the page    11
+    the user should see the text in the page    12
+    the user should see the text in the page    This is a justification
+    the user should see the text in the page    100
+    the user should see the text in the page    Written feedback
+    the user should see the text in the page    Scored
+    the user should see the text in the page    Out of
+    the user should not see the text in the page    The business opportunity is plausible

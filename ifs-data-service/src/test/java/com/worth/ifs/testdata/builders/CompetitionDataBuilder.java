@@ -213,6 +213,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
     }
 
+    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
+    }
+
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
 
         if (date == null) {
