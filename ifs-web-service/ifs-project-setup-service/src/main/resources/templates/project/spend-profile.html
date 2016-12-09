@@ -20,21 +20,27 @@
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
+        <form th:object="${form}">
 
-        <div class="error-summary" aria-hidden="true">
-            <h2 class="heading-medium error-summary-heading">
-                Unable to submit spend profile.
-            </h2>
-            Please review
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-            </ul>
-        </div>
+
+            <div class="error-summary" aria-hidden="true">
+                <h2 class="heading-medium error-summary-heading">
+                    Unable to submit spend profile.
+                </h2>
+                Please review
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+                </ul>
+            </div>
+
+
+        </form>
 
         <div class="error-summary" th:if="${form == null}"
              th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
             <h2 class="heading-medium error-summary-heading">
-                You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+                You cannot submit your spend profile. Your total costs are higher than the eligible project
+                costs.</h2>
             Please review
             <ul class="error-summary-list">
                 <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.fieldName}"></li>
@@ -42,20 +48,24 @@
         </div>
 
 
-        <th:block th:if="${model.markedAsComplete and form == null and !model.submitted and !model.projectManager}">
+        <th:block
+                th:if="${model.markedAsComplete and form == null and !model.submitted and !model.projectManager}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
+                <p>Your spend profile has been sent to the lead partner. They will review and submit to Innovate
+                    UK.
                 </p>
             </div>
         </th:block>
         <th:block
                 th:if="${model.markedAsComplete and !model.submitted and model.projectManager and model.userPartOfThisOrganisation}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile is marked as complete. You can still edit this page. When all partners have
+                <p>Your spend profile is marked as complete. You can still edit this page. When all partners
+                    have
                     submitted their spend profiles you can submit them to us.</p>
             </div>
         </th:block>
-        <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together with your
+        <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together
+            with your
             project partners. This is so we can plan the allocation of the grant funding to your project.</p>
         <dl class="standard-definition-list">
             <dt>Project start date</dt>
@@ -73,7 +83,8 @@
             <th:block th:text="${model.organisationName}"/>
             - Spend profile
         </h2>
-        <p>Your project costs have been profiled equally across the time periods. Please edit to show your planned
+        <p>Your project costs have been profiled equally across the time periods. Please edit to show your
+            planned
             expenditure across the life of your project. Please note that costs cannot be moved across cost
             categories.</p>
     </div>
