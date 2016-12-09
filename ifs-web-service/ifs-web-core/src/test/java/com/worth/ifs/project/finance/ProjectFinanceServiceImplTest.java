@@ -2,6 +2,7 @@ package com.worth.ifs.project.finance;
 
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.project.finance.service.ProjectFinanceRestService;
 import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.resource.SpendProfileTableResource;
@@ -11,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -96,5 +100,15 @@ public class ProjectFinanceServiceImplTest {
         result = service.getSpendProfileStatusByProjectId(projectId);
 
         assertEquals(ApprovalType.UNSET, result);
+    }
+
+    @Test
+    public void testFinanceTotals() {
+
+        List<ProjectFinanceResource> resources = newProjectFinanceResource().build(2);
+        when(projectFinanceRestService.getFinanceTotals(123L)).thenReturn(restSuccess(resources));
+
+        List<ProjectFinanceResource> financeTotals = service.getFinanceTotals(123L);
+        assertEquals(resources, financeTotals);
     }
 }
