@@ -4,7 +4,6 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.LocalDateResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
-import com.worth.ifs.form.ErrorSummaryForm;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.form.SpendProfileForm;
 import com.worth.ifs.project.resource.ProjectResource;
@@ -80,7 +79,6 @@ public class ProjectSpendProfileController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(method = GET)
     public String viewSpendProfile(Model model,
-                                   @ModelAttribute(FORM_ATTR_NAME) ErrorSummaryForm form,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -110,9 +108,6 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute ErrorSummaryForm reviewForm,
-                                   @SuppressWarnings("unused") BindingResult reviewBindingResult,
-                                   ValidationHandler reviewValidationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -129,7 +124,7 @@ public class ProjectSpendProfileController {
             return validationHandler.failNowOrSucceedWith(() -> BASE_DIR + "/spend-profile", () -> BASE_DIR + "/spend-profile");
         } else {
             ServiceResult<Void> result = markSpendProfileIncomplete(projectId, organisationId);
-            return reviewValidationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> {
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> {
 
                 model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
 
