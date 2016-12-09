@@ -38,7 +38,7 @@ services:
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
     ports:
-      - "8090:8080"
+      - "8086:8080"
 
   smtp:
     image: camptocamp/smtp-sink

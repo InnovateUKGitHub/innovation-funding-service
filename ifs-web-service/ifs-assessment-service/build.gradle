@@ -49,6 +49,12 @@ task deployToTomcat(type: Copy) {
     rename '(.*).war', 'assessment.war'
 }
 
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
 task buildDocker( type:Docker, dependsOn: build) {
     push = false
     applicationName = 'assessment-service'
