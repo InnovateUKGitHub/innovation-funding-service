@@ -6,10 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.project.finance.ProjectFinanceService;
 import com.worth.ifs.project.form.SpendProfileForm;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.resource.ProjectUserResource;
-import com.worth.ifs.project.resource.SpendProfileResource;
-import com.worth.ifs.project.resource.SpendProfileTableResource;
+import com.worth.ifs.project.resource.*;
 import com.worth.ifs.project.util.DateUtil;
 import com.worth.ifs.project.util.FinancialYearDate;
 import com.worth.ifs.project.util.SpendProfileTableCalculator;
@@ -38,6 +35,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
+import static com.worth.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static com.worth.ifs.project.util.ControllersUtil.isLeadPartner;
 import static com.worth.ifs.user.resource.UserRoleType.PARTNER;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
@@ -92,11 +90,11 @@ public class ProjectSpendProfileController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/review", method = GET)
     public String reviewSpendProfilePage(Model model,
-                                                 @PathVariable("projectId") final Long projectId,
-                                                 @PathVariable("organisationId") final Long organisationId,
-                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                         @PathVariable("projectId") final Long projectId,
+                                         @PathVariable("organisationId") final Long organisationId,
+                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-            model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
+        model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
         return BASE_DIR + "/spend-profile";
     }
 
@@ -113,7 +111,7 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         form.setTable(spendProfileTableResource);
 
-        if(spendProfileTableResource.getMarkedAsComplete()) {
+        if (spendProfileTableResource.getMarkedAsComplete()) {
             markSpendProfileInComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
         }
         model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
@@ -165,7 +163,7 @@ public class ProjectSpendProfileController {
         HashMap<String, Boolean> partnerProgressMap = new HashMap<>();
         partnerOrganisations.stream().forEach(organisation -> {
             Optional<SpendProfileResource> spendProfile = projectFinanceService.getSpendProfile(projectId, organisation.getId());
-            partnerProgressMap.put(organisation.getName(),spendProfile.get().isMarkedAsComplete());
+            partnerProgressMap.put(organisation.getName(), spendProfile.get().isMarkedAsComplete());
         });
         return partnerProgressMap;
     }
@@ -193,7 +191,7 @@ public class ProjectSpendProfileController {
                                     String successView,
                                     UserResource loggedInUser) {
         ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
-        if(result.isFailure()){
+        if (result.isFailure()) {
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
             model.addAttribute("model", spendProfileViewModel);
@@ -224,7 +222,8 @@ public class ProjectSpendProfileController {
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
-                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()), leadPartner);
+                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()),
+                isApproved(projectResource.getId()), leadPartner);
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {
@@ -233,7 +232,7 @@ public class ProjectSpendProfileController {
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
     }
 
-    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table){
+    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table) {
         Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
         Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
         return IntStream.range(startYear, endYear + 1).
@@ -242,12 +241,12 @@ public class ProjectSpendProfileController {
                             Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
                             BigDecimal totalForYear = BigDecimal.ZERO;
 
-                            for(Long key : keys){
+                            for (Long key : keys) {
                                 List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
-                                for(int i = 0; i < values.size(); i++){
+                                for (int i = 0; i < values.size(); i++) {
                                     LocalDateResource month = table.getMonths().get(i);
                                     FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
-                                    if(year == financialYearDate.getFiscalYear()){
+                                    if (year == financialYearDate.getFiscalYear()) {
                                         totalForYear = totalForYear.add(values.get(i));
                                     }
                                 }
@@ -260,7 +259,7 @@ public class ProjectSpendProfileController {
 
 
     private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
-                                                          final UserResource loggedInUser) {
+                                                                                                   final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
@@ -274,7 +273,13 @@ public class ProjectSpendProfileController {
                 partnersSpendProfileProgress,
                 partnerOrganisations,
                 projectResource.getSpendProfileSubmittedDate() != null,
-                editablePartners);
+                editablePartners,
+                isApproved(projectId));
+    }
+
+    private boolean isApproved(final Long projectId) {
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
     private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
@@ -291,7 +296,7 @@ public class ProjectSpendProfileController {
         Map<String, Boolean> editablePartnersMap = new HashMap<>();
         partnerOrganisations.stream().forEach(organisation -> {
             boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectId, organisation.getId(), loggedInUser);
-            editablePartnersMap.put(organisation.getName(),isUserPartOfThisOrganisation);
+            editablePartnersMap.put(organisation.getName(), isUserPartOfThisOrganisation);
         });
         return editablePartnersMap;
     }
@@ -300,9 +305,9 @@ public class ProjectSpendProfileController {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
-                                                            && projectUserResource.getOrganisation().equals(organisationId)
-                                                            && PARTNER.getName().equals(projectUserResource.getRoleName())
-                                                            );
+                && projectUserResource.getOrganisation().equals(organisationId)
+                && PARTNER.getName().equals(projectUserResource.getRoleName())
+        );
 
         return returnedProjectUser.isPresent();
     }

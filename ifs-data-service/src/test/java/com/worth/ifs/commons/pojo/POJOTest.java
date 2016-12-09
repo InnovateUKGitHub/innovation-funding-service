@@ -35,10 +35,7 @@ import com.worth.ifs.finance.resource.ProjectFinanceResource;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.form.resource.FormInputType;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.resource.ExistingUserStagedInviteResource;
-import com.worth.ifs.invite.resource.InviteProjectResource;
-import com.worth.ifs.invite.resource.NewUserStagedInviteResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.project.bankdetails.domain.BankDetails;
 import com.worth.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -85,6 +82,7 @@ public class POJOTest {
             AssessorFormInputResponseResource.class,
             Assessment.class,
             AssessmentTotalScoreResource.class,
+            AvailableAssessorResource.class,
             Address.class,
             OrganisationType.class,
             Application.class,
