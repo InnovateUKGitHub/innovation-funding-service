@@ -99,7 +99,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.projectKey", "com.worth:ifs"
+        property "sonar.projectKey", "org.innovateuk:ifs"
         property "sonar.branch", "ifs"
         // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"

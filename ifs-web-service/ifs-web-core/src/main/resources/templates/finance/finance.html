@@ -42,7 +42,7 @@
                 </legend>
                 <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
-                <label class="block-label" th:each="size : ${T(com.worth.ifs.user.resource.OrganisationSize).values()}">
+                <label class="block-label" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
                     <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
@@ -91,7 +91,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <div th:fragment="labour (complete)" th:remove="tag">
-        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
             <div class="form-group" th:attr="data-repeatable-container=${question.getId()}" th:if="${costCategory!=null}">
                 <div class="form-group inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}">
@@ -253,8 +253,8 @@
     <!-- ===========================Form: overheads =========================== -->
     <div th:fragment="overheads" th:remove="tag">
         <p ifs:utext="${question.getDescription()}" />
-        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
-            <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
+        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+            <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
                 <fieldset>
                     <legend class="visuallyhidden">Overhead costs</legend>
                     <div class="form-group">
@@ -263,9 +263,9 @@
                                    type="radio"
                                    required="required"
                                    th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
-                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE}"
-                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE)}"
-                                   th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE}"
+                                   th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE)}"
+                                   th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                             No administration support funding
                         </label>
                         <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
@@ -273,9 +273,9 @@
                                    type="radio"
                                    required="required"
                                    th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
-                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"
-                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"
-                                   th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
+                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"
+                                   th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"
+                                   th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                             20% of labour costs
                         </label>
                         <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
@@ -283,9 +283,9 @@
                                    type="radio"
                                    required="required"
                                    th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
-                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE}"
-                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}"
-                                   th:disabled="${!(overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE}"
+                                   th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}"
+                                   th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                             Custom administration support cost
                         </label>
                     </div>
@@ -311,7 +311,7 @@
                                th:id="${'section-total-'+subSection.id+'-default'}"
                                th:attr="data-calculation-fields='#section-total-9,0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="*"
-                               th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"
                                 />
                     </div>
                 </div>
@@ -335,7 +335,7 @@
                                class="form-control form-control-1-4 alignright"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'field-error' : ''"
                                placeholder="0"
-                               ifs:nonZeroValue="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? ${overheadCosts?.getRate()} : 0" />
+                               ifs:nonZeroValue="${overheadCosts?.getRate()!=null and overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? ${overheadCosts?.getRate()} : 0" />
                     </div>
                     <div class="form-group alignright inline">
                         <label th:for="${'section-total-'+subSection.id+'-custom'}">
@@ -348,7 +348,7 @@
                                th:id="${'section-total-'+subSection.id+'-custom'}"
                                th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="/,*"
-                               th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
                     </div>
                 </div>
             </div>
@@ -358,7 +358,7 @@
     <!-- ===========================Form: materials =========================== -->
     <div th:fragment="materials" th:remove="tag">
         <p th:text="${question.getDescription()}"></p>
-        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
             <div class="form-group">
                 <table id="material-costs-table">
                     <thead>
@@ -485,7 +485,7 @@
     <!-- ===========================Form: capital usage =========================== -->
     <div th:fragment="capital_usage" th:remove="tag">
         <p th:text="${question.getDescription()}"></p>
-        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
             <div id="capital_usage">
                 <div th:each="cost : ${costCategory.costs}" th:remove="tag">
                     <div th:include="finance/finance :: capital_usage_row" th:remove="tag"/>
@@ -658,7 +658,7 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting">
         <p th:text="${question.getDescription()}"></p>
-        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+        <div th:remove="tag" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
 
             <div id="subcontracting">
                 <div th:each="cost : ${costCategory.costs}" th:remove="tag">
@@ -764,7 +764,7 @@
     <!-- ===========================Form: travel cost =========================== -->
     <div th:fragment="travel">
         <p th:text="${question.description}"></p>
-        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
             <div class="form-group">
                 <table id="travel-costs-table">
                     <thead>
@@ -886,7 +886,7 @@
     <!-- ===========================Form: other cost =========================== -->
     <div th:fragment="other_costs">
         <p th:text="${question.description}" />
-        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${formInput.type},costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
             <div class="form-group">
                 <table id="other-costs-table">
                     <thead>
@@ -967,7 +967,7 @@
     <!-- ===========================Form: Other funding=========================== -->
     <div th:fragment="other_funding" th:remove="tag"
          th:with="formInputType=${formInput.type},
-                   costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},
+                   costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},
                    type=${formInput.type.nameLower}">
         <div class="form-group"
                 th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
