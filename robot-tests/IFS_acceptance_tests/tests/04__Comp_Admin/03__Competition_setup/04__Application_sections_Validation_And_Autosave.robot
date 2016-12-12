@@ -6,41 +6,50 @@ Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Business opportunity Server-side validations
+Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
     Given The user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     When the user leaves all the question field empty
-    And the user leaves all the assesment questions empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the user should see the text in the page    Please enter a from score
+
+Business opportunity Sever-side validations assessment questions
+    [Documentation]    INFUND-5685
+    [Tags]    HappyPath
+    Given the user leaves all the assesment questions empty
+    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    Then the user should see the text in the page    Please enter a from score
     And the user should see the text in the page    Please enter a to score
     And the user should see the text in the page    Please enter a justification
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
-    And the user fills the empty assessment fields
-    When the user fills the empty question fields
+    Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the user should not see the text in the page   Please enter a from score
+
+Business opportunity: Client side validations assessment questions
+    [Documentation]    INFUND-5629 INFUND-5685
+    [Tags]    HappyPath
+
+    Given the user fills the empty assessment fields
+    focus    jQuery=.button[value="Save and close"]
+    Then the user should not see the text in the page   Please enter a from score
     And the user should not see the text in the page   Please enter a to score
     And the user should not see the text in the page   Please enter a justification
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]    Failing
-    #TODO Seems to fail intermittently due to autosave
+    [Tags]
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
@@ -50,8 +59,7 @@ Business opportunity: Autosave
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]    HappyPath    Failing
-    #TODO seem to fail intermittently due to autosave
+    [Tags]    HappyPath
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
