@@ -33,6 +33,26 @@
 			<fieldset>
 				<div class="form-group">
 					<legend>
+						<span class="form-label form-label-bold">Research area</span>
+						<span class="form-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
+					</legend>
+					<label data-target="resubmission-details" class="block-label selected" for="feasibility-studies">
+						<input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="application.researchArea" />
+						Feasibility studies
+					</label>
+					<label class="block-label" for="industrial-research">
+						<input type="radio" value="industrial-research" required="required" id="industrial-research" name="application.researchArea" />
+						Industrial research
+					</label>
+					<label class="block-label" for="experimental-development">
+						<input type="radio" value="experimental-development" required="required" id="experimental-development" name="application.researchArea" />
+						Experimental development
+					</label>
+				</div>
+			</fieldset>
+			<fieldset>
+				<div class="form-group">
+					<legend>
 						<span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
 						<span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
 					</legend>
@@ -40,7 +60,7 @@
 						<input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
 						Yes
 					</label>
-					<label class="block-label selected focused" for="resubmission-no">
+					<label class="block-label selected" for="resubmission-no">
 						<input type="radio" value="false" required="required" id="resubmission-no" checked="checked" name="application.resubmission" />
 						No
 					</label>
@@ -133,6 +153,14 @@
 		<input type="hidden" id="application_id" value="1" />
 		<button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
 	</form>
+	<ul class="pagination">
+		<li class="next">
+			<a rel="next" title="Navigate to next part" href="#">
+				<span class="pagination-label">Next</span>
+				<span class="pagination-part-title">Project summary</span>
+			</a>
+		</li>
+	</ul>
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
