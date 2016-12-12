@@ -203,6 +203,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
