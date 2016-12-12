@@ -47,7 +47,7 @@
                     <dt class="column-third">Written feedback</dt>
                     <dd class="column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.writtenFeedback}">
-                        <dt class="column-third">Guidance Title</dt>
+                        <dt class="column-third">Guidance title</dt>
                         <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">None</dd>
                         <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}" ifs:utext="${question.assessmentGuidanceTitle}"></dd>
                         <dt class="column-third">Guidance</dt>
@@ -300,7 +300,7 @@
                         <th:block th:if="${question.writtenFeedback != null}">
                         <div th:class="${#fields.hasErrors('question.assessmentGuidanceTitle')}? 'form-group error':'form-group'">
                             <label class="form-label" for="question.assessmentGuidanceTitle">
-                                <span class="form-label-bold">Guidance Title</span>
+                                <span class="form-label-bold">Guidance title</span>
                                 <span th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}" th:remove="tag">
                                         <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}" th:text="${err}" />
                                     </span>
