@@ -25,14 +25,11 @@ public class FinanceChecksViabilityViewModel {
     private OrganisationSize organisationSize;
 
     private Long projectId;
-    private boolean creditReportVerified;
-    private boolean viabilityApproved;
 
     public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
                                            Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
                                            Integer contributionToProject, String companyRegistrationNumber,
-                                           Integer turnover, Integer headCount, OrganisationSize organisationSize, Long projectId,
-                                           boolean creditReportVerified, boolean viabilityApproved) {
+                                           Integer turnover, Integer headCount, OrganisationSize organisationSize, Long projectId) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -46,8 +43,6 @@ public class FinanceChecksViabilityViewModel {
         this.headCount = headCount;
         this.organisationSize = organisationSize;
         this.projectId = projectId;
-        this.creditReportVerified = creditReportVerified;
-        this.viabilityApproved = viabilityApproved;
     }
 
     public String getOrganisationName() {
@@ -76,14 +71,6 @@ public class FinanceChecksViabilityViewModel {
 
     public Long getProjectId() {
         return projectId;
-    }
-
-    public boolean isCreditReportVerified() {
-        return creditReportVerified;
-    }
-
-    public boolean isViabilityApproved() {
-        return viabilityApproved;
     }
 
     public Integer getTotalCosts() {

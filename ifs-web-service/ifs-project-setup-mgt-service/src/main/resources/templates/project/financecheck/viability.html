@@ -55,11 +55,11 @@
       <dd th:text="${model.organisationSize != null ? #messages.msg('ifs.organisation.size.' + model.organisationSize) : '-'}">Medium</dd>
     </dl>
 
-    <form>
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
       <h2 class="heading-medium">Credit report</h2>
       <div class="form-group">
         <label class="block-label" for="costs-reviewed">
-          <input id="costs-reviewed" type="checkbox" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+          <input id="costs-reviewed" type="checkbox" th:field="${form.creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
         </label>
       </div>
 
@@ -68,21 +68,21 @@
       <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
       <div class="form-group">
         <label class="block-label" for="project-viable" data-target="add-rag-rating">
-          <input id="project-viable" type="checkbox" name="rag-rate" data-disable-button-until-checked="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
+          <input id="project-viable" type="checkbox" th:field="${form.viabilityConfirmed}" data-disable-button-until-checked="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
         </label>
       </div>
 
       <div class="form-group" id="add-rag-rating">
         <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
-        <select id="rag-rating"  class="form-control" data-disable-button-until-checked="#confirm-button">
-          <option value="">--</option>
+        <select th:field="${form.ragStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
+          <option value="" th:selected="${form.ragStatus == null}">--</option>
           <option value="Green">Green</option>
           <option value="Amber">Amber</option>
           <option value="Red">Red</option>
         </select>
       </div>
 
-      <button type="button" class="button" id="confirm-button">Confirm viability</button>
+      <button type="submit" class="button" id="confirm-button">Confirm viability</button>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

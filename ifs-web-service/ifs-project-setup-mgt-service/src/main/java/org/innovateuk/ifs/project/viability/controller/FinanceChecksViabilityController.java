@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -19,6 +20,7 @@ import java.util.List;
 import static java.math.RoundingMode.HALF_EVEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller serves the Viability page where internal users can confirm the viability of a partner organisation's
@@ -38,10 +40,19 @@ public class FinanceChecksViabilityController {
     private ProjectFinanceService financeService;
 
     @RequestMapping(method = GET)
-    public String viewViability(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId, Model model) {
+    public String viewViability(@PathVariable("projectId") Long projectId,
+                                @PathVariable("organisationId") Long organisationId, Model model) {
 
         populateViewModel(projectId, organisationId, model);
+        populateForm(projectId, organisationId, model);
         return "project/financecheck/viability";
+    }
+
+    @RequestMapping(method = POST)
+    public String updateViability(@PathVariable("projectId") Long projectId,
+                                  @PathVariable("organisationId") Long organisationId) {
+
+        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
     }
 
     private void populateViewModel(Long projectId, Long organisationId, Model model) {
@@ -65,12 +76,15 @@ public class FinanceChecksViabilityController {
         Integer turnover = null;
         Integer headCount = null;
         OrganisationSize organisationSize = organisation.getOrganisationSize();
-        boolean creditReportVerified = false;
-        boolean viabilityApproved = false;
 
         model.addAttribute("model", new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, creditReportVerified, viabilityApproved));
+                companyRegistrationNumber, turnover, headCount, organisationSize, projectId));
+    }
+
+    private void populateForm(Long projectId, Long organisationId, Model model) {
+        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(true, true, "Red");
+        model.addAttribute("form", form);
     }
 
     private int toZeroScaleInt(BigDecimal value) {
