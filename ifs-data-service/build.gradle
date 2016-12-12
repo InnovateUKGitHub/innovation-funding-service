@@ -9,8 +9,8 @@ apply plugin: 'org.asciidoctor.convert'
 
 task('copyFreemarkerResources', type: Copy) {
 //Copy freemarker resources to build path to support running as a jar.
-    from 'src/main/java/com/worth/ifs/notifications/templates'
-        into 'build/classes/main/com/worth/ifs/notifications/templates'
+    from 'src/main/java/org/innovateuk/ifs/notifications/templates'
+        into 'build/classes/main/org/innovateuk/ifs/notifications/templates'
         include '**/*'
 }
 
@@ -28,14 +28,14 @@ configurations {
 }
 
 bootRepackage {
-    mainClass = 'com.worth.ifs.Application'
+    mainClass = 'org.innovateuk.ifs.Application'
     withJarTask = war
 }
 
 ext {
     snippetsDir = file('build/generated-snippets')
     javaLanguageLevel = 1.8
-    generatedMapperSourcesDir = 'build/classes/main/com/worth/ifs/mappers'
+    generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
 
 sourceSets {

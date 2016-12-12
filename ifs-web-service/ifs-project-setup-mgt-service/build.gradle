@@ -6,7 +6,7 @@ war {
 
 
 bootRepackage {
-    mainClass = 'com.worth.ifs.Application'
+    mainClass = 'org.innovateuk.ifs.Application'
 }
 
 configurations {
