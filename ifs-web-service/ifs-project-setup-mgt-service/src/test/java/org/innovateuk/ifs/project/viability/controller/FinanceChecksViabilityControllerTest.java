@@ -144,9 +144,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(1004), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
-
-        assertFalse(viewModel.isCreditReportVerified());
-        assertFalse(viewModel.isViabilityApproved());
     }
 
     private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
@@ -183,9 +180,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
-
-        assertFalse(viewModel.isCreditReportVerified());
-        assertFalse(viewModel.isViabilityApproved());
     }
 
     @Override
