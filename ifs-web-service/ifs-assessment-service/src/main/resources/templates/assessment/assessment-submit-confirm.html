@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Submit assessments'" th:remove="tag" />
+</head>
+
+<body th:with="context='assessment'" class="assessment-submit-confirm">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main>
+
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:remove="tag" />
+
+
+    <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
+    <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
+    <form method="post" th:action="@{/assessor/dashboard/competition/{id}(id=${competitionId})}" th:object="${form}">
+
+        <div>
+            <input type="hidden" name="assessmentIds" th:field="*{assessmentIds}" th:value="${assessmentIds}" />
+            <input type="submit" tabindex="0" class="button large" value="Submit assessments" />
+            <a role="button" tabindex="1" class="button buttonlink large" th:href="@{/assessor/dashboard/competition/{id}(id=${competitionId})}">Cancel</a>
+        </div>
+    </form>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

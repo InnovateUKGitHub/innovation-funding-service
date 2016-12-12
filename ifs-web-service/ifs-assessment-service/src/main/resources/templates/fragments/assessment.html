@@ -231,7 +231,7 @@
         <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
         <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
         <div>
-            <button class="button large" type="submit">Yes I want to submit the assessments</button>
+            <button class="button large" type="submit" th:formaction="@{/assessor/dashboard/competition/{id}(id=${model.competitionId})}">Yes I want to submit the assessments</button>
             <button class="js-close button buttonlink large" type="button">Cancel</button>
         </div>
     </div>
