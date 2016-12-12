@@ -86,6 +86,17 @@ ${IN_ASSESSMENT_APPLICATION_1_HEADER}    ${IN_ASSESSMENT_APPLICATION_1_NUMBER}: 
 ${IN_ASSESSMENT_APPLICATION_2}    16
 ${IN_ASSESSMENT_APPLICATION_3}    20
 ${IN_ASSESSMENT_APPLICATION_3_NUMBER}    00000020
+${IN_ASSESSMENT_APPLICATION_3_LEAD_PARTNER_EMAIL}    shawn.ward@example.com
+${IN_ASSESSMENT_APPLICATION_3_TITLE}    Intelligent Building
+${IN_ASSESSMENT_APPLICATION_4_NUMBER}    00000018
+${IN_ASSESSMENT_APPLICATION_4_LEAD_PARTNER_EMAIL}    ernest.austin@example.com
+${IN_ASSESSMENT_APPLICATION_4_TITLE}    Park living
+${IN_ASSESSMENT_APPLICATION_5_NUMBER}    00000019
+${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
+${IN_ASSESSMENT_APPLICATION_5_TITLE}    Products and Services Personalised
+${IN_ASSESSMENT_APPLICATION_6_NUMBER}    00000021
+${IN_ASSESSMENT_APPLICATION_6_LEAD_PARTNER_EMAIL}    lisa.fox@example.com
+${IN_ASSESSMENT_APPLICATION_6_TITLE}    Intelligent water system
 
 ${INFORM_COMPETITION}    7
 ${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
@@ -178,7 +189,7 @@ ${test_title}     test title
 
 # File related variables
 ${UPLOAD_FOLDER}                  uploaded_files
-#${DOWNLOAD_FOLDER}               This variable to be defined TODO INFUND-6187
+${DOWNLOAD_FOLDER}               download_files
 ${empty_field_warning_message}    This field cannot be left blank
 ${valid_pdf}            testing.pdf
 ${too_large_pdf}        large.pdf
@@ -186,10 +197,10 @@ ${text_file}            testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    55
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    60
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    75
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    66
 ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}    56
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    59
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    69
 ${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    225
 ${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    226
 ${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    227
