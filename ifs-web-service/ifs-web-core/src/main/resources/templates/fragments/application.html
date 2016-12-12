@@ -20,7 +20,7 @@
                  th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                  th:id="'form-input-'+${formInput.getId()}">
                 <div th:replace="question-type/types :: ${formInput.type.nameLower}"
-                     th:unless="${formInput.type == T(com.worth.ifs.form.resource.FormInputType).FINANCE}"/>
+                     th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}"/>
             </div>
         </div>
          <div th:remove="tag" th:if="${question.shortName.equals('Application details') and !currentApplication.isOpen()}">
@@ -29,7 +29,7 @@
                     th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                     th:id="'form-input-'+${formInput.getId()}">
                    <div th:replace="question-type/types :: ${formInput.type.nameLower}"
-                        th:unless="${formInput.type == T(com.worth.ifs.form.resource.FormInputType).FINANCE}"/>
+                        th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}"/>
                </div>
              </div>
 
