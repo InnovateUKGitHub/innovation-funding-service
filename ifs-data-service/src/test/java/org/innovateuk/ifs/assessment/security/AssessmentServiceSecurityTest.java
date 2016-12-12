@@ -119,6 +119,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
+        public ServiceResult<AssessmentResource> findAssignableById(Long id) {
+            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
+        }
+
+        @Override
         public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
