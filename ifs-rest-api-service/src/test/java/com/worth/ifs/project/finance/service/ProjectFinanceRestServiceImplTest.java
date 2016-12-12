@@ -49,7 +49,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void markSpendProfile() {
+    public void markSpendProfileComplete() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -58,6 +58,20 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/incomplete",
+                OK);
+
+        RestResult<Void> result = service.markSpendProfileIncomplete(projectId, organisationId);
 
         assertTrue(result.isSuccess());
     }
