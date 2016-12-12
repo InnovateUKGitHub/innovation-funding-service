@@ -19,6 +19,16 @@ Business opportunity Server-side validations setup questions
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
+Application questions mark as done validations
+    [Documentation]    INFUND-6468
+    [Tags]
+    Given the user clicks the button/link    link=Application 
+    And the user clicks the button/link    jQuery=.button:contains("Done") 
+    And the user should see the text in the page    Unable to mark as complete. 
+    And the user should see the text in the page    view the application section(s) to resolve the error. 
+    And The user clicks the button/link    link=Business opportunity 
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
@@ -40,7 +50,6 @@ Business opportunity: Client side validations
 Business opportunity: Client side validations assessment questions
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
-
     Given the user fills the empty assessment fields
     focus    jQuery=.button[value="Save and close"]
     Then the user should not see the text in the page   Please enter a from score
