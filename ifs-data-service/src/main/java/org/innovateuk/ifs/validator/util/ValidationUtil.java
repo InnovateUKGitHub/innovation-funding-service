@@ -48,10 +48,12 @@ public class ValidationUtil {
     @Autowired
     @Lazy
     private ValidationUtil(ValidatorService validatorService,
-                           MinRowCountValidator minRowCountValidator
+                           MinRowCountValidator minRowCountValidator,
+                           SpendProfileCostValidator spendProfileCostValidator
     ) {
         this.validatorService = validatorService;
         this.minRowCountValidator = minRowCountValidator;
+        this.spendProfileCostValidator = spendProfileCostValidator;
     }
 
     /**
