@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class AssessorCompetitionDashboardViewModel {
 
-    private Long competitionId;
+    private long competitionId;
     private String competitionTitle;
     private String competition;
     private String leadTechnologist;
@@ -18,7 +18,7 @@ public class AssessorCompetitionDashboardViewModel {
     private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
     private boolean submitVisible;
 
-    public AssessorCompetitionDashboardViewModel(Long competitionId, String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
+    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
         this.competition = competition;
@@ -30,7 +30,7 @@ public class AssessorCompetitionDashboardViewModel {
         this.submitVisible = submitVisible;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
