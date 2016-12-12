@@ -278,13 +278,14 @@ Academic partner spend profile client side validations
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
     When the user makes all values zeros               32    ${project_duration}  # Travel
-    When the user makes all values zeros               33    ${project_duration}  # Other - Directly incurred
-    When the user makes all values zeros               35    ${project_duration}  # Estates
+    Then the user makes all values zeros               33    ${project_duration}  # Other - Directly incurred
+    And the user makes all values zeros                35    ${project_duration}  # Estates
     When the user enters text to a text field          css=#row-36-1    0  # Other - Directly allocated
     And the user enters text to a text field           css=#row-36-2    0  # Other - Directly allocated
     And the user enters text to a text field           css=#row-39-1    0  # Other - Exceptions
     And the user enters text to a text field           css=#row-39-2    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
+    #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
