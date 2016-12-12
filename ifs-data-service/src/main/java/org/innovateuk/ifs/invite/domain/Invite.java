@@ -45,7 +45,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     @Enumerated(EnumType.STRING)
     private InviteStatus status;
 
-    public static String generateHash() {
+    public static String generateInviteHash() {
         return UUID.randomUUID().toString();
     }
 

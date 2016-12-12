@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.invite.domain.Invite.generateHash;
+import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.String.format;
@@ -90,7 +90,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
                 return serviceFailure(badRequestError(errors.toString()));
             } else {
-                projectInvite.setHash(generateHash());
+                projectInvite.setHash(generateInviteHash());
                 inviteProjectRepository.save(projectInvite);
                 return serviceSuccess();
             }

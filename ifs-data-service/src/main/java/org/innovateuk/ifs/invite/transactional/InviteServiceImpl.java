@@ -54,7 +54,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.domain.Invite.generateHash;
+import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -135,7 +135,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
-            invite.setHash(generateHash());
+            invite.setHash(generateInviteHash());
             applicationInviteRepository.save(invite);
 
             ServiceResult<Void> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
