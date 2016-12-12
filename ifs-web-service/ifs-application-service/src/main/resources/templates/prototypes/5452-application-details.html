@@ -20,7 +20,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application details'})" th:remove="tag" />
 
-	<form>
+	<form action="#">
 		<button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 		<div class="question" id="form-input-9">
 			<div class="form-group">
@@ -37,15 +37,15 @@
 						<span class="form-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
 					</legend>
 					<label data-target="resubmission-details" class="block-label selected" for="feasibility-studies">
-						<input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="application.researchArea" />
+						<input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
 						Feasibility studies
 					</label>
 					<label class="block-label" for="industrial-research">
-						<input type="radio" value="industrial-research" required="required" id="industrial-research" name="application.researchArea" />
+						<input type="radio" value="industrial-research" required="required" id="industrial-research" name="researchArea" />
 						Industrial research
 					</label>
 					<label class="block-label" for="experimental-development">
-						<input type="radio" value="experimental-development" required="required" id="experimental-development" name="application.researchArea" />
+						<input type="radio" value="experimental-development" required="required" id="experimental-development" name="researchArea" />
 						Experimental development
 					</label>
 				</div>
@@ -145,14 +145,35 @@
 					</li>
 				</ul>
 			</div>
-			<p>
-				<button type="submit" name="mark_as_complete" class="buttonlink" value="9">Mark as complete</button>
-			</p>
+            <p>
+                <button id="mark-as-complete-submit" type="submit" name="mark_as_complete" class="buttonlink" value="9">Mark as complete</button>
+                <a href="#" id="mark-as-complete-check" data-js-modal="change-research-area">Mark as complete</a>
+            </p>
+            <div class="change-research-area" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+                <button class="js-close close" aria-label="Close Popup">X</button>
+                <div>
+
+                    <h2 class="heading-medium no-margin">Change research area</h2>
+
+                    <p>Are you sure you want to change the research area for this project, from [research area] to [research area].</p>
+                    <p>This will reset the funding percentage for all applicants claiming funding.</p>
+
+                    <hr />
+
+                    <div class="alignright-button">
+                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                        <!--<a class="button" href="#">Change research area</a>-->
+                        <button type="submit" class="button-secondary" name="submit-section">Change research area</button>
+                    </div>
+
+                </div>
+            </div>
 		</div>
 
 		<input type="hidden" id="application_id" value="1" />
 		<button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
 	</form>
+
 	<ul class="pagination">
 		<li class="next">
 			<a rel="next" title="Navigate to next part" href="#">
@@ -168,5 +189,17 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+    // <![CDATA[
+        $('#mark-as-complete-check').hide();
+        $('#mark-as-complete-submit').show();
+        jQuery(document).ready(function(){
+            $('input[type=radio][name=researchArea]').on('change',function() {
+                $('#mark-as-complete-check').show();
+                $('#mark-as-complete-submit').hide();
+            });
+        });
+    // ]]>
+</script>
 </body>
 </html>
