@@ -1,0 +1,28 @@
+To run load_test_representative
+===============================
+For Example (JMeter)
+--------------------
+1) jmeter -Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -puat.properties -tload_test_representative.jmx
+
+Where
+invite_user        = number of users to run the invite_user group
+applicant_users    = number of users to run the applicant_users group
+registration_users = number of users to run the registration_users group
+uat.properties     = file that contains properties on uat invariants. Currently:
+                     server_url        = the url of the uat servers
+                     authorisation_url = the url of the shibboleth authentication servers
+                     users_csv         = name of the csv file that contains the users to run in the test
+
+2) Import the load_test_representative.jmx
+
+For Example (Blazemeter)
+------------------------
+1) Upload the load_test_representative.jmx and the csv file with user data.
+2) Add command line arguments e.g.
+-Jinvite_user=5 -Japplicant_users=50 -Jregistration_users=5
+3) Add Jmeter Properties e.g.
+server_url=ifs.uat.innovateuk.org
+authorisation_url=auth.uat.innovateuk.org
+users_csv=load_test_data_uat.csv
+Make sure users_csv matches the uploaded csv
+4) Make sure that Threads checkbox is unchecked
