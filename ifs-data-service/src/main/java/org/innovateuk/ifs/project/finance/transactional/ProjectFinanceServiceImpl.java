@@ -2,10 +2,12 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
@@ -15,6 +17,7 @@ import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessReposito
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -87,6 +90,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private FinanceCheckProcessRepository financeCheckProcessRepository;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -301,6 +307,27 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        return serviceSuccess(projectFinance.getViability());
+
+    }
+
+    @Override
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability){
+
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        projectFinance.setViability(viability);
+
+        projectFinanceRepository.save(projectFinance);
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
