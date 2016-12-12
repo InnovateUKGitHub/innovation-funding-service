@@ -24,6 +24,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Collections;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -292,23 +294,24 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
 
-    //@Test
+    @Test
     public void submitSectionApplicationAssessedQuestionWithCheckedOptionsShouldResultInError() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
-        question.setQuestionId(questionId);
-        question.setType(ASSESSED_QUESTION);
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(questionId)
+                .withType(ASSESSED_QUESTION).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenFeedback", "true")
                 .param("question.assessmentGuidanceTitle", "")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "")
+                .param("question.type", "ASSESSED_QUESTION")
                 .param("guidanceRows[0].scoreFrom", "")
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
@@ -325,18 +328,23 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertEquals("NotNull", bindingResult.getFieldError("guidanceRows[0].scoreFrom").getCode());
     }
 
-    //@Test
+    @Test
     public void submitSectionApplicationAssessedQuestionWithUncheckedOptionsShouldNotResultInError() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(questionId)
+                .withType(ASSESSED_QUESTION).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question?ASSESSED_QUESTION=true")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenGuidance", "false")
                 .param("question.guidanceTitle", "")
                 .param("question.scored", "false")
                 .param("question.scoreTotal", "")
+                .param("question.type", "ASSESSED_QUESTION")
                 .param("guidanceRows[0].scoreFrom", "")
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
@@ -353,13 +361,17 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertNull(bindingResult.getFieldError("guidanceRows[0].scoreFrom"));
     }
 
-    //@Test
+    @Test
     public void submitSectionApplicationScopeQuestionWithCheckedOptionsShouldResultInError() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(questionId)
+                .withType(ASSESSED_QUESTION).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenFeedback", "true")
                 .param("question.assessmentGuidanceTitle", "")
@@ -379,13 +391,17 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertEquals("NotEmpty", bindingResult.getFieldError("question.guidanceRows[0].subject").getCode());
     }
 
-    //@Test
+    @Test
     public void submitSectionApplicationScopeQuestionWithUncheckedOptionsShouldNotResultInError() throws Exception {
         Long questionId = 4L;
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(questionId)
+                .withType(ASSESSED_QUESTION).build();
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question?SCOPE=true")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenGuidance", "false")
                 .param("question.guidanceTitle", "")
