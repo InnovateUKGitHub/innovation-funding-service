@@ -63,7 +63,7 @@
                                    th:attr="data-invite-id=${invite.id}"
                                    data-js-modal="modal-submit-remove-collaborator" class="buttonlink no-margin font-xsmall">Remove</a><br/>
                 </th:block>
-                <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
+                <small th:if="${invite.status.name() ==  T(org.innovateuk.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
 
             </li>
         </ul>
