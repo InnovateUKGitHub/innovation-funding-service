@@ -7,10 +7,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
@@ -27,8 +26,6 @@ import javax.persistence.*;
 @Entity
 @DiscriminatorOptions(force = true)
 public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
-    private static final CharSequence HASH_SALT = "b80asdf00poiasd07hn";
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -47,6 +44,10 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     @Enumerated(EnumType.STRING)
     private InviteStatus status;
+
+    public static String generateInviteHash() {
+        return UUID.randomUUID().toString();
+    }
 
     Invite() {
     	// no-arg constructor
@@ -120,16 +121,6 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String generateHash() {
-        if(StringUtils.isEmpty(hash)){
-            StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
-            int random = (int) Math.ceil(Math.random() * 100); // random number from 1 to 100
-            hash = String.format("%s==%s==%s", id, email, random);
-            hash = encoder.encode(hash);
-        }
-        return hash;
     }
 
     // TODO rename to getProcess() and delete the setter

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryTypeResource;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -745,6 +747,44 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ServiceResult<Void> result = service.completeSpendProfilesReview(projectId);
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testGetViabilitySuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViability(Viability.APPROVED);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Viability> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.APPROVED, result.getSuccessObject());
+
+    }
+
+    @Test
+    public void testSaveViabilitySuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {

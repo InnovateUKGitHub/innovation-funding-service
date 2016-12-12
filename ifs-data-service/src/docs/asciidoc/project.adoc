@@ -432,6 +432,30 @@ include::{snippets}/project/mark-spend-profile-complete/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/project/mark-spend-profile-complete/curl-request.adoc[]
 
+=== Get Viability
+==== Success
+===== Request
+include::{snippets}/project/get-viability/http-request.adoc[]
+include::{snippets}/project/get-viability/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-viability/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-viability/curl-request.adoc[]
+
+=== Save Viability
+==== Success
+===== Request
+include::{snippets}/project/save-viability/http-request.adoc[]
+include::{snippets}/project/save-viability/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/save-viability/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-viability/curl-request.adoc[]
+
 === Get Project Team Status
 ==== Success
 ===== Request
