@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.viability.viewmodel;
 
-import com.worth.ifs.user.resource.OrganisationSize;
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 /**
  * View model for the Viability page

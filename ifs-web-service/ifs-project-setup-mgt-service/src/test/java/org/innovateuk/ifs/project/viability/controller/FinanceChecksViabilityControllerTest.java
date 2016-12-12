@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.project.viability.controller;
 
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.finance.resource.ProjectFinanceResource;
-import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
-import com.worth.ifs.finance.resource.cost.FinanceRowType;
-import com.worth.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationSize;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,21 +16,21 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static com.worth.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
-import static com.worth.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
-import static com.worth.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
-import static com.worth.ifs.finance.builder.LabourCostBuilder.newLabourCost;
-import static com.worth.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
-import static com.worth.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
-import static com.worth.ifs.finance.builder.OtherCostBuilder.newOtherCost;
-import static com.worth.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
-import static com.worth.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
-import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static com.worth.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
-import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
+import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -99,7 +99,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                             withGrantClaimPercentage(100).
                             build(1)).
                     build(),
-            FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+            OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
                     newOtherFunding().
                             withOtherPublicFunding("Yes", "").
                             withFundingSource(OTHER_FUNDING, "Some source of funding").

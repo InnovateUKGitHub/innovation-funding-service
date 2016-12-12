@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -292,11 +293,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfileSubmittedDate() != null) {
-                return serviceFailure(new java.lang.Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+                return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
             }
 
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
-                return serviceFailure(new java.lang.Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+                return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
             }
 
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
@@ -311,7 +312,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
 
-        List<java.lang.Error> incorrectCosts = checkCostsForAllCategories(table);
+        List<Error> incorrectCosts = checkCostsForAllCategories(table);
 
         if (incorrectCosts.isEmpty()) {
             return serviceSuccess();
@@ -320,11 +321,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private List<java.lang.Error> checkCostsForAllCategories(SpendProfileTableResource table) {
+    private List<Error> checkCostsForAllCategories(SpendProfileTableResource table) {
 
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
 
-        List<java.lang.Error> incorrectCosts = new ArrayList<>();
+        List<Error> incorrectCosts = new ArrayList<>();
 
         for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
             Long category = entry.getKey();
@@ -341,7 +342,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return incorrectCosts;
     }
 
-    private void isCostValid(BigDecimal cost, Long category, int index, List<java.lang.Error> incorrectCosts) {
+    private void isCostValid(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         checkFractionalCost(cost, category, index, incorrectCosts);
 
@@ -350,24 +351,24 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         checkCostGreaterThanOrEqualToMillion(cost, category, index, incorrectCosts);
     }
 
-    private void checkFractionalCost(BigDecimal cost, Long category, int index, List<java.lang.Error> incorrectCosts) {
+    private void checkFractionalCost(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (cost.scale() > 0) {
-            incorrectCosts.add(new java.lang.Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
+            incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
-    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, List<java.lang.Error> incorrectCosts) {
+    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
-            incorrectCosts.add(new java.lang.Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
+            incorrectCosts.add(new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, List<java.lang.Error> incorrectCosts) {
+    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
 
         if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
-            incorrectCosts.add(new java.lang.Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
+            incorrectCosts.add(new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
@@ -376,7 +377,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 andOnSuccess (
                         spendProfile -> {
                             if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
-                                return serviceFailure(new java.lang.Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+                                return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
                             }
 
                             spendProfile.setMarkedAsComplete(markAsComplete);
@@ -430,7 +431,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
 
-        List<java.lang.Error> categoriesWithIncorrectTotal = new ArrayList<>();
+        List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
 
         for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
             Long category = entry.getKey();

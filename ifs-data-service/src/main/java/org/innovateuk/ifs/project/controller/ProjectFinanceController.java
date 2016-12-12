@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ProjectFinanceController {
 
     @Autowired
-    private com.worth.ifs.project.finance.transactional.ProjectFinanceService projectFinanceService;
+    private ProjectFinanceService projectFinanceService;
 
     @RequestMapping(value = "/{projectId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {

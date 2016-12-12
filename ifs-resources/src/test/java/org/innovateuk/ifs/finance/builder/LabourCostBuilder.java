@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.finance.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.finance.resource.cost.LabourCost;
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder> {
 

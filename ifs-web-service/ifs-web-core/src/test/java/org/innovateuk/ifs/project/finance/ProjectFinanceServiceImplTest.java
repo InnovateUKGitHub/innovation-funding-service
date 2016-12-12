@@ -14,8 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class ProjectFinanceServiceImplTest {
 
     @InjectMocks
-    private com.worth.ifs.project.finance.ProjectFinanceServiceImpl service;
+    private ProjectFinanceServiceImpl service;
 
     @Mock
     private ProjectFinanceRestService projectFinanceRestService;

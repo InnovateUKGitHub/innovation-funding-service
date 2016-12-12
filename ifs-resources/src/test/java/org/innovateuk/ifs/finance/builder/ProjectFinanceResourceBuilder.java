@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.finance.builder;
 
-import com.worth.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  * Builder for ProjectFinance entities.

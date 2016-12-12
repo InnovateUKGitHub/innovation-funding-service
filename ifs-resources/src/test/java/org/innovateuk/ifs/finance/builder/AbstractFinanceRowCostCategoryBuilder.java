@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
-import com.worth.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.util.List;
 import java.util.function.BiConsumer;

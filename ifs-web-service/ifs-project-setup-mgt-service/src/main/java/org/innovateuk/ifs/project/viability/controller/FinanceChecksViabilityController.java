@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.project.viability.controller;
 
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.finance.resource.ProjectFinanceResource;
-import com.worth.ifs.project.ProjectService;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationSize;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.math.RoundingMode.HALF_EVEN;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**

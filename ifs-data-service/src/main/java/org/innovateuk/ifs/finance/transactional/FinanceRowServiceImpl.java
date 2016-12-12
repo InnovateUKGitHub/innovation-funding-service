@@ -55,7 +55,7 @@ import static java.util.Arrays.asList;
 @Service
 public class FinanceRowServiceImpl extends BaseTransactionalService implements FinanceRowService {
 
-    private static final Log LOG = LogFactory.getLog(com.worth.ifs.finance.transactional.FinanceRowServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(FinanceRowServiceImpl.class);
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -347,7 +347,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
             setFinanceDetails(applicationFinanceResource);
             return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0);
         } else {
-            return serviceFailure(new java.lang.Error(PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST, asList(applicationId, organisationId)));
+            return serviceFailure(new Error(PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST, asList(applicationId, organisationId)));
         }
     }
 

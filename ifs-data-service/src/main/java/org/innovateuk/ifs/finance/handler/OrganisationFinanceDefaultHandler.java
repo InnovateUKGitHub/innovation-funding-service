@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
 
-    private static final Log LOG = LogFactory.getLog(com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler.class);
+    private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
 
     @Autowired
     private QuestionService questionService;

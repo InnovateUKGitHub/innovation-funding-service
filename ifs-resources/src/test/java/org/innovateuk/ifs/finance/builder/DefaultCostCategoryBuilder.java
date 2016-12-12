@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.builder;
 
-import com.worth.ifs.finance.resource.category.DefaultCostCategory;
+import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 
 import java.util.List;
 import java.util.function.BiConsumer;
