@@ -14,6 +14,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
 ...
 ...               INFUND-5001 As an assessor I want to see information about competitions that I have accepted to assess so that I can remind myself of the subject matter.
+...
+...               INFUND-5509 As an Assessor I can see details relating to work and payment, so that I can decide whether to accept it.
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -62,10 +64,15 @@ Existing assessor: Accept invitation
     ...    INFUND-304
     ...
     ...    INFUND-3716
+    ...
+    ...    INFUND-5509
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the text in the page    You are invited to act as an assessor for the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
+    And the user should see the text in the page    12 January 2018 to 28 January 2019 - assessment period
+    And the user should see the text in the page    taking place on 15 January 2018.
+    And the user should see the text in the page    100.00 per application.
     When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${READY_TO_OPEN_COMPETITION_NAME}

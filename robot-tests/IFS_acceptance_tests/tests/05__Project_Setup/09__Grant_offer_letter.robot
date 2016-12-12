@@ -11,17 +11,25 @@ Resource          PS_Variables.robot
 *** Test Cases ***
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
-    [Tags]    Experian  Pending
+    [Tags]    Experian
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok       # Spend Profile
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok       # Other Docs
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting  # GOL
-    
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok       # Project details
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(3).status.ok       # Bank details
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok       # Finance Checks
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.ok       # Spend Profile
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
+
+Project finance can access the GOL page
+    [Documentation]    INFUND-6409
+    [Tags]  Experian
+    [Setup]  log in as a different user    &{internal_finance_credentials}
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(5) td.status.action a
+    And the user should not see an error in the page
+
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848
     [Tags]    HappyPath
@@ -129,9 +137,9 @@ Internal Dashboard should be updated
     [Documentation]    INFUND-4851
     [Tags]    Pending
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    # Pending due to ongoing work in sprint 19, will attach a ticket number once the ticket has been created by BAs
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.ok
+    #TODO Pending due to INFUND-5998.
 
 *** Keywords ***
 the lead uploads a grant offer letter
