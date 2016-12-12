@@ -89,10 +89,10 @@ Non submitted applications from this competition should be visible
 
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
-    [Tags]    HappyPath    Download    Pending
+    [Tags]    HappyPath    Download
     When the admin downloads the excel
     And user opens the excel and checks the content
-    [Teardown]    Empty the download directory
+    [Teardown]    Remove the file from the operating system    submitted_applications.xlsx
 
 *** Keywords ***
 The application list is sorted by
@@ -124,12 +124,9 @@ Both calculations in the page should show the same
     ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-two-thirds span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
-Empty the download directory
-    Empty Directory    ${DOWNLOAD_FOLDER}
-
 
 the admin downloads the excel
-    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${OPEN_COMPETITION_APPLICATION_5_NUMBER}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
 
 
 User opens the excel and checks the content
@@ -140,14 +137,12 @@ User opens the excel and checks the content
     should be equal    ${APPLICATION_TITLE_1}    ${IN_ASSESSMENT_APPLICATION_4_TITLE}
     ${LEAD_ORGANISATION_EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F2
     should be equal    ${LEAD_ORGANISATION_EMAIL_1}    ${IN_ASSESSMENT_APPLICATION_4_LEAD_PARTNER_EMAIL}
-    ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
     ${APPLICATION_ID_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A3
     Should Be Equal    ${APPLICATION_ID_2}    ${IN_ASSESSMENT_APPLICATION_5_NUMBER}
     ${APPLICATION_TITLE_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B3
     should be equal    ${APPLICATION_TITLE_2}    ${IN_ASSESSMENT_APPLICATION_5_TITLE}
     ${LEAD_ORGANISATION_EMAIL_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F3
     should be equal    ${LEAD_ORGANISATION_EMAIL_2}    ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}
-    ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
     ${APPLICATION_ID_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
     Should Be Equal    ${APPLICATION_ID_3}    ${IN_ASSESSMENT_APPLICATION_3_NUMBER}
     ${APPLICATION_TITLE_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
