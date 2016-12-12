@@ -114,10 +114,9 @@ Project Finance user can view academic Jes form
 Project Finance user can export bank details
     [Documentation]    INFUND-5852
     [Tags]    Download
-    [Setup]    Empty the download directory
     When the project finance user downloads the bank details
     Then the user opens the excel and checks the content
-    [Teardown]    Empty the download directory
+    [Teardown]    remove the file from the operating system    bank_details.csv
 
 
 

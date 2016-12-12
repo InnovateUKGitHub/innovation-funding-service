@@ -92,7 +92,7 @@ Excel export
     [Tags]    HappyPath    Download
     When the admin downloads the excel
     And user opens the excel and checks the content
-    [Teardown]    Empty the download directory
+    [Teardown]    Remove the file from the operating system    submitted_applications.xlsx
 
 *** Keywords ***
 The application list is sorted by
