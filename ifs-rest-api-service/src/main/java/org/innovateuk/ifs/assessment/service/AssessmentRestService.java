@@ -12,8 +12,6 @@ public interface AssessmentRestService {
 
     RestResult<AssessmentResource> getById(Long id);
 
-    RestResult<AssessmentResource> getAssignableById(Long id);
-
     RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long CompetitionId);
 
     RestResult<AssessmentTotalScoreResource> getTotalScore(Long id);
