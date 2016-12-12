@@ -105,7 +105,7 @@ public class ProjectGrantOfferLetterSendController {
                                              Model model) {
 
         MultipartFile file = form.getGrantOfferLetter();
-        ServiceResult<FileEntryResource> generateResult = projectService.addGeneratedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+        ServiceResult<FileEntryResource> generateResult = projectService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
         validationHandler.addAnyErrors(generateResult);
