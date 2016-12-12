@@ -12,12 +12,12 @@ function addUserToShibboleth {
 
     if [ "${system_user}" == "1" ]; then
 
-      #printf "Skipping adding user ${emailAddress} to Shibboleth as they are a System User and as such have no login\n"
-      printf "\r"
+      echo "Skipping adding user ${emailAddress} to Shibboleth as they are a System User and as such have no login"
+
 
     else
 
-      #printf "\033[K${num}/${NUMUSERS} Adding User ${emailAddress} from MySQL in Shibboleth\r"
+      echo "Adding User ${emailAddress} from MySQL in Shibboleth"
 
       response=$(curl -s -k -d "{\"email\": \"${emailAddress}\",\"password\": \"Passw0rd\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/)
       uuid=$(echo ${response} | sed 's/.*"uuid":"\([^"]*\)".*/\1/g')
@@ -26,12 +26,11 @@ function addUserToShibboleth {
       userStatus=$(executeMySQLCommand "select status from user where email='${emailAddress}';")
 
       if [ "${userStatus}" == "ACTIVE" ]; then
-        #printf "\033[K${num}/${NUMUSERS} User ${emailAddress} is active in MySQL, so activating them in Shibboleth\r"
+        echo "User ${emailAddress} is active in MySQL, so activating them in Shibboleth"
         curl -s -X PUT -k -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/${uuid}/activateUser
       fi
 
     fi
-    echo 1
 }
 
 export -f addUserToShibboleth
@@ -54,9 +53,7 @@ done
 
 docker-compose exec -T shib /tmp/_delete-shib-users-remote.sh
 
-NUMUSERS=`mysql ifs -uroot -ppassword -hifs-database -N -s -e "select count(email) from user;" 2>/dev/null`
-
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}" | pv -s $((2+(NUMUSERS*2))) -i 0.1 >/dev/null
+mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}" 
 
 cat <<'END'
 

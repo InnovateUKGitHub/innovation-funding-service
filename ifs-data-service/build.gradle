@@ -182,17 +182,6 @@ task deployToTomcat(type: Copy) {
     rename '(.*).war', 'ROOT.war'
 }
 
-watch {
-    java {
-        files files('src/main/java')
-        tasks 'deployToTomcat'
-    }
-    resources {
-        files files('src/main/resources')
-        tasks 'deployToTomcat'
-    }
-}
-
 
 //noinspection GroovyMissingReturnStatement
 processResources {
