@@ -1,7 +1,7 @@
-package com.worth.ifs.commons.validation.exception;
+package org.innovateuk.ifs.commons.validation.exception;
 
-import com.worth.ifs.commons.error.exception.IFSRuntimeException;
-import com.worth.ifs.commons.validation.SpendProfileValidationError;
+import org.innovateuk.ifs.commons.error.exception.IFSRuntimeException;
+import org.innovateuk.ifs.commons.validation.SpendProfileValidationError;
 
 import java.util.Collections;
 
