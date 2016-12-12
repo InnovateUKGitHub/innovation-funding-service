@@ -17,6 +17,8 @@ import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -306,20 +308,32 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        return serviceSuccess(projectFinance.getViability());
+        ViabilityResource viabilityResource = new ViabilityResource();
+        viabilityResource.setViability(projectFinance.getViability());
+
+        ViabilityStatus viabilityStatus = projectFinance.getViabilityStatus();
+
+        if (viabilityStatus == null) {
+            viabilityResource.setViabilityStatus(ViabilityStatus.UNSET);
+        } else {
+            viabilityResource.setViabilityStatus(viabilityStatus);
+        }
+
+        return serviceSuccess(viabilityResource);
 
     }
 
     @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability){
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
         projectFinance.setViability(viability);
+        projectFinance.setViabilityStatus(viabilityStatus);
 
         projectFinanceRepository.save(projectFinance);
 
