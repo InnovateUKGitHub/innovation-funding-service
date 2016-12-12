@@ -36,11 +36,11 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static java.util.UUID.randomUUID;
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
@@ -134,7 +134,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionInvite> inviteUserToCompetition(String name, String email, Competition competition, Category innovationArea) {
         return serviceSuccess(
-                competitionInviteRepository.save(new CompetitionInvite(name, email, generateHash(), competition, innovationArea))
+                competitionInviteRepository.save(new CompetitionInvite(name, email, generateInviteHash(), competition, innovationArea))
         );
     }
 
@@ -148,17 +148,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private ServiceResult<CompetitionInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> competitionInviteRepository.save(new CompetitionInvite(user, generateHash(), competition))
+                        competition -> competitionInviteRepository.save(new CompetitionInvite(user, generateInviteHash(), competition))
                 );
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
-    }
-
-    // TODO INFUND-6725 this needs to be replaced with an alternate token generator
-    private static String generateHash() {
-        return randomUUID().toString();
     }
 
     private ServiceResult<User> getUserByEmail(String email) {
