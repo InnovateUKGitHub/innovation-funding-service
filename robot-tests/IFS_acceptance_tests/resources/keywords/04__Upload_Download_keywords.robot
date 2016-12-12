@@ -11,10 +11,10 @@ The user downloads the file
 
 
 Download should be done
-    [Documentation]    Verifies that the directory has only one folder
+    [Documentation]    Verifies that the directory has only one file
     ...    Returns path to the file
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
-    Length Should Be    ${files}    1    Should be only one file in the download folder
+    Length Should Be    ${files}    2    Should be only one file in the download folder
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
     Log    File was successfully downloaded to ${file}
     [Return]    ${file}
@@ -24,8 +24,12 @@ the file should be downloaded
     File Should Exist    ${filename}
     File Should Not Be Empty    ${filename}
 
-Empty the download directory
-    Empty Directory    ${DOWNLOAD_FOLDER}
+remove the file from the operating system
+   [Arguments]    ${filename}
+    remove file    ${download_folder}/${filename}
+
+
+
 
 the file has been scanned for viruses
     Sleep    5s
