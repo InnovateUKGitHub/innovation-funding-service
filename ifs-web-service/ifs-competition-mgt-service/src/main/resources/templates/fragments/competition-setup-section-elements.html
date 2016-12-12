@@ -203,9 +203,9 @@
                 </fieldset>
             </div>
 
-            <th:block th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+            <th:block th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
 
-                <input type="hidden" name="competitionSetupForm.question.type" th:value="${T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
+                <input type="hidden" name="competitionSetupForm.question.type" th:value="${T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
 
                 <h2 class="heading-medium extra-margin">Assessment of this question</h2>
 
@@ -331,9 +331,8 @@
                         <div class="form-group">
 
                             <input type="hidden" name="removeGuidanceRow" />
-
                             <h3 class="heading-small">Guidance table</h3>
-                            <table id="guidance-table" class="assessed-guidance" th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                            <table id="guidance-table" class="assessed-guidance" th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
                                 <thead>
                                     <tr>
                                         <th scope="col">Score <span class="visuallyhidden"> from</span></th>
@@ -403,13 +402,13 @@
                                 </tbody>
                             </table>
 
-                            <table id="guidance-table" th:if="${competitionSetupForm.question.type == T(com.worth.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                            <table id="guidance-table" th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
                                 <thead>
-                                <tr>
-                                    <th scope="col">Subject</th>
-                                    <th scope="col">Justification</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col">Subject</th>
+                                        <th scope="col">Justification</th>
+                                        <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
