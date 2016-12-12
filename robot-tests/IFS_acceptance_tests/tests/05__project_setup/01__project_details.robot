@@ -68,12 +68,31 @@ Internal users can see Project Details not yet completed
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Tags]      HappyPath    Pending
+    log in as a different user   &{Comp_admin1_credentials}
+    #TODO Pending due to INFUND-6642
+    When the user navigates to the page    ${internal_project_summary}
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting     #Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status              #MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting      #Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action       #Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status              #Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting      #Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status              #GOL
+    #Internal user can view project details via the clickable 'hour glass' for Project details
+    When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
+    Then the user should see the element    jQuery=h1:contains("Project details")
+    And the user clicks the button/link     link=Competition dashboard
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
     [Teardown]    the user closes the browser
 
 Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805
     [Tags]    HappyPath
-    [Setup]    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
+    Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     Then the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
@@ -95,7 +114,6 @@ Non-lead partner can see the project setup page
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -179,7 +197,7 @@ Lead partner can see the overview of the project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
     And the user should see the element    link=Target start date
     And the user should see the element    link=Project address
-    And the user should see the element    link=Project manager
+    And the user should see the element    link=Project Manager
     And the user should see the text in the page    Finance contacts
 
 Submit button is disabled if the details are not fully filled out
@@ -212,7 +230,7 @@ Option to invite a project manager
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     And the user should see the element    jQuery=p:contains("Who will be the Project Manager for your project?")
     When the user selects the radio button    projectManager    new
     Then the user should see the element    id=invite-project-manager
@@ -279,7 +297,7 @@ Invited project manager shows on the project manager selection screen
     [Tags]    Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     Then the user should see the text in the page    Bob Jones
 
 Lead partner selects a project manager
@@ -289,14 +307,14 @@ Lead partner selects a project manager
     ...    INFUND-5610
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see a validation error    You need to select a Project Manager before you can continue
     When the user selects the radio button    projectManager    projectManager1
     And the user should not see the text in the page    You need to select a Project Manager before you can continue
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
-    And the user clicks the button/link    link=Project manager
+    And the user clicks the button/link    link=Project Manager
     And the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
     And the user selects the radio button    projectManager    projectManager2
     And the user clicks the button/link    jQuery=.button:contains("Save")
@@ -460,7 +478,7 @@ Non-lead partner cannot change start date, project manager or project address
     Given log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should not see the element    link=Target start date
-    And the user should not see the element    link=Project manager
+    And the user should not see the element    link=Project Manager
     And the user should not see the element    link=Project address
 
 Academic Partner nominates Finance contact
@@ -519,7 +537,7 @@ Project details read only after submission
     Then all the fields are completed
     And The user should not see the element    link=Target start date
     And The user should not see the element    link=Project address
-    And The user should not see the element    link=Project manager
+    And The user should not see the element    link=Project Manager
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
@@ -549,9 +567,9 @@ Non-lead partner cannot change any project details
     Then the user should see the text in the page    Target start date
     And the user should see the text in the page    1 Jan 2017
     And the user should not see the element    link=Target start date
-    And the user should see the text in the page    Project manager
+    And the user should see the text in the page    Project Manager
     And the user should see the text in the page    Elmo Chenault
-    And the user should not see the element    link=Project manager
+    And the user should not see the element    link=Project Manager
     And the user should see the text in the page    Project address
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
@@ -563,23 +581,11 @@ Non-lead partner cannot change any project details
     And the user should be redirected to the correct page    ${project_in_setup_page}
 
 
-Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049, INFUND-5507
-    [Tags]
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).waiting
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
-    When the user clicks the button/link    jQuery=#table-project-status td.status.ok a
-    Then the user should see the element    jQuery=h1:contains("Project details")
-    And the user clicks the button/link     link=Competition dashboard
-
-
 Internal user can see the Project details as sumbmitted
     [Documentation]  INFUND-5856
     [Tags]
-    [Setup]  the user navigates to the page  ${internal_project_summary}
+    [Setup]  log in as a different user  &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${internal_project_summary}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td.status.ok a
     Then the user should see the element     jQuery=#project-details
     And the user can see all project details completed

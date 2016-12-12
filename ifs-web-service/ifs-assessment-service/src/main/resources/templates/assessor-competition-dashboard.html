@@ -35,8 +35,6 @@
                         <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                             <h2 class="heading-medium error-summary-heading">There was a problem submitting some of your assessments.</h2>
 
-                            <p><strong>Please contact Innovate UK using the link at the bottom of the page.</strong></p>
-
                             <ul class="error-summary-list">
                                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                             </ul>
@@ -56,8 +54,13 @@
                                                 <a th:href="${assignmentUrl}">accept / reject assessment</a>
                                             </p>
                                         </div>
-                                        <div th:if="${application.accepted or application.open}" class="application-status open empty">
-                                            <p>Open</p>
+
+                                        <div th:if="${application.accepted}" class="application-status open empty">
+                                            <p>Accepted</p>
+                                        </div>
+
+                                        <div th:if="${application.open}" class="application-status open empty">
+                                            <p>In progress</p>
                                         </div>
 
                                         <div th:if="${application.readyToSubmit}" class="application-status assessed" th:classappend="${application.recommended} ? 'yes' : 'no'">

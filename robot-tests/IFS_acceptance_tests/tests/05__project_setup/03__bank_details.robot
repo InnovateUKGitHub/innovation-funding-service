@@ -6,6 +6,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 ...
 ...               INFUND-4903 As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
+...
+...               INFUND-6018 Partner should see a flag in Bank Details, when he needs to take an action
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -15,11 +17,17 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 
 Bank details page
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
     Given guest user log-in  steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
-    And the user clicks the button/link    link=Bank details
+    Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
+    And the user clicks the button/link     link=Project setup status
+    And the user clicks the button/link     link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
 
@@ -97,11 +105,17 @@ Bank details submission
 
 
 Bank details for Academic
-    [Documentation]    INFUND-3010, INFUND-2621
+    [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user    pete.tom@egg.com    Passw0rd
-    And the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
+    And the user clicks the button/link     link=Project setup status
     And the user clicks the button/link    link=Bank details
     When the user enters text to a text field    name=accountNumber    51406795
     And the user enters text to a text field    name=sortCode    404745
@@ -125,14 +139,18 @@ Bank details for Academic
     And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049
-    [Tags]    Experian    Failing
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Documentation]    INFUND-4049, INFUND-5543
+    [Tags]      HappyPath   Pending
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -148,10 +166,16 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element    link = Grant offer letter
 
 Bank details for non-lead partner
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
     Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
     When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    And the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
+    And the user clicks the button/link     link=Project setup status
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account

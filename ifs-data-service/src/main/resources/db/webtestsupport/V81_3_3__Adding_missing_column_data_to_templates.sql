@@ -8,10 +8,10 @@ INNER JOIN section s ON
 SET q.competition_id = s.competition_id
 WHERE (s.competition_id=@programme_competition_id OR s.competition_id=@sector_competition_id);
 
--- Copy multiple_statuses and question_type columns from the original competition.
+-- Copy multiple_statuses, question_type, mark_as_completed_enabled columns from the original competition.
 UPDATE question q
     INNER JOIN question qs ON
     (q.description=qs.description or q.short_name=qs.short_name OR q.name=qs.name)
-SET q.multiple_statuses=qs.multiple_statuses,q.question_type=qs.question_type
+SET q.multiple_statuses=qs.multiple_statuses,q.question_type=qs.question_type,q.mark_as_completed_enabled=qs.mark_as_completed_enabled
 WHERE (q.competition_id=@programme_competition_id OR q.competition_id=@sector_competition_id)
 AND (qs.competition_id=1);

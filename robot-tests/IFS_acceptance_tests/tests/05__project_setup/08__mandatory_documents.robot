@@ -197,7 +197,7 @@ Status in the dashboard remains action required after uploads
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-6152
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
@@ -371,8 +371,7 @@ CompAdmin approves other documents
 
 Partners can see the documents approved
     [Documentation]    INFUND-5559, INFUND-5424
-    [Tags]    HappyPath    Pending
-    #TO DO:INFUND-5887
+    [Tags]    HappyPath
     Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.success-alert h2:contains("These documents have been approved by Innovate UK")
@@ -397,9 +396,9 @@ CompAdmin can see Project status updated
 
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049
-    [Tags]    Experian
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Documentation]    INFUND-4049 , INFUND-5543
+    [Tags]    Experian HappyPath
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
