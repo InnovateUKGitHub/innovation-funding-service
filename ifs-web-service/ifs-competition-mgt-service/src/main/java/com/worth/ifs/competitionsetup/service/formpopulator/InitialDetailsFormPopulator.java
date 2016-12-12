@@ -25,7 +25,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		competitionSetupForm.setExecutiveUserId(competitionResource.getExecutive());
 
 		competitionSetupForm.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
-		competitionSetupForm.setInnovationAreaCategoryId(competitionResource.getInnovationAreas().iterator().next()); //TODO : INFUND-6479
+		competitionSetupForm.setInnovationAreaCategoryIds(competitionResource.getInnovationAreas());
 		competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
 
 		if (competitionResource.getStartDate() != null) {

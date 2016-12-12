@@ -64,7 +64,7 @@ public class InitialDetailsSectionSaverTest {
         long innovationSectorId = 5L;
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
         CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().build();
-        competitionSetupForm.setInnovationAreaCategoryId(innovationArea.getId());
+        competitionSetupForm.setInnovationAreaCategoryIds(singleton(innovationArea.getId()));
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());

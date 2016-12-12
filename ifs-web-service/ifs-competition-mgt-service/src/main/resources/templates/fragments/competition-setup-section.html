@@ -5,7 +5,7 @@
         <h1 class="heading-xlarge">Initial details</h1>
     </div>
     <div class="panel-indent">
-        This will create a new Competition - you will be able to specify more details as you proceed
+        This will create a new competition - you will be able to specify more details as you proceed
     </div>
 
     <form th:action="@{(${editable} ? '' : 'initial/edit')}"
@@ -61,16 +61,16 @@
                 </select>
             </div>
 
-            <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
-                <label class="form-label" for="innovationAreaCategoryId">
+            <div th:class="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group error':'form-group'">
+                <label class="form-label" for="innovationAreaCategoryIds">
                     <span class="form-label-bold">Innovation area</span>
-                    <span th:if="${#fields.hasErrors('innovationAreaCategoryId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
+                    <span th:if="${#fields.hasErrors('innovationAreaCategoryIds')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
-                    <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
-                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
+                <select class="form-control width-x-large" name="innovationAreaCategoryIds" id="innovationAreaCategoryIds" required="required" data-required-errormessage="Please select an innovation area">
+                    <option th:if="${competitionSetupForm.innovationAreaCategoryIds == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryIds == null}">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds == innovationArea.id}">Innovation Area</option>
                 </select>
             </div>
 
@@ -186,7 +186,10 @@
                 <dd th:each="(innovationSector : ${innovationSectors})" th:if="${innovationSector.id == competitionSetupForm.innovationSectorCategoryId}" th:text="${innovationSector.name}">Innovation Sector</dd>
 
                 <dt>Innovation area</dt>
-                <dd th:each="(innovationArea : ${innovationAreas})" th:if="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}" th:text="${innovationArea.name}">Innovation Area</dd>
+                <dd><label th:each="(innovationArea, status : ${innovationAreas})"
+                           th:if="${#sets.contains(competitionSetupForm.innovationAreaCategoryIds, innovationArea.id)}"
+                           th:text="${status.last} ? ${innovationArea.name} : ${innovationArea.name + ', '}">Innovation Area</label>
+                </dd>
 
                 <dt>Opening date</dt>
                 <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>

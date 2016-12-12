@@ -8,9 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Collections.singleton;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,10 +33,13 @@ public class InitialDetailsFormPopulatorTest {
 				
 	@Test
 	public void testGetSectionFormDataInitialDetails() {
+
+		Set<Long> innovationAreas = Stream.of(6L, 66L).collect(Collectors.toSet());
+
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionType(4L)
 				.withExecutive(5L)
-				.withInnovationAreas(singleton(6L))  //TODO: INFUND-6479
+				.withInnovationAreas(innovationAreas)
 				.withLeadTechnologist(7L)
 				.withStartDate(LocalDateTime.of(2000, 1, 2, 3, 4))
 				.withCompetitionCode("code")
@@ -49,7 +54,7 @@ public class InitialDetailsFormPopulatorTest {
 		InitialDetailsForm form = (InitialDetailsForm) result;
 		assertEquals(Long.valueOf(4L), form.getCompetitionTypeId());
 		assertEquals(Long.valueOf(5L), form.getExecutiveUserId());
-		assertEquals(Long.valueOf(6L), form.getInnovationAreaCategoryId());
+		assertEquals(innovationAreas, form.getInnovationAreaCategoryIds());
 		assertEquals(Long.valueOf(7L), form.getLeadTechnologistUserId());
 		assertEquals(Integer.valueOf(2), form.getOpeningDateDay());
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());

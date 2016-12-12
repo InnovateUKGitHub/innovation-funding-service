@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Error.fieldError;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
@@ -60,43 +59,44 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 	@Override
 	public List<Error> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		
-		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 
-		competition.setName(initialDetailsForm.getTitle());
-		competition.setExecutive(initialDetailsForm.getExecutiveUserId());
+        InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
 
-		try {
-			LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
-					initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
-			competition.setStartDate(startDate);
+        competition.setName(initialDetailsForm.getTitle());
+        competition.setExecutive(initialDetailsForm.getExecutiveUserId());
+
+        try {
+            LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
+                    initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
+            competition.setStartDate(startDate);
 
             List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId());
-            if(!errors.isEmpty()) {
+            if (!errors.isEmpty()) {
                 return errors;
             }
 
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
 
             return asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
-		}
+        }
 
-		competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
-		competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+        competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
+        competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
 
-		competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+        competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
-		List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
-		List<CategoryResource> matchingChild =
-				children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
-		if (matchingChild.isEmpty()) {
-			return asList(fieldError("innovationAreaCategoryId",
-					initialDetailsForm.getInnovationAreaCategoryId(),
+        List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
+		List<CategoryResource> matchingChildren =
+				children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());  //TODO: INFUND-6479
+
+        if (matchingChildren.isEmpty()) {
+			return asList(fieldError("innovationAreaCategoryIds",
+					initialDetailsForm.getInnovationAreaCategoryIds(),
 					"competition.setup.innovation.area.must.be.selected",
                     singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
 		}
-		competition.setInnovationAreas(singleton(initialDetailsForm.getInnovationAreaCategoryId())); //TODO: INFUND-6479
+		competition.setInnovationAreas(initialDetailsForm.getInnovationAreaCategoryIds());
 
 		competitionService.update(competition);
         return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId()).getErrors();
@@ -120,7 +120,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competitionResource.setInnovationSector(Long.parseLong(value));
                 break;
             case "innovationAreaCategoryId":
-                competitionResource.setInnovationAreas(singleton(Long.parseLong(value)));  //TODO: INFUND-6479
+                processInnovationSector(competitionResource, Long.parseLong(value));
                 break;
             case "leadTechnologistUserId":
                 competitionResource.setLeadTechnologist(Long.parseLong(value));
@@ -154,7 +154,16 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         return errors;
     }
 
-	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
+    private void processInnovationSector(CompetitionResource competitionResource, Long value) {
+
+        if (competitionResource.getInnovationAreas().contains(value)) {
+            competitionResource.getInnovationAreas().remove(value);
+        } else {
+            competitionResource.getInnovationAreas().add(value);
+        }
+    }
+
+    private List<Error> validateOpeningDate(LocalDateTime openingDate) {
 	    if(openingDate.getYear() > 9999) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
         }
