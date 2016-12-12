@@ -34,11 +34,16 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static com.worth.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static com.worth.ifs.invite.constant.InviteStatus.CREATED;
+import static com.worth.ifs.user.builder.ProfileBuilder.newProfile;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static com.worth.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -582,6 +587,21 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompliant(TRUE)
                 .withAdded(FALSE)
                 .build(1);
+
+        when(userRepositoryMock.findByRoles_Name(ASSESSOR.getName())).thenReturn(asList(newUser()
+                .withId(77L)
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withEmailAddress("worth.email.test+assessor1@gmail.com")
+                .withProfile(newProfile().withBusinessType(BUSINESS).build())
+                .build()));
+
+        when(userProfileServiceMock.getUserProfileStatus(77L)).thenReturn(serviceSuccess(newUserProfileStatusResource()
+                .withContractComplete(TRUE)
+                .withSkillsComplete(TRUE)
+                .withAffliliationsComplete(TRUE)
+                .build()));
+
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);

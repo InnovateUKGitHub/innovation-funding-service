@@ -17,7 +17,9 @@ import com.worth.ifs.invite.repository.RejectionReasonRepository;
 import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserProfileStatusResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.transactional.UserProfileService;
 import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -35,10 +37,12 @@ import static com.worth.ifs.invite.constant.InviteStatus.OPENED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static com.worth.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static com.worth.ifs.user.resource.BusinessType.BUSINESS;
+import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Service for managing {@link com.worth.ifs.invite.domain.CompetitionInvite}s.
@@ -69,6 +73,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
@@ -111,10 +118,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        // TODO INFUND-6775
-        return serviceSuccess(
-                asList(new AvailableAssessorResource(77L, "Jeremy", "Alufson", "worth.email.test+assessor1@gmail.com", BUSINESS,
-                        new CategoryResource(null, "Earth Observation", null, null, null), true, false)));
+        List<User> assessors = userRepository.findByRoles_Name(ASSESSOR.getName());
+
+        return serviceSuccess(assessors.stream()
+                .map(assessor -> {
+                    AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
+                    availableAssessor.setEmail(assessor.getEmail());
+                    availableAssessor.setFirstName(assessor.getFirstName());
+                    availableAssessor.setLastName(assessor.getLastName());
+                    availableAssessor.setUserId(assessor.getId());
+                    availableAssessor.setBusinessType(assessor.getProfile().getBusinessType());
+                    availableAssessor.setCompliant(assessorIsCompliant(assessor.getId()));
+                    availableAssessor.setAdded(inviteCreated(assessor.getEmail(), competitionId));
+                    availableAssessor.setInnovationArea(new CategoryResource()); //TODO
+                    return availableAssessor;
+                }).collect(toList()));
     }
 
     @Override
@@ -124,6 +142,15 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         .andOnSuccess(competition -> inviteUserToCompetition(stagedInvite.getName(), stagedInvite.getEmail(), competition, innovationArea))
                 )
                 .andOnSuccessReturn(mapper::mapToResource);
+    }
+
+    private boolean inviteCreated(String email, long competitionId) {
+        return getByEmailAndCompetition(email, competitionId).isSuccess();
+    }
+
+    private boolean assessorIsCompliant(long userId) {
+        UserProfileStatusResource userStatus = userProfileService.getUserProfileStatus(userId).getSuccessObject();
+        return userStatus.isSkillsComplete() && userStatus.isAffiliationsComplete() && userStatus.isContractComplete();
     }
 
     private ServiceResult<Category> getInnovationArea(long innovationCategoryId) {
