@@ -17,10 +17,10 @@ public interface ApplicationFinanceHandler {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ApplicationFinanceResource getApplicationOrganisationFinances(final ApplicationFinanceResourceId applicationFinanceResourceId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     List<ApplicationFinanceResource> getApplicationTotals(@P("applicationId")final Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
     // TODO DW - INFUND-4825 - is this permission too broad?

@@ -52,7 +52,7 @@
       <dd th:text="${model.headCount != null ? model.headCount : '-'}">0</dd>
 
       <dt>Organisation size</dt>
-      <dd th:text="${#messages.msg('ifs.organisation.size.' + model.organisationSize)}">Medium</dd>
+      <dd th:text="${model.organisationSize != null ? #messages.msg('ifs.organisation.size.' + model.organisationSize) : '-'}">Medium</dd>
     </dl>
 
     <form>
