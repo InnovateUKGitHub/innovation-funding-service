@@ -2,7 +2,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.worth.ifs.bitbucket.plugin</groupId>
+    <groupId>org.innovateuk.ifs.bitbucket.plugin</groupId>
     <artifactId>ifs-bitbucket-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <organization>
@@ -10,7 +10,7 @@
         <url>http://www.example.com/</url>
     </organization>
     <name>ifs-bitbucket-plugin</name>
-    <description>This is the com.worth.ifs.bitbucket.plugin:ifs-bitbucket-plugin plugin for Atlassian Bitbucket Server.</description>
+    <description>This is the org.innovateuk.ifs.bitbucket.plugin:ifs-bitbucket-plugin plugin for Atlassian Bitbucket Server.</description>
     <packaging>atlassian-plugin</packaging>
     <dependencyManagement>
         <dependencies>
@@ -123,7 +123,7 @@
                     <instructions>
                         <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
                         <!-- Add package to export here -->
-                        <Export-Package>com.worth.ifs.bitbucket.plugin.api,</Export-Package>
+                        <Export-Package>org.innovateuk.ifs.bitbucket.plugin.api,</Export-Package>
                         <!-- Add package import here -->
                         <Import-Package>org.springframework.osgi.*;resolution:="optional", org.eclipse.gemini.blueprint.*;resolution:="optional", *</Import-Package>
                         <!-- Ensure plugin is Spring powered -->
