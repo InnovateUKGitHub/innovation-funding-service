@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+...
+...               INFUND-6387 As an Applicant creating an account I will be invited to answer questions for diversity monitoring purposes so that InnovateUK complies with BEIS ministerial requirement
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -19,7 +21,9 @@ View and edit profile link redirects to the Your profile page
     Then the user should see the element    link=Edit your details
 
 Edit the profile and verify if the changes are saved
-    [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Documentation]    INFUND-1042
+    ...
+    ...    INFUND-6387
     [Tags]    HappyPath    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=view and edit your profile details
