@@ -130,7 +130,7 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" data-required-errormessage="The reason cannot be blank" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="The reason cannot be blank." th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option th:each="reason : ${rejectionReasons}"
                         th:value="${reason.id}"
@@ -190,7 +190,7 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" data-required-errormessage="Please enter a reason" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" data-required-errormessage="Please enter a reason." th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option value="conflict-of-interest">Conflict of interest</option>
                 <option value="not-my-area-of-interest">Not my area of expertise</option>
