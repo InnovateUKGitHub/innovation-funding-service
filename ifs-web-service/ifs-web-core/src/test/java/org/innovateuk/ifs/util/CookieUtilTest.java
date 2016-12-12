@@ -1,4 +1,4 @@
-package com.worth.ifs.util;
+package org.innovateuk.ifs.util;
 
 import org.junit.Before;
 import org.junit.Test;

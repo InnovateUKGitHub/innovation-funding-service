@@ -31,25 +31,35 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.util.InviteUtil.INVITE_HASH;
+import static org.innovateuk.ifs.util.InviteUtil.handleAcceptedInvite;
+import static org.innovateuk.ifs.util.InviteUtil.handleInvalidInvite;
+
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
 public class AcceptInviteController extends BaseController {
-    public static final String INVITE_HASH = "invite_hash";
-    public static final String ORGANISATION_TYPE = "organisationType";
     private static final Log LOG = LogFactory.getLog(AcceptInviteController.class);
+
     @Autowired
     private UserAuthenticationService userAuthenticationService;
+
     @Autowired
     private InviteRestService inviteRestService;
+
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
     @Autowired
     private OrganisationService organisationService;
+
     @Autowired
     private RegistrationService registrationService;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String inviteEntryPage(
@@ -58,17 +68,17 @@ public class AcceptInviteController extends BaseController {
             HttpServletRequest request,
             Model model) {
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
+        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
         if (!invite.isSuccess()) {
-            handleInvalidInvite(response);
+            handleInvalidInvite(response, cookieUtil);
             return "never should get here because of exception.";
         } else {
             ApplicationInviteResource inviteResource = invite.getSuccessObject();
             if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
-                return handleAcceptedInvite(cookieFlashMessageFilter, response);
+                return handleAcceptedInvite(cookieFlashMessageFilter, response, cookieUtil);
             } else {
-                CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                cookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 // check if there already is a user with this emailaddress
@@ -84,13 +94,6 @@ public class AcceptInviteController extends BaseController {
         }
     }
 
-    protected static String handleAcceptedInvite(CookieFlashMessageFilter cookieFlashMessageFilter, HttpServletResponse response) {
-        CookieUtil.removeCookie(response, INVITE_HASH);
-        cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-        return "redirect:/login";
-    }
-
-
     private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, ApplicationInviteResource inviteResource, RestResult<Boolean> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
         if (existingUserSearch.getSuccessObject()) {
 
@@ -105,11 +108,11 @@ public class AcceptInviteController extends BaseController {
 
                     return "registration/accept-invite-failure";
                 }else{
-                    CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                    cookieUtil.saveToCookie(response, INVITE_HASH, hash);
                     return "redirect:/accept-invite-authenticated/confirm-invited-organisation";
                 }
             }else{
-                CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                cookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 // just show the login link
             }
         }else{
@@ -128,7 +131,7 @@ public class AcceptInviteController extends BaseController {
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvitedOrganisation(HttpServletResponse response, HttpServletRequest request, Model model) {
-        String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -137,7 +140,7 @@ public class AcceptInviteController extends BaseController {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
-                CookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
+                cookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
 
                 model.addAttribute("invite", inviteResource);
                 model.addAttribute("organisation", organisation);
@@ -145,17 +148,12 @@ public class AcceptInviteController extends BaseController {
                 model.addAttribute("registerUrl", RegistrationController.BASE_URL);
                 return "registration/confirm-invited-organisation";
             } else {
-                return handleAcceptedInvite(cookieFlashMessageFilter, response);
+                return handleAcceptedInvite(cookieFlashMessageFilter, response, cookieUtil);
             }
         }else{
-            handleInvalidInvite(response);
+            handleInvalidInvite(response, cookieUtil);
         }
         return "";
-    }
-
-    protected static void handleInvalidInvite(HttpServletResponse response) throws InvalidURLException{
-        CookieUtil.removeCookie(response, INVITE_HASH);
-        throw new InvalidURLException("Invite url is not valid", null);
     }
 
     /**

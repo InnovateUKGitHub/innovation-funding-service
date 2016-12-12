@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.application;
 
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.registration.AcceptInviteController;
+import org.innovateuk.ifs.registration.service.RegistrationService;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.InviteUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,15 +16,18 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
-import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.registration.AcceptInviteController;
-import org.innovateuk.ifs.registration.service.RegistrationService;
-import org.innovateuk.ifs.user.resource.UserResource;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -41,7 +40,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
     private Validator validator;
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-    
+
     @Mock
     private RegistrationService registrationService;
 
@@ -61,34 +60,39 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+        this.setupCookieUtil();
     }
 
     @Test
     public void testInviteEntryPage() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 get(String.format("/accept-invite/%s", INVITE_HASH))
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().exists(AcceptInviteController.INVITE_HASH))
-                .andExpect(cookie().value(AcceptInviteController.INVITE_HASH, INVITE_HASH))
-                .andExpect(view().name("registration/accept-invite"));
+                .andExpect(cookie().exists(InviteUtil.INVITE_HASH))
+                .andExpect(view().name("registration/accept-invite"))
+                .andReturn();
+
+        assertEquals(INVITE_HASH, getDecryptedCookieValue(result.getResponse().getCookies(), InviteUtil.INVITE_HASH));
     }
 
     @Test
     public void testInviteEntryPageExistingUser() throws Exception {
-    	Map<String, String> errors = new HashMap<>();
-    	errors.put("errorkey", "errorvalue");
+        Map<String, String> errors = new HashMap<>();
+        errors.put("errorkey", "errorvalue");
         when(registrationService.getInvalidInviteMessages(isA(UserResource.class), isA(ApplicationInviteResource.class), isA(InviteOrganisationResource.class))).thenReturn(errors);
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 get(String.format("/accept-invite/%s", INVITE_HASH_EXISTING_USER))
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().exists(AcceptInviteController.INVITE_HASH))
-                .andExpect(cookie().value(AcceptInviteController.INVITE_HASH, INVITE_HASH_EXISTING_USER))
+                .andExpect(cookie().exists(InviteUtil.INVITE_HASH))
                 .andExpect(model().attribute("emailAddressRegistered", "true"))
                 .andExpect(model().attribute("errorkey", "errorvalue"))
-                .andExpect(view().name("registration/accept-invite-failure"));
+                .andExpect(view().name("registration/accept-invite-failure"))
+                .andReturn();
+
+        assertEquals(INVITE_HASH_EXISTING_USER, getDecryptedCookieValue(result.getResponse().getCookies(), InviteUtil.INVITE_HASH));
     }
 
     @Test
@@ -97,16 +101,19 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
                 get(String.format("/accept-invite/%s", INVALID_INVITE_HASH))
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().value(AcceptInviteController.INVITE_HASH, ""))
+                .andExpect(cookie().exists(InviteUtil.INVITE_HASH))
+                .andExpect(cookie().value(InviteUtil.INVITE_HASH, ""))
                 .andExpect(view().name("url-hash-invalid"));
     }
+
     @Test
     public void testInviteEntryPageAccepted() throws Exception {
         mockMvc.perform(
                 get(String.format("/accept-invite/%s", ACCEPTED_INVITE_HASH))
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value(AcceptInviteController.INVITE_HASH, ""))
+                .andExpect(cookie().exists(InviteUtil.INVITE_HASH))
+                .andExpect(cookie().value(InviteUtil.INVITE_HASH, ""))
                 .andExpect(view().name("redirect:/login"));
     }
 }

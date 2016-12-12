@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.registration.AcceptInviteController;
 import org.innovateuk.ifs.registration.OrganisationCreationController;
 import org.innovateuk.ifs.registration.RegistrationController;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static org.innovateuk.ifs.util.InviteUtil.INVITE_HASH;
 
 /**
  * This controller will handle all requests that are related to the create of a application.
@@ -40,15 +41,17 @@ public class ApplicationCreationController {
     @Autowired
     private UserAuthenticationService userAuthenticationService;
 
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
         model.addAttribute(COMPETITION_ID, competitionId);
-        CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
-        CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
-        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+        cookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
+        cookieUtil.removeCookie(response, INVITE_HASH);
+        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
 
         return "create-application/check-eligibility";
     }
@@ -63,16 +66,16 @@ public class ApplicationCreationController {
                                         HttpServletResponse response) {
         log.info("get competition id");
 
-        Long competitionId = Long.valueOf(CookieUtil.getCookieValue(request, COMPETITION_ID));
+        Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
         log.info("get user id");
-        Long userId = Long.valueOf(CookieUtil.getCookieValue(request, USER_ID));
+        Long userId = Long.valueOf(cookieUtil.getCookieValue(request, USER_ID));
 
         ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
         if (application == null || application.getId() == null) {
             log.error("Application not created with competitionID: " + competitionId);
             log.error("Application not created with userId: " + userId);
         } else {
-            CookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
+            cookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
 
             // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place below
             if (userAuthenticationService.getAuthentication(request) == null) {

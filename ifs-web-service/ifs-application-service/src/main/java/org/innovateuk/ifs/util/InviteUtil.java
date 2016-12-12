@@ -1,7 +1,7 @@
-package com.worth.ifs.util;
+package org.innovateuk.ifs.util;
 
-import com.worth.ifs.commons.error.exception.InvalidURLException;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
 
 import javax.servlet.http.HttpServletResponse;
 

@@ -9,11 +9,11 @@ import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +24,6 @@ import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
-import static org.innovateuk.ifs.util.CookieUtil.getCookieValue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
@@ -45,6 +44,9 @@ public class ProjectRegistrationController {
     @Autowired
     protected OrganisationRestService organisationRestService;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     private final static String EMAIL_FIELD_NAME = "email";
     public static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
@@ -55,7 +57,7 @@ public class ProjectRegistrationController {
                                HttpServletRequest request,
                                HttpServletResponse response,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
@@ -74,7 +76,7 @@ public class ProjectRegistrationController {
                                      HttpServletRequest request,
                                      Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
             ValidationMessages errors = errorMessages(loggedInUser, invite);
