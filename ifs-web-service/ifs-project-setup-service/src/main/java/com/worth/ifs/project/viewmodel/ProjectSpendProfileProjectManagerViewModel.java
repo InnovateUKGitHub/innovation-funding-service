@@ -19,9 +19,11 @@ public class ProjectSpendProfileProjectManagerViewModel {
     private Map<String, Boolean> editablePartners;
     private List<OrganisationResource> partnerOrganisations;
     private boolean submitted;
+    private boolean approved;
 
     public ProjectSpendProfileProjectManagerViewModel(Long projectId, Long applicationId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
-                                                      List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners) {
+                                                      List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners,
+                                                      boolean approved) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -29,6 +31,7 @@ public class ProjectSpendProfileProjectManagerViewModel {
         this.partnerOrganisations = partnerOrganisations;
         this.submitted = submitted;
         this.editablePartners = editablePartners;
+        this.approved = approved;
     }
 
     public Long getProjectId() {
@@ -77,6 +80,8 @@ public class ProjectSpendProfileProjectManagerViewModel {
         return submitted;
     }
 
+    public boolean isApproved() { return approved; }
+
     public Long getApplicationId() {
         return applicationId;
     }
@@ -97,6 +102,7 @@ public class ProjectSpendProfileProjectManagerViewModel {
                 .append(partnerSpendProfileProgress, that.partnerSpendProfileProgress)
                 .append(editablePartners, that.editablePartners)
                 .append(partnerOrganisations, that.partnerOrganisations)
+                .append(approved, that.approved)
                 .isEquals();
     }
 
@@ -110,6 +116,7 @@ public class ProjectSpendProfileProjectManagerViewModel {
                 .append(editablePartners)
                 .append(partnerOrganisations)
                 .append(submitted)
+                .append(approved)
                 .toHashCode();
     }
 }

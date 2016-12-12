@@ -219,6 +219,7 @@ class CsvUtils {
         String type;
         String targetName;
         String ownerName;
+        String innovationAreaName;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -229,6 +230,7 @@ class CsvUtils {
             type = line.get(i++);
             targetName = line.get(i++);
             ownerName = line.get(i++);
+            innovationAreaName = line.get(i++);
         }
     }
 
@@ -341,6 +343,7 @@ class CsvUtils {
         LocalDateTime submissionDate;
         LocalDateTime fundersPanelDate;
         LocalDateTime fundersPanelEndDate;
+        LocalDateTime assessorBriefingDate;
         LocalDateTime assessorAcceptsDate;
         LocalDateTime assessorsNotifiedDate;
         LocalDateTime assessorEndDate;
@@ -362,6 +365,7 @@ class CsvUtils {
             submissionDate = nullableDateTime(line.get(i++));
             fundersPanelDate = nullableDateTime(line.get(i++));
             fundersPanelEndDate = nullableDateTime(line.get(i++));
+            assessorBriefingDate = nullableDateTime(line.get(i++));
             assessorsNotifiedDate = nullableDateTime(line.get(i++));
             assessorAcceptsDate = nullableDateTime(line.get(i++));
             assessorEndDate = nullableDateTime(line.get(i++));

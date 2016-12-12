@@ -18,6 +18,7 @@ import com.worth.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import com.worth.ifs.competitionsetup.viewmodel.FunderViewModel;
+import com.worth.ifs.controller.ValidationHandler;
 import com.worth.ifs.profiling.ProfileExecution;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +29,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static com.worth.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
@@ -179,7 +180,7 @@ public class CompetitionSetupController {
                     section, subsection,
                     fieldName, value,
                     Optional.ofNullable(objectId)
-                    )
+                    ).getErrors()
             );
             return this.createJsonObjectNode(true);
         } catch (Exception e) {
@@ -207,7 +208,7 @@ public class CompetitionSetupController {
 
         List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)));
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)).getErrors());
 
             return this.createJsonObjectNode(true);
         } catch (Exception e) {
@@ -230,16 +231,18 @@ public class CompetitionSetupController {
     @RequestMapping(value = "/{competitionId}/section/initial", method = RequestMethod.POST)
     public String submitInitialSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) InitialDetailsForm competitionSetupForm,
                                               BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
 
     @RequestMapping(value = "/{competitionId}/section/additional", method = RequestMethod.POST)
     public String submitAdditionalSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) AdditionalInfoForm competitionSetupForm,
                                               BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model, HttpServletRequest request) {
         if (request.getParameterMap().containsKey("generate-code")) {
@@ -263,12 +266,13 @@ public class CompetitionSetupController {
         //Validate after competition code generated and co funders added/removed.
         validator.validate(competitionSetupForm, bindingResult);
 
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
 
     @RequestMapping(value = "/{competitionId}/section/eligibility", method = RequestMethod.POST)
     public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
                                               BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model) {
 
@@ -276,37 +280,40 @@ public class CompetitionSetupController {
     		bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
     	}
 
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
     }
 
     @RequestMapping(value = "/{competitionId}/section/milestones", method = RequestMethod.POST)
     public String submitMilestonesSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) MilestonesForm competitionSetupForm,
                                               BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model) {
         if (bindingResult.hasErrors()) {
             competitionSetupMilestoneService.sortMilestones(competitionSetupForm);
         }
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.MILESTONES, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.MILESTONES, model);
     }
 
     @RequestMapping(value = "/{competitionId}/section/application", method = RequestMethod.POST)
-    public String submitApplicationFormSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFormForm competitionSetupForm,
+    public String submitApplicationFormSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm competitionSetupForm,
                                                       BindingResult bindingResult,
+                                                      ValidationHandler validationHandler,
                                                       @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                       Model model) {
 
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
     }
 
 
     @RequestMapping(value = "/{competitionId}/section/assessors", method = RequestMethod.POST)
     public String submitAssessorsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
                                                   BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                   Model model) {
 
-        return genericCompetitionSetupSection(competitionSetupForm, bindingResult, competitionId, CompetitionSetupSection.ASSESSORS, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.ASSESSORS, model);
     }
 
     @RequestMapping(value = "/{competitionId}/ready-to-open", method = RequestMethod.GET)
@@ -338,7 +345,7 @@ public class CompetitionSetupController {
         }
     }
 
-    private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, BindingResult bindingResult, Long competitionId, CompetitionSetupSection section, Model model) {
+    private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, ValidationHandler validationHandler, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
         if(isSendToDashboard(competition)) {
@@ -346,33 +353,16 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        if (isSuccessfulSaved(competitionSetupForm, competition, section, bindingResult)) {
-            return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
-        } else {
+
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+        Supplier<String> failureView = () -> {
             LOG.debug("Form errors");
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
             return "competition/setup";
-        }
-    }
+        };
 
-    private Boolean isSuccessfulSaved(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-           return false;
-        }
-
-        List<Error> saveSectionResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
-        if(saveSectionResult != null && !saveSectionResult.isEmpty()) {
-            saveSectionResult.forEach(e -> {
-                if(e.getFieldName() != null) {
-                    bindingResult.rejectValue(e.getFieldName(), e.getErrorKey());
-                } else {
-                    ObjectError error = new ObjectError("currentSection", new String[] {e.getErrorKey()}, null, null);
-                    bindingResult.addError(error);
-                }
-            });
-        }
-
-        return !bindingResult.hasErrors();
+        return validationHandler.performActionOrBindErrorsToField("currentSection", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section));
     }
 
     private ObjectNode createJsonObjectNode(boolean success, String message) {

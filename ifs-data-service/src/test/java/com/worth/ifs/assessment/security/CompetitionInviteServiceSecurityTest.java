@@ -3,14 +3,13 @@ package com.worth.ifs.assessment.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.transactional.CompetitionInviteService;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.resource.CompetitionInviteResource;
-import com.worth.ifs.invite.resource.CompetitionParticipantResource;
-import com.worth.ifs.invite.resource.RejectionReasonResource;
+import com.worth.ifs.invite.resource.*;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
@@ -18,7 +17,6 @@ import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.util.Collections.singletonList;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
@@ -147,6 +145,31 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> sendInvite(long inviteId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteInvite(String email, long competitionId) {
             return null;
         }
     }

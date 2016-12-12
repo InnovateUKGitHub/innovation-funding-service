@@ -86,14 +86,17 @@
         <input type="hidden"
                th:name="question.shortTitleEditable"
                th:value="${question.shortTitleEditable}" />
+        <input type="hidden"
+               th:name="question.type"
+               th:value="${question.type}" />
 
         <div class="question">
             <div th:class="${#fields.hasErrors('question.shortTitle')}? 'form-group error':'form-group'">
                 <label class="form-label" for="question.shortTitle">
                     <span class="form-label-bold">Question heading</span>
                     <span th:if="${#fields.hasErrors('question.shortTitle')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('question.shortTitle')}" th:text="${err}" />
-                        </span>
+                        <span class="error-message"  th:each="err : ${#fields.errors('question.shortTitle')}" th:text="${err}" />
+                    </span>
                 </label>
 
                 <input th:class="${#fields.hasErrors('question.shortTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
@@ -102,7 +105,7 @@
                        id="question.shortTitle"
                        th:name="question.shortTitle"
                        th:value="${question.shortTitle}"
-                       readonly="${!question.shortTitleEditable}"
+                       th:readonly="${!question.shortTitleEditable}"
                        maxlength="255"/>
             </div>
             <div th:class="${#fields.hasErrors('question.title')}? 'form-group error':'form-group'">

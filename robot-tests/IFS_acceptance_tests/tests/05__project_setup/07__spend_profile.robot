@@ -363,7 +363,7 @@ PM's Spend profile Summary page gets updated after submit
     [Documentation]    INFUND-3766
     [Tags]
     Given the user navigates to the page     ${external_spendprofile_summary}
-    Then the user should see the element     jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been submitted to Innovate UK")
+    Then the user should see the element     jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
 
@@ -382,17 +382,6 @@ Partners can see the Spend Profile section completed
     Given Log in as a different user       pete.tom@egg.com    Passw0rd
     And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element   jQuery=li.waiting:nth-of-type(6)
-
-Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049
-    [Tags]    Experian
-    [Setup]  Log in as a different user     john.doe@innovateuk.test    Passw0rd
-    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
@@ -451,6 +440,19 @@ Comp Admin can download the Spend Profile csv
     When the user clicks the button/link       link=EGGS-spend-profile.csv
     Then the user should not see an error in the page
     #TODO update ticket along with INFND-6187
+
+Status updates correctly for internal user's table
+    [Documentation]    INFUND-4049 ,INFUND-5543
+    [Tags]    Experian  HappyPath   Pending
+    [Setup]    log in as a different user   &{Comp_admin1_credentials}
+    When the user navigates to the page     ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting       # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action   # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
