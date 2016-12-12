@@ -179,17 +179,17 @@
 			No administration support funding
 		</label>
 		<label class="block-label" for="admin-support-radio-2">
-			<input id="admin-support-radio-2" type="radio" name="admin-support-radio-group" value="20%" checked="checked" />
+			<input id="admin-support-radio-2" type="radio" name="admin-support-radio-group" value="20%" />
 			20% of labour costs
 		</label>
 		<label class="block-label" for="admin-support-radio-3">
-			<input id="admin-support-radio-3" type="radio" name="admin-support-radio-group" value="Custom" />
-			Custom administration support cost
+			<input id="admin-support-radio-3" type="radio" name="admin-support-radio-group" value="overheads" />
+			Calculate overheads
 		</label>
-		<label class="block-label" for="admin-support-radio-4">
+		<!-- <label class="block-label" for="admin-support-radio-4">
 			<input id="admin-support-radio-4" type="radio" name="admin-support-radio-group" value="Special rate" />
 			Special rate agreed with Innovate UK
-		</label>
+		</label> -->
 	</div>
 
 	<fieldset class="">
@@ -212,18 +212,43 @@
 
 
 		<div id="admin-support-3">
-			<h3 class="heading-medium">Custom administration support costs</h3>
-			<p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.</p>
-			<div class="form-group alignright">
+			<h3 class="heading-medium">Calculate overheads</h3>
+			<p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
+
+      <div class="form-group download">
+	        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+	        <a href="#">Overhead calculation spreadsheet.pdf (56kb)</a>
+	    </div>
+
+      <fieldset>
+        <legend class="visuallyhidden">Upload your completed spreadsheet</legend>
+
+        <th:block th:if="${param.status == null or param.status[0] == 'overheadRemoved'}">
+          <div class="upload-section extra-margin">
+            <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+            <input type="file" name="file" id="file" class="inputfile" />
+            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+          </div>
+        </th:block>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'overheadUploaded'}">
+          <div class="upload-section extra-margin">
+            <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+            <div>
+              <a href="#" class="uploaded-file">The-uploaded-file-example.pdf</a>
+            </div>
+            <div class="alignright">
+              <a href="?status=overheadRemoved" class="button button-secondary">Remove</a>
+            </div>
+          </div>
+        </th:block>
+
+      </fieldset>
+
+      <div class="form-group alignright">
 				<label>
-					Rate calculated (%)
-					<input type="number" name="admin-support-custom" class="form-control form-control-1-4 alignright"  id="id_admin-support-custom" value="£ 0" />
-				</label>
-			</div>
-			<div class="form-group alignright">
-				<label>
-					Total administration support cost
-					<input type="number" name="admin-support-custom-2" class="form-control form-control-1-4 alignright" readonly="" id="id_admin-support-custom-2" value="£ 0" />
+					Enter the total cost of overheads as calculated in the spreadsheet &pound;
+					<input type="number" name="admin-support-custom" class="form-control form-control-1-4 alignright"  id="id_admin-support-custom" value="" />
 				</label>
 			</div>
 		</div>
