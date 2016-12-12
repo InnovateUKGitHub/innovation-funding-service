@@ -13,7 +13,6 @@ The user downloads the file
 Download should be done
     [Documentation]    Verifies that the directory has only one folder
     ...    Returns path to the file
-    #TODO Pednging due to INFUND-6187
     ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
     Length Should Be    ${files}    1    Should be only one file in the download folder
     ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
@@ -24,6 +23,9 @@ the file should be downloaded
     [Arguments]    ${filename}
     File Should Exist    ${filename}
     File Should Not Be Empty    ${filename}
+
+Empty the download directory
+    Empty Directory    ${DOWNLOAD_FOLDER}
 
 the file has been scanned for viruses
     Sleep    5s
