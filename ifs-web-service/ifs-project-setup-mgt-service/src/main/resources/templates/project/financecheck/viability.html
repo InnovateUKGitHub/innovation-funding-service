@@ -38,35 +38,23 @@
 
     <h2 class="heading-medium">Organisation information</h2>
     <dl class="standard-definition-list">
-      <th:block th:unless="${#strings.isEmpty(model.organisationName)}">
-        <dt>Company name</dt>
-        <dd th:text="${model.organisationName}">Aptrans Ltd</dd>
-      </th:block>
-      <th:block th:unless="${#strings.isEmpty(model.companyRegistrationNumber)}">
-        <dt>Company registration number</dt>
-        <dd th:text="${model.companyRegistrationNumber}">0123456789</dd>
-      </th:block>
 
-      <th:block th:unless="${#strings.isEmpty(model.turnover)}">
-        <dt>Turnover</dt>
-        <dd th:text="${model.turnover}">0123456789</dd>
-      </th:block>
+      <dt>Company name</dt>
+      <dd th:text="${model.organisationName}">Aptrans Ltd</dd>
 
-      <th:block th:unless="${#strings.isEmpty(model.headCount)}">
-        <dt>Head count</dt>
-        <dd th:text="${model.headCount}">0</dd>
-      </th:block>
+      <dt>Company registration number</dt>
+      <dd th:text="${model.companyRegistrationNumber}">0123456789</dd>
 
-      <th:block th:unless="${#strings.isEmpty(model.organisationSize)}">
-        <dt>Organisation size</dt>
-        <dd th:text="${model.organisationSize}">Medium</dd>
-      </th:block>
+      <dt>Turnover</dt>
+      <dd th:text="${model.turnover != null ? model.turnover : '-'}">0123456789</dd>
+
+      <dt>Head count</dt>
+      <dd th:text="${model.headCount != null ? model.headCount : '-'}">0</dd>
+
+      <dt>Organisation size</dt>
+      <dd th:text="${#messages.msg('ifs.organisation.size.' + model.organisationSize)}">Medium</dd>
     </dl>
 
-    <!--/*
-    ===============================
-    THE FUTURE, enable when ready :)
-    ===============================
     <form>
       <h2 class="heading-medium">Credit report</h2>
       <div class="form-group">
@@ -96,7 +84,6 @@
 
       <button type="button" class="button" id="confirm-button">Confirm viability</button>
     </form>
-    */-->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
