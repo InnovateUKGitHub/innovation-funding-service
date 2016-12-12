@@ -28,6 +28,9 @@ Edit the profile and verify if the changes are saved
     Then the user should see the text in the page    Chris
     And the user should see the text in the page    Brown
     And the user should see the text in the page    0123456789
+    And the user should see the text in the page    Mixed/Multiple ethnic groups
+    And the user should see the text in the page    Male
+    And the user should see the text in the page    No
     And the user can change their details back again
 
 Verify that the applicant's name has been changed on other parts of the site
