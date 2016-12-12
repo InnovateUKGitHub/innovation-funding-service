@@ -3,6 +3,8 @@ package com.worth.ifs.project.finance.transactional;
 import com.worth.ifs.commons.security.SecuredBySpring;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.project.finance.resource.Viability;
+import com.worth.ifs.project.finance.resource.ViabilityResource;
+import com.worth.ifs.project.finance.resource.ViabilityStatus;
 import com.worth.ifs.project.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -42,8 +44,8 @@ public interface ProjectFinanceService {
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")
-    ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+    ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
-    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability);
+    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus);
 }
