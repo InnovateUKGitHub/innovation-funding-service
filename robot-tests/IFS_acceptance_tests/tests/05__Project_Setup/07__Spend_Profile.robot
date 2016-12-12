@@ -196,7 +196,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element         link = Finance checks
     And the user should see the element             link= Spend profile
     And the user should not see the element         link = Grant offer letter
-    # TODO update the acc tests for Editing the Spend Profile by a non-lead partner    INFUND-5153
+
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -437,7 +437,6 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
     When the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
     Then the user should not see an error in the page
-    #TODO update ticket along with INFND-6187
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
