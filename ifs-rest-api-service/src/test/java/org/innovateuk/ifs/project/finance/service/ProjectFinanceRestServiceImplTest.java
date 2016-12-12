@@ -2,13 +2,15 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
-import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
+
+import static com.worth.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -23,7 +25,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void test() {
+    public void testGenerateSpendProfile() {
 
         setupPostWithRestResultExpectations("/project/123/spend-profile/generate", Void.class, null, null, CREATED);
         service.generateSpendProfile(123L);
@@ -110,6 +112,20 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        Assert.assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetFinanceTotals() {
+
+        Long projectId = 123L;
+
+        List<ProjectFinanceResource> results = newProjectFinanceResource().build(2);
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/project-finance/totals", projectFinanceResourceListType(), results);
+
+        RestResult<List<ProjectFinanceResource>> result = service.getFinanceTotals(projectId);
+
+        assertEquals(results, result.getSuccessObject());
     }
 }

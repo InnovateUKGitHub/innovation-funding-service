@@ -17,13 +17,19 @@ public interface ApplicationFinanceHandler {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ApplicationFinanceResource getApplicationOrganisationFinances(final ApplicationFinanceResourceId applicationFinanceResourceId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     List<ApplicationFinanceResource> getApplicationTotals(@P("applicationId")final Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
+    // TODO DW - INFUND-4825 - is this permission too broad?
     @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-    @SecuredBySpring(value = "READ", description = "Internal users can view the Project Finances during the Finance Checks process")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Internal users can view the Project Finances during the Finance Checks process")
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users " +
+            "can view the overall Project Finances for a Project during the Finance Checks process")
+    List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId);
 }

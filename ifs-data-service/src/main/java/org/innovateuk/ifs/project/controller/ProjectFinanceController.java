@@ -1,18 +1,15 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
-import org.innovateuk.ifs.project.resource.SpendProfileResource;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -25,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ProjectFinanceController {
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private com.worth.ifs.project.finance.transactional.ProjectFinanceService projectFinanceService;
 
     @RequestMapping(value = "/{projectId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {
@@ -45,7 +42,7 @@ public class ProjectFinanceController {
 
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-table")
     public RestResult<SpendProfileTableResource> getSpendProfileTable(@PathVariable("projectId") final Long projectId,
-                                                                 @PathVariable("organisationId") final Long organisationId) {
+                                                                      @PathVariable("organisationId") final Long organisationId) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -69,8 +66,8 @@ public class ProjectFinanceController {
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile", method = POST)
     public RestResult<Void> saveSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                           @PathVariable("organisationId") final Long organisationId,
-                                                           @RequestBody SpendProfileTableResource table) {
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @RequestBody SpendProfileTableResource table) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
@@ -89,19 +86,8 @@ public class ProjectFinanceController {
         return projectFinanceService.completeSpendProfilesReview(projectId).toPostResponse();
     }
 
-    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/viability")
-    public RestResult<Viability> getViability(@PathVariable("projectId") final Long projectId,
-                                              @PathVariable("organisationId") final Long organisationId) {
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectFinanceService.getViability(projectOrganisationCompositeId).toGetResponse();
-    }
-
-    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
-    public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
-                                          @PathVariable("organisationId") final Long organisationId,
-                                          @PathVariable("viability") final Viability viability) {
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectFinanceService.saveViability(projectOrganisationCompositeId, viability).toPostResponse();
+    @RequestMapping(value = "/{projectId}/project-finance/totals", method = GET)
+    public RestResult<List<ProjectFinanceResource>> getProjectFinanceTotals(@PathVariable("projectId") final Long projectId) {
+        return projectFinanceService.getProjectFinanceTotals(projectId).toGetResponse();
     }
 }

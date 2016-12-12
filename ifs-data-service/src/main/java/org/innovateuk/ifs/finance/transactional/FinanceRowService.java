@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 public interface FinanceRowService {
 
-    @PreAuthorize("hasPermission(#costFieldId, 'org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource', 'READ')")
+    @PreAuthorize("hasPermission(#costFieldId, 'com.worth.ifs.finance.resource.FinanceRowMetaFieldResource', 'READ')")
     ServiceResult<FinanceRowMetaField> getCostFieldById(@P("costFieldId") Long costFieldId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
@@ -42,16 +42,16 @@ public interface FinanceRowService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FinanceRowItem>> getCostItems(Long applicationFinanceId, Long questionId);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<FinanceRowItem> addCost(@P("applicationFinanceId") Long applicationFinanceId, Long questionId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<FinanceRowItem> addCostWithoutPersisting(@P("applicationFinanceId") Long applicationFinanceId, Long questionId);
-    
-    @PreAuthorize("hasPermission(#costId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'UPDATE')")
+
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.FinanceRow', 'UPDATE')")
     ServiceResult<FinanceRowItem> updateCost(@P("costId")Long costId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasPermission(#costId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'DELETE')")
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.FinanceRow', 'DELETE')")
     ServiceResult<Void> deleteCost(@P("costId") Long costId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -60,16 +60,16 @@ public interface FinanceRowService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     ServiceResult<Double> getResearchParticipationPercentage(@P("applicationId") Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<ApplicationFinanceResource> addCost(@P("applicationFinanceResourceId") final ApplicationFinanceResourceId applicationFinanceResourceId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_COST')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_COST')")
     ServiceResult<ApplicationFinanceResource> updateCost(@P("applicationFinanceId")Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
@@ -85,27 +85,32 @@ public interface FinanceRowService {
             description = "Internal users can access the finance checks details")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId") Long applicationId);
 
     @NotSecured(value = "This is not getting date from the database, just getting a FinanceRowHandler", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(Long costItemId);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'CREATE_FILE_ENTRY')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'CREATE_FILE_ENTRY')")
     ServiceResult<FileEntryResource> createFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_FILE_ENTRY')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'UPDATE_FILE_ENTRY')")
     ServiceResult<FileEntryResource> updateFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'DELETE_FILE_ENTRY')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'DELETE_FILE_ENTRY')")
     ServiceResult<Void> deleteFinanceFileEntry(@P("applicationFinanceId")long applicationFinanceId);
 
-    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
     ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId")long applicationFinanceId);
 
     /**
      * Not included in REST API classes as only meant to be used within data layer
      */
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource','READ_ORGANISATION_FUNDING_STATUS')")
     ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
+            description = "Project Finance users can view financial overviews of Organisations on Projects")
+    ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
 }

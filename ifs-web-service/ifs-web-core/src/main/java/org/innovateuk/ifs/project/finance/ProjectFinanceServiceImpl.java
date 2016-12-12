@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -63,5 +65,10 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return projectFinanceRestService.completeSpendProfilesReview(projectId).toServiceResult();
+    }
+
+    @Override
+    public List<ProjectFinanceResource> getFinanceTotals(Long projectId) {
+        return projectFinanceRestService.getFinanceTotals(projectId).getSuccessObjectOrThrowException();
     }
 }

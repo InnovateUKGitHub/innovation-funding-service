@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+
+import java.util.List;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -28,4 +31,6 @@ public interface ProjectFinanceRestService {
     RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
 
     RestResult<Void> completeSpendProfilesReview(Long projectId);
+
+    RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long projectId);
 }

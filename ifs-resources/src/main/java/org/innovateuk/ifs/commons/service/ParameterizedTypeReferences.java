@@ -14,10 +14,14 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -33,7 +37,7 @@ import java.util.Set;
  */
 public final class ParameterizedTypeReferences {
 
-	private ParameterizedTypeReferences() {}
+    private ParameterizedTypeReferences() {}
 
     /**
      * Basic types
@@ -67,10 +71,6 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
-        return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
@@ -143,6 +143,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationFinanceResource>> applicationFinanceResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationFinanceResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ProjectFinanceResource>> projectFinanceResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectFinanceResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<OrganisationTypeResource>> organisationTypeResourceListType() {

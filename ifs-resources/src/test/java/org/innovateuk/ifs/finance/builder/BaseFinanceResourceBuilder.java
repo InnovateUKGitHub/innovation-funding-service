@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.finance.builder;
 
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.finance.resource.BaseFinanceResource;
+import com.worth.ifs.finance.resource.category.FinanceRowCostCategory;
+import com.worth.ifs.finance.resource.category.GrantClaimCategory;
+import com.worth.ifs.finance.resource.cost.FinanceRowType;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
 /**
  * Base class Builder for building BaseFinanceResource entities.  This class holds build steps that are common to all
@@ -20,10 +20,6 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
  */
 public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends BaseFinanceResource, S extends BaseFinanceResourceBuilder<FinanceResourceType, S>>
         extends BaseBuilder<FinanceResourceType, S> {
-
-    public S withApplication(Long... applicationIds) {
-        return withArray((applicationId, applicationFinanceResource) -> setField("application", applicationId, applicationFinanceResource), applicationIds);
-    }
 
     public S withOrganisation(Long... organisationIds) {
         return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);

@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.finance.builder;
 
-import com.worth.ifs.finance.resource.cost.OtherCost;
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.finance.resource.cost.OtherCost;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class OtherCostBuilder extends BaseBuilder<S, T> {
+public class OtherCostBuilder extends BaseBuilder<OtherCost, OtherCostBuilder> {
 
     public OtherCostBuilder withId(Long... id) {
         return withArraySetFieldByReflection("id", id);

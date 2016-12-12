@@ -1,17 +1,21 @@
 package org.innovateuk.ifs.finance.builder;
 
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import com.worth.ifs.finance.resource.ProjectFinanceResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
  * Builder for ProjectFinance entities.
  */
 public class ProjectFinanceResourceBuilder extends BaseFinanceResourceBuilder<ProjectFinanceResource, ProjectFinanceResourceBuilder> {
+
+    public ProjectFinanceResourceBuilder withProject(Long... projectId) {
+        return withArray((id, finance) -> finance.setProject(id), projectId);
+    }
 
     private ProjectFinanceResourceBuilder(List<BiConsumer<Integer, ProjectFinanceResource>> newMultiActions) {
         super(newMultiActions);

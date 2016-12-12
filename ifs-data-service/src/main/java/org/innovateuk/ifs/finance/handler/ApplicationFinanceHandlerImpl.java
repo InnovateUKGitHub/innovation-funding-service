@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import com.worth.ifs.finance.handler.*;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -80,7 +81,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+            com.worth.ifs.finance.handler.OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId(), applicationFinance.getApplication().getCompetition()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
             applicationFinanceResources.add(applicationFinanceResource);
@@ -113,16 +114,31 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
+    @Override
+    public List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId) {
+        List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
+        List<ProjectFinanceResource> financeResources = new ArrayList<>();
+
+        for(ProjectFinance finance : finances) {
+            ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
+            com.worth.ifs.finance.handler.OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getName());
+            EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(), finance.getProject().getApplication().getCompetition()));
+            financeResource.setFinanceOrganisationDetails(costs);
+            financeResources.add(financeResource);
+        }
+        return financeResources;
+    }
+
     private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        com.worth.ifs.finance.handler.OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 
     private void setProjectFinanceDetails(ProjectFinanceResource projectFinanceResource) {
         Organisation organisation = organisationRepository.findOne(projectFinanceResource.getOrganisation());
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        com.worth.ifs.finance.handler.OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId());
         projectFinanceResource.setFinanceOrganisationDetails(costs);
     }

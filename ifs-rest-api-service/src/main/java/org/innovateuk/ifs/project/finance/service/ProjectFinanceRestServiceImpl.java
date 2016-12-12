@@ -2,11 +2,16 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -63,5 +68,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     @Override
     public RestResult<Void> completeSpendProfilesReview(Long projectId) {
         return postWithRestResult(projectFinanceRestURL + "/" + projectId + "/complete-spend-profiles-review/", Void.class);
+    }
+
+    @Override
+    public RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long projectId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/project-finance/totals", projectFinanceResourceListType());
     }
 }

@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.project.finance;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,4 +32,6 @@ public interface ProjectFinanceService {
     ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
 
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
+
+    List<ProjectFinanceResource> getFinanceTotals(Long projectId);
 }
