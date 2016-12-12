@@ -58,24 +58,11 @@ services:
 
   data:
     image: worth/data-service:1.0-SNAPSHOT
-
-    links:
-      - mysql:ifs-database
     networks:
       ifs:
         aliases:
           - ifs-data-service
 
-  mysql:
-    image: mysql:5.5.49
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: ifs
-    restart: on-failure
-    networks:
-      - ifs
 networks:
   ifs:
     driver: bridge
