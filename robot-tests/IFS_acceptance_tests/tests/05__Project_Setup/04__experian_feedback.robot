@@ -147,8 +147,7 @@ Other internal users cannot access this page
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
-    [Tags]    Pending
-    #TODO  Pending due to INFUND-4680
+    [Tags]
     [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
     the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
 

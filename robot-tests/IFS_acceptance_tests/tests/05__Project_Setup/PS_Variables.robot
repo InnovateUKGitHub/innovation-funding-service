@@ -42,3 +42,24 @@ ${PS_MD_APPLICATION_PM_EMAIL}                ralph.young@ooba.example.com
 ${PS_MD_APPLICATION_PARTNER_EMAIL}           tina.taylor@wordpedia.example.com
 ${PS_MD_APPLICATION_ACADEMIC_EMAIL}          antonio.jenkins@jabbertype.example.com
 
+#Project: Point control and automated monitoring
+# SP = Spend Profile
+${Katz_Id}         47
+${Katz_Name}       Katz
+${Meembee_Id}      48
+${Meembee_Name}    Meembee
+${Zooveo_Id}       49
+${Zooveo_Name}     Zooveo
+${PS_SP_Competition_Id}         10
+${PS_SP_Competition_Name}       Rolling stock future developments
+${PS_SP_APPLICATION_GOL}        38
+${PS_SP_APPLICATION_NUMBER}     00000038
+${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
+${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_NUMBER}: ${PS_SP_APPLICATION_TITLE}
+${PS_SP_APPLICATION_PROJECT}    8
+${PS_SP_APPLICATION_LEAD_ORGANISATION_ID}    ${Katz_Id}
+${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
+${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      phillip.ramos@katz.example.com
+${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
+${PS_SP_APPLICATION_PARTNER_EMAIL}           kimberly.fowler@meembee.example.com
+${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
