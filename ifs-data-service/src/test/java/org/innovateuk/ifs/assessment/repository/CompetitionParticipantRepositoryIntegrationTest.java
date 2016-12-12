@@ -93,7 +93,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void save() {
         CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
-        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite) );for CompetitionParticipantController endpoint changes:ifs-data-service/src/test/java/com/worth/ifs/assessment/repository/CompetitionParticipantRepositoryIntegrationTest.java
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite) );
 
         flushAndClearSession();
 
