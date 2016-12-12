@@ -84,7 +84,7 @@
                             <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}" th:remove="tag">
                                 <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                                     <td class="numeric"
-                                        th:with="formInputType=${formInput.type},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
+                                        th:with="formInputType=${formInput.type},category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                         th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                                     </td>
                                 </div>
@@ -113,7 +113,7 @@
                         </td>
                         <div th:remove="tag" th:each="financeSubSection : ${financeSectionChildren}"
                              th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
-                            <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(com.worth.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
+                            <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                 th:if="${financeTotal != null}"
                                 th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                         </div>
