@@ -41,7 +41,15 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isSpendProfileGenerated() {
-        return asList(COMPLETE, ACTION_REQUIRED).contains(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+        return asList(ACTION_REQUIRED, PENDING, COMPLETE).contains(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+    }
+
+    public boolean isSpendProfileApproved() {
+        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getSpendProfileStatus());
+    }
+
+    public boolean isOtherDocumentsApproved() {
+        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getOtherDocumentsStatus());
     }
 
     private ProjectPartnerStatusResource getMatchingPartnerStatus(OrganisationResource organisation) {

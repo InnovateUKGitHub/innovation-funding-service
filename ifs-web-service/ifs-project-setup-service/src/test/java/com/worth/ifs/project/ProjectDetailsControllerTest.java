@@ -5,11 +5,11 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.resource.AddressTypeResource;
 import com.worth.ifs.address.resource.OrganisationAddressType;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.bankdetails.form.ProjectDetailsAddressForm;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.constant.InviteStatus;
 import com.worth.ifs.invite.resource.InviteProjectResource;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.project.form.ProjectDetailsAddressForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectTeamStatusResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
@@ -27,11 +27,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static com.worth.ifs.address.resource.OrganisationAddressType.*;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
@@ -63,6 +63,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
+    private static final String SAVE_FC = "save_fc";
+    private static final String INVITE_FC = "invite_fc";
+    private static final String SAVE_PM = "save_pm";
 
 	@Before
 	public void setUp() {
@@ -159,7 +162,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
             .collect(toList());
 
-        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null);
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null, false);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
@@ -199,6 +202,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId)
+                .param(SAVE_PM, INVITE_FC)
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/details"));
@@ -314,6 +318,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                     contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                    param(SAVE_FC, INVITE_FC).
                     param("organisation", "1").
                     param("financeContact", "2")).
                 andExpect(status().is3xxRedirection()).
@@ -339,7 +344,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
         UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
@@ -375,18 +380,21 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.inviteFinanceContact(projectId, existingInvites.get(1))).thenReturn(serviceSuccess());
         when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisation);
         when(projectService.saveProjectInvite(any())).thenReturn(serviceSuccess());
+        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
 
         InviteStatus testStatus = CREATED;
 
-        mockMvc.perform(post("/project/{id}/details/invite-finance-contact", projectId).
+        mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(INVITE_FC, INVITE_FC).
                 param("userId", invitedUserId + "").
                 param("name", invitedUserName).
                 param("email", invitedUserEmail).
                 param("inviteStatus", testStatus.toString()).
                 param("organisation", organisationId + "")).
-                andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId  + "/details")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/finance-contact")).
                 andReturn();
     }
 
@@ -493,6 +501,31 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("addressForm.selectedPostcode.town", addressResource.getTown())
                 .param("addressForm.selectedPostcode.postcode", addressResource.getPostcode()))
                 .andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
+                andReturn();
+    }
+
+    @Test
+    public void testSearchAddressFailsWithFieldErrorOnEmpty() throws Exception {
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        AddressResource addressResource = newAddressResource().withPostcode("S1 2LB").withAddressLine1("Address Line 1").withTown("Sheffield").build();
+        addressResource.setId(null);
+        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)REGISTERED.getOrdinal()).withName(REGISTERED.name()).build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withAddressType(addressTypeResource).withAddress(addressResource).build();
+        leadOrganisation.setAddresses(Collections.singletonList(organisationAddressResource));
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+
+        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("addressType", ADD_NEW.name())
+                .param("search-address", "")
+                .param("addressForm.postcodeInput", "")).
+                andExpect(model().hasErrors()).
+                andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput")).
                 andReturn();
     }
 

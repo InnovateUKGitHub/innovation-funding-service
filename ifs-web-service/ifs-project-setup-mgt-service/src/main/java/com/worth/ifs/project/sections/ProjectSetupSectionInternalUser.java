@@ -1,12 +1,16 @@
 package com.worth.ifs.project.sections;
 
+import com.worth.ifs.project.constant.ProjectActivityStates;
+import com.worth.ifs.project.resource.ApprovalType;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static com.worth.ifs.project.constant.ProjectActivityStates.*;
 import static com.worth.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static com.worth.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 /**
@@ -56,11 +60,12 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isSpendProfileSubmitted()) {
-            return NOT_ACCESSIBLE;
+
+        if (projectSetupProgressChecker.isSpendProfileApproved() || projectSetupProgressChecker.isSpendProfileSubmitted()) {
+            return ACCESSIBLE;
         }
 
-        return ACCESSIBLE;
+        return NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessOtherDocumentsSection(UserResource userResource) {
@@ -72,16 +77,32 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
-        if(!projectSetupProgressChecker.isGrantOfferLetterSubmitted()) {
+        if(!projectSetupProgressChecker.isGrantOfferLetterSent()) {
             return NOT_ACCESSIBLE;
         }
 
         return ACCESSIBLE;
     }
 
+    public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
+        if((userResource.hasRole(COMP_ADMIN) || userResource.hasRole(PROJECT_FINANCE)) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
     private SectionAccess fail(String message) {
         LOG.info(message);
         return NOT_ACCESSIBLE;
+    }
+
+    public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
+        if(userResource.hasRole(COMP_ADMIN) || userResource.hasRole(PROJECT_FINANCE)) {
+            return projectSetupProgressChecker.getRoleSpecificActivityState().get(COMP_ADMIN);
+        } else {
+            return projectSetupProgressChecker.getGrantOfferLetterState();
+        }
+
     }
 
 

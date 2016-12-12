@@ -44,7 +44,8 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TODO INFUND-5990  Assessor bin slow in building
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -66,7 +67,7 @@ Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     Given the user is not logged-in
-    When the guest user enters the log in credentials    project.finance1@innovateuk.test    Passw0rd
+    When the guest user enters the log in credentials    lee.bowman@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.

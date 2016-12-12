@@ -128,8 +128,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(new ArrayList<>()));
 
-
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"))
                 .andDo(
@@ -143,7 +142,31 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                                         parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
                                 )
                         )
-                );;
+                );
+    }
+
+    @Test
+    public void markSectionAsInComplete() throws Exception {
+        Section section = newSection().withId(7L).withCompetitionAndPriority(newCompetition().build(), 1).build();
+        Long processRoleId = 1L;
+        Long applicationId = 1L;
+
+        when(sectionService.markSectionAsInComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsInComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk())
+                .andDo(
+                        document(
+                                "section/mark-as-incomplete",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("sectionId").description("id of section to mark as complete"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
+                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
+                                )
+                        )
+                );
     }
 
     @Test
@@ -160,7 +183,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(validationMessages));
 
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"validation.finance.min.row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[]}]}]"))
                 .andDo(

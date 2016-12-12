@@ -25,7 +25,7 @@ Live Competitions
     And the user should see the text in the page    Closed
     And the user should see the text in the page    Panel
     And the user should see the text in the page    Inform
-    And the user should not see the text in the page    Sarcasm Stupendousness    # this step verifies that the ready to open competitions are not visible in other tabs
+    And the user should not see the text in the page    ${READY_TO_OPEN_COMPETITION_NAME}    # this step verifies that the ready to open competitions are not visible in other tabs
 
 Live competition calculations
     [Documentation]    INFUND-3830
@@ -37,11 +37,12 @@ Live competition calculations
     And the total calculation in dashboard should be correct    Live    //section/ul/li
 
 Project setup Competitions
-    [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610
+    [Documentation]    INFUND-3831, INFUND-3003, INFUND-2610 INFUND-5176
     When the user clicks the button/link    jQuery=a:contains(Project setup)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the text in the page    Project setup
-    And the user should see the text in the page    Killer Riffs
-    And the user should not see the text in the page    Sarcasm Stupendousness    # this step verifies that the ready to open competitions are not visible in other tabs
+    And the user should see the text in the page    ${PROJECT_SETUP_COMPETITION_NAME}
+    And the user should see the text in the page   3 projects
+    And the user should not see the text in the page    ${READY_TO_OPEN_COMPETITION_NAME}    # this step verifies that the ready to open competitions are not visible in other tabs
 
 Project setup competition calculations
     [Documentation]    INFUND-3831
@@ -51,21 +52,21 @@ Project setup competition calculations
 PS projects title and lead
     [Documentation]    INFUND-2610
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user should see the element    link=Killer Riffs
-    When the user clicks the button/link    link=Killer Riffs
+    And the user should see the element    link=${PROJECT_SETUP_COMPETITION_NAME}
+    When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("best riffs")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: Vitruvius Stonework Limited")
-    And the user should see the element    jQuery=tr:nth-child(2) th:contains("better riffs")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element    jQuery=tr:nth-child(2) th:contains("Office Chair for Life")
     And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
-    And the user should see the element    jQuery=tr:nth-child(3) th:contains("awesome riffs")
+    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Elbow grease")
     And the user should see the element    jQuery=tr:nth-child(3) th:contains("Lead: Big Riffs And Insane Solos Ltd")
 
 PS projects status
     [Documentation]    INFUND-2610
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link    link=Killer Riffs
-    Then the user should see the element    jQuery=tr:nth-child(1):contains("best riffs")
+    And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
+    Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)
@@ -89,7 +90,7 @@ Upcoming competitions calculations
 
 Upcoming competitions ready for open
     [Documentation]    INFUND-3003
-    Then The user should see the text in the page    Sarcasm Stupendousness
+    Then The user should see the text in the page    ${READY_TO_OPEN_COMPETITION_NAME}
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
@@ -97,15 +98,15 @@ Competition Opens automatically on date
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     And The competition is ready to open
-    When Change the open date of the Sarcasm Stupendousness in the database to one day before
+    When Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
     And the user navigates to the page    ${SERVER}/management/dashboard/live
     Then the user should see the text in the page    Open
     And The competition should be open
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `id`='9';
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
 
 Search existing applications
     [Documentation]    INFUND-3829
-    When The user enters text to a text field    id=searchQuery    Juggling Craziness
+    When The user enters text to a text field    id=searchQuery    ${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    css=#searchsubmit
     Then The user should see the text in the page    In assessment
     And the total calculation should be correct
@@ -146,7 +147,7 @@ check calculations on one page
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
 
 The competition is ready to open
-    Then element should contain    jQuery=section:nth-child(4)    Sarcasm Stupendousness
+    Then element should contain    jQuery=section:nth-child(4)    ${READY_TO_OPEN_COMPETITION_NAME}
 
 The competition should be open
-    And element should contain    jQuery=section:nth-child(3)    Sarcasm Stupendousness
+    And element should contain    jQuery=section:nth-child(3)    ${READY_TO_OPEN_COMPETITION_NAME}

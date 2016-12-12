@@ -2,11 +2,8 @@ package com.worth.ifs.competitionsetup.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.service.CategoryService;
-import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
-import com.worth.ifs.competition.resource.CompetitionSetupSection;
-import com.worth.ifs.competitionsetup.controller.CompetitionSetupApplicationController;
-import com.worth.ifs.competitionsetup.viewmodel.application.QuestionViewModel;
+import com.worth.ifs.competition.resource.*;
+import com.worth.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import com.worth.ifs.competitionsetup.service.CompetitionSetupService;
 import org.junit.Before;
@@ -58,12 +55,12 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testGetCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+    public void testGetEditCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        mockMvc.perform(get(URL_PREFIX + "/question/finance"))
+        mockMvc.perform(get(URL_PREFIX + "/question/finance/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/finances"));
 
@@ -71,13 +68,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testPostCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+    public void testPostEditCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         final boolean fullApplicationFinance = true;
         final boolean includeGrowthTable = false;
-        mockMvc.perform(post(URL_PREFIX + "/question/finance")
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
                 .param("includeGrowthTable", String.valueOf(includeGrowthTable)))
@@ -91,8 +88,20 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void testViewCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/question/finance"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/finances"))
+                .andExpect(model().attribute("editable", false));
+    }
+
+    @Test
     public void testApplicationProcessLandingPage() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -108,7 +117,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testSetApplicationProcessAsComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(Status.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -121,11 +130,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationQuestionWithErrors() throws Exception {
         Long questionId = 4L;
-        QuestionViewModel question = new QuestionViewModel();
-        question.setId(questionId);
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
 
         mockMvc.perform(post(URL_PREFIX +"/question")
-                .param("question.id", questionId.toString()))
+                .param("question.questionId", questionId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
@@ -145,7 +154,74 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX));
 
-        verify(competitionSetupQuestionService).updateQuestion(isA(QuestionViewModel.class));
+        verify(competitionSetupQuestionService).updateQuestion(isA(CompetitionSetupQuestionResource.class));
+    }
+
+    @Test
+    public void testGetEditCompetitionApplicationDetails() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/detail/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/application-details"))
+                .andExpect(model().attribute("editable", true));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testViewCompetitionApplicationDetails() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        ApplicationDetailsForm form = new ApplicationDetailsForm();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.getSubsectionFormData(
+                competition,
+                CompetitionSetupSection.APPLICATION_FORM,
+                CompetitionSetupSubsection.APPLICATION_DETAILS,
+                null)
+                ).thenReturn(form);
+
+        mockMvc.perform(get(URL_PREFIX + "/detail"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/application-details"))
+                .andExpect(model().attribute("editable", false))
+                .andExpect(model().attribute("competitionSetupForm", form));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void testPostCompetitionApplicationDetails() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        final boolean useResubmissionQuestion = true;
+
+        mockMvc.perform(post(URL_PREFIX + "/detail/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("useResubmissionQuestion", String.valueOf(useResubmissionQuestion)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
+
+        ArgumentCaptor<CompetitionResource> argument = ArgumentCaptor.forClass(CompetitionResource.class);
+        verify(competitionService).update(argument.capture());
+        assertThat(argument.getValue().isUseResubmissionQuestion(), equalTo(useResubmissionQuestion));
+    }
+
+    @Test
+    public void testPostCompetitionApplicationDetailsWithError() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/detail/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("useResubmissionQuestion", String.valueOf("Invalid")))
+                .andExpect(view().name("competition/application-details"));
+
     }
 
 }

@@ -3,7 +3,7 @@ package com.worth.ifs.sil.email.service;
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.config.RestTemplateAdaptorFactory;
+import com.worth.ifs.config.rest.RestTemplateAdaptorFactory;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;

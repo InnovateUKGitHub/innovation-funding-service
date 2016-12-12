@@ -19,7 +19,9 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
 
 
     @Mappings({
-            @Mapping(source = "target.name", target = "competitionName")
+            @Mapping(source = "target.name", target = "competitionName"),
+            @Mapping(source = "target.assessorAcceptsDate", target = "acceptsDate"),
+            @Mapping(source = "target.assessorDeadlineDate", target = "deadlineDate")
     })
     @Override
     public abstract CompetitionInviteResource mapToResource(CompetitionInvite domain);

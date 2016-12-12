@@ -2,13 +2,9 @@ package com.worth.ifs.assessment.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
-import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,11 +14,10 @@ import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuild
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static com.worth.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static com.worth.ifs.assessment.resource.AssessmentStates.OPEN;
-import static com.worth.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,15 +35,15 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findById() throws Exception {
-        Long assessmentId = 5L;
+        Long assessmentId = 6L;
 
         loginFelixWilson();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(assessmentId, assessmentResource.getId());
-        assertEquals(Long.valueOf(20L), assessmentResource.getProcessRole());
-        assertEquals(Long.valueOf(3L), assessmentResource.getApplication());
+        assertEquals(Long.valueOf(21L), assessmentResource.getProcessRole());
+        assertEquals(Long.valueOf(4L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
-        assertEquals(singletonList(2L), assessmentResource.getProcessOutcomes());
+        assertEquals(emptyList(), assessmentResource.getProcessOutcomes());
     }
 
     @Test
@@ -81,6 +76,15 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
         List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
         assertEquals(4, assessmentResources.size());
+    }
+
+    @Test
+    public void getTotalScore() throws Exception {
+        loginPaulPlum();
+
+        AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccessObjectOrThrowException();
+        assertEquals(72, result.getTotalScoreGiven());
+        assertEquals(100, result.getTotalScorePossible());
     }
 
     @Test

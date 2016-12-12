@@ -14,6 +14,7 @@ import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.project.resource.ProjectUserResource;
 import com.worth.ifs.project.status.resource.ProjectStatusResource;
 import com.worth.ifs.project.transactional.ProjectService;
+import com.worth.ifs.project.transactional.SaveMonitoringOfficerResult;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -247,7 +248,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 1L;
 
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
         when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
@@ -266,7 +268,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         Long projectId = 1L;
 
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess());
+        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
         when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
@@ -277,6 +280,27 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
         verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+
+    }
+
+    @Test
+    public void saveMonitoringOfficerWithoutSendingNotifications() throws Exception {
+
+        Long projectId = 1L;
+
+        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
+        successResult.setMonitoringOfficerSaved(false);
+        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
+        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
+                thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(monitoringOfficerResource)))
+                .andExpect(status().isOk());
+
+        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 

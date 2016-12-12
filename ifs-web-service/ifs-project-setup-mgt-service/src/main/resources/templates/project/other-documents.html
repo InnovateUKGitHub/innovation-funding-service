@@ -9,7 +9,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
     <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
+         th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
          th:remove="tag"/>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
@@ -30,7 +30,7 @@
         </div>
 
         <div class="warning-alert" th:if="${model.approved == false}">
-            <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the project team.</p>
+            <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
         </div>
 
         <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.applicationId,8)} + ': ' + ${model.projectName} "/>

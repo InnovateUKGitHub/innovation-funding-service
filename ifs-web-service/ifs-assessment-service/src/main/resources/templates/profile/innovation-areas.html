@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Your skills</h1>
@@ -33,7 +33,8 @@
                         </span>
                     </label>
                     <p class="form-hint">
-                        Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment. For example ‘Solar Power’, ‘Genetics’, ‘Recycling’
+                        Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
+                        For example; Solar Power, Genetics, Recycling
                     </p>
                     <div class="textarea-wrapped word-count">
                         <textarea

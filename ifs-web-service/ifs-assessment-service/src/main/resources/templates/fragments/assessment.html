@@ -163,8 +163,8 @@
 
 
 <!-- ======== Assessment - reject assessment modal ======= -->
-<div th:fragment="assessment-reject-assesment-modal (assessmentId)">
-    <div class="reject-assesment-modal" role="dialog" aria-hidden="true">
+<div th:fragment="assessment-reject-assessment-modal (assessmentId)">
+    <div class="reject-assessment-modal" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
         <div th:include="fragments/assessment :: assessment-reject-application-form (assessmentId=${assessmentId})" th:remove="tag" />

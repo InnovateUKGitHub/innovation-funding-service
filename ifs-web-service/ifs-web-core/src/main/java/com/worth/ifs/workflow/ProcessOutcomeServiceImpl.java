@@ -20,4 +20,14 @@ public class ProcessOutcomeServiceImpl implements ProcessOutcomeService {
         return processOutcomeRestService.findOne(id).getSuccessObjectOrThrowException();
     }
 
+    @Override
+    public ProcessOutcomeResource getByProcessId(Long processId) {
+        return processOutcomeRestService.findLatestByProcessId(processId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ProcessOutcomeResource getByProcessIdAndOutcomeType(Long processId, String outcomeType) {
+        return processOutcomeRestService.findLatestByProcessIdAndType(processId, outcomeType).getSuccessObjectOrThrowException();
+    }
+
 }

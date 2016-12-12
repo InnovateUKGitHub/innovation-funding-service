@@ -22,7 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.clearUniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;

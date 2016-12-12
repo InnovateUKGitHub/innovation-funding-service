@@ -1,9 +1,7 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.assessment.resource.ApplicationRejectionResource;
-import com.worth.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.*;
 import com.worth.ifs.assessment.transactional.AssessmentService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
@@ -13,15 +11,16 @@ import org.springframework.security.access.method.P;
 
 import java.util.List;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static com.worth.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static java.util.Arrays.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
-
 
 public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<AssessmentService> {
 
@@ -58,7 +57,17 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long competitionId = 1L;
 
         classUnderTest.findByUserAndCompetition(userId, competitionId);
-        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessment(isA(AssessmentResource.class), isA(UserResource.class));
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void getTotalScore() {
+        Long assessmentId = 1L;
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> classUnderTest.getTotalScore(assessmentId),
+                () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
+        );
     }
 
     @Test
@@ -93,6 +102,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         );
     }
 
+    @Test
+    public void submitAssessments() throws Exception {
+        AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource().withAssessmentIds(asList(1L, 2L)).build();
+
+        assertAccessDenied(
+                () -> classUnderTest.submitAssessments(assessmentSubmissions),
+                () -> verify(assessmentPermissionRules).userCanSubmitAssessments(isA(AssessmentSubmissionsResource.class), isA(UserResource.class))
+        );
+    }
+
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
@@ -102,6 +121,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         @Override
         public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
+            return null;
         }
 
         @Override
@@ -116,6 +140,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource) {
             return null;
         }
     }

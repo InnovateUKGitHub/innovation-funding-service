@@ -25,7 +25,7 @@
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin-create-acc(url)">
     <h1 class="heading-large">New to this service?</h1>
-    <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+    <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with Innovate UK.</p>
 
     <p>When you create an account you can:</p>
     <ul class="list-bullet">
@@ -45,7 +45,8 @@
             <div class="pie-container">
                 <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
                 <div class="pie-overlay">
-                    <div>0</div>
+                  <span class="day">2</span>
+                  <span class="visuallyhidden">Days left</span>
                 </div>
             </div>
         </div>
@@ -67,10 +68,10 @@
 
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-applicant-page-title(subtitle, heading)">
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin">194741: Innovate UK, Technology inspired</p>
-        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
-    </div>
+  <h1 class="heading-xlarge">
+    <span class="heading-secondary" th:text="${(subtitle == null ? '194741: Technology inspired' : subtitle )}">COMP DETAILS</span>
+    <th:block th:text="${heading}" />
+  </h1>
 </div>
 
 <!-- ===================Assessor Page title============================== -->

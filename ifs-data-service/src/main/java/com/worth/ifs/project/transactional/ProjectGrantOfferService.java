@@ -15,22 +15,22 @@ import java.util.function.Supplier;
  **/
 public interface ProjectGrantOfferService {
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
+    @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'com.worth.ifs.project.resource.ProjectResource', 'UPLOAD_SIGNED_GRANT_OFFER')")

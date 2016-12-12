@@ -2,6 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.form.AddressForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.service.OrganisationService;
@@ -45,6 +46,7 @@ import java.util.Locale;
 import static com.worth.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static com.worth.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 /**
@@ -157,6 +159,11 @@ public class OrganisationCreationController {
             organisationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
             addOrganisationType(organisationForm, request);
             bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
+
+            if(organisationForm.getAddressForm().isTriedToSearch() && isBlank(organisationForm.getAddressForm().getPostcodeInput())) {
+                ValidationMessages.rejectValue(bindingResult, "addressForm.postcodeInput", "EMPTY_POSTCODE_SEARCH");
+            }
+
             validator.validate(organisationForm, bindingResult);
             model.addAttribute(BINDING_RESULT_ORGANISATION_FORM, bindingResult);
 

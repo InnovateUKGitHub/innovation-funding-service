@@ -1,14 +1,14 @@
 package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.resource.CompetitionSearchResultItem;
+import com.worth.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.BaseBuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionSearchResultItem, CompetitionSearchResultItemBuilder> {
@@ -41,12 +41,16 @@ public class CompetitionSearchResultItemBuilder extends BaseBuilder<CompetitionS
         return withArray((number, competition) -> competition.setNumberOfApplications(number), numberOfApplications);
     }
 
-    public CompetitionSearchResultItemBuilder withCompetitionStatus(CompetitionResource.Status... competitionStatus) {
+    public CompetitionSearchResultItemBuilder withCompetitionStatus(CompetitionStatus... competitionStatus) {
         return withArray((status, competition) -> competition.setCompetitionStatus(status), competitionStatus);
     }
 
     public CompetitionSearchResultItemBuilder withCompetitionTypeName(String... competitionTypeName) {
         return withArray((name, competition) -> competition.setCompetitionTypeName(name), competitionTypeName);
+    }
+
+    public CompetitionSearchResultItemBuilder withProjectsCount(Integer... projectsCount) {
+        return withArray((number, competition) -> competition.setProjectsCount(number), projectsCount);
     }
 
     @Override

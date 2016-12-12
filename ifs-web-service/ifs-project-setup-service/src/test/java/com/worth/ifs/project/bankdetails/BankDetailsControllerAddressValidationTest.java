@@ -7,7 +7,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.project.BankDetailsController;
-import com.worth.ifs.bankdetails.form.BankDetailsForm;
+import com.worth.ifs.project.form.BankDetailsForm;
 import com.worth.ifs.project.resource.ProjectResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
@@ -26,11 +26,9 @@ import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCo
 import static com.worth.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(Parameterized.class)
 public class BankDetailsControllerAddressValidationTest extends BaseControllerMockMVCTest<BankDetailsController> {

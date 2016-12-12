@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to terms of contract',linkClass='link-back',linkUrl=@{/profile/terms}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your terms of contract',linkClass='link-back',linkUrl=@{/profile/terms}" th:remove="tag" />
 
             <div class="hgroup no-margin-top">
                 <h1 class="heading-xlarge no-margin" th:text="|Annex ${model.annex}|">Annex A</h1>

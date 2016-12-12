@@ -18,7 +18,7 @@
 
     <div class="page-title">
         <div th:include="fragments/elements :: project-title (projectId=${model.project.application}, projectName=${model.project.name})" th:remove="tag" />
-        <h1 class="heading-xlarge">Project setup</h1>
+        <h1 class="heading-xlarge">Project details</h1>
     </div>
 
 <h2 class="heading-medium">Project details</h2>
@@ -63,7 +63,7 @@
 
     <h2 class="heading-medium">Partner finance contacts</h2>
 
-    <p>Each of the partners is responsible for submitting their own finance contact.</p>
+    <p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
 
     <table id="project-details-finance">
         <thead>

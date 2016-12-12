@@ -61,7 +61,7 @@ public class QuestionStatusRules {
 
     private boolean userIsConnected(Long applicationId, UserResource user){
         ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(),  applicationId);
-        return processRole!=null;
+        return processRole != null;
     }
 
     private boolean userIsAssigned(Long questionId, Long applicationId, UserResource user){

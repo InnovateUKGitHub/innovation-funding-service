@@ -1,16 +1,19 @@
 package com.worth.ifs.assessment.security;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.mapper.AssessmentMapper;
-import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.resource.AssessmentOutcomes;
 import com.worth.ifs.assessment.resource.AssessmentResource;
+import com.worth.ifs.assessment.resource.AssessmentStates;
+import com.worth.ifs.assessment.resource.AssessmentSubmissionsResource;
 import com.worth.ifs.commons.security.PermissionRule;
 import com.worth.ifs.commons.security.PermissionRules;
 import com.worth.ifs.security.BasePermissionRules;
 import com.worth.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.EnumSet;
+import java.util.Set;
+
+import static com.worth.ifs.assessment.resource.AssessmentStates.*;
 
 /**
  * Provides the permissions around CRUD operations for {@link com.worth.ifs.assessment.domain.Assessment} resources.
@@ -18,34 +21,44 @@ import org.springframework.stereotype.Component;
 @Component
 @PermissionRules
 public class AssessmentPermissionRules extends BasePermissionRules {
-    @Autowired
-    AssessmentMapper mapper;
 
-    @Autowired
-    AssessmentRepository assessmentRepository;
+    @PermissionRule(value = "READ_DASHBOARD", description = "Assessors can view all Assessments on the competition dashboard, except those rejected")
+    public boolean userCanReadAssessmentOnDashboard(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        return isAssessorForAssessment(assessment, user, allowedStates);
+    }
 
-    @PermissionRule(value = "READ", description = "Assessors can read Assessments")
-    public boolean userCanReadAssessment(final AssessmentResource assessment, final UserResource user) {
-        return isAssessorForAssessment(assessment, user);
+    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments, except those rejected or submitted")
+    public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        return isAssessorForAssessment(assessment, user, allowedStates);
+    }
+
+    @PermissionRule(value = "READ_SCORE", description = "Assessors can read the score of Assessments except those pending or rejected")
+    public boolean userCanReadAssessmentScore(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
     @PermissionRule(value = "UPDATE", description = "Only owners can update Assessments")
-    public boolean userCanUpdateAssessment(final AssessmentResource assessment, final UserResource user) {
-        return isAssessorForAssessment(assessment, user);
+    public boolean userCanUpdateAssessment(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
-    private boolean isAssessorForAssessment(final AssessmentResource assessment, final UserResource user) {
+    @PermissionRule(value = "SUBMIT", description = "Only owners can submit Assessments")
+    public boolean userCanSubmitAssessments(AssessmentSubmissionsResource submissions, UserResource user) {
+        return assessmentRepository.findAll(submissions.getAssessmentIds()).stream()
+                .allMatch(assessment -> assessment.getParticipant().getUser().getId().equals(user.getId()));
+    }
+
+    private boolean isAssessorForAssessment(AssessmentResource assessment, UserResource user, Set<AssessmentStates> allowedStates) {
         Long assessmentUser = processRoleRepository.findOne(assessment.getProcessRole()).getUser().getId();
-        return user.getId().equals(assessmentUser) && !assessorHasRejectedAssessment(assessment);
+        return user.getId().equals(assessmentUser) && assessmentHasViewableState(assessment, allowedStates);
     }
 
-    private boolean assessorHasRejectedAssessment(final AssessmentResource assessmentResource) {
+    private boolean assessmentHasViewableState(AssessmentResource assessmentResource, Set<AssessmentStates> allowedStates) {
         Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-
-        if (assessment.getLastOutcome() != null) {
-            return assessment.getLastOutcome().getOutcomeType().equals(AssessmentOutcomes.REJECT.getType());
-        } else {
-            return false;
-        }
+        return allowedStates.contains(assessment.getActivityState());
     }
 }
