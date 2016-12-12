@@ -43,5 +43,18 @@
         }
       }
     }
+    @include media-down(mobile){
+      display: none!important;
+    }
+  }
+  section {
+    h2 {
+      @include media-down(mobile){
+        margin-top: 0.5em;
+      }
+    }
+    @include media-down(mobile){
+      display: block!important;
+    }
   }
 }
