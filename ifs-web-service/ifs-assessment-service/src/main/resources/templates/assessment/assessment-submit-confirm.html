@@ -20,9 +20,9 @@
     <form method="post" th:action="@{/assessor/dashboard/competition/{id}(id=${competitionId})}" th:object="${form}">
 
         <div>
-            <input type="hidden" name="assessmentIds" th:field="*{assessmentIds}" th:value="${assessmentIds}" />
-            <input type="submit" tabindex="0" class="button large" value="Submit assessments" />
-            <a role="button" tabindex="1" class="button buttonlink large" th:href="@{/assessor/dashboard/competition/{id}(id=${competitionId})}">Cancel</a>
+            <input type="hidden" th:field="*{assessmentIds}" />
+            <input type="submit" class="button large" value="Submit assessments" />
+            <a role="button" class="button buttonlink large" th:href="@{/assessor/dashboard/competition/{id}(id=${competitionId})}">Cancel</a>
         </div>
     </form>
 </main>
