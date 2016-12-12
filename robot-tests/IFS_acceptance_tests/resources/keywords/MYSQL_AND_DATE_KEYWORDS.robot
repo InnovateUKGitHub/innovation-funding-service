@@ -37,16 +37,6 @@ The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
     And reload page
 
-The accept deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the future
-    Connect to Database     @{database}
-    ${today}=     get time
-    ${tomorrow}=     add time to date    ${today}    1 day
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${tomorrow}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_ACCEPTS';
-
-The accept deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} is reset
-    Connect to Database     @{database}
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2016-01-12 00:00:00' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_ACCEPTS';
-
 the days remaining should be correct (Top of the page)
     [Arguments]    ${END_DATE}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
