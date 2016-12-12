@@ -384,7 +384,7 @@ Partners can see the Spend Profile section completed
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -393,8 +393,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been rejected")
-    # TODO - Set up test data with Innovate lead and check for the lead.
-    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed, Pending due to INFUND-5942
+    And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
     Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
     And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
