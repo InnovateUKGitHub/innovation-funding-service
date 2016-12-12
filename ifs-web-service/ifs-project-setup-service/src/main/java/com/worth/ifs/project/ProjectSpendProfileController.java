@@ -111,7 +111,7 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
+        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
@@ -123,10 +123,9 @@ public class ProjectSpendProfileController {
             return validationHandler.failNowOrSucceedWith(() -> BASE_DIR + "/spend-profile", () -> BASE_DIR + "/spend-profile");
         } else {
             ServiceResult<Void> result = markSpendProfileIncomplete(projectId, organisationId);
-            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> {
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> {
 
                 model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
-
                 return BASE_DIR + "/spend-profile";
             });
         }
@@ -161,6 +160,7 @@ public class ProjectSpendProfileController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'PROJECT_MANAGER_ACCESS')")
     @RequestMapping(value = "/incomplete", method = POST)
     public String markAsActionRequiredSpendProfile(Model model,
+                                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                                    BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
                                                    @PathVariable("projectId") final Long projectId,

@@ -104,15 +104,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     public void viewSpendProfileSuccessfulViewModelPopulation() throws Exception {
 
         Long organisationId = 1L;
+        Long projectId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
+                .withId(projectId)
                 .build();
 
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(false);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
@@ -215,15 +223,22 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
 
         Long organisationId = 1L;
+        Long projectId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
+                .withId(projectId)
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(false);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
@@ -243,6 +258,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
+
         verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
     }
 
@@ -292,15 +308,22 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     public void editSpendProfileSuccess() throws Exception {
 
         Long organisationId = 1L;
+        Long projectId = 1L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withDuration(3L)
+                .withId(projectId)
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(false);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
@@ -346,13 +369,23 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .withId(projectId)
                 .build();
 
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
         table.setMarkedAsComplete(true);
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
 
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(false);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+
+        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
 
         SpendProfileForm expectedForm = new SpendProfileForm();
@@ -363,6 +396,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("project/spend-profile"));
+
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
 
     }
 
