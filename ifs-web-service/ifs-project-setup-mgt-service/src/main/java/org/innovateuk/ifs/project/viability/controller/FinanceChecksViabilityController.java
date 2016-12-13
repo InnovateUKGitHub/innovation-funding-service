@@ -91,7 +91,7 @@ public class FinanceChecksViabilityController {
         Viability viability = financeService.getViability(projectId, organisationId);
         boolean viabilityConfirmed = viability == Viability.APPROVED;
 
-        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(true, viabilityConfirmed, "Red");
+        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(false, viabilityConfirmed, "Red");
         model.addAttribute("form", form);
     }
 
