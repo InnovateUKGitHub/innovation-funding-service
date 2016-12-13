@@ -28,7 +28,8 @@ public class ProjectFinance extends Finance {
     @Enumerated(EnumType.STRING)
     private Viability viability = Viability.PENDING;
 
-    private ViabilityStatus viabilityStatus;
+    @Enumerated(EnumType.STRING)
+    private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
 
     public ProjectFinance() {
     }

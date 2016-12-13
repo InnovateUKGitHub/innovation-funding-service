@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.finance.resource;
 
+/**
+ * Resource to hold the Viability details
+ */
 public class ViabilityResource {
 
     private Viability viability;

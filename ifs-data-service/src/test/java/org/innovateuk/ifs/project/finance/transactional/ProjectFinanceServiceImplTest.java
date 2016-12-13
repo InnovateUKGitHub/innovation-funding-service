@@ -652,26 +652,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetViabilityWhenViabilityStatusIsNull() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setViability(Viability.APPROVED);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
-
-        assertTrue(result.isSuccess());
-
-        assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
-        assertEquals(ViabilityStatus.UNSET, result.getSuccessObject().getViabilityStatus());
-
-    }
-
-    @Test
     public void testGetViabilitySuccess() {
 
         Long projectId = 1L;
@@ -689,6 +669,47 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
         assertEquals(ViabilityStatus.GREEN, result.getSuccessObject().getViabilityStatus());
+
+    }
+
+    @Test
+    public void testSaveViabilityWhenViabilityAlreadyApproved() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViability(Viability.APPROVED);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+
+    }
+
+    @Test
+    public void testSaveViabilityWhenViabilityStatusIsUnset() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.UNSET);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(VIABILITY_RAG_STATUS_MUST_BE_SET));
+
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
 
     }
 

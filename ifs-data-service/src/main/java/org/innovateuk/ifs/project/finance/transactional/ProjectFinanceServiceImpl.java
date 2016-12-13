@@ -32,7 +32,6 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -56,7 +55,6 @@ import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -319,14 +317,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ViabilityResource viabilityResource = new ViabilityResource();
         viabilityResource.setViability(projectFinance.getViability());
-
-        ViabilityStatus viabilityStatus = projectFinance.getViabilityStatus();
-
-        if (viabilityStatus == null) {
-            viabilityResource.setViabilityStatus(ViabilityStatus.UNSET);
-        } else {
-            viabilityResource.setViabilityStatus(viabilityStatus);
-        }
+        viabilityResource.setViabilityStatus(projectFinance.getViabilityStatus());
 
         return serviceSuccess(viabilityResource);
 
@@ -336,6 +327,27 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+
+        return validateViability(projectFinance, viabilityStatus)
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
+    }
+
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, ViabilityStatus viabilityStatus) {
+
+        if (Viability.APPROVED == projectFinanceInDB.getViability()) {
+
+            return serviceFailure(new Error(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+
+        } else if (ViabilityStatus.UNSET == viabilityStatus) {
+
+            return serviceFailure(new Error(VIABILITY_RAG_STATUS_MUST_BE_SET));
+
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
 
         projectFinance.setViability(viability);
         projectFinance.setViabilityStatus(viabilityStatus);
