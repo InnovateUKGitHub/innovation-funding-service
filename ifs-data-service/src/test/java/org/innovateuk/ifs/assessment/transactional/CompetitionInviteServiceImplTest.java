@@ -552,7 +552,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void sendInvite_alreadySentException() throws Exception {
+    public void sendInvite_alreadySent() throws Exception {
         long inviteId = 1L;
         CompetitionInvite invite = newCompetitionInvite()
                 .withCompetition(newCompetition().withName("my competition").build())
@@ -563,35 +563,12 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         try {
             competitionInviteService.sendInvite(inviteId);
+            fail();
         } catch (RuntimeException e) {
             assertSame(IllegalStateException.class, e.getCause().getClass());
 
             verify(competitionInviteRepositoryMock).findOne(inviteId);
             verifyNoMoreInteractions(competitionInviteRepositoryMock);
-        }
-    }
-
-    @Test
-    public void sendInvite_participantInviteMustBeSentException() throws Exception {
-        long inviteId = 1L;
-
-        CompetitionInvite invite = newCompetitionInvite()
-                .withCompetition(newCompetition().withName("my competition").build())
-                .withStatus(CREATED)
-                .build();
-        CompetitionInvite inviteSpy = spy(invite);
-
-        when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(inviteSpy);
-        when(inviteSpy.send()).thenReturn(inviteSpy);
-
-        try {
-            competitionInviteService.sendInvite(inviteId);
-        } catch (RuntimeException e) {
-            assertSame(IllegalArgumentException.class, e.getCause().getClass());
-
-            verify(inviteSpy).send();
-            verify(competitionInviteRepositoryMock).findOne(inviteId);
-            verifyNoMoreInteractions(inviteSpy, competitionInviteRepositoryMock);
         }
     }
 
