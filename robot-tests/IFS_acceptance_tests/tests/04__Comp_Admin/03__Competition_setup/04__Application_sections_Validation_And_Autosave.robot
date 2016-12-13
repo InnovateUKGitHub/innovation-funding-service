@@ -6,8 +6,9 @@ Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Business opportunity Server-side validations
-    [Documentation]    INFUND-5629
+Business opportunity Server-side validations setup questions
+    [Documentation]    INFUND-5629 INFUND-5685
+    [Tags]    HappyPath
     Given The user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
@@ -18,28 +19,56 @@ Business opportunity Server-side validations
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
 
+Application questions mark as done validations
+    [Documentation]    INFUND-6468
+    [Tags]
+    Given the user clicks the button/link    link=Application 
+    And the user clicks the button/link    jQuery=.button:contains("Done") 
+    And the user should see the text in the page    Unable to mark as complete. 
+    And the user should see the text in the page    view the application section(s) to resolve the error. 
+    And The user clicks the button/link    link=Business opportunity 
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+
+Business opportunity Sever-side validations assessment questions
+    [Documentation]    INFUND-5685
+    [Tags]    HappyPath
+    Given the user leaves all the assesment questions empty
+    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    Then the user should see the text in the page    Please enter a from score
+    And the user should see the text in the page    Please enter a to score
+    And the user should see the text in the page    Please enter a justification
 
 Business opportunity: Client side validations
-    [Documentation]    INFUND-5629
-    When the user fills the empty question fields
+    [Documentation]    INFUND-5629 INFUND-5685
+    [Tags]    HappyPath
+    Given the user fills the empty question fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+
+Business opportunity: Client side validations assessment questions
+    [Documentation]    INFUND-5629 INFUND-5685
+    [Tags]    HappyPath
+    Given the user fills the empty assessment fields
+    focus    jQuery=.button[value="Save and close"]
+    Then the user should not see the text in the page   Please enter a from score
+    And the user should not see the text in the page   Please enter a to score
+    And the user should not see the text in the page   Please enter a justification
 
 Business opportunity: Autosave
-    [Documentation]    INFUND-5629
+    [Documentation]    INFUND-5629 INFUND-5685
     [Tags]
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user should see the correct inputs in the Applications questions form
+    And the user should see the correct inputs in assesment questions
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
-    [Tags]
+    [Tags]    HappyPath
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     Then The user should see the text in the page    Business opportunity
@@ -59,6 +88,12 @@ the user leaves all the question field empty
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+
+The user leaves all the assesment questions empty
+    The user enters text to a text field    id=guidanceRow-0-scorefrom    ${EMPTY}
+    The user enters text to a text field    id=guidanceRow-0-scoreto    ${EMPTY}
+    the user enters text to a text field    id=guidanceRow-0-justification    ${EMPTY}
+
 
 the validation error above the question should be visible
     [Arguments]    ${QUESTION}    ${ERROR}
@@ -86,6 +121,14 @@ the user should see the correct inputs in the Applications questions form
     Should Be Equal    ${input_value}    Guidance text test
     ${input_value} =    Get Value    id=question.maxWords
     Should Be Equal    ${input_value}    150
+
+The user should see the correct inputs in assesment questions
+    ${input_value} =    Get Value    id=guidanceRow-0-scorefrom
+    Should Be Equal    ${input_value}    30
+    ${input_value} =    Get Value    id=guidanceRow-0-scoreto
+    Should Be Equal    ${input_value}    35
+    ${input_value} =    Get Value    id=guidanceRow-0-justification
+    Should Be Equal    ${input_value}    This is a justification
 
 User creates a new competition for Application tests
     Given the user clicks the button/link    id=section-3

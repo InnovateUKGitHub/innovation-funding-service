@@ -89,13 +89,10 @@ Non submitted applications from this competition should be visible
 
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
-    [Tags]    HappyPath    Pending
-    #TODO Pending due to INFUND-6187
-    # TODO we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
-    Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
+    [Tags]    HappyPath    Download
     When the admin downloads the excel
     And user opens the excel and checks the content
-    [Teardown]    Empty the download directory
+    [Teardown]    Remove the file from the operating system    submitted_applications.xlsx
 
 *** Keywords ***
 The application list is sorted by
@@ -127,41 +124,28 @@ Both calculations in the page should show the same
     ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-two-thirds span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
-Empty the download directory
-    Empty Directory    ${DOWNLOAD_FOLDER}
-
-Download File
-    [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
-    log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
 
 the admin downloads the excel
-    ${ALL_COOKIES} =    Get Cookies
-    Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${server}/management/competition/${OPEN_COMPETITION}/download    submitted_applications.xlsx
-    wait until keyword succeeds    300ms    1 seconds    Download should be done
+    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
-    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
-    Should Be Equal    ${APPLICATION_ID_1}    ${OPEN_COMPETITION_APPLICATION_5_NUMBER}
-    ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
-    should be equal    ${APPLICATION_TITLE_1}    A new innovative solution
-    ${LEAD_ORRGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4
-    should be equal    ${LEAD_ORRGANISATION_1}    Empire Ltd
-    ${FIRST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    D4
-    should be equal    ${FIRST_NAME_1}    Steve
-    ${LAST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    E4
-    should be equal    ${LAST_NAME_1}    Smith
-    ${EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
-    should be equal    ${EMAIL_1}    steve.smith@empire.com
-    ${DURATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    G4
-    Should Be Equal As Numbers    ${DURATION_1}    20.0
-    ${NUMBER_OF_PARTNERS_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    H4
-    Should Be Equal As Numbers    ${NUMBER_OF_PARTNERS_1}    4.0
-    ${SUMMARY_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    I4
-    Should contain    ${SUMMARY_1}    The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years.
-    ${TOTAL_COST_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    J4
-    Should Be Equal    ${TOTAL_COST_1}    £398,324.29
-    ${FUNDING_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    K4
-    Should Be Equal    ${FUNDING_1}    £8,000.00
+    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A2
+    Should Be Equal    ${APPLICATION_ID_1}    ${IN_ASSESSMENT_APPLICATION_4_NUMBER}
+    ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B2
+    should be equal    ${APPLICATION_TITLE_1}    ${IN_ASSESSMENT_APPLICATION_4_TITLE}
+    ${LEAD_ORGANISATION_EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F2
+    should be equal    ${LEAD_ORGANISATION_EMAIL_1}    ${IN_ASSESSMENT_APPLICATION_4_LEAD_PARTNER_EMAIL}
+    ${APPLICATION_ID_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A3
+    Should Be Equal    ${APPLICATION_ID_2}    ${IN_ASSESSMENT_APPLICATION_5_NUMBER}
+    ${APPLICATION_TITLE_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B3
+    should be equal    ${APPLICATION_TITLE_2}    ${IN_ASSESSMENT_APPLICATION_5_TITLE}
+    ${LEAD_ORGANISATION_EMAIL_2}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F3
+    should be equal    ${LEAD_ORGANISATION_EMAIL_2}    ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}
+    ${APPLICATION_ID_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
+    Should Be Equal    ${APPLICATION_ID_3}    ${IN_ASSESSMENT_APPLICATION_3_NUMBER}
+    ${APPLICATION_TITLE_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
+    should be equal    ${APPLICATION_TITLE_3}    ${IN_ASSESSMENT_APPLICATION_3_TITLE}
+    ${LEAD_ORGANISATION_EMAIL_3}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
+    should be equal    ${LEAD_ORGANISATION_EMAIL_3}    ${IN_ASSESSMENT_APPLICATION_3_LEAD_PARTNER_EMAIL}
