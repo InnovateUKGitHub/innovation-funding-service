@@ -13,7 +13,7 @@ Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-
+# Alternative Bank account pair:12345677 - 000004
 *** Test Cases ***
 
 Bank details page
