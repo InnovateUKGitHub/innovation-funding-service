@@ -1,5 +1,5 @@
 *** Variables ***
-${docker}    0
+${docker}         0
 ${smoke_test}     0
 ${BROWSER}        chrome
 ${SERVER_BASE}    ifs-local-dev
@@ -8,7 +8,6 @@ ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
-
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    100,837
 ${DEFAULT_INDUSTRIAL_OTHER_FUNDING_WITH_COMMAS}    1,234
 ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    70,586
@@ -21,13 +20,10 @@ ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}    0
 ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}    100%
 ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}    ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}    100836.81
-${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}   102,837
+${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    102,837
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
-
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
-
-
 ${OPEN_COMPETITION}    1
 ${OPEN_COMPETITION_NAME}    Connected digital additive manufacturing
 ${OPEN_COMPETITION_APPLICATION_1}    9
@@ -42,12 +38,9 @@ ${OPEN_COMPETITION_APPLICATION_3_HEADER}    ${OPEN_COMPETITION_APPLICATION_3_NUM
 ${OPEN_COMPETITION_APPLICATION_4}    10
 ${OPEN_COMPETITION_APPLICATION_5}    8
 ${OPEN_COMPETITION_APPLICATION_5_NUMBER}    00000008
-
 ${READY_TO_OPEN_COMPETITION}    6
 ${READY_TO_OPEN_COMPETITION_NAME}    Photonics for health
-
 ${COMP_SETUP_COMPETITION}    9
-
 ${FUNDERS_PANEL_COMPETITION}    5
 ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
 ${FUNDERS_PANEL_APPLICATION_1}    24
@@ -61,9 +54,7 @@ ${FUNDERS_PANEL_APPLICATION_2_HEADER}    ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: 
 ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    11
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION}    ${EMPIRE_LTD_ID}
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
-
 ${NEW_COMP_SETUP_COMPETITION}    10
-
 ${PROJECT_SETUP_COMPETITION}    8
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1}    32
@@ -79,7 +70,6 @@ ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}    Ludlow
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    jessica.doe@ludlow.co.uk
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}    pete.tom@egg.com
-
 ${IN_ASSESSMENT_COMPETITION}    4
 ${IN_ASSESSMENT_COMPETITION_NAME}    Sustainable living models for the future
 ${IN_ASSESSMENT_APPLICATION_1}    22
@@ -100,16 +90,13 @@ ${IN_ASSESSMENT_APPLICATION_5_TITLE}    Products and Services Personalised
 ${IN_ASSESSMENT_APPLICATION_6_NUMBER}    00000021
 ${IN_ASSESSMENT_APPLICATION_6_LEAD_PARTNER_EMAIL}    lisa.fox@example.com
 ${IN_ASSESSMENT_APPLICATION_6_TITLE}    Intelligent water system
-
 ${INFORM_COMPETITION}    7
 ${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
 ${INFORM_APPLICATION_1_PROJECT}    4
-
 ${STEVE_SMITH_ID}    55
 ${JESSICA_DOE_ID}    56
 ${PETE_TOM_ID}    57
 ${TEST_TWENTY_ID}    44
-
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/${OPEN_COMPETITION_APPLICATION_1}/section/1/#question-11
@@ -189,16 +176,14 @@ ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
 ${test_title}     test title
-
 # File related variables
-${UPLOAD_FOLDER}                  uploaded_files
-${DOWNLOAD_FOLDER}               download_files
+${UPLOAD_FOLDER}    uploaded_files
+${DOWNLOAD_FOLDER}    download_files
 ${empty_field_warning_message}    This field cannot be left blank
-${valid_pdf}            testing.pdf
-${too_large_pdf}        large.pdf
-${text_file}            testing.txt
+${valid_pdf}      testing.pdf
+${too_large_pdf}    large.pdf
+${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    75
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    66
@@ -207,7 +192,6 @@ ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    69
 ${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    225
 ${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    226
 ${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    227
-
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessment_summary_complete_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
 ${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/375
@@ -229,10 +213,10 @@ ${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATIO
 ${assessment_skills}    ${server}/assessment/profile/declaration
 ${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
-
 # Database variables
 ${database_name}    ifs
 ${database_user}    root
 ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
+${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
