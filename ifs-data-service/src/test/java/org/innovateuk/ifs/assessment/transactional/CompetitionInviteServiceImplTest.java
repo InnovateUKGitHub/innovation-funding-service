@@ -716,11 +716,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void sendInvite() {
-        // TODO INFUND-6855
-    }
-
-    @Test
     public void deleteInvite() {
         final String email = "tom@poly.io";
         final long competitonId = 11L;
