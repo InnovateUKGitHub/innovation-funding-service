@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
@@ -8,7 +9,6 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,19 +16,21 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.nCopies;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Collections.nCopies;
-import static java.util.Optional.empty;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -324,7 +326,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
         when(competitionInviteServiceMock.getAvailableAssessors(competitionId)).thenReturn(serviceSuccess(expectedAvailableAssessorResources));
@@ -334,6 +336,34 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(content().json(toJson(expectedAvailableAssessorResources)));
 
         verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId);
+    }
+
+    @Test
+    public void getCreatedInvites() throws Exception {
+        long competitionId = 1L;
+        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource().build(2);
+
+        when(competitionInviteServiceMock.getCreatedInvites(competitionId)).thenReturn(serviceSuccess(expectedAssessorCreatedInviteResources));
+
+        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAssessorCreatedInviteResources)));
+
+        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId);
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+        List<AssessorInviteOverviewResource> expectedAssessorInviteOverviewResources = newAssessorInviteOverviewResource().build(2);
+
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId)).thenReturn(serviceSuccess(expectedAssessorInviteOverviewResources));
+
+        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAssessorInviteOverviewResources)));
+
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId);
     }
 
     @Test

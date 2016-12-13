@@ -2,10 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,6 +51,16 @@ public class CompetitionInviteController {
     @RequestMapping(value = "/getAvailableAssessors/{competitionId}", method = RequestMethod.GET)
     public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(@PathVariable Long competitionId) {
         return competitionInviteService.getAvailableAssessors(competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/getCreatedInvites/{competitionId}", method = RequestMethod.GET)
+    public RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(@PathVariable Long competitionId) {
+        return competitionInviteService.getCreatedInvites(competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/getInvitationOverview/{competitionId}", method = RequestMethod.GET)
+    public RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(@PathVariable Long competitionId) {
+        return competitionInviteService.getInvitationOverview(competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/inviteUser", method = RequestMethod.POST)

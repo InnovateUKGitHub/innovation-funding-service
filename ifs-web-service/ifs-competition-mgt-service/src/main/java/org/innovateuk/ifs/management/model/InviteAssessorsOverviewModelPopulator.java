@@ -1,8 +1,19 @@
 package org.innovateuk.ifs.management.model;
 
+import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsOverviewViewModel;
+import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for the Invite assessors 'Overview' view.
@@ -10,10 +21,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelPopulator<InviteAssessorsOverviewViewModel> {
 
+    @Autowired
+    private CompetitionInviteRestService competitionInviteRestService;
+
     @Override
     public InviteAssessorsOverviewViewModel populateModel(CompetitionResource competition) {
         InviteAssessorsOverviewViewModel model = super.populateModel(competition);
+        model.setAssessors(getAssessors(competition));
         return model;
+    }
+
+    private List<OverviewAssessorRowViewModel> getAssessors(CompetitionResource competition) {
+        return competitionInviteRestService.getInvitationOverview(competition.getId()).getSuccessObject()
+                .stream()
+                .map(this::getRowViewModel)
+                .collect(toList());
+    }
+
+    private OverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+        String name = Stream.of(assessorInviteOverviewResource.getFirstName(), assessorInviteOverviewResource.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
+        String categoryArea = assessorInviteOverviewResource.getInnovationArea().getName();
+        return new OverviewAssessorRowViewModel(name, categoryArea, assessorInviteOverviewResource.isCompliant(), assessorInviteOverviewResource.getStatus(), assessorInviteOverviewResource.getDetails());
     }
 
     @Override

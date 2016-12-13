@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.management.viewmodel.AvailableAssessorViewModel;
+import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,17 +31,17 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
         return model;
     }
 
-    private List<AvailableAssessorViewModel> getAssessors(CompetitionResource competition) {
+    private List<AvailableAssessorRowViewModel> getAssessors(CompetitionResource competition) {
         return competitionInviteRestService.getAvailableAssessors(competition.getId()).getSuccessObjectOrThrowException()
                 .stream()
-                .map(this::getAssessorViewModel)
+                .map(this::getRowViewModel)
                 .collect(toList());
     }
 
-    private AvailableAssessorViewModel getAssessorViewModel(AvailableAssessorResource assessor) {
-        String name = Stream.of(assessor.getFirstName(), assessor.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
-        String innovationArea = assessor.getInnovationArea().getName();
-        return new AvailableAssessorViewModel(assessor.getUserId(), name, assessor.getEmail(), assessor.getBusinessType(), innovationArea, assessor.isCompliant(), assessor.isAdded());
+    private AvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource availableAssessorResource) {
+        String name = Stream.of(availableAssessorResource.getFirstName(), availableAssessorResource.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
+        String innovationArea = availableAssessorResource.getInnovationArea().getName();
+        return new AvailableAssessorRowViewModel(name, innovationArea, availableAssessorResource.isCompliant(), availableAssessorResource.getBusinessType(), availableAssessorResource.isAdded());
     }
 
     @Override

@@ -2,17 +2,16 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorCreatedInviteResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorInviteOverviewResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.availableAssessorResourceListType;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.lang.String.format;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
@@ -50,6 +49,15 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getAvailableAssessors", competitionId), availableAssessorResourceListType());
+    }
+
+    @Override
+    public RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getCreatedInvites", competitionId), assessorCreatedInviteResourceListType());
+    }
+
+    public RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getInvitationOverview", competitionId), assessorInviteOverviewResourceListType());
     }
 
     @Override

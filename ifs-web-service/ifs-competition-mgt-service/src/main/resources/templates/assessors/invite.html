@@ -94,7 +94,7 @@
             </div>
             */-->
 
-            <form>
+            <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
                 <table>
                     <thead>
                         <tr>
@@ -106,17 +106,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><span>Dave Smith</span></td>
-                            <td>dave@email.com</td>
-                            <td>Earth Observation</td>
+                        <tr th:each="assessor : ${model.assessors}">
+                            <td><span th:text="${assessor.name}">Dave Smith</span></td>
+                            <td th:text="${assessor.email}">dave@email.com</td>
+                            <td th:text="${assessor.innovationArea}">Earth Observation</td>
                             <td>
-                                <span class="yes">Yes</span>
+                                <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                                <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
+                                <!--
+                                TODO INFUND-6414
                                 <button class="button no-margin-right"><span class="hidden">John Barnes </span>Invite individual</button>
                                 <br />
-                                <button class="button button-clear no-margin-right"><span class="hidden">John Barnes </span>Remove from list</button>
+                                -->
+                                <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
                             </td>
                         </tr>
                     </tbody>
