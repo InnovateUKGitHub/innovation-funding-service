@@ -127,8 +127,8 @@ Links to other sections in Project setup dependent on project details (applicabl
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    Then the user should see the element    link = Monitoring Officer
-    And the user should see the element    link = Bank details
+    Then the user should not see the element   link = Monitoring Officer
+    And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
     And the user should not see the element    link = Grant offer letter
