@@ -15,9 +15,9 @@ public class CompetitionInviteModelPopulator {
     @Autowired
     private CompetitionInviteRestService inviteRestService;
 
-    public CompetitionInviteViewModel populateModel(String inviteHash) {
+    public CompetitionInviteViewModel populateModel(String inviteHash, boolean userLoggedIn) {
         CompetitionInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
-        return new CompetitionInviteViewModel(inviteHash, invite);
-    }
 
+        return new CompetitionInviteViewModel(inviteHash, invite, userLoggedIn);
+    }
 }
