@@ -35,6 +35,7 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
@@ -675,11 +676,38 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void deleteInvite() {
-        // TODO INFUND-6855
+        final String email = "tom@poly.io";
+        final long competitonId = 11L;
+        final CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withStatus(CREATED)
+                .build();
+
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(email, competitonId)).thenReturn(competitionInvite);
+
+        competitionInviteService.deleteInvite(email, competitonId).getSuccessObjectOrThrowException();
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByEmailAndCompetitionId(email, competitonId);
+        inOrder.verify(competitionInviteRepositoryMock).delete(competitionInvite);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void deleteInvite_sent() {
-        // TODO INFUND-6855
+        final String email = "tom@poly.io";
+        final long competitonId = 11L;
+        final CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withStatus(SENT)
+                .build();
+
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(email, competitonId)).thenReturn(competitionInvite);
+
+        ServiceResult<Void> serviceResult = competitionInviteService.deleteInvite(email, competitonId);
+
+        assertTrue(serviceResult.isFailure());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByEmailAndCompetitionId(email, competitonId);
+        inOrder.verifyNoMoreInteractions();
     }
 }
