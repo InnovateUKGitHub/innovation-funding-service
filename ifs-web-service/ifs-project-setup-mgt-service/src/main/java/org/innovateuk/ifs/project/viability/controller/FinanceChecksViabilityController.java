@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -50,8 +52,10 @@ public class FinanceChecksViabilityController {
 
     @RequestMapping(method = POST)
     public String updateViability(@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId) {
+                                  @PathVariable("organisationId") Long organisationId,
+                                  @ModelAttribute("form") FinanceChecksViabilityForm form) {
 
+        financeService.saveViability(projectId, organisationId, form.isViabilityConfirmed() ? Viability.APPROVED : Viability.PENDING);
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
     }
 
@@ -83,7 +87,11 @@ public class FinanceChecksViabilityController {
     }
 
     private void populateForm(Long projectId, Long organisationId, Model model) {
-        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(true, true, "Red");
+
+        Viability viability = financeService.getViability(projectId, organisationId);
+        boolean viabilityConfirmed = viability == Viability.APPROVED;
+
+        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(true, viabilityConfirmed, "Red");
         model.addAttribute("form", form);
     }
 

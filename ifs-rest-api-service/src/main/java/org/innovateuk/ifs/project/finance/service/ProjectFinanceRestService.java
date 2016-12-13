@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -33,4 +34,8 @@ public interface ProjectFinanceRestService {
     RestResult<Void> completeSpendProfilesReview(Long projectId);
 
     RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long projectId);
+
+    RestResult<Viability> getViability(Long projectId, Long organisationId);
+
+    RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability);
 }
