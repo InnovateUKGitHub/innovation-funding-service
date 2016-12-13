@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.finance.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
@@ -129,5 +130,29 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         RestResult<List<ProjectFinanceResource>> result = service.getFinanceTotals(projectId);
 
         assertEquals(results, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetViability() {
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", Viability.class, Viability.APPROVED);
+
+        RestResult<Viability> results = service.getViability(123L, 456L);
+
+        assertEquals(Viability.APPROVED, results.getSuccessObject());
+    }
+
+    @Test
+    public void testSaveViability() {
+
+        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" + Viability.APPROVED.name();
+
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED);
+
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
     }
 }
