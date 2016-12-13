@@ -59,22 +59,12 @@
             </div>
         </div>
 
-        <!-- <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" /> -->
-
-        <div class="form-group">
-          <fieldset>
-            <label for="org-eligible" class="block-label">
-              <input id="org-eligible" value="org-eligible" type="checkbox" />
-              I confirm that the project costs entered for my organisation are all eligible.
-            </label>
-          </fieldset>
-        </div>
+        <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
 
         <div class="alignright-button extra-margin">
-            <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" formaction="#" value="1" disabled="disabled">Mark as complete</button>
+            <button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
+		</button>
         </div>
-
-        <a href="/prototypes/4600-finances" class="button-secondary">Return to finances</a>
 
         <ul class="pagination">
             <li class="next">
@@ -85,6 +75,9 @@
             </li>
         </ul>
 
+        <a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+
+
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
         <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -93,20 +86,6 @@
     <div th:include="fragments/layout :: footer" th:remove="tag" />
     <div th:include="fragments/layout :: body-end" th:remove="tag" />
     <script type="text/javascript">
-
-      jQuery("input#org-eligible").on('click',function(e){
-        if ( jQuery(this).is(':checked') ) {
-          jQuery("#mark_as_complete").removeAttr('disabled');
-        }else{
-            jQuery("#mark_as_complete").attr('disabled', 'disabled');
-        }
-      });
-
-      jQuery("input[name='userType']").on('click',function(e){
-        if ( jQuery(this).is(':checked') ) {
-          jQuery("#continue").removeAttr('disabled');
-        }
-      });
 
     	jQuery('input#funding-yes').on('click',function(e){
     		//e.preventDefault();

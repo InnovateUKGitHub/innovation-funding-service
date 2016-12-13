@@ -42,6 +42,10 @@ ol.list-style-type-roman{
       }
     }
 
+    p{
+      padding-left: 20px;
+    }
+
     .column-third{
       padding: 12px 0 0 20px;
       @include media-down(mobile) {
