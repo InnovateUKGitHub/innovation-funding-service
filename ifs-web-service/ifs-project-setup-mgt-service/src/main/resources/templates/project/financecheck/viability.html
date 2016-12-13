@@ -4,6 +4,8 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Viability'" th:remove="tag" />
 </head>
 <body th:with="context='project-management'">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 <main id="content">
@@ -82,7 +84,11 @@
         </select>
       </div>
 
-      <button type="submit" class="button" id="confirm-button">Confirm viability</button>
+      <button type="button" data-js-modal="modal-confirm-viability" class="button" id="confirm-button">Confirm viability</button>
+      <th:block  th:include="fragments/modals :: modal-confirm-viability" />
+
+      <hr />
+      <button class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
