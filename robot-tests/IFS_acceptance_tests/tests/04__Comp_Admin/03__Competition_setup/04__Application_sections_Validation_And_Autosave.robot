@@ -73,6 +73,21 @@ Business opportunity: Mark as done
     And The user should see the text in the page    Guidance text test
     And The user should see the text in the page    150
     And The user should see the text in the page    No
+    [Teardown]  the user clicks the button/link    link=Application
+
+Scope: Sever-side validations assessment questions
+     [Documentation]
+     [Tags]    Pending  INFUND-6444
+     #TODO
+     Given the user clicks the button/link    link=Scope
+     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+     When the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+     And the user clicks the button/link    jQuery=.button[value="Save and close"]
+     Then the user should see the text in the page    Please enter a subject
+     And the user should see the text in the page    Please enter a justification
+     And The user clicks the button/link    id=remove-guidance-row-2
+     And the user should not see the text in the page    Please enter a subject
+     And the user should not see the text in the page    Please enter a justification
 
 *** Keywords ***
 the user leaves all the question field empty
