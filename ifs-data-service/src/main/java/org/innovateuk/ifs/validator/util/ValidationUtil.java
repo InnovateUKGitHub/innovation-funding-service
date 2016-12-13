@@ -4,12 +4,14 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.validator.MinRowCountValidator;
 import org.innovateuk.ifs.validator.NotEmptyValidator;
@@ -17,7 +19,6 @@ import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
@@ -41,15 +42,18 @@ public class ValidationUtil {
     private final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     private ValidatorService validatorService;
     private MinRowCountValidator minRowCountValidator;
+    private SpendProfileCostValidator spendProfileCostValidator;
 
 
     @Autowired
     @Lazy
     private ValidationUtil(ValidatorService validatorService,
-                           MinRowCountValidator minRowCountValidator
+                           MinRowCountValidator minRowCountValidator,
+                           SpendProfileCostValidator spendProfileCostValidator
     ) {
         this.validatorService = validatorService;
         this.minRowCountValidator = minRowCountValidator;
+        this.spendProfileCostValidator = spendProfileCostValidator;
     }
 
     /**
@@ -221,7 +225,22 @@ public class ValidationUtil {
 
         return results;
     }
-    
+
+    public Optional<ValidationMessages> validateSpendProfileTableResource(SpendProfileTableResource tableResource) {
+
+        Optional<ValidationMessages> result = Optional.empty();
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(tableResource, "spendProfileTable");
+        ValidationUtils.invokeValidator(spendProfileCostValidator, tableResource, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            ValidationMessages messages = new ValidationMessages(bindingResult);
+            result = Optional.of(messages);
+        }
+
+        return result;
+    }
+
     private boolean nonEmpty(ValidationMessages validationMessages) {
     	return validationMessages != null && validationMessages.hasErrors();
     }
