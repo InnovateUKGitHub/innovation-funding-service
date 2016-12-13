@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,12 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
     }
 
+    public S withOrganisationSize(OrganisationSize... value) {
+        return withArray((v, finance) -> finance.setOrganisationSize(v), value);
+    }
+
     public S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
-        return withArray((financeOrganisationDetail, applicationFinanceResource) -> setField("financeOrganisationDetails", financeOrganisationDetail, applicationFinanceResource), financeOrganisationDetails);
+        return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
     }
 
     public S withGrantClaimPercentage(Integer percentage) {

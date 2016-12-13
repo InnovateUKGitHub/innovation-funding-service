@@ -99,7 +99,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                             withGrantClaimPercentage(100).
                             build(1)).
                     build(),
-            OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+            FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
                     newOtherFunding().
                             withOtherPublicFunding("Yes", "").
                             withFundingSource(OTHER_FUNDING, "Some source of funding").

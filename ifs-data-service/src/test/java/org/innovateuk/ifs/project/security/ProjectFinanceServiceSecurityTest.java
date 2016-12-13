@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.*;
@@ -272,6 +273,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<ProjectFinanceResource>> getProjectFinanceTotals(Long projectId) {
             return null;
         }
     }

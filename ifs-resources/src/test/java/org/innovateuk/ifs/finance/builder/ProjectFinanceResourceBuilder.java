@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -15,6 +16,10 @@ public class ProjectFinanceResourceBuilder extends BaseFinanceResourceBuilder<Pr
 
     public ProjectFinanceResourceBuilder withProject(Long... projectId) {
         return withArray((id, finance) -> finance.setProject(id), projectId);
+    }
+
+    public ProjectFinanceResourceBuilder withViability(Viability... value) {
+        return withArray((v, finance) -> finance.setViability(v), value);
     }
 
     private ProjectFinanceResourceBuilder(List<BiConsumer<Integer, ProjectFinanceResource>> newMultiActions) {
