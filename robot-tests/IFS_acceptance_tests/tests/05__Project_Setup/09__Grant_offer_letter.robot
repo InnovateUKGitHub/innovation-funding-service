@@ -2,6 +2,9 @@
 Documentation     INFUND-4851 As a project manager I want to be able to submit an uploaded Grant Offer Letter so that Innovate UK can review my signed copy
 ...
 ...               INFUND-6059 As the contracts team I want to be able to send a Grant Offer Letter to the partners so that the project can begin
+...
+...               INFUND-4849 As a partner I want to be able to download a Grant Offer Letter and Appendices
+
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -86,7 +89,7 @@ PM should be able upload a file and then access the Submit button
     Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
 
 PM can view the generated Grant Offer Letter
-    [Documentation]    INFUND-6059
+    [Documentation]    INFUND-6059, INFUND-4849
     [Tags]    Pending
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
