@@ -154,7 +154,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
         assertEquals("Red", form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(true, form.isViabilityConfirmed());
+        assertEquals(true, form.isViabilityConfirmedChecked());
     }
 
     @Test
@@ -188,7 +188,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         assertEquals("Red", form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(true, form.isViabilityConfirmed());
+        assertEquals(true, form.isViabilityConfirmedChecked());
     }
 
     @Test
@@ -199,13 +199,30 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         mockMvc.perform(
             post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                param("confirm-viability", "").
                 param("creditReportConfirmed", "true").
-                param("viabilityConfirmed", "true").
                 param("ragStatus", "Red")).
             andExpect(status().is3xxRedirection()).
             andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
         verify(projectFinanceService).saveViability(projectId, organisationId, Viability.APPROVED);
+    }
+
+    @Test
+    public void testSaveAndContinue() throws Exception {
+
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                        param("save-and-continue", "").
+                        param("creditReportConfirmed", "true").
+                        param("ragStatus", "Red")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
+
+        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.PENDING);
     }
 
     private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
