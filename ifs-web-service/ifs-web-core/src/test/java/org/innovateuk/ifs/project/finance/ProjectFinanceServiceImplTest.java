@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.finance;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
@@ -18,6 +19,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -110,5 +112,24 @@ public class ProjectFinanceServiceImplTest {
 
         List<ProjectFinanceResource> financeTotals = service.getFinanceTotals(123L);
         assertEquals(resources, financeTotals);
+    }
+
+    @Test
+    public void testGetViability() {
+
+        when(projectFinanceRestService.getViability(123L, 456L)).thenReturn(restSuccess(Viability.APPROVED));
+
+        Viability result = service.getViability(123L, 456L);
+        assertEquals(Viability.APPROVED, result);
+    }
+
+    @Test
+    public void testSaveViability() {
+
+        when(projectFinanceRestService.saveViability(123L, 456L, Viability.APPROVED)).thenReturn(restSuccess());
+
+        service.saveViability(123L, 456L, Viability.APPROVED);
+
+        verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED);
     }
 }
