@@ -69,8 +69,8 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public List<ProjectFinanceResource> getFinanceTotals(Long projectId) {
-        return projectFinanceRestService.getFinanceTotals(projectId).getSuccessObjectOrThrowException();
+    public List<ProjectFinanceResource> getProjectFinances(Long projectId) {
+        return projectFinanceRestService.getProjectFinances(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override

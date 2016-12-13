@@ -33,7 +33,7 @@ public interface ProjectFinanceRestService {
 
     RestResult<Void> completeSpendProfilesReview(Long projectId);
 
-    RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long projectId);
+    RestResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
     RestResult<Viability> getViability(Long projectId, Long organisationId);
 

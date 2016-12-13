@@ -315,7 +315,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<List<ProjectFinanceResource>> getProjectFinanceTotals(Long projectId) {
+    public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
         return financeRowService.financeChecksTotals(projectId);
     }
 

@@ -63,18 +63,18 @@ public class FinanceChecksViabilityController {
 
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<ProjectFinanceResource> financeTotals = financeService.getFinanceTotals(projectId);
-        ProjectFinanceResource financeTotalsForOrganisation = simpleFindFirst(financeTotals,
+        List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
+        ProjectFinanceResource financesForOrganisation = simpleFindFirst(projectFinances,
                 finance -> finance.getOrganisation().equals(organisationId)).get();
 
         String organisationName = organisation.getName();
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
-        Integer totalCosts = toZeroScaleInt(financeTotalsForOrganisation.getTotal());
-        Integer percentageGrant = financeTotalsForOrganisation.getGrantClaimPercentage();
-        Integer fundingSought = toZeroScaleInt(financeTotalsForOrganisation.getTotalFundingSought());
-        Integer otherPublicSectorFunding = toZeroScaleInt(financeTotalsForOrganisation.getTotalOtherFunding());
-        Integer contributionToProject = toZeroScaleInt(financeTotalsForOrganisation.getTotalContribution());
+        Integer totalCosts = toZeroScaleInt(financesForOrganisation.getTotal());
+        Integer percentageGrant = financesForOrganisation.getGrantClaimPercentage();
+        Integer fundingSought = toZeroScaleInt(financesForOrganisation.getTotalFundingSought());
+        Integer otherPublicSectorFunding = toZeroScaleInt(financesForOrganisation.getTotalOtherFunding());
+        Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
 
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
         Integer turnover = null;

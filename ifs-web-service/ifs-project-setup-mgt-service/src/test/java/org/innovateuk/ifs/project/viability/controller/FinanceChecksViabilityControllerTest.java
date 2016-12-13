@@ -124,7 +124,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        when(projectFinanceService.getFinanceTotals(project.getId())).thenReturn(projectFinances);
+        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -160,7 +160,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        when(projectFinanceService.getFinanceTotals(project.getId())).thenReturn(projectFinances);
+        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).

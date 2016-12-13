@@ -277,7 +277,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<List<ProjectFinanceResource>> getProjectFinanceTotals(Long projectId) {
+        public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
             return null;
         }
     }

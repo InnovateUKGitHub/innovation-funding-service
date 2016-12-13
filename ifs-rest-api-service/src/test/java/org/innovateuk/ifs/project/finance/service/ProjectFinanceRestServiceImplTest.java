@@ -119,15 +119,15 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void testGetFinanceTotals() {
+    public void testGetProjectFinances() {
 
         Long projectId = 123L;
 
         List<ProjectFinanceResource> results = newProjectFinanceResource().build(2);
 
-        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/project-finance/totals", projectFinanceResourceListType(), results);
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/project-finances", projectFinanceResourceListType(), results);
 
-        RestResult<List<ProjectFinanceResource>> result = service.getFinanceTotals(projectId);
+        RestResult<List<ProjectFinanceResource>> result = service.getProjectFinances(projectId);
 
         assertEquals(results, result.getSuccessObject());
     }

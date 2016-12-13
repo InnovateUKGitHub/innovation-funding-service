@@ -550,6 +550,21 @@ include::{snippets}/project/get-finance-check-summary/response-fields.adoc[]
 include::{snippets}/project/get-finance-check-summary/curl-request.adoc[]
 
 
+=== Get Project Finances
+==== Success
+===== Request
+include::{snippets}/project/get-project-finances/http-request.adoc[]
+include::{snippets}/project/get-project-finances/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-project-finances/http-response.adoc[]
+include::{snippets}/project/get-project-finances/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-project-finances/curl-request.adoc[]
+
+
+
 === Get Spend Profile CSV
 ==== Success
 ===== Request

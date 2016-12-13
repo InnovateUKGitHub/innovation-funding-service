@@ -88,9 +88,9 @@ public class ProjectFinanceController {
         return projectFinanceService.completeSpendProfilesReview(projectId).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/project-finance/totals", method = GET)
-    public RestResult<List<ProjectFinanceResource>> getProjectFinanceTotals(@PathVariable("projectId") final Long projectId) {
-        return projectFinanceService.getProjectFinanceTotals(projectId).toGetResponse();
+    @RequestMapping(value = "/{projectId}/project-finances", method = GET)
+    public RestResult<List<ProjectFinanceResource>> getProjectFinances(@PathVariable("projectId") final Long projectId) {
+        return projectFinanceService.getProjectFinances(projectId).toGetResponse();
     }
 
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/viability")

@@ -105,12 +105,12 @@ public class ProjectFinanceServiceImplTest {
     }
 
     @Test
-    public void testFinanceTotals() {
+    public void testGetProjectFinances() {
 
         List<ProjectFinanceResource> resources = newProjectFinanceResource().build(2);
-        when(projectFinanceRestService.getFinanceTotals(123L)).thenReturn(restSuccess(resources));
+        when(projectFinanceRestService.getProjectFinances(123L)).thenReturn(restSuccess(resources));
 
-        List<ProjectFinanceResource> financeTotals = service.getFinanceTotals(123L);
+        List<ProjectFinanceResource> financeTotals = service.getProjectFinances(123L);
         assertEquals(resources, financeTotals);
     }
 

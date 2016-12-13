@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.finance.documentation.ProjectFinanceResponseFields.projectFinanceFields;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -390,7 +391,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
-    public void getProjectFinanceTotals() throws Exception {
+    public void getProjectFinances() throws Exception {
 
         Long projectId = 1L;
 
@@ -471,15 +472,16 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 build(2);
 
-        when(projectFinanceServiceMock.getProjectFinanceTotals(projectId)).thenReturn(serviceSuccess(expectedFinances));
+        when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(serviceSuccess(expectedFinances));
 
-        mockMvc.perform(get("/project/{projectId}/project-finance/totals", projectId))
+        mockMvc.perform(get("/project/{projectId}/project-finances", projectId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedFinances)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which finance totals are being retrieved")
-                        )
+                        ),
+                        responseFields(projectFinanceFields)
                 ));
     }
 

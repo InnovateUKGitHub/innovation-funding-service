@@ -34,7 +34,7 @@ public interface ProjectFinanceService {
 
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
-    List<ProjectFinanceResource> getFinanceTotals(Long projectId);
+    List<ProjectFinanceResource> getProjectFinances(Long projectId);
 
     Viability getViability(Long projectId, Long organisationId);
 
