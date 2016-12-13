@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,8 @@ import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -76,7 +79,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(savedParticipant, retrievedParticipant);
 
         assertEquals(CompetitionParticipantRole.ASSESSOR, retrievedParticipant.getRole());
-        assertEquals(ParticipantStatus.PENDING, retrievedParticipant.getStatus());
+        assertEquals(PENDING, retrievedParticipant.getStatus());
 
         CompetitionInvite retrievedInvite = retrievedParticipant.getInvite();
         assertEquals("name1", retrievedInvite.getName());
@@ -163,19 +166,45 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(user, invite));
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRoleAndStatus(user.getId(),CompetitionParticipantRole.ASSESSOR, ParticipantStatus.PENDING );
+        List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRoleAndStatus(user.getId(),CompetitionParticipantRole.ASSESSOR, PENDING );
 
         assertNotNull(retrievedParticipants);
         assertEquals(1,retrievedParticipants.size());
         assertEquals(savedParticipant, retrievedParticipants.get(0));
 
         assertEquals(CompetitionParticipantRole.ASSESSOR, retrievedParticipants.get(0).getRole());
-        assertEquals(ParticipantStatus.PENDING, retrievedParticipants.get(0).getStatus());
+        assertEquals(PENDING, retrievedParticipants.get(0).getStatus());
 
         Competition retrievedCompetition = retrievedParticipants.get(0).getProcess();
         assertEquals(competition.getName(), retrievedCompetition.getName());
 
         User retrievedUser = retrievedParticipants.get(0).getUser();
+        assertEquals(user.getFirstName(),retrievedUser.getFirstName());
+    }
+
+
+    @Test
+    public void getByUserIdCompetitionIdAndStatuses() {
+        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
+        User user = newUser()
+                .withId(3L)
+                .withFirstName("Professor")
+                .build();
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(user, invite));
+        flushAndClearSession();
+
+        CompetitionParticipant retrievedParticipant = repository.getByUserIdAndCompetitionIdAndStatusIn(user.getId(),competition.getId(), EnumSet.of(PENDING, ACCEPTED));
+
+        assertNotNull(retrievedParticipant);
+        assertEquals(savedParticipant, retrievedParticipant);
+
+        assertEquals(CompetitionParticipantRole.ASSESSOR, retrievedParticipant.getRole());
+        assertEquals(PENDING, retrievedParticipant.getStatus());
+
+        Competition retrievedCompetition = retrievedParticipant.getProcess();
+        assertEquals(competition.getName(), retrievedCompetition.getName());
+
+        User retrievedUser = retrievedParticipant.getUser();
         assertEquals(user.getFirstName(),retrievedUser.getFirstName());
     }
 }

@@ -582,7 +582,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withBusinessType(BUSINESS)
                 .withInnovationArea(newCategoryResource()
                         .with(id(null))
-                        .withName("Earth Observation")
                         .build())
                 .withCompliant(TRUE)
                 .withAdded(FALSE)
@@ -602,6 +601,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withAffliliationsComplete(TRUE)
                 .build()));
 
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId("worth.email.test+assessor1@gmail.com", competitionId)).thenReturn(null);
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);

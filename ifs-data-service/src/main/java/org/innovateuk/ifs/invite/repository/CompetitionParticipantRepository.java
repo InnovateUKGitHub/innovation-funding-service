@@ -6,6 +6,7 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -18,4 +19,6 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
     CompetitionParticipant getByInviteHash( String hash);
 
     List<CompetitionParticipant> getByUserIdAndRoleAndStatus(Long userId, CompetitionParticipantRole role, ParticipantStatus status);
+
+    CompetitionParticipant getByUserIdAndCompetitionIdAndStatusIn(Long userId, Long competitionId, EnumSet<ParticipantStatus> statuses);
 }
