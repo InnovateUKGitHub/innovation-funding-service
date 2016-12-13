@@ -5,13 +5,9 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionParticipantResourceListType;
-import static java.lang.String.format;
 
 @Service
 public class CompetitionParticipantRestServiceImpl extends BaseRestService implements CompetitionParticipantRestService {
@@ -19,7 +15,10 @@ public class CompetitionParticipantRestServiceImpl extends BaseRestService imple
     private static final String competitionParticipantRestUrl = "/competitionparticipant";
 
     @Override
-    public RestResult<List<CompetitionParticipantResource>> getParticipants(Long userId, CompetitionParticipantRoleResource role, ParticipantStatusResource status) {
-        return getWithRestResult(String.format("%s/user/%s/role/%s/status/%s", competitionParticipantRestUrl, userId, role, status), ParameterizedTypeReferences.competitionParticipantResourceListType());
+    public RestResult<List<CompetitionParticipantResource>> getParticipants(Long userId, CompetitionParticipantRoleResource role) {
+        return getWithRestResult(
+                String.format("%s/user/%s/role/%s", competitionParticipantRestUrl, userId, role),
+                ParameterizedTypeReferences.competitionParticipantResourceListType()
+        );
     }
 }

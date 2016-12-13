@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.junit.Assert.assertFalse;
@@ -75,6 +77,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
     public void userCanViewTheirOwnCompetitionParticipation() {
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
                 .withUser(7L)
+                .withInvite(newCompetitionInviteResource().withStatus(SENT).build())
                 .build();
         UserResource userResource = newUserResource()
                 .withId(7L)

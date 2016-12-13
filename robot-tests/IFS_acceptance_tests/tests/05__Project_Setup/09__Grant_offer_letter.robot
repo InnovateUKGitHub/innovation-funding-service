@@ -125,7 +125,7 @@ PM Submits the Grant Offer letter
     [Documentation]    INFUND-4851
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
-    And the user clicks the button/link     jQuery=button:contains("Confirm Submission")
+    And the user clicks the button/link     jQuery=button:contains("Confirm submission")
     Then the user should not see an error in the page
 
 PM's dashboard should be updated

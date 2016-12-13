@@ -97,7 +97,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withBriefingDate(briefingDate).withAssessorPay(assessorPay)
                 .build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource);
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource, false);
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
@@ -157,7 +157,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
                 .withBriefingDate(briefingDate).withAssessorPay(assessorPay).build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource);
+        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource, true);
 
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))

@@ -54,7 +54,7 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
 
         setLoggedInUser(assessorUserResource);
 
-        assertTrue(classUnderTest.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).getSuccessObject().isEmpty());
+        assertTrue(classUnderTest.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR).getSuccessObject().isEmpty());
 
         verify(competitionParticipantPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanViewTheirOwnCompetitionParticipation(any(CompetitionParticipantResource.class), eq(assessorUserResource));
     }
@@ -62,7 +62,7 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
     public static class TestCompetitionParticipantService implements CompetitionParticipantService {
 
         @Override
-        public ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(@P("user") Long userId, @P("role") CompetitionParticipantRoleResource role, @P("status") ParticipantStatusResource status) {
+        public ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(@P("user") Long userId, @P("role") CompetitionParticipantRoleResource role) {
             return serviceSuccess( newCompetitionParticipantResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS) );
         }
     }
