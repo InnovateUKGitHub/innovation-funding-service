@@ -59,8 +59,8 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(2)},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max(70)},
+                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
 
@@ -78,8 +78,8 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(2)},
-                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max(70)},
+                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
@@ -91,7 +91,9 @@
                                     </span>
                         </legend>
                         <label class="block-label" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
-                            <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a gender"/>
+                            <input th:field="*{gender}" th:value="${gen}" type="radio" required="required"
+                                    th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                             data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
                             <span th:text="${gen.displayName}" th:remove="tag"/>
                         </label>
                     </fieldset>
@@ -106,7 +108,11 @@
                                 </span>
                         </legend>
                         <label class="block-label" th:each="eth : ${ethnicityOptions}">
-                            <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an ethnicity" />
+                            <input th:field="*{ethnicity}"
+                                   th:value="${eth.id}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-minlength-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
                             <span th:text="${eth.description}" th:remove="tag"/>
                         </label>
                     </fieldset>
@@ -121,7 +127,11 @@
                                 </span>
                         </legend>
                         <label class="block-label" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
-                            <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
+                            <input th:field="*{disability}"
+                                    th:value="${dis}"
+                                    type="radio"
+                                    required="required"
+                                    th:attr="data-minlength-errormessage=#{validation.standard.disability.selectionrequired}" />
                             <span th:text="${dis.displayName}" th:remove="tag" />
                         </label>
                     </fieldset>

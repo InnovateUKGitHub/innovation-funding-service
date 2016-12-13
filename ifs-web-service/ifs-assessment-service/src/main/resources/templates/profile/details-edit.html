@@ -57,6 +57,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
+                           th:attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
+                                         data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                         data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
                            data-minlength-errormessage="Your first name should have at least 2 characters"
                            data-maxlength-errormessage="Your first name cannot have more than 70 characters"
                            data-required-errormessage="Please enter a first name"
