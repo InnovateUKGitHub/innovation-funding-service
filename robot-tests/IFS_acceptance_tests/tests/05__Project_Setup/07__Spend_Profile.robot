@@ -575,14 +575,14 @@ partner submits his bank details
     the user clicks the button/link       jQuery=.button:contains("Submit")
 
 project finance approves bank details
-    log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${Katz_Id}/review-bank-details
-    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Approve account")
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${Meembee_Id}/review-bank-details
-    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Approve account")
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${Zooveo_Id}/review-bank-details
+    log in as a different user                   &{internal_finance_credentials}
+    proj finance approves partners bank details  ${Katz_Id}
+    proj finance approves partners bank details  ${Meembee_Id}
+    proj finance approves partners bank details  ${Zooveo_Id}
+
+proj finance approves partners bank details
+    [Arguments]  ${id}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${id}/review-bank-details
     the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     the user clicks the button/link    jQuery=.button:contains("Approve account")
 
