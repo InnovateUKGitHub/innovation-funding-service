@@ -7,13 +7,19 @@ import org.innovateuk.ifs.user.resource.BusinessType;
  */
 public class AvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
+    private String email;
     private BusinessType businessType;
     private boolean added;
 
-    public AvailableAssessorRowViewModel(String name, String innovationArea, boolean compliant, BusinessType businessType, boolean added) {
+    public AvailableAssessorRowViewModel(String name, String innovationArea, boolean compliant, String email, BusinessType businessType, boolean added) {
         super(name, innovationArea, compliant);
+        this.email = email;
         this.businessType = businessType;
         this.added = added;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public BusinessType getBusinessType() {

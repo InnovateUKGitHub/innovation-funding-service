@@ -41,7 +41,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
     private AvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource availableAssessorResource) {
         String name = Stream.of(availableAssessorResource.getFirstName(), availableAssessorResource.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
         String innovationArea = availableAssessorResource.getInnovationArea().getName();
-        return new AvailableAssessorRowViewModel(name, innovationArea, availableAssessorResource.isCompliant(), availableAssessorResource.getBusinessType(), availableAssessorResource.isAdded());
+        return new AvailableAssessorRowViewModel(name, innovationArea, availableAssessorResource.isCompliant(), availableAssessorResource.getEmail(), availableAssessorResource.getBusinessType(), availableAssessorResource.isAdded());
     }
 
     @Override

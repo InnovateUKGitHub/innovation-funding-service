@@ -303,6 +303,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(expectedName, availableAssessorRowViewModel.getName());
             assertEquals(availableAssessorResource.getInnovationArea().getName(), availableAssessorRowViewModel.getInnovationArea());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
+            assertEquals(availableAssessorResource.getEmail(), availableAssessorRowViewModel.getEmail());
             assertEquals(availableAssessorResource.getBusinessType(), availableAssessorRowViewModel.getBusinessType());
             assertEquals(availableAssessorResource.isAdded(), availableAssessorRowViewModel.isAdded());
         });
