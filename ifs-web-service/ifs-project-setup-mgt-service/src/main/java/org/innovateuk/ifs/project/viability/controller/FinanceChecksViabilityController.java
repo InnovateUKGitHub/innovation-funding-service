@@ -55,7 +55,10 @@ public class FinanceChecksViabilityController {
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form) {
 
-        financeService.saveViability(projectId, organisationId, form.isViabilityConfirmed() ? Viability.APPROVED : Viability.PENDING);
+        Viability updatedViability = form.isViabilityConfirmed() ? Viability.APPROVED : Viability.PENDING;
+
+        financeService.saveViability(projectId, organisationId, updatedViability);
+
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
     }
 

@@ -34,8 +34,10 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCTest<FinanceChecksViabilityController> {
@@ -187,6 +189,23 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals("Red", form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
         assertEquals(true, form.isViabilityConfirmed());
+    }
+
+    @Test
+    public void testConfirmViability() throws Exception {
+
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        mockMvc.perform(
+            post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                param("creditReportConfirmed", "true").
+                param("viabilityConfirmed", "true").
+                param("ragStatus", "Red")).
+            andExpect(status().is3xxRedirection()).
+            andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
+
+        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.APPROVED);
     }
 
     private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
