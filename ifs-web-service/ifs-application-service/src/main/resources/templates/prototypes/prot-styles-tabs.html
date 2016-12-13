@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype tabs'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.css" />
     <style>
@@ -58,24 +58,32 @@
           tabScreenSize: 640
         },
         init: function () {
-          var windowWidth = $(window).width(); // TODO add orientation change event listener here
           settings = this.settings;
 
-          // TODO check with other FEDS if we should be doing this
+          // Check screen width
+          IFS.core.tabInterface.checkScreenWidth();
+
+          // Handle screen resize
+          $(window).on('resize', function () {
+            IFS.core.tabInterface.checkScreenWidth();
+          });
+
+          // Change focus between tabs with arrow keys
+          $('body').on('keydown', '[role="tab"]', function (e) {
+            IFS.core.tabInterface.changeFocus(e, $(this));
+          });
+
+          // Handle click on tab to show + focus tabpanel
+          $('body').on('click', '[role="tab"]', function (e) {
+            IFS.core.tabInterface.handleClick(e, $(this));
+          });
+        },
+        checkScreenWidth: function() {
+          var windowWidth = $(window).width();
           // Check screen width and apply collapsible functionality for mobile and tabs functionality for everything else
           if(windowWidth > settings.tabScreenSize ) {
             // Setup the tab html
             IFS.core.tabInterface.initTabHTML();
-
-            // Change focus between tabs with arrow keys
-            $('body').on('keydown', '[role="tab"]', function (e) {
-              IFS.core.tabInterface.changeFocus(e, $(this));
-            });
-
-            // Handle click on tab to show + focus tabpanel
-            $('body').on('click', '[role="tab"]', function (e) {
-              IFS.core.tabInterface.handleClick(e, $(this));
-            });
           } else {
             // Setup the collapsible html
             IFS.core.tabInterface.initCollapsibleHTML();
@@ -83,8 +91,11 @@
         },
         initTabHTML: function() {
           // The setup
-          $(settings.tabContainer +' ul').attr('role','tablist').show();
+          $(settings.tabContainer +' > ul').attr('role','tablist').show();
           $(settings.tabContainer +' [role="tablist"] li').attr('role','presentation');
+          $(settings.tabContainer +' section').removeClass('collapsible');
+          $(settings.tabContainer +' section h2 button').contents().unwrap();
+          $(settings.tabContainer +' section div').removeAttr('aria-hidden');
           $('[role="tablist"] a').attr({
             'role' : 'tab',
             'tabindex' : '-1'
@@ -179,8 +190,34 @@
           $('#' + instance.attr('href').substring(1)).attr('aria-hidden', null);
         },
         initCollapsibleHTML: function() {
-          // Add collapsible behaviour here
-//          $(settings.tabContainer +' section').addClass('collapsible');
+          var index = 0;
+          var id = '';   // create unique id for a11y relationship
+
+          //Only add the markup if its not already there
+          if(!$(settings.tabContainer +' section').first().hasClass('collapsible')) {
+            $(settings.tabContainer +' section').addClass('collapsible').removeAttr('aria-hidden');
+            // TODO when we refactor this into the main app code this could be incorporated into the collapsible.js
+            //IFS.core.collapsible.init();
+            $(settings.tabContainer + ' section').each(function() {
+              id = 'collapsible-' + index;
+              // wrap the content and make it focusable
+              $(this).find('div').attr('aria-hidden', true).attr('id', id);
+              // Add the button inside the <h2> so both the heading and button semantics are read
+              $(this).find('h2').wrapInner('<button aria-expanded="false" aria-controls="'+ id +'" type="button">');
+              index++;
+            });
+            $('body').on('click', '.collapsible > h2 >  [aria-controls], .collapsible > h3 >  [aria-controls]' , function() {
+              IFS.core.tabInterface.toggleCollapsible(this);
+            });
+          }
+        },
+        toggleCollapsible: function(el) {
+          var inst = $(el);
+          var panel = inst.find('div');
+          var state = inst.find('button').attr('aria-expanded') === 'false';
+          //toggle the current
+          inst.find('button').attr('aria-expanded', state);
+          panel.attr('aria-hidden', !state);
         }
       }
     })();
