@@ -98,14 +98,20 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     }
 
     protected void setStatus(final InviteStatus newStatus) {
-        if (newStatus == null) throw new NullPointerException("status cannot be null");
+        if (newStatus == null) {
+            throw new NullPointerException("status cannot be null");
+        }
+
         switch (newStatus) {
             case CREATED:
-                if (this.status != null) throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
+                if (this.status != null) {
+                    throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot create an Invite that has already been created.");
+                }
                 break;
             case SENT:
-                if (this.status != InviteStatus.CREATED)
+                if (this.status != InviteStatus.CREATED) {
                     throw new IllegalStateException("(" + this.status + ") -> (" + newStatus + ") Cannot send an Invite that has already been sent.");
+                }
                 break;
             case OPENED:
                 // TODO check legal invite transitions

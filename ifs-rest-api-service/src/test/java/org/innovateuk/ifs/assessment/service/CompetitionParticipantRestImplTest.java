@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionParticipantResourceListType;
-
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -35,8 +33,8 @@ public class CompetitionParticipantRestImplTest extends BaseRestServiceUnitTest<
             return cpr;
         }).collect(Collectors.toList());
 
-        setupGetWithRestResultExpectations(String.format("%s/user/%s/role/%s/status/%s", restUrl, 1L, ASSESSOR, ACCEPTED), competitionParticipantResourceListType(), expected, OK);
-        List<CompetitionParticipantResource> actual = service.getParticipants(1L, ASSESSOR, ACCEPTED).getSuccessObject();
+        setupGetWithRestResultExpectations(String.format("%s/user/%s/role/%s", restUrl, 1L, ASSESSOR), competitionParticipantResourceListType(), expected, OK);
+        List<CompetitionParticipantResource> actual = service.getParticipants(1L, ASSESSOR).getSuccessObject();
         assertEquals(expected, actual);
     }
 }
