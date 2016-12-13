@@ -17,21 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static java.time.LocalDateTime.now;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -161,33 +158,6 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 .getSuccessObject();
 
         assertEquals(0, participants.size());
-    }
-
-    @Test
-    public void getParticipants_filtersCreated() throws Exception {
-        Competition competition1 = buildInAssessmentCompetition();
-        Competition competition2 = buildInAssessmentCompetition();
-
-        CompetitionParticipant expectedParticipant1 = buildCompetitionParticipant(competition1, CREATED, PENDING);
-        CompetitionParticipant expectedParticipant2 = buildCompetitionParticipant(competition2, SENT, PENDING);
-
-        competitionParticipantRepository.save(asList(expectedParticipant1, expectedParticipant2));
-
-        flushAndClearSession();
-
-        List<CompetitionParticipantResource> participants = controller.getParticipants(
-                getPaulPlum().getId(),
-                CompetitionParticipantRoleResource.ASSESSOR
-        )
-                .getSuccessObject();
-
-        assertEquals(1, participants.size());
-
-        assertEquals(expectedParticipant2.getId(), participants.get(0).getId());
-        assertEquals(expectedParticipant2.getProcess().getId(), participants.get(0).getCompetitionId());
-        assertEquals(expectedParticipant2.getUser().getId(), participants.get(0).getUserId());
-        assertEquals(0L, participants.get(0).getSubmittedAssessments());
-        assertEquals(0L, participants.get(0).getTotalAssessments());
     }
 
     @Test

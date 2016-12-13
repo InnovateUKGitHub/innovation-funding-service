@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.controller.dashboard;
 
-import com.worth.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.model.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
@@ -9,11 +9,11 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetit
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

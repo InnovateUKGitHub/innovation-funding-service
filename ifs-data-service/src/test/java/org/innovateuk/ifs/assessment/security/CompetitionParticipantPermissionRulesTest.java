@@ -88,20 +88,6 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
     }
 
     @Test
-    public void userCanViewTheirOwnCompetitionParticipation_inviteNotSentOrOpened() {
-        CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
-                .withUser(7L)
-                .withInvite(newCompetitionInviteResource().withStatus(CREATED).build())
-                .build();
-        UserResource userResource = newUserResource()
-                .withId(7L)
-                .withRolesGlobal(singletonList(assessorRole()))
-                .build();
-
-        assertFalse(rules.userCanViewTheirOwnCompetitionParticipation(competitionParticipantResource, userResource));
-    }
-
-    @Test
     public void userCanViewTheirOwnCompetitionParticipation_differentUser() {
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource()
                 .withUser(7L)

@@ -48,7 +48,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
         List<CompetitionParticipantResource> competitionParticipantResources = competitionParticipantRepository.getByUserIdAndRole(userId, role).stream()
                 .map(compParticipantMapper::mapToResource)
-                .filter(participant -> !participant.isRejected() && (participant.isAnUpcomingAssessment() || participant.isInAssessment()))
+                .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
                 .collect(toList());
 
         competitionParticipantResources.forEach(this::determineStatusOfCompetitionAssessments);

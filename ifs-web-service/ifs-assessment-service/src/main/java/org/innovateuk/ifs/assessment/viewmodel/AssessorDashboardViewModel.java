@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import com.worth.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 
 import java.util.List;

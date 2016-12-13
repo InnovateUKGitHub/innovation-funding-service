@@ -177,6 +177,11 @@ public class CompetitionParticipantResource {
         return competitionStatus == READY_TO_OPEN || competitionStatus == OPEN || competitionStatus == CLOSED;
     }
 
+    @JsonIgnore
+    public boolean isUpcomingOrInAssessment() {
+        return isInAssessment() || isAnUpcomingAssessment();
+    }
+
     private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
         if (daysLeft <= 0) {
             return 100;
