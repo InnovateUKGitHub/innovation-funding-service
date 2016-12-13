@@ -63,9 +63,9 @@ public enum CompetitionSetupSection {
 			return !(this.equals(INITIAL_DETAILS)
                     //TODO INFUND-6675 & 6694 & 6695 : add editable sections here.
                     );
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 	
 }

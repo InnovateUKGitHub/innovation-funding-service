@@ -108,7 +108,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
     	if(section.preventEdit(competition)) {
-            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s edited: ", competitionId, section));
+            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competitionId, section));
             return "redirect:/dashboard";
         }
 
