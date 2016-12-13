@@ -2,7 +2,8 @@
 Documentation     INFUND-6459 As a member of the competitions team I can select 'Close assessment' in an In assessment competition so that the competition is moved to state 'Out of assessment'
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    Run Keywords    Connect to Database    @{database}
-...               AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE `id`='124';    #Changed the status of the competition to "In Assessment" for the rest of the tests
+...               AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE `id`='124';
+...               AND    the user closes the browser    #Changed the status of the competition to "In Assessment" for the rest of the tests
 Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 
