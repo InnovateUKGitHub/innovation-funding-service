@@ -18,12 +18,14 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import static junit.framework.TestCase.assertNull;
 import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -206,5 +208,23 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         User retrievedUser = retrievedParticipant.getUser();
         assertEquals(user.getFirstName(),retrievedUser.getFirstName());
+    }
+
+    @Test
+    public void getByUserIdCompetitionIdAndStatuses_accepted() {
+        CompetitionInvite invite = new CompetitionInvite("name1", "tom1@poly.io", "hash", competition, innovationArea);
+        invite.open();
+        User user = newUser()
+                .withId(3L)
+                .withFirstName("Professor")
+                .build();
+        CompetitionParticipant savedParticipant = repository.save( new CompetitionParticipant(invite));
+
+        savedParticipant.acceptAndAssignUser(user);
+        repository.save(savedParticipant);
+        flushAndClearSession();
+
+        CompetitionParticipant retrievedParticipant = repository.getByUserIdAndCompetitionIdAndStatusIn(user.getId(),competition.getId(), EnumSet.of(PENDING, REJECTED));
+        assertNull(retrievedParticipant);
     }
 }

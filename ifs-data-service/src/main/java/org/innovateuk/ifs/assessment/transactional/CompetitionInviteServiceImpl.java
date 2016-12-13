@@ -123,7 +123,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         List<User> assessors = userRepository.findByRoles_Name(ASSESSOR.getName());
 
         return serviceSuccess(assessors.stream()
-                .filter(assessor -> isCompetitionParticipant(assessor.getId(), competitionId, EnumSet.of(PENDING, ACCEPTED)))
+                .filter(assessor -> !isCompetitionParticipant(assessor.getId(), competitionId, EnumSet.of(PENDING, ACCEPTED)))
                 .map(assessor -> {
                     AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
                     availableAssessor.setEmail(assessor.getEmail());
@@ -148,7 +148,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private boolean isCompetitionParticipant(long userId, long competitionId, EnumSet<ParticipantStatus> statuses) {
-        return getCompetitionParticipant(userId, competitionId, statuses).isFailure();
+        return getCompetitionParticipant(userId, competitionId, statuses).isSuccess();
     }
 
     private ServiceResult<CompetitionParticipant> getCompetitionParticipant(long userId, long competitionId, EnumSet<ParticipantStatus> statuses) {

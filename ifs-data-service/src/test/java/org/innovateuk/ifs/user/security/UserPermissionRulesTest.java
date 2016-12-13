@@ -390,14 +390,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void testUsersCanViewTheirOwnProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersCanViewTheirOwnProfileStatus(userProfileStatus, user));
+        assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, user));
     }
 
     @Test
     public void testUsersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
         UserResource user = newUserResource().withId(1L).build();
         UserProfileStatusResource anotherUsersProfileStatus = newUserProfileStatusResource().withUser(2L).build();
-        assertFalse(rules.usersCanViewTheirOwnProfileStatus(anotherUsersProfileStatus, user));
+        assertFalse(rules.usersAndCompAdminCanViewProfileStatus(anotherUsersProfileStatus, user));
+    }
+
+    @Test
+    public void testCompAdminCanViewUserProfileStatus() {
+        UserResource user = newUserResource().build();
+        UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
+        assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, compAdminUser()));
     }
 
     @Override
