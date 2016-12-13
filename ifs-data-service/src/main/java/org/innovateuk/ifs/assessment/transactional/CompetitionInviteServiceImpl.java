@@ -72,6 +72,17 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private UserRepository userRepository;
 
+
+    @Override
+    public ServiceResult<CompetitionInviteResource> getCreatedInvite(Long inviteId) {
+        return getById(inviteId).andOnSuccess(invite -> {
+            if (invite.getStatus() != CREATED) {
+                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
+            }
+            return serviceSuccess(invite);
+        }).andOnSuccessReturn(mapper::mapToResource);
+    }
+
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)

@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface CompetitionInviteRestService {
 
+    RestResult<CompetitionInviteResource> getCreated(Long inviteId);
+
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
     RestResult<CompetitionInviteResource> openInvite(String inviteHash);

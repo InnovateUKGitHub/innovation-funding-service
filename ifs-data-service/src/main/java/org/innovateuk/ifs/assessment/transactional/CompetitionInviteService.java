@@ -16,6 +16,10 @@ import java.util.Optional;
  */
 public interface CompetitionInviteService {
 
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<CompetitionInviteResource> getCreatedInvite(Long inviteId);
+
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",

@@ -23,6 +23,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     private static final String competitionInviteRestUrl = "/competitioninvite";
 
     @Override
+    public RestResult<CompetitionInviteResource> getCreated(Long inviteId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getCreated", inviteId), CompetitionInviteResource.class);
+    }
+
+    @Override
     public RestResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getWithRestResultAnonymous(format("%s/%s/%s", competitionInviteRestUrl, "/getInvite", inviteHash), CompetitionInviteResource.class);
     }
