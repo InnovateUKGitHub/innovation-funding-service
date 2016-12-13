@@ -5,7 +5,9 @@ import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
+import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.transactional.FinanceRowService;
 import com.worth.ifs.project.domain.PartnerOrganisation;
@@ -76,6 +78,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
+
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
@@ -108,6 +113,34 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
         return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
+    }
+
+    @Override
+    public ServiceResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
+        return projectService.getProjectById(projectId).andOnSuccess(project -> {
+            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication(), organisationId);
+            if(applicationFinance != null) {
+                applicationFinance.setIsCreditReport(reportPresent);
+                applicationFinanceRepository.save(applicationFinance);
+                return serviceSuccess();
+            } else {
+                return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+            }
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+        return projectService.getProjectById(projectId).andOnSuccess(project -> {
+            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication(), organisationId);
+            if(applicationFinance != null) {
+                Boolean creditReport = applicationFinance.getIsCreditReport();
+                applicationFinanceRepository.save(applicationFinance);
+                return serviceSuccess(creditReport);
+            } else {
+                return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+            }
+        });
     }
 
     private ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(PartnerOrganisation partnerOrganisation) {

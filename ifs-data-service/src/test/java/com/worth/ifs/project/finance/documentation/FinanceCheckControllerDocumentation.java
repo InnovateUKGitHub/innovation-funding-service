@@ -21,7 +21,6 @@ import static com.worth.ifs.project.builder.CostCategoryResourceBuilder.newCostC
 import static com.worth.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static com.worth.ifs.project.builder.CostResourceBuilder.newCostResource;
 import static com.worth.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static com.worth.ifs.project.controller.FinanceCheckController.*;
 import static com.worth.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
 import static com.worth.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static com.worth.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
@@ -194,6 +193,36 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 ));
 
         verify(financeCheckServiceMock).getFinanceCheckSummary(123L);
+    }
+
+    @Test
+    public void getCreditReport() throws Exception {
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}/credit-report";
+        when(financeCheckServiceMock.getCreditReport(123L, 234L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        mockMvc.perform(get(url, 123L, 234L)).
+                andExpect(status().isOk()).
+                andExpect(content().string("true")).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
+                                parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked")
+                        )
+                ));
+    }
+
+    @Test
+    public void setCreditReport() throws Exception {
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}/credit-report/{reportPresent}";
+        when(financeCheckServiceMock.setCreditReport(123L, 234L, Boolean.TRUE)).thenReturn(serviceSuccess());
+        mockMvc.perform(post(url, 123L, 234L, Boolean.TRUE)).
+                andExpect(status().isOk()).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
+                                parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked"),
+                                parameterWithName("reportPresent").description("The credit report flag")
+                        )
+                ));
     }
 
     @Override

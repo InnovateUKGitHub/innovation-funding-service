@@ -19,4 +19,8 @@ public interface FinanceCheckRestService {
     RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
 
     RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
+
+    RestResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean reportPresent);
+
+    RestResult<Boolean> getCreditReport(Long projectId, Long organisationId);
 }

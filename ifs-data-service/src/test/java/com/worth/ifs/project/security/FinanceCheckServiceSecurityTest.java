@@ -101,6 +101,13 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
+
+        @Override
+        public ServiceResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean creditReportPresent) { return null; }
+
     }
 }
 

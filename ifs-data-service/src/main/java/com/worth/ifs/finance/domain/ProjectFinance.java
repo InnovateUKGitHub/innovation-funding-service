@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 
 /**
  * Entity object similar to ApplicationFinance for storing values in finance_row tables which can be edited by
- * internal project finance users.  It also holds organiation size because internal users will be allowed to edit
+ * internal project finance users.  It also holds organisation size because internal users will be allowed to edit
  * organisation size as well.
  */
 @Entity
