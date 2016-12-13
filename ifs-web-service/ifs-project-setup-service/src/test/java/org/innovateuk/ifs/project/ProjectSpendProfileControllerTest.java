@@ -4,16 +4,19 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
-import org.innovateuk.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
@@ -21,14 +24,16 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.List;
 import java.util.stream.IntStream;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -43,12 +48,12 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileController> {
     @Mock
@@ -171,7 +176,21 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        SpendProfileTableResource table = new SpendProfileTableResource();
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource()
+                .withUser(1L)
+                .withOrganisation(1L)
+                .withRoleName(PARTNER)
+                .build(1);
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+
+        SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
 
         when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
 
@@ -180,12 +199,38 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
+
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+
+        MvcResult result = mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("table.markedAsComplete", "true")
+                .param("table.monthlyCostsPerCategoryMap[1][0]", "10")
+                .param("table.monthlyCostsPerCategoryMap[1][1]", "10")
+                .param("table.monthlyCostsPerCategoryMap[1][2]", "10")
+                .param("table.monthlyCostsPerCategoryMap[2][0]", "10")
+                .param("table.monthlyCostsPerCategoryMap[2][1]", "10")
+                .param("table.monthlyCostsPerCategoryMap[2][2]", "10")
+                .param("table.monthlyCostsPerCategoryMap[3][0]", "10")
+                .param("table.monthlyCostsPerCategoryMap[3][1]", "10")
+                .param("table.monthlyCostsPerCategoryMap[3][2]", "10")
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit"));
+                .andExpect(view().name("project/spend-profile")).andReturn();
+
+        SpendProfileForm form = (SpendProfileForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(1, form.getObjectErrors().size());
+
+        verify(projectService).getById(projectId);
+        verify(projectFinanceService, times(2)).getSpendProfileTable(projectId, organisationId);
+        verify(organisationService).getOrganisationById(organisationId);
+        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
+
     }
 
     @Test

@@ -9,12 +9,10 @@ import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.util.DateUtil;
 import org.innovateuk.ifs.project.util.FinancialYearDate;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
-import org.innovateuk.ifs.project.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
-import org.innovateuk.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -32,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -121,28 +120,37 @@ public class ProjectSpendProfileController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/edit", method = POST)
-    public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+    public String saveSpendProfile(Model model,
+                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
+        Supplier<String> failureView = () -> {
+
+            SpendProfileTableResource updatedTable = form.getTable();
+            SpendProfileTableResource originalTableWithUpdatedCosts = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+            originalTableWithUpdatedCosts.setMonthlyCostsPerCategoryMap(updatedTable.getMonthlyCostsPerCategoryMap());
+
+            ProjectResource project = projectService.getById(projectId);
+
+            return doEditSpendProfile(model, form, organisationId, loggedInUser, project, originalTableWithUpdatedCosts);
+        };
+
         String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
-        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
-        if (customValidationHandler.hasErrors()) {
-            return failureView;
-        }
 
-        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+            spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+            ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
 
-        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> successView);
+        });
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
@@ -152,6 +160,21 @@ public class ProjectSpendProfileController {
                                              @PathVariable("organisationId") final Long organisationId,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
+    }
+
+    private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
+                                      ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
+
+        form.setTable(spendProfileTableResource);
+
+        if(spendProfileTableResource.getMarkedAsComplete()) {
+            String successView = "redirect:/" + BASE_DIR + "/" + project.getId() + "/partner-organisation/" + organisationId + "/spend-profile";
+            markSpendProfileInComplete(model, project.getId(), organisationId, successView, loggedInUser);
+        }
+
+        model.addAttribute("model", buildSpendProfileViewModel(project, organisationId, spendProfileTableResource, loggedInUser));
+
+        return BASE_DIR + "/spend-profile";
     }
 
     private String viewProjectManagerSpendProfile(Model model, Long projectId, UserResource loggedInUser) {

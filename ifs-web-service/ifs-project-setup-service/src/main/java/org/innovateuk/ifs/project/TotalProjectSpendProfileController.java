@@ -62,13 +62,13 @@ public class TotalProjectSpendProfileController {
                                   ValidationHandler validationHandler,
                                   Model model) {
         return validationHandler.performActionOrBindErrorsToField("",
-            () -> {
-                model.addAttribute("model", buildTotalViewModel(projectId));
-                model.addAttribute(FORM_ATTR_NAME, form);
-                return SPEND_PROFILE_TOTALS_TEMPLATE;
-            },
-            () -> "redirect:/project/" + projectId,
-            () ->  projectFinanceService.completeSpendProfilesReview(projectId));
+                () -> {
+                    model.addAttribute("model", buildTotalViewModel(projectId));
+                    model.addAttribute(FORM_ATTR_NAME, form);
+                    return SPEND_PROFILE_TOTALS_TEMPLATE;
+                },
+                () -> "redirect:/project/" + projectId,
+                () ->  projectFinanceService.completeSpendProfilesReview(projectId));
 
     }
 
@@ -104,6 +104,4 @@ public class TotalProjectSpendProfileController {
                 totalOfAllActualTotals, totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName));
 
     }
-
-
 }

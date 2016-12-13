@@ -139,7 +139,7 @@ Status updates correctly for internal user's table
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting      # MO
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks are approved
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.waiting  # Spend Profile
