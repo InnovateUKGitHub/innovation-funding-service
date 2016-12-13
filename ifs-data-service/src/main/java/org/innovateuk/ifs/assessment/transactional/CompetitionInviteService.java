@@ -18,7 +18,7 @@ public interface CompetitionInviteService {
 
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<CompetitionInviteResource> getCreatedInvite(Long inviteId);
+    ServiceResult<CompetitionInviteResource> getCreatedInvite(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",

@@ -23,7 +23,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     private static final String competitionInviteRestUrl = "/competitioninvite";
 
     @Override
-    public RestResult<CompetitionInviteResource> getCreated(Long inviteId) {
+    public RestResult<CompetitionInviteResource> getCreated(long inviteId) {
         return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getCreated", inviteId), CompetitionInviteResource.class);
     }
 
@@ -66,4 +66,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     public RestResult<Void> deleteInvite(String email, long competitionId) {
         return postWithRestResult(format("%s/%s", competitionInviteRestUrl, "/deleteInvite"), asMap("email", email, "competitionId", competitionId), Void.class);
     }
+
+    @Override
+    public RestResult<Void> sendInvite(long inviteId) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), Void.class);
+    }
+
+
 }

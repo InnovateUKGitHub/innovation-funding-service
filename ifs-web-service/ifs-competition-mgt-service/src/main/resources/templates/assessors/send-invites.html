@@ -11,7 +11,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Invite assessor',linkClass='linkBack',linkUrl=@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" th:remove="tag"/>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Invite assessor',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" th:remove="tag"/>
 
     <div class="page-title">
         <h1 class="heading-xlarge">
@@ -23,10 +23,10 @@
     <h2 class="heading-medium">Recipients:
         <span th:text="${model.recipient}">Dave smith</span>
     </h2>
-    <form action="/management/competition/assessors/invite/{id}/send" method="post">
+    <form th:action="@{/competition/assessors/invite/{inviteId}/send(inviteId=${model.inviteId})}" method="post">
     <div class="form-group">
         <label class="form-label-bold" for="subject">Subject</label>
-        <input class="form-control width-full" id="subject" type="text" value="Invitation to assess 'Technology inspired'" />
+        <input class="form-control width-full" id="subject" type="text" th:value="|Invitation to assess '${model.competitionName}'|" value="Invitation to assess 'Technology inspired'" />
     </div>
 
     <div class="form-group">

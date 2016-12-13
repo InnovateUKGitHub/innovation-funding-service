@@ -26,7 +26,7 @@ public class CompetitionInviteController {
     private CompetitionInviteService competitionInviteService;
 
     @RequestMapping(value = "/getCreated/{inviteId}", method = RequestMethod.GET)
-    public RestResult<CompetitionInviteResource> getCreatedInvite(@PathVariable Long inviteId) {
+    public RestResult<CompetitionInviteResource> getCreatedInvite(@PathVariable long inviteId) {
         return competitionInviteService.getCreatedInvite(inviteId).toGetResponse();
     }
 
@@ -69,5 +69,10 @@ public class CompetitionInviteController {
     @RequestMapping(value = "/deleteInvite", method = RequestMethod.POST)
     public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam Long competitionId) {
         return competitionInviteService.deleteInvite(email, competitionId).toPostResponse();
+    }
+
+    @RequestMapping(value = "/sendInvite/{inviteId}", method = RequestMethod.POST)
+    public RestResult<Void> sendInvite(@PathVariable long inviteId) {
+        return competitionInviteService.sendInvite(inviteId).toPostResponse();
     }
 }

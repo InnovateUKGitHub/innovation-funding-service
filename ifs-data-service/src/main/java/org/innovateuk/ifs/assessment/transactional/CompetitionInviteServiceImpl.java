@@ -74,7 +74,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
 
     @Override
-    public ServiceResult<CompetitionInviteResource> getCreatedInvite(Long inviteId) {
+    public ServiceResult<CompetitionInviteResource> getCreatedInvite(long inviteId) {
         return getById(inviteId).andOnSuccess(invite -> {
             if (invite.getStatus() != CREATED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));

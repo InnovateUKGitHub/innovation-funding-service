@@ -5,11 +5,13 @@ package org.innovateuk.ifs.management.viewmodel;
  */
 public class SendInviteViewModel {
     private Long competitionId;
+    private Long inviteId;
     private String competitionName;
     private String recipient;
 
-    public SendInviteViewModel(Long competitionId, String competitionName, String recipient) {
+    public SendInviteViewModel(Long competitionId, Long inviteId, String competitionName, String recipient) {
         this.competitionId = competitionId;
+        this.inviteId = inviteId;
         this.competitionName = competitionName;
         this.recipient = recipient;
     }
@@ -20,6 +22,14 @@ public class SendInviteViewModel {
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public Long getInviteId() {
+        return inviteId;
+    }
+
+    public void setInviteId(Long inviteId) {
+        this.inviteId = inviteId;
     }
 
     public String getCompetitionName() {

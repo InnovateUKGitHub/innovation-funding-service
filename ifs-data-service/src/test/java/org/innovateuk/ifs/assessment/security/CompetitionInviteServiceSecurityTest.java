@@ -128,6 +128,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public static class TestCompetitionInviteService implements CompetitionInviteService {
 
         @Override
+        public ServiceResult<CompetitionInviteResource> getCreatedInvite(long inviteId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) { return null; }
 
         @Override

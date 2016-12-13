@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface CompetitionInviteRestService {
 
-    RestResult<CompetitionInviteResource> getCreated(Long inviteId);
+    RestResult<CompetitionInviteResource> getCreated(long inviteId);
 
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
@@ -30,4 +30,6 @@ public interface CompetitionInviteRestService {
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
     RestResult<Void> deleteInvite(String email, long competitionId);
+
+    RestResult<Void> sendInvite(long inviteId);
 }
