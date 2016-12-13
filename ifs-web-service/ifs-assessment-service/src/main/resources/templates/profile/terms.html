@@ -48,7 +48,7 @@
                                 </span>
                             </legend>
                             <label class="block-label">
-                                <input data-required-errormessage="Please agree to the terms and conditions" required="required" type="checkbox" th:field="*{agreesToTerms}" />
+                                <input th:attr="data-required-errormessage=#{validation.assessorprofiletermsform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
                                 I agree to and sign the terms of contract for becoming an assessor
                             </label>
                         </fieldset>
