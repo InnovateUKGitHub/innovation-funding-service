@@ -196,7 +196,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should not see the element         link = Finance checks
     And the user should see the element             link= Spend profile
     And the user should not see the element         link = Grant offer letter
-    # TODO update the acc tests for Editing the Spend Profile by a non-lead partner    INFUND-5153
+
 
 Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970
@@ -278,13 +278,14 @@ Academic partner spend profile client side validations
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
     When the user makes all values zeros               32    ${project_duration}  # Travel
-    When the user makes all values zeros               33    ${project_duration}  # Other - Directly incurred
-    When the user makes all values zeros               35    ${project_duration}  # Estates
+    Then the user makes all values zeros               33    ${project_duration}  # Other - Directly incurred
+    And the user makes all values zeros                35    ${project_duration}  # Estates
     When the user enters text to a text field          css=#row-36-1    0  # Other - Directly allocated
     And the user enters text to a text field           css=#row-36-2    0  # Other - Directly allocated
     And the user enters text to a text field           css=#row-39-1    0  # Other - Exceptions
     And the user enters text to a text field           css=#row-39-2    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
+    #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
@@ -383,7 +384,7 @@ Partners can see the Spend Profile section completed
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -392,8 +393,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been rejected")
-    # TODO - Set up test data with Innovate lead and check for the lead.
-    # The existing check to ensure the lead as Robin Wilson when no lead is assigned has been removed, Pending due to INFUND-5942
+    And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
     Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
     And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
@@ -437,7 +437,6 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
     When the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
     Then the user should not see an error in the page
-    #TODO update ticket along with INFND-6187
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543

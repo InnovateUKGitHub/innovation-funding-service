@@ -21,6 +21,7 @@ import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.Fin
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -51,6 +52,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     private CompetitionService competitionService;
 
     @Autowired
+    @Qualifier("mvcValidator")
     private Validator validator;
 
     @Autowired

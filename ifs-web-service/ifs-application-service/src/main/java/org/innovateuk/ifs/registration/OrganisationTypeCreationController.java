@@ -15,6 +15,7 @@ import org.innovateuk.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ public class OrganisationTypeCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationTypeCreationController.class);
     Validator validator;
     @Autowired
+    @Qualifier("mvcValidator")
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
