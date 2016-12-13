@@ -62,8 +62,16 @@
     <li>
       <div class="grid-row">
         <div class="column-one">
-          <h3 class="heading-small">Your funding</h3>
+
+          <th:block th:if="${param.status != null and param.status[0] == 'initialView'}">
+            <h3 class="heading-small">Your funding</h3>
             <p>Before you can supply your funding information this project must be given a reearch area in <a href="/prototypes/5452-application-details">project details</a>, and your organisation size defined in the <a href="/prototypes/4600-your-org">your organisation</a> section.</p>
+          </th:block>
+
+          <th:block th:if="${param.status == null or param.status[0] != 'initialView'}">
+            <h3 class="heading-small"><a href="/prototypes/6618-your-funding">Your funding</a></h3>
+          </th:block>
+
         </div>
       </div>
     </li>
@@ -85,6 +93,7 @@
           </tr>
       </thead>
       <tbody>
+        <th:block th:if="${param.status != null and param.status[0] == 'initialView'}">
           <tr>
             <td class="numeric"><strong>&pound;0</strong></td>
             <td class="numeric">0%</td>
@@ -92,6 +101,17 @@
             <td class="numeric">&pound;0</td>
             <td class="numeric">&pound;0</td>
           </tr>
+        </th:block>
+
+        <th:block th:if="${param.status == null or param.status[0] != 'initialView'}">
+          <tr>
+            <td class="numeric"><strong>&pound;110,000</strong></td>
+            <td class="numeric">70%</td>
+            <td class="numeric">&pound;60,000</td>
+            <td class="numeric">&pound;10,000</td>
+            <td class="numeric">&pound;30,000</td>
+          </tr>
+        </th:block>
       </tbody>
     </table>
   </div>

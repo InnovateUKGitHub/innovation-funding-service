@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.finance.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -47,4 +48,10 @@ public interface ProjectFinanceService {
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
             description = "Project Finance users can view financial overviews of Organisations on Projects")
     ServiceResult<List<ProjectFinanceResource>> getProjectFinanceTotals(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")
+    ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
+    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability);
 }
