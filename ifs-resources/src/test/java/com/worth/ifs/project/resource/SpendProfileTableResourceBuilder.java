@@ -1,18 +1,20 @@
 package com.worth.ifs.project.resource;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.commons.rest.LocalDateResource;
-import com.worth.ifs.commons.rest.ValidationMessages;
-import com.worth.ifs.project.finance.resource.CostCategoryResource;
+
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
+import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static com.worth.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  *
