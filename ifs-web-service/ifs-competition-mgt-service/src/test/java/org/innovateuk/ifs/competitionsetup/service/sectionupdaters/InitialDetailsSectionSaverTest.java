@@ -23,12 +23,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -50,20 +47,32 @@ public class InitialDetailsSectionSaverTest {
     @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
+    //TODO: Create tests for situations surrounding Milestone saving
+    //TODO: Create test for invalid date handling
+    //TODO: Create test for situations surrounding retrieval of innovation sector
+
     @Test
     public void testSaveCompetitionSetupSection() {
+        Long executiveUserId = 1L;
+        Long competitionTypeId = 2L;
+        Long leadTechnologistId = 3L;
+        Long innovationAreaId = 4L;
+        Long innovationSectorId = 5L;
+
+        LocalDateTime openingDate = LocalDateTime.of(2020, 12, 1, 0, 0);
+
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
-        competitionSetupForm.setExecutiveUserId(1L);
-        competitionSetupForm.setOpeningDateDay(1);
-        competitionSetupForm.setOpeningDateMonth(12);
-        competitionSetupForm.setOpeningDateYear(2020);
-        competitionSetupForm.setCompetitionTypeId(2L);
-        competitionSetupForm.setLeadTechnologistUserId(3L);
-
-        long innovationSectorId = 5L;
+        competitionSetupForm.setExecutiveUserId(executiveUserId);
+        competitionSetupForm.setOpeningDateDay(openingDate.getDayOfMonth());
+        competitionSetupForm.setOpeningDateMonth(openingDate.getMonthValue());
+        competitionSetupForm.setOpeningDateYear(openingDate.getYear());
+        competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
+        competitionSetupForm.setCompetitionTypeId(competitionTypeId);
+        competitionSetupForm.setInnovationAreaCategoryId(innovationAreaId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
-        CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().build();
+
+        CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().withId(innovationAreaId).build();
         competitionSetupForm.setInnovationAreaCategoryId(innovationArea.getId());
 
         List<MilestoneResource> milestones = new ArrayList<>();
@@ -85,12 +94,14 @@ public class InitialDetailsSectionSaverTest {
         service.saveSection(competition, competitionSetupForm);
 
         assertEquals("title", competition.getName());
-        assertEquals(Long.valueOf(1L), competition.getExecutive());
-        assertEquals(Long.valueOf(2L), competition.getCompetitionType());
-        assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-        assertEquals(Long.valueOf(innovationArea.getId()), competition.getInnovationArea());
-        assertEquals(Long.valueOf(innovationSectorId), competition.getInnovationSector());
-        assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
+        assertEquals(competition.getExecutive(), executiveUserId);
+        assertEquals(competition.getCompetitionType(), competitionTypeId);
+        assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
+        assertEquals(competition.getInnovationArea(), innovationAreaId);
+        assertEquals(competition.getInnovationSector(), innovationSectorId);
+        assertEquals(openingDate, competition.getStartDate());
+        assertEquals(competition.getCompetitionType(), competitionTypeId);
+        assertEquals(innovationSectorId, competition.getInnovationSector());
 
         verify(competitionService).update(competition);
         verify(competitionService).initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId());
@@ -121,23 +132,38 @@ public class InitialDetailsSectionSaverTest {
     }
 
     @Test
-    public void testCompleteCompetitionCannotSetFields() {
-        CompetitionResource competition = newCompetitionResource().build();
-        competition.setSetupComplete(true);
-        competition.setStartDate(LocalDateTime.now().minusDays(1));
-        competition.setFundersPanelDate(LocalDateTime.now().plusDays(1));
-        InitialDetailsForm form = new InitialDetailsForm();
+    public void testCompletedCompetitionCanSetOnlyLeadTechnologistAndExecutive() {
         String newTitle = "New title";
         Long newExec = 1L;
+        Long leadTechnologistId = 2L;
+        Long competitionTypeId = 3L;
+        Long innovationSectorId = 4L;
+
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withSetupComplete(true)
+                .withStartDate(yesterday)
+                .withFundersPanelDate(tomorrow)
+                .build();
+
+        InitialDetailsForm form = new InitialDetailsForm();
         form.setTitle(newTitle);
         form.setExecutiveUserId(newExec);
+        form.setLeadTechnologistUserId(leadTechnologistId);
+        form.setCompetitionTypeId(competitionTypeId);
+        form.setInnovationSectorCategoryId(innovationSectorId);
+
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, form);
 
-        assertThat(competition.getName(), is(not(equalTo(newTitle))));
-        assertThat(competition.getExecutive(), is(equalTo(newExec)));
-
+        assertNull(competition.getName());
+        assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
+        assertEquals(competition.getExecutive(), newExec);
+        assertNull(competition.getCompetitionType());
+        assertNull(competition.getInnovationSector());
     }
 
     private MilestoneResource getMilestone(){
