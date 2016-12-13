@@ -21,9 +21,44 @@
         <!-- HARDCODED PROTOTYPE HTML -->
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" th:remove="tag" />
 
-        <form action="#">
+        <form action="#" >
 
-          <fieldset th:unless="${param.org != null and param.org[0] == 'growth'}">
+          <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset class="extra-margin-bottom">
+              <legend class="heading-large no-margin-bottom">Organisation size</legend>
+              <p class="form-hint">In order to work out how much funding you are able to receive, please provide your business size using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
+              <div class="form-block">
+                <label class="block-label" for="radio-1">
+                  <input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+                  Micro / small - claim up to 70%
+                </label>
+                <label class="block-label" for="radio-2">
+                  <input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+                  Medium - claim up to 60%
+                </label>
+                <label class="block-label" for="radio-3">
+                  <input id="radio-3" type="radio" name="radio-group" value="Large"/>
+                  Large - claim up to 50%
+                </label>
+              </div>
+            </fieldset>
+          </th:block>
+
+          <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <dl class="readonly-data">
+              <dt>Organisation size</dt>
+              <dd>Medium</dd>
+
+              <dt>Staff count</dt>
+              <dd>340</dd>
+
+              <dt>Turnover</dt>
+              <dd>&pound;12,000,000</dd>
+            </dl>
+          </th:block>
+
+
+          <fieldset th:unless="${param.org != null and param.org[0] == 'growth' or param.status != null and param.status[0] == 'readOnly'}">
 
             <legend class="heading-large">Staff count and turnover</legend>
 
@@ -130,31 +165,45 @@
 
           </th:block>
 
-      	  <fieldset class="extra-margin">
-            <legend class="heading-large no-margin-bottom">Organisation size</legend>
-      		  <p class="form-hint">In order to work out how much funding you are able to receive, please provide your business size using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
-        		<div class="form-block">
-        			<label class="block-label" for="radio-1">
-        				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
-        				Micro / small - claim up to 70%
-        			</label>
-        			<label class="block-label" for="radio-2">
-        				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
-        				Medium - claim up to 60%
-        			</label>
-        			<label class="block-label" for="radio-3">
-        				<input id="radio-3" type="radio" name="radio-group" value="Large"/>
-        				Large - claim up to 50%
-        			</label>
-        		</div>
-          </fieldset>
-
-          <div class="alignright-button extra-margin">
-        		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
+          <div class="extra-margin">
+        		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1" data-js-modal="change-org-size">Mark as complete
         		</button>
         	</div>
 
+          <div class="change-org-size" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+            <button class="js-close close" aria-label="Close Popup">X</button>
+            <div>
+
+              <h2 class="heading-medium no-margin">Change organisation size</h2>
+
+              <div id="org-text-small">
+                <p>Are you sure you wish to change your organisation size from medium to large?</p>
+                <p>This will reset your funding amount.</p>
+              </div>
+
+              <hr />
+
+              <div class="alignright-button">
+
+                <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+
+                <input type="hidden" id="status" name="status" value="orgSizeChanged" />
+
+                <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+                  <input type="hidden" name="growth" value="growth" />
+                </th:block>
+
+                <button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Change organisation size</button>
+
+              </div>
+            </div>
+          </div>
+
         </form>
+
+        <div class="extra-margin">
+          <a href="/prototypes/4600-finances" class="button-secondary">Return to finances</a>
+        </div>
 
         <ul class="pagination">
             <li class="prev">
@@ -164,8 +213,6 @@
                 </a>
             </li>
         </ul>
-
-        <a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
 
 
         <!-- END OFHARDCODED PROTOTYPE HTML -->
