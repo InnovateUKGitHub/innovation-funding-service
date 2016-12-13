@@ -125,6 +125,7 @@ public class InitialDetailsSectionSaverTest {
         CompetitionResource competition = newCompetitionResource().build();
         competition.setSetupComplete(true);
         competition.setStartDate(LocalDateTime.now().minusDays(1));
+        competition.setFundersPanelDate(LocalDateTime.now().plusDays(1));
         InitialDetailsForm form = new InitialDetailsForm();
         String newTitle = "New title";
         Long newExec = 1L;
