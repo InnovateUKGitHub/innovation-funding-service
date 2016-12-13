@@ -59,8 +59,8 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max(70)},
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
 
@@ -78,8 +78,8 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min},
-                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max(70)},
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
@@ -140,8 +140,8 @@
                            minlength="8"
                            maxlength="20"
                            required="required"
-                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(8)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max(20)},
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
                 <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
@@ -168,7 +168,7 @@
                                th:field="*{email}"
                                maxlength="256"
                                required="required"
-                               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max},
+                               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                         data-required-errormessage=#{validation.standard.email.required}" />
                     </span>
                 </div>
@@ -185,6 +185,7 @@
                           </ul>
                           Your password can include spaces to make a phrase.
                         </span>
+
                         <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
@@ -196,7 +197,7 @@
                            minlength="10"
                            maxlength="30"
                            th:attr="data-required-errormessage=#{validation.standard.password.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min},
+                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'10')},
                                     data-maxlength-errormessage=#{validation.standard.password.length.max}"
                             />
                 </div>
@@ -214,8 +215,8 @@
                            minlength="10"
                            maxlength="30"
                            th:attr="data-required-errormessage=#{validation.standard.retypedpassword.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min},
-                                    data-maxlength-errormessage=#{validation.standard.password.length.max}"
+                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'10')},
+                                    data-maxlength-errormessage=#{validation.standard.password.length.max(30)}"
                            />
                 </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">

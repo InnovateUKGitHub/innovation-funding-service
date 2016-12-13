@@ -56,8 +56,8 @@
                        required="required"
                        minlength="2"
                        maxlength="70"
-                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min},
-                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(2)},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max(70)},
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
@@ -73,8 +73,8 @@
                        required="required"
                        minlength="2"
                        maxlength="70"
-                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min},
-                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(2)},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max(70)},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
@@ -146,8 +146,8 @@
                        minlength="8"
                        maxlength="20"
                        required="required"
-                       th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min},
-                                data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
+                       th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(8)},
+                                data-maxlength-errormessage=#{validation.standard.phonenumber.length.max(20)},
                                 data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
             <div class="form-group">

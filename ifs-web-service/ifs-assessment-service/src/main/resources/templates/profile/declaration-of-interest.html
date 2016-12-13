@@ -40,7 +40,7 @@
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{principalEmployer}"
                            th:errorclass="field-error" required="required"
-                           data-required-errormessage="Please enter a principal employer." />
+                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
@@ -52,7 +52,7 @@
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{role}"
                            th:errorclass="field-error" required="required"
-                           data-required-errormessage="Please enter your role with your principal employer." />
+                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
@@ -78,14 +78,14 @@
                             <input value="yes" type="radio" th:field="*{hasAppointments}"
                                    data-repeatable-rowcontainer="#position-table tbody"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-add-required="input.appointment-field" />
                             Yes
                         </label>
                         <label class="block-label">
                             <input value="no" type="radio" th:field="*{hasAppointments}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-remove-required="input.appointment-field" />
                             No
                         </label>
@@ -117,7 +117,8 @@
                                                th:errorclass="field-error"
                                                th:field="*{appointments[__${appointmentStat.index}__].organisation}"
                                                required="required"
-                                               data-required-errormessage="Please enter an organisation." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.organisation.required}" />
+
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
                                         <label>
@@ -131,7 +132,7 @@
                                                th:errorclass="field-error"
                                                th:field="*{appointments[__${appointmentStat.index}__].position}"
                                                required="required"
-                                               data-required-errormessage="Please enter a position." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.position.required}"  />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
