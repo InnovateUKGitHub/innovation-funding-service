@@ -6,13 +6,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -24,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -36,6 +32,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -52,6 +49,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private CompetitionInviteService competitionInviteService = new CompetitionInviteServiceImpl();
+
 
     private CompetitionParticipant competitionParticipant;
     private UserResource userResource;
@@ -612,5 +610,76 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void inviteUser_existing() {
+        User user = newUser()
+                .withEmailAddress("tom@poly.io")
+                .withFirstName("tom")
+                .withLastName("baldwin")
+                .build();
+
+        Competition competition = newCompetition()
+                .withName("competition name")
+                .build();
+
+        ExistingUserStagedInviteResource existingAssessor = newExistingUserStagedInviteResource()
+                .withCompetitionId(competition.getId())
+                .withEmail(user.getEmail())
+                .build();
+
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withCompetition(competition)
+                .withHash(Invite.generateInviteHash())
+                .withEmail(user.getEmail())
+                .withName(user.getName())
+                .build();
+
+        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        CompetitionInvite inviteExpectation = argThat(lambdaMatches(invite -> {
+            assertEquals(user.getEmail(), invite.getEmail());
+            assertEquals(user.getName(), invite.getName());
+            assertEquals(CREATED, invite.getStatus());
+            assertEquals(competition, invite.getTarget());
+            assertFalse(invite.getHash().isEmpty());
+            return true;
+        }));
+
+        when(competitionInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionInvite);
+        when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(newCompetitionInviteResource().build());
+
+        CompetitionInviteResource invite = competitionInviteService.inviteUser(existingAssessor).getSuccessObjectOrThrowException();
+
+        assertNotNull(invite);
+
+        InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(userRepositoryMock).findByEmail(user.getEmail());
+        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionInviteRepositoryMock).save(any(CompetitionInvite.class));
+        inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteUser_new() {
+        // TODO INFUND-6855
+    }
+
+    @Test
+    public void sendInvite() {
+        // TODO INFUND-6855
+    }
+
+    @Test
+    public void deleteInvite() {
+        // TODO INFUND-6855
+    }
+
+    @Test
+    public void deleteInvite_sent() {
+        // TODO INFUND-6855
     }
 }
