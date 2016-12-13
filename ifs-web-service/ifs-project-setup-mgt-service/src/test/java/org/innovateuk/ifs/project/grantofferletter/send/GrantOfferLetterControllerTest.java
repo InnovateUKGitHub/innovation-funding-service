@@ -53,7 +53,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
@@ -89,7 +89,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
@@ -103,7 +103,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
@@ -141,7 +141,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
@@ -155,7 +155,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
@@ -182,8 +182,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         Long projectId = 1L;
 
-        when(projectService.getGeneratedGrantOfferFile(projectId)).thenReturn(Optional.empty());
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFile(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/grant-offer-letter"))
                 .andExpect(status().isNoContent())
@@ -208,8 +208,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         byte[] content = "HelloWorld".getBytes();
         ByteArrayResource golByteArrayResource = new ByteArrayResource(content);
 
-        when(projectService.getGeneratedGrantOfferFile(projectId)).thenReturn(Optional.of(golByteArrayResource));
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.of(golFileEntryResource));
+        when(projectService.getGrantOfferFile(projectId)).thenReturn(Optional.of(golByteArrayResource));
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(golFileEntryResource));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/grant-offer-letter"))
                 .andExpect(status().isOk())
@@ -239,14 +239,14 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(golFileEntryResource);
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(golFileEntryResource);
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
 
-        when(projectService.addGeneratedGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes())).
+        when(projectService.addGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
@@ -283,11 +283,11 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
-        when(projectService.removeGeneratedGrantOfferLetter(123L)).
+        when(projectService.removeGrantOfferLetter(123L)).
                 thenReturn(serviceSuccess());
 
         MockMultipartFile fileToDelete = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
@@ -310,7 +310,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         Long projectId = 1L;
 
         when(projectService.getAdditionalContractFile(projectId)).thenReturn(Optional.empty());
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/additional-contract"))
                 .andExpect(status().isNoContent())
@@ -366,7 +366,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(annexFileEntryResource);
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
@@ -406,7 +406,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
 
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 

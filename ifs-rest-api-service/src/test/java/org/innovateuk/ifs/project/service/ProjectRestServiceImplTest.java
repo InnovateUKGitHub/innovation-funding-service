@@ -500,7 +500,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         setupDeleteWithRestResultExpectations(nonBaseUrl);
 
-        RestResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+        RestResult<Void> result = service.removeGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
 

@@ -84,7 +84,7 @@ public class ProjectGrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
-    public String uploadGrantOfferLetterFile(
+    public String uploadSignedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -101,44 +101,6 @@ public class ProjectGrantOfferLetterController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
-    @RequestMapping(params = "uploadGeneratedOfferLetterClicked", method = POST)
-    public String uploadGeneratedGrantOfferLetterFile(
-            @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "grantOfferLetter", form, () -> {
-
-            MultipartFile grantOfferLetter = form.getGrantOfferLetter();
-
-            return projectService.addGeneratedGrantOfferLetter(projectId, grantOfferLetter.getContentType(), grantOfferLetter.getSize(),
-                    grantOfferLetter.getOriginalFilename(), getMultipartFileBytes(grantOfferLetter));
-        });
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
-    @RequestMapping(params = "uploadAdditionalContractClicked", method = POST)
-    public String uploadAdditionalContractFile(
-            @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "additionalContractFile", form, () -> {
-
-            MultipartFile additionalContract = form.getAdditionalContract();
-
-            return projectService.addGeneratedGrantOfferLetter(projectId, additionalContract.getContentType(), additionalContract.getSize(),
-                    additionalContract.getOriginalFilename(), getMultipartFileBytes(additionalContract));
-        });
-    }
-
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/grant-offer-letter", method = GET)
@@ -147,8 +109,8 @@ public class ProjectGrantOfferLetterController {
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getGeneratedGrantOfferFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectService.getGrantOfferFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getGrantOfferFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -193,7 +155,7 @@ public class ProjectGrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 

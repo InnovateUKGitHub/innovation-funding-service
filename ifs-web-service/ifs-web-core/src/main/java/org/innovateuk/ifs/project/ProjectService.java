@@ -88,15 +88,15 @@ public interface ProjectService {
 
     Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
 
-    Optional<ByteArrayResource> getGeneratedGrantOfferFile(Long projectId);
+    Optional<ByteArrayResource> getGrantOfferFile(Long projectId);
 
-    Optional<FileEntryResource> getGeneratedGrantOfferFileDetails(Long projectId);
+    Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId);
 
     ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+    ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    ServiceResult<Void> removeGeneratedGrantOfferLetter(Long projectId);
+    ServiceResult<Void> removeGrantOfferLetter(Long projectId);
 
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 

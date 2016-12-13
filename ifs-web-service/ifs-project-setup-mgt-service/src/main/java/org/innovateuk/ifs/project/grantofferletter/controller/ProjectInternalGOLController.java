@@ -82,20 +82,10 @@ public class ProjectInternalGOLController {
     public ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getGeneratedGrantOfferFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectService.getGrantOfferFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getGrantOfferFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
-    }
-
-    //TODO Endpoint to be removed as GOL will be generated when Finance Checks or Other documents are approved.
-    //TODO - INFUND-5998
-    @RequestMapping(value = "/generate", method = GET)
-    public ResponseEntity<FileEntryResource> generatedGrantOfferLetterFile(
-            @PathVariable("projectId") final Long projectId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) throws IOException {
-
-        return new ResponseEntity<>(projectService.addGeneratedGrantOfferLetter(projectId, CONTENT_TYPE, 26845, "grant-offer-letter", new byte[26845]).getSuccessObject(), HttpStatus.OK);
     }
 
     private String getHeaderAttachment(String fileName) {
@@ -126,7 +116,7 @@ public class ProjectInternalGOLController {
     private ProjectInternalGOLViewModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
 
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 

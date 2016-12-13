@@ -384,7 +384,7 @@ public class ProjectServiceImplTest {
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
         when(projectRestService.getGrantOfferFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = service.getGeneratedGrantOfferFile(123L);
+        Optional<ByteArrayResource> result = service.getGrantOfferFile(123L);
         assertEquals(content, result);
     }
 
@@ -396,7 +396,7 @@ public class ProjectServiceImplTest {
         Optional<FileEntryResource> response = Optional.of(returnedFile);
         when(projectRestService.getGrantOfferFileDetails(123L)).thenReturn(restSuccess(response));
 
-        Optional<FileEntryResource> result = service.getGeneratedGrantOfferFileDetails(123L);
+        Optional<FileEntryResource> result = service.getGrantOfferFileDetails(123L);
         assertEquals(response, result);
     }
 
@@ -446,19 +446,19 @@ public class ProjectServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                service.addGeneratedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                service.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
     }
 
     @Test
-    public void testRemoveGeneratedGrantOfferLetter() {
+    public void testRemoveGrantOfferLetter() {
         long projectId = 123L;
 
-        when(projectRestService.removeGeneratedGrantOfferLetter(projectId)).thenReturn(restSuccess());
+        when(projectRestService.removeGrantOfferLetter(projectId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+        ServiceResult<Void> result = service.removeGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
     }

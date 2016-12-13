@@ -49,7 +49,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
         when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource()
                 .withRoleName(UserRoleType.PROJECT_MANAGER)
@@ -79,10 +79,10 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
 
-        when(projectService.getGeneratedGrantOfferFile(123L)).
+        when(projectService.getGrantOfferFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectService.getGeneratedGrantOfferFileDetails(123L)).
+        when(projectService.getGrantOfferFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/grant-offer-letter", 123L)).
@@ -136,19 +136,19 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 result.getResponse().getHeader("Content-Disposition"));
     }
     @Test
-    public void testUploadGrantOfferLetter() throws Exception {
+    public void testUploadSignedGrantOfferLetter() throws Exception {
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
+        MockMultipartFile uploadedFile = new MockMultipartFile("signedGrantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectService.addGeneratedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(
                 fileUpload("/project/123/offer").
                         file(uploadedFile).
-                        param("uploadGeneratedOfferLetterClicked", "")).
+                        param("uploadSignedGrantOfferLetterClicked", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/123/offer"));
     }

@@ -40,7 +40,7 @@ public class ProjectInternalGOLControllerTest extends BaseControllerMockMVCTest<
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
-        when(projectService.getGeneratedGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource()
                 .withRoleName(UserRoleType.PROJECT_MANAGER)
@@ -81,10 +81,10 @@ public class ProjectInternalGOLControllerTest extends BaseControllerMockMVCTest<
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
 
-        when(projectService.getGeneratedGrantOfferFile(123L)).
+        when(projectService.getGrantOfferFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectService.getGeneratedGrantOfferFileDetails(123L)).
+        when(projectService.getGrantOfferFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/grant-offer-letter", 123L)).
