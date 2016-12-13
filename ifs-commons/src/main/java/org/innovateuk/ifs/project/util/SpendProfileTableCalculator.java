@@ -1,9 +1,9 @@
-package com.worth.ifs.project.util;
+package org.innovateuk.ifs.project.util;
 
-import com.worth.ifs.commons.rest.LocalDateResource;
-import com.worth.ifs.project.resource.ProjectResource;
-import com.worth.ifs.project.viewmodel.SpendProfileSummaryModel;
-import com.worth.ifs.project.viewmodel.SpendProfileSummaryYearModel;
+import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -12,8 +12,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMapValue;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
 
 /**
  * Component for calculating row and column totals for spend profile tables.
@@ -65,7 +65,13 @@ public class SpendProfileTableCalculator {
 
                             for (Long key : keys) {
                                 List<BigDecimal> values = tableData.get(key);
-                                totalForYear = getTotalForYear(values, months, year, totalForYear);
+                                for (int i = 0; i < values.size(); i++) {
+                                    LocalDateResource month = months.get(i);
+                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
+                                    if (year == financialYearDate.getFiscalYear()) {
+                                        totalForYear = totalForYear.add(values.get(i));
+                                    }
+                                }
                             }
                             return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
                         }
