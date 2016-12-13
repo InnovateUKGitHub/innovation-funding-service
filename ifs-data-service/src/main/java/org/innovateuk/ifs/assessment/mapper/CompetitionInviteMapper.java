@@ -18,17 +18,15 @@ import org.mapstruct.Mappings;
 )
 public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvite, CompetitionInviteResource, Long> {
 
-
     @Mappings({
             @Mapping(source = "target.name", target = "competitionName"),
             @Mapping(source = "target.assessorAcceptsDate", target = "acceptsDate"),
             @Mapping(source = "target.assessorDeadlineDate", target = "deadlineDate"),
             @Mapping(source = "target.assessorPay", target = "assessorPay"),
-            @Mapping(source = "target.assessorBriefingDate", target = "briefingDate")
+            @Mapping(source = "target.assessorBriefingDate", target = "briefingDate"),
     })
     @Override
     public abstract CompetitionInviteResource mapToResource(CompetitionInvite domain);
-
 
     @Mappings({
             @Mapping(target="id", ignore=true),
