@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -54,9 +57,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,12 +65,13 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -83,10 +84,6 @@ import static org.innovateuk.ifs.project.transactional.ProjectServiceImpl.Notifi
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -350,6 +347,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
 
+    public ServiceResult<Void> notifyProjectIsLive(Long projectId) {
+
+        Project project = projectRepository.findOne(projectId);
+        List<NotificationTarget> notificationTargets = getAllPartnersAsNotificationTarget(project);
+
+        Notification partnerNotification = createLiveProjectNotification(project, notificationTargets, Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
+        ServiceResult<Void> sendEmailResult = notificationService.sendNotification(partnerNotification, EMAIL);
+
+        return processAnyFailuresOrSucceed(sendEmailResult);
+    }
+
     @Override
     public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
@@ -538,6 +546,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         project.setExploitationPlan(null);
     }
 
+    private NotificationTarget createPartnerNotificationTargets(final ProjectUser user) {
+        return new ExternalUserNotificationTarget(user.getUser().getName(), user.getUser().getEmail());
+    }
+¶
+    private Notification createLiveProjectNotification(final Project project, List<NotificationTarget> notificationTargets, Enum template) {
+
+        Map<String, Object> globalArguments = createGlobalArgsForLiveProjectEmail();
+
+        return new Notification(systemNotificationSource, notificationTargets, template, globalArguments, emptyMap());
+    }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
         String fullName = getProjectManagerFullName(projectManager);
@@ -1028,6 +1046,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getOnlyElementOrEmpty(projectManagers);
     }
 
+    private List<NotificationTarget> getAllPartnersAsNotificationTarget(Project project) {
+        return simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isPartner()), pu -> new UserNotificationTarget(pu.getUser()));
+    }
+
     @Override
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
@@ -1084,4 +1106,5 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     return serviceSuccess(Boolean.TRUE);
                 });
     }
+
 }
