@@ -21,20 +21,6 @@ public class AvailableAssessorResource {
     public AvailableAssessorResource() {
     }
 
-    /*
-     * TODO Should be able to remove this constructor when INFUND-6775 is completed
-     */
-    public AvailableAssessorResource(Long userId, String firstName, String lastName, String email, BusinessType businessType, CategoryResource innovationArea, boolean compliant, boolean added) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.businessType = businessType;
-        this.innovationArea = innovationArea;
-        this.compliant = compliant;
-        this.added = added;
-    }
-
     public Long getUserId() {
         return userId;
     }
