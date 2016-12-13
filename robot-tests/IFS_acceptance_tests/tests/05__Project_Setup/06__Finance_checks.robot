@@ -113,12 +113,11 @@ Project Finance user can view academic Jes form
 
 Project Finance user can export bank details
     [Documentation]    INFUND-5852
-    [Tags]    Pending
-    #TODO Pending due to INFUND-6187
-    Given the user navigates to the page   ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-    Then the user should see the text in the page    Export all bank details
-    And the user clicks the button/link          link = Export all bank details
-    And the Project finance user downloads the excel
+    [Tags]    Download
+    When the project finance user downloads the bank details
+    Then the user opens the excel and checks the content
+    [Teardown]    remove the file from the operating system    bank_details.csv
+
 
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -140,7 +139,7 @@ Status updates correctly for internal user's table
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting      # MO
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks are approved
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.waiting  # Spend Profile
@@ -154,6 +153,13 @@ Other internal users do not have access to Finance Checks
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
+
+Other internal users do not have access to bank details export
+    [Documentation]    INFUND-5852
+    [Tags]
+    When the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+    Then the user should not see the element    link=Export all bank details
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    You do not have the necessary permissions for your request
 
 
 *** Keywords ***
@@ -229,7 +235,6 @@ the users fill out project details
     the user clicks the button/link    jQuery=button:contains("Submit")
 
 
-
 the user fills in project costs
     Input Text    name=costs[0].value    £ 8,000
     Input Text    name=costs[1].value    £ 2,000
@@ -242,23 +247,53 @@ the user fills in project costs
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
-Download should be done
-    [Documentation]    Verifies that the directory has only one folder
-    ...    Returns path to the file
-    ${files}    List Files In Directory    ${DOWNLOAD_FOLDER}
-    File Should Exist     ${DOWNLOAD_FOLDER}/Bank_details.csv
-    ${file}    Join Path    ${DOWNLOAD_FOLDER}    ${files[0]}
-    Log    File was successfully downloaded to ${file}
-    [Return]    ${file}
 
-Download File
-    [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
-    log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${FILENAME}
+the project finance user downloads the bank details
+    the user downloads the file    lee.bowman@innovateuk.test    Passw0rd    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
 
-the Project finance user downloads the excel
-    ${ALL_COOKIES} =    Get Cookies
-    Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    ${server}/management/competition/3/status/bank-details/export   Bank_details.csv
-    wait until keyword succeeds    300ms    1 seconds    Download should be done
+
+the user opens the excel and checks the content
+    ${contents}=    read csv file    ${DOWNLOAD_FOLDER}/bank_details.csv
+    ${empire_details}=    get from list    ${contents}    1
+    ${empire_name}=    get from list    ${empire_details}    0
+    should be equal    ${empire_name}    ${empire_ltd_name}
+    ${eggs_details}=    get from list    ${contents}    2
+    ${eggs_name}=    get from list    ${eggs_details}    0
+    should be equal    ${eggs_name}    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    ${ludlow_details}=    get from list    ${contents}    3
+    ${ludlow_name}=    get from list    ${ludlow_details}    0
+    should be equal    ${ludlow_name}    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    ${application_number}=    get from list    ${empire_details}    1
+    should be equal    ${application_number}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}
+    ${postcode}=    get from list    ${empire_details}    8
+    should be equal    ${postcode}    CH64 3RU
+    ${bank_account_name}=    get from list    ${empire_details}    9
+    should be equal    ${bank_account_name}    ${empire_ltd_name}
+    ${bank_account_number}=    get from list    ${empire_details}    10
+    should be equal    ${bank_account_number}    51406795
+    ${bank_account_sort_code}=    get from list    ${empire_details}    11
+    should be equal    ${bank_account_sort_code}    404745
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

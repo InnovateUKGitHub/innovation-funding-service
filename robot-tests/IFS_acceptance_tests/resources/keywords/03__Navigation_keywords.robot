@@ -112,3 +112,17 @@ The user should see the text in the page
 The user goes back to the previous page
     Wait for autosave
     Go Back
+
+the user reloads the page
+    sleep    1s
+    Wait for autosave
+    Run Keyword And Ignore Error    Confirm Action
+    Reload Page
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
