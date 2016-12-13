@@ -8,7 +8,6 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
 
     private boolean creditReportConfirmed;
-    private boolean viabilityConfirmed;
     private String ragStatus;
 
     // for Spring MVC
@@ -17,7 +16,6 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
 
     public FinanceChecksViabilityForm(boolean creditReportConfirmed, boolean viabilityConfirmed, String ragStatus) {
         this.creditReportConfirmed = creditReportConfirmed;
-        this.viabilityConfirmed = viabilityConfirmed;
         this.ragStatus = ragStatus;
     }
 
@@ -25,8 +23,8 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
         return creditReportConfirmed;
     }
 
-    public boolean isViabilityConfirmed() {
-        return viabilityConfirmed;
+    public boolean isViabilityConfirmedChecked() {
+        return ragStatus != null;
     }
 
     public String getRagStatus() {
@@ -35,10 +33,6 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
 
     public void setCreditReportConfirmed(boolean creditReportConfirmed) {
         this.creditReportConfirmed = creditReportConfirmed;
-    }
-
-    public void setViabilityConfirmed(boolean viabilityConfirmed) {
-        this.viabilityConfirmed = viabilityConfirmed;
     }
 
     public void setRagStatus(String ragStatus) {

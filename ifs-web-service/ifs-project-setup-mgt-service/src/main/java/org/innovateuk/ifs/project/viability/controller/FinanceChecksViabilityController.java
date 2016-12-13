@@ -50,12 +50,23 @@ public class FinanceChecksViabilityController {
         return "project/financecheck/viability";
     }
 
-    @RequestMapping(method = POST)
-    public String updateViability(@PathVariable("projectId") Long projectId,
+    @RequestMapping(method = POST, params = "save-and-continue")
+    public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form) {
 
-        financeService.saveViability(projectId, organisationId, form.isViabilityConfirmed() ? Viability.APPROVED : Viability.PENDING);
+        financeService.saveViability(projectId, organisationId, Viability.PENDING);
+
+        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
+    }
+
+    @RequestMapping(method = POST, params = "confirm-viability")
+    public String confirmViability(@PathVariable("projectId") Long projectId,
+                                   @PathVariable("organisationId") Long organisationId,
+                                   @ModelAttribute("form") FinanceChecksViabilityForm form) {
+
+        financeService.saveViability(projectId, organisationId, Viability.APPROVED);
+
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
     }
 
@@ -91,7 +102,7 @@ public class FinanceChecksViabilityController {
         Viability viability = financeService.getViability(projectId, organisationId);
         boolean viabilityConfirmed = viability == Viability.APPROVED;
 
-        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(true, viabilityConfirmed, "Red");
+        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(false, viabilityConfirmed, "Red");
         model.addAttribute("form", form);
     }
 

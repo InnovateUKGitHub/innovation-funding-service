@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -32,8 +34,10 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCTest<FinanceChecksViabilityController> {
@@ -125,6 +129,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
+        when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(Viability.APPROVED);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -133,8 +138,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("project/financecheck/viability")).
                 andReturn();
 
-        FinanceChecksViabilityViewModel viewModel =
-                (FinanceChecksViabilityViewModel) result.getModelAndView().getModel().get("model");
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksViabilityViewModel viewModel = (FinanceChecksViabilityViewModel) model.get("model");
 
         assertTrue(viewModel.isLeadPartnerOrganisation());
         assertOrganisationDetails(industrialOrganisation, viewModel);
@@ -144,15 +150,11 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(1004), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
-    }
 
-    private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
-        assertEquals(organisation.getName(), viewModel.getOrganisationName());
-        assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
-        assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
-        assertNull(viewModel.getHeadCount());
-        assertNull(viewModel.getTurnover());
-        assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
+        FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
+        assertEquals("Red", form.getRagStatus());
+        assertEquals(false, form.isCreditReportConfirmed());
+        assertEquals(true, form.isViabilityConfirmedChecked());
     }
 
     @Test
@@ -161,6 +163,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
+        when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(Viability.APPROVED);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).
@@ -169,8 +172,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("project/financecheck/viability")).
                 andReturn();
 
-        FinanceChecksViabilityViewModel viewModel =
-                (FinanceChecksViabilityViewModel) result.getModelAndView().getModel().get("model");
+        Map<String, Object> model = result.getModelAndView().getModel();
+        FinanceChecksViabilityViewModel viewModel = (FinanceChecksViabilityViewModel) model.get("model");
 
         assertFalse(viewModel.isLeadPartnerOrganisation());
         assertOrganisationDetails(academicOrganisation, viewModel);
@@ -180,6 +183,55 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(5868), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(0), viewModel.getContributionToProject());
+
+        FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
+
+        assertEquals("Red", form.getRagStatus());
+        assertEquals(false, form.isCreditReportConfirmed());
+        assertEquals(true, form.isViabilityConfirmedChecked());
+    }
+
+    @Test
+    public void testConfirmViability() throws Exception {
+
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        mockMvc.perform(
+            post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                param("confirm-viability", "").
+                param("creditReportConfirmed", "true").
+                param("ragStatus", "Red")).
+            andExpect(status().is3xxRedirection()).
+            andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
+
+        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.APPROVED);
+    }
+
+    @Test
+    public void testSaveAndContinue() throws Exception {
+
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                        param("save-and-continue", "").
+                        param("creditReportConfirmed", "true").
+                        param("ragStatus", "Red")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
+
+        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.PENDING);
+    }
+
+    private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
+        assertEquals(organisation.getName(), viewModel.getOrganisationName());
+        assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
+        assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
+        assertNull(viewModel.getHeadCount());
+        assertNull(viewModel.getTurnover());
+        assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
     }
 
     @Override
