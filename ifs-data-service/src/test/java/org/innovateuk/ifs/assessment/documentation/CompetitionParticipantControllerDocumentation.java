@@ -48,16 +48,15 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         List<CompetitionParticipantResource> competitionParticipants = competitionParticipantResourceBuilder.build(2);
 
-        when(competitionParticipantServiceMock.getCompetitionParticipants(userId, role, status)).thenReturn(serviceSuccess(competitionParticipants));
+        when(competitionParticipantServiceMock.getCompetitionParticipants(userId, role)).thenReturn(serviceSuccess(competitionParticipants));
 
-        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}/status/{status}", userId, role, status)
+        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("userId").description("User id of the competition participant"),
-                                parameterWithName("role").description("Role of the user"),
-                                parameterWithName("status").description("Invite status for the competition")
+                                parameterWithName("role").description("Role of the user")
                         ),
                         responseFields(fieldWithPath("[]").description("List of competition participants the user is allowed to see"))
                 ));
