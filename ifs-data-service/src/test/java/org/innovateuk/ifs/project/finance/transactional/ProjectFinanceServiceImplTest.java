@@ -11,6 +11,8 @@ import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryTypeResource;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -750,7 +752,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetViabilitySuccess() {
+    public void testGetViabilityWhenViabilityStatusIsNull() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -760,11 +762,33 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Viability> result = service.getViability(projectOrganisationCompositeId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.APPROVED, result.getSuccessObject());
+        assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
+        assertEquals(ViabilityStatus.UNSET, result.getSuccessObject().getViabilityStatus());
+
+    }
+
+    @Test
+    public void testGetViabilitySuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViability(Viability.APPROVED);
+        projectFinanceInDB.setViabilityStatus(ViabilityStatus.GREEN);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
+        assertEquals(ViabilityStatus.GREEN, result.getSuccessObject().getViabilityStatus());
 
     }
 
@@ -778,11 +802,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
         assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
+        assertEquals(ViabilityStatus.AMBER, projectFinanceInDB.getViabilityStatus());
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
 
     }
