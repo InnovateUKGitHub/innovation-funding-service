@@ -34,12 +34,12 @@ public class CompetitionParticipantControllerTest extends BaseControllerMockMVCT
         List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
                 .build(2);
 
-        when(competitionParticipantService.getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(serviceSuccess(competitionParticipants));
+        when(competitionParticipantService.getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR)).thenReturn(serviceSuccess(competitionParticipants));
 
-        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}/status/{status}", 1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", 1L, CompetitionParticipantRoleResource.ASSESSOR).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(toJson(competitionParticipants)))
                 .andExpect(status().isOk());
 
-        verify(competitionParticipantService, times(1)).getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED);
+        verify(competitionParticipantService, times(1)).getCompetitionParticipants(1L, CompetitionParticipantRoleResource.ASSESSOR);
     }
 }
