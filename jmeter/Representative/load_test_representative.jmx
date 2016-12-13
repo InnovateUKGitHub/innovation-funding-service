@@ -1672,7 +1672,7 @@ hello world</stringProp>
         </CSVDataSet>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Invite Group" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Invite Group" enabled="true">
         <stringProp name="TestPlan.comments">Applicants that interact with the application</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -2239,6 +2239,17 @@ hello world</stringProp>
           <hashTree/>
         </hashTree>
         <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Recording Controller" enabled="true"/>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User Config" enabled="true">
+          <stringProp name="filename">${users_csv}</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="variableNames">username,password,application_id,form_id,application_details_question_id,project_summary_question_id,public_description_question_id,project_exploitation_question_id,economic_benefit_question_id,funding_question_id,adding_value_question_id,your_finance_section_id,travel_and_subsistence_row_id,finance_overview_section_id</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">true</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
         <hashTree/>
       </hashTree>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
