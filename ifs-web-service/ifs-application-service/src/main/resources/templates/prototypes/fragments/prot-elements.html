@@ -75,4 +75,64 @@
 </th:block>
 
 
+<!-- =========================== Accordians =========================== -->
+
+<th:block th:fragment="prot-accordians">
+    <div class="collapsible">
+        <h2>Collapsible header</h2>
+        <p>Content goes here</p>
+        <h2>Collapsible header 2</h2>
+        <p>Content goes here 2</p>
+        <h2>Collapsible header 3</h2>
+        <p>Content goes here 3</p>
+        <h2>Collapsible header 4</h2>
+        <p>Content goes here 4</p>
+        <h2>Collapsible header 5</h2>
+        <p>Content goes here 5</p>
+    </div>
+</th:block>
+
+
+<!-- =========================== Accordians =========================== -->
+
+<th:block th:fragment="prot-read-only-forms">
+    <form>
+        <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset>
+                <legend class="heading-medium">Application details</legend>
+                <div class="form-group">
+                    <label class="form-label" for="application-name">Application name</label>
+                    <input class="form-control" id="application-name" type="text" />
+                </div>
+            </fieldset>
+        </th:block>
+        <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <h2 class="heading-medium">Application details</h2>
+            <dl class="readonly-data">
+                <dt>Application name</dt>
+                <dd>[application name]</dd>
+            </dl>
+        </th:block>
+        <div class="extra-margin">
+            <a th:href="${(param.status != null and param.status[0] == 'readOnly' ? '/prototypes/prot-styles-read-only-forms' : '/prototypes/prot-styles-read-only-forms?status=readOnly')}" type="submit" th:text="${param.status != null and param.status[0] == 'readOnly' ? 'Edit application details' : 'Mark application details as complete'}"></a>
+        </div>
+    </form>
+</th:block>
+
+
+<!-- =========================== Task list =========================== -->
+
+<th:block th:fragment="prot-task-list">
+    <h3 class="heading-small">Task list</h3>
+    <ul class="task-list">
+        <li><a href="#" class="task-title">Task 1</a></li>
+        <li><a href="#" class="task-title">Task 2</a><span class="status-complete">Completed</span></li>
+        <li><a href="#" class="task-title">Task 3</a><span class="action-required">Assigned to <strong>you</strong></span><span class="status-complete">Completed</span></li>
+        <li><a href="#" class="task-title">Task 4</a><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><span class="status-complete">Completed</span></li>
+        <li><strong class="task-title">Task 5</strong></li>
+        <li><strong class="task-title">Task 6</strong><span class="notification">Jessica Doe</span></li>
+        <li class="unavailable"><strong class="task-title">Task 7</strong><span class="notification">-</span></li>
+    </ul>
+</th:block>
+
 </html>

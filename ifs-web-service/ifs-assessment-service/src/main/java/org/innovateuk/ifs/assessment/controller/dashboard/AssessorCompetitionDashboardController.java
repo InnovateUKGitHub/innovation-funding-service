@@ -65,4 +65,26 @@ public class AssessorCompetitionDashboardController {
                 }
         );
     }
+
+    @RequestMapping(value = "/dashboard/confirm-competition/{competitionId}", method = RequestMethod.POST)
+    public String confirmSubmitAssessments(Model model,
+                                           @PathVariable("competitionId") final Long competitionId,
+                                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                           @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
+                                           BindingResult bindingResult,
+                                           ValidationHandler validationHandler) {
+
+
+        Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId, form);
+
+        return validationHandler.failNowOrSucceedWith(
+                renderDashboard,
+                () -> {
+                    model.addAttribute("competitionId", competitionId);
+
+                    return "assessment/assessment-submit-confirm";
+                }
+        );
+
+    }
 }

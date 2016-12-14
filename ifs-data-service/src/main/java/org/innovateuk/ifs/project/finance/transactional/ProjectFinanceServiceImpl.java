@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import com.google.common.collect.Lists;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -17,6 +18,8 @@ import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -27,8 +30,8 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -52,7 +55,6 @@ import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -95,6 +97,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ValidationUtil validationUtil;
 
 
     @Autowired
@@ -306,20 +311,46 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        return serviceSuccess(projectFinance.getViability());
+        ViabilityResource viabilityResource = new ViabilityResource();
+        viabilityResource.setViability(projectFinance.getViability());
+        viabilityResource.setViabilityStatus(projectFinance.getViabilityStatus());
+
+        return serviceSuccess(viabilityResource);
 
     }
 
     @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability){
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
+        return validateViability(projectFinance, viabilityStatus)
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
+    }
+
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, ViabilityStatus viabilityStatus) {
+
+        if (Viability.APPROVED == projectFinanceInDB.getViability()) {
+
+            return serviceFailure(new Error(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+
+        } else if (ViabilityStatus.UNSET == viabilityStatus) {
+
+            return serviceFailure(new Error(VIABILITY_RAG_STATUS_MUST_BE_SET));
+
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
+
         projectFinance.setViability(viability);
+        projectFinance.setViabilityStatus(viabilityStatus);
 
         projectFinanceRepository.save(projectFinance);
 
@@ -328,63 +359,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateSpendProfileCosts(SpendProfileTableResource table) {
 
-        List<Error> incorrectCosts = checkCostsForAllCategories(table);
+        Optional<ValidationMessages> validationMessages = validationUtil.validateSpendProfileTableResource(table);
+        final List<Error> incorrectCosts = Lists.newArrayList();
+        validationMessages.ifPresent(v -> incorrectCosts.addAll(v.getErrors()));
 
         if (incorrectCosts.isEmpty()) {
             return serviceSuccess();
         } else {
             return serviceFailure(incorrectCosts);
-        }
-    }
-
-    private List<Error> checkCostsForAllCategories(SpendProfileTableResource table) {
-
-        Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
-
-        List<Error> incorrectCosts = new ArrayList<>();
-
-        for (Map.Entry<Long, List<BigDecimal>> entry : monthlyCostsPerCategoryMap.entrySet()) {
-            Long category = entry.getKey();
-            List<BigDecimal> monthlyCosts = entry.getValue();
-
-            int index = 0;
-            for (BigDecimal cost : monthlyCosts) {
-                isCostValid(cost, category, index, incorrectCosts);
-                index++;
-            }
-
-        }
-
-        return incorrectCosts;
-    }
-
-    private void isCostValid(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        checkFractionalCost(cost, category, index, incorrectCosts);
-
-        checkCostLessThanZero(cost, category, index, incorrectCosts);
-
-        checkCostGreaterThanOrEqualToMillion(cost, category, index, incorrectCosts);
-    }
-
-    private void checkFractionalCost(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        if (cost.scale() > 0) {
-            incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
-        }
-    }
-
-    private void checkCostLessThanZero(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        if (-1 == cost.compareTo(BigDecimal.ZERO)) { // Indicates that the cost is less than zero
-            incorrectCosts.add(new Error(SPEND_PROFILE_COST_LESS_THAN_ZERO_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
-        }
-    }
-
-    private void checkCostGreaterThanOrEqualToMillion(BigDecimal cost, Long category, int index, List<Error> incorrectCosts) {
-
-        if (-1 != cost.compareTo(new BigDecimal("1000000"))) { // Indicates that the cost million or more
-            incorrectCosts.add(new Error(SPEND_PROFILE_COST_MORE_THAN_MILLION_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList(category, index + 1), HttpStatus.BAD_REQUEST));
         }
     }
 
