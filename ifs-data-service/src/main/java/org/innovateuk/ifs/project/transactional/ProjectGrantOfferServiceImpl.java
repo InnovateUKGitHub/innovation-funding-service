@@ -21,6 +21,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -94,6 +95,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
+
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
 
     @Override
@@ -374,13 +378,15 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 yearEligibleCostTotal, yearlyGrantAllocationTotal);
     }
 
-    private Map<String, List<BigDecimal>> getMonthlyEligibleCostPerOrganisation(Map<String, SpendProfileTableResource> organisationSpendProfiles) {
+    private Map<String, List<BigDecimal>> getMonthlyEligibleCostPerOrganisation(Map<String,
+            SpendProfileTableResource> organisationSpendProfiles) {
         return simpleMapValue(organisationSpendProfiles, tableResource ->
                     spendProfileTableCalculator.calculateMonthlyTotals(tableResource.getMonthlyCostsPerCategoryMap(),
                             tableResource.getMonths().size()));
     }
 
-    private Map<String, SpendProfileTableResource> getSpendProfileTableResourcePerOrganisation(Project project, List<Organisation> organisations) {
+    private Map<String, SpendProfileTableResource> getSpendProfileTableResourcePerOrganisation(Project project,
+                                                                                               List<Organisation> organisations) {
         return organisations.stream()
                     .map(organisation -> organisationMapper.mapToResource(organisation))
                     .collect(Collectors.toMap(OrganisationResource::getName, organisation -> {
@@ -392,7 +398,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                     }));
     }
 
-    private void populateOrganisationPerValuesMaps(Project project, Map<String, Integer> organisationAndGrantPercentageMap, Map<String, List<String>> organisationYearsMap, Map<String, List<BigDecimal>> organisationEligibleCostTotal, Map<String, List<BigDecimal>> organisationGrantAllocationTotal, List<String> projectYears, List<Organisation> organisations, Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap, List<LocalDateResource> months) {
+    private void populateOrganisationPerValuesMaps(Project project,
+                                                   Map<String, Integer> organisationAndGrantPercentageMap,
+                                                   Map<String, List<String>> organisationYearsMap,
+                                                   Map<String, List<BigDecimal>> organisationEligibleCostTotal,
+                                                   Map<String, List<BigDecimal>> organisationGrantAllocationTotal,
+                                                   List<String> projectYears, List<Organisation> organisations,
+                                                   Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap,
+                                                   List<LocalDateResource> months) {
         organisations.stream()
                 .map(organisation -> organisationMapper.mapToResource(organisation))
                 .forEach(organisation -> {
@@ -415,7 +428,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, String name, Map<String, Integer> organisationAndGrantPercentageMap) {
-        organisationAndGrantPercentageMap.put(name, applicationFinanceResource.getGrantClaimPercentage() == 0 ? 100 : applicationFinanceResource.getGrantClaimPercentage());
+        organisationAndGrantPercentageMap.put(name, organisationFinanceDelegate.isUsingJesFinances(name) ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
     }
 }
