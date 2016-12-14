@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.*;
 import org.junit.Test;
 
@@ -165,6 +166,35 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectFinanceServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetViability() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        Viability expectedViability = Viability.APPROVED;
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViability));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedViability)));
+    }
+
+    @Test
+    public void testSaveViability() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+        Viability viability = Viability.APPROVED;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}", projectId, organisationId, viability))
                 .andExpect(status().isOk());
     }
 

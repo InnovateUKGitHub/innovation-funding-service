@@ -60,5 +60,21 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isProjectManager(projectId, user.getId());
     }
 
+    @PermissionRule(
+            value = "VIEW_VIABILITY",
+            description = "Project Finance Users can view Viability")
+    public boolean projectFinanceUserCanViewViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "SAVE_VIABILITY",
+            description = "Project Finance Users can save Viability")
+    public boolean projectFinanceUserCanSaveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
+
 
 }

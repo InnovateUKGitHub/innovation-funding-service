@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,21 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/complete-spend-profiles-review", method = POST)
     public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
         return projectFinanceService.completeSpendProfilesReview(projectId).toPostResponse();
+    }
+
+    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/viability")
+    public RestResult<Viability> getViability(@PathVariable("projectId") final Long projectId,
+                                              @PathVariable("organisationId") final Long organisationId) {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.getViability(projectOrganisationCompositeId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
+    public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
+                                          @PathVariable("organisationId") final Long organisationId,
+                                          @PathVariable("viability") final Viability viability) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.saveViability(projectOrganisationCompositeId, viability).toPostResponse();
     }
 }
