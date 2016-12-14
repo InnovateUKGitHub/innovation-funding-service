@@ -109,11 +109,11 @@ include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/curl-req
 === Check if Signed Grant Offer Letter Is Approved
 
 ==== Request
-include::{snippets}/project/signed-grant-offer-letter/http-request.adoc[]
-include::{snippets}/project/signed-grant-offer-letter/path-parameters.adoc[]
+include::{snippets}/project/signed-grant-offer-letter/approval/http-request.adoc[]
+include::{snippets}/project/signed-grant-offer-letter/approval/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/project/signed-grant-offer-letter/http-response.adoc[]
+include::{snippets}/project/signed-grant-offer-letter/approval/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/project/signed-grant-offer-letter/curl-request.adoc[]
+include::{snippets}/project/signed-grant-offer-letter/approval/curl-request.adoc[]

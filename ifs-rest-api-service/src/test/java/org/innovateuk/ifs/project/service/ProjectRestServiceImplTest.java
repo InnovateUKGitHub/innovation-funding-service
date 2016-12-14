@@ -597,7 +597,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     public void testIsSignedGrantOfferLetterApproved() {
         long projectId = 123L;
 
-        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter";
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval";
         setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
 
         RestResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);

@@ -302,7 +302,7 @@ public class ProjectController {
         return projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter", method = GET)
+    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval", method = GET)
     public RestResult<Boolean> isignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
         return projectService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
     }
