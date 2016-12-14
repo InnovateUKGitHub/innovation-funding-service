@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -147,7 +148,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         updateApprovalOfSpendProfile(projectId, approvalType);
-        return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceSuccess());
+        return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 
     @Override
