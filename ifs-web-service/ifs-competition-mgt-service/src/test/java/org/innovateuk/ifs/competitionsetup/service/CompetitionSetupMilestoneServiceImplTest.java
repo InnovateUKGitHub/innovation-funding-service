@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,16 +56,16 @@ public class CompetitionSetupMilestoneServiceImplTest {
                 .withDate(LocalDateTime.MAX)
                 .build());
 
-        LinkedMap<String, MilestoneViewModel> newMilestones = new LinkedMap<>();
-        MilestoneViewModel milestoneViewModel = new MilestoneViewModel(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
-        newMilestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneViewModel);
+        LinkedMap<String, MilestoneRowForm> newMilestones = new LinkedMap<>();
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
+        newMilestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
         when(milestoneService.updateMilestones(anyListOf(MilestoneResource.class))).thenReturn(Collections.emptyList());
 
         List<Error> result = service.updateMilestonesForCompetition(oldMilestones, newMilestones, 123L);
 
         assertTrue(result.isEmpty());
-        MilestoneViewModel newMilestone = newMilestones.get(MilestoneType.SUBMISSION_DATE.name());
+        MilestoneRowForm newMilestone = newMilestones.get(MilestoneType.SUBMISSION_DATE.name());
         assertEquals(Integer.valueOf(LocalDate.MIN.getDayOfMonth()), newMilestone.getDay());
         assertEquals(Integer.valueOf(LocalDate.MIN.getMonthValue()), newMilestone.getMonth());
         assertEquals(Integer.valueOf(LocalDate.MIN.getYear()), newMilestone.getYear());
@@ -73,9 +73,9 @@ public class CompetitionSetupMilestoneServiceImplTest {
 
     @Test
     public void validateMilestoneDatesTrue() {
-        LinkedMap<String, MilestoneViewModel> milestones = new LinkedMap<>();
-        MilestoneViewModel milestoneViewModel = new MilestoneViewModel(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
-        milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneViewModel);
+        LinkedMap<String, MilestoneRowForm> milestones = new LinkedMap<>();
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
+        milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
         List<Error> result = service.validateMilestoneDates(milestones);
 
@@ -84,9 +84,9 @@ public class CompetitionSetupMilestoneServiceImplTest {
 
     @Test
     public void validateMilestoneDatesFalse() {
-        LinkedMap<String, MilestoneViewModel> milestones = new LinkedMap<>();
-        MilestoneViewModel milestoneViewModel = new MilestoneViewModel(MilestoneType.SUBMISSION_DATE, LocalDateTime.MAX);
-        milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneViewModel);
+        LinkedMap<String, MilestoneRowForm> milestones = new LinkedMap<>();
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MAX);
+        milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
         List<Error> result = service.validateMilestoneDates(milestones);
 

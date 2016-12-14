@@ -13,7 +13,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -149,7 +149,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 			}
 		}
 
-	    MilestoneViewModel milestoneEntry = new MilestoneViewModel(MilestoneType.OPEN_DATE, openingDate);
+	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
 
 
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
@@ -158,7 +158,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         }
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
-		LinkedMap<String, MilestoneViewModel> milestoneEntryMap = new LinkedMap<>();
+		LinkedMap<String, MilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
 		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
 
 		return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,26 +10,26 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
-import org.apache.commons.collections4.map.LinkedMap;
+import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MilestonesSectionSaverTest {
@@ -64,7 +65,7 @@ public class MilestonesSectionSaverTest {
         List<MilestoneResource> resourceList = new ArrayList<>();
         resourceList.add(milestoneresource);
 
-        competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry());
+        competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
 
         when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
         service.saveSection(competition, competitionSetupForm);
@@ -76,11 +77,56 @@ public class MilestonesSectionSaverTest {
         assertTrue(resourceList.get(0).getType().equals(MilestoneType.OPEN_DATE));
     }
 
-    private LinkedMap<String, MilestoneViewModel> populateMilestoneFormEntry() {
-        LinkedMap<String, MilestoneViewModel>  milestoneList = new LinkedMap<>();
 
-        MilestoneViewModel milestone = new MilestoneViewModel(MilestoneType.OPEN_DATE, LocalDateTime.of(2017, 1, 1, 0 ,0));
-        milestoneList.put(MilestoneType.OPEN_DATE.name(), milestone);
+    @Test
+    public void testSaveMilestoneSetupComplete() {
+        MilestonesForm competitionSetupForm = new MilestonesForm();
+
+        LocalDateTime pastDate = LocalDateTime.now().minusDays(1);
+        LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withMilestones(Arrays.asList(1L, 2L))
+                .withSetupComplete(true)
+                .withId(1L).build();
+
+        MilestoneResource milestonePast = newMilestoneResource()
+                .withId(1L)
+                .withName(MilestoneType.OPEN_DATE)
+                .withDate(pastDate)
+                .withCompetitionId(1L).build();
+        MilestoneResource milestoneFuture = newMilestoneResource()
+                .withId(2L)
+                .withName(MilestoneType.BRIEFING_EVENT)
+                .withDate(futureDate)
+                .withCompetitionId(1L).build();
+
+        List<MilestoneResource> resourceList = asList(milestonePast, milestoneFuture);
+
+        competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
+        when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
+
+        service.saveSection(competition, competitionSetupForm);
+
+        //verify update was only called once (for the future date)
+        ArgumentCaptor<Map> argumentCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(competitionSetupMilestoneService).updateMilestonesForCompetition(eq(resourceList), argumentCaptor.capture(), eq(1L));
+
+        assertThat(argumentCaptor.getValue().size(), equalTo(1));
+        assertThat(argumentCaptor.getValue().get(MilestoneType.BRIEFING_EVENT.name()), notNullValue());
+        assertThat(argumentCaptor.getValue().get(MilestoneType.OPEN_DATE.name()), nullValue());
+
+    }
+
+
+
+    private LinkedMap<String, MilestoneRowForm> populateMilestoneFormEntry(List<MilestoneResource> resources) {
+        LinkedMap<String, MilestoneRowForm>  milestoneList = new LinkedMap<>();
+
+        resources.forEach(milestoneResource -> {
+            MilestoneRowForm milestone = new MilestoneRowForm(milestoneResource.getType(), milestoneResource.getDate());
+            milestoneList.put(milestoneResource.getType().name(), milestone);
+        });
 
         return milestoneList;
     }
