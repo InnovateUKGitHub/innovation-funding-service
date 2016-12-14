@@ -4,14 +4,13 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -19,9 +18,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -31,14 +33,16 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -56,8 +60,23 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setUp() {
-        Competition competition = newCompetition().withName("my competition").build();
-        CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
+                .build(2));
+        Competition competition = newCompetition().withName("my competition")
+                .withMilestones(milestones)
+                .withSetupComplete(true)
+                .build();
+
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withStatus(SENT)
+                .withCompetition(competition)
+                .build();
+
         competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
@@ -175,6 +194,22 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void openInvite_inviteExpired() throws Exception {
+        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(LocalDateTime.now().minusDays(1)).build();
+        CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
+        when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(competitionInvite);
+
+        ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.openInvite("inviteHashExpired");
+
+        assertTrue(inviteServiceResult.isFailure());
+        assertTrue(inviteServiceResult.getFailure().is(new Error(COMPETITION_INVITE_EXPIRED, "my competition")));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).getByHash("inviteHashExpired");
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void openInvite_afterAccepted() throws Exception {
         competitionInviteService.openInvite("inviteHash");
         ServiceResult<Void> acceptResult = competitionInviteService.acceptInvite("inviteHash", userResource);
@@ -249,7 +284,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void acceptInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
+        assertEquals(SENT, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
@@ -364,7 +399,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void rejectInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
+        assertEquals(SENT, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
@@ -498,6 +533,45 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void sendInvite() throws Exception {
+        long inviteId = 1L;
+        CompetitionInvite invite = newCompetitionInvite()
+                .withCompetition(newCompetition().withName("my competition").build())
+                .withStatus(CREATED)
+                .build();
+
+        when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
+
+        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId);
+
+        assertTrue(serviceResult.isSuccess());
+
+        verify(competitionInviteRepositoryMock).findOne(inviteId);
+        verifyNoMoreInteractions(competitionInviteRepositoryMock);
+    }
+
+    @Test
+    public void sendInvite_alreadySent() throws Exception {
+        long inviteId = 1L;
+        CompetitionInvite invite = newCompetitionInvite()
+                .withCompetition(newCompetition().withName("my competition").build())
+                .withStatus(SENT)
+                .build();
+
+        when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
+
+        try {
+            competitionInviteService.sendInvite(inviteId);
+            fail();
+        } catch (RuntimeException e) {
+            assertSame(IllegalStateException.class, e.getCause().getClass());
+
+            verify(competitionInviteRepositoryMock).findOne(inviteId);
+            verifyNoMoreInteractions(competitionInviteRepositoryMock);
+        }
+    }
+
+    @Test
     public void checkExistingUser_hashNotExists() throws Exception {
         when(competitionInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
@@ -568,22 +642,51 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
+
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
-                .withUserId(77L)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
-                .withEmail("worth.email.test+assessor1@gmail.com")
-                .withBusinessType(BUSINESS)
                 .withInnovationArea(newCategoryResource()
                         .with(id(null))
                         .withName("Earth Observation")
                         .build())
                 .withCompliant(TRUE)
+                .withEmail("worth.email.test+assessor1@gmail.com")
+                .withBusinessType(BUSINESS)
                 .withAdded(FALSE)
                 .build(1);
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getCreatedInvites() throws Exception {
+        long competitionId = 1L;
+
+        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withInnovationArea(newCategoryResource()
+                        .with(id(null))
+                        .withName("Earth Observation")
+                        .build())
+                .withCompliant(TRUE)
+                .withEmail("worth.email.test+assessor1@gmail.com")
+                .build(1);
+
+        List<AssessorCreatedInviteResource> actual = competitionInviteService.getCreatedInvites(competitionId).getSuccessObjectOrThrowException();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+
+        // TODO INFUND-6450
+
+        List<AssessorInviteOverviewResource> actual = competitionInviteService.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
+        assertTrue(actual.isEmpty());
     }
 }

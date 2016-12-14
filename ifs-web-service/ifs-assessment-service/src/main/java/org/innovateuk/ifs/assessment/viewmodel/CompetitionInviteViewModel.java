@@ -12,68 +12,50 @@ import java.time.LocalDateTime;
  */
 public class CompetitionInviteViewModel {
 
-    private String competitionInviteHash;
-    private String competitionName;
-    private LocalDateTime acceptsDate;
-    private LocalDateTime deadlineDate;
-    private LocalDateTime briefingDate;
-    private BigDecimal assessorPay;
+    private final String competitionInviteHash;
+    private final String competitionName;
+    private final LocalDateTime acceptsDate;
+    private final LocalDateTime deadlineDate;
+    private final LocalDateTime briefingDate;
+    private final BigDecimal assessorPay;
+    private final boolean userLoggedIn;
 
-    public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite) {
+    public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite, boolean userLoggedIn) {
         this.competitionInviteHash = competitionInviteHash;
         this.competitionName = invite.getCompetitionName();
         this.acceptsDate = invite.getAcceptsDate();
         this.deadlineDate = invite.getDeadlineDate();
         this.briefingDate = invite.getBriefingDate();
         this.assessorPay = invite.getAssessorPay();
+        this.userLoggedIn = userLoggedIn;
     }
 
     public String getCompetitionInviteHash() {
         return competitionInviteHash;
     }
 
-    public void setCompetitionInviteHash(String competitionInviteHash) {
-        this.competitionInviteHash = competitionInviteHash;
-    }
-
     public String getCompetitionName() {
         return competitionName;
-    }
-
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
     }
 
     public LocalDateTime getAcceptsDate() {
         return acceptsDate;
     }
 
-    public void setAcceptsDate(LocalDateTime acceptsDate) {
-        this.acceptsDate = acceptsDate;
-    }
-
     public LocalDateTime getDeadlineDate() {
         return deadlineDate;
-    }
-
-    public void setDeadlineDate(LocalDateTime deadlineDate) {
-        this.deadlineDate = deadlineDate;
     }
 
     public LocalDateTime getBriefingDate() {
         return briefingDate;
     }
 
-    public void setBriefingDate(LocalDateTime briefingDate) {
-        this.briefingDate = briefingDate;
-    }
-
     public BigDecimal getAssessorPay() {
         return assessorPay;
     }
 
-    public void setAssessorPay(BigDecimal assessorPay) {
-        this.assessorPay = assessorPay;
+    public boolean isUserLoggedIn() {
+        return userLoggedIn;
     }
 
     @Override
@@ -95,6 +77,7 @@ public class CompetitionInviteViewModel {
                 .append(deadlineDate, that.deadlineDate)
                 .append(briefingDate, that.briefingDate)
                 .append(assessorPay, that.assessorPay)
+                .append(userLoggedIn, that.userLoggedIn)
                 .isEquals();
     }
 
@@ -107,6 +90,7 @@ public class CompetitionInviteViewModel {
                 .append(deadlineDate)
                 .append(briefingDate)
                 .append(assessorPay)
+                .append(userLoggedIn)
                 .toHashCode();
     }
 }

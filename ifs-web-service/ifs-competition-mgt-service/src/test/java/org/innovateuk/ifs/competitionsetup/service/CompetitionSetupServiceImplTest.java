@@ -42,8 +42,10 @@ public class CompetitionSetupServiceImplTest {
 	public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
 		Model model = new ExtendedModelMap();
 		CompetitionResource competition = newCompetitionResource()
+				.withId(1L)
 				.withCompetitionCode("code")
 				.withName("name")
+				.withSetupComplete(false)
 				.build();
 		
 		service.setCompetitionSetupSectionModelPopulators(asList());
@@ -51,7 +53,7 @@ public class CompetitionSetupServiceImplTest {
 		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
 		
 		List<CompetitionSetupSection> completedSections = new ArrayList<>();
-		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(8L)).thenReturn(completedSections);
+		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competition.getId())).thenReturn(completedSections);
 		
 		service.populateCompetitionSectionModelAttributes(model, competition, section);
 		
@@ -64,6 +66,7 @@ public class CompetitionSetupServiceImplTest {
 		Model model = new ExtendedModelMap();
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionCode("code")
+				.withSetupComplete(false)
 				.withName("name")
 				.build();
 		

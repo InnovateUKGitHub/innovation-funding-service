@@ -30,10 +30,6 @@ public class AvailableAssessorResourceBuilder extends BaseBuilder<AvailableAsses
         return new AvailableAssessorResourceBuilder(emptyList());
     }
 
-    public AvailableAssessorResourceBuilder withUserId(Long... value) {
-        return withArraySetFieldByReflection("userId", value);
-    }
-
     public AvailableAssessorResourceBuilder withFirstName(String... value) {
         return withArraySetFieldByReflection("firstName", value);
     }

@@ -12,11 +12,11 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
@@ -128,7 +128,9 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public static class TestCompetitionInviteService implements CompetitionInviteService {
 
         @Override
-        public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) { return null; }
+        public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) {
+            return null;
+        }
 
         @Override
         public ServiceResult<CompetitionInviteResource> openInvite(@P("inviteHash") String inviteHash) {
@@ -141,7 +143,9 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) { return null; }
+        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
+            return null;
+        }
 
         @Override
         public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
@@ -150,6 +154,16 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
             return null;
         }
 
