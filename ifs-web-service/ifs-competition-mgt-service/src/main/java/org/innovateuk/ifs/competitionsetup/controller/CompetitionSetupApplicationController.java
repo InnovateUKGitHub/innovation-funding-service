@@ -35,7 +35,6 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.*;
-import static org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -95,7 +94,7 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                         Model model) {
+                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getFinancePage(model, competitionResource, true, null);
     }
@@ -122,7 +121,6 @@ public class CompetitionSetupApplicationController {
                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getQuestionPage(model, competitionResource, questionId, false, null);
-
     }
 
     @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.GET)
@@ -131,7 +129,6 @@ public class CompetitionSetupApplicationController {
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getQuestionPage(model, competitionResource, questionId, true, null);
-
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
@@ -152,11 +149,12 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/question", method = RequestMethod.POST)
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
-                                            BindingResult bindingResult,
+                                               BindingResult bindingResult,
                                                ValidationHandler validationHandler,
                                             @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
         validateScopeGuidanceRows(competitionSetupForm, bindingResult);
+
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
@@ -170,24 +168,24 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                        Model model) {
+                                         Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getDetailsPage(model, competitionResource, false, null);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                         Model model) {
+                                            Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getDetailsPage(model, competitionResource, true, null);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
     public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                            Model model) {
+                                           BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getDetailsPage(model, competitionResource, true, form);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
@@ -220,20 +218,15 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
-        if(isSendToDashboard(competitionResource)) {
-            LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
 
         CompetitionSetupQuestionType type = questionResource.getSuccessObjectOrThrowException().getType();
         CompetitionSetupSubsection setupSubsection;
 
         if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
-            setupSubsection =  QUESTIONS;
+            setupSubsection = CompetitionSetupSubsection.QUESTIONS;
         } else {
-            setupSubsection =  PROJECT_DETAILS;
+            setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
         }
 
         setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);

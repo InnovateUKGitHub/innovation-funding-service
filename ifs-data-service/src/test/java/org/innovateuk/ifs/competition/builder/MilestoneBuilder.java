@@ -2,16 +2,17 @@ package org.innovateuk.ifs.competition.builder;
 
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.user.builder.ProfileBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
 
@@ -23,12 +24,16 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
         return new MilestoneBuilder(emptyList()).with(uniqueIds());
     }
 
-    public MilestoneBuilder withDate(LocalDateTime date) {
-        return with(milestone -> setField("date", date, milestone));
+    public MilestoneBuilder withDate(LocalDateTime... dates) {
+        return withArraySetFieldByReflection("date", dates);
     }
 
-    public MilestoneBuilder withCompetitionId(Long competition) {
-        return with(milestone -> setField("competition", competition, milestone));
+    public MilestoneBuilder withCompetition(Competition... competitions) {
+        return withArraySetFieldByReflection("competition", competitions);
+    }
+
+    public MilestoneBuilder withType(MilestoneType... types) {
+        return withArraySetFieldByReflection("type", types);
     }
 
     @Override
@@ -39,10 +44,5 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
     @Override
     protected Milestone createInitial() {
         return createDefault(Milestone.class);
-    }
-
-
-    public MilestoneBuilder withType(MilestoneType... types) {
-        return withArray((type, milestone) -> setField("type", type, milestone), types);
     }
 }
