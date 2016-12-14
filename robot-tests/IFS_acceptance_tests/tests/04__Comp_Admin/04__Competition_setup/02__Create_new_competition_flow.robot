@@ -438,35 +438,6 @@ Application: should have a green check
     Then the user should see the element    css=ul > li:nth-child(5) > img
     And The user should see the element    jQuery=.button:contains("Save as Ready To Open")
 
-Assessor: Contain the correct options
-    [Documentation]    INFUND-5641
-    [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Assessors
-    And the user should see the text in the page    How many assessors are required for each application?
-    Then the user should see the element    jQuery=label:contains(1)
-    When the user should see the element    jQuery=label:contains(3)
-    And the user should see the element    jQuery=label:contains(5)
-    And the user should see the text in the page    How much do assessors receive per application
-    And the user should see the element    id=assessorPay
-
-Assessor: Mark as Done then Edit again
-    [Documentation]    INFUND-5641
-    [Tags]    HappyPath
-    When the user selects the checkbox    id=assessors-62
-    And the user enters text to a text field    id=assessorPay    100
-    And the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    3
-    And the user should see the text in the page    100
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
-    Then the user clicks the button/link    jQuery=.button:contains("Done")
-
-Assessor: Should have a Green Check
-    [Documentation]    INFUND-5641
-    [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(6) .section-status
-
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]
@@ -490,6 +461,39 @@ User should be able to Save the Competition as Open
     And the user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
+
+Assessor: Contain the correct options
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link    link=Assessors
+    And the user should see the text in the page    How many assessors are required for each application?
+    Then the user should see the element    jQuery=label:contains(1)
+    When the user should see the element    jQuery=label:contains(3)
+    And the user should see the element    jQuery=label:contains(5)
+    And the user should see the text in the page    How much do assessors receive per application
+    And the user should see the element    id=assessorPay
+
+Assessor: Mark as Done then Edit again
+     [Documentation]    INFUND-5641
+     [Tags]    HappyPath
+    When the user selects the checkbox    id=assessors-62
+    And the user enters text to a text field    id=assessorPay    100
+    And the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the text in the page    3
+    And the user should see the text in the page    100
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Then the user clicks the button/link    jQuery=.button:contains("Done")
+
+Assessor: Should have a Green Check
+    [Documentation]    INFUND-5641
+    [Tags]    HappyPath
+    When The user clicks the button/link    link=Competition setup
+    Then the user should see the element    css=li:nth-child(6) .section-status
+    And the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    And the user clicks the button/link    link=All competitions
+    And the user clicks the button/link    id=section-3
+    And the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
 
 *** Keywords ***
 the user moves focus and waits for autosave
