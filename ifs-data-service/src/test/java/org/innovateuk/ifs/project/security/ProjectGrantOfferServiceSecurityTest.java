@@ -194,6 +194,27 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
+    @Test
+    public void testGenerateGrantOfferLetterIfReadyDeniedIfNotCorrectGlobalRoles() {
+
+        final Long projectId = 1L;
+
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+                .collect(toList());
+
+        nonCompAdminRoles.forEach(role -> {
+
+            setLoggedInUser(
+                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                classUnderTest.generateGrantOfferLetterIfReady(projectId);
+                Assert.fail("Should not have been able to generate GOL automatically without the global Comp Admin role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+
 
     @Override
     protected Class<? extends ProjectGrantOfferService> getClassUnderTest() {

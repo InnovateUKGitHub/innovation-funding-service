@@ -184,39 +184,41 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 andOnSuccess(project -> fileTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
                             andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
                                     fileEntryResource).
-                                    andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
+                                    andOnSuccess(inputStreamSupplier -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                                             andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
-@Override
+    @Override
     public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-        if(projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject() == ApprovalType.APPROVED) {
-            return getProject(projectId).andOnSuccess( project -> {
-                if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+        return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
+            if(approval == ApprovalType.APPROVED) {
+                return getProject(projectId).andOnSuccess(project -> {
+                    if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
 
-                    FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
-                    return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
-                            .andOnSuccess( () -> serviceSuccess()).
-                                    andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
-                } else {
-                    return serviceSuccess();
-                }
-            });
-        } else {
-            return serviceSuccess();
-        }
+                        FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
+                        return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
+                                .andOnSuccess(() -> serviceSuccess()).
+                                        andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+                    } else {
+                        return serviceSuccess();
+                    }
+                });
+            } else {
+                return serviceSuccess();
+            }
+        });
     }
 
     private Map<String, Object> getTemplateData(Project project) {
         Map<String, Object> templateReplacements = new HashMap<>();
-        List<String> addresses = getAddresses(project);
+        Address address = project.getAddress();
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", project.getApplication().getLeadOrganisation().getName());
-        templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
-        templateReplacements.put("Address2", addresses.size() < 2 ? "" : addresses.get(1));
-        templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
-        templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
-        templateReplacements.put("PostCode", addresses.size() < 5 ? "" : addresses.get(4));
+        templateReplacements.put("Address1", address != null && address.getAddressLine1() != null ? address.getAddressLine1() : "");
+        templateReplacements.put("Address2", address != null && address.getAddressLine2() != null ? address.getAddressLine2() : "");
+        templateReplacements.put("Address3", address != null && address.getAddressLine3() != null ? address.getAddressLine3() : "");
+        templateReplacements.put("TownCity", address != null && address.getTown() != null ? address.getTown() : "");
+        templateReplacements.put("PostCode", address != null && address.getPostcode() != null ? address.getPostcode() : "");
         templateReplacements.put("Date", LocalDateTime.now().toString());
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
@@ -226,19 +228,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", getYearlyGOLProfileTable());
         return templateReplacements;
-    }
-
-    private List<String> getAddresses(Project project) {
-        List<String> addressLines = new ArrayList<>();
-        if (project.getAddress() != null ) {
-            Address address = project.getAddress();
-            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "" );
-            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "" );
-            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : "" ));
-            addressLines.add(address.getTown() != null ? address.getTown() : "");
-            addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
-        }
-        return addressLines;
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
