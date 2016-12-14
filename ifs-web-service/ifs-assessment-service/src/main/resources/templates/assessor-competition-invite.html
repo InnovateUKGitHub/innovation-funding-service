@@ -50,9 +50,10 @@
                     <legend class="visuallyhidden">Are you available to assess this competition?</legend>
                     <h2 class="heading-medium">Are you available to assess this competition?</h2>
 
-                    <p>If you are available you will be taken through the account creation process. As this is a new service you will need to create an account and sign our terms and conditions even if you are an existing assessor for Innovate UK.</p>
+                    <p th:if="${!model.userLoggedIn}">If you are available you will be taken through the account creation process. As this is a new service you will need to create an account and sign our terms and conditions even if you are an existing assessor for Innovate UK.</p>
 
-                    <button class="button large extra-margin" type="submit">Yes, create account</button>
+                    <button class="button large extra-margin" type="submit" th:text="${model.userLoggedIn} ? 'Yes' : 'Yes, create account'">Yes, create account</button>
+
                     <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">No</a>
                 </fieldset>
             </form>

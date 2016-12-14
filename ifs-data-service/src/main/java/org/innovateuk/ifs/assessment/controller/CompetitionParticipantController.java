@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +22,9 @@ public class CompetitionParticipantController {
     @Autowired
     private CompetitionParticipantService competitionParticipantService;
 
-    @RequestMapping(value = "/user/{userId}/role/{role}/status/{status}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/{userId}/role/{role}", method = RequestMethod.GET)
     public RestResult<List<CompetitionParticipantResource>> getParticipants(@PathVariable("userId") Long userId,
-                                                                            @PathVariable("role") CompetitionParticipantRoleResource roleResource,
-                                                                            @PathVariable("status") ParticipantStatusResource statusResource) {
-
-         return competitionParticipantService.getCompetitionParticipants(userId, roleResource, statusResource).toGetResponse();
+                                                                               @PathVariable("role") CompetitionParticipantRoleResource roleResource) {
+        return competitionParticipantService.getCompetitionParticipants(userId, roleResource).toGetResponse();
     }
 }

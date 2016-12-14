@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 
 import java.util.List;
 
@@ -12,5 +11,5 @@ import java.util.List;
  */
 public interface CompetitionParticipantRestService {
 
-    RestResult<List<CompetitionParticipantResource>> getParticipants(Long userId, CompetitionParticipantRoleResource role , ParticipantStatusResource status);
+    RestResult<List<CompetitionParticipantResource>> getParticipants(Long userId, CompetitionParticipantRoleResource role);
 }

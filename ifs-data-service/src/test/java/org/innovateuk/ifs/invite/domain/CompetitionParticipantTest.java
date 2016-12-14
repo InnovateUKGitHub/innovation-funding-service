@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.builder.RejectionReasonBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
@@ -10,10 +8,16 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static java.util.Optional.empty;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class CompetitionParticipantTest {
 
@@ -23,9 +27,20 @@ public class CompetitionParticipantTest {
     @Before
     public void setup() {
         invite = newCompetitionInvite()
-                .withCompetition( CompetitionBuilder.newCompetition().withName("my competition") )
+                .withCompetition( newCompetition().withName("my competition") )
+                .withStatus(SENT)
                 .build();
         rejectionReason = RejectionReasonBuilder.newRejectionReason().build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructor_inviteNotSentOrOpened() throws Exception {
+        CompetitionInvite createdInvite = newCompetitionInvite()
+                .withCompetition(newCompetition().withName("my competition"))
+                .withStatus(CREATED)
+                .build();
+
+        new CompetitionParticipant(createdInvite);
     }
 
     @Test
@@ -36,7 +51,7 @@ public class CompetitionParticipantTest {
         invite.open();
 
         competitionParticipant.acceptAndAssignUser(user);
-        assertEquals(ParticipantStatus.ACCEPTED, competitionParticipant.getStatus());
+        assertEquals(ACCEPTED, competitionParticipant.getStatus());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -74,7 +89,7 @@ public class CompetitionParticipantTest {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
-        assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
+        assertEquals(REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
         assertEquals("too busy", competitionParticipant.getRejectionReasonComment());
     }
@@ -123,7 +138,7 @@ public class CompetitionParticipantTest {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, Optional.of(""));
-        assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
+        assertEquals(REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
         assertEquals("", competitionParticipant.getRejectionReasonComment());
     }
@@ -133,7 +148,7 @@ public class CompetitionParticipantTest {
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, empty());
-        assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
+        assertEquals(REJECTED, competitionParticipant.getStatus());
         assertEquals(rejectionReason, competitionParticipant.getRejectionReason());
         assertNull(competitionParticipant.getRejectionReasonComment());
     }
