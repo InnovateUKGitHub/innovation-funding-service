@@ -117,6 +117,7 @@ public class POJOTest {
             CostCategoryTypeResource.class,
             SpendProfileResource.class,
             SpendProfileTableResource.class,
+            ViabilityResource.class,
             CompetitionFunderResource.class,
             CompetitionCountResource.class,
             LocalDateResource.class,
