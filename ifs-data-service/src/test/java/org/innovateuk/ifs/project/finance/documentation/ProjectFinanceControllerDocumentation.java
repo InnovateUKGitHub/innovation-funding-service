@@ -478,7 +478,6 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 withProject(project.getId()).
                 withOrganisation(academicOrganisation.getId(), industrialOrganisation.getId()).
                 withFinanceOrganisationDetails(academicOrganisationFinances, industrialOrganisationFinances).
-                withViability(Viability.APPROVED).
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 build(2);
 
