@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -35,6 +36,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_EVEN;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
@@ -43,10 +48,6 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQU
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.ZERO;
-import static java.math.RoundingMode.HALF_EVEN;
-import static java.util.Arrays.asList;
 
 
 /**
@@ -164,46 +165,38 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            FinanceCheckPartnerStatusResource.Viability viabilityStatus = getViability(org);
-            ViabilityStatus viabilityRagStatus = getViabilityRagStatus(org);
+            Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> viability = getViability(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
                     FinanceCheckPartnerStatusResource.Eligibility.REVIEW;
 
             return new FinanceCheckPartnerStatusResource(
-                            org.getOrganisation().getId(),
-                            org.getOrganisation().getName(),
-                            viabilityStatus, viabilityRagStatus, eligibilityStatus);
-                }
-        );
+                org.getOrganisation().getId(),
+                org.getOrganisation().getName(),
+                viability.getLeft(), viability.getRight(),
+                eligibilityStatus);
+        });
     }
 
-    private ViabilityStatus getViabilityRagStatus(PartnerOrganisation org) {
-
-        ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
-                org.getProject().getId(), org.getOrganisation().getId());
-
-        ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
-
-        return viabilityDetails.getViabilityStatus();
-    }
-
-    private FinanceCheckPartnerStatusResource.Viability getViability(PartnerOrganisation org) {
+    private Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
 
         if (organisationFinanceDelegate.isUsingJesFinances(org.getOrganisation().getOrganisationType().getName())) {
 
-            return FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE;
+            return Pair.of(FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
 
         } else {
+
             ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
                     org.getProject().getId(), org.getOrganisation().getId());
 
             ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
 
-            return viabilityDetails.getViability() == Viability.APPROVED ?
+            FinanceCheckPartnerStatusResource.Viability viability = viabilityDetails.getViability() == Viability.APPROVED ?
                     FinanceCheckPartnerStatusResource.Viability.APPROVED :
                     FinanceCheckPartnerStatusResource.Viability.REVIEW;
+
+            return Pair.of(viability, viabilityDetails.getViabilityStatus());
         }
     }
 

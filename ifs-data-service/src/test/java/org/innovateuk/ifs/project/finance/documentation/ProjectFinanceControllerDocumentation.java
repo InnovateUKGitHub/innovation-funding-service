@@ -336,13 +336,11 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     public void getViability() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ViabilityResource expectedViabilityResource = new ViabilityResource();
-        expectedViabilityResource.setViability(Viability.APPROVED);
-        expectedViabilityResource.setViabilityStatus(ViabilityStatus.GREEN);
+        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
 
         when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 

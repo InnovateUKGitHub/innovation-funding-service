@@ -6,8 +6,16 @@ package org.innovateuk.ifs.project.finance.resource;
 public class ViabilityResource {
 
     private Viability viability;
-
     private ViabilityStatus viabilityStatus;
+
+    // for JSON marshalling
+    ViabilityResource() {
+    }
+
+    public ViabilityResource(Viability viability, ViabilityStatus viabilityStatus) {
+        this.viability = viability;
+        this.viabilityStatus = viabilityStatus;
+    }
 
     public Viability getViability() {
         return viability;
