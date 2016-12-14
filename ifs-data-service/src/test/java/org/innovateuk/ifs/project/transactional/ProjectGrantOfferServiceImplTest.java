@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.file.builder.FileEntryBuilder;
 import org.innovateuk.ifs.project.transactional.*;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
@@ -26,6 +27,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -212,12 +214,23 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testSubmitGrantOfferLetterFailure() {
+    public void testSubmitGrantOfferLetterFailureNoSignedGolFile() {
+
+        ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        assertTrue(result.getFailure().is(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+        Assert.assertThat(project.getOfferSubmittedDate(), nullValue());
+    }
+
+    @Test
+    public void testSubmitGrantOfferLetterFailureCannotReachSignedState() {
+        project.setSignedGrantOfferLetter(mock(FileEntry.class));
+
         when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.FALSE);
 
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
-        Assert.assertFalse(result.isSuccess());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE));
         Assert.assertThat(project.getOfferSubmittedDate(), nullValue());
     }
 

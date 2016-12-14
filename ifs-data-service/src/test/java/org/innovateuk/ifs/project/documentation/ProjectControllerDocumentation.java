@@ -582,7 +582,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void isSignedGrantOfferLetterApproved() throws Exception{
         when(projectServiceMock.isSignedGrantOfferLetterApproved(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        mockMvc.perform(get("/project/{projectId}/is-signed-grant-offer-letter-approved", 123L))
+        mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

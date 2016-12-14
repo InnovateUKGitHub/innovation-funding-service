@@ -70,7 +70,7 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "APPROVE_SIGNED_GRANT_OFFER_INTERNAL_USER",
+            value = "APPROVE_SIGNED_GRANT_OFFER",
             description = "Competitions team & Project Finance can approve signed grant offer letter")
     public boolean internalUsersCanApproveSignedGrantOfferLetter(Long projectId, UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);

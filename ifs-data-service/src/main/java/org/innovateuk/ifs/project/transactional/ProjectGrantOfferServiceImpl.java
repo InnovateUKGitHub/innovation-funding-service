@@ -296,9 +296,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
-                andOnSuccess(project ->
-                {
-                    if(golWorkflowHandler.isSent(project)){
+                andOnSuccess(project -> {
+                    if(golWorkflowHandler.isSent(project)) {
                         return fileService.updateFile(fileEntryResource, inputStreamSupplier).
                                 andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true));
                     } else {
@@ -310,8 +309,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-            if (project.getSignedGrantOfferLetter() == null || !golWorkflowHandler.sign(project)) {
+            if (project.getSignedGrantOfferLetter() == null) {
                 return serviceFailure(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+            }
+            if(!golWorkflowHandler.sign(project)) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
             project.setOfferSubmittedDate(LocalDateTime.now());
             return serviceSuccess();

@@ -21,6 +21,8 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
+import java.util.function.BiFunction;
+
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.PROJECT_CREATED;
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SENT;
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SIGNED;
@@ -94,35 +96,26 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return process != null && GOLState.SENT.equals(process.getActivityState());
     }
 
-
-    public boolean grantOfferLetterSent(Project project) {
+    boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
         GOLProcess process = getCurrentProcess(project);
         if(process == null)
             return false;
         ProjectUser projectUser = process.getParticipant();
         if(projectUser == null)
             return false;
-        return grantOfferLetterSent(project, projectUser);
+        return fn.apply(project, projectUser);
+    }
+
+    public boolean grantOfferLetterSent(Project project) {
+        return getIfProjectAndUserValid(project, this::grantOfferLetterSent);
     }
 
     public boolean approve(Project project) {
-        GOLProcess process = getCurrentProcess(project);
-        if(process == null)
-            return false;
-        ProjectUser projectUser = process.getParticipant();
-        if(projectUser == null)
-            return false;
-        return grantOfferLetterApproved(project, projectUser);
+        return getIfProjectAndUserValid(project, this::grantOfferLetterApproved);
     }
 
     public boolean sign(Project project) {
-        GOLProcess process = getCurrentProcess(project);
-        if(process == null)
-            return false;
-        ProjectUser projectUser = process.getParticipant();
-        if(projectUser == null)
-            return false;
-        return grantOfferLetterSigned(project, projectUser);
+        return getIfProjectAndUserValid(project, this::grantOfferLetterSigned);
     }
 
     @Override

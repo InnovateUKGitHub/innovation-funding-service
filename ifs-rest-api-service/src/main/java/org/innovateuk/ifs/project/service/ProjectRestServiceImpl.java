@@ -256,6 +256,6 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/is-signed-grant-offer-letter-approved", Boolean.class);
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter", Boolean.class);
     }
 }
