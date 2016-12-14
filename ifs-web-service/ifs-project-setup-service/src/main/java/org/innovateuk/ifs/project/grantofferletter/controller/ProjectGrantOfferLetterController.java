@@ -35,7 +35,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.singletonList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 /**
  * Controller for the grant offer letter
  **/
@@ -91,7 +90,6 @@ public class ProjectGrantOfferLetterController {
             ValidationHandler validationHandler,
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
 
             MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
@@ -132,7 +130,7 @@ public class ProjectGrantOfferLetterController {
     @RequestMapping(value = "/additional-contract", method = GET)
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAdditionalContrcatFile(
+    ResponseEntity<ByteArrayResource> downloadAdditionalContractFile(
             @PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = projectService.getAdditionalContractFile(projectId);
@@ -163,9 +161,10 @@ public class ProjectGrantOfferLetterController {
                 .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
-                leadPartner, grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
-                signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
-                additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
+                leadPartner,
+                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
+                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
                 project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
     }

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 
@@ -56,8 +57,17 @@ public class CompetitionParticipant extends Participant<Competition, Competition
 
     public CompetitionParticipant(User user, CompetitionInvite invite) {
         super();
-        if (invite == null) throw new NullPointerException("invite cannot be null");
-        if (invite.getTarget() == null) throw new NullPointerException("invite.target cannot be null");
+        if (invite == null) {
+            throw new NullPointerException("invite cannot be null");
+        }
+
+        if (invite.getTarget() == null) {
+            throw new NullPointerException("invite.target cannot be null");
+        }
+
+        if (invite.getStatus() != SENT && invite.getStatus() != OPENED) {
+            throw new IllegalArgumentException("invite.status must be SENT or OPENED");
+        }
 
         this.user = user;
         this.competition = invite.getTarget();
@@ -110,6 +120,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         if (getStatus() == REJECTED) {
             throw new IllegalStateException("Cannot accept a CompetitionParticipant that has been rejected");
         }
+
         if (getStatus() == ACCEPTED) {
             throw new IllegalStateException("CompetitionParticipant has already been accepted");
         }

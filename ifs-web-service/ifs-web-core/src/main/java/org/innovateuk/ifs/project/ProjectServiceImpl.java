@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project;
 
+import org.innovateuk.ifs.project.*;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -8,10 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -320,6 +318,16 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
         return projectRestService.isGrantOfferLetterAlreadySent(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+        return projectRestService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+        return projectRestService.isSignedGrantOfferLetterApproved(projectId).toServiceResult();
     }
 
 }
