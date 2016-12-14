@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.Project;
@@ -15,9 +15,7 @@ import org.innovateuk.ifs.project.finance.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
-import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -30,7 +28,6 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -47,7 +44,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -317,20 +313,46 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        return serviceSuccess(projectFinance.getViability());
+        ViabilityResource viabilityResource = new ViabilityResource();
+        viabilityResource.setViability(projectFinance.getViability());
+        viabilityResource.setViabilityStatus(projectFinance.getViabilityStatus());
+
+        return serviceSuccess(viabilityResource);
 
     }
 
     @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability){
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
+        return validateViability(projectFinance, viabilityStatus)
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
+    }
+
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, ViabilityStatus viabilityStatus) {
+
+        if (Viability.APPROVED == projectFinanceInDB.getViability()) {
+
+            return serviceFailure(new Error(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+
+        } else if (ViabilityStatus.UNSET == viabilityStatus) {
+
+            return serviceFailure(new Error(VIABILITY_RAG_STATUS_MUST_BE_SET));
+
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
+
         projectFinance.setViability(viability);
+        projectFinance.setViabilityStatus(viabilityStatus);
 
         projectFinanceRepository.save(projectFinance);
 

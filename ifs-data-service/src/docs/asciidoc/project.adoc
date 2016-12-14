@@ -453,6 +453,7 @@ include::{snippets}/project/get-viability/path-parameters.adoc[]
 
 ===== Response
 include::{snippets}/project/get-viability/http-response.adoc[]
+include::{snippets}/project/get-viability/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-viability/curl-request.adoc[]
