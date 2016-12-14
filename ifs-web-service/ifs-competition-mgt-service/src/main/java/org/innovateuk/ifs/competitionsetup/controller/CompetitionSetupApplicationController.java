@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.GuidanceRowForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,6 +59,7 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Autowired
+    @Qualifier("mvcValidator")
     private Validator validator;
 
     @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
