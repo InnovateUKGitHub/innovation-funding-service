@@ -6,6 +6,8 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.junit.Test;
 
@@ -174,27 +176,30 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 1L;
 
-        Viability expectedViability = Viability.APPROVED;
+        ViabilityResource expectedViabilityResource = new ViabilityResource();
+        expectedViabilityResource.setViability(Viability.APPROVED);
+        expectedViabilityResource.setViabilityStatus(ViabilityStatus.GREEN);
+
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViability));
+        when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedViability)));
+                .andExpect(content().json(toJson(expectedViabilityResource)));
     }
-
     @Test
     public void testSaveViability() throws Exception {
         Long projectId = 1L;
         Long organisationId = 1L;
         Viability viability = Viability.APPROVED;
+        ViabilityStatus viabilityStatus = ViabilityStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityStatus)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}", projectId, organisationId, viability))
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityStatus}", projectId, organisationId, viability, viabilityStatus))
                 .andExpect(status().isOk());
     }
 

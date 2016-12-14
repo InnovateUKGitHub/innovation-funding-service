@@ -1,0 +1,54 @@
+/*-------- Task list -------------*/
+.task-list{
+  margin: 10px 0 50px;
+  li{
+    position: relative;
+    border-top: 1px solid $border-colour;
+    padding: 10px;
+    .task-title{
+      display: inline-block;
+      width: 50%;
+      font-weight: bold;
+    }
+    .action-required{
+      @extend  %action-required;
+      padding-left: 20px;
+      font-size: 16px;
+    }
+    .notification{
+      padding-left: 20px;
+      font-size: 16px;
+    }
+    .secondary-notification{
+      color: $secondary-text-colour;
+      padding-left: 20px;
+      font-size: 16px;
+    }
+    .status{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .status-complete{
+      @extend %icon-tick;
+      background-size: 14px;
+      background-position: 0 4px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding-left: 20px;
+      color: $button-colour;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    &.unavailable{
+      background-color: $panel-colour;
+      color: $secondary-text-colour;
+    }
+    &:last-child{
+      border-bottom: 1px solid $border-colour;
+    }
+  }
+}

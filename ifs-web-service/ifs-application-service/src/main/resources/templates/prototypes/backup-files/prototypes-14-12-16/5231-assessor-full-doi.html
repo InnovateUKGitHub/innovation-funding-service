@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor profile'}, ${'/prototypes/5229-assessor-profile'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'John Smith'}, ${null})" th:remove="tag" />
+
+	<h1 class="heading-large">Declaration of interest</h1>
+	
+	<h3 class="heading-small no-margin-bottom">Principal employer and role</h3>
+	<p>ASDF solutions <br /> CEO</p>
+
+	<h2 class="heading-medium no-margin-bottom">Professional affiliations</h2>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro provident eaque quia dolor cum quam atque dignissimos quidem iusto voluptas, deserunt ut exercitationem, a omnis quod dolorem blanditiis. Quo, rerum.</p>
+
+	<h2 class="heading-medium">Appointments, directorships and consultancies</h2>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Organisation</th>
+				<th scope="col">Role</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					Aptrans Ltd
+				</td>
+				<td>
+					Executive consultant
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2 class="heading-medium no-margin-bottom">Other financial interests</h2>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto dolore vel harum voluptatem dolores ipsum, nihil nisi ad, ipsam placeat consequuntur labore excepturi cumque facere doloremque asperiores, voluptatibus ab dignissimos.</p>
+
+	<h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Relation</th>
+				<th scope="col">Organisation</th>
+				<th scope="col">Role</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					Sister
+				</td>
+				<td>
+					BioTech Corp
+				</td>
+				<td>
+					Senior Fiscal Officer
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2 class="heading-medium no-margin-bottom">Close family member other financial interests</h2>
+	<p>Consectetur adipisci dolor itaque accusamus tempore explicabo assumenda vero quasi fuga, ipsa unde, ipsam dolores repellendus.</p>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

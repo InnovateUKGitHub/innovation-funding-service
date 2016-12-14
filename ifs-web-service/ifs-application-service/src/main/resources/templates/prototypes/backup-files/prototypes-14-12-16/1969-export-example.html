@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<h1 style="text-align: center"><strong>EXAMPLE EXPORT PAGE</strong></h1>
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="extra-margin" style="padding: 100px 0; text-align: center">
+		
+		<p>The exported application data will appear as .csv file here</p>
+		
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    
+</main>
+
+
+
+</body>
+</html>

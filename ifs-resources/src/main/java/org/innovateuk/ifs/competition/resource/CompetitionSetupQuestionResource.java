@@ -3,12 +3,16 @@ package org.innovateuk.ifs.competition.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -33,12 +37,15 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
     private Boolean appendix;
 
+    private String assessmentGuidanceTitle;
     private String assessmentGuidance;
     private Integer assessmentMaxWords;
 
     private Boolean scored;
     private Integer scoreTotal;
     private Boolean writtenFeedback;
+
+    @Valid
     private List<GuidanceRowResource> guidanceRows = new ArrayList<>();
 
     private Boolean researchCategoryQuestion;
@@ -197,6 +204,14 @@ public class CompetitionSetupQuestionResource {
         this.scope = scope;
     }
 
+    public String getAssessmentGuidanceTitle() {
+        return assessmentGuidanceTitle;
+    }
+
+    public void setAssessmentGuidanceTitle(String assessmentGuidanceTitle) {
+        this.assessmentGuidanceTitle = assessmentGuidanceTitle;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -217,6 +232,7 @@ public class CompetitionSetupQuestionResource {
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
                 .append(assessmentGuidance, that.assessmentGuidance)
+                .append(assessmentGuidanceTitle, that.assessmentGuidanceTitle)
                 .append(assessmentMaxWords, that.assessmentMaxWords)
                 .append(scored, that.scored)
                 .append(scoreTotal, that.scoreTotal)
@@ -241,6 +257,7 @@ public class CompetitionSetupQuestionResource {
                 .append(maxWords)
                 .append(appendix)
                 .append(assessmentGuidance)
+                .append(assessmentGuidanceTitle)
                 .append(assessmentMaxWords)
                 .append(scored)
                 .append(scoreTotal)

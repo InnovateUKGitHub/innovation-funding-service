@@ -2,7 +2,9 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
@@ -49,11 +51,27 @@ public class CompetitionManagementInviteAssessorsController {
         return doViewFind(model, competitionId);
     }
 
+    @RequestMapping(value = "/find", params = {"add"}, method = RequestMethod.POST)
+    public String addInviteFromFindView(Model model, @PathVariable("competitionId") Long competitionId, @RequestParam(name = "add") String email) {
+        inviteUser(email, competitionId).getSuccessObjectOrThrowException();
+        return doViewFind(model, competitionId);
+    }
+
+    @RequestMapping(value = "/find", params = {"remove"}, method = RequestMethod.POST)
+    public String removeInviteFromFindView(Model model, @PathVariable("competitionId") Long competitionId, @RequestParam(name = "remove") String email) {
+        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        return doViewFind(model, competitionId);
+    }
+
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
     public String invite(Model model, @PathVariable("competitionId") Long competitionId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition));
-        return "assessors/invite";
+        return doViewInvite(model, competitionId);
+    }
+
+    @RequestMapping(value = "/invite", params = {"remove"}, method = RequestMethod.POST)
+    public String removeInviteFromInviteView(Model model, @PathVariable("competitionId") Long competitionId, @RequestParam(name = "remove") String email) {
+        deleteInvite(email, competitionId);
+        return doViewInvite(model, competitionId);
     }
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET)
@@ -63,21 +81,23 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/overview";
     }
 
-    @RequestMapping(value = "/inviteUser", method = RequestMethod.POST)
-    public String inviteUser(Model model, @PathVariable("competitionId") Long competitionId, @RequestParam String email) {
-        competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).getSuccessObjectOrThrowException();
-        return doViewFind(model, competitionId);
+    private ServiceResult<CompetitionInviteResource> inviteUser(String email, Long competitionId) {
+        return competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
     }
 
-    @RequestMapping(value = "/deleteInvite", method = RequestMethod.POST)
-    public String deleteInvite(Model model, @PathVariable("competitionId") Long competitionId, @RequestParam String email) {
-        competitionInviteRestService.deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
-        return doViewFind(model, competitionId);
+    private ServiceResult<Void> deleteInvite(String email, Long competitionId) {
+        return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
     }
 
     private String doViewFind(Model model, Long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition));
         return "assessors/find";
+    }
+
+    private String doViewInvite(Model model, Long competitionId) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition));
+        return "assessors/invite";
     }
 }

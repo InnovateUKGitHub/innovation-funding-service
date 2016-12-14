@@ -20,10 +20,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
-import org.innovateuk.ifs.project.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.domain.*;
 import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
@@ -1375,6 +1372,33 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(resultWithLeadFilter.isSuccess());
         assertEquals(expectedProjectTeamStatusResourceFilteredOnLead, resultWithLeadFilter.getSuccessObject());
 
+
+        // test MO status is pending and not action required when project details submitted
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(any(Project.class))).thenReturn(true);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(null);
+
+        ProjectLeadStatusResource expectedLeadPartnerOrganisationStatusWhenPDSubmitted = newProjectLeadStatusResource().
+                withName(organisations.get(0).getName()).
+                withOrganisationType(
+                        OrganisationTypeEnum.getFromId(organisations.get(0).getOrganisationType().getId())).
+                withOrganisationId(organisations.get(0).getId()).
+                withProjectDetailsStatus(COMPLETE).
+                withMonitoringOfficerStatus(PENDING).
+                withBankDetailsStatus(PENDING).
+                withFinanceChecksStatus(ACTION_REQUIRED).
+                withSpendProfileStatus(NOT_STARTED).
+                withOtherDocumentsStatus(ACTION_REQUIRED).
+                withGrantOfferStatus(NOT_REQUIRED).
+                build();
+
+        ProjectTeamStatusResource expectedProjectTeamStatusResourceWhenPSSubmitted = newProjectTeamStatusResource().
+                withProjectLeadStatus(expectedLeadPartnerOrganisationStatusWhenPDSubmitted).
+                withPartnerStatuses(expectedFullPartnerStatuses).
+                build();
+
+        ServiceResult<ProjectTeamStatusResource> resultForPSSubmmited = service.getProjectTeamStatus(p.getId(), Optional.empty());
+        assertTrue(resultForPSSubmmited.isSuccess());
+        assertEquals(expectedProjectTeamStatusResourceWhenPSSubmitted, resultForPSSubmmited.getSuccessObject());
     }
 
     @Test
