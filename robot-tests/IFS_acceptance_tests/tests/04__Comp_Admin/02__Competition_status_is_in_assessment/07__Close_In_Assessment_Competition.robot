@@ -19,3 +19,4 @@ Assessors shouldn't see the closed competition
     [Documentation]    INFUND-6459
     [Setup]    Log in as a different user    &{assessor2_credentials}
     Then The user should not see the element    link=Sustainable living models for the future
+
