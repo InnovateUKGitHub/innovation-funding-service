@@ -7,6 +7,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -97,6 +99,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
+
+    @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
 
 
     @Override
@@ -321,8 +326,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
+                andOnSuccess(project -> {
+                    if(golWorkflowHandler.isSent(project)) {
+                        return fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                                andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true));
+                    } else {
+                        return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY);
+                    }
+                });
     }
 
     @Override
@@ -330,6 +341,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSignedGrantOfferLetter() == null) {
                 return serviceFailure(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+            }
+            if(!golWorkflowHandler.sign(project)) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
             project.setOfferSubmittedDate(LocalDateTime.now());
             return serviceSuccess();

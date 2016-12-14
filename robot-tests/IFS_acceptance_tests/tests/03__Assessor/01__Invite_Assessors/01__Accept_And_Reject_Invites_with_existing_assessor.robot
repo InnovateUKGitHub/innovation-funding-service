@@ -48,7 +48,7 @@ Existing assessor: Reject invitation
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_existing_assessor1}
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
@@ -68,12 +68,12 @@ Existing assessor: Accept invitation
     ...    INFUND-5509
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user should see the text in the page    You are invited to act as an assessor for the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
+    And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user should see the text in the page    12 January 2018 to 28 January 2019 - assessment period
-    And the user should see the text in the page    taking place on 15 January 2018.
+    And the user should see the text in the page    12 January 2018 to 28 January 2019: Assessment period
+    And the user should see the text in the page    taking place at 15 January 2018.
     And the user should see the text in the page    100.00 per application.
-    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    When the user clicks the button/link    jQuery=.button:contains("Yes")
     Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${READY_TO_OPEN_COMPETITION_NAME}
 
@@ -117,7 +117,7 @@ Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
     [Tags]
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    When the user clicks the button/link    jQuery=.button:contains("Yes")
     Then The user should see permissions error message
 
 The user should not be able to accept or reject the same applications

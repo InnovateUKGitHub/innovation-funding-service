@@ -11,18 +11,21 @@ import javax.validation.constraints.Size;
  * Form for guidance rows in order that the subject field can be split into score from and score to elements
  * and validated accordingly.
  */
-public class GuidanceRowForm {
 
-    @NotEmpty(message = "{validation.applicationquestionform.justification.required}")
-    @Size(max=255, message = "{validation.applicationquestionform.justification.max}")
+public class GuidanceRowForm {
+    public interface GuidanceRowViewGroup {
+    }
+
+    @NotEmpty(message = "{validation.applicationquestionform.justification.required}", groups=GuidanceRowViewGroup.class)
+    @Size(max=255, message = "{validation.applicationquestionform.justification.max}", groups=GuidanceRowViewGroup.class)
     private String justification;
 
-    @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}")
-    @NotNull(message = "{validation.applicationquestionform.scorefrom.required}")
+    @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}", groups=GuidanceRowViewGroup.class)
+    @NotNull(message = "{validation.applicationquestionform.scorefrom.required}", groups=GuidanceRowViewGroup.class)
     private Integer scoreFrom;
 
-    @Min(value=0, message = "{validation.applicationquestionform.scoreto.min}")
-    @NotNull(message = "{validation.applicationquestionform.scoreto.required}")
+    @Min(value=0, message = "{validation.applicationquestionform.scoreto.min}", groups=GuidanceRowViewGroup.class)
+    @NotNull(message = "{validation.applicationquestionform.scoreto.required}", groups=GuidanceRowViewGroup.class)
     private Integer scoreTo;
 
     private Integer priority;

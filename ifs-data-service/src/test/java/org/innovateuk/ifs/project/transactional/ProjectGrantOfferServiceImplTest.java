@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.transactional;
 
-
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -25,10 +25,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -54,8 +56,7 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -244,6 +245,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testUpdateSignedGrantOfferLetterFileEntry() {
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.TRUE);
         assertUpdateFile(
                 project::getSignedGrantOfferLetter,
                 (fileToUpdate, inputStreamSupplier) ->
@@ -251,17 +253,46 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testSubmitGrantOfferLetterFailure() {
+    public void testUpdateSignedGrantOfferLetterFileEntryGolNotSent() {
+
+        FileEntryResource fileToUpdate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
+        assertTrue(result.isFailure());
+        assertEquals(result.getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY.toString());
+
+    }
+
+    @Test
+    public void testSubmitGrantOfferLetterFailureNoSignedGolFile() {
 
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
-        Assert.assertFalse(result.isSuccess());
+        assertTrue(result.getFailure().is(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT));
+        Assert.assertThat(project.getOfferSubmittedDate(), nullValue());
+    }
+
+    @Test
+    public void testSubmitGrantOfferLetterFailureCannotReachSignedState() {
+        project.setSignedGrantOfferLetter(mock(FileEntry.class));
+
+        when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
+
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE));
         Assert.assertThat(project.getOfferSubmittedDate(), nullValue());
     }
 
     @Test
     public void testSubmitGrantOfferLetterSuccess() {
         project.setSignedGrantOfferLetter(mock(FileEntry.class));
+
+        when(golWorkflowHandlerMock.sign(any())).thenReturn(Boolean.TRUE);
+
         ServiceResult<Void> result = service.submitGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
@@ -289,6 +320,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertNull(project.getGrantOfferLetter());
         verify(fileServiceMock).deleteFile(existingGOLFile.getId());
     }
+
 
     @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {
