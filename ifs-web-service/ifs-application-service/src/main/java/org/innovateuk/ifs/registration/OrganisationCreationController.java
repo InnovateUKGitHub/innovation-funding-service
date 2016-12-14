@@ -108,10 +108,9 @@ public class OrganisationCreationController {
     private MessageSource messageSource;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private CookieUtil cookieUtil;
+
+    private Validator validator;
 
     @Autowired
     @Qualifier("mvcValidator")

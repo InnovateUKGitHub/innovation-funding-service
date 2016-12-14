@@ -93,6 +93,15 @@ public class CookieUtilTest {
     }
 
     @Test
+    public void getCookieValueWithMissingCookie() throws Exception {
+        String fieldName = "cookie_fieldname";
+
+        String cookieValue = cookieUtil.getCookieValue(request, fieldName);
+
+        assertTrue(cookieValue.isEmpty());
+    }
+
+    @Test
     public void getCookieValue() throws Exception {
         String fieldName = "cookie_fieldname";
         String value =  "cookieValue";
