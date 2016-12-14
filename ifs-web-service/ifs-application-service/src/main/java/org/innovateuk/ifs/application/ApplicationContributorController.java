@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -69,6 +70,7 @@ public class ApplicationContributorController{
     private CookieUtil cookieUtil;
 
     @Autowired
+    @Qualifier("mvcValidator")
     private Validator validator;
 
     @RequestMapping(value = "", method = RequestMethod.GET)

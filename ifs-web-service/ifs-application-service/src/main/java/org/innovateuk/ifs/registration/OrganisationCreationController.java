@@ -22,6 +22,7 @@ import org.innovateuk.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
@@ -111,6 +112,12 @@ public class OrganisationCreationController {
 
     @Autowired
     private CookieUtil cookieUtil;
+
+    @Autowired
+    @Qualifier("mvcValidator")
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
 
     @RequestMapping("/" + CREATE_ORGANISATION_TYPE)
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {

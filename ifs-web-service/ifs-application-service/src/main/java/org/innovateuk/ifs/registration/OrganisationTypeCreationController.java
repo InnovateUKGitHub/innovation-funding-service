@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +40,7 @@ public class OrganisationTypeCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationTypeCreationController.class);
     Validator validator;
     @Autowired
+    @Qualifier("mvcValidator")
     public void setValidator(Validator validator) {
         this.validator = validator;
     }

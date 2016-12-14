@@ -142,7 +142,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                 throw new RuntimeException("status " + status + " not yet supported by CompetitionBuilder.withCompetitionStatus method");
             }
         }
-    
+
     public CompetitionBuilder withAssessorFeedbackDate(LocalDateTime... endDate) {
         return withArray((date, competition) -> competition.setAssessorFeedbackDate(date), endDate);
     }
