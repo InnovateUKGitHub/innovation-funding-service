@@ -164,19 +164,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            FinanceCheckPartnerStatusResource.Viability viabilityStatus;
-
-            if (organisationFinanceDelegate.isUsingJesFinances(org.getOrganisation().getOrganisationType().getName())) {
-                viabilityStatus = FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE;
-            } else {
-                ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
-                        org.getProject().getId(), org.getOrganisation().getId());
-
-                Viability viability = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
-                viabilityStatus = viability == Viability.APPROVED ?
-                        FinanceCheckPartnerStatusResource.Viability.APPROVED :
-                        FinanceCheckPartnerStatusResource.Viability.REVIEW;
-            }
+            FinanceCheckPartnerStatusResource.Viability viabilityStatus = getViability(org);
+            ViabilityStatus viabilityRagStatus = getViabilityRagStatus(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
@@ -185,9 +174,37 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             return new FinanceCheckPartnerStatusResource(
                             org.getOrganisation().getId(),
                             org.getOrganisation().getName(),
-                            viabilityStatus, "RED", eligibilityStatus);
+                            viabilityStatus, viabilityRagStatus, eligibilityStatus);
                 }
         );
+    }
+
+    private ViabilityStatus getViabilityRagStatus(PartnerOrganisation org) {
+
+        ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
+                org.getProject().getId(), org.getOrganisation().getId());
+
+        ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
+
+        return viabilityDetails.getViabilityStatus();
+    }
+
+    private FinanceCheckPartnerStatusResource.Viability getViability(PartnerOrganisation org) {
+
+        if (organisationFinanceDelegate.isUsingJesFinances(org.getOrganisation().getOrganisationType().getName())) {
+
+            return FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE;
+
+        } else {
+            ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
+                    org.getProject().getId(), org.getOrganisation().getId());
+
+            ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
+
+            return viabilityDetails.getViability() == Viability.APPROVED ?
+                    FinanceCheckPartnerStatusResource.Viability.APPROVED :
+                    FinanceCheckPartnerStatusResource.Viability.REVIEW;
+        }
     }
 
     private FinanceCheck mapToDomain(FinanceCheckResource financeCheckResource) {
