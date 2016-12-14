@@ -87,7 +87,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
                                 .withWordCount(assessmentMaxWords)
-                                .withGuidanceTitle(assessmentGuidance)
+                                .withGuidanceAnswer(assessmentGuidance)
                                 .withGuidanceRows(guidanceRows)
                                 .build(),
                         newFormInput()
@@ -201,7 +201,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(questionFormInput.getGuidanceTitle(), guidanceTitle);
         assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
         assertEquals(questionFormInput.getWordCount(), maxWords);
-        assertEquals(writtenFeedbackFormInput.getDescription(), assessmentGuidanceTitle);
+        assertEquals(writtenFeedbackFormInput.getGuidanceTitle(), assessmentGuidanceTitle);
         //Short name shouldn't be set on SCOPE question.
         assertNotEquals(question.getShortName(), newShortTitle);
         assertEquals(question.getShortName(), shortTitle);
