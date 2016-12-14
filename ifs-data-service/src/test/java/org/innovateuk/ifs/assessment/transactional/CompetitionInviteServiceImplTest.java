@@ -537,17 +537,21 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
-        CompetitionInvite invite = newCompetitionInvite()
+        CompetitionInvite invite = spy(
+                newCompetitionInvite()
                 .withCompetition(newCompetition().withName("my competition").build())
                 .withStatus(CREATED)
-                .build();
+                .build()
+        );
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
 
         ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId);
 
         assertTrue(serviceResult.isSuccess());
+        assertEquals(SENT, invite.getStatus());
 
+        verify(invite).send();
         verify(competitionInviteRepositoryMock).findOne(inviteId);
         verifyNoMoreInteractions(competitionInviteRepositoryMock);
     }
