@@ -52,6 +52,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -108,7 +109,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         table.setMonths(asList(
                 new LocalDateResource(1, 3, 2019),new LocalDateResource(1, 4, 2019)));
 
-        organisation = newOrganisation().build();
+        organisation = newOrganisation().withOrganisationType(ACADEMIC).build();
         organisationResource = newOrganisationResource().build();
 
         Competition competition = newCompetition().build();
@@ -167,6 +168,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationMapperMock.mapToResource(organisation)).thenReturn(organisationResource);
+        when(organisationFinanceDelegateMock.isUsingJesFinances(ACADEMIC.name())).thenReturn(true);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisation.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
                 .thenReturn(ServiceResult.serviceSuccess(table));

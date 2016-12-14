@@ -408,7 +408,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 .forEach(organisation -> {
                     financeRowService.financeDetails(project.getApplication().getId(), organisation.getId())
                             .andOnSuccessReturn(applicationFinanceResource -> grantPercentagePerOrganisation(applicationFinanceResource,
-                                    organisation.getName(),
+                                    organisation,
                                     organisationAndGrantPercentageMap));
 
                     monthlyCostsPerOrganisationMap.values().forEach(value -> {
@@ -423,8 +423,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 });
     }
 
-    private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, String name, Map<String, Integer> organisationAndGrantPercentageMap) {
-        organisationAndGrantPercentageMap.put(name, organisationFinanceDelegate.isUsingJesFinances(name) ? 100 : applicationFinanceResource.getGrantClaimPercentage());
+    private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, Organisation organisation, Map<String, Integer> organisationAndGrantPercentageMap) {
+        organisationAndGrantPercentageMap.put(organisation.getName(),
+                organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                        ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
     }
 }
