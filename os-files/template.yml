@@ -1,0 +1,2467 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: template.yml
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-12T09:42:33Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: admin
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: enmobile/docker-spring-boot-admin
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/admin:latest
+      generation: 2
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    name: application-service
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/application-service:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    name: assessment-service
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/assessment-service:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    name: competition-management-service
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/competition-management-service:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-12T11:39:52Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: competition-mgt-service
+  spec: {}
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T18:41:00Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: data
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: worth/data-service:1.0-SNAPSHOT
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/data:1.0-SNAPSHOT
+      generation: 2
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T18:39:39Z
+    creationTimestamp: null
+    generation: 1
+    name: data-service
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/data-service:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T18:41:01Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: imap
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: camptocamp/courier-imap
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/imap:latest
+      generation: 2
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T18:41:06Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: mysql
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: mysql:5.5.49
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/mysql:5.5.49
+      generation: 2
+      importPolicy: {}
+      name: 5.5.49
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    name: project-setup-management-service
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/project-setup-management-service:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-12T11:54:28Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: project-setup-mgt-service
+  spec: {}
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-12T10:22:06Z
+    creationTimestamp: null
+    generation: 1
+    name: project-setup-service
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/project-setup-service:1.0-SNAPSHOT
+      generation: 1
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-12T12:20:38Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: shib
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: worth/shibboleth:1.0-SNAPSHOT
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/shib:1.0-SNAPSHOT
+      generation: 2
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    generation: 1
+    name: shibboleth
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/shibboleth:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T18:41:02Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: smtp
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: camptocamp/smtp-sink
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/smtp:latest
+      generation: 2
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T18:41:03Z
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: webmail
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: camptocamp/sqwebmail
+      from:
+        kind: DockerImage
+        name: 172.30.53.244:5000/laszlo7/webmail:latest
+      generation: 2
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-12-11T19:03:47Z
+    creationTimestamp: null
+    generation: 1
+    name: worthdata
+  spec: {}
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: admin
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: admin
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: admin
+      spec:
+        containers:
+        - image: enmobile/docker-spring-boot-admin@sha256:f9f6a42f1f00f86f5b15e175f3ccd2f3ebd96dc03b2d67d96d1cbfa216f35b4e
+          imagePullPolicy: Always
+          name: admin
+          ports:
+          - containerPort: 8123
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - admin
+        from:
+          kind: ImageStreamTag
+          name: admin:latest
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: application-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: application-service
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: application-service
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/application-service@sha256:e20258e86ae4374d25ddcd5f391049f2478dd9504d43855904e6041671aa62e5
+          imagePullPolicy: IfNotPresent
+          name: application-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - application-service
+        from:
+          kind: ImageStreamTag
+          name: application-service:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: assessment-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: assessment-service
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: assessment-service
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/assessment-service@sha256:f1c149f6c574275606d84e1223e5620d492984b1669b56c287bfc3a9d7865531
+          imagePullPolicy: IfNotPresent
+          name: assessment-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - assessment-service
+        from:
+          kind: ImageStreamTag
+          name: assessment-service:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: competition-mgt-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: competition-mgt-service
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: competition-mgt-service
+      spec:
+        containers:
+        - image: worth/competition-management-service:1.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          name: competition-mgt-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - competition-mgt-service
+        from:
+          kind: ImageStreamTag
+          name: competition-mgt-service:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: data
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: data
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: data
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/data@sha256:7d2844a058058903d2d76535f829666235a7833fdb32a01225cd935e993d2fc1
+          imagePullPolicy: IfNotPresent
+          name: data
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /tmp/ifs-local
+            name: dir-1
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: dir-1
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - data
+        from:
+          kind: ImageStreamTag
+          name: data:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 4
+    labels:
+      compose: ifs
+    name: imap
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: imap
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: imap
+      spec:
+        containers:
+        - image: camptocamp/courier-imap@sha256:00a8ab4ff3b582184886f833a24544101e6a4e71ea7aaaf6c842c8406178a4c8
+          imagePullPolicy: Always
+          name: imap
+          ports:
+          - containerPort: 143
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        - image: camptocamp/smtp-sink@sha256:f0077ec0be1d09d3a991cbb3894815396c411f7ecb26aa4d85b284578cc9f2c5
+          imagePullPolicy: Always
+          name: smtp
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        - image: camptocamp/sqwebmail@sha256:92b882468acda54a0452536ba5a93996fb136be8eb78f281a1603685af044c97
+          imagePullPolicy: Always
+          name: webmail
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - imap
+        from:
+          kind: ImageStreamTag
+          name: imap:latest
+          namespace: laszlo7
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - smtp
+        from:
+          kind: ImageStreamTag
+          name: smtp:latest
+          namespace: laszlo7
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - webmail
+        from:
+          kind: ImageStreamTag
+          name: webmail:latest
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 4
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: mysql
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: mysql
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_DATABASE
+            value: ifs
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          image: mysql@sha256:c1f0233cf67bb9af5377323001bf8d03243c644cd8c7bc992dc383bc3bf22844
+          imagePullPolicy: IfNotPresent
+          name: mysql
+          ports:
+          - containerPort: 3306
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - mysql
+        from:
+          kind: ImageStreamTag
+          name: mysql:5.5.49
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: project-setup-mgt-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: project-setup-mgt-service
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: project-setup-mgt-service
+      spec:
+        containers:
+        - image: worth/project-setup-management-service:1.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          name: project-setup-mgt-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - project-setup-mgt-service
+        from:
+          kind: ImageStreamTag
+          name: project-setup-mgt-service:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: project-setup-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: project-setup-service
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: project-setup-service
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/project-setup-service@sha256:ccec1a73a6264fd472a43c7b69584711e5509fbdbc6b44abdcff005721e977db
+          imagePullPolicy: IfNotPresent
+          name: project-setup-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - project-setup-service
+        from:
+          kind: ImageStreamTag
+          name: project-setup-service:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    generation: 2
+    labels:
+      compose: ifs
+    name: shib
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: shib
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: shib
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/shib@sha256:a2c554e5d5552de6527c4e8917ac59dd4bdce7e0297b5b99199df9b74aa6dc56
+          imagePullPolicy: IfNotPresent
+          name: shib
+          ports:
+          - containerPort: 443
+            protocol: TCP
+          - containerPort: 389
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - shib
+        from:
+          kind: ImageStreamTag
+          name: shib:1.0-SNAPSHOT
+          namespace: laszlo7
+      type: ImageChange
+  status:
+    availableReplicas: 1
+    observedGeneration: 2
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: admin-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: admin
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"admin","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/admin","uid":"4c7be906-c04f-11e6-8585-525400c583ad","resourceVersion":"18294","generation":2,"creationTimestamp":"2016-12-12T09:42:29Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["admin"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"admin:latest"},"lastTriggeredImage":"enmobile/docker-spring-boot-admin@sha256:f9f6a42f1f00f86f5b15e175f3ccd2f3ebd96dc03b2d67d96d1cbfa216f35b4e"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"admin"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"admin"}},"spec":{"containers":[{"name":"admin","image":"enmobile/docker-spring-boot-admin@sha256:f9f6a42f1f00f86f5b15e175f3ccd2f3ebd96dc03b2d67d96d1cbfa216f35b4e","ports":[{"containerPort":8123,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"admin:latest"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: admin
+    name: admin-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: admin-1
+      deploymentconfig: admin
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: admin
+          openshift.io/deployment.name: admin-1
+        creationTimestamp: null
+        labels:
+          deployment: admin-1
+          deploymentconfig: admin
+      spec:
+        containers:
+        - image: enmobile/docker-spring-boot-admin@sha256:f9f6a42f1f00f86f5b15e175f3ccd2f3ebd96dc03b2d67d96d1cbfa216f35b4e
+          imagePullPolicy: Always
+          name: admin
+          ports:
+          - containerPort: 8123
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: application-service-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: application-service
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"application-service","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/application-service","uid":"afd7fdd4-c05f-11e6-acf9-525400c583ad","resourceVersion":"20141","generation":2,"creationTimestamp":"2016-12-12T11:39:48Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["application-service"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"application-service:1.0-SNAPSHOT"},"lastTriggeredImage":"172.30.53.244:5000/laszlo7/application-service@sha256:e20258e86ae4374d25ddcd5f391049f2478dd9504d43855904e6041671aa62e5"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"application-service"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"application-service"}},"spec":{"containers":[{"name":"application-service","image":"172.30.53.244:5000/laszlo7/application-service@sha256:e20258e86ae4374d25ddcd5f391049f2478dd9504d43855904e6041671aa62e5","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":2,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"application-service:1.0-SNAPSHOT"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: application-service
+    name: application-service-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: application-service-1
+      deploymentconfig: application-service
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: application-service
+          openshift.io/deployment.name: application-service-1
+        creationTimestamp: null
+        labels:
+          deployment: application-service-1
+          deploymentconfig: application-service
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/application-service@sha256:e20258e86ae4374d25ddcd5f391049f2478dd9504d43855904e6041671aa62e5
+          imagePullPolicy: IfNotPresent
+          name: application-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: assessment-service-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: assessment-service
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"assessment-service","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/assessment-service","uid":"afdbbb5b-c05f-11e6-acf9-525400c583ad","resourceVersion":"20142","generation":2,"creationTimestamp":"2016-12-12T11:39:48Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["assessment-service"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"assessment-service:1.0-SNAPSHOT"},"lastTriggeredImage":"172.30.53.244:5000/laszlo7/assessment-service@sha256:f1c149f6c574275606d84e1223e5620d492984b1669b56c287bfc3a9d7865531"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"assessment-service"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"assessment-service"}},"spec":{"containers":[{"name":"assessment-service","image":"172.30.53.244:5000/laszlo7/assessment-service@sha256:f1c149f6c574275606d84e1223e5620d492984b1669b56c287bfc3a9d7865531","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":2,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"assessment-service:1.0-SNAPSHOT"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: assessment-service
+    name: assessment-service-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: assessment-service-1
+      deploymentconfig: assessment-service
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: assessment-service
+          openshift.io/deployment.name: assessment-service-1
+        creationTimestamp: null
+        labels:
+          deployment: assessment-service-1
+          deploymentconfig: assessment-service
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/assessment-service@sha256:f1c149f6c574275606d84e1223e5620d492984b1669b56c287bfc3a9d7865531
+          imagePullPolicy: IfNotPresent
+          name: assessment-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: competition-mgt-service-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: competition-mgt-service
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"competition-mgt-service","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/competition-mgt-service","uid":"afe19748-c05f-11e6-acf9-525400c583ad","resourceVersion":"20422","generation":2,"creationTimestamp":"2016-12-12T11:39:48Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["competition-mgt-service"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"competition-mgt-service:1.0-SNAPSHOT"}}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"competition-mgt-service"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"competition-mgt-service"}},"spec":{"containers":[{"name":"competition-mgt-service","image":"worth/competition-management-service:1.0-SNAPSHOT","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: competition-mgt-service
+    name: competition-mgt-service-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: competition-mgt-service-1
+      deploymentconfig: competition-mgt-service
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: competition-mgt-service
+          openshift.io/deployment.name: competition-mgt-service-1
+        creationTimestamp: null
+        labels:
+          deployment: competition-mgt-service-1
+          deploymentconfig: competition-mgt-service
+      spec:
+        containers:
+        - image: worth/competition-management-service:1.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          name: competition-mgt-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: data-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: data
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"data","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/data","uid":"5b22d949-bfd1-11e6-b820-525400c583ad","resourceVersion":"15992","generation":2,"creationTimestamp":"2016-12-11T18:40:57Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["data"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"data:1.0-SNAPSHOT"},"lastTriggeredImage":"172.30.53.244:5000/laszlo7/data@sha256:7d2844a058058903d2d76535f829666235a7833fdb32a01225cd935e993d2fc1"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"data"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"data"}},"spec":{"volumes":[{"name":"dir-1","emptyDir":{}}],"containers":[{"name":"data","image":"172.30.53.244:5000/laszlo7/data@sha256:7d2844a058058903d2d76535f829666235a7833fdb32a01225cd935e993d2fc1","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"dir-1","mountPath":"/tmp/ifs-local"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":2,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"data:1.0-SNAPSHOT"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: data
+    name: data-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: data-1
+      deploymentconfig: data
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: data
+          openshift.io/deployment.name: data-1
+        creationTimestamp: null
+        labels:
+          deployment: data-1
+          deploymentconfig: data
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/data@sha256:7d2844a058058903d2d76535f829666235a7833fdb32a01225cd935e993d2fc1
+          imagePullPolicy: IfNotPresent
+          name: data
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /tmp/ifs-local
+            name: dir-1
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: dir-1
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: imap-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: imap
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"imap","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/imap","uid":"5b25f65b-bfd1-11e6-b820-525400c583ad","resourceVersion":"15830","generation":4,"creationTimestamp":"2016-12-11T18:40:57Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["imap"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"imap:latest"},"lastTriggeredImage":"camptocamp/courier-imap@sha256:00a8ab4ff3b582184886f833a24544101e6a4e71ea7aaaf6c842c8406178a4c8"}},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["smtp"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"smtp:latest"},"lastTriggeredImage":"camptocamp/smtp-sink@sha256:f0077ec0be1d09d3a991cbb3894815396c411f7ecb26aa4d85b284578cc9f2c5"}},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["webmail"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"webmail:latest"},"lastTriggeredImage":"camptocamp/sqwebmail@sha256:92b882468acda54a0452536ba5a93996fb136be8eb78f281a1603685af044c97"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"imap"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"imap"}},"spec":{"containers":[{"name":"imap","image":"camptocamp/courier-imap@sha256:00a8ab4ff3b582184886f833a24544101e6a4e71ea7aaaf6c842c8406178a4c8","ports":[{"containerPort":143,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"},{"name":"smtp","image":"camptocamp/smtp-sink@sha256:f0077ec0be1d09d3a991cbb3894815396c411f7ecb26aa4d85b284578cc9f2c5","resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"},{"name":"webmail","image":"camptocamp/sqwebmail@sha256:92b882468acda54a0452536ba5a93996fb136be8eb78f281a1603685af044c97","ports":[{"containerPort":80,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":4,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"imap:latest"}}},{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"smtp:latest"}}},{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"webmail:latest"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: imap
+    name: imap-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: imap-1
+      deploymentconfig: imap
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: imap
+          openshift.io/deployment.name: imap-1
+        creationTimestamp: null
+        labels:
+          deployment: imap-1
+          deploymentconfig: imap
+      spec:
+        containers:
+        - image: camptocamp/courier-imap@sha256:00a8ab4ff3b582184886f833a24544101e6a4e71ea7aaaf6c842c8406178a4c8
+          imagePullPolicy: Always
+          name: imap
+          ports:
+          - containerPort: 143
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        - image: camptocamp/smtp-sink@sha256:f0077ec0be1d09d3a991cbb3894815396c411f7ecb26aa4d85b284578cc9f2c5
+          imagePullPolicy: Always
+          name: smtp
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        - image: camptocamp/sqwebmail@sha256:92b882468acda54a0452536ba5a93996fb136be8eb78f281a1603685af044c97
+          imagePullPolicy: Always
+          name: webmail
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: mysql-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: mysql
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"mysql","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/mysql","uid":"5b2f676e-bfd1-11e6-b820-525400c583ad","resourceVersion":"15847","generation":2,"creationTimestamp":"2016-12-11T18:40:58Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["mysql"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"mysql:5.5.49"},"lastTriggeredImage":"mysql@sha256:c1f0233cf67bb9af5377323001bf8d03243c644cd8c7bc992dc383bc3bf22844"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"mysql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"mysql"}},"spec":{"containers":[{"name":"mysql","image":"mysql@sha256:c1f0233cf67bb9af5377323001bf8d03243c644cd8c7bc992dc383bc3bf22844","ports":[{"containerPort":3306,"protocol":"TCP"}],"env":[{"name":"MYSQL_DATABASE","value":"ifs"},{"name":"MYSQL_ROOT_PASSWORD","value":"password"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":2,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"mysql:5.5.49"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: mysql
+    name: mysql-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: mysql-1
+      deploymentconfig: mysql
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: mysql
+          openshift.io/deployment.name: mysql-1
+        creationTimestamp: null
+        labels:
+          deployment: mysql-1
+          deploymentconfig: mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_DATABASE
+            value: ifs
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          image: mysql@sha256:c1f0233cf67bb9af5377323001bf8d03243c644cd8c7bc992dc383bc3bf22844
+          imagePullPolicy: IfNotPresent
+          name: mysql
+          ports:
+          - containerPort: 3306
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: project-setup-mgt-service-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: project-setup-mgt-service
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"project-setup-mgt-service","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/project-setup-mgt-service","uid":"b99ff09a-c061-11e6-acf9-525400c583ad","resourceVersion":"20499","generation":2,"creationTimestamp":"2016-12-12T11:54:24Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["project-setup-mgt-service"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"project-setup-mgt-service:1.0-SNAPSHOT"}}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"project-setup-mgt-service"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"project-setup-mgt-service"}},"spec":{"containers":[{"name":"project-setup-mgt-service","image":"worth/project-setup-management-service:1.0-SNAPSHOT","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: project-setup-mgt-service
+    name: project-setup-mgt-service-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: project-setup-mgt-service-1
+      deploymentconfig: project-setup-mgt-service
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: project-setup-mgt-service
+          openshift.io/deployment.name: project-setup-mgt-service-1
+        creationTimestamp: null
+        labels:
+          deployment: project-setup-mgt-service-1
+          deploymentconfig: project-setup-mgt-service
+      spec:
+        containers:
+        - image: worth/project-setup-management-service:1.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          name: project-setup-mgt-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: project-setup-service-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: project-setup-service
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"project-setup-service","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/project-setup-service","uid":"d7d5bac0-c055-11e6-8585-525400c583ad","resourceVersion":"18908","generation":2,"creationTimestamp":"2016-12-12T10:29:20Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["project-setup-service"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"project-setup-service:1.0-SNAPSHOT"},"lastTriggeredImage":"172.30.53.244:5000/laszlo7/project-setup-service@sha256:ccec1a73a6264fd472a43c7b69584711e5509fbdbc6b44abdcff005721e977db"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"project-setup-service"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"project-setup-service"}},"spec":{"containers":[{"name":"project-setup-service","image":"172.30.53.244:5000/laszlo7/project-setup-service@sha256:ccec1a73a6264fd472a43c7b69584711e5509fbdbc6b44abdcff005721e977db","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"project-setup-service:1.0-SNAPSHOT"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: project-setup-service
+    name: project-setup-service-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: project-setup-service-1
+      deploymentconfig: project-setup-service
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: project-setup-service
+          openshift.io/deployment.name: project-setup-service-1
+        creationTimestamp: null
+        labels:
+          deployment: project-setup-service-1
+          deploymentconfig: project-setup-service
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/project-setup-service@sha256:ccec1a73a6264fd472a43c7b69584711e5509fbdbc6b44abdcff005721e977db
+          imagePullPolicy: IfNotPresent
+          name: project-setup-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    annotations:
+      openshift.io/deployer-pod.name: shib-1-deploy
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: shib
+      openshift.io/deployment.phase: Complete
+      openshift.io/deployment.replicas: "1"
+      openshift.io/deployment.status-reason: caused by an image change
+      openshift.io/encoded-deployment-config: |
+        {"kind":"DeploymentConfig","apiVersion":"v1","metadata":{"name":"shib","namespace":"laszlo7","selfLink":"/oapi/v1/namespaces/laszlo7/deploymentconfigs/shib","uid":"62314c06-c065-11e6-9c75-525400c583ad","resourceVersion":"21186","generation":2,"creationTimestamp":"2016-12-12T12:20:35Z","labels":{"compose":"ifs"}},"spec":{"strategy":{"type":"Rolling","rollingParams":{"updatePeriodSeconds":1,"intervalSeconds":1,"timeoutSeconds":600,"maxUnavailable":"25%","maxSurge":"25%"},"resources":{}},"triggers":[{"type":"ConfigChange"},{"type":"ImageChange","imageChangeParams":{"automatic":true,"containerNames":["shib"],"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"shib:1.0-SNAPSHOT"},"lastTriggeredImage":"172.30.53.244:5000/laszlo7/shib@sha256:a2c554e5d5552de6527c4e8917ac59dd4bdce7e0297b5b99199df9b74aa6dc56"}}],"replicas":1,"test":false,"selector":{"deploymentconfig":"shib"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deploymentconfig":"shib"}},"spec":{"containers":[{"name":"shib","image":"172.30.53.244:5000/laszlo7/shib@sha256:a2c554e5d5552de6527c4e8917ac59dd4bdce7e0297b5b99199df9b74aa6dc56","ports":[{"containerPort":443,"protocol":"TCP"},{"containerPort":389,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"latestVersion":1,"observedGeneration":1,"details":{"message":"caused by an image change","causes":[{"type":"ImageChange","imageTrigger":{"from":{"kind":"ImageStreamTag","namespace":"laszlo7","name":"shib:1.0-SNAPSHOT"}}}]}}}
+    creationTimestamp: null
+    generation: 1
+    labels:
+      compose: ifs
+      openshift.io/deployment-config.name: shib
+    name: shib-1
+  spec:
+    replicas: 1
+    selector:
+      deployment: shib-1
+      deploymentconfig: shib
+    template:
+      metadata:
+        annotations:
+          openshift.io/deployment-config.latest-version: "1"
+          openshift.io/deployment-config.name: shib
+          openshift.io/deployment.name: shib-1
+        creationTimestamp: null
+        labels:
+          deployment: shib-1
+          deploymentconfig: shib
+      spec:
+        containers:
+        - image: 172.30.53.244:5000/laszlo7/shib@sha256:a2c554e5d5552de6527c4e8917ac59dd4bdce7e0297b5b99199df9b74aa6dc56
+          imagePullPolicy: IfNotPresent
+          name: shib
+          ports:
+          - containerPort: 443
+            protocol: TCP
+          - containerPort: 389
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    replicas: 0
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: admin
+  spec:
+    host: admin-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8123-tcp
+    to:
+      kind: Service
+      name: admin
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T09:45:45Z
+        status: "True"
+        type: Admitted
+      host: admin-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: application-service
+  spec:
+    host: application-service-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: application-service
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T14:24:31Z
+        status: "True"
+        type: Admitted
+      host: application-service-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: assessment-service
+  spec:
+    host: assessment-service-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: assessment-service
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T14:12:22Z
+        status: "True"
+        type: Admitted
+      host: assessment-service-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: competition-mgt-service
+  spec:
+    host: competition-mgt-service-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: competition-mgt-service
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T14:25:17Z
+        status: "True"
+        type: Admitted
+      host: competition-mgt-service-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: data
+  spec:
+    host: data-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: data
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T10:03:30Z
+        status: "True"
+        type: Admitted
+      host: data-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: project-setup-mgt-servic
+  spec:
+    host: project-setup-mgt-servic-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: project-setup-mgt-servic
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T14:25:25Z
+        status: "True"
+        type: Admitted
+      host: project-setup-mgt-servic-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: project-setup-service
+  spec:
+    host: project-setup-service-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 8080-tcp
+    to:
+      kind: Service
+      name: project-setup-service
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T14:25:30Z
+        status: "True"
+        type: Admitted
+      host: project-setup-service-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: shib
+  spec:
+    host: shib-laszlo7.apps.10.2.2.2.xip.io
+    port:
+      targetPort: 443-tcp
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: shib
+      weight: 100
+  status:
+    ingress:
+    - conditions:
+      - lastTransitionTime: 2016-12-12T14:02:25Z
+        status: "True"
+        type: Admitted
+      host: shib-laszlo7.apps.10.2.2.2.xip.io
+      routerName: router
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: admin
+  spec:
+    ports:
+    - name: 8123-tcp
+      port: 8123
+      protocol: TCP
+      targetPort: 8123
+    selector:
+      deploymentconfig: admin
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: application-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: application-service
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: assessment-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: assessment-service
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: competition-mgt-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: competition-mgt-service
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: data
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: data
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: data-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: data
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: ifs-database
+  spec:
+    ports:
+    - name: 3306-tcp
+      port: 3306
+      protocol: TCP
+      targetPort: 3306
+    selector:
+      deploymentconfig: mysql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: imap
+  spec:
+    ports:
+    - name: 80-tcp
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: 143-tcp
+      port: 143
+      protocol: TCP
+      targetPort: 143
+    selector:
+      deploymentconfig: imap
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: project-setup-mgt-servic
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: project-setup-mgt-service
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: project-setup-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: project-setup-service
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      compose: ifs
+    name: shib
+  spec:
+    ports:
+    - name: 389-tcp
+      port: 389
+      protocol: TCP
+      targetPort: 389
+    - name: 443-tcp
+      port: 443
+      protocol: TCP
+      targetPort: 443
+    selector:
+      deploymentconfig: shib
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"admin-1","uid":"4e5908ed-c04f-11e6-8585-525400c583ad","apiVersion":"v1","resourceVersion":"18309"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: admin
+      openshift.io/deployment.name: admin-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: admin-1-
+    labels:
+      deployment: admin-1
+      deploymentconfig: admin
+  spec:
+    containers:
+    - image: enmobile/docker-spring-boot-admin@sha256:f9f6a42f1f00f86f5b15e175f3ccd2f3ebd96dc03b2d67d96d1cbfa216f35b4e
+      imagePullPolicy: Always
+      name: admin
+      ports:
+      - containerPort: 8123
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"application-service-1","uid":"afef13f3-c05f-11e6-acf9-525400c583ad","apiVersion":"v1","resourceVersion":"20190"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: application-service
+      openshift.io/deployment.name: application-service-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: application-service-1-
+    labels:
+      deployment: application-service-1
+      deploymentconfig: application-service
+  spec:
+    containers:
+    - image: 172.30.53.244:5000/laszlo7/application-service@sha256:e20258e86ae4374d25ddcd5f391049f2478dd9504d43855904e6041671aa62e5
+      imagePullPolicy: IfNotPresent
+      name: application-service
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"assessment-service-1","uid":"aff34504-c05f-11e6-acf9-525400c583ad","apiVersion":"v1","resourceVersion":"20197"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: assessment-service
+      openshift.io/deployment.name: assessment-service-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: assessment-service-1-
+    labels:
+      deployment: assessment-service-1
+      deploymentconfig: assessment-service
+  spec:
+    containers:
+    - image: 172.30.53.244:5000/laszlo7/assessment-service@sha256:f1c149f6c574275606d84e1223e5620d492984b1669b56c287bfc3a9d7865531
+      imagePullPolicy: IfNotPresent
+      name: assessment-service
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"competition-mgt-service-1","uid":"8c609477-c061-11e6-acf9-525400c583ad","apiVersion":"v1","resourceVersion":"20438"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: competition-mgt-service
+      openshift.io/deployment.name: competition-mgt-service-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: competition-mgt-service-1-
+    labels:
+      deployment: competition-mgt-service-1
+      deploymentconfig: competition-mgt-service
+  spec:
+    containers:
+    - image: worth/competition-management-service:1.0-SNAPSHOT
+      imagePullPolicy: IfNotPresent
+      name: competition-mgt-service
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"data-1","uid":"a9b148eb-bfd1-11e6-b820-525400c583ad","apiVersion":"v1","resourceVersion":"16028"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: data
+      openshift.io/deployment.name: data-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: data-1-
+    labels:
+      deployment: data-1
+      deploymentconfig: data
+  spec:
+    containers:
+    - image: 172.30.53.244:5000/laszlo7/data@sha256:7d2844a058058903d2d76535f829666235a7833fdb32a01225cd935e993d2fc1
+      imagePullPolicy: IfNotPresent
+      name: data
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /tmp/ifs-local
+        name: dir-1
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - emptyDir: {}
+      name: dir-1
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"imap-1","uid":"5e70e745-bfd1-11e6-b820-525400c583ad","apiVersion":"v1","resourceVersion":"15862"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: imap
+      openshift.io/deployment.name: imap-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: imap-1-
+    labels:
+      deployment: imap-1
+      deploymentconfig: imap
+  spec:
+    containers:
+    - image: camptocamp/courier-imap@sha256:00a8ab4ff3b582184886f833a24544101e6a4e71ea7aaaf6c842c8406178a4c8
+      imagePullPolicy: Always
+      name: imap
+      ports:
+      - containerPort: 143
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    - image: camptocamp/smtp-sink@sha256:f0077ec0be1d09d3a991cbb3894815396c411f7ecb26aa4d85b284578cc9f2c5
+      imagePullPolicy: Always
+      name: smtp
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    - image: camptocamp/sqwebmail@sha256:92b882468acda54a0452536ba5a93996fb136be8eb78f281a1603685af044c97
+      imagePullPolicy: Always
+      name: webmail
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"mysql-1","uid":"6033f3c9-bfd1-11e6-b820-525400c583ad","apiVersion":"v1","resourceVersion":"15876"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: mysql
+      openshift.io/deployment.name: mysql-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: mysql-1-
+    labels:
+      deployment: mysql-1
+      deploymentconfig: mysql
+  spec:
+    containers:
+    - env:
+      - name: MYSQL_DATABASE
+        value: ifs
+      - name: MYSQL_ROOT_PASSWORD
+        value: password
+      image: mysql@sha256:c1f0233cf67bb9af5377323001bf8d03243c644cd8c7bc992dc383bc3bf22844
+      imagePullPolicy: IfNotPresent
+      name: mysql
+      ports:
+      - containerPort: 3306
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"project-setup-mgt-service-1","uid":"c0a3948f-c061-11e6-acf9-525400c583ad","apiVersion":"v1","resourceVersion":"20515"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: project-setup-mgt-service
+      openshift.io/deployment.name: project-setup-mgt-service-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: project-setup-mgt-service-1-
+    labels:
+      deployment: project-setup-mgt-service-1
+      deploymentconfig: project-setup-mgt-service
+  spec:
+    containers:
+    - image: worth/project-setup-management-service:1.0-SNAPSHOT
+      imagePullPolicy: IfNotPresent
+      name: project-setup-mgt-service
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"project-setup-service-1","uid":"d7fc6d34-c055-11e6-8585-525400c583ad","apiVersion":"v1","resourceVersion":"18935"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: project-setup-service
+      openshift.io/deployment.name: project-setup-service-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: project-setup-service-1-
+    labels:
+      deployment: project-setup-service-1
+      deploymentconfig: project-setup-service
+  spec:
+    containers:
+    - image: 172.30.53.244:5000/laszlo7/project-setup-service@sha256:ccec1a73a6264fd472a43c7b69584711e5509fbdbc6b44abdcff005721e977db
+      imagePullPolicy: IfNotPresent
+      name: project-setup-service
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/created-by: |
+        {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"ReplicationController","namespace":"laszlo7","name":"shib-1","uid":"8bcdcc62-c065-11e6-9c75-525400c583ad","apiVersion":"v1","resourceVersion":"21224"}}
+      openshift.io/deployment-config.latest-version: "1"
+      openshift.io/deployment-config.name: shib
+      openshift.io/deployment.name: shib-1
+      openshift.io/scc: anyuid
+    creationTimestamp: null
+    generateName: shib-1-
+    labels:
+      deployment: shib-1
+      deploymentconfig: shib
+  spec:
+    containers:
+    - image: 172.30.53.244:5000/laszlo7/shib@sha256:a2c554e5d5552de6527c4e8917ac59dd4bdce7e0297b5b99199df9b74aa6dc56
+      imagePullPolicy: IfNotPresent
+      name: shib
+      ports:
+      - containerPort: 443
+        protocol: TCP
+      - containerPort: 389
+        protocol: TCP
+      resources: {}
+      securityContext:
+        capabilities:
+          add:
+          - SYS_PTRACE
+          drop:
+          - MKNOD
+          - SYS_CHROOT
+        privileged: false
+        seLinuxOptions:
+          level: s0:c8,c7
+      terminationMessagePath: /dev/termination-log
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-9nh9o
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    host: origin
+    imagePullSecrets:
+    - name: default-dockercfg-mwohk
+    nodeName: origin
+    restartPolicy: Always
+    securityContext:
+      seLinuxOptions:
+        level: s0:c8,c7
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    volumes:
+    - name: default-token-9nh9o
+      secret:
+        secretName: default-token-9nh9o
+  status:
+    phase: Pending
