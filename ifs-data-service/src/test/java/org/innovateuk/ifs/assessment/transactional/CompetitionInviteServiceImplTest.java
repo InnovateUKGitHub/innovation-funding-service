@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -26,7 +27,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -730,15 +731,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByEmail(newUser.getEmail())).thenReturn(Optional.of(newUser));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        CompetitionInvite inviteExpectation = argThat(lambdaMatches(invite -> {
-            assertEquals(newUser.getEmail(), invite.getEmail());
-            assertEquals(newUser.getName(), invite.getName());
-            assertEquals(CREATED, invite.getStatus());
-            assertEquals(competition, invite.getTarget());
-            assertFalse(invite.getHash().isEmpty());
-            assertNull(invite.getInnovationArea());
-            return true;
-        }));
+        CompetitionInvite inviteExpectation = createInviteExpectations(newUser.getEmail(), newUser.getName(), CREATED, competition, null);
 
         when(competitionInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(expectedInviteResource);
@@ -750,7 +743,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(userRepositoryMock).findByEmail(newUser.getEmail());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
-        inOrder.verify(competitionInviteRepositoryMock).save(any(CompetitionInvite.class));
+        inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(newUser.getEmail(), newUser.getName(), CREATED, competition, null));
         inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
         inOrder.verifyNoMoreInteractions();
     }
@@ -788,15 +781,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         when(categoryRepositoryMock.findByIdAndType(innovationArea.getId(), innovationArea.getType())).thenReturn(innovationArea);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        CompetitionInvite inviteExpectation = argThat(lambdaMatches(invite -> {
-            assertEquals(newAssessorName, invite.getEmail());
-            assertEquals(newAssessorEmail, invite.getName());
-            assertEquals(CREATED, invite.getStatus());
-            assertEquals(competition, invite.getTarget());
-            assertFalse(invite.getHash().isEmpty());
-            assertEquals(innovationArea, invite.getInnovationArea());
-            return true;
-        }));
+        CompetitionInvite inviteExpectation = createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea);
 
         when(competitionInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(expectedInviteResource);
@@ -808,7 +793,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(categoryRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(categoryRepositoryMock).findByIdAndType(innovationArea.getId(), innovationArea.getType());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
-        inOrder.verify(competitionInviteRepositoryMock).save(any(CompetitionInvite.class));
+        inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea));
         inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
         inOrder.verifyNoMoreInteractions();
     }
@@ -847,5 +832,17 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         verify(competitionInviteRepositoryMock).getByEmailAndCompetitionId(email, competitonId);
         verifyNoMoreInteractions(competitionInviteRepositoryMock);
+    }
+
+    private CompetitionInvite createInviteExpectations(String name, String email, InviteStatus status, Competition competition, Category innovationArea) {
+        return createLambdaMatcher( invite -> {
+                    assertEquals(name, invite.getEmail());
+                    assertEquals(email, invite.getName());
+                    assertEquals(CREATED, invite.getStatus());
+                    assertEquals(competition, invite.getTarget());
+                    assertFalse(invite.getHash().isEmpty());
+                    assertEquals(innovationArea, invite.getInnovationArea());
+                }
+        );
     }
 }
