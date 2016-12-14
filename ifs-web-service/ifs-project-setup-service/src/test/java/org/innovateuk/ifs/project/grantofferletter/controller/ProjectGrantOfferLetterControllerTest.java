@@ -79,6 +79,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         assertTrue(model.isShowSubmitButton());
         assertNull(model.getSubmitDate());
         assertFalse(model.isSubmitted());
+        assertFalse(model.isOfferApproved());
     }
 
     @Test
