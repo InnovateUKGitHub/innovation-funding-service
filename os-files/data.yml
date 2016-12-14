@@ -2,40 +2,6 @@ apiVersion: v1
 kind: List
 items:
 - apiVersion: v1
-  kind: ImageStream
-  metadata:
-    creationTimestamp: null
-    name: data
-  spec:
-    tags:
-    - annotations:
-        openshift.io/imported-from: worth/data-service:1.0-SNAPSHOT
-      from:
-        kind: DockerImage
-        name: worth/data-service:1.0-SNAPSHOT
-      generation: null
-      importPolicy: {}
-      name: 1.0-SNAPSHOT
-  status:
-    dockerImageRepository: ""
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    creationTimestamp: null
-    name: mysql
-  spec:
-    tags:
-    - annotations:
-        openshift.io/imported-from: mysql:5.5.49
-      from:
-        kind: DockerImage
-        name: mysql:5.5.49
-      generation: null
-      importPolicy: {}
-      name: 5.5.49
-  status:
-    dockerImageRepository: ""
-- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
@@ -66,14 +32,6 @@ items:
     test: false
     triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - mysql
-        from:
-          kind: ImageStreamTag
-          name: mysql:5.5.49
-      type: ImageChange
   status: {}
 - apiVersion: v1
   kind: DeploymentConfig
@@ -93,7 +51,7 @@ items:
           deploymentconfig: data
       spec:
         containers:
-        - image: worth/data-service:1.0-SNAPSHOT
+        - image: 721685138178.dkr.ecr.eu-west-1.amazonaws.com/data-service:1.0-SNAPSHOT
           name: data
           ports:
           - containerPort: 8080
@@ -107,14 +65,6 @@ items:
     test: false
     triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - data
-        from:
-          kind: ImageStreamTag
-          name: data:1.0-SNAPSHOT
-      type: ImageChange
   status: {}
 - apiVersion: v1
   kind: Service
