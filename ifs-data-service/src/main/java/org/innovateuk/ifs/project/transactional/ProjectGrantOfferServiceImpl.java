@@ -35,7 +35,6 @@ import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -388,8 +387,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private Map<String, SpendProfileTableResource> getSpendProfileTableResourcePerOrganisation(Project project,
                                                                                                List<Organisation> organisations) {
         return organisations.stream()
-                    .map(organisation -> organisationMapper.mapToResource(organisation))
-                    .collect(Collectors.toMap(OrganisationResource::getName, organisation -> {
+                    .collect(Collectors.toMap(Organisation::getName, organisation -> {
                         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
                         if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
                             return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
@@ -407,9 +405,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                                    Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap,
                                                    List<LocalDateResource> months) {
         organisations.stream()
-                .map(organisation -> organisationMapper.mapToResource(organisation))
                 .forEach(organisation -> {
-
                     financeRowService.financeDetails(project.getApplication().getId(), organisation.getId())
                             .andOnSuccessReturn(applicationFinanceResource -> grantPercentagePerOrganisation(applicationFinanceResource,
                                     organisation.getName(),

@@ -167,7 +167,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationMapperMock.mapToResource(organisation)).thenReturn(organisationResource);
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), 3L)).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisation.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
                 .thenReturn(ServiceResult.serviceSuccess(table));
     }
