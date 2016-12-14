@@ -42,17 +42,12 @@ Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
     Given the user fills the empty question fields
+    And the user fills the empty assessment fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-
-Business opportunity: Client side validations assessment questions
-    [Documentation]    INFUND-5629 INFUND-5685
-    [Tags]    HappyPath
-    Given the user fills the empty assessment fields
-    focus    jQuery=.button[value="Save and close"]
-    Then the user should not see the text in the page   Please enter a from score
+    And the user should not see the text in the page   Please enter a from score
     And the user should not see the text in the page   Please enter a to score
     And the user should not see the text in the page   Please enter a justification
 
@@ -78,6 +73,20 @@ Business opportunity: Mark as done
     And The user should see the text in the page    Guidance text test
     And The user should see the text in the page    150
     And The user should see the text in the page    No
+    [Teardown]  the user clicks the button/link    link=Application
+
+Scope: Sever-side validations assessment questions
+     [Documentation]  INFUND-6444
+     [Tags]
+     Given the user clicks the button/link    link=Scope
+     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+     When the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+     And the user clicks the button/link    jQuery=.button[value="Save and close"]
+     Then the user should see the text in the page    Please enter a value.
+     And the user should see the text in the page    Please enter a justification.
+     And The user clicks the button/link    id=remove-guidance-row-2
+     And the user should not see the text in the page    Please enter a subject
+     And the user should not see the text in the page    Please enter a justification
 
 *** Keywords ***
 the user leaves all the question field empty
@@ -86,13 +95,19 @@ the user leaves all the question field empty
     focus    jQuery=.button[value="Save and close"]
     sleep    200ms
     The user enters text to a text field    id=question.title    ${EMPTY}
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
+    the user moves focus and waits for autosave
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+    the user moves focus and waits for autosave
 
 The user leaves all the assesment questions empty
     The user enters text to a text field    id=guidanceRow-0-scorefrom    ${EMPTY}
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRow-0-scoreto    ${EMPTY}
+    the user moves focus and waits for autosave
     the user enters text to a text field    id=guidanceRow-0-justification    ${EMPTY}
+    the user moves focus and waits for autosave
 
 
 the validation error above the question should be visible
@@ -107,7 +122,6 @@ the validation error above the question should not be visible
 
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the user should see the correct inputs in the Applications questions form

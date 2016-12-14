@@ -52,14 +52,14 @@
 
       </div>
     </li>
-    <li class="assigned-to-me">
+    <li class="funding assigned-to-me">
       <div class="grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="/prototypes/4600-your-org">Your organisation</a></h3>
+          <h3 class="heading-small"><a href="/prototypes/4600-your-org">Your organisation size</a></h3>
         </div>
       </div>
     </li>
-    <li>
+    <li class="funding assigned-to-me">
       <div class="grid-row">
         <div class="column-one">
 
@@ -75,6 +75,32 @@
         </div>
       </div>
     </li>
+
+
+    <li class="no-funding hidden">
+      <div class="grid-row">
+        <div class="column-half">
+          <h3 class="heading-small">Your organisation size</h3>
+        </div>
+        <div class="column-half alignright">
+          <h3 class="heading-small form-hint">Not required</h3>
+        </div>
+      </div>
+    </li>
+    <li class="no-funding hidden">
+      <div class="grid-row">
+        <div class="column-half">
+          <h3 class="heading-small">Your funding</h3>
+        </div>
+        <div class="column-half alignright">
+          <h3 class="heading-small form-hint">Not required</h3>
+        </div>
+      </div>
+    </li>
+
+
+
+
   </ul>
 
   <h2 class="heading-medium">Finance summary</h2>
@@ -203,6 +229,20 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+
+jQuery("input#no-funding").on('click',function(e){
+  if ( jQuery(this).is(':checked') ) {
+    jQuery(".no-funding").removeClass('hidden');
+    jQuery(".funding").addClass('hidden');
+  }else{
+    jQuery(".no-funding").addClass('hidden');
+    jQuery(".funding").removeClass('hidden');
+  }
+});
+
+</script>
 
 </body>
 </html>
