@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<header class="page-header group">
+	  <div class="hgroup">
+	    <h1>Example Page 1</h1>
+	    <h2 class="subtitle">This is just a prototype test</h2>
+	  </div>
+	</header>
+
+	<ul class="list-bullet">
+		<li>here is a bulleted list</li>
+		<li>vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor</li>
+		<li>vestibulum id ligula porta felis euismod semper</li>
+		<li>integer posuere erat a ante venenatis dapibus posuere velit aliquet</li>
+	</ul>
+
+	<a href="/prototypes/example2" class="button button-get-started" role="button">Start now</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>
