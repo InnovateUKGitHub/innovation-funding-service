@@ -23,7 +23,7 @@ public class CompetitionInviteController {
     private CompetitionInviteService competitionInviteService;
 
     @RequestMapping(value = "/getCreated/{inviteId}", method = RequestMethod.GET)
-    public RestResult<CompetitionInviteResource> getCreatedInvite(@PathVariable long inviteId) {
+    public RestResult<AssessorInviteToSendResource> getCreatedInvite(@PathVariable long inviteId) {
         return competitionInviteService.getCreatedInvite(inviteId).toGetResponse();
     }
 
