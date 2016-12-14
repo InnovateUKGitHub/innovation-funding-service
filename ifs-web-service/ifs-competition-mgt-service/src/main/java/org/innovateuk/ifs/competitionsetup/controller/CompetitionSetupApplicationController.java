@@ -87,7 +87,7 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                         Model model) {
+                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getFinancePage(model, competitionResource, true, null);
     }
@@ -128,10 +128,10 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                            Model model) {
+                                         BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
@@ -142,10 +142,10 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/question", method = RequestMethod.POST)
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
-                                            BindingResult bindingResult,
+                                               BindingResult bindingResult,
                                                ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                            Model model) {
+                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                               Model model) {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
@@ -159,24 +159,24 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                        Model model) {
+                                         Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getDetailsPage(model, competitionResource, false, null);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                         Model model) {
+                                            Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return getDetailsPage(model, competitionResource, true, null);
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
     public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                            Model model) {
+                                           BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getDetailsPage(model, competitionResource, true, form);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
