@@ -231,7 +231,6 @@ public class ProjectSpendProfileController {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
 
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
@@ -256,32 +255,6 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
     }
-
-    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table) {
-        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
-        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
-        return IntStream.range(startYear, endYear + 1).
-                mapToObj(
-                        year -> {
-                            Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
-                            BigDecimal totalForYear = BigDecimal.ZERO;
-
-                            for (Long key : keys) {
-                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
-                                for (int i = 0; i < values.size(); i++) {
-                                    LocalDateResource month = table.getMonths().get(i);
-                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
-                                    if (year == financialYearDate.getFiscalYear()) {
-                                        totalForYear = totalForYear.add(values.get(i));
-                                    }
-                                }
-                            }
-                            return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
-                        }
-
-                ).collect(toList());
-    }
-
 
     private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
                                                                                                    final UserResource loggedInUser) {
