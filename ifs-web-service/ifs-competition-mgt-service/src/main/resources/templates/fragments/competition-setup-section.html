@@ -62,25 +62,37 @@
             </div>
 
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
-                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}? 'form-group error':'form-group'" th:id="innovation-row-__${status.index}">
+                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}? 'form-group error':'form-group'" th:id="innovation-row-__${status.index}__">
                     <label class="form-label" th:for="innovationAreaCategoryId-__${status.index}__">
-                        <span class="form-label-bold">Innovation area</span>
+                        <span class="form-label-bold" th:classappend="${status.index > 0} ? 'visuallyhidden': ''">Innovation area</span>
                         <span th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                         </span>
                     </label>
-                    <select class="form-control width-x-large" th:name="innovationAreaCategoryIds[__${status.index}__]" th:id="${'innovationAreaCategoryId-'+status.index}" required="required"
+                    <select class="form-control width-x-large" th:name="innovationAreaCategoryIds[__${status.index}__]" th:id="innovationAreaCategoryId-__${status.index}__" required="required"
                             data-required-errormessage="Please select an innovation area">
                         <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == null}">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == innovationArea.id}">Innovation Area</option>
+                    </select>
+                    <button th:if="${status.index > 0}" data-remove-row="" class="buttonlink" th:value="${status.index}" type="button">Remove</button>
+                </div>
+            </th:block>
+            <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
+                <div class="form-group" th:id="innovation-row-0">
+                    <label class="form-label" th:for="innovationAreaCategoryId-0">
+                        <span class="form-label-bold">Innovation area</span>
+                    </label>
+                    <select class="form-control width-x-large" name="innovationAreaCategoryIds[0]" id="innovationAreaCategoryId-0" required="required"
+                            data-required-errormessage="Please select an innovation area">
+                        <option value="" disabled="disabled" selected="selected">Please select &hellip;</option>
+                        <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
                     </select>
                 </div>
             </th:block>
 
             <div id="dynamic-row-pointer">
                 <input type="hidden" name="removeArea" />
-                <input type="hidden" name="areaCount" id="co-funder-count" th:value="${competitionSetupForm.innovationAreaCategoryIds.size()}" />
-                <button class="buttonlink" name="add-innovation-area" id="add-innovation-area">+ add another innovation area</button>
+                <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 
 

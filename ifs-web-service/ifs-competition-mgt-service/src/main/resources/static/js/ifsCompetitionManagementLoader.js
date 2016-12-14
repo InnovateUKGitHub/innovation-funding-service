@@ -28,8 +28,8 @@ IFS.competitionManagement.loadOrder = {
   'competition-setup' : {
     init : function() {
       IFS.competitionManagement.setup.init();
+      IFS.competitionManagement.repeater.init();
       IFS.core.finance.init();
-
     }
   }
 };
