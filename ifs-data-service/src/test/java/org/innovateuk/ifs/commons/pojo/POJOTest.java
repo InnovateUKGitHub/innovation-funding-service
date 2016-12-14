@@ -83,6 +83,8 @@ public class POJOTest {
             Assessment.class,
             AssessmentTotalScoreResource.class,
             AvailableAssessorResource.class,
+            AssessorCreatedInviteResource.class,
+            AssessorInviteOverviewResource.class,
             Address.class,
             OrganisationType.class,
             Application.class,

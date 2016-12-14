@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import java.util.List;
+
 /**
  * Holder of model attributes for the Invite assessors view.
  */
-public abstract class InviteAssessorsViewModel {
+public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAssessorsRowViewModel> {
 
     private Long competitionId;
     private String competitionName;
@@ -13,6 +15,7 @@ public abstract class InviteAssessorsViewModel {
     private int assessorsStaged;
     private String innovationSector;
     private String innovationArea;
+    private List<ViewModelRowType> assessors;
 
     protected InviteAssessorsViewModel() {
     }
@@ -79,5 +82,13 @@ public abstract class InviteAssessorsViewModel {
 
     public void setInnovationArea(String innovationArea) {
         this.innovationArea = innovationArea;
+    }
+
+    public List<ViewModelRowType> getAssessors() {
+        return assessors;
+    }
+
+    public void setAssessors(List<ViewModelRowType> assessors) {
+        this.assessors = assessors;
     }
 }
