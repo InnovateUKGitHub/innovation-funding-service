@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -39,14 +41,12 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -72,8 +72,16 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withDate(LocalDateTime.now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
-        Competition competition = newCompetition().withName("my competition").withMilestones(milestones).withSetupComplete(true).build();
-        CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
+        Competition competition = newCompetition().withName("my competition")
+                .withMilestones(milestones)
+                .withSetupComplete(true)
+                .build();
+
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withStatus(SENT)
+                .withCompetition(competition)
+                .build();
+
         competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
@@ -281,7 +289,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void acceptInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
+        assertEquals(SENT, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         ServiceResult<Void> serviceResult = competitionInviteService.acceptInvite("inviteHash", userResource);
@@ -396,7 +404,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void rejectInvite_notOpened() {
-        assertEquals(CREATED, competitionParticipant.getInvite().getStatus());
+        assertEquals(SENT, competitionParticipant.getInvite().getStatus());
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
         RejectionReasonResource rejectionReasonResource = RejectionReasonResourceBuilder
@@ -527,6 +535,45 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).save(competitionParticipant);
 
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long inviteId = 1L;
+        CompetitionInvite invite = newCompetitionInvite()
+                .withCompetition(newCompetition().withName("my competition").build())
+                .withStatus(CREATED)
+                .build();
+
+        when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
+
+        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId);
+
+        assertTrue(serviceResult.isSuccess());
+
+        verify(competitionInviteRepositoryMock).findOne(inviteId);
+        verifyNoMoreInteractions(competitionInviteRepositoryMock);
+    }
+
+    @Test
+    public void sendInvite_alreadySent() throws Exception {
+        long inviteId = 1L;
+        CompetitionInvite invite = newCompetitionInvite()
+                .withCompetition(newCompetition().withName("my competition").build())
+                .withStatus(SENT)
+                .build();
+
+        when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
+
+        try {
+            competitionInviteService.sendInvite(inviteId);
+            fail();
+        } catch (RuntimeException e) {
+            assertSame(IllegalStateException.class, e.getCause().getClass());
+
+            verify(competitionInviteRepositoryMock).findOne(inviteId);
+            verifyNoMoreInteractions(competitionInviteRepositoryMock);
+        }
     }
 
     @Test

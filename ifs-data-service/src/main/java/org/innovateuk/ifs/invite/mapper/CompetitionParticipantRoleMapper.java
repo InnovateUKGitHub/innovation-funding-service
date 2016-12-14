@@ -14,5 +14,5 @@ public interface CompetitionParticipantRoleMapper {
 
     public CompetitionParticipantRoleResource mapToResource(CompetitionParticipantRole domain);
 
-    public  CompetitionParticipantRole mapToDomain(CompetitionParticipantRoleResource resource);
+    public CompetitionParticipantRole mapToDomain(CompetitionParticipantRoleResource resource);
 }
