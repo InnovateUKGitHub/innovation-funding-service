@@ -11,6 +11,7 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.user.domain.User;
@@ -74,11 +75,12 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build())
                 .getId();
 
-        RestResult<CompetitionInviteResource> serviceResult = controller.getCreatedInvite(createdId);
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
         assertTrue(serviceResult.isSuccess());
 
-        CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
+        assertEquals("tom poly", inviteResource.getRecipient());
     }
 
     @Test

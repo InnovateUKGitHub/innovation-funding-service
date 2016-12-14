@@ -99,12 +99,12 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getCreatedInvite() throws Exception {
-        ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.getCreatedInvite(5L);
+        ServiceResult<AssessorInviteToSendResource> inviteServiceResult = competitionInviteService.getCreatedInvite(5L);
 
         assertTrue(inviteServiceResult.isSuccess());
 
-        CompetitionInviteResource competitionInviteResource = inviteServiceResult.getSuccessObjectOrThrowException();
-        assertEquals("my competition", competitionInviteResource.getCompetitionName());
+        AssessorInviteToSendResource resource = inviteServiceResult.getSuccessObjectOrThrowException();
+        assertEquals("my competition", resource.getCompetitionName());
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock, calls(1)).findOne(5L);

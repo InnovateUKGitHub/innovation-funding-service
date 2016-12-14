@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
@@ -68,6 +69,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private CompetitionInviteMapper mapper;
 
     @Autowired
+    private AssessorInviteToSendMapper toSendMapper;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -75,13 +79,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
 
     @Override
-    public ServiceResult<CompetitionInviteResource> getCreatedInvite(long inviteId) {
+    public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
         return getById(inviteId).andOnSuccess(invite -> {
             if (invite.getStatus() != CREATED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
             }
             return serviceSuccess(invite);
-        }).andOnSuccessReturn(mapper::mapToResource);
+        }).andOnSuccessReturn(toSendMapper::mapToResource);
     }
 
     @Override
@@ -136,7 +140,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         // TODO INFUND-6412
         return serviceSuccess(
                 asList(new AssessorCreatedInviteResource("Jeremy", "Alufson",
-                        new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com")));
+                        new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com",52L)));
     }
 
     @Override
