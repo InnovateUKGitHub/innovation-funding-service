@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -25,7 +26,9 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -35,6 +38,7 @@ import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilesto
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -661,7 +665,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void inviteUser_existing() {
-        User user = newUser()
+        User newUser = newUser()
                 .withEmailAddress("tom@poly.io")
                 .withFirstName("tom")
                 .withLastName("baldwin")
@@ -673,37 +677,40 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ExistingUserStagedInviteResource existingAssessor = newExistingUserStagedInviteResource()
                 .withCompetitionId(competition.getId())
-                .withEmail(user.getEmail())
+                .withEmail(newUser.getEmail())
                 .build();
 
         CompetitionInvite competitionInvite = newCompetitionInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
-                .withEmail(user.getEmail())
-                .withName(user.getName())
+                .withEmail(newUser.getEmail())
+                .withName(newUser.getName())
                 .build();
 
-        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        CompetitionInviteResource expectedInviteResource = newCompetitionInviteResource().build();
+
+        when(userRepositoryMock.findByEmail(newUser.getEmail())).thenReturn(Optional.of(newUser));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         CompetitionInvite inviteExpectation = argThat(lambdaMatches(invite -> {
-            assertEquals(user.getEmail(), invite.getEmail());
-            assertEquals(user.getName(), invite.getName());
+            assertEquals(newUser.getEmail(), invite.getEmail());
+            assertEquals(newUser.getName(), invite.getName());
             assertEquals(CREATED, invite.getStatus());
             assertEquals(competition, invite.getTarget());
             assertFalse(invite.getHash().isEmpty());
+            assertNull(invite.getInnovationArea());
             return true;
         }));
 
         when(competitionInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionInvite);
-        when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(newCompetitionInviteResource().build());
+        when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(expectedInviteResource);
 
         CompetitionInviteResource invite = competitionInviteService.inviteUser(existingAssessor).getSuccessObjectOrThrowException();
 
-        assertNotNull(invite);
+        assertEquals(expectedInviteResource, invite);
 
         InOrder inOrder = inOrder(userRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
-        inOrder.verify(userRepositoryMock).findByEmail(user.getEmail());
+        inOrder.verify(userRepositoryMock).findByEmail(newUser.getEmail());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(competitionInviteRepositoryMock).save(any(CompetitionInvite.class));
         inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
@@ -712,7 +719,60 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void inviteUser_new() {
-        // TODO INFUND-6855
+        final String newAssessorName = "tom baldwin";
+        final String newAssessorEmail = "tom@poly.io";
+
+        final Competition competition = newCompetition().build();
+
+        final Category innovationArea = newCategory()
+                .withName("machine learning")
+                .withType(INNOVATION_AREA)
+                .build();
+
+        final NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
+                .withEmail(newAssessorName)
+                .withName(newAssessorEmail)
+                .withCompetitionId(competition.getId())
+                .withInnovationCategoryId(innovationArea.getId())
+                .build();
+
+        final CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withCompetition(competition)
+                .withHash(Invite.generateInviteHash())
+                .withEmail(newAssessorName)
+                .withName(newAssessorEmail)
+                .withInnovationArea(innovationArea)
+                .withUser()
+                .build();
+
+        final CompetitionInviteResource expectedInviteResource = newCompetitionInviteResource().build();
+
+        when(categoryRepositoryMock.findByIdAndType(innovationArea.getId(), innovationArea.getType())).thenReturn(innovationArea);
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        CompetitionInvite inviteExpectation = argThat(lambdaMatches(invite -> {
+            assertEquals(newAssessorName, invite.getEmail());
+            assertEquals(newAssessorEmail, invite.getName());
+            assertEquals(CREATED, invite.getStatus());
+            assertEquals(competition, invite.getTarget());
+            assertFalse(invite.getHash().isEmpty());
+            assertEquals(innovationArea, invite.getInnovationArea());
+            return true;
+        }));
+
+        when(competitionInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionInvite);
+        when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(expectedInviteResource);
+
+        CompetitionInviteResource invite = competitionInviteService.inviteUser(newAssessor).getSuccessObjectOrThrowException();
+
+        assertEquals(expectedInviteResource, invite);
+
+        InOrder inOrder = inOrder(categoryRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(categoryRepositoryMock).findByIdAndType(innovationArea.getId(), innovationArea.getType());
+        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionInviteRepositoryMock).save(any(CompetitionInvite.class));
+        inOrder.verify(competitionInviteMapperMock).mapToResource(competitionInvite);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
