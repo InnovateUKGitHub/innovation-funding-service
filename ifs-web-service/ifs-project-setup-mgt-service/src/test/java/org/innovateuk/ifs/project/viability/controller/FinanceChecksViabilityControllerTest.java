@@ -5,6 +5,8 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
@@ -126,10 +128,12 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     @Test
     public void testViewViabilityIndustrial() throws Exception {
 
+        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
-        when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(Viability.APPROVED);
+        when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(viability);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -152,7 +156,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
 
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
-        assertEquals("Red", form.getRagStatus());
+        assertEquals(viability.getViabilityStatus(), form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
         assertEquals(true, form.isViabilityConfirmedChecked());
     }
@@ -160,10 +164,12 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     @Test
     public void testViewViabilityAcademic() throws Exception {
 
+        ViabilityResource viability = new ViabilityResource(Viability.PENDING, ViabilityStatus.UNSET);
+
         when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
-        when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(Viability.APPROVED);
+        when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).
@@ -186,9 +192,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
 
-        assertEquals("Red", form.getRagStatus());
+        assertEquals(viability.getViabilityStatus(), form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(true, form.isViabilityConfirmedChecked());
+        assertEquals(false, form.isViabilityConfirmedChecked());
     }
 
     @Test
@@ -201,7 +207,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
             post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                 param("confirm-viability", "").
                 param("creditReportConfirmed", "true").
-                param("ragStatus", "Red")).
+                param("ragStatus", "RED")).
             andExpect(status().is3xxRedirection()).
             andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
@@ -218,7 +224,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                         param("save-and-continue", "").
                         param("creditReportConfirmed", "true").
-                        param("ragStatus", "Red")).
+                        param("ragStatus", "AMBER")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 

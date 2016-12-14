@@ -322,9 +322,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        ViabilityResource viabilityResource = new ViabilityResource();
-        viabilityResource.setViability(projectFinance.getViability());
-        viabilityResource.setViabilityStatus(projectFinance.getViabilityStatus());
+        ViabilityResource viabilityResource = new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus());
 
         return serviceSuccess(viabilityResource);
 
@@ -343,11 +341,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {
 
-            return serviceFailure(new Error(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
 
         } else if (ViabilityStatus.UNSET == viabilityStatus) {
 
-            return serviceFailure(new Error(VIABILITY_RAG_STATUS_MUST_BE_SET));
+            return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
 
         } else {
             return serviceSuccess();
@@ -382,7 +380,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 andOnSuccess (
                         spendProfile -> {
                             if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
-                                return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+                                return serviceFailure(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED);
                             }
 
                             spendProfile.setMarkedAsComplete(markAsComplete);

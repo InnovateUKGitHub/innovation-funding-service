@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -88,8 +89,8 @@ public class FinanceChecksViabilityController {
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
 
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
-        Integer turnover = null;
-        Integer headCount = null;
+        Integer turnover = null; // for this release, these will always be null
+        Integer headCount = null; // for this release, these will always be null
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
         model.addAttribute("model", new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
@@ -99,10 +100,10 @@ public class FinanceChecksViabilityController {
 
     private void populateForm(Long projectId, Long organisationId, Model model) {
 
-        Viability viability = financeService.getViability(projectId, organisationId);
-        boolean viabilityConfirmed = viability == Viability.APPROVED;
+        ViabilityResource viability = financeService.getViability(projectId, organisationId);
+        boolean creditReportConfirmed = false;
 
-        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(false, viabilityConfirmed, "Red");
+        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityStatus());
         model.addAttribute("form", form);
     }
 

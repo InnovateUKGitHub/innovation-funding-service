@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -79,8 +80,8 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Viability> getViability(Long projectId, Long organisationId) {
-        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", Viability.class);
+    public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)

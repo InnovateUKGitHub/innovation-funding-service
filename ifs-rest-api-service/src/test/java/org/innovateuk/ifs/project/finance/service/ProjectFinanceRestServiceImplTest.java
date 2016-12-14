@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
@@ -135,11 +137,14 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testGetViability() {
 
-        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", Viability.class, Viability.APPROVED);
+        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
 
-        RestResult<Viability> results = service.getViability(123L, 456L);
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", ViabilityResource.class, viability);
 
-        assertEquals(Viability.APPROVED, results.getSuccessObject());
+        RestResult<ViabilityResource> results = service.getViability(123L, 456L);
+
+        assertEquals(Viability.APPROVED, results.getSuccessObject().getViability());
+        assertEquals(ViabilityStatus.GREEN, results.getSuccessObject().getViabilityStatus());
     }
 
     @Test

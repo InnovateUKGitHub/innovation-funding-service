@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
@@ -117,10 +119,12 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testGetViability() {
 
-        when(projectFinanceRestService.getViability(123L, 456L)).thenReturn(restSuccess(Viability.APPROVED));
+        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
 
-        Viability result = service.getViability(123L, 456L);
-        assertEquals(Viability.APPROVED, result);
+        when(projectFinanceRestService.getViability(123L, 456L)).thenReturn(restSuccess(viability));
+
+        ViabilityResource result = service.getViability(123L, 456L);
+        assertEquals(viability, result);
     }
 
     @Test
