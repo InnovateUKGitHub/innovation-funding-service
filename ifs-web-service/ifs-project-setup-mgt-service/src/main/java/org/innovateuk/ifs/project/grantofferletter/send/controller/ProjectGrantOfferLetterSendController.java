@@ -77,19 +77,6 @@ public class ProjectGrantOfferLetterSendController {
         );
     }
 
-    /* disable GOL received by post INFUND-6377
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @RequestMapping(value = "/receivedByPost", method = POST)
-    public String grantOfferLetterReceivedByPost(@PathVariable Long projectId,
-                                                 @ModelAttribute ProjectGrantOfferLetterSendForm form,
-                                                 Model model,
-                                                 @SuppressWarnings("unused") BindingResult bindingResult,
-                                                 ValidationHandler validationHandler) {
-        // TODO - set to ready to approve???
-        return doViewGrantOfferLetterSend(projectId, model, form);
-    }
-    */
-
     private String doViewGrantOfferLetterSend(Long projectId, Model model, ProjectGrantOfferLetterSendForm form) {
         ProjectGrantOfferLetterSendViewModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
 
@@ -233,17 +220,17 @@ public class ProjectGrantOfferLetterSendController {
         Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
 
         return new ProjectGrantOfferLetterSendViewModel(competitionSummary,
-                grantOfferFileDetails != null ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
-                additionalContractFile != null ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
+                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 grantOfferLetterAlreadySent,
                 projectId,
                 project.getName(),
                 application.getId(),
-                grantOfferFileDetails != null ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
-                additionalContractFile != null ? additionalContractFile.isPresent() : Boolean.FALSE,
+                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
+                additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
                 signedGrantOfferLetterApproved,
-                signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE,
-                signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
+                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE,
+                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
         );
     }
 

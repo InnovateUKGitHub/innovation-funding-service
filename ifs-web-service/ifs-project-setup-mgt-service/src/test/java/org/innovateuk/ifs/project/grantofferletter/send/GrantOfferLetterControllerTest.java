@@ -260,7 +260,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
-        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(null);
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
@@ -307,7 +307,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
         when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
-        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(null);
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
         when(projectService.removeGrantOfferLetter(123L)).

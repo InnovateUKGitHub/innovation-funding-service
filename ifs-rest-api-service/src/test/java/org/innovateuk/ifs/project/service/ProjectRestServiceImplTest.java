@@ -588,6 +588,8 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
+        setupPostWithRestResultVerifications(expectedUrl, Void.class, null);
+
         assertTrue(result.isSuccess());
     }
 

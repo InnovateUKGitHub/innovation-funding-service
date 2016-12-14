@@ -1095,21 +1095,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
                         return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
                     }
+                    return serviceSuccess();
                 }
             }
-            return serviceSuccess();
+            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
         });
     }
 
     @Override
     public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isApproved(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
+        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
     }
 
 

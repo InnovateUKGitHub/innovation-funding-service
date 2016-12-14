@@ -83,7 +83,7 @@ public class ProjectGrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(params = "uploadSignedGrantOfferLetterClicked", method = POST)
-    public String uploadGrantOfferLetterFile(
+    public String uploadSignedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -129,7 +129,7 @@ public class ProjectGrantOfferLetterController {
     @RequestMapping(value = "/additional-contract", method = GET)
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAdditionalContrcatFile(
+    ResponseEntity<ByteArrayResource> downloadAdditionalContractFile(
             @PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = projectService.getAdditionalContractFile(projectId);
@@ -161,9 +161,9 @@ public class ProjectGrantOfferLetterController {
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner,
-                grantOfferFileDetails != null ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
-                signedGrantOfferLetterFile != null ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                additionalContractFile != null ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
+                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
                 project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
     }

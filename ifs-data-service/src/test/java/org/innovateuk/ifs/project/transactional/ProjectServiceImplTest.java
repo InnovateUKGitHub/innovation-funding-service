@@ -1650,9 +1650,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
         when(golWorkflowHandlerMock.approve(p)).thenReturn(Boolean.TRUE);
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(p);
+        verify(golWorkflowHandlerMock).approve(p);
 
         assertTrue(result.isSuccess());
     }
@@ -1667,11 +1672,38 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.approve(any())).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.approve(p)).thenReturn(Boolean.FALSE);
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
-        assertFalse(result.isFailure());
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(p);
+        verify(golWorkflowHandlerMock).approve(p);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterFailureNotReadyToApprove(){
+
+        Organisation o = newOrganisation().build();
+        User u = newUser().withEmailAddress("a@b.com").build();
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(p);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE));
     }
 
     @Test
@@ -1686,6 +1718,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.TRUE);
 
         ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isApproved(p);
 
         assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
     }
@@ -1702,6 +1737,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.FALSE);
 
         ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isApproved(p);
 
         assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
     }

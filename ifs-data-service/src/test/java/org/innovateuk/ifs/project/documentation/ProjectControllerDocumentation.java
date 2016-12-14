@@ -548,23 +548,27 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void isSendGrantOfferLetterAllowed() throws Exception {
         when(projectServiceMock.isSendGrantOfferLetterAllowed(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        mockMvc.perform(get("/project/{projectId}/is-send-grant-offer-letter-allowed", 123L))
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/is-send-grant-offer-letter-allowed", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )));
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
     }
 
     @Test
     public void isGrantOfferLetterAlreadySent() throws Exception {
         when(projectServiceMock.isGrantOfferLetterAlreadySent(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        mockMvc.perform(get("/project/{projectId}/is-grant-offer-letter-already-sent", 123L))
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/is-grant-offer-letter-already-sent", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )));
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
     }
 
     @Test
@@ -576,18 +580,21 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the signed Grant Offer Letter is being approved/rejected."),
                                 parameterWithName("approvalType").description("Approval or rejection.")
-                        )));
+                        )))
+                .andReturn();
     }
 
     @Test
     public void isSignedGrantOfferLetterApproved() throws Exception{
         when(projectServiceMock.isSignedGrantOfferLetterApproved(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter", 123L))
+        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the approval status of the signed Grant Offer Letter is requested.")
-                        )));
+                        )))
+                .andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){
