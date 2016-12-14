@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.grantofferletter.send.form.ProjectGrantOfferLe
 import org.innovateuk.ifs.project.grantofferletter.send.viewmodel.ProjectGrantOfferLetterSendViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,17 +77,6 @@ public class ProjectGrantOfferLetterSendController {
         );
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @RequestMapping(value = "/receivedByPost", method = POST)
-    public String grantOfferLetterReceivedByPost(@PathVariable Long projectId,
-                                                 @ModelAttribute ProjectGrantOfferLetterSendForm form,
-                                                 Model model,
-                                                 @SuppressWarnings("unused") BindingResult bindingResult,
-                                                 ValidationHandler validationHandler) {
-        // TODO - set to ready to approve???
-        return doViewGrantOfferLetterSend(projectId, model, form);
-    }
-
     private String doViewGrantOfferLetterSend(Long projectId, Model model, ProjectGrantOfferLetterSendForm form) {
         ProjectGrantOfferLetterSendViewModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
 
@@ -105,7 +95,7 @@ public class ProjectGrantOfferLetterSendController {
                                              Model model) {
 
         MultipartFile file = form.getGrantOfferLetter();
-        ServiceResult<FileEntryResource> generateResult = projectService.addGeneratedGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+        ServiceResult<FileEntryResource> generateResult = projectService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file));
 
         validationHandler.addAnyErrors(generateResult);
@@ -121,29 +111,27 @@ public class ProjectGrantOfferLetterSendController {
                                              ValidationHandler validationHandler,
                                              Model model) {
 
-        projectService.removeGeneratedGrantOfferLetter(projectId);
+        projectService.removeGrantOfferLetter(projectId);
 
         return doViewGrantOfferLetterSend(projectId, model, form);
-
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @RequestMapping(params = "uploadAnnexClicked", value = "/upload-annex", method = POST)
-    public String uploadAnnexFile(
+    @RequestMapping(value = "/signed/{approvalType}", method = POST)
+    public String signedGrantOfferLetterApproval(
             @PathVariable("projectId") final Long projectId,
+            @PathVariable ApprovalType approvalType,
             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            Model model) {
 
-        return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
+        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
 
-            MultipartFile file = form.getAnnex();
+        ServiceResult<Void> generateResult = projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType);
 
-            return projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
-                    file.getOriginalFilename(), getMultipartFileBytes(file));
-        });
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> {return doViewGrantOfferLetterSend(projectId, model, form);}
+        );
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, ProjectGrantOfferLetterSendForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
@@ -184,6 +172,38 @@ public class ProjectGrantOfferLetterSendController {
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @RequestMapping(value = "/signed-grant-offer-letter", method = GET)
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadSignedGrantOfferLetterFile(
+            @PathVariable("projectId") final Long projectId) {
+
+        final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @RequestMapping(params = "uploadAnnexClicked", value = "/upload-annex", method = POST)
+    public String uploadAnnexFile(
+            @PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
+
+            MultipartFile file = form.getAnnex();
+
+            return projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
+        });
+    }
+
     private ProjectGrantOfferLetterSendViewModel populateGrantOfferLetterSendViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
@@ -193,17 +213,25 @@ public class ProjectGrantOfferLetterSendController {
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
-        Boolean sendOfferLetterAllowed = projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject();
+        Boolean grantOfferLetterAlreadySent = projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject();
+
+        Boolean signedGrantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
+
+        Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
 
         return new ProjectGrantOfferLetterSendViewModel(competitionSummary,
-                                                        grantOfferFileDetails != null ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
-                                                        additionalContractFile != null ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                                                        sendOfferLetterAllowed,
-                                                        projectId,
-                                                        project.getName(),
-                                                        application.getId(),
-                                                        grantOfferFileDetails != null ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
-                                                        additionalContractFile != null ? additionalContractFile.isPresent() : Boolean.FALSE);
+                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
+                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                grantOfferLetterAlreadySent,
+                projectId,
+                project.getName(),
+                application.getId(),
+                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
+                additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
+                signedGrantOfferLetterApproved,
+                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE,
+                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
+        );
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
@@ -213,6 +241,5 @@ public class ProjectGrantOfferLetterSendController {
             return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
         }
     }
-
 
 }
