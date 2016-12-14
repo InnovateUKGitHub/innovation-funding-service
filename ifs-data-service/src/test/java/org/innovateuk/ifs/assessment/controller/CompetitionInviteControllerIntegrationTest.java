@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
@@ -18,9 +19,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -58,6 +59,26 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         loginSystemRegistrationUser();
 
         competition = competitionRepository.findOne(1L);
+    }
+
+    @Test
+    public void getCreatedInvite() {
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName("tom poly")
+                .withEmail("tom@poly.io")
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .build())
+                .getId();
+
+        RestResult<CompetitionInviteResource> serviceResult = controller.getCreatedInvite(createdId);
+        assertTrue(serviceResult.isSuccess());
+
+        CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
     }
 
     @Test
@@ -482,5 +503,22 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(RejectionReason.class, -1L)));
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName("tom poly")
+                .withEmail("tom@poly.io")
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .build())
+                .getId();
+        RestResult<Void> serviceResult = controller.sendInvite(createdId);
+        assertTrue(serviceResult.isSuccess());
+
     }
 }

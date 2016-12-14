@@ -77,13 +77,14 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompetition(competition)
                 .build();
 
+        CompetitionInvite createdInvite = newCompetitionInvite().withCompetition(competition).withStatus(CREATED).build();
         competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(7L).build();
         user = newUser().withId(7L).build();
 
-
+        when(competitionInviteRepositoryMock.findOne(5L)).thenReturn(createdInvite);
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
         when(competitionInviteRepositoryMock.save(same(competitionInvite))).thenReturn(competitionInvite);
@@ -94,6 +95,21 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         when(rejectionReasonRepositoryMock.findOne(1L)).thenReturn(rejectionReason);
 
         when(userRepositoryMock.findOne(7L)).thenReturn(user);
+    }
+
+    @Test
+    public void getCreatedInvite() throws Exception {
+        ServiceResult<CompetitionInviteResource> inviteServiceResult = competitionInviteService.getCreatedInvite(5L);
+
+        assertTrue(inviteServiceResult.isSuccess());
+
+        CompetitionInviteResource competitionInviteResource = inviteServiceResult.getSuccessObjectOrThrowException();
+        assertEquals("my competition", competitionInviteResource.getCompetitionName());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).findOne(5L);
+        inOrder.verify(competitionInviteMapperMock, calls(1)).mapToResource(any(CompetitionInvite.class));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test

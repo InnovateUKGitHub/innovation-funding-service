@@ -43,6 +43,17 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void getCreatedInvite() throws Exception {
+        CompetitionInviteResource resource = new CompetitionInviteResource();
+        long inviteId = 1L;
+
+        when(competitionInviteServiceMock.getCreatedInvite(inviteId)).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(get("/competitioninvite/getCreated/{inviteId}", inviteId)).andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock, only()).getCreatedInvite(inviteId);
+    }
+
+    @Test
     public void getInvite() throws Exception {
         CompetitionInviteResource resource = new CompetitionInviteResource();
 
@@ -391,5 +402,15 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isNoContent());
 
         verify(competitionInviteServiceMock, only()).deleteInvite(email, competitionId);
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long inviteId = 1L;
+        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId))
+                .andExpect(status().isOk());
+        verify(competitionInviteServiceMock, only()).sendInvite(inviteId);
     }
 }
