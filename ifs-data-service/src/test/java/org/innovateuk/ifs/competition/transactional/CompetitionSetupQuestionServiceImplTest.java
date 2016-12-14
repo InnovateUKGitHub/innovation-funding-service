@@ -49,7 +49,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     private static String guidanceTitle = "guidanceTitle";
     private static String guidance = "guidance";
     private static Integer maxWords = 1;
-    private static String assessmentGuidance = "assessmentGuidance";
+    private static String assessmentGuidanceAnswer = "assessmentGuidance";
     private static String assessmentGuidanceTitle = "assessmentGuidanceTitle";
     private static Integer assessmentMaxWords = 2;
     private static Integer scoreTotal = 10;
@@ -87,7 +87,8 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
                                 .withWordCount(assessmentMaxWords)
-                                .withGuidanceAnswer(assessmentGuidance)
+                                .withGuidanceTitle(assessmentGuidanceTitle)
+                                .withGuidanceAnswer(assessmentGuidanceAnswer)
                                 .withGuidanceRows(guidanceRows)
                                 .build(),
                         newFormInput()
@@ -128,7 +129,8 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getWrittenFeedback(), true);
         assertEquals(resource.getScope(), true);
         assertEquals(resource.getResearchCategoryQuestion(), true);
-        assertEquals(resource.getAssessmentGuidance(), assessmentGuidance);
+        assertEquals(resource.getAssessmentGuidance(), assessmentGuidanceAnswer);
+        assertEquals(resource.getAssessmentGuidanceTitle(), assessmentGuidanceTitle);
         assertEquals(resource.getAssessmentMaxWords(), assessmentMaxWords);
         assertEquals(resource.getGuidanceTitle(), guidanceTitle);
         assertEquals(resource.getMaxWords(), maxWords);
@@ -162,7 +164,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                 .withShortTitle(newShortTitle)
                 .withSubTitle(subTitle)
                 .withQuestionId(questionId)
-                .withAssessmentGuidance(assessmentGuidance)
+                .withAssessmentGuidance(assessmentGuidanceAnswer)
                 .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
                 .withAssessmentMaxWords(assessmentMaxWords)
                 .withGuidanceRows(guidanceRows)
@@ -201,6 +203,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(questionFormInput.getGuidanceTitle(), guidanceTitle);
         assertEquals(questionFormInput.getGuidanceAnswer(), guidance);
         assertEquals(questionFormInput.getWordCount(), maxWords);
+        assertEquals(writtenFeedbackFormInput.getGuidanceAnswer(), assessmentGuidanceAnswer);
         assertEquals(writtenFeedbackFormInput.getGuidanceTitle(), assessmentGuidanceTitle);
         //Short name shouldn't be set on SCOPE question.
         assertNotEquals(question.getShortName(), newShortTitle);
