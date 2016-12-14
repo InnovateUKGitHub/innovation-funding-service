@@ -19,6 +19,9 @@ public class ProjectGrantOfferLetterSendViewModel {
     private Long applicationId;
     private Boolean grantOfferLetterFileContentAvailable;
     private Boolean additionalContractFileContentAvailable;
+    private Boolean signedGrantOfferLetterApproved;
+    private Boolean signedGrantOfferLetterAvailable;
+    private FileDetailsViewModel signedGrantOfferLetterFile;
 
     public ProjectGrantOfferLetterSendViewModel(CompetitionSummaryResource competitionSummary,
                                                 FileDetailsViewModel grantOfferLetterFile,
@@ -28,7 +31,10 @@ public class ProjectGrantOfferLetterSendViewModel {
                                                 String projectName,
                                                 Long applicationId,
                                                 Boolean grantOfferLetterFileContentAvailable,
-                                                Boolean additionalContractFileContentAvailable) {
+                                                Boolean additionalContractFileContentAvailable,
+                                                Boolean signedGrantOfferLetterApproved,
+                                                Boolean signedGrantOfferLetterAvailable,
+                                                FileDetailsViewModel signedGrantOfferLetterFile) {
         this.competitionSummary = competitionSummary;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
@@ -38,6 +44,9 @@ public class ProjectGrantOfferLetterSendViewModel {
         this.applicationId = applicationId;
         this.grantOfferLetterFileContentAvailable = grantOfferLetterFileContentAvailable;
         this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
+        this.signedGrantOfferLetterApproved = signedGrantOfferLetterApproved;
+        this.signedGrantOfferLetterAvailable = signedGrantOfferLetterAvailable;
+        this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -75,6 +84,12 @@ public class ProjectGrantOfferLetterSendViewModel {
 
     public Boolean getAdditionalContractFileContentAvailable() { return additionalContractFileContentAvailable; }
 
+    public FileDetailsViewModel getSignedGrantOfferLetterFile() { return signedGrantOfferLetterFile; }
+
+    public Boolean getSignedGrantOfferLetterApproved() { return signedGrantOfferLetterApproved; }
+
+    public Boolean getSignedGrantOfferLetterFileAvailable() { return signedGrantOfferLetterAvailable; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,6 +108,9 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(applicationId, that.applicationId)
                 .append(grantOfferLetterFileContentAvailable, that.grantOfferLetterFileContentAvailable)
                 .append(additionalContractFileContentAvailable, that.additionalContractFileContentAvailable)
+                .append(signedGrantOfferLetterApproved, that.signedGrantOfferLetterApproved)
+                .append(signedGrantOfferLetterFile, that.signedGrantOfferLetterFile)
+                .append(signedGrantOfferLetterAvailable, that.signedGrantOfferLetterAvailable)
                 .isEquals();
     }
 
@@ -107,6 +125,9 @@ public class ProjectGrantOfferLetterSendViewModel {
                 .append(applicationId)
                 .append(grantOfferLetterFileContentAvailable)
                 .append(additionalContractFileContentAvailable)
+                .append(signedGrantOfferLetterApproved)
+                .append(signedGrantOfferLetterFile)
+                .append(signedGrantOfferLetterAvailable)
                 .toHashCode();
     }
 }

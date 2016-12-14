@@ -94,18 +94,19 @@ public class ProjectFinanceController {
     }
 
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/viability")
-    public RestResult<Viability> getViability(@PathVariable("projectId") final Long projectId,
-                                              @PathVariable("organisationId") final Long organisationId) {
+    public RestResult<ViabilityResource> getViability(@PathVariable("projectId") final Long projectId,
+                                                      @PathVariable("organisationId") final Long organisationId) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.getViability(projectOrganisationCompositeId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityStatus}", method = POST)
     public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
                                           @PathVariable("organisationId") final Long organisationId,
-                                          @PathVariable("viability") final Viability viability) {
+                                          @PathVariable("viability") final Viability viability,
+                                          @PathVariable("viabilityStatus") final ViabilityStatus viabilityStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectFinanceService.saveViability(projectOrganisationCompositeId, viability).toPostResponse();
+        return projectFinanceService.saveViability(projectOrganisationCompositeId, viability, viabilityStatus).toPostResponse();
     }
 }

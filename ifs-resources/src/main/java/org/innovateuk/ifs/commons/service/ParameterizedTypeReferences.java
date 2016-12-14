@@ -70,6 +70,14 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<AssessorCreatedInviteResource>> assessorCreatedInviteResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorCreatedInviteResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessorInviteOverviewResource>> assessorInviteOverviewResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorInviteOverviewResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }

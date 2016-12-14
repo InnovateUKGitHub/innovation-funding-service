@@ -27,6 +27,8 @@ public class CompetitionInviteResource extends InviteResource {
 
     private String email;
 
+    private String hash;
+
     private InviteStatus status;
 
     private CategoryResource innovationArea;
@@ -101,6 +103,14 @@ public class CompetitionInviteResource extends InviteResource {
 
     public void setInnovationArea(CategoryResource innovationArea) {
         this.innovationArea = innovationArea;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     @Override
