@@ -174,7 +174,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         if (restFailure.has(COMPETITION_INVITE_EXPIRED)) {
-            throw new InviteClosedException(error.getErrorKey(), error.getArguments());
+            throw new InviteExpiredException(error.getErrorKey(), error.getArguments());
         }
 
         throw new RuntimeException();
