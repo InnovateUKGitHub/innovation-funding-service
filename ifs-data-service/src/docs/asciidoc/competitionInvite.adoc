@@ -60,7 +60,6 @@ include::{snippets}/competitioninvite/check-existing-user/curl-request.adoc[]
 ==== Request
 include::{snippets}/competitioninvite/get-available-assessors/http-request.adoc[]
 include::{snippets}/competitioninvite/get-available-assessors/path-parameters.adoc[]
-include::{snippets}/competitioninvite/get-available-assessors/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/get-available-assessors/http-response.adoc[]
@@ -73,7 +72,6 @@ include::{snippets}/competitioninvite/get-available-assessors/curl-request.adoc[
 ==== Request
 include::{snippets}/competitioninvite/get-created-invites/http-request.adoc[]
 include::{snippets}/competitioninvite/get-created-invites/path-parameters.adoc[]
-include::{snippets}/competitioninvite/get-created-invites/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/get-created-invites/http-response.adoc[]
@@ -86,7 +84,6 @@ include::{snippets}/competitioninvite/get-created-invites/curl-request.adoc[]
 ==== Request
 include::{snippets}/competitioninvite/get-invitation-overview/http-request.adoc[]
 include::{snippets}/competitioninvite/get-invitation-overview/path-parameters.adoc[]
-include::{snippets}/competitioninvite/get-invitation-overview/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/get-invitation-overview/http-response.adoc[]
@@ -98,8 +95,6 @@ include::{snippets}/competitioninvite/get-invitation-overview/curl-request.adoc[
 === Add a user to the assessor invite list for a competition
 ==== Request
 include::{snippets}/competitioninvite/invite-user/http-request.adoc[]
-include::{snippets}/competitioninvite/invite-user/path-parameters.adoc[]
-include::{snippets}/competitioninvite/invite-user/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/invite-user/http-response.adoc[]
@@ -111,8 +106,7 @@ include::{snippets}/competitioninvite/invite-user/curl-request.adoc[]
 === Delete a user from the assessor invite list for a competition
 ==== Request
 include::{snippets}/competitioninvite/delete-invite/http-request.adoc[]
-include::{snippets}/competitioninvite/delete-invite/path-parameters.adoc[]
-include::{snippets}/competitioninvite/delete-invite/request-fields.adoc[]
+include::{snippets}/competitioninvite/delete-invite/request-parameters.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/delete-invite/http-response.adoc[]
