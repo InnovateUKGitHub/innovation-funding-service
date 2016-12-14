@@ -129,6 +129,15 @@ li.type-company{
   }
 }
 
+/*----- Readonly data view ----*/
+dl{
+  &.readonly-data{
+    dd{
+      margin-bottom: 1em;
+    }
+  }
+}
+
 /*----- Standard definition list ----*/
 
 dl.standard-definition-list{
