@@ -2,8 +2,10 @@ package org.innovateuk.ifs.competition.resource;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import java.time.LocalDateTime;
+
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.*;
 
 public class CompetitionSetupSectionTest {
 
@@ -59,5 +61,79 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
 		
 		assertEquals(CompetitionSetupSection.APPLICATION_FORM, result);
+	}
+
+	@Test
+	public void testAllSectionsEditableWhenSetupIsCompleteAndNotYetInAssessment() {
+		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
+		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.ELIGIBILITY;
+		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
+		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
+		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
+		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.APPLICATION_FORM;
+		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
+
+		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withSetupComplete(true)
+				.withStartDate(tomorrow)
+				.withFundersPanelDate(tomorrow)
+				.build();
+
+		assertFalse(homeSection.preventEdit(competitionResource));
+		assertFalse(eligibilitySection.preventEdit(competitionResource));
+		assertFalse(milestonesSection.preventEdit(competitionResource));
+		assertFalse(applicationFormSection.preventEdit(competitionResource));
+		assertFalse(assessorSection.preventEdit(competitionResource));
+		assertFalse(initialDetailsSection.preventEdit(competitionResource));
+		assertFalse(additionalInfoSection.preventEdit(competitionResource));
+	}
+
+	@Test
+	public void testSectionsEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
+		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
+		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
+
+		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withSetupComplete(true)
+				.withStartDate(yesterday)
+				.withFundersPanelDate(tomorrow)
+				.build();
+
+		assertFalse(initialDetailsSection.preventEdit(competitionResource));
+		assertFalse(additionalInfoSection.preventEdit(competitionResource));
+	}
+
+	@Test
+	public void testSectionsNotEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
+		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
+		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.ELIGIBILITY;
+		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
+		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
+		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
+		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.APPLICATION_FORM;
+		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
+
+		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withSetupComplete(true)
+				.withStartDate(yesterday)
+				.withFundersPanelDate(yesterday)
+				.build();
+
+		assertTrue(homeSection.preventEdit(competitionResource));
+		assertTrue(eligibilitySection.preventEdit(competitionResource));
+		assertTrue(milestonesSection.preventEdit(competitionResource));
+		assertTrue(applicationFormSection.preventEdit(competitionResource));
+		assertTrue(assessorSection.preventEdit(competitionResource));
+		assertTrue(initialDetailsSection.preventEdit(competitionResource));
+		assertTrue(additionalInfoSection.preventEdit(competitionResource));
 	}
 }
