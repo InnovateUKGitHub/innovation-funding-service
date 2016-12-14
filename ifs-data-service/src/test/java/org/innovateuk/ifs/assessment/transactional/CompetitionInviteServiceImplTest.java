@@ -10,9 +10,7 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -37,6 +35,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -63,7 +62,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
         List<Milestone> milestones = newMilestone()
                 .withDate(LocalDateTime.now().minusDays(1))
-                .withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
         milestones.addAll(newMilestone()
                 .withDate(LocalDateTime.now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
@@ -643,22 +642,51 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
+
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
-                .withUserId(77L)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
-                .withEmail("worth.email.test+assessor1@gmail.com")
-                .withBusinessType(BUSINESS)
                 .withInnovationArea(newCategoryResource()
                         .with(id(null))
                         .withName("Earth Observation")
                         .build())
                 .withCompliant(TRUE)
+                .withEmail("worth.email.test+assessor1@gmail.com")
+                .withBusinessType(BUSINESS)
                 .withAdded(FALSE)
                 .build(1);
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getCreatedInvites() throws Exception {
+        long competitionId = 1L;
+
+        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withInnovationArea(newCategoryResource()
+                        .with(id(null))
+                        .withName("Earth Observation")
+                        .build())
+                .withCompliant(TRUE)
+                .withEmail("worth.email.test+assessor1@gmail.com")
+                .build(1);
+
+        List<AssessorCreatedInviteResource> actual = competitionInviteService.getCreatedInvites(competitionId).getSuccessObjectOrThrowException();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+
+        // TODO INFUND-6450
+
+        List<AssessorInviteOverviewResource> actual = competitionInviteService.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
+        assertTrue(actual.isEmpty());
     }
 }

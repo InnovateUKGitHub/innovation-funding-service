@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.resource;
 
-import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,22 +9,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class ProjectFinanceResource extends BaseFinanceResource {
 
-    private Viability viability;
-
     public Long getProject() {
         return super.getTarget();
     }
 
     public void setProject(Long target) {
         super.setTarget(target);
-    }
-
-    public Viability getViability() {
-        return viability;
-    }
-
-    public void setViability(Viability viability) {
-        this.viability = viability;
     }
 
     public ProjectFinanceResource(Long id, Long organisation, Long projectId, OrganisationSize organisationSize) {
@@ -53,7 +42,6 @@ public class ProjectFinanceResource extends BaseFinanceResource {
                 .append(organisation, that.organisation)
                 .append(target, that.target)
                 .append(organisationSize, that.organisationSize)
-                .append(viability, that.viability)
                 .append(financeOrganisationDetails, that.financeOrganisationDetails)
                 .isEquals();
     }

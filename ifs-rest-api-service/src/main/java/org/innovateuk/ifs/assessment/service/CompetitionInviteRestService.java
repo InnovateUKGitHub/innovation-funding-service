@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
 
@@ -24,6 +21,10 @@ public interface CompetitionInviteRestService {
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
     RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
+
+    RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
+
+    RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
