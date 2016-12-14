@@ -77,6 +77,72 @@
                 </div>
             </div>
 
+            <details class="extra-margin-bottom">
+                <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
+
+                <form>
+                    <p>Enter the new assessor's details below to add them to your invite list.</p>
+
+                    <div class="table-overflow">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" id="innovation-sector" class="table-column-third">Innovation sector</th>
+                                    <th scope="col" id="innovation-area" class="table-column-two-thirds">Innovation area</th>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell-align-top width-40-percent">
+                                        <select class="form-control width-full" aria-labelledby="innovation-sector">
+                                            <option selected="selected">Please select an innovation sector</option>
+                                        </select>
+                                    </td>
+                                    <td class="cell-align-top width-40-percent">
+                                        <select class="form-control width-full" aria-labelledby="innovation-area">
+                                            <option selected="selected">Please select an innovation area</option>
+                                        </select>
+                                        <div>The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</div>
+                                    </td>
+                                    <td class="width-20-percent"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th id="invite-label-assessor-name" scope="col">Name</th>
+                                    <th id="invite-label-assessor-email" scope="col">Email</th>
+                                    <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="prototype-assessor-row-two">
+                                    <td class="width-40-percent">
+                                        <input type="text" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
+                                    </td>
+                                    <td class="width-40-percent">
+                                        <input type="text" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
+                                    </td>
+                                    <td class="alignright width-20-percent">
+                                        <button class="buttonlink" type="submit">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="alignright extra-margin">
+                            <button class="buttonlink" type="submit">Add another assessor of this type</button>
+                        </p>
+                    </div>
+
+                    <div class="alignright extra-margin-top">
+                        <button type="submit" class="button no-margin">Add assessor(s) to list</button>
+                    </div>
+                </form>
+            </details>
+
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>
 
