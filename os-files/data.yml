@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    name: data
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: worth/data-service:1.0-SNAPSHOT
+      from:
+        kind: DockerImage
+        name: worth/data-service:1.0-SNAPSHOT
+      generation: null
+      importPolicy: {}
+      name: 1.0-SNAPSHOT
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    name: mysql
+  spec:
+    tags:
+    - annotations:
+        openshift.io/imported-from: mysql:5.5.49
+      from:
+        kind: DockerImage
+        name: mysql:5.5.49
+      generation: null
+      importPolicy: {}
+      name: 5.5.49
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: mysql
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: mysql
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_DATABASE
+            value: ifs
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          image: mysql:5.5.49
+          name: mysql
+          ports:
+          - containerPort: 3306
+          resources: {}
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - mysql
+        from:
+          kind: ImageStreamTag
+          name: mysql:5.5.49
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: data
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: data
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: data
+      spec:
+        containers:
+        - image: worth/data-service:1.0-SNAPSHOT
+          name: data
+          ports:
+          - containerPort: 8080
+          resources: {}
+          volumeMounts:
+          - mountPath: /tmp/ifs-local
+            name: dir-1
+        volumes:
+        - emptyDir: {}
+          name: dir-1
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - data
+        from:
+          kind: ImageStreamTag
+          name: data:1.0-SNAPSHOT
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ifs-database
+  spec:
+    ports:
+    - name: 3306-tcp
+      port: 3306
+      targetPort: 3306
+    selector:
+      deploymentconfig: mysql
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: data-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: data
+  status:
+    loadBalancer: {}
