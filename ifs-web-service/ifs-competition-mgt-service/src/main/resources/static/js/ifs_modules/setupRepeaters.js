@@ -62,10 +62,19 @@ IFS.competitionManagement.repeater = (function() {
       var idCount = parseInt(rows.last().prop('id').split('innovation-row-')[1], 10)+1;
 
       var newRow = rows.first().clone();
+      //clear error messages
+      newRow.removeClass('error');
+      newRow.find('.error-message').remove();
+      //new row attribute
       newRow.prop('id', 'innovation-row-'+idCount);
+      //fix label link
       newRow.find('[id^="innovationAreaCategoryId"]').prop('id', 'innovationAreaCategoryId-'+idCount);
       newRow.find('[for^="innovationAreaCategoryId"]').prop('for', 'innovationAreaCategoryId-'+idCount);
+      //hide new row label for styling
+      newRow.find('.form-label').children().addClass('visuallyhidden');
+      //change name attributes
       newRow.find('[name]').prop('name', 'innovationAreaCategoryIds['+count+']');
+      //add remove button
       newRow.append('<button data-remove-row="innovationArea" value="'+count+'" class="buttonlink" type="button">Remove</button>');
 
       rows.last().after(newRow);
