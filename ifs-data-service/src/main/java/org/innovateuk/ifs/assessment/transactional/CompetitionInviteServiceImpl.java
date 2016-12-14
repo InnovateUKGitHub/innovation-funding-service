@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -120,10 +119,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        List<User> assessors = userRepository.findByRoles_Name(ASSESSOR.getName());
+        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetition(competitionId);
 
         return serviceSuccess(assessors.stream()
-                .filter(assessor -> !isCompetitionParticipant(assessor.getId(), competitionId, EnumSet.of(PENDING, ACCEPTED)))
                 .map(assessor -> {
                     AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
                     availableAssessor.setEmail(assessor.getEmail());
@@ -145,14 +143,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         .andOnSuccess(competition -> inviteUserToCompetition(stagedInvite.getName(), stagedInvite.getEmail(), competition, innovationArea))
                 )
                 .andOnSuccessReturn(mapper::mapToResource);
-    }
-
-    private boolean isCompetitionParticipant(long userId, long competitionId, EnumSet<ParticipantStatus> statuses) {
-        return getCompetitionParticipant(userId, competitionId, statuses).isSuccess();
-    }
-
-    private ServiceResult<CompetitionParticipant> getCompetitionParticipant(long userId, long competitionId, EnumSet<ParticipantStatus> statuses) {
-        return find(competitionParticipantRepository.getByUserIdAndCompetitionIdAndStatusIn(userId, competitionId, statuses), notFoundError (CompetitionParticipant.class, userId, competitionId, statuses));
     }
 
     private BusinessType getBusinessType(User assessor) {

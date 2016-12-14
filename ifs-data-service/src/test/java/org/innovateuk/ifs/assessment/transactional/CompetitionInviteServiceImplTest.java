@@ -46,7 +46,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -661,7 +660,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withAdded(FALSE)
                 .build(1);
 
-        when(userRepositoryMock.findByRoles_Name(ASSESSOR.getName())).thenReturn(asList(newUser()
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(asList(newUser()
                 .withId(77L)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
