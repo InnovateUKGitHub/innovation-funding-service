@@ -277,7 +277,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
 
         Long organisationId = 1L;
-        Long projectId = 1L;
+        Long projectId = 2L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -314,13 +314,15 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("project/spend-profile"));
 
         verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(projectFinanceService).markSpendProfileComplete(2L, 1L);
+
     }
 
     @Test
     public void markAsCompleteSpendProfileSuccess() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         when(projectFinanceService.markSpendProfileComplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
@@ -328,13 +330,15 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
+
+        verify(projectFinanceService).markSpendProfileComplete(1L, 2L);
     }
 
     @Test
     public void markAsIncompleteSpendProfileSuccess() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
@@ -342,20 +346,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
-    }
 
-    @Test
-    public void markAsIncompleteSpendProfileFailure() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
-        when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
+        verify(projectFinanceService).markSpendProfileIncomplete(1L, 2L);
     }
 
     @Test
@@ -413,8 +405,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void partnerCannotEditAfterSubmission() throws Exception {
-        Long organisationId = 1L;
         Long projectId = 1L;
+        Long organisationId = 2L;
 
         ProjectResource projectResource = newProjectResource()
                 .withName("projectName1")
@@ -437,7 +429,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
         partnerOrganisationResource.setOrganisation(organisationId);
         partnerOrganisationResource.setLeadOrganisation(false);
-//        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
 
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
@@ -449,10 +440,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("redirect:/project/1/partner-organisation/1/spend-profile"));
+                .andExpect(view().name("redirect:/project/1/partner-organisation/2/spend-profile"));
 
-//        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
-
+        verify(projectFinanceService).markSpendProfileIncomplete(1L, 2L);
     }
 
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {

@@ -160,13 +160,15 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
                 .andExpect(status().isOk());
+
+        verify(projectFinanceServiceMock).markSpendProfileComplete(projectOrganisationCompositeId);
     }
 
     @Test
     public void markSpendProfileIncomplete() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
@@ -178,6 +180,8 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
                 .andExpect(status().isOk());
+
+        verify(projectFinanceServiceMock).markSpendProfileIncomplete(projectOrganisationCompositeId);
     }
 
     @Test

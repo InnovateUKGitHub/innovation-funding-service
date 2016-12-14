@@ -33,7 +33,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void saveSpendProfile() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
@@ -42,6 +42,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.saveSpendProfile(projectId, organisationId,  table);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile", Void.class, table);
+
 
         assertTrue(result.isSuccess());
 
@@ -51,12 +53,13 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void markSpendProfileComplete() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete",
                 OK);
 
         RestResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile/complete", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -65,12 +68,13 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void markSpendProfileIncomplete() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/incomplete",
                 OK);
 
         RestResult<Void> result = service.markSpendProfileIncomplete(projectId, organisationId);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile/incomplete", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -84,6 +88,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        setupPostWithRestResultVerifications("/project/1/complete-spend-profiles-review/", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -108,6 +114,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.acceptOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
+        setupPostWithRestResultVerifications("/project/1/spend-profile/approval/APPROVED", Void.class, null);
+
         assertTrue(result.isSuccess());
     }
 

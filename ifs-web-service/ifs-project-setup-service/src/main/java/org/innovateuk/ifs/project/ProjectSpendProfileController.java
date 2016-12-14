@@ -166,7 +166,7 @@ public class ProjectSpendProfileController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'PROJECT_MANAGER_ACCESS')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
     @RequestMapping(value = "/incomplete", method = POST)
     public String markAsActionRequiredSpendProfile(Model model,
                                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,

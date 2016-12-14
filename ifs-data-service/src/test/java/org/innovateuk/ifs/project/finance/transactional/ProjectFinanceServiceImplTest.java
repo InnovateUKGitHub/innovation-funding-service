@@ -556,7 +556,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ServiceResult<Void> result = service.markSpendProfileIncomplete(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
-        assertTrue(!spendProfileInDB.isMarkedAsComplete());
+        assertFalse(spendProfileInDB.isMarkedAsComplete());
     }
 
     @Test
