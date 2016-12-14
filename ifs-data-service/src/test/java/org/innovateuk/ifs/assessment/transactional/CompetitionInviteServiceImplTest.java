@@ -773,7 +773,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withEmail(newAssessorName)
                 .withName(newAssessorEmail)
                 .withInnovationArea(innovationArea)
-                .withUser()
                 .build();
 
         final CompetitionInviteResource expectedInviteResource = newCompetitionInviteResource().build();
@@ -790,7 +789,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         assertEquals(expectedInviteResource, invite);
 
-        InOrder inOrder = inOrder(categoryRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(categoryRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock, userRepositoryMock);
         inOrder.verify(categoryRepositoryMock).findByIdAndType(innovationArea.getId(), innovationArea.getType());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(competitionInviteRepositoryMock).save(createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea));
