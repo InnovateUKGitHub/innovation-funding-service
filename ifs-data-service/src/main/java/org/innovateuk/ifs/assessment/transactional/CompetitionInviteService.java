@@ -50,6 +50,12 @@ public interface CompetitionInviteService {
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)

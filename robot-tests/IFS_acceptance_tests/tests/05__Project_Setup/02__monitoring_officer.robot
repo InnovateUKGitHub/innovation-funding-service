@@ -8,6 +8,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-2634 As a partner I want to be able to view details of the assigned Monitoring Officer for my project so I can contact them
 ...
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
+...
+...               INFUND-6706 Mismatch in MO status between dashboard and consortium table
 Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -18,17 +20,19 @@ ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/proj
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
-    [Documentation]    INFUND-2634, INFUND-2621
+    [Documentation]    INFUND-2634, INFUND-2621, INFUND-6706
     [Tags]    HappyPath
     [Setup]    Log in as user    steve.smith@empire.com    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    We will assign the project a Monitoring Officer.
     And the user should not see the element    jQuery=ul li.complete:nth-child(3)
+    And the user should see the element    jQuery=ul li.waiting:nth-child(3)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
@@ -114,7 +118,7 @@ MO client-side validation
     Then the user should not see the validation error    Input for your phone number has a minimum length of 8 characters
 
 MO details can be added
-    [Documentation]    INFUND-2630
+    [Documentation]    INFUND-2630, INFUND-6706
     ...
     ...    INFUND-2632
     [Tags]    HappyPath
@@ -129,6 +133,8 @@ MO details can be added
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details(email step)
     [Documentation]    INFUND-2630

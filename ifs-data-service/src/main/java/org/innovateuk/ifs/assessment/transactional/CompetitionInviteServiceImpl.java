@@ -32,6 +32,8 @@ import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -41,8 +43,8 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -127,13 +129,26 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     availableAssessor.setEmail(assessor.getEmail());
                     availableAssessor.setFirstName(assessor.getFirstName());
                     availableAssessor.setLastName(assessor.getLastName());
-                    availableAssessor.setUserId(assessor.getId());
                     availableAssessor.setBusinessType(getBusinessType(assessor));
                     availableAssessor.setCompliant(assessorIsCompliant(assessor.getId()));
                     availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
                     availableAssessor.setInnovationArea(new CategoryResource()); //TODO INFUND-6392
                     return availableAssessor;
                 }).collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
+        // TODO INFUND-6412
+        return serviceSuccess(
+                asList(new AssessorCreatedInviteResource("Jeremy", "Alufson",
+                        new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com")));
+    }
+
+    @Override
+    public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
+        // TODO INFUND-6450
+        return serviceSuccess(emptyList());
     }
 
     @Override
@@ -230,7 +245,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private ServiceResult<CompetitionInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
-            if (!EnumSet.of(READY_TO_OPEN,IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
+            if (!EnumSet.of(READY_TO_OPEN, IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
