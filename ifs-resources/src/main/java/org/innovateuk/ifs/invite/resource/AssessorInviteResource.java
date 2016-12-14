@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.invite.resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * Abstract DTO for fields common to assessor invite resources.
@@ -54,6 +59,14 @@ abstract class AssessorInviteResource {
 
     public void setCompliant(boolean compliant) {
         this.compliant = compliant;
+    }
+
+    public String getFullName() {
+        return Stream.of(this.getFirstName(), this.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
+    }
+
+    public String getInnovationAreaName() {
+        return this.getInnovationArea() == null ? null : this.getInnovationArea().getName();
     }
 
     @Override

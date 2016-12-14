@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.model;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
@@ -10,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -39,9 +36,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     }
 
     private InvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
-        String name = Stream.of(assessorCreatedInviteResource.getFirstName(), assessorCreatedInviteResource.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
-        String categoryArea = assessorCreatedInviteResource.getInnovationArea().getName();
-        return new InvitedAssessorRowViewModel(name, categoryArea, assessorCreatedInviteResource.isCompliant(), assessorCreatedInviteResource.getEmail());
+        return new InvitedAssessorRowViewModel(assessorCreatedInviteResource.getFullName(), assessorCreatedInviteResource.getInnovationAreaName(), assessorCreatedInviteResource.isCompliant(), assessorCreatedInviteResource.getEmail());
     }
 
     @Override
