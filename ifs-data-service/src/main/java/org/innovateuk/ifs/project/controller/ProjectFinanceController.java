@@ -73,14 +73,14 @@ public class ProjectFinanceController {
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", method = POST)
-    public RestResult<Void> markSpendProfileCompete(@PathVariable("projectId") final Long projectId,
+    public RestResult<Void> markSpendProfileComplete(@PathVariable("projectId") final Long projectId,
                                                     @PathVariable("organisationId") final Long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.markSpendProfileComplete(projectOrganisationCompositeId).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", method = POST)
-    public RestResult<Void> markSpendProfileIncompete(@PathVariable("projectId") final Long projectId,
+    public RestResult<Void> markSpendProfileIncomplete(@PathVariable("projectId") final Long projectId,
                                                     @PathVariable("organisationId") final Long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.markSpendProfileIncomplete(projectOrganisationCompositeId).toPostResponse();

@@ -143,7 +143,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void markSpendProfileCompete() throws Exception {
+    public void markSpendProfileComplete() throws Exception {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -155,6 +155,24 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectFinanceServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId, true)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(table)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId, true)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
                 .andExpect(status().isOk());

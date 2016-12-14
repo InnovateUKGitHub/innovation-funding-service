@@ -23,9 +23,7 @@
 
         <th:block th:if="${form != null}" th:object="${form}">
             <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-                <h2 class="heading-medium error-summary-heading">
-                    Unable to submit spend profile.
-                </h2>
+                <h2 class="heading-medium error-summary-heading">Unable to submit spend profile.</h2>
                 Please review
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
@@ -35,9 +33,7 @@
 
         <div class="error-summary" th:if="${form == null}"
              th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
-            <h2 class="heading-medium error-summary-heading">
-                You cannot submit your spend profile. Your total costs are higher than the eligible project
-                costs.</h2>
+            <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
             Please review
             <ul class="error-summary-list">
                 <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.fieldName}"></li>
@@ -55,8 +51,7 @@
         <th:block
             th:if="${model.markedAsComplete and !model.submitted and model.projectManager and model.userPartOfThisOrganisation}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile is marked as complete. You can still edit this page. When all partners have
-                    completed their spend profiles you can send them to us.</p>
+                <p>Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
             </div>
         </th:block>
         <th:block
@@ -70,29 +65,18 @@
                 <p>Your spend profile has now been accepted by Innovate UK.</p>
             </div>
         </th:block>
-        <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together
-            with your
-            project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+        <p>We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
         <dl class="standard-definition-list">
             <dt>Project start date</dt>
             <dd>
                 <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}"/>
             </dd>
             <dt>Duration</dt>
-            <dd>
-                <th:block th:text="${model.durationInMonths}"/>
-                months
-            </dd>
+            <dd><th:block th:text="${model.durationInMonths}"/> months</dd>
         </dl>
 
-        <h2 class="heading-medium">
-            <th:block th:text="${model.organisationName}"/>
-            - Spend profile
-        </h2>
-        <p>Your project costs have been profiled equally across the time periods. Please edit to show your
-            planned
-            expenditure across the life of your project. Please note that costs cannot be moved across cost
-            categories.</p>
+        <h2 class="heading-medium"><th:block th:text="${model.organisationName}"/> - Spend profile</h2>
+        <p>Your project costs have been profiled equally across the time periods. Please edit to show your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
     </div>
 
     <th:block th:with="readonly=${form == null ? true : false}">
@@ -313,9 +297,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <button th:unless="${readonly}" class="button button-secondary extra-margin">Save and return to spend
-                    profile overview
-                </button>
+                <button th:unless="${readonly}" class="button button-secondary extra-margin">Save and return to spend profile overview</button>
             </div>
         </form>
 
@@ -324,35 +306,25 @@
 
             <th:block th:if="${!model.markedAsComplete and !model.projectManager}">
                 <a class="button button-secondary extra-margin"
-                   th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit
-                    spend profile</a>
+                   th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-                <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your
-                    spend profile. It should match the eligible project costs. The lead partner will submit all costs to
-                    Innovate UK.</p>
+                <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
                 <form method="post"
                       th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                    <button class="button" name="mark-as-complete"
-                            th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Submit to lead
-                        partner
-                    </button>
+                    <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Submit to lead partner</button>
                 </form>
             </th:block>
 
             <th:block th:if="${model.projectManager}">
                 <div th:if="${model.userPartOfThisOrganisation}">
                     <a class="button button-secondary extra-margin"
-                       th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit
-                        spend profile</a>
+                       th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <div th:if="${!model.markedAsComplete}">
                         <p class="extra-margin">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
                         <form method="post"
                               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                            <button class="button" name="mark-as-complete"
-                                    th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as
-                                complete
-                            </button>
+                            <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
                         </form>
                     </div>
                 </div>
@@ -361,8 +333,7 @@
                     <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
                     <form method="post"
                           th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                        <button class="button button-secondary extra-margin" name="allow-edit">Allow partner to edit
-                        </button>
+                        <button class="button button-secondary extra-margin" name="allow-edit">Allow partner to edit</button>
                     </form>
                 </div>
             </th:block>
