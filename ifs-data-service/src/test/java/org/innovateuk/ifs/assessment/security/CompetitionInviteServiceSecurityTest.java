@@ -178,6 +178,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
+        public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> sendInvite(long inviteId) {
             return null;
         }
