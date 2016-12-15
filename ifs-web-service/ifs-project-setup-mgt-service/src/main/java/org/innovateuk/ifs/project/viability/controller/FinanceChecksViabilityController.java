@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -13,12 +16,14 @@ import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -46,32 +51,55 @@ public class FinanceChecksViabilityController {
     public String viewViability(@PathVariable("projectId") Long projectId,
                                 @PathVariable("organisationId") Long organisationId, Model model) {
 
-        populateViewModel(projectId, organisationId, model);
-        populateForm(projectId, organisationId, model);
-        return "project/financecheck/viability";
+        return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId));
     }
 
     @RequestMapping(method = POST, params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
-                                  @ModelAttribute("form") FinanceChecksViabilityForm form) {
+                                  @ModelAttribute("form") FinanceChecksViabilityForm form,
+                                  @SuppressWarnings("unused") BindingResult bindingResult,
+                                  ValidationHandler validationHandler,
+                                  Model model) {
 
-        financeService.saveViability(projectId, organisationId, Viability.PENDING, form.getRagStatus());
+        Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
+        return doSaveViability(projectId, organisationId, Viability.PENDING, form, validationHandler, model, successView);
     }
 
     @RequestMapping(method = POST, params = "confirm-viability")
     public String confirmViability(@PathVariable("projectId") Long projectId,
                                    @PathVariable("organisationId") Long organisationId,
-                                   @ModelAttribute("form") FinanceChecksViabilityForm form) {
+                                   @ModelAttribute("form") FinanceChecksViabilityForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
+                                   Model model) {
 
-        financeService.saveViability(projectId, organisationId, Viability.APPROVED, form.getRagStatus());
+        Supplier<String> successView = () ->
+                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
+        return doSaveViability(projectId, organisationId, Viability.APPROVED, form, validationHandler, model, successView);
     }
 
-    private void populateViewModel(Long projectId, Long organisationId, Model model) {
+    private String doSaveViability(Long projectId, Long organisationId, Viability viability, FinanceChecksViabilityForm form,
+                                   ValidationHandler validationHandler, Model model, Supplier<String> successView) {
+
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
+
+        ServiceResult<Void> result = financeService.saveViability(projectId, organisationId, viability, form.getRagStatus());
+
+        return validationHandler.
+                addAnyErrors(result).
+                failNowOrSucceedWith(failureView, successView);
+    }
+
+    private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
+        model.addAttribute("model", getViewModel(projectId, organisationId, model));
+        model.addAttribute("form", form);
+        return "project/financecheck/viability";
+    }
+
+    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         boolean viabilityConfirmed = viability.getViability() == Viability.APPROVED;
@@ -96,18 +124,18 @@ public class FinanceChecksViabilityController {
         Integer headCount = null; // for this release, these will always be null
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
-        model.addAttribute("model", new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
+        return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed));
+                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed);
     }
 
-    private void populateForm(Long projectId, Long organisationId, Model model) {
+    private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         boolean creditReportConfirmed = false;
+        boolean confirmViabilityChecked = viability.getViabilityStatus() != ViabilityStatus.UNSET;
 
-        FinanceChecksViabilityForm form = new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityStatus());
-        model.addAttribute("form", form);
+        return new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityStatus(), confirmViabilityChecked);
     }
 
     private int toZeroScaleInt(BigDecimal value) {

@@ -86,7 +86,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public void saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
-        projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
+        return projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).toServiceResult();
     }
 }

@@ -42,5 +42,5 @@ public interface ProjectFinanceService {
 
     ViabilityResource getViability(Long projectId, Long organisationId);
 
-    void saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating);
+    ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating);
 }
