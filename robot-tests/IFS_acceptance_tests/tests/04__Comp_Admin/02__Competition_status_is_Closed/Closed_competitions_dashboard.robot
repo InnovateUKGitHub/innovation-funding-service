@@ -2,6 +2,8 @@
 Documentation     INFUND-6604 As a member of the competitions team I can view the Invite assessors dashboard so that I can find and invite assessors to the competition
 ...
 ...               INFUND-6599 As a member of the competitions team I can navigate to the dashboard of a closed competition so that I can see information and further actions for the competition
+...
+...               INFUND-6458 As a member of the competitions team I can select 'Notify Assessors' in a closed assessment so that the competition is moved to state 'In assessment'
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -21,3 +23,10 @@ The user can Invite Assessors
     Then The user should see the element    link=Overview
     And the user should see the element    link=Find
     And the user should see the element    link=Invite
+    [Teardown]    The user clicks the button/link    link=Competition
+
+The user can Notify Assessors
+    [Documentation]    INFUND-6458
+    [Tags]    Pending
+    When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
