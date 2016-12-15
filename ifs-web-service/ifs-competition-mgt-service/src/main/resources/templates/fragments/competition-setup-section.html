@@ -865,7 +865,7 @@
 
 
     <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="assessors">
+          th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
         <th:block th:if="${editable}" id="section-assessors-edit">
             <h2 class="heading-small">How many assessors are required for each application?</h2>
             <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
@@ -892,12 +892,12 @@
                     </span>
                 </label>
                 <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
-
-                       th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
+                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
                        data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="field-error"/>
+                       th:errorclass="field-error"
+                       th:readonly="${isSetupAndLive}"/>
             </div>
 
             <button class="button">Done</button>
@@ -912,7 +912,7 @@
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
             </dl>
 
-           <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+           <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 

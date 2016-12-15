@@ -59,10 +59,11 @@ public enum CompetitionSetupSection {
 	public boolean preventEdit(CompetitionResource competitionResource) {
 		if (competitionResource.isSetupAndAfterNotifications()) {
             return true;
-        } if (competitionResource.isSetupAndLive()) {
-			return !(this.equals(INITIAL_DETAILS)
-                    //TODO INFUND-6675 & 6694 & 6695 : add editable sections here.
-                    );
+        }
+
+        if (competitionResource.isSetupAndLive()) {
+			return !(this.equals(INITIAL_DETAILS) ||
+					this.equals(ASSESSORS));
 		}
 
 		return false;
