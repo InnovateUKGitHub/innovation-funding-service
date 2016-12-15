@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 
 import java.util.List;
@@ -55,6 +56,10 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setAppendix(appendix));
     }
 
+    public CompetitionSetupQuestionResourceBuilder withAssessmentGuidanceTitle(String assessmentGuidanceTitle) {
+        return with(competition -> competition.setAssessmentGuidanceTitle(assessmentGuidanceTitle));
+    }
+
     public CompetitionSetupQuestionResourceBuilder withAssessmentGuidance(String assessmentGuidance) {
         return with(competition -> competition.setAssessmentGuidance(assessmentGuidance));
     }
@@ -77,6 +82,10 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
 
     public CompetitionSetupQuestionResourceBuilder withGuidanceRows(List<GuidanceRowResource> guidanceRows) {
         return with(competition -> competition.setGuidanceRows(guidanceRows));
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withType(CompetitionSetupQuestionType types) {
+        return with(competition -> competition.setType(types));
     }
 
     @Override
