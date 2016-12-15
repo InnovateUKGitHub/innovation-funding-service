@@ -13,12 +13,14 @@ import javax.validation.constraints.Size;
  */
 
 public class GuidanceRowForm {
+
     public interface GuidanceRowViewGroup {
     }
 
     @NotEmpty(message = "{validation.applicationquestionform.justification.required}", groups=GuidanceRowViewGroup.class)
     @Size(max=255, message = "{validation.applicationquestionform.justification.max}", groups=GuidanceRowViewGroup.class)
     private String justification;
+
 
     @Min(value=0, message = "{validation.applicationquestionform.scorefrom.min}", groups=GuidanceRowViewGroup.class)
     @NotNull(message = "{validation.applicationquestionform.scorefrom.required}", groups=GuidanceRowViewGroup.class)

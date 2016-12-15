@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
@@ -38,7 +38,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 			competitionSetupForm.setQuestion(questionResource);
 
 			competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource ->  {
-				AssessorsForm.GuidanceRowForm grvm = new AssessorsForm.GuidanceRowForm(guidanceRowResource);
+				GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
 				competitionSetupForm.getGuidanceRows().add(grvm);
 			});
 
