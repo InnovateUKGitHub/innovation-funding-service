@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.email.resource.EmailContent;
+
 /**
  * Holder of model attributes for the Send Invites view.
  */
@@ -8,16 +10,14 @@ public class SendInviteViewModel {
     private Long inviteId;
     private String competitionName;
     private String recipient;
-    private String subject;
-    private String content;
+    private EmailContent emailContent;
 
-    public SendInviteViewModel(Long competitionId, Long inviteId, String competitionName, String recipient, String subject, String content) {
+    public SendInviteViewModel(Long competitionId, Long inviteId, String competitionName, String recipient, EmailContent emailContent) {
         this.competitionId = competitionId;
         this.inviteId = inviteId;
         this.competitionName = competitionName;
         this.recipient = recipient;
-        this.subject = subject;
-        this.content = content;
+        this.emailContent = emailContent;
     }
 
     public Long getCompetitionId() {
@@ -52,19 +52,11 @@ public class SendInviteViewModel {
         this.recipient = recipient;
     }
 
-    public String getSubject() {
-        return subject;
+    public EmailContent getEmailContent() {
+        return emailContent;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setEmailContent(EmailContent emailContent) {
+        this.emailContent = emailContent;
     }
 }

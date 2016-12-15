@@ -109,9 +109,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().toString(),
                             "deadlineDate", invite.getTarget().getAssessorDeadlineDate().toString()));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
-            // TODO: this content needs to be attached to the returned resource.
-            return serviceSuccess(invite);
-        }).andOnSuccessReturn(toSendMapper::mapToResource);
+            AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
+            resource.setEmailContent(content);
+            return serviceSuccess(resource);
+        });
     }
 
     @Override
