@@ -5,22 +5,22 @@ items:
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
-    name: application-svc
+    name: assessment-svc
   spec:
     replicas: 1
     selector:
-      deploymentconfig: application-svc
+      deploymentconfig: assessment-svc
     strategy:
       resources: {}
     template:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: application-svc
+          deploymentconfig: assessment-svc
       spec:
         containers:
-        - image: worth/application-service:1.0-SNAPSHOT
-          name: application-svc
+        - image: worth/assessment-service:1.0-SNAPSHOT
+          name: assessment-svc
           ports:
           - containerPort: 8080
           resources: {}
@@ -32,13 +32,13 @@ items:
   kind: Service
   metadata:
     creationTimestamp: null
-    name: application-svc
+    name: assessment-svc
   spec:
     ports:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
     selector:
-      deploymentconfig: application-svc
+      deploymentconfig: assessment-svc
   status:
     loadBalancer: {}
