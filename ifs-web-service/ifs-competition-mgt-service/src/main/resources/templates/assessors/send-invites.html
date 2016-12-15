@@ -24,27 +24,12 @@
             <form th:action="@{/competition/{competitionId}/assessors/invite/{inviteId}/send(competitionId=${model.competitionId},inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
                 <div class="form-group">
                     <label class="form-label-bold" for="subject">Subject</label>
-                    <input class="form-control width-full" id="subject" type="text" th:value="|Invitation to assess '${model.competitionName}'|" value="Invitation to assess 'Technology inspired'" />
+                    <input class="form-control width-full" id="subject" type="text" th:value='${model.emailContent.subject}' />
                 </div>
 
                 <div class="form-group">
                     <label class="form-label-bold" for="message">Message</label>
-                    <textarea id="message" rows="16" class="form-control width-full">
-Dear [NAME]
-
-We are inviting you to assess applications for the competition '[COMPETITION NAME]'.
-
-We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications.
-
-Assessment period: [dd MMMM yyyy] - [dd MMMM yyyy]
-
-Please visit our new online Innovation funding service to respond to this request
-
-John Dickson
-
-Competitions Team
-Innovate UK
-                    </textarea>
+                    <textarea id="message" rows="16" class="form-control width-full" th:text="${model.emailContent.plainText}"/>
                 </div>
 
                 <div class="alignright">

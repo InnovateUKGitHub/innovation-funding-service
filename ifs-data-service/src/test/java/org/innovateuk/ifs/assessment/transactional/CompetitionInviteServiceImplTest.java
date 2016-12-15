@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -103,6 +105,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getCreatedInvite() throws Exception {
+        when(notificationSender.sendEmailWithContent(any(), any(), any())).thenReturn(serviceSuccess(null));
         ServiceResult<AssessorInviteToSendResource> inviteServiceResult = competitionInviteService.getCreatedInvite(5L);
 
         assertTrue(inviteServiceResult.isSuccess());
@@ -569,10 +572,16 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompetition(newCompetition().withName("my competition").build())
                 .withStatus(CREATED)
                 .build();
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
+        when(notificationSender.sendEmailWithContent(any(), any(), any())).thenReturn(serviceSuccess(null));
 
-        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId);
+        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId, content);
 
         assertTrue(serviceResult.isSuccess());
 
@@ -587,11 +596,16 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompetition(newCompetition().withName("my competition").build())
                 .withStatus(SENT)
                 .build();
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
 
         try {
-            competitionInviteService.sendInvite(inviteId);
+            competitionInviteService.sendInvite(inviteId, content);
             fail();
         } catch (RuntimeException e) {
             assertSame(IllegalStateException.class, e.getCause().getClass());

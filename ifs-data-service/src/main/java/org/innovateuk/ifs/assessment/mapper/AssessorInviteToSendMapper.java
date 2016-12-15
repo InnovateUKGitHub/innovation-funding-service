@@ -22,7 +22,6 @@ public abstract class AssessorInviteToSendMapper extends BaseMapper<CompetitionI
             @Mapping(source = "name",target = "recipient"),
             @Mapping(source = "target.name", target = "competitionName"),
             @Mapping(source = "target.id", target = "competitionId"),
-            @Mapping(target = "emailSubject", ignore = true),
             @Mapping(target = "emailContent", ignore = true)
 
     })

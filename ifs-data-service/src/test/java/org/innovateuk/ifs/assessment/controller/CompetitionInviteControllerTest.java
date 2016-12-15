@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.assessment.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.*;
@@ -23,6 +25,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -407,10 +410,21 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
-        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess());
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
 
-        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId))
+        ObjectMapper mapper = new ObjectMapper();
+
+        when(competitionInviteServiceMock.sendInvite(eq(inviteId), any())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(content)))
                 .andExpect(status().isOk());
-        verify(competitionInviteServiceMock, only()).sendInvite(inviteId);
+
+        verify(competitionInviteServiceMock, only()).sendInvite(eq(inviteId), any());
     }
 }

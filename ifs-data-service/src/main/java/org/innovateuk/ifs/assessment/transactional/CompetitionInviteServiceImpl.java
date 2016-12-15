@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
@@ -16,6 +17,11 @@ import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -26,11 +32,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -77,6 +85,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationSender notificationSender;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
 
     @Override
     public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
@@ -84,6 +98,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (invite.getStatus() != CREATED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
+            NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+            Notification notification = new Notification(systemNotificationSource, singletonList(recipient), null, null);
+            EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+            // TODO: this content needs to be attached to the returned resource.
             return serviceSuccess(invite);
         }).andOnSuccessReturn(toSendMapper::mapToResource);
     }
@@ -191,12 +209,18 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> sendInvite(long inviteId) {
-        return getById(inviteId).andOnSuccess(this::sendInvite);
+    public ServiceResult<Void> sendInvite(long inviteId, EmailContent content) {
+        return getById(inviteId).andOnSuccess(invite -> sendInvite(invite, content));
     }
 
-    private ServiceResult<Void> sendInvite(CompetitionInvite invite) {
+    private ServiceResult<Void> sendInvite(CompetitionInvite invite, EmailContent content) {
         competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
+
+        // send email
+        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        Notification notification = new Notification(systemNotificationSource, singletonList(recipient), null, null);
+        notificationSender.sendEmailWithContent(notification, recipient, content);
+
         return serviceSuccess();
     }
 

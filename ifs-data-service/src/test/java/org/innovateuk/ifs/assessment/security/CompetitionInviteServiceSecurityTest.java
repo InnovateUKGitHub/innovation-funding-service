@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -183,7 +184,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> sendInvite(long inviteId) {
+        public ServiceResult<Void> sendInvite(long inviteId, EmailContent content) {
             return null;
         }
 

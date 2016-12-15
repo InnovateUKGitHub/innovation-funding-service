@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
@@ -32,5 +33,5 @@ public interface CompetitionInviteRestService {
 
     RestResult<Void> deleteInvite(String email, long competitionId);
 
-    RestResult<Void> sendInvite(long inviteId);
+    RestResult<Void> sendInvite(long inviteId, EmailContent content);
 }

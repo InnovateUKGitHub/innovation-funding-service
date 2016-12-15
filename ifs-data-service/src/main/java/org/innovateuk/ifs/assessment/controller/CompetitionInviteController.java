@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/sendInvite/{inviteId}", method = RequestMethod.POST)
-    public RestResult<Void> sendInvite(@PathVariable long inviteId) {
-        return competitionInviteService.sendInvite(inviteId).toPostResponse();
+    public RestResult<Void> sendInvite(@PathVariable long inviteId, @RequestBody EmailContent content) {
+        return competitionInviteService.sendInvite(inviteId, content).toPostResponse();
     }
 }

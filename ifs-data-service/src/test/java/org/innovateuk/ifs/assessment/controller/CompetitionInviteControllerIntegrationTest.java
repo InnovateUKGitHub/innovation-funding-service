@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
@@ -519,7 +521,13 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withStatus(InviteStatus.CREATED)
                 .build())
                 .getId();
-        RestResult<Void> serviceResult = controller.sendInvite(createdId);
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
+
+        RestResult<Void> serviceResult = controller.sendInvite(createdId, content);
         assertTrue(serviceResult.isSuccess());
 
     }

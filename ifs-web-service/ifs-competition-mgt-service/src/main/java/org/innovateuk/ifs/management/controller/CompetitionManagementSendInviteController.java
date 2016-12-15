@@ -2,7 +2,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.model.SendInvitePopulator;
@@ -42,7 +45,7 @@ public class CompetitionManagementSendInviteController {
                             @PathVariable("inviteId") long inviteId,
                             @PathVariable("competitionId") long competitionId,
                             @ModelAttribute("form") @Valid SendInviteForm form) {
-        RestResult<Void> result = competitionInviteRestService.sendInvite(inviteId);
+        RestResult<Void> result = competitionInviteRestService.sendInvite(inviteId, new EmailContent(form.getSubject(), form.getContent(), form.getContent()));
         return String.format("redirect:/competition/%s/assessors/invite",competitionId);
     }
 }
