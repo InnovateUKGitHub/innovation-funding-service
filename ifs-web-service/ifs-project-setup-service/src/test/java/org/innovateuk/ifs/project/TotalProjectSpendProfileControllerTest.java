@@ -2,11 +2,14 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
-import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
-import org.innovateuk.ifs.project.viewmodel.*;
+import org.innovateuk.ifs.project.viewmodel.TotalProjectSpendProfileTableViewModel;
+import org.innovateuk.ifs.project.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
@@ -15,21 +18,20 @@ import org.mockito.Spy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMVCTest<TotalProjectSpendProfileController> {
     @Mock
