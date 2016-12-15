@@ -27,11 +27,11 @@ Status updates correctly for internal user's table
 
 Project finance user uploads the grant offer letter
     [Documentation]    INFUND-6377
+    [Tags]
     # note that this step is now required as all the following functionality is only unlocked once the grant offer letter has been sent to the partners
     [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    When the user uploads the GOL    testing.pdf
-    And the user clicks the button/link    id=send-gol
+    When the user clicks the button/link    id=send-gol
     And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
     Then the user should see the text in the page    The grant offer letter is now available for review
 
@@ -215,8 +215,3 @@ proj finance approves the spend profiles
     the user selects the checkbox      id=approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
     the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")
-
-the user uploads the GOL
-    [Arguments]    ${file_name}
-    Choose File    name=grantOfferLetter    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
