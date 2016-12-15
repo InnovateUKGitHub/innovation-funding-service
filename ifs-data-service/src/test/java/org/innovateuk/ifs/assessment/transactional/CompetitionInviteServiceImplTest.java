@@ -732,14 +732,14 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero")
-                .withEmail("john@email.com", "dave@email.com", "richard@email.com", "oliver@email.com")
+                .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com")
                 .withUser(compliantUser, nonCompliantUserNoSkills, nonCompliantUserNoAffiliations, nonCompliantUserNoContract)
                 .withInnovationArea()
                 .build(4);
 
         CompetitionInvite newUserInvite = newCompetitionInvite()
                 .withName("Christopher Soames")
-                .withEmail("christopher@email.com")
+                .withEmail("christopher@example.com")
                 .withUser()
                 .withInnovationArea(innovationAreaCategory)
                 .build();
@@ -748,7 +748,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
                 .withInnovationArea(null, null, null, null, innovationAreaCategoryResource)
                 .withCompliant(true, false, false, false, false)
-                .withEmail("john@email.com", "dave@email.com", "richard@email.com", "oliver@email.com", "christopher@email.com")
+                .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "christopher@example.com")
                 .build(5);
 
         when(competitionInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED)).thenReturn(combineLists(existingUserInvites, newUserInvite));
