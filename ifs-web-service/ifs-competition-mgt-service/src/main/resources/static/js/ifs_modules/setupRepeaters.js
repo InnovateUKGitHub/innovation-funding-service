@@ -70,10 +70,15 @@ IFS.competitionManagement.repeater = (function() {
       //fix label link
       newRow.find('[id^="innovationAreaCategoryId"]').prop('id', 'innovationAreaCategoryId-'+idCount);
       newRow.find('[for^="innovationAreaCategoryId"]').prop('for', 'innovationAreaCategoryId-'+idCount);
+
+      //set the first please select as selected
+      newRow.find('[selected]').removeAttr('selected');
+      newRow.find('[disabled]').first().attr('selected', '');
+
       //hide new row label for styling
       newRow.find('.form-label').children().addClass('visuallyhidden');
-      //change name attributes
-      newRow.find('[name]').prop('name', 'innovationAreaCategoryIds['+count+']');
+      //change name attributes and empty values
+      newRow.find('[name]').prop('name', 'innovationAreaCategoryIds['+count+']').val("");
       //add remove button
       newRow.append('<button data-remove-row="innovationArea" value="'+count+'" class="buttonlink" type="button">Remove</button>');
 
