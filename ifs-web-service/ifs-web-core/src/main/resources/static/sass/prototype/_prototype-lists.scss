@@ -42,6 +42,17 @@ ol.list-style-type-roman{
       }
     }
 
+    p{
+      padding-left: 20px;
+    }
+
+    span{
+      &.form-hint{
+        margin: 0;
+        padding-top: 0.6em;
+      }
+    }
+
     .column-third{
       padding: 12px 0 0 20px;
       @include media-down(mobile) {
@@ -122,6 +133,15 @@ li.type-company{
  .meta.crumbtrail{
     margin: 0;
     padding: 0;
+  }
+}
+
+/*----- Readonly data view ----*/
+dl{
+  &.readonly-data{
+    dd{
+      margin-bottom: 1em;
+    }
   }
 }
 

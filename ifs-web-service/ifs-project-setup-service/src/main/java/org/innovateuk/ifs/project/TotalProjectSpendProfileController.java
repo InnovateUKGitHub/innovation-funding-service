@@ -3,15 +3,15 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
-import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.form.TotalSpendProfileForm;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
-import org.innovateuk.ifs.project.viewmodel.*;
+import org.innovateuk.ifs.project.viewmodel.TotalProjectSpendProfileTableViewModel;
+import org.innovateuk.ifs.project.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,13 +20,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
 
 /**
  * This controller will handle all requests that are related to the reviewing and submitting of total project spend profiles.
@@ -65,13 +66,13 @@ public class TotalProjectSpendProfileController {
                                   ValidationHandler validationHandler,
                                   Model model) {
         return validationHandler.performActionOrBindErrorsToField("",
-            () -> {
-                model.addAttribute("model", buildTotalViewModel(projectId));
-                model.addAttribute(FORM_ATTR_NAME, form);
-                return SPEND_PROFILE_TOTALS_TEMPLATE;
-            },
-            () -> "redirect:/project/" + projectId,
-            () ->  projectFinanceService.completeSpendProfilesReview(projectId));
+                () -> {
+                    model.addAttribute("model", buildTotalViewModel(projectId));
+                    model.addAttribute(FORM_ATTR_NAME, form);
+                    return SPEND_PROFILE_TOTALS_TEMPLATE;
+                },
+                () -> "redirect:/project/" + projectId,
+                () ->  projectFinanceService.completeSpendProfilesReview(projectId));
 
     }
 
@@ -107,6 +108,4 @@ public class TotalProjectSpendProfileController {
                 totalOfAllActualTotals, totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName));
 
     }
-
-
 }

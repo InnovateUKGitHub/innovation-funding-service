@@ -110,7 +110,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
+            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
         } else {
             return NOT_STARTED;
         }
