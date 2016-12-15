@@ -5,10 +5,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
@@ -94,9 +91,9 @@ public interface ProjectService {
 
     ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    ServiceResult<FileEntryResource> addGeneratedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+    ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    ServiceResult<Void> removeGeneratedGrantOfferLetter(Long projectId);
+    ServiceResult<Void> removeGrantOfferLetter(Long projectId);
 
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 
@@ -122,4 +119,7 @@ public interface ProjectService {
 
     ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
 
+    ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
+
+    ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 }
