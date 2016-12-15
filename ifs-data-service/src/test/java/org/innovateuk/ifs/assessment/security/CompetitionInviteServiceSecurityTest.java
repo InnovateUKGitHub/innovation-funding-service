@@ -142,6 +142,71 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
+    public void getCreatedInvites() {
+        ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            classUnderTest.getCreatedInvites(1L);
+        });
+
+    }
+
+    @Test
+    public void getCreatedInvites_nonAssessorManagement() {
+        NON_ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            assertAccessDenied(
+                    () -> classUnderTest.getCreatedInvites(1L),
+                    () -> {}
+            );
+        });
+
+    }
+
+    @Test
+    public void getInvitationOverview() {
+        ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            classUnderTest.getInvitationOverview(1L);
+        });
+
+    }
+
+    @Test
+    public void getInvitationOverview_nonAssessorManagement() {
+        NON_ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            assertAccessDenied(
+                    () -> classUnderTest.getInvitationOverview(1L),
+                    () -> {}
+            );
+        });
+    }
+
+    @Test
     public void getAvailableAssessors() {
         setLoggedInUser(null);
 

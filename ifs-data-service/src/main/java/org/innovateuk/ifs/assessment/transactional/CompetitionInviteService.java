@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -52,10 +51,14 @@ public interface CompetitionInviteService {
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve created invites by competition")
     ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve invitation overview by competition")
     ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
