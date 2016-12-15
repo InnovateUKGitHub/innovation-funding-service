@@ -130,7 +130,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     availableAssessor.setFirstName(assessor.getFirstName());
                     availableAssessor.setLastName(assessor.getLastName());
                     availableAssessor.setBusinessType(getBusinessType(assessor));
-                    availableAssessor.setCompliant(assessorIsCompliant(assessor.getId()));
+                    availableAssessor.setCompliant(isAssessorCompliant(assessor.getId()));
                     availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
                     availableAssessor.setInnovationArea(new CategoryResource()); //TODO INFUND-6392
                     return availableAssessor;
@@ -169,9 +169,14 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return result.isSuccess() ? result.getSuccessObject().getStatus() == CREATED : FALSE;
     }
 
-    private boolean assessorIsCompliant(long userId) {
+    private boolean isAssessorCompliant(long userId) {
         ServiceResult<UserProfileStatusResource> result = userProfileService.getUserProfileStatus(userId);
-        return result.isSuccess() ? result.getSuccessObject().isAffiliationsComplete() && result.getSuccessObject().isContractComplete() : FALSE;
+        if (result.isSuccess()) {
+            UserProfileStatusResource userStatus = result.getSuccessObject();
+            return userStatus.isSkillsComplete() && userStatus.isAffiliationsComplete() && userStatus.isContractComplete();
+        } else {
+            return FALSE;
+        }
     }
 
     private ServiceResult<Category> getInnovationArea(long innovationCategoryId) {
