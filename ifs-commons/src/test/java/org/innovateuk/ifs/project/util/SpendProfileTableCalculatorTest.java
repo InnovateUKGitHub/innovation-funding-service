@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SpendProfileTableCalculatorTest extends BaseUnitTest {
+public class SpendProfileTableCalculatorTest {
 
     private static final Long ROW_NAME_1 = 1L;
     private static final Long ROW_NAME_2 = 2L;
