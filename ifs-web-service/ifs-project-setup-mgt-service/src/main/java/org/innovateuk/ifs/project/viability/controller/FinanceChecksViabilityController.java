@@ -56,7 +56,7 @@ public class FinanceChecksViabilityController {
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form) {
 
-        financeService.saveViability(projectId, organisationId, Viability.PENDING);
+        financeService.saveViability(projectId, organisationId, Viability.PENDING, form.getRagStatus());
 
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
     }
@@ -66,12 +66,15 @@ public class FinanceChecksViabilityController {
                                    @PathVariable("organisationId") Long organisationId,
                                    @ModelAttribute("form") FinanceChecksViabilityForm form) {
 
-        financeService.saveViability(projectId, organisationId, Viability.APPROVED);
+        financeService.saveViability(projectId, organisationId, Viability.APPROVED, form.getRagStatus());
 
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
     }
 
     private void populateViewModel(Long projectId, Long organisationId, Model model) {
+
+        ViabilityResource viability = financeService.getViability(projectId, organisationId);
+        boolean viabilityConfirmed = viability.getViability() == Viability.APPROVED;
 
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -95,7 +98,7 @@ public class FinanceChecksViabilityController {
 
         model.addAttribute("model", new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, projectId));
+                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed));
     }
 
     private void populateForm(Long projectId, Long organisationId, Model model) {

@@ -150,11 +150,12 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testSaveViability() {
 
-        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" + Viability.APPROVED.name();
+        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" +
+                Viability.APPROVED.name() + "/" + ViabilityStatus.RED.name();
 
         setupPostWithRestResultExpectations(postUrl, OK);
 
-        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED);
+        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.RED);
 
         assertTrue(result.isSuccess());
 

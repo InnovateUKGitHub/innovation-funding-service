@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -85,10 +86,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
-    public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability) {
+    public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
 
         String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/viability/" + viability.name();
+                "/viability/" + viability.name() + "/" + viabilityRagRating.name();
 
         return postWithRestResult(postUrl, Void.class);
     }

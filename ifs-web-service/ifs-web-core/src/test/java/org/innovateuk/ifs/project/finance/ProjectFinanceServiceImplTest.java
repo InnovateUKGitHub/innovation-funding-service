@@ -130,10 +130,10 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testSaveViability() {
 
-        when(projectFinanceRestService.saveViability(123L, 456L, Viability.APPROVED)).thenReturn(restSuccess());
+        when(projectFinanceRestService.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN)).thenReturn(restSuccess());
 
-        service.saveViability(123L, 456L, Viability.APPROVED);
+        service.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN);
 
-        verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED);
+        verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN);
     }
 }

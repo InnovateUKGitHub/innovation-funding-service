@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -38,5 +39,5 @@ public interface ProjectFinanceRestService {
 
     RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);
 
-    RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability);
+    RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating);
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
@@ -80,7 +81,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public void saveViability(Long projectId, Long organisationId, Viability viability) {
-        projectFinanceRestService.saveViability(projectId, organisationId, viability).getSuccessObjectOrThrowException();
+    public void saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
+        projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).getSuccessObjectOrThrowException();
     }
 }
