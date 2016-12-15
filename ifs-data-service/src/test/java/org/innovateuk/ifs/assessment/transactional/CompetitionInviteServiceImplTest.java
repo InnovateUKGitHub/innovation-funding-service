@@ -581,7 +581,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
         when(notificationSender.sendEmailWithContent(any(), any(), any())).thenReturn(serviceSuccess(null));
 
-        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId, content);
+        ServiceResult<AssessorInviteToSendResource> serviceResult = competitionInviteService.sendInvite(inviteId, content);
 
         assertTrue(serviceResult.isSuccess());
 

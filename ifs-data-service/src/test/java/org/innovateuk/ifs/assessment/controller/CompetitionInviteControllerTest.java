@@ -415,10 +415,11 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withPlainText("plain")
                 .withHtmlText("html")
                 .build();
+        AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
+
+        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess(resource));
 
         ObjectMapper mapper = new ObjectMapper();
-
-        when(competitionInviteServiceMock.sendInvite(eq(inviteId), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)

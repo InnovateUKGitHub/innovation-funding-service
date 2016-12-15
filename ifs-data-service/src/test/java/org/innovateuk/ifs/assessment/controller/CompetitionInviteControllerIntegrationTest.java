@@ -527,8 +527,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withHtmlText("html")
                 .build();
 
-        RestResult<Void> serviceResult = controller.sendInvite(createdId, content);
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
         assertTrue(serviceResult.isSuccess());
-
     }
 }

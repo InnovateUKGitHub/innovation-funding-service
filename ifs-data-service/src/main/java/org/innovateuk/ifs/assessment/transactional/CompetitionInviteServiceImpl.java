@@ -209,11 +209,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> sendInvite(long inviteId, EmailContent content) {
-        return getById(inviteId).andOnSuccess(invite -> sendInvite(invite, content));
+    public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
+        return getById(inviteId).andOnSuccess(invite -> sendInvite(invite, content)).andOnSuccessReturn(toSendMapper::mapToResource);
     }
 
-    private ServiceResult<Void> sendInvite(CompetitionInvite invite, EmailContent content) {
+    private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {
         competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
 
         // send email
@@ -221,7 +221,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         Notification notification = new Notification(systemNotificationSource, singletonList(recipient), null, null);
         notificationSender.sendEmailWithContent(notification, recipient, content);
 
-        return serviceSuccess();
+        return invite;
     }
 
     @Override

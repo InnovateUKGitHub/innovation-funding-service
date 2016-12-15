@@ -193,5 +193,11 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         return createErrorModelAndViewWithTitleAndMessage(e, req, e.getArguments(), HttpStatus.BAD_REQUEST, "error.title.invite.expired", e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    @ExceptionHandler(value = InviteAlreadySentException.class)
+    public ModelAndView inviteClosedException(HttpServletRequest req, InviteAlreadySentException e) {
+        LOG.debug("ErrorController inviteAlreadySentException", e);
+        return createErrorModelAndViewWithTitleAndMessage(e, req, e.getArguments(), HttpStatus.BAD_REQUEST, "error.title.invite.already.sent", e.getMessage());
+    }
 
 }

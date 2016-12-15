@@ -70,7 +70,7 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "SEND_INVITE_WITH_CONTENT",
             description = "The System Registration user can check for the presence of a User on an invite or the presence of a User with the invited e-mail address",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> sendInvite(long inviteId, EmailContent content);
+    ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> deleteInvite(String email, long competitionId);

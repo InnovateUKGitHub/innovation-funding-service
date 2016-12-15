@@ -80,7 +80,7 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/sendInvite/{inviteId}", method = RequestMethod.POST)
-    public RestResult<Void> sendInvite(@PathVariable long inviteId, @RequestBody EmailContent content) {
+    public RestResult<AssessorInviteToSendResource> sendInvite(@PathVariable long inviteId, @RequestBody EmailContent content) {
         return competitionInviteService.sendInvite(inviteId, content).toPostResponse();
     }
 }
