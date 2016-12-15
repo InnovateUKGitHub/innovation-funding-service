@@ -160,13 +160,15 @@ public class ProjectGrantOfferLetterController {
         boolean isProjectManager = getProjectManager(projectId)
                 .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
 
+        boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).isSuccess() ? projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject() : false;
+
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
-                project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
+                project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager, isGrantOfferLetterSent);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
