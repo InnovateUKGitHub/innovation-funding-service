@@ -529,7 +529,6 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Test
     public void inviteNewUsers_competitionNotFound() throws Exception {
         long competitionId = 10000L;
-
         assertNull(competitionRepository.findOne(competitionId));
 
         Category innovationArea = categoryRepository.findOne(5L);
@@ -544,13 +543,13 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Test
     public void inviteNewUsers_innovationAreaNotFound() throws Exception {
         long categoryId = 10000L;
-
         assertNull(categoryRepository.findOne(categoryId));
 
         List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), categoryId);
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
         assertFalse(serviceResult.isSuccess());
+        assertEquals(2, serviceResult.getFailure().getErrors().size());
         assertEquals("invites[0].innovationArea", serviceResult.getFailure().getErrors().get(0).getFieldName());
         assertEquals(categoryId, serviceResult.getFailure().getErrors().get(0).getFieldRejectedValue());
         assertEquals("invites[1].innovationArea", serviceResult.getFailure().getErrors().get(1).getFieldName());
@@ -568,6 +567,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
         assertFalse(serviceResult.isSuccess());
+        assertEquals(1, serviceResult.getFailure().getErrors().size());
         assertEquals("invites[0].email", serviceResult.getFailure().getErrors().get(0).getFieldName());
         assertEquals("testname1@for-this.address", serviceResult.getFailure().getErrors().get(0).getFieldRejectedValue());
     }
