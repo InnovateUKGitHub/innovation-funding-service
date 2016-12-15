@@ -633,7 +633,7 @@
 
             </dl>
 
-            <button th:if="${!preventEdit}" type="submit" class="button">Edit</button>
+            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
