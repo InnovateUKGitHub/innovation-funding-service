@@ -47,6 +47,9 @@ public interface CompetitionInviteService {
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve available assessors by competition",
+            additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
