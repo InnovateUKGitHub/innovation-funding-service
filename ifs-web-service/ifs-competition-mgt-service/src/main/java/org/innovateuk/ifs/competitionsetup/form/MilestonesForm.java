@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
 import org.apache.commons.collections4.map.LinkedMap;
 
 /**
@@ -8,13 +7,13 @@ import org.apache.commons.collections4.map.LinkedMap;
  */
 public class MilestonesForm extends CompetitionSetupForm {
 
-    private LinkedMap<String, MilestoneViewModel> milestoneEntries = new LinkedMap<>();
+    private LinkedMap<String, MilestoneRowForm> milestoneEntries = new LinkedMap<>();
 
-    public LinkedMap<String, MilestoneViewModel> getMilestoneEntries() {
+    public LinkedMap<String, MilestoneRowForm> getMilestoneEntries() {
         return milestoneEntries;
     }
 
-    public void setMilestoneEntries(LinkedMap<String, MilestoneViewModel> milestoneEntries) {
+    public void setMilestoneEntries(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
         this.milestoneEntries = milestoneEntries;
     }
 }

@@ -8,6 +8,9 @@ var sass = require('gulp-sass');
 var sassLint = require('gulp-sass-lint');
 var compass = require('compass-importer');
 
+// Path variables
+var node_modules_path = __dirname + '/../../../../../node_modules/';
+
 gulp.task('default',['js','css']);
 
 //build all js
@@ -35,7 +38,7 @@ gulp.task('ifs-js', function () {
 //concat and minify all the vendor files
 gulp.task('vendor',function(){
   return gulp.src([
-    'js/vendor/cookie/*.js',
+    node_modules_path + 'js-cookie/src/js.cookie.js',
     'js/vendor/jquery/jquery-ui.min.js',
     'js/vendor/govuk/*.js',
     '!js/vendor/govuk/ie.js',
