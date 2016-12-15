@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendInvitePopulator {
     public SendInviteViewModel populateModel(long inviteId, AssessorInviteToSendResource invite) {
-        return new SendInviteViewModel(invite.getCompetitionId(), inviteId, invite.getCompetitionName(), invite.getRecipient(), invite.getEmailSubject(), invite.getEmailContent());
+        return new SendInviteViewModel(invite.getCompetitionId(), inviteId, invite.getCompetitionName(), invite.getRecipient(), invite.getEmailContent());
     }
 }

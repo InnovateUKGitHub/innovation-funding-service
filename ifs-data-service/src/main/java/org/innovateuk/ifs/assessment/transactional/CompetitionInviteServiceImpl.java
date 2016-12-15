@@ -101,9 +101,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
             Notification notification = new Notification(systemNotificationSource, singletonList(recipient), null, null);
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
-            // TODO: this content needs to be attached to the returned resource.
-            return serviceSuccess(invite);
-        }).andOnSuccessReturn(toSendMapper::mapToResource);
+            AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
+            resource.setEmailContent(content);
+            return serviceSuccess(resource);
+        });
     }
 
     @Override

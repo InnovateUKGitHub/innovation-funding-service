@@ -18,7 +18,9 @@ import java.util.Optional;
 public interface CompetitionInviteService {
 
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @SecuredBySpring(value = "GET_CREATED_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
@@ -66,10 +68,9 @@ public interface CompetitionInviteService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
 
-    @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "SEND_INVITE_WITH_CONTENT",
-            description = "The System Registration user can check for the presence of a User on an invite or the presence of a User with the invited e-mail address",
-            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
+    @SecuredBySpring(value = "SEND_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
