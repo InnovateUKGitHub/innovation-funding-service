@@ -39,7 +39,8 @@ gulp.task('ifs-js', function () {
 gulp.task('vendor',function(){
   return gulp.src([
     node_modules_path + 'js-cookie/src/js.cookie.js',
-    'js/vendor/jquery/jquery-ui.min.js',
+    node_modules_path + 'jquery/dist/jquery.js',
+    'js/vendor/jquery-ui/jquery-ui.min.js',
     'js/vendor/govuk/*.js',
     '!js/vendor/govuk/ie.js',
     'js/vendor/wysiwyg-editor/*.js',
