@@ -9,7 +9,7 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'initial/edit')}"
-          th:attrappend="data-autosave=${competition.setupComplete != true}?compSetup"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
@@ -39,11 +39,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or competition.isSetupAndLive()}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
+                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
-                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or competition.isSetupAndLive()}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
+                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
 
 
@@ -55,13 +55,13 @@
                     </span>
                 </label>
 
-                <select th:disabled="${competition.isSetupAndLive()}" th:readonly="${isSetupAndLive}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
+                <select th:disabled="${isSetupAndLive}" th:readonly="${isSetupAndLive}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
                         data-required-errormessage="Please select an innovation sector"
                         data-autosave-disabled="">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
-                <input th:if="${competition.isSetupAndLive()}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
+                <input th:if="${isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -71,11 +71,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select th:disabled="${competition.isSetupAndLive()}" class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
+                <select th:disabled="${isSetupAndLive}" class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
                     <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
-                <input type="hidden" th:if="${competition.isSetupAndLive()}" th:field="${competitionSetupForm.innovationAreaCategoryId}" />
+                <input type="hidden" th:if="${isSetupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryId}" />
             </div>
 
 
@@ -665,7 +665,7 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
-          th:attrappend="data-autosave=${competition.setupComplete != true}?compSetup"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
