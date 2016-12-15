@@ -1,8 +1,12 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
+if(!project.hasProperty('cloud')) {
+    apply from: "war-build.gradle";
+}
+
 apply from: "script-support.gradle"
-apply plugin: 'war'
+
 apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
@@ -17,19 +21,13 @@ task('copyFreemarkerResources', type: Copy) {
 compileJava.dependsOn copyFreemarkerResources
 
 
-
-war {
-    baseName = 'ifs-data-service'
-}
-
-
 configurations {
     providedRuntime
 }
 
 bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
-    withJarTask = war
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 }
 
 ext {
@@ -66,6 +64,7 @@ jar {
     from ("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
+    baseName = 'ifs-data-service'
 }
 
 configurations {
@@ -129,7 +128,7 @@ task buildDocker( type:Docker, dependsOn: build) {
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy{
-            from war
+            from jar
             into stageDir
         }
         copy{
@@ -176,12 +175,6 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
-task deployToTomcat(type: Copy) {
-    from war
-    into "$tomcatWebAppsDir"
-    rename '(.*).war', 'ROOT.war'
-}
-
 
 //noinspection GroovyMissingReturnStatement
 processResources {
@@ -200,16 +193,6 @@ compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
-
-
-task cleanDeploy() {
-    build.mustRunAfter clean
-    deployToTomcat.mustRunAfter build
-
-    dependsOn clean
-    dependsOn build
-    dependsOn deployToTomcat
-}
 
 task cleanDeployServices() {
 
