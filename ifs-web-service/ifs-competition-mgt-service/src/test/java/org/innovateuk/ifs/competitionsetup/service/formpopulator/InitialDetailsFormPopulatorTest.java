@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,11 +38,6 @@ public class InitialDetailsFormPopulatorTest {
 
 	@Mock
 	private CategoryFormatter categoryFormatter;
-
-	@Before
-	public void setUp() {
-		service = new InitialDetailsFormPopulator();
-	}
 	
 	@Test
 	public void testSectionToFill() {
