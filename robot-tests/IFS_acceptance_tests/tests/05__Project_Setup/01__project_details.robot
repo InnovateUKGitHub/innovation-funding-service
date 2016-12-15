@@ -42,6 +42,7 @@ Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
+Resource          PS_Variables.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK

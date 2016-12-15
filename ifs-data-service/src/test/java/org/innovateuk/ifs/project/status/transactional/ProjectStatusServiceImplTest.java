@@ -212,7 +212,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
@@ -244,7 +244,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
@@ -276,7 +276,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
@@ -308,7 +308,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
@@ -340,7 +340,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
@@ -372,7 +372,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
-        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getSpendProfileStatus());
