@@ -1,15 +1,18 @@
-apply plugin: 'war'
+if(!project.hasProperty('cloud')) {
+    apply from: "war-build.gradle";
+}
 configurations {
     providedRuntime
 }
 
-war {
+jar {
     baseName = 'assessment'
 }
 
 
 bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 }
 
 dependencies {
@@ -28,11 +31,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-task deployToTomcat(type: Copy) {
-    from war
-    into "$tomcatWebAppsDir"
-    rename '(.*).war', 'assessment.war'
-}
+
 
 processResources {
     filesMatching("*.properties") {
@@ -46,7 +45,7 @@ task buildDocker( type:Docker, dependsOn: build) {
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy {
-            from war
+            from jar
             into stageDir
         }
     }
@@ -58,10 +57,4 @@ task cleanDeployServices() {
     dependsOn buildDocker
 }
 
-task cleanDeploy() {
-    build.mustRunAfter clean
-    deployToTomcat.mustRunAfter build
-    dependsOn clean
-    dependsOn build
-    dependsOn deployToTomcat
-}
+
