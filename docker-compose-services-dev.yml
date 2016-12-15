@@ -6,35 +6,40 @@ services:
     links:
       - admin
     ports:
-      - "8081:8000"
+      - "8081:8080"
+      - "9001:8000"
 
   assessment-service:
     hostname: assessment-service
     links:
       - admin
     ports:
-      - "8082:8000"
+      - "8082:8080"
+      - "9002:8000"
 
   competition-mgt-service:
     hostname: competition-mgt-service
     links:
       - admin
     ports:
-      - "8083:8000"
+      - "8083:8080"
+      - "9003:8000"
 
   project-setup-mgt-service:
     hostname: project-setup-mgt-service
     links:
       - admin
     ports:
-      - "8084:8000"
+      - "8084:8080"
+      - "9004:8000"
 
   project-setup-service:
     hostname: project-setup-service
     links:
       - admin
     ports:
-      - "8085:8000"
+      - "8085:8080"
+      - "9005:8000"
 
   data:
     hostname: data
@@ -45,7 +50,8 @@ services:
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
     ports:
-      - "8086:8000"
+      - "8086:8080"
+      - "9006:8000"
 
   smtp:
     image: camptocamp/smtp-sink

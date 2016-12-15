@@ -3,6 +3,7 @@ MAINTAINER David Soff <dsoff@worth.systems>
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081
+EXPOSE 8000
 EXPOSE 12345
 RUN apk --update add curl
 COPY certificate /certificate

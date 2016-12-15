@@ -3,6 +3,7 @@ MAINTAINER David Soff <dsoff@worth.systems>
 RUN apk --update add curl
 EXPOSE 8009
 EXPOSE 8000
+EXPOSE 8080
 VOLUME /tmp
 ADD project-setup-management-1.0-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'

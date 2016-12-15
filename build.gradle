@@ -31,14 +31,19 @@ subprojects {
         dependsOn jacocoTestReport
     }
 
+
     dependencies {
-        compile "org.springframework.boot:spring-boot-starter-web"
-//        if (project.hasProperty("platform") && project.platform == "cloud") {
+        //Required to exclude dependencies from the generated WAR's
+        //excludeDevTools property is used to exclude from the generated JAR's
+        if(project.hasProperty("cloud") && project.cloud == "development") {
+            println "compile this in boy"
             compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
             compile "org.springframework.boot:spring-boot-starter-actuator"
             compile "org.springframework.boot:spring-boot-actuator-docs"
-//        }
-        compile "org.springframework.boot:spring-boot-devtools"
+            compile "org.springframework.boot:spring-boot-devtools"
+        }
+
+        compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
@@ -65,7 +70,7 @@ subprojects {
 buildscript {
 
     ext {
-        springBootVersion = '1.3.0.RELEASE'
+        springBootVersion = '1.3.2.RELEASE'
     }
     repositories {
         mavenCentral()
