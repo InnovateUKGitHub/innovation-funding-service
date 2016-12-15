@@ -210,7 +210,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
-        return getById(inviteId).andOnSuccess(invite -> sendInvite(invite, content)).andOnSuccessReturn(toSendMapper::mapToResource);
+        return getById(inviteId).andOnSuccessReturn(invite -> sendInvite(invite, content)).andOnSuccessReturn(toSendMapper::mapToResource);
     }
 
     private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {

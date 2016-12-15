@@ -417,7 +417,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build();
         AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
 
-        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess(resource));
+        when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
         ObjectMapper mapper = new ObjectMapper();
 

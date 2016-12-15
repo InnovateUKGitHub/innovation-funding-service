@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -35,7 +36,6 @@ public class CompetitionInviteDocs {
             fieldWithPath("recipient").description("Name of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
             fieldWithPath("competitionName").description("The name of the competition"),
-            fieldWithPath("emailSubject").description("Subject of the invite email"),
             fieldWithPath("emailContent").description("Content of the invite email")
     };
 
@@ -54,8 +54,11 @@ public class CompetitionInviteDocs {
     public static final AssessorInviteToSendResourceBuilder assessorInviteToSendResourceBuilder = newAssessorInviteToSendResource()
             .withCompetitionId(1L)
             .withCompetitionName("Juggling Craziness")
-            .withEmailContent("content")
-            .withEmailSubject("subject")
+            .withEmailContent(newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain text")
+                .withHtmlText("<html>html text</htm>")
+                .build())
             .withRecipient("Paul Plum");
 
 }

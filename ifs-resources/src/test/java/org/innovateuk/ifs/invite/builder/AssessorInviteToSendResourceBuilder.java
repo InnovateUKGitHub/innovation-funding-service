@@ -44,10 +44,6 @@ public class AssessorInviteToSendResourceBuilder extends BaseBuilder<AssessorInv
         return withArraySetFieldByReflection("competitionName", value);
     }
 
-    public AssessorInviteToSendResourceBuilder withEmailSubject(String... value) {
-        return withArraySetFieldByReflection("emailSubject", value);
-    }
-
     public AssessorInviteToSendResourceBuilder withEmailContent(EmailContent... value) {
         return withArraySetFieldByReflection("emailContent", value);
     }

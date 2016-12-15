@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
@@ -13,6 +14,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Optional.ofNullable;
 import static org.mockito.Mockito.mock;
@@ -152,10 +154,15 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
     @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain text")
+                .withHtmlText("<html>html text</htm>")
+                .build();
 
         AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
 
-        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess(resource));
+        when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId))
                 .andExpect(status().isOk())
