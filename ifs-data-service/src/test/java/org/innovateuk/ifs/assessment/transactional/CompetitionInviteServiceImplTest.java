@@ -360,8 +360,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
     }
 
-    // reject
-
     @Test
     public void rejectInvite() {
         competitionInviteService.openInvite("inviteHash");
