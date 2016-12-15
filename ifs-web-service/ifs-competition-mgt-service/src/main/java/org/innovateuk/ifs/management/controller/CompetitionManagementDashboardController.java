@@ -31,7 +31,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "live";
     }
 
-    @RequestMapping(value="/dashboard/projectSetup", method= RequestMethod.GET)
+    @RequestMapping(value="/dashboard/project-setup", method= RequestMethod.GET)
     public String projectSetup(Model model, HttpServletRequest request) {
         model.addAttribute("competitions", competitionService.getProjectSetupCompetitions());
         model.addAttribute("counts", competitionService.getCompetitionCounts());
