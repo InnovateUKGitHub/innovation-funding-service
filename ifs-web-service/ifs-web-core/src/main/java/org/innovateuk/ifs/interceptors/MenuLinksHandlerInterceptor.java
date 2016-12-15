@@ -32,6 +32,9 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     @Value("${logout.url}")
     private String logoutUrl;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if(modelAndView!=null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:") )) {
@@ -61,7 +64,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
             if(simpleGrantedAuthority.isPresent()) {
                 UserResource user = authentication.getDetails();
                 if (user.hasRoles(ASSESSOR, APPLICANT)) {
-                    String role = CookieUtil.getCookieValue(request, "role");
+                    String role = cookieUtil.getCookieValue(request, "role");
                     if (!role.isEmpty()) {
                         return "/" + user.getRoles().stream().filter(roleResource -> roleResource.getName().equals(role)).findFirst().get().getUrl();
                     }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.send;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.grantofferletter.send.controller.ProjectGrantOfferLetterSendController;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -38,10 +39,12 @@ public class GrantOfferLetterSendControllerSecurityTest extends BaseProjectSetup
         assertSecured(() -> classUnderTest.sendGrantOfferLetter(123L, null, null, null, null));
     }
 
+    /* disabled GOL received by post INFUND-6377
     @Test
     public void testGrantOfferLetterReceivedByPostPage() {
         assertSecured(() -> classUnderTest.grantOfferLetterReceivedByPost(123L, null, null, null, null));
     }
+    */
 
     @Test
     public void testUploadGrantOfferLetterFile() {
@@ -57,6 +60,17 @@ public class GrantOfferLetterSendControllerSecurityTest extends BaseProjectSetup
     public void testUploadAnnexPage() {
         assertSecured(() -> classUnderTest.uploadAnnexFile(123L, null, null, null, null, null));
     }
+
+    @Test
+    public void testApproceOrRejectSignedGrantOfferLetter() {
+        assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(123L, ApprovalType.APPROVED, null, null, null, null));
+    }
+
+    @Test
+    public void testDownloadSignedGrantOfferLetterFile() {
+        assertSecured(() -> classUnderTest.downloadSignedGrantOfferLetterFile(123L));
+    }
+
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.internalCanAccessGrantOfferLetterSendSection(eq(123L), isA(UserResource.class));

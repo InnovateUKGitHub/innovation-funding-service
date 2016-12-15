@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -34,7 +33,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void saveSpendProfile() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
@@ -43,22 +42,39 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.saveSpendProfile(projectId, organisationId,  table);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile", Void.class, table);
+
 
         assertTrue(result.isSuccess());
 
     }
 
     @Test
-    public void markSpendProfile() {
+    public void markSpendProfileComplete() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
-        Boolean complete = true;
+        Long organisationId = 2L;
 
-        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete/" + complete,
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete",
                 OK);
 
-        RestResult<Void> result = service.markSpendProfile(projectId, organisationId,  complete);
+        RestResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile/complete", Void.class, null);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/incomplete",
+                OK);
+
+        RestResult<Void> result = service.markSpendProfileIncomplete(projectId, organisationId);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile/incomplete", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -72,6 +88,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        setupPostWithRestResultVerifications("/project/1/complete-spend-profiles-review/", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -96,6 +114,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.acceptOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
+        setupPostWithRestResultVerifications("/project/1/spend-profile/approval/APPROVED", Void.class, null);
+
         assertTrue(result.isSuccess());
     }
 
