@@ -46,7 +46,7 @@ public interface CompetitionInviteService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
