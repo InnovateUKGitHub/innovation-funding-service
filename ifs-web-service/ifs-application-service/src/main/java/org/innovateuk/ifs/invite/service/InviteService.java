@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A utility class for common invite methods.
+ * A Service interface for common invite methods.
  */
 public interface InviteService {
 

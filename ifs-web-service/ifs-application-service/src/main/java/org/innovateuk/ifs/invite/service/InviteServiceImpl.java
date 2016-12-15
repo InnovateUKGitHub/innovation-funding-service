@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A utility class for common invite methods.
+ * A service class for common invite methods.
  */
 @Service
 public class InviteServiceImpl implements InviteService {
