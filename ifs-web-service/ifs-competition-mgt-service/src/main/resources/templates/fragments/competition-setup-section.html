@@ -203,10 +203,8 @@
                 <dd th:each="(innovationSector : ${innovationSectors})" th:if="${innovationSector.id == competitionSetupForm.innovationSectorCategoryId}" th:text="${innovationSector.name}">Innovation Sector</dd>
 
                 <dt>Innovation area</dt>
-                <dd><label th:each="(innovationArea, status : ${innovationAreas})"
-                           th:if="${#sets.contains(competitionSetupForm.innovationAreaCategoryIds, innovationArea.id)}"
-                           th:text="${status.last} ? ${innovationArea.name} : ${innovationArea.name + ', '}">Innovation Area</label>
-                </dd>
+                <dd th:text="${competitionSetupForm.innovationAreaNamesFormatted}"></dd>
+
 
                 <dt>Opening date</dt>
                 <dd th:text="${competitionSetupForm.openingDateDay+'/'+competitionSetupForm.openingDateMonth+'/'+competitionSetupForm.openingDateYear}"></dd>

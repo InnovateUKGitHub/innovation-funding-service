@@ -44,6 +44,8 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long leadTechnologistUserId;
 
+    private String innovationAreaNamesFormatted;
+
     public Long getExecutiveUserId() {
         return executiveUserId;
     }
@@ -124,5 +126,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.leadTechnologistUserId = leadTechnologistUserId;
     }
 
+    public String getInnovationAreaNamesFormatted() {
+        return innovationAreaNamesFormatted;
+    }
 
+    public void setInnovationAreaNamesFormatted(String formattedNames) {
+        this.innovationAreaNamesFormatted = formattedNames;
+    }
 }
