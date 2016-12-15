@@ -13,7 +13,8 @@ Resource          PS_Variables.robot
 *** Test Cases ***
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
-    [Tags]    Experian
+    [Tags]    Experian    Pending
+    #TODO Pending due to INFUND-6642
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok       # Project details
