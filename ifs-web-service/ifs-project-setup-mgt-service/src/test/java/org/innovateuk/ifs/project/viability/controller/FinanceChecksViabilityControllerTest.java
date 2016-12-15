@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
@@ -147,6 +148,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityViewModel viewModel = (FinanceChecksViabilityViewModel) model.get("model");
 
         assertTrue(viewModel.isLeadPartnerOrganisation());
+        assertTrue(viewModel.isShowApprovalMessage());
         assertOrganisationDetails(industrialOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
@@ -183,6 +185,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityViewModel viewModel = (FinanceChecksViabilityViewModel) model.get("model");
 
         assertFalse(viewModel.isLeadPartnerOrganisation());
+        assertTrue(viewModel.isShowApprovalMessage());
         assertOrganisationDetails(academicOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
@@ -205,6 +208,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long projectId = 123L;
         Long organisationId = 456L;
 
+        when(projectFinanceService.saveViability(projectId, organisationId, Viability.APPROVED, ViabilityStatus.RED)).
+                thenReturn(serviceSuccess());
+
         mockMvc.perform(
             post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                 param("confirm-viability", "").
@@ -222,13 +228,16 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long projectId = 123L;
         Long organisationId = 456L;
 
+        when(projectFinanceService.saveViability(projectId, organisationId, Viability.PENDING, ViabilityStatus.UNSET)).
+                thenReturn(serviceSuccess());
+
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                         param("save-and-continue", "").
                         param("creditReportConfirmed", "true").
                         param("ragStatus", "UNSET")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
         verify(projectFinanceService).saveViability(projectId, organisationId, Viability.PENDING, ViabilityStatus.UNSET);
     }

@@ -105,6 +105,10 @@ public class FinanceChecksViabilityViewModel {
         return viabilityConfirmed;
     }
 
+    public boolean isShowApprovalMessage() {
+        return approverName != null;
+    }
+
     public String getApproverName() {
         return approverName;
     }
