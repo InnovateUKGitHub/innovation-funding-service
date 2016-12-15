@@ -41,7 +41,7 @@ Status updates correctly for internal user's table
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting   # MO   TODO pending due to INFUND-6952
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action   # MO
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details are not yet provided by any partner yet
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks-always action flag for private beta
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
