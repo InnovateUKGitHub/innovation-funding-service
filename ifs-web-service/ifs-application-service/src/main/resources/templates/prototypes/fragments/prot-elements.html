@@ -125,13 +125,30 @@
 <th:block th:fragment="prot-task-list">
     <h3 class="heading-small">Task list</h3>
     <ul class="task-list">
-        <li><a href="#" class="task-title">Task 1</a></li>
-        <li><a href="#" class="task-title">Task 2</a><span class="status-complete">Completed</span></li>
-        <li><a href="#" class="task-title">Task 3</a><span class="action-required">Assigned to <strong>you</strong></span><span class="status-complete">Completed</span></li>
-        <li><a href="#" class="task-title">Task 4</a><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><span class="status-complete">Completed</span></li>
-        <li><strong class="task-title">Task 5</strong></li>
-        <li><strong class="task-title">Task 6</strong><span class="notification">Jessica Doe</span></li>
-        <li class="unavailable"><strong class="task-title">Task 7</strong><span class="notification">-</span></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 1</a></h4></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><span class="task-status-complete">Completed</span></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required">Assigned to <strong>you</strong></span><span class="task-status-complete">Completed</span></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><span class="task-status-complete">Completed</span></li>
+        <li><div class="task"><h4 class="heading-small">Task 5</h4></div></li>
+        <li><div class="task"><h4 class="heading-small">Task 6</h4></div><span class="notification">Jessica Doe</span></li>
+        <li class="read-only"><div class="task"><h4 class="heading-small">Task 7</h4></div><span class="notification">-</span></li>
+        <li>
+            <div class="task-full-width">
+                <h4 class="heading-small"><a href="#">Task 8</a></h4>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                <ul class="list-bullet">
+                    <li>ipsum dolor sit amet</li>
+                    <li>consectetur adipiscing</li>
+                </ul>
+            </div>
+        </li>
+        <li class="read-only">
+            <div class="task-full-width">
+                <h4 class="heading-small">Task 9</h4>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In erat urna, porttitor in mi sit amet, facilisis vulputate lectus. Integer cursus porta augue id pellentesque.
+            </div>
+            <span class="task-status">No action required</span>
+        </li>
     </ul>
 </th:block>
 

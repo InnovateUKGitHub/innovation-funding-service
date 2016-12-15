@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.finance;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -56,8 +56,13 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
-        return projectFinanceRestService.markSpendProfile(projectId, organisationId, complete).toServiceResult();
+    public ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId) {
+        return projectFinanceRestService.markSpendProfileComplete(projectId, organisationId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId) {
+        return projectFinanceRestService.markSpendProfileIncomplete(projectId, organisationId).toServiceResult();
     }
 
     @Override

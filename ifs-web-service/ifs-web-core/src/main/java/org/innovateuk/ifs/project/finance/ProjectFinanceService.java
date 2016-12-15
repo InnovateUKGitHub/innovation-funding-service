@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.finance;
 
+
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -28,7 +28,9 @@ public interface ProjectFinanceService {
 
     ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 
-    ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
+    ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId);
+
+    ServiceResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId);
 
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 }
