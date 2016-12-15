@@ -24,7 +24,7 @@
         <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
           <h2 class="heading-small no-margin">Organisation size determines funding</h2>
           <p>The organisation size is used to calculate your funding level in the application.</p>
-          <p>Changing this selection will reset the your funding level.</p>
+          <p>Changing this selection will reset your funding level.</p>
         </div>
 
         <form action="#" >
@@ -90,7 +90,7 @@
             <div class="form-group">
               <label for="turnover" class="form-label-bold">
                 Turnover (&pound;)
-                <span class="form-hint">Your turnover from your last financial year.</span>
+                <span class="form-hint">Your turnover from the last financial year.</span>
               </label>
               <input type="text" class="form-control width-medium" id="turnover" name="turnover" />
             </div>
@@ -254,7 +254,7 @@
               </th:block>
 
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark your organisation as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 
