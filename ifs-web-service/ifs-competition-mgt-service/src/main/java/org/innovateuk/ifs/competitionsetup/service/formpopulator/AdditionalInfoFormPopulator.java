@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.viewmodel.FunderViewModel;
+import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +38,13 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());
 
 		competitionResource.getFunders().forEach(funderResource ->  {
-			FunderViewModel funder = new FunderViewModel(funderResource);
+			InitialDetailsForm.FunderRowForm funder = new InitialDetailsForm.FunderRowForm(funderResource);
 			competitionSetupForm.getFunders().add(funder);
 		});
 
         if(competitionResource.getFunders().isEmpty()) {
 			CompetitionFunderResource competitionFunderResource = initFirstFunder();
-			competitionSetupForm.setFunders(asList(new FunderViewModel(competitionFunderResource)));
+			competitionSetupForm.setFunders(asList(new InitialDetailsForm.FunderRowForm(competitionFunderResource)));
 			competitionResource.setFunders(asList(competitionFunderResource));
 			competitionService.update(competitionResource);
         }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
 import org.apache.commons.collections4.map.LinkedMap;
 
 /**

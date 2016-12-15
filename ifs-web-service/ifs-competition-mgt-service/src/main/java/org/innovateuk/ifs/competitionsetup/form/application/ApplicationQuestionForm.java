@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.form.application;
 
-import org.innovateuk.ifs.competitionsetup.viewmodel.GuidanceRowForm;
+import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ import java.util.List;
 public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
 
     @Valid
-    private List<GuidanceRowForm> guidanceRows = new ArrayList<>();
+    private List<AssessorsForm.GuidanceRowForm> guidanceRows = new ArrayList<>();
 
-    public List<GuidanceRowForm> getGuidanceRows() {
+    public List<AssessorsForm.GuidanceRowForm> getGuidanceRows() {
         return guidanceRows;
     }
 
-    public void setGuidanceRows(List<GuidanceRowForm> guidanceRows) {
+    public void setGuidanceRows(List<AssessorsForm.GuidanceRowForm> guidanceRows) {
         this.guidanceRows = guidanceRows;
     }
 }

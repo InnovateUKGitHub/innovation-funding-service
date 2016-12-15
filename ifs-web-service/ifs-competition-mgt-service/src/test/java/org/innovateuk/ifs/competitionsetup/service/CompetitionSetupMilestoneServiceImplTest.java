@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;

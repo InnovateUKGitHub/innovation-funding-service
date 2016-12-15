@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.mockito.InjectMocks;

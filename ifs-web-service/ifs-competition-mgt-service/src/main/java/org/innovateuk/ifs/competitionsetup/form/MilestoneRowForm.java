@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
