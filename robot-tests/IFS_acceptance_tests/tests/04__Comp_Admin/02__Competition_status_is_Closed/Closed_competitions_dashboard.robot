@@ -27,5 +27,6 @@ The user can Invite Assessors
 
 The user can Notify Assessors
     [Documentation]    INFUND-6458
+    [Tags]    Pending
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
