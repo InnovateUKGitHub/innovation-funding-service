@@ -18,6 +18,7 @@ import org.innovateuk.ifs.application.transactional.AssessorFeedbackService;
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -232,6 +233,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
+
+    @Mock
+    protected AssessorInviteToSendMapper assessorInviteToSendMapperMock;
 
     @Mock
     protected CompetitionInviteService competitionInviteServiceMock;

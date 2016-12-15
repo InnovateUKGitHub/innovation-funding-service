@@ -36,6 +36,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -80,15 +81,18 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         CompetitionInvite createdInvite = newCompetitionInvite().withCompetition(competition).withStatus(CREATED).build();
         competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        AssessorInviteToSendResource expectedToSend = newAssessorInviteToSendResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(7L).build();
         user = newUser().withId(7L).build();
 
         when(competitionInviteRepositoryMock.findOne(5L)).thenReturn(createdInvite);
+        when(competitionInviteRepositoryMock.findOne(4L)).thenReturn(competitionInvite);
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
         when(competitionInviteRepositoryMock.save(same(competitionInvite))).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(same(competitionInvite))).thenReturn(expected);
+        when(assessorInviteToSendMapperMock.mapToResource(same(createdInvite))).thenReturn(expectedToSend);
 
         when(competitionParticipantRepositoryMock.getByInviteHash("inviteHash")).thenReturn(competitionParticipant);
 
@@ -106,10 +110,20 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         AssessorInviteToSendResource resource = inviteServiceResult.getSuccessObjectOrThrowException();
         assertEquals("my competition", resource.getCompetitionName());
 
-        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, assessorInviteToSendMapperMock);
         inOrder.verify(competitionInviteRepositoryMock, calls(1)).findOne(5L);
-        inOrder.verify(competitionInviteMapperMock, calls(1)).mapToResource(any(CompetitionInvite.class));
+        inOrder.verify(assessorInviteToSendMapperMock, calls(1)).mapToResource(any(CompetitionInvite.class));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getCreatedInvite_notCreated() throws Exception {
+        ServiceResult<AssessorInviteToSendResource> inviteServiceResult = competitionInviteService.getCreatedInvite(4L);
+
+        assertTrue(inviteServiceResult.isFailure());
+        assertTrue(inviteServiceResult.getFailure().is(new Error(COMPETITION_INVITE_ALREADY_SENT, "my competition")));
+
+        verify(competitionInviteRepositoryMock,only()).findOne(4L);
     }
 
     @Test
@@ -682,6 +696,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         long competitionId = 1L;
 
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withInviteId(52L)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
                 .withInnovationArea(newCategoryResource()

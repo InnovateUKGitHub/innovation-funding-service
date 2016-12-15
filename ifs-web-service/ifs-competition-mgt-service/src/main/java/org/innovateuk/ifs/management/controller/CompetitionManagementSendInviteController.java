@@ -43,6 +43,6 @@ public class CompetitionManagementSendInviteController {
                             @PathVariable("competitionId") long competitionId,
                             @ModelAttribute("form") @Valid SendInviteForm form) {
         RestResult<Void> result = competitionInviteRestService.sendInvite(inviteId);
-        return String.format("redirect:/competition/%s/assessors/",competitionId);
+        return String.format("redirect:/competition/%s/assessors/invite",competitionId);
     }
 }

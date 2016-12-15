@@ -1,38 +1,32 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.management.form.SendInviteForm;
+import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
 import org.innovateuk.ifs.management.model.SendInvitePopulator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
-
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * This controller will handle all Competition Management requests related to sending competition invites to assessors
- */
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class CompetitionManagementSendInviteControllerTest extends BaseControllerMockMVCTest<CompetitionManagementSendInviteController> {
 
 
+    @Spy
+    @InjectMocks
+    private SendInvitePopulator sendInvitePopulator;
 
     @Override
     protected CompetitionManagementSendInviteController supplyControllerUnderTest() {
@@ -42,35 +36,37 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     @Override
     @Before
     public void setUp() {
-        super.setup();
+        super.setUp();
 
     }
 
     @Test
     public void inviteEmail() throws Exception {
         long inviteId = 4L;
-        CompetitionInviteResource invite = newCompetitionInviteResource().build();
+        long competitionId = 5L;
+        AssessorInviteToSendResource invite = newAssessorInviteToSendResource().build();
         when(competitionInviteRestService.getCreated(inviteId)).thenReturn(restSuccess(invite));
+
+        mockMvc.perform(get("/competition/{competitionId}/assessors/invite/{inviteId}", competitionId, inviteId))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/send-invites"));
+
+        verify(competitionInviteRestService, only()).getCreated(inviteId);
     }
 
-    @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
+    @Test
+    public void sendEmail() throws Exception {
+        long inviteId = 4L;
+        long competitionId = 5L;
+        when(competitionInviteRestService.sendInvite(inviteId)).thenReturn(restSuccess());
 
-    @Autowired
-    private SendInvitePopulator sendInvitePopulator;
+        mockMvc.perform(post("/competition/{compeitionId}/assessors/invite/{inviteId}/send", competitionId, inviteId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competitionId)));
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String inviteEmail(Model model, @PathVariable("inviteId") long inviteId) {
-        CompetitionInviteResource invite = competitionInviteRestService.getCreated(inviteId).getSuccessObjectOrThrowException();
-        model.addAttribute("model", sendInvitePopulator.populateModel(invite));
-        return "assessors/send-invites";
+        verify(competitionInviteRestService, only()).sendInvite(inviteId);
+
     }
 
-    @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public String sendEmail(Model model,
-                            @PathVariable("inviteId") long inviteId,
-                            @ModelAttribute("form") @Valid SendInviteForm form) {
-        RestResult<Void> result = competitionInviteRestService.sendInvite(inviteId);
-        return "redirect:/competition/assessors/invite/" + inviteId;
-    }
 }

@@ -29,6 +29,10 @@ public class AssessorCreatedInviteResourceBuilder extends BaseBuilder<AssessorCr
         return new AssessorCreatedInviteResourceBuilder(emptyList());
     }
 
+    public AssessorCreatedInviteResourceBuilder withInviteId(Long... value) {
+        return withArraySetFieldByReflection("inviteId", value);
+    }
+
     public AssessorCreatedInviteResourceBuilder withFirstName(String... value) {
         return withArraySetFieldByReflection("firstName", value);
     }

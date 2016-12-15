@@ -82,7 +82,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
         return getById(inviteId).andOnSuccess(invite -> {
             if (invite.getStatus() != CREATED) {
-                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
+                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
             return serviceSuccess(invite);
         }).andOnSuccessReturn(toSendMapper::mapToResource);
