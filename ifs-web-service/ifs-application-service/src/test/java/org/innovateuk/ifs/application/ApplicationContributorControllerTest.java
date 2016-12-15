@@ -38,8 +38,9 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
     @Mock
     private Validator validator;
+
     @Mock
-    CookieFlashMessageFilter cookieFlashMessageFilter;
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private Long applicationId;
     private Long alternativeApplicationId;
@@ -66,6 +67,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+        setupCookieUtil();
 
         applicationId = applications.get(0).getId();
         alternativeApplicationId = applicationId + 1;
@@ -75,6 +77,8 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
         inviteOverviewRedirectUrl = String.format("redirect:/application/%d/contributors", applicationId);
         viewName = APPLICATION_CONTRIBUTORS_INVITE;
+
+
     }
 
     @Test
@@ -86,7 +90,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void testInviteContributorsCookie() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", URLEncoder.encode("{\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8));
+        Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
 
 //        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
@@ -104,19 +108,22 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void testInviteContributorsPostAddPerson() throws Exception {
-        mockMvc.perform(post(inviteUrl)
+        MvcResult result = mockMvc.perform(post(inviteUrl)
                 .param("organisations[0].organisationName", "Empire Ltd")
                 .param("organisations[0].organisationId", "1")
                 .param("add_person", "0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
     @Test
     public void testInviteContributorsPostPerson() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -125,13 +132,16 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
     @Test
     public void testInviteContributorsPostDuplicatePerson() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -142,13 +152,20 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
     @Test
     public void testInviteContributorsPostInvalidPerson() throws Exception {
-        mockMvc.perform(
+
+        String expectedCookieVal = URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8);
+        String cookieName = "contributor_invite_state";
+
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -157,14 +174,16 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                         .param("organisations[0].invites[0].email", "")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(cookie().exists(cookieName))
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(expectedCookieVal, getDecryptedCookieValue(result.getResponse().getCookies(), cookieName));
     }
 
     @Test
     public void testInviteContributorsBeginApplication() throws Exception {
-        mockMvc.perform(
+        MvcResult resultOne = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -174,12 +193,14 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", ""))
-                .andExpect(view().name(inviteOverviewRedirectUrl));
+                .andExpect(view().name(inviteOverviewRedirectUrl))
+                .andReturn();
+
+        assertEquals("", getDecryptedCookieValue(resultOne.getResponse().getCookies(), "contributor_invite_state"));
 
 
-        mockMvc.perform(
-                post(inviteUrl+"")
+        MvcResult resultTwo = mockMvc.perform(
+                post(inviteUrl + "")
                         .param("newApplication", "Empire Ltd")
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -189,13 +210,15 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", ""))
-                .andExpect(view().name(applicationRedirectUrl));
+                .andExpect(view().name(applicationRedirectUrl))
+                .andReturn();
+
+        assertEquals("", getDecryptedCookieValue(resultTwo.getResponse().getCookies(), "contributor_invite_state"));
     }
-    
+
     @Test
     public void testLeadCanInviteToOtherOrganisation() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -207,17 +230,19 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", ""))
-                .andExpect(view().name(inviteOverviewRedirectUrl));
+                .andExpect(view().name(inviteOverviewRedirectUrl))
+                .andReturn();
+
+        assertEquals("", getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
-    
+
     @Test
     public void testNonLeadCannotInviteToOtherOrganisation() throws Exception {
-    	
-    	this.setupUserInvite("name", "user@email.com", 3L);
-    	this.loginNonLeadUser("user@email.com");
-    	
-        mockMvc.perform(
+
+        this.setupUserInvite("name", "user@email.com", 3L);
+        this.loginNonLeadUser("user@email.com");
+
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -229,19 +254,22 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":true,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[]},{\"organisationName\":\"Some Other Org Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":2,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Jim Kirk\",\"email\":\"j.kirk@starfleet.org\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"triedToSave\":true,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[]},{\"organisationName\":\"Some Other Org Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":2,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Jim Kirk\",\"email\":\"j.kirk@starfleet.org\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
-    
 
 
-	@Test
+
+    @Test
     public void testNonLeadCanInviteToTheirOwnOrganisation() throws Exception {
-    	
-		this.setupUserInvite("name", "user@email.com", 2L);
-		this.loginNonLeadUser("user@email.com");
-    	
-        mockMvc.perform(
+
+        this.setupUserInvite("name", "user@email.com", 2L);
+        this.loginNonLeadUser("user@email.com");
+
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -253,15 +281,17 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", ""))
-                .andExpect(view().name(inviteOverviewRedirectUrl));
+                .andExpect(view().name(inviteOverviewRedirectUrl))
+                .andReturn();
+
+        assertEquals("", getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
-    
-    
+
+
     @Test
     public void testInviteContributorsRemovePerson() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -273,13 +303,16 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
     @Test
     public void testInviteContributorsRemovePerson2() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post(inviteUrl)
                         .param("organisations[0].organisationName", "Empire Ltd")
                         .param("organisations[0].organisationId", "1")
@@ -291,9 +324,11 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
 
+        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
 
     }
 
@@ -302,8 +337,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
      */
     @Test
     public void testInviteContributorsPostAddPartner() throws Exception {
-
-        mockMvc.perform(post(inviteUrl)
+        MvcResult result = mockMvc.perform(post(inviteUrl)
                 .param("organisations[0].organisationName", "Empire Ltd")
                 .param("organisations[0].organisationId", "1")
                 .param("organisations[0].invites[0].personName", "Nico Bijl")
@@ -313,8 +347,11 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                 .param("add_partner", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]},{\"organisationName\":\"\",\"organisationNameConfirmed\":null,\"organisationId\":null,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]},{\"organisationName\":\"\",\"organisationNameConfirmed\":null,\"organisationId\":null,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
 
@@ -324,7 +361,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
      */
     @Test
     public void testInviteContributorsPostRemovePersonAndPartner() throws Exception {
-        mockMvc.perform(post(inviteUrl)
+        MvcResult result = mockMvc.perform(post(inviteUrl)
                 .param("organisations[0].organisationName", "Empire Ltd")
                 .param("organisations[0].organisationId", "1")
                 .param("organisations[0].invites[0].personName", "Nico Bijl")
@@ -337,13 +374,17 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                 .param("remove_person", "1_0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(
+                URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
     @Test
     public void testInviteContributorsPostRemovePersonFromPartner() throws Exception {
-        mockMvc.perform(post(inviteUrl)
+        MvcResult result = mockMvc.perform(post(inviteUrl)
                 .param("organisations[0].organisationName", "Empire Ltd")
                 .param("organisations[0].organisationId", "1")
                 .param("organisations[0].invites[0].personName", "Nico Bijl")
@@ -359,15 +400,18 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                 .param("remove_person", "1_0"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(cookie().value("contributor_invite_state", URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]},{\"organisationName\":\"SomePartner\",\"organisationNameConfirmed\":null,\"organisationId\":null,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8)))
-                .andExpect(view().name(redirectUrl));
+                .andExpect(view().name(redirectUrl))
+                .andReturn();
+
+        assertEquals(
+                URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]},{\"organisationName\":\"SomePartner\",\"organisationNameConfirmed\":null,\"organisationId\":null,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
 
     @Test
     public void whenCookieHasDifferingApplicationIdFromGetParameterItShouldBeIgnored() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", URLEncoder.encode("{\"applicationId\":"+alternativeApplicationId+",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8));
+        Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":"+alternativeApplicationId+",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
 
-//        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(viewName))
@@ -383,10 +427,10 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     public void whenUserIsRemovedRedirectToOverview() throws Exception {
         mockMvc.perform(
                 post(removeUrl)
-                    .param("applicationInviteId", "2")
+                        .param("applicationInviteId", "2")
         )
-        .andExpect(status().is3xxRedirection())
-        .andExpect(view().name(inviteOverviewRedirectUrl));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(inviteOverviewRedirectUrl));
     }
 
     @Test
@@ -396,21 +440,21 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         mockMvc.perform(
                 get(removeUrl + String.format("/%d/confirm", inviteId))
         )
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(view().name(APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM))
-        .andExpect(model().attribute("inviteId", inviteId))
-        .andExpect(model().attributeExists("removeContributorForm"));
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name(APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM))
+                .andExpect(model().attribute("inviteId", inviteId))
+                .andExpect(model().attributeExists("removeContributorForm"));
     }
 
     private void loginNonLeadUser(String email) {
-    	UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
-    	loginUser(user);
-	}
-	
+        UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
+        loginUser(user);
+    }
+
     private void setupUserInvite(String name, String email, Long organisationId) {
-    	InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
-    	inviteOrgResource.setOrganisation(organisationId);
-    	inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
-    	when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
-	}
+        InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
+        inviteOrgResource.setOrganisation(organisationId);
+        inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
+    }
 }

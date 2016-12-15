@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.viewmodel.FunderViewModel;
+import org.innovateuk.ifs.competitionsetup.form.FunderRowForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -27,9 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdditionalInfoSectionSaverTest {
@@ -139,9 +137,9 @@ public class AdditionalInfoSectionSaverTest {
 				.withFunderBudget(new BigDecimal(2))
 				.build();
 
-		List<FunderViewModel> newFunders = new ArrayList<>();
-		newFunders.add(new FunderViewModel(funderResource1));
-		newFunders.add(new FunderViewModel(funderResource2));
+		List<FunderRowForm> newFunders = new ArrayList<>();
+		newFunders.add(new FunderRowForm(funderResource1));
+		newFunders.add(new FunderRowForm(funderResource2));
 
 		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm(newPafNumber, newActivityCode, newBudgetCode, newFunders);
 

@@ -1,14 +1,17 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class FunderViewModel {
+/**
+ * Form representing a row in the funders table.
+ */
+public class FunderRowForm {
 
     @NotEmpty(message = "{validation.additionalinfoform.fundername.required}")
     private String funder;
@@ -21,11 +24,11 @@ public class FunderViewModel {
     @NotNull
     private Boolean coFunder;
 
-    public FunderViewModel() {
+    public FunderRowForm() {
 
     }
 
-    public FunderViewModel(CompetitionFunderResource funderResource) {
+    public FunderRowForm(CompetitionFunderResource funderResource) {
         this.setFunder(funderResource.getFunder());
         this.setFunderBudget(funderResource.getFunderBudget());
         this.setCoFunder(funderResource.getCoFunder());

@@ -665,7 +665,8 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
-          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="milestones"
+          th:attrappend="data-autosave=${competition.setupComplete != true}?compSetup"
+          th:attr="data-competition=${competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
@@ -695,6 +696,7 @@
                 </thead>
                 <tbody>
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
+                      th:if="${milestoneEntry.value.milestoneType.presetDate}"
                       class="date-group form-group-row"
                       data-future-date=""
                       th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
@@ -707,6 +709,10 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
                              th:value="${milestoneEntry.key}"  />
+                      <input type="hidden"
+                             required="required"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                             th:value="${milestoneEntry.value.editable}"  />
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
                           <input type="number"
@@ -719,7 +725,8 @@
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
-                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"/>
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
+                                 th:readonly="${!milestoneEntry.value.editable}" />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -730,7 +737,8 @@
                                 class="form-control width-small"
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
-                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
+                                th:readonly="${!milestoneEntry.value.editable}"/>
                       </td>
                       <td class="year" >
                           <input type="number"
@@ -741,7 +749,8 @@
                                  required="required"
                                  class="form-control width-small"
                                  th:value="${milestoneEntry.value.year}"
-                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
+                                 th:readonly="${!milestoneEntry.value.editable}" />
                           </td>
                     </tr>
                 </tbody>
@@ -762,7 +771,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}" >
+                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
+                        th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
                         <td th:text="${milestoneEntry.value.day}"></td>
