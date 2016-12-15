@@ -364,23 +364,21 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        return validateViability(projectFinance, viabilityStatus)
+        return validateViability(projectFinance, viability, viabilityStatus)
                 .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
     }
 
-    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {
-
             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
-
-        } else if (ViabilityStatus.UNSET == viabilityStatus) {
-
-            return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
-
-        } else {
-            return serviceSuccess();
         }
+
+        if (Viability.APPROVED == viability && ViabilityStatus.UNSET == viabilityStatus) {
+            return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
+        }
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {

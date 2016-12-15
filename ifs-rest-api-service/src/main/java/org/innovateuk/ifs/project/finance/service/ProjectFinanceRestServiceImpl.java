@@ -98,4 +98,16 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
         return postWithRestResult(postUrl, Void.class);
     }
+
+    @Override
+    public RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId) {
+        String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report";
+        return getWithRestResult(url, Boolean.class);
+    }
+
+    @Override
+    public RestResult<Void> setCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
+        String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report/" + confirmed;
+        return postWithRestResult(url);
+    }
 }

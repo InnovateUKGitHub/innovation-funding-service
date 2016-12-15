@@ -87,11 +87,31 @@ public class FinanceChecksViabilityController {
 
         Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
 
-        ServiceResult<Void> result = financeService.saveViability(projectId, organisationId, viability, form.getRagStatus());
+        ServiceResult<Void> saveCreditReportResult = financeService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
 
         return validationHandler.
-                addAnyErrors(result).
-                failNowOrSucceedWith(failureView, successView);
+               addAnyErrors(saveCreditReportResult).
+               failNowOrSucceedWith(failureView, () -> {
+
+            ViabilityStatus statusToSend = getRagStatusDependantOnConfirmationCheckboxSelection(form);
+
+            ServiceResult<Void> saveViabilityResult = financeService.saveViability(projectId, organisationId, viability, statusToSend);
+
+            return validationHandler.
+                   addAnyErrors(saveViabilityResult).
+                   failNowOrSucceedWith(failureView, successView);
+        });
+    }
+
+    private ViabilityStatus getRagStatusDependantOnConfirmationCheckboxSelection(FinanceChecksViabilityForm form) {
+        ViabilityStatus statusToSend;
+
+        if (form.isConfirmViabilityChecked()) {
+            statusToSend = form.getRagStatus();
+        } else {
+            statusToSend = ViabilityStatus.UNSET;
+        }
+        return statusToSend;
     }
 
     private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
@@ -137,7 +157,7 @@ public class FinanceChecksViabilityController {
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
-        boolean creditReportConfirmed = false;
+        boolean creditReportConfirmed = financeService.isCreditReportConfirmed(projectId, organisationId);
         boolean confirmViabilityChecked = viability.getViabilityStatus() != ViabilityStatus.UNSET;
 
         return new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityStatus(), confirmViabilityChecked);

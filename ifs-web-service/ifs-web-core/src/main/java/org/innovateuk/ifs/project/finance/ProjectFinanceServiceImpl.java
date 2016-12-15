@@ -89,4 +89,14 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     public ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
         return projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).toServiceResult();
     }
+
+    @Override
+    public boolean isCreditReportConfirmed(Long projectId, Long organisationId) {
+        return projectFinanceRestService.isCreditReportConfirmed(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
+        return projectFinanceRestService.setCreditReportConfirmed(projectId, organisationId, confirmed).toServiceResult();
+    }
 }

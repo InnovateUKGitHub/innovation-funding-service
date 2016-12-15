@@ -43,4 +43,8 @@ public interface ProjectFinanceRestService {
     RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);
 
     RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating);
+
+    RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId);
+
+    RestResult<Void> setCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
 }
