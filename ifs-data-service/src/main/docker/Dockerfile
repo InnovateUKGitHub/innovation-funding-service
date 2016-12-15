@@ -11,7 +11,7 @@ WORKDIR /
 VOLUME /tmp
 ADD ifs-data-service-1.0-SNAPSHOT.war app.jar
 RUN sh -c 'touch /app.jar'
-ENTRYPOINT ["java", "-Xmx100m", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-Xmx300m", "-jar", "/app.jar"]
 
 HEALTHCHECK --interval=10s --timeout=3s \
   CMD curl -f http://localhost:8080/health || exit 1
