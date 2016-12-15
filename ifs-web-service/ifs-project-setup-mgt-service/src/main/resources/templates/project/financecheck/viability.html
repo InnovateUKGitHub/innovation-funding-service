@@ -73,33 +73,31 @@
       <h2 class="heading-medium">Credit report</h2>
       <div class="form-group">
         <label class="block-label" for="costs-reviewed">
-          <input id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+          <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
         </label>
       </div>
-
-      <h2 class="heading-medium">Approve viability</h2>
-      <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
-      <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
-      <div class="form-group">
-        <label class="block-label" for="project-viable" data-target="add-rag-rating">
-          <input id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-disable-button-until-checked="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
-        </label>
-      </div>
-
-      <div class="form-group" id="add-rag-rating">
-        <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
-        <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
-          <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
-          <option value="GREEN">Green</option>
-          <option value="AMBER">Amber</option>
-          <option value="RED">Red</option>
-        </select>
-      </div>
-
-      <button type="button" data-js-modal="modal-confirm-viability" class="button" id="confirm-button">Confirm viability</button>
-      <th:block  th:include="fragments/modals :: modal-confirm-viability" />
-
-      <hr />
+      <th:block th:unless="${model.isReadOnly()}">
+          <h2 class="heading-medium">Approve viability</h2>
+          <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
+          <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
+          <div class="form-group">
+            <label class="block-label" for="project-viable" data-target="add-rag-rating">
+              <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-disable-button-until-checked="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
+            </label>
+          </div>
+          <div class="form-group" id="add-rag-rating">
+            <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
+            <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
+              <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
+              <option value="GREEN">Green</option>
+              <option value="AMBER">Amber</option>
+              <option value="RED">Red</option>
+            </select>
+          </div>
+          <button type="button" data-js-modal="modal-confirm-viability" class="button" id="confirm-button">Confirm viability</button>
+          <th:block  th:include="fragments/modals :: modal-confirm-viability" />
+      </th:block>
+      <hr/>
       <button class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
     </form>
 
