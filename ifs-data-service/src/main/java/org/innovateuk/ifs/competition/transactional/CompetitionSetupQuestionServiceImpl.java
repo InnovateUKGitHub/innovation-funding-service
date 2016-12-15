@@ -74,7 +74,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
                 setupResource.setGuidance(formInput.getGuidanceAnswer());
-                setupResource.setMaxWords(formInput.getWordCount());
+                setupResource.setMaxWords(wordCountWithDefault(formInput.getWordCount()));
                 break;
         }
     }
@@ -83,7 +83,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case TEXTAREA:
                 setupResource.setWrittenFeedback(formInput.getActive());
-                setupResource.setAssessmentMaxWords(formInput.getWordCount());
+                setupResource.setAssessmentMaxWords(wordCountWithDefault(formInput.getWordCount()));
                 setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
                 setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
                 setupResource.setAssessmentGuidanceTitle(formInput.getGuidanceTitle());
@@ -182,6 +182,14 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             guidanceRowRepository.delete(writtenFeedbackFormInput.getGuidanceRows());
             guidanceRowRepository.save(newRows);
             writtenFeedbackFormInput.setGuidanceRows(newRows);
+        }
+    }
+
+    private int wordCountWithDefault(Integer wordCount) {
+        if (wordCount != null && wordCount > 0) {
+            return wordCount;
+        } else {
+            return 400;
         }
     }
 
