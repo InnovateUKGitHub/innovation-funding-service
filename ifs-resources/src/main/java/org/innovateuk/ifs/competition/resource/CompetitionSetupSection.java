@@ -63,10 +63,10 @@ public enum CompetitionSetupSection {
 
         if (competitionResource.isSetupAndLive()) {
 			return !(this.equals(INITIAL_DETAILS) ||
+					this.equals(MILESTONES) ||
 					this.equals(ASSESSORS));
 		}
 
 		return false;
 	}
-	
 }
