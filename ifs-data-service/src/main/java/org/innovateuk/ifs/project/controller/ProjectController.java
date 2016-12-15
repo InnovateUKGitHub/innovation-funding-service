@@ -8,14 +8,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
-import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,12 +66,12 @@ public class ProjectController {
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
     }
-    
+
     @RequestMapping(method=RequestMethod.POST, value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
         return projectService.setProjectManager(id, projectManagerId).toPostResponse();
     }
-    
+
     @RequestMapping(value = "/{projectId}/startdate", method = POST)
     public RestResult<Void> updateProjectStartDate(@PathVariable("projectId") final Long projectId,
                                                    @RequestParam("projectStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
@@ -94,18 +90,18 @@ public class ProjectController {
     public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return projectService.findByUserId(userId).toGetResponse();
     }
-    
+
     @RequestMapping(value = "/{projectId}/organisation/{organisation}/finance-contact", method = POST)
     public RestResult<Void> updateFinanceContact(@PathVariable("projectId") final Long projectId,
-    		@PathVariable("organisation") final Long organisationId,
-                                                   @RequestParam("financeContact") Long financeContactUserId) {
+                                                 @PathVariable("organisation") final Long organisationId,
+                                                 @RequestParam("financeContact") Long financeContactUserId) {
         return projectService.updateFinanceContact(projectId, organisationId, financeContactUserId).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @RequestBody @Valid final InviteProjectResource inviteResource) {
-       return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
+        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
@@ -163,7 +159,7 @@ public class ProjectController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-            projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                projectService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
 
@@ -298,5 +294,16 @@ public class ProjectController {
     @RequestMapping(value= "/{projectId}/is-grant-offer-letter-already-sent", method = GET)
     public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
         return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval/{approvalType}", method = POST)
+    public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
+                                                                  @PathVariable("approvalType") final ApprovalType approvalType) {
+        return projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval", method = GET)
+    public RestResult<Boolean> isignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
+        return projectService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
     }
 }
