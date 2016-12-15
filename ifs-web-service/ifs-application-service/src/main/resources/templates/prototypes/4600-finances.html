@@ -3,10 +3,6 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-    <style> .message-alert {
-        background: #e4eff6;
-        padding-left: 30px;
-        } </style>
 </head>
 <body class="app-overview">
 
@@ -59,7 +55,7 @@
         </div>
       </div>
     </li>
-    <li class="funding assigned-to-me">
+    <li class="funding" th:classappend="${(param.status != null and param.status[0] == 'initialView' ? '' : 'assigned-to-me')}" >
       <div class="grid-row">
         <div class="column-one">
 
@@ -83,7 +79,7 @@
           <h3 class="heading-small">Your organisation size</h3>
         </div>
         <div class="column-half alignright">
-          <h3 class="heading-small form-hint">Not required</h3>
+          <span class="form-hint">Not required</span>
         </div>
       </div>
     </li>
@@ -93,7 +89,7 @@
           <h3 class="heading-small">Your funding</h3>
         </div>
         <div class="column-half alignright">
-          <h3 class="heading-small form-hint">Not required</h3>
+          <span class="form-hint">Not required</span>
         </div>
       </div>
     </li>

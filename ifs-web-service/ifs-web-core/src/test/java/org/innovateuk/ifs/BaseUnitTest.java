@@ -48,6 +48,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.InjectMocks;
@@ -56,16 +57,23 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -90,6 +98,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
@@ -104,6 +113,7 @@ public class BaseUnitTest {
     public UserResource applicantUser;
 
     public UserAuthentication loggedInUserAuthentication;
+    public TextEncryptor encryptor;
 
     protected final Log log = LogFactory.getLog(getClass());
 
@@ -193,6 +203,8 @@ public class BaseUnitTest {
     public ProjectStatusService projectStatusServiceMock;
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
+    @Mock
+    public CookieUtil cookieUtil;
 
     @Spy
     @InjectMocks
@@ -427,7 +439,7 @@ public class BaseUnitTest {
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource6));
 
         when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource)) ;
-        
+
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {
             section.setQuestionGroup(false);
@@ -575,7 +587,7 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(2).getId())).thenReturn(application3ProcessRoles);
         when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(3).getId())).thenReturn(application4ProcessRoles);
 
-		Map<Long, Set<Long>> completedMap = new HashMap<>();
+        Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
         completedMap.put(organisation2.getId(), new TreeSet<>());
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(0).getId())).thenReturn(completedMap);
@@ -689,6 +701,35 @@ public class BaseUnitTest {
                 }).build(1);
 
         when(questionService.findQuestionStatusesByQuestionAndApplicationId(1l, application.getId())).thenReturn(questionStatusResources);
+    }
+
+    public void setupCookieUtil() {
+        String password = "mysecretpassword";
+        String salt = "109240124012412412";
+        encryptor = Encryptors.text(password, salt);
+
+        ReflectionTestUtils.setField(cookieUtil, "cookieSecure", TRUE);
+        ReflectionTestUtils.setField(cookieUtil, "cookieHttpOnly", FALSE);
+        ReflectionTestUtils.setField(cookieUtil, "encryptionPassword", password);
+        ReflectionTestUtils.setField(cookieUtil, "encryptionSalt", salt);
+        ReflectionTestUtils.setField(cookieUtil, "encryptor", encryptor);
+
+        doCallRealMethod().when(cookieUtil).saveToCookie(any(HttpServletResponse.class), any(String.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).removeCookie(any(HttpServletResponse.class), any(String.class));
+    }
+
+    public String getDecryptedCookieValue(Cookie[] cookies, String cookieName) {
+        Optional<Cookie> cookieFound = Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(cookieName))
+                .findAny();
+
+        if(cookieFound.isPresent()) {
+            return encryptor.decrypt(cookieFound.get().getValue());
+        }
+
+        return null;
     }
 
     private QuestionResource setupQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {
