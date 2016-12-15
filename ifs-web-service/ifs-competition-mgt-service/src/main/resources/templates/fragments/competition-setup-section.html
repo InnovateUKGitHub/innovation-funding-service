@@ -233,7 +233,9 @@
     </div>
 
     <form data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="additional"
-          th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+          th:action="@{(${editable} ? '' : 'additional/edit')}"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">
@@ -289,10 +291,11 @@
                                th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
                                data-required-errormessage="Please enter a budget"
-                               data-min-errormessage="Please enter a valid number"/>
+                               data-min-errormessage="Please enter a valid number" />
                         <input type="hidden"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
-                               th:value="${iteration.index != 0}"/>
+                               th:value="${iteration.index != 0}"
+                               th:if="${isSetupAndLive}" />
 
                         <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
@@ -331,7 +334,8 @@
                            type="text"
                            th:field="${competitionSetupForm.pafNumber}"
                            required="required"
-                           data-required-errormessage="Please enter a PAF number" />
+                           data-required-errormessage="Please enter a PAF number"
+                           th:readonly="${isSetupAndLive}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -345,7 +349,8 @@
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}"
                            required="required"
-                           data-required-errormessage="Please enter a budget code" />
+                           data-required-errormessage="Please enter a budget code"
+                           th:readonly="${isSetupAndLive}"/>
                 </div>
 
 
@@ -356,12 +361,13 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
-                    type="text" required="required"
-                    th:field="${competitionSetupForm.activityCode}"
-                    maxlength="255"
-                    data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
-                           data-required-errormessage="Please enter an activity code" />
+                    <input  th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                            type="text" required="required"
+                            th:field="${competitionSetupForm.activityCode}"
+                            maxlength="255"
+                            data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
+                            data-required-errormessage="Please enter an activity code"
+                            th:readonly="${isSetupAndLive}"/>
 
                 </div>
 
@@ -379,8 +385,9 @@
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"
-                           data-autosave-disabled="data-autosave-disabled" />
-                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
+                           data-autosave-disabled="data-autosave-disabled"
+                           th:readonly="${isSetupAndLive}"/>
+                    <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
@@ -405,11 +412,11 @@
                 <tr  th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
                         <td th:text="${funder.funder}">Funder Name</td>
-                        <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
+                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatDecimal(funder?.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
                         <td th:text="${funder.funder}">Co-Funder Name</td>
-                        <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
+                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatDecimal(funder?.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
                 </tbody>
@@ -452,8 +459,11 @@
         <h1 class="heading-xlarge">Eligibility</h1>
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="eligibility">
+    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id}"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
+          data-autosave="compSetup" data-section="eligibility">
 
         <fieldset th:if="${editable}" id="section-3-edit">
 
@@ -626,7 +636,7 @@
 
             </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:if="${!preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>

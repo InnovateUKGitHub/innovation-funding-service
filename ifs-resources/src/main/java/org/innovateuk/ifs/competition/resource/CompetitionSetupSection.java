@@ -65,10 +65,6 @@ public enum CompetitionSetupSection {
 		return editableAfterSetupAndLive;
 	}
 
-	public void setEditableAfterSetupAndLive(Boolean editableAfterSetupAndLive) {
-		this.editableAfterSetupAndLive = editableAfterSetupAndLive;
-	}
-
 	public boolean preventEdit(CompetitionResource competitionResource) {
 		if (competitionResource.isSetupAndAfterNotifications()) {
             return true;

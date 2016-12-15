@@ -73,7 +73,6 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.APPLICATION_FORM;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 
 		CompetitionResource competitionResource = newCompetitionResource()
@@ -120,7 +119,6 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
