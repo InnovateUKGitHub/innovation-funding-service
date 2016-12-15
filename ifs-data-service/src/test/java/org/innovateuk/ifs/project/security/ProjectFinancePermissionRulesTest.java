@@ -6,10 +6,10 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -83,6 +83,30 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertFalse(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
             }
         });
+    }
+
+    @Test
+    public void testProjectManagerCanIncompleteAnySpendProfile() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setUpUserAsProjectManager(project, user);
+
+        assertTrue(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void testPartnerCannotIncompleteSpendProfile() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setUpUserNotAsProjectManager(user);
+
+        assertFalse(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
     }
 
     @Test

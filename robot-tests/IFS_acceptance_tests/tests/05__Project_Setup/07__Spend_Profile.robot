@@ -378,10 +378,10 @@ Partners can see the Spend Profile section completed
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
-    Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
-    Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942

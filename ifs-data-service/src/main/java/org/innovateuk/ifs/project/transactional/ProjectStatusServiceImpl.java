@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
@@ -99,7 +103,11 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project){
-        return createProjectDetailsStatus(project);
+        return createProjectDetailsCompetitionStatus(project);
+    }
+
+    private ProjectActivityStates createProjectDetailsCompetitionStatus(Project project) {
+        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project){

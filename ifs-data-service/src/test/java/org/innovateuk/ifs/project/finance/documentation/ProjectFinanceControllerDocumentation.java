@@ -27,21 +27,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static java.lang.Boolean.FALSE;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CSV_GENERATION_FAILURE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.SpendProfileDocs.spendProfileCSVFields;
-import static org.innovateuk.ifs.documentation.SpendProfileDocs.spendProfileResourceFields;
-import static org.innovateuk.ifs.documentation.SpendProfileDocs.spendProfileTableFields;
+import static org.innovateuk.ifs.documentation.SpendProfileDocs.*;
 import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.lang.Boolean.FALSE;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
@@ -315,20 +313,39 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         Long projectId = 1L;
         Long organisationId = 1L;
-        Boolean complete = true;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.markSpendProfile(projectOrganisationCompositeId, complete)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", projectId, organisationId, complete)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
         )
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as complete"),
-                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete"),
-                                parameterWithName("complete").description("Flag to indicate if the Spend Profile can be marked as complete or not")
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete")
+                        )
+                ));
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
+        )
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as incomplete"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as incomplete")
                         )
                 ));
     }
@@ -337,13 +354,11 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     public void getViability() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ViabilityResource expectedViabilityResource = new ViabilityResource();
-        expectedViabilityResource.setViability(Viability.APPROVED);
-        expectedViabilityResource.setViabilityStatus(ViabilityStatus.GREEN);
+        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
 
         when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 
