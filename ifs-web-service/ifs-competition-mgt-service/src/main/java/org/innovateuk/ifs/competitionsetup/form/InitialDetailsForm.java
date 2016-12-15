@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Form for the initial details competition setup section.
@@ -36,7 +36,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     private Long innovationSectorCategoryId;
 
     @NotEmpty(message = "{validation.initialdetailsform.innovationareacategoryid.required}")
-    private Set<Long> innovationAreaCategoryIds;
+    private List<Long> innovationAreaCategoryIds;
 
     @NotNull(message = "{validation.initialdetailsform.competitiontypeid.required}")
     private Long competitionTypeId;
@@ -100,11 +100,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.innovationSectorCategoryId = innovationSectorCategoryId;
     }
 
-    public Set<Long> getInnovationAreaCategoryIds() {
+    public List<Long> getInnovationAreaCategoryIds() {
         return innovationAreaCategoryIds;
     }
 
-    public void setInnovationAreaCategoryIds(Set<Long> innovationAreaCategoryIds) {
+    public void setInnovationAreaCategoryIds(List<Long> innovationAreaCategoryIds) {
         this.innovationAreaCategoryIds = innovationAreaCategoryIds;
     }
 

@@ -101,7 +101,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                         singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))))));
             }
         }
-		competition.setInnovationAreas(initialDetailsForm.getInnovationAreaCategoryIds());
+		competition.setInnovationAreas(initialDetailsForm.getInnovationAreaCategoryIds().stream().collect(Collectors.toSet()));
 
 		return competitionService.update(competition).andOnSuccess(() -> {
             if (initialDetailsForm.isMarkAsCompleteAction()) {
