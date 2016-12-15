@@ -29,7 +29,7 @@
                        th:field="${competitionSetupForm.title}"
                        required="required"
                        data-required-errormessage="Please enter a title"
-                       th:readonly="${competition.isSetupAndLive()}" />
+                       th:readonly="${isSetupAndLive}" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
@@ -55,7 +55,7 @@
                     </span>
                 </label>
 
-                <select th:disabled="${competition.isSetupAndLive()}" th:readonly="${competition.isSetupAndLive()}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
+                <select th:disabled="${competition.isSetupAndLive()}" th:readonly="${isSetupAndLive}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
                         data-required-errormessage="Please select an innovation sector"
                         data-autosave-disabled="">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
@@ -94,7 +94,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
                           </label>
-                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
                                  required="required"
@@ -108,7 +108,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateMonth">
                               <span>Month</span>
                           </label>
-                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
@@ -122,7 +122,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateYear">
                               <span>Year</span>
                           </label>
-                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
@@ -210,7 +210,7 @@
                 </dd>
                </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -431,7 +431,7 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -633,7 +633,7 @@
 
             </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -771,7 +771,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
@@ -919,7 +919,7 @@
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
             </dl>
 
-           <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+           <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
