@@ -27,14 +27,26 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     User findOneByUid(@Param("uid") String uid);
 
     @Query(value = "SELECT * " +
-            "FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id, role r " +
-            "WHERE r.id = ur.role_id AND r.name = 'assessor' AND u.id NOT IN(" +
-            "SELECT u.id " +
-            "FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id, " +
-            "competition_user cu LEFT JOIN invite i ON cu.invite_id = i.id, " +
-            "role r LEFT JOIN user_role usr_r ON r.id = usr_r.role_id, " +
-            "participant_status ps LEFT JOIN competition_user comp_u ON ps.id = comp_u.participant_status_id " +
-            "WHERE cu.competition_id = :competitionId AND u.email = i.email " +
-            "AND (ps.name = 'PENDING' OR ps.name = 'ACCEPTED') AND r.name = 'assessor')", nativeQuery = true)
+            "FROM user u " +
+            "   LEFT JOIN user_role ur " +
+            "       ON u.id = ur.user_id " +
+            "   LEFT JOIN role r " +
+            "       ON ur.role_id = r.id " +
+            "WHERE r.name = 'assessor' AND u.id NOT IN(" +
+            "   SELECT u.id " +
+            "   FROM user u " +
+            "       LEFT JOIN user_role ur " +
+            "           ON u.id = ur.user_id, " +
+            "       competition_user cu " +
+            "       LEFT JOIN invite i " +
+            "           ON cu.invite_id = i.id, " +
+            "       role r " +
+            "       LEFT JOIN user_role usr_r " +
+            "           ON r.id = usr_r.role_id, " +
+            "       participant_status ps " +
+            "       LEFT JOIN competition_user comp_u " +
+            "           ON ps.id = comp_u.participant_status_id " +
+            "    WHERE cu.competition_id = :competitionId AND u.email = i.email " +
+            "       AND (ps.name = 'PENDING' OR ps.name = 'ACCEPTED') AND r.name = 'assessor')", nativeQuery = true)
     List<User> findAllAvailableAssessorsByCompetition(@Param("competitionId") long competitionId);
 }
