@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
