@@ -54,5 +54,4 @@ public class ApplicationFinance extends Finance {
     public void setApplication(Application application) {
         this.application = application;
     }
-
 }

@@ -19,5 +19,4 @@ public interface FinanceCheckRestService {
     RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
 
     RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
-
 }

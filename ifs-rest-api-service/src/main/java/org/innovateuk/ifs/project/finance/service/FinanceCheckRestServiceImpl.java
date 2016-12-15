@@ -43,5 +43,4 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/status";
         return getWithRestResult(url, FinanceCheckProcessResource.class);
     }
-
 }

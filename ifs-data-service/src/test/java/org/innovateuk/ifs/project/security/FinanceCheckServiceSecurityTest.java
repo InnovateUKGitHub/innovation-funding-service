@@ -101,7 +101,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
             return null;
         }
-
     }
 }
 

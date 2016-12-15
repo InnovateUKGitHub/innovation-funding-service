@@ -52,10 +52,10 @@ public interface ProjectFinanceService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
     ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus);
 
-    @PreAuthorize("hasPermission(#projectId, 'VIEW_CREDIT_REPORT')")
+    @PreAuthorize("hasPermission(#projectId, 'SAVE_CREDIT_REPORT')")
     ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent);
 
-    @PreAuthorize("hasPermission(#projectId, 'SAVE_CREDIT_REPORT')")
+    @PreAuthorize("hasPermission(#projectId, 'VIEW_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId);
 
 }

@@ -161,7 +161,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations) {
 
         return mapWithIndex(partnerOrganisations, (i, org) -> {
-                    
+
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 

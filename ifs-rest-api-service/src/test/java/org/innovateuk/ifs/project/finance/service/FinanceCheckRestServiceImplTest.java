@@ -2,13 +2,13 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
 public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<FinanceCheckRestServiceImpl> {

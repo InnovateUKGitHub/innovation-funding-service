@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 /**
  * Project finance resource holds the organisation's finance resources for a project during Finance Checks

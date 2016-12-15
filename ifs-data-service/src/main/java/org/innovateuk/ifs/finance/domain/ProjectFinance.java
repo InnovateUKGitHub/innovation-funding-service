@@ -58,9 +58,9 @@ public class ProjectFinance extends Finance {
         this.viability = viability;
     }
 
-    public Boolean getCreditReportConfirmed() { return creditReportConfirmed; }
+    public boolean getCreditReportConfirmed() { return creditReportConfirmed; }
 
-    public void setCreditReportConfirmed(Boolean creditReportConfirmed) { this.creditReportConfirmed = creditReportConfirmed; }
+    public void setCreditReportConfirmed(boolean creditReportConfirmed) { this.creditReportConfirmed = creditReportConfirmed; }
 
     public ViabilityStatus getViabilityStatus() {
         return viabilityStatus;
