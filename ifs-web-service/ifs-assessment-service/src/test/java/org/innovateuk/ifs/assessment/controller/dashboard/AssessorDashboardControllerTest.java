@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.controller.dashboard;
 
+import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.model.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
@@ -8,10 +9,8 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetit
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
-import org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -28,12 +27,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.time.LocalDateTime.now;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -69,12 +73,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(4))
                 .withSubmittedAssessments(1L)
@@ -86,7 +90,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(false)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -97,7 +101,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
                         LocalDateTime.now().plusDays(4).toLocalDate(),
                         3,
@@ -114,8 +118,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_activeStartsToday() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
@@ -123,7 +127,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorDeadlineDate(now().plusDays(6))
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
-                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -131,7 +135,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(false)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -142,7 +146,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
                         LocalDateTime.now().plusDays(6).toLocalDate(),
                         5,
@@ -159,14 +163,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_activeEndsToday() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
-                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -174,7 +178,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(true)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -185,7 +189,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
                         LocalDateTime.now().plusDays(0).toLocalDate(),
                         0,
@@ -202,14 +206,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_fundersPanel() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
-                .withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL)
+                .withCompetitionStatus(FUNDERS_PANEL)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -217,7 +221,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(true)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -237,8 +241,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_upcomingAssessments() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
@@ -252,7 +256,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(false)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -263,7 +267,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardUpcomingCompetitionViewModel> expectedUpcomingCompetitions = asList(
+        List<AssessorDashboardUpcomingCompetitionViewModel> expectedUpcomingCompetitions = singletonList(
                 new AssessorDashboardUpcomingCompetitionViewModel(
                         2L, "Juggling Craziness",
                         LocalDateTime.now().plusDays(1).toLocalDate(),
@@ -280,14 +284,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard_pastAssessmentInAssessment() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
-                .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
-                .withStatus(ParticipantStatusResource.ACCEPTED)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .withAssessorDeadlineDate(now().minusDays(0))
-                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -295,7 +299,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(true)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, CompetitionParticipantRoleResource.ASSESSOR, ParticipantStatusResource.ACCEPTED)).thenReturn(restSuccess(asList(participant)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -306,7 +310,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = asList(
+        List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
                         LocalDateTime.now().plusDays(0).toLocalDate(),
                         0,
@@ -318,5 +322,51 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
+    }
+
+    @Test
+    public void dashboard_pendingInvites() throws Exception {
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource()
+                .withHash("inviteHash")
+                .build();
+
+        CompetitionParticipantResource participantResource = newCompetitionParticipantResource()
+                .withInvite(inviteResource)
+                .withCompetitionParticipantRole(ASSESSOR)
+                .withStatus(PENDING)
+                .withUser(3L)
+                .withCompetition(2L)
+                .withCompetitionName("Juggling Craziness")
+                .withAssessorAcceptsDate(now().plusDays(10))
+                .withAssessorDeadlineDate(now().plusDays(20))
+                .withCompetitionStatus(CLOSED)
+                .build();
+
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withContractComplete(true)
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participantResource)));
+        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = singletonList(new AssessorDashboardPendingInviteViewModel(
+                "inviteHash",
+                "Juggling Craziness",
+                now().plusDays(10).toLocalDate(),
+                now().plusDays(20).toLocalDate()
+        ));
+
+        assertEquals(1, model.getPendingInvites().size());
+        assertEquals(expectedPendingInvitesModel, model.getPendingInvites());
     }
 }

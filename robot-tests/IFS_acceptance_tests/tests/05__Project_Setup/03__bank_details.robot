@@ -140,7 +140,7 @@ Bank details for Academic
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5543
-    [Tags]      HappyPath   Pending
+    [Tags]      HappyPath
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details

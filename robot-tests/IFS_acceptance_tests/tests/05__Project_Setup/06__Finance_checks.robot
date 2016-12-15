@@ -134,17 +134,16 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
-     [Tags]      HappyPath   Pending
+     [Tags]      HappyPath
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance Checks are approved
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.waiting  # Spend Profile
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting       # Bank details
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance Checks are actionable from the start-workaround for Private beta assessment
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
-
 
 Other internal users do not have access to Finance Checks
     [Documentation]    INFUND-4821
