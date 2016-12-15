@@ -28,7 +28,7 @@ public class ProjectFinance extends Finance {
     @Enumerated(EnumType.STRING)
     private Viability viability = Viability.PENDING;
 
-    private Boolean isCreditReport;
+    private boolean creditReportConfirmed = false;
 
     @Enumerated(EnumType.STRING)
     private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
@@ -58,9 +58,9 @@ public class ProjectFinance extends Finance {
         this.viability = viability;
     }
 
-    public Boolean getIsCreditReport() { return isCreditReport; }
+    public Boolean getCreditReportConfirmed() { return creditReportConfirmed; }
 
-    public void setIsCreditReport(Boolean isCreditReport) { this.isCreditReport = isCreditReport; }
+    public void setCreditReportConfirmed(Boolean creditReportConfirmed) { this.creditReportConfirmed = creditReportConfirmed; }
 
     public ViabilityStatus getViabilityStatus() {
         return viabilityStatus;

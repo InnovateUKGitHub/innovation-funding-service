@@ -317,7 +317,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
         if(projectFinance != null) {
-            projectFinance.setIsCreditReport(reportPresent);
+            projectFinance.setCreditReportConfirmed(reportPresent);
             projectFinanceRepository.save(projectFinance);
             return serviceSuccess();
         } else {
@@ -329,7 +329,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
         if(projectFinance != null) {
-            Boolean creditReport = projectFinance.getIsCreditReport();
+            Boolean creditReport = projectFinance.getCreditReportConfirmed();
             projectFinanceRepository.save(projectFinance);
             return serviceSuccess(creditReport);
         } else {

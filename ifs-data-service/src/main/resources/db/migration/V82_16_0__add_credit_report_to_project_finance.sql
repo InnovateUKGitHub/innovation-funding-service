@@ -1,1 +1,1 @@
-ALTER TABLE `ifs`.`project_finance` ADD COLUMN `is_credit_report` BIT(1) NOT NULL DEFAULT FALSE COMMENT 'Whether a credit report is available' ;
+ALTER TABLE `ifs`.`project_finance` ADD COLUMN `credit_report_confirmed` BIT(1) NOT NULL DEFAULT FALSE COMMENT 'Whether an available credit report has been confirmed during Viability checks' ;

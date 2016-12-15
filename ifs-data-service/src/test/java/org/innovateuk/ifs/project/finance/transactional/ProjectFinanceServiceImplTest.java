@@ -783,7 +783,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Long organisationId = 1L;
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setIsCreditReport(Boolean.TRUE);
+        projectFinanceInDB.setCreditReportConfirmed(Boolean.TRUE);
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
         ServiceResult<Boolean> result = service.getCreditReport(projectId, organisationId);
 
@@ -806,7 +806,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Boolean.TRUE, projectFinanceInDB.getIsCreditReport());
+        assertEquals(Boolean.TRUE, projectFinanceInDB.getCreditReportConfirmed());
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
 
     }
