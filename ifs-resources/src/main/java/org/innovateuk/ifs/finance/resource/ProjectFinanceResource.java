@@ -59,7 +59,6 @@ public class ProjectFinanceResource extends BaseFinanceResource {
                 .append(organisation, that.organisation)
                 .append(target, that.target)
                 .append(organisationSize, that.organisationSize)
-                .append(viability, that.viability)
                 .append(financeOrganisationDetails, that.financeOrganisationDetails)
                 .append(isCreditReport, that.isCreditReport)
                 .isEquals();

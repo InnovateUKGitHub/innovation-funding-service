@@ -14,6 +14,7 @@ public class CompetitionInviteDocs {
             fieldWithPath("id").description("Id of the competition invite"),
             fieldWithPath("competitionName").description("Name of the competition"),
             fieldWithPath("email").description("Email of the competition invitee"),
+            fieldWithPath("hash").description("Hash id of the competition invite"),
             fieldWithPath("status").description("Status of the competition invite"),
             fieldWithPath("acceptsDate").description("Date of assessor accepting"),
             fieldWithPath("deadlineDate").description("Date of assessor deadline"),
@@ -30,6 +31,7 @@ public class CompetitionInviteDocs {
     public static final CompetitionInviteResourceBuilder competitionInviteResourceBuilder = newCompetitionInviteResource()
             .withIds(1L)
             .withCompetitionName("Juggling Craziness")
+            .withHash("abcdefghijkl")
             .withEmail("paul.plum@gmail.com");
 
     public static final CompetitionRejectionResource competitionInviteResource =

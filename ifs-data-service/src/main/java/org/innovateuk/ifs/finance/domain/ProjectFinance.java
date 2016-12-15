@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -27,8 +28,10 @@ public class ProjectFinance extends Finance {
     @Enumerated(EnumType.STRING)
     private Viability viability = Viability.PENDING;
 
-
     private Boolean isCreditReport;
+
+    @Enumerated(EnumType.STRING)
+    private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
 
     public ProjectFinance() {
     }
@@ -58,4 +61,12 @@ public class ProjectFinance extends Finance {
     public Boolean getIsCreditReport() { return isCreditReport; }
 
     public void setIsCreditReport(Boolean isCreditReport) { this.isCreditReport = isCreditReport; }
+
+    public ViabilityStatus getViabilityStatus() {
+        return viabilityStatus;
+    }
+
+    public void setViabilityStatus(ViabilityStatus viabilityStatus) {
+        this.viabilityStatus = viabilityStatus;
+    }
 }

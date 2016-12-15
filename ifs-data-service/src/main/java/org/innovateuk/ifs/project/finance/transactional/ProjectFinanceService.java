@@ -2,8 +2,9 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -43,14 +44,15 @@ public interface ProjectFinanceService {
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")
-    ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+    ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
-    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability);
+    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus);
 
     @PreAuthorize("hasPermission(#projectId, 'VIEW_CREDIT_REPORT')")
     ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent);
 
     @PreAuthorize("hasPermission(#projectId, 'SAVE_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId);
+
 }
