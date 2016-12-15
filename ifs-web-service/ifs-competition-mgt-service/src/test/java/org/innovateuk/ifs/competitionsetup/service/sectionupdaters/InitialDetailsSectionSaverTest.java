@@ -22,7 +22,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -63,7 +66,7 @@ public class InitialDetailsSectionSaverTest {
         long innovationSectorId = 5L;
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
         CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().build();
-        competitionSetupForm.setInnovationAreaCategoryIds(CollectionFunctions.asLinkedSet(innovationArea.getId(), 1L, 2L, 3L));
+        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationArea.getId(), 1L, 2L, 3L));
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());
@@ -86,7 +89,10 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(Long.valueOf(1L), competition.getExecutive());
         assertEquals(Long.valueOf(2L), competition.getCompetitionType());
         assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-        assertEquals(CollectionFunctions.asLinkedSet(innovationArea.getId(), 1L, 2L, 3L), competition.getInnovationAreas());
+        // We don't care about the order of the innovation area ids, so compare as a set
+        Set<Long> expectedInnovationAreaIds = CollectionFunctions.asLinkedSet(innovationArea.getId(), 1L, 2L, 3L);
+        Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
+        assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(Long.valueOf(innovationSectorId), competition.getInnovationSector());
         assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
 

@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 /**
  * Form populator for the initial details competition setup section.
  */
@@ -25,7 +27,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		competitionSetupForm.setExecutiveUserId(competitionResource.getExecutive());
 
 		competitionSetupForm.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
-		competitionSetupForm.setInnovationAreaCategoryIds(competitionResource.getInnovationAreas());
+		competitionSetupForm.setInnovationAreaCategoryIds(competitionResource.getInnovationAreas().stream().collect(Collectors.toList()));
 		competitionSetupForm.setLeadTechnologistUserId(competitionResource.getLeadTechnologist());
 
 		if (competitionResource.getStartDate() != null) {

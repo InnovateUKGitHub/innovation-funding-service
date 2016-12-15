@@ -12,9 +12,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class InitialDetailsFormPopulatorTest {
 
@@ -54,7 +57,8 @@ public class InitialDetailsFormPopulatorTest {
 		InitialDetailsForm form = (InitialDetailsForm) result;
 		assertEquals(Long.valueOf(4L), form.getCompetitionTypeId());
 		assertEquals(Long.valueOf(5L), form.getExecutiveUserId());
-		assertEquals(innovationAreas, form.getInnovationAreaCategoryIds());
+		assertThat(form.getInnovationAreaCategoryIds(), hasItems(6L, 66L));
+		assertThat(form.getInnovationAreaCategoryIds(), hasSize(2));
 		assertEquals(Long.valueOf(7L), form.getLeadTechnologistUserId());
 		assertEquals(Integer.valueOf(2), form.getOpeningDateDay());
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
