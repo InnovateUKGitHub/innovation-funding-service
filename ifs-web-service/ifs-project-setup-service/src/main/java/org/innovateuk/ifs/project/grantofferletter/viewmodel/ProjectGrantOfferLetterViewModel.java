@@ -18,12 +18,11 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
     private LocalDateTime submitDate;
-    private boolean offerRejected;
-    private boolean offerAccepted;
+    private boolean offerApproved;
 
     public ProjectGrantOfferLetterViewModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                             FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                            LocalDateTime submitDate, boolean offerRejected, boolean offerAccepted, boolean projectManager) {
+                                            LocalDateTime submitDate, boolean offerApproved, boolean projectManager) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -31,8 +30,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
         this.submitDate = submitDate;
-        this.offerRejected = offerRejected;
-        this.offerAccepted = offerAccepted;
+        this.offerApproved = offerApproved;
         this.projectManager = projectManager;
     }
 
@@ -58,12 +56,12 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
         return grantOfferLetterFile;
     }
 
-    public boolean isOfferRejected() {
-        return offerRejected;
+    public boolean isOfferApproved() {
+        return offerApproved;
     }
 
-    public void setOfferRejected(boolean offerRejected) {
-        this.offerRejected = offerRejected;
+    public void setOfferApproved(boolean offerApproved) {
+        this.offerApproved = offerApproved;
     }
 
     public void setGrantOfferLetterFile(FileDetailsViewModel grantOfferLetterFile) {
@@ -96,14 +94,6 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
 
     public void setSignedGrantOfferLetterFile(FileDetailsViewModel signedGrantOfferLetterFile) {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
-    }
-
-    public boolean isOfferAccepted() {
-        return offerAccepted;
-    }
-
-    public void setOfferAccepted(boolean offerAccepted) {
-        this.offerAccepted = offerAccepted;
     }
 
     public boolean isShowSubmitButton() { return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null; }
