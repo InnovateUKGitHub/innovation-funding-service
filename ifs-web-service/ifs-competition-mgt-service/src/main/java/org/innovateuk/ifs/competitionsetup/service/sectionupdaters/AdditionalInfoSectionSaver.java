@@ -40,7 +40,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 
 	@Override
 	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		if(!competition.isSetupAndAfterNotifications()) {
+		if(!sectionToSave().preventEdit(competition)) {
 			return updateCompetitionAdditionalInfo(competition, competitionSetupForm);
 		}
 		else {
@@ -65,7 +65,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
-		if(!CompetitionSetupSection.ADDITIONAL_INFO.preventEdit(competition)) {
+		if(!competition.isSetupAndLive()) {
 			competition.setActivityCode(additionalInfoForm.getActivityCode());
 			competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
 			competition.setBudgetCode(additionalInfoForm.getBudgetCode());

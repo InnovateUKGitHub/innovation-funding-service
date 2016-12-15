@@ -123,6 +123,10 @@ public class AdditionalInfoSectionSaverTest {
 		String newActivityCode = "newActivityCode";
 		String newBudgetCode = "newBudgetCoce";
 
+		String oldPafCode = "oldPafCode";
+		String oldActivityCode = "oldBudgetCode";
+		String oldBudgetCode = "oldActivityCode";
+
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
 
@@ -143,9 +147,9 @@ public class AdditionalInfoSectionSaverTest {
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L)
-				.withPafCode("oldPafCode")
-				.withBudgetCode("oldBudgetCode")
-				.withActivityCode("oldActivityCode")
+				.withPafCode(oldPafCode)
+				.withBudgetCode(oldBudgetCode)
+				.withActivityCode(oldActivityCode)
 				.withSetupComplete(true)
 				.withStartDate(yesterday)
 				.withFundersPanelDate(tomorrow)
@@ -156,17 +160,17 @@ public class AdditionalInfoSectionSaverTest {
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
 		verify(competitionService).update(argumentCaptor.capture());
 
-		assertEquals(argumentCaptor.getValue().getPafCode(), competition.getPafCode());
-		assertEquals(argumentCaptor.getValue().getActivityCode(), competition.getActivityCode());
-		assertEquals(argumentCaptor.getValue().getBudgetCode(), competition.getBudgetCode());
+		assertEquals(oldPafCode, 		argumentCaptor.getValue().getPafCode());
+		assertEquals(oldActivityCode, 	argumentCaptor.getValue().getActivityCode());
+		assertEquals(oldBudgetCode, 	argumentCaptor.getValue().getBudgetCode());
 
 		CompetitionFunderResource createdFunderResource1 = argumentCaptor.getValue().getFunders().get(0);
 		CompetitionFunderResource createdFunderResource2 = argumentCaptor.getValue().getFunders().get(1);
 
-		assertEquals(createdFunderResource1.getFunder(), funderResource1.getFunder());
-		assertEquals(createdFunderResource1.getFunderBudget(), funderResource1.getFunderBudget());
-		assertEquals(createdFunderResource2.getFunder(), funderResource2.getFunder());
-		assertEquals(createdFunderResource2.getFunderBudget(), funderResource2.getFunderBudget());
+		assertEquals(funderResource1.getFunder(), createdFunderResource1.getFunder());
+		assertEquals(funderResource1.getFunderBudget(), createdFunderResource1.getFunderBudget());
+		assertEquals(funderResource2.getFunder(), createdFunderResource2.getFunder());
+		assertEquals(funderResource2.getFunderBudget(), createdFunderResource2.getFunderBudget());
 
 		verify(competitionService).update(competition);
 	}
