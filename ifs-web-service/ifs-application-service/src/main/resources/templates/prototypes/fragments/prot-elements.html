@@ -119,4 +119,20 @@
     </form>
 </th:block>
 
+
+<!-- =========================== Task list =========================== -->
+
+<th:block th:fragment="prot-task-list">
+    <h3 class="heading-small">Task list</h3>
+    <ul class="task-list">
+        <li><a href="#" class="task-title">Task 1</a></li>
+        <li><a href="#" class="task-title">Task 2</a><span class="status-complete">Completed</span></li>
+        <li><a href="#" class="task-title">Task 3</a><span class="action-required">Assigned to <strong>you</strong></span><span class="status-complete">Completed</span></li>
+        <li><a href="#" class="task-title">Task 4</a><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><span class="status-complete">Completed</span></li>
+        <li><strong class="task-title">Task 5</strong></li>
+        <li><strong class="task-title">Task 6</strong><span class="notification">Jessica Doe</span></li>
+        <li class="unavailable"><strong class="task-title">Task 7</strong><span class="notification">-</span></li>
+    </ul>
+</th:block>
+
 </html>
