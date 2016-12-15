@@ -26,12 +26,18 @@ items:
           resources: {}
         - image: camptocamp/smtp-sink
           name: smtp
+          volumeMounts:
+          - name: smtp-maildir-storage
+            mountPath: /home/smtp/Maildir
           resources: {}
         - image: camptocamp/sqwebmail
           name: webmail
           ports:
           - containerPort: 80
           resources: {}
+        volumes:
+        - emptyDir: {}
+          name: smtp-maildir-storage
     test: false
     triggers:
     - type: ConfigChange
