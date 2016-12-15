@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -176,7 +176,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     public String getName() {
-        return Stream.of(this.getFirstName(), this.getLastName()).filter(org.apache.commons.lang3.StringUtils::isNotBlank).collect(joining(" "));
+        return Stream.of(this.getFirstName(), this.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
     }
 
     public String getLastName() {
