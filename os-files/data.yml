@@ -28,7 +28,12 @@ items:
           name: mysql
           ports:
           - containerPort: 3306
-          resources: {}
+          volumeMounts:
+          - name: mysql-tmp-storage
+            mountPath: /var/lib/mysql
+        volumes:
+          - emptyDir: {}
+            name: mysql-tmp-storage
     test: false
     triggers:
     - type: ConfigChange
