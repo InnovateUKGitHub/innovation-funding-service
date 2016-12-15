@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
@@ -12,14 +13,25 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.StreamFunctions.toStream;
 import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
+
+    private static final List<UserRoleType> ASSESSOR_MANAGEMENT_ROLES = asList(COMP_ADMIN, COMP_EXEC);
+
+    private static final List<UserRoleType> NON_ASSESSOR_MANAGEMENT_ROLES = toStream(UserRoleType.values())
+            .filter(userRoleType -> !ASSESSOR_MANAGEMENT_ROLES.contains(userRoleType) )
+            .collect(toList());
 
     private CompetitionInvitePermissionRules competitionInvitePermissionRules;
     private CompetitionInviteLookupStrategy competitionInviteLookupStrategy;
@@ -123,6 +135,130 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
                     verifyZeroInteractions(competitionParticipantPermissionRules);
                 }
         );
+    }
+
+    @Test
+    public void inviteUser_existing() {
+        ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            classUnderTest.inviteUser(newExistingUserStagedInviteResource().build());
+        });
+    }
+
+    @Test
+    public void inviteUser_existing_nonAssessorManagement() {
+        NON_ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            assertAccessDenied(
+                    () -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()),
+                    () -> {}
+            );
+        });
+    }
+
+    @Test
+    public void inviteUser_new() {
+        ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            classUnderTest.inviteUser(newNewUserStagedInviteResource().build());
+        });
+    }
+
+    @Test
+    public void inviteUser_new_nonAssessorManagement() {
+        NON_ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            assertAccessDenied(
+                    () -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()),
+                    () -> {}
+            );
+        });
+    }
+
+    @Test
+    public void sendInvite() {
+        ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            classUnderTest.sendInvite(1L);
+        });
+    }
+
+    @Test
+    public void sendInvite_nonAssessorManagement() {
+        NON_ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            assertAccessDenied(
+                    () -> classUnderTest.sendInvite(1L),
+                    () -> {}
+            );
+        });
+    }
+
+    @Test
+    public void deleteInvite() {
+        ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            classUnderTest.deleteInvite("email", 1L);
+        });
+    }
+
+    @Test
+    public void deleteInvite_nonAssessorManagement() {
+        NON_ASSESSOR_MANAGEMENT_ROLES.forEach(roleType -> {
+            setLoggedInUser(
+                    newUserResource()
+                            .withRolesGlobal(singletonList(newRoleResource()
+                                    .withType(roleType)
+                                    .build())
+                            )
+                            .build());
+            assertAccessDenied(
+                    () -> classUnderTest.deleteInvite("email", 1L),
+                    () -> {}
+            );
+        });
     }
 
     public static class TestCompetitionInviteService implements CompetitionInviteService {
