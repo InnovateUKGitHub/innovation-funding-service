@@ -3,6 +3,7 @@ package org.innovateuk.ifs.category.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -14,12 +15,16 @@ public class CategoryResource {
     private CategoryType type;
 
     private Long parent;
-    private Set<Long> children;
+    private Set<CategoryResource> children;
 
     public CategoryResource() {
     }
 
-    public CategoryResource(Long id, String name, CategoryType type, Long parent, Set<Long> children) {
+    public CategoryResource(Long id, String name, CategoryType type, Long parent) {
+        this(id, name, type, parent, new HashSet<>());
+    }
+
+    public CategoryResource(Long id, String name, CategoryType type, Long parent, Set<CategoryResource> children) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -59,11 +64,11 @@ public class CategoryResource {
         this.parent = parent;
     }
 
-    public Set<Long> getChildren() {
+    public Set<CategoryResource> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<Long> children) {
+    public void setChildren(Set<CategoryResource> children) {
         this.children = children;
     }
 
