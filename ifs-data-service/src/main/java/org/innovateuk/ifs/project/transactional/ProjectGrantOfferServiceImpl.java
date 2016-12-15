@@ -2,9 +2,17 @@ package org.innovateuk.ifs.project.transactional;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,16 +23,20 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
+import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.codec.binary.StringUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -40,13 +52,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.io.File.separator;
 
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
@@ -68,7 +82,26 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileEntryMapper fileEntryMapper;
 
     @Autowired
+    private OrganisationMapper organisationMapper;
+
+
+    @Autowired
     private FileTemplateRenderer fileTemplateRenderer;
+
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    @Autowired
+    private FinanceRowService financeRowService;
+
+    @Autowired
+    private SpendProfileTableCalculator spendProfileTableCalculator;
+
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+
+    @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
 
 
     @Override
@@ -175,10 +208,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         //TODO Implement adding Finance data if approved otherwise skip generation of GOL.
         return getProject(projectId).
                 andOnSuccess(project -> fileTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
-                            andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
-                                    fileEntryResource).
-                                    andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
-                                            andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
+                        andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
+                                fileEntryResource).
+                                andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
+                                        andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
     private Map<String, Object> getTemplateData(Project project) {
@@ -198,7 +231,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 project.getTargetStartDate().toString() : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
-        templateReplacements.put("TableData", getYearlyGOLProfileTable());
+        templateReplacements.put("TableData", getYearlyGOLProfileTable(project));
         return templateReplacements;
     }
 
@@ -293,8 +326,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
+                andOnSuccess(project -> {
+                    if(golWorkflowHandler.isSent(project)) {
+                        return fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                                andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true));
+                    } else {
+                        return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY);
+                    }
+                });
     }
 
     @Override
@@ -302,6 +341,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSignedGrantOfferLetter() == null) {
                 return serviceFailure(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+            }
+            if(!golWorkflowHandler.sign(project)) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
             project.setOfferSubmittedDate(LocalDateTime.now());
             return serviceSuccess();
@@ -322,56 +364,83 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return GOL_TEMPLATES_PATH;
     }
 
-    private YearlyGOLProfileTable getYearlyGOLProfileTable() {
+    private YearlyGOLProfileTable getYearlyGOLProfileTable(Project project) {
+        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
+        Map<String, List<String>> organisationYearsMap = new LinkedHashMap<>();
+        Map<String, List<BigDecimal>> organisationEligibleCostTotal = new HashMap<>();
+        Map<String, List<BigDecimal>> organisationGrantAllocationTotal = new HashMap<>();
 
-        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap();
-        Map<String, List<String>> organisationYearsMap = new LinkedHashMap();
-        List<String> years = new LinkedList<>();
-        Map<String, List<BigDecimal>> organisationEligibleCostTotal = new HashMap();
-        List<BigDecimal> eligibleCostPerYear = new LinkedList<>();
-        Map<String, List<BigDecimal>> organisationGrantAllocationTotal = new HashMap();
-        List<BigDecimal> grantPerYear = new LinkedList<>();
-        Map<String, BigDecimal> yearEligibleCostTotal = new HashMap();
-        Map<String, BigDecimal> yearGrantAllocationTotal = new HashMap();
-        BigDecimal eligibleCostGrandTotal = BigDecimal.valueOf(10000);
-        BigDecimal grantAllocationGrandTotal = BigDecimal.valueOf(10000);
+        List<String> projectYears = spendProfileTableCalculator.generateSpendProfileYears(projectMapper.mapToResource(project));
 
-        organisationAndGrantPercentageMap.put("Empire Ltd", 20);
-        organisationAndGrantPercentageMap.put("Ludlow", 30);
-        organisationAndGrantPercentageMap.put("EGGS", 50);
+        List<Organisation> organisations = project.getOrganisations();
+        Map<String, SpendProfileTableResource> organisationSpendProfiles = getSpendProfileTableResourcePerOrganisation(project, organisations);
 
+        Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap = getMonthlyEligibleCostPerOrganisation(organisationSpendProfiles);
+        List<LocalDateResource> months = organisationSpendProfiles.values().iterator().next().getMonths();
 
-        years.add(0, "2016/2017");
-        years.add(1, "2017/2018");
-        years.add(2, "2018/2019");
-        organisationYearsMap.put("Empire Ltd", years);
-        organisationYearsMap.put("Ludlow", years);
-        organisationYearsMap.put("EGGS", years);
+        populateOrganisationPerValuesMaps(project, organisationAndGrantPercentageMap,
+                organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal,
+                projectYears, organisations, monthlyCostsPerOrganisationMap,
+                months);
 
-        eligibleCostPerYear.add(0, BigDecimal.valueOf(1000));
-        eligibleCostPerYear.add(1, BigDecimal.valueOf(1200));
-        eligibleCostPerYear.add(2, BigDecimal.valueOf(1100));
-        grantPerYear.add(0, BigDecimal.valueOf(1000));
-        grantPerYear.add(1, BigDecimal.valueOf(1200));
-        grantPerYear.add(2, BigDecimal.valueOf(1100));
-        organisationEligibleCostTotal.put("Empire Ltd", eligibleCostPerYear);
-        organisationEligibleCostTotal.put("Ludlow", eligibleCostPerYear);
-        organisationEligibleCostTotal.put("EGGS", eligibleCostPerYear);
-
-        organisationGrantAllocationTotal.put("Empire Ltd", grantPerYear);
-        organisationGrantAllocationTotal.put("Ludlow", grantPerYear);
-        organisationGrantAllocationTotal.put("EGGS", grantPerYear);
-
-        yearEligibleCostTotal.put(years.get(0), BigDecimal.valueOf(3000));
-        yearEligibleCostTotal.put(years.get(1), BigDecimal.valueOf(2600));
-        yearEligibleCostTotal.put(years.get(2), BigDecimal.valueOf(2300));
-
-        yearGrantAllocationTotal.put(years.get(0), BigDecimal.valueOf(3000));
-        yearGrantAllocationTotal.put(years.get(1), BigDecimal.valueOf(2600));
-        yearGrantAllocationTotal.put(years.get(2), BigDecimal.valueOf(2300));
+        Map<String, BigDecimal> yearEligibleCostTotal = spendProfileTableCalculator.createYearlyEligibleCostTotal(projectMapper.mapToResource(project), monthlyCostsPerOrganisationMap, months);
+        Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectMapper.mapToResource(project), monthlyCostsPerOrganisationMap, months, organisationAndGrantPercentageMap);
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearGrantAllocationTotal, eligibleCostGrandTotal, grantAllocationGrandTotal);
+                yearEligibleCostTotal, yearlyGrantAllocationTotal);
+    }
+
+    private Map<String, List<BigDecimal>> getMonthlyEligibleCostPerOrganisation(Map<String,
+            SpendProfileTableResource> organisationSpendProfiles) {
+        return simpleMapValue(organisationSpendProfiles, tableResource ->
+                    spendProfileTableCalculator.calculateMonthlyTotals(tableResource.getMonthlyCostsPerCategoryMap(),
+                            tableResource.getMonths().size()));
+    }
+
+    private Map<String, SpendProfileTableResource> getSpendProfileTableResourcePerOrganisation(Project project,
+                                                                                               List<Organisation> organisations) {
+        return organisations.stream()
+                    .collect(Collectors.toMap(Organisation::getName, organisation -> {
+                        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
+                        if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
+                            return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+                        }
+                        return new SpendProfileTableResource();
+                    }));
+    }
+
+    private void populateOrganisationPerValuesMaps(Project project,
+                                                   Map<String, Integer> organisationAndGrantPercentageMap,
+                                                   Map<String, List<String>> organisationYearsMap,
+                                                   Map<String, List<BigDecimal>> organisationEligibleCostTotal,
+                                                   Map<String, List<BigDecimal>> organisationGrantAllocationTotal,
+                                                   List<String> projectYears, List<Organisation> organisations,
+                                                   Map<String, List<BigDecimal>> monthlyCostsPerOrganisationMap,
+                                                   List<LocalDateResource> months) {
+        organisations.stream()
+                .forEach(organisation -> {
+                    financeRowService.financeDetails(project.getApplication().getId(), organisation.getId())
+                            .andOnSuccessReturn(applicationFinanceResource -> grantPercentagePerOrganisation(applicationFinanceResource,
+                                    organisation,
+                                    organisationAndGrantPercentageMap));
+
+                    monthlyCostsPerOrganisationMap.values().forEach(value -> {
+                        List<BigDecimal> eligibleCostPerYear = spendProfileTableCalculator.calculateEligibleCostPerYear(projectMapper.mapToResource(project), value, months);
+                        List<BigDecimal> grantAllocationPerYear = spendProfileTableCalculator.calculateGrantAllocationPerYear(projectMapper.mapToResource(project), value, months,
+                                organisationAndGrantPercentageMap.get(organisation.getName()));
+
+                        organisationEligibleCostTotal.put(organisation.getName(), eligibleCostPerYear);
+                        organisationGrantAllocationTotal.put(organisation.getName(), grantAllocationPerYear);
+                        organisationYearsMap.put(organisation.getName(), projectYears);
+                    });
+                });
+    }
+
+    private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, Organisation organisation, Map<String, Integer> organisationAndGrantPercentageMap) {
+        organisationAndGrantPercentageMap.put(organisation.getName(),
+                organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                        ? 100 : applicationFinanceResource.getGrantClaimPercentage());
+        return serviceSuccess();
     }
 }

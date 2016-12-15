@@ -87,7 +87,6 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
         boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
-        boolean spendProfileApproved = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -122,7 +121,7 @@ public class ProjectSetupStatusController {
         SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), projectDetailsSubmitted);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(bankDetailsState);
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
-        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState, spendProfileApproved);
+        SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState);
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
 

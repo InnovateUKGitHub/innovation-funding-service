@@ -5,11 +5,7 @@ import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
-import org.innovateuk.ifs.project.resource.SpendProfileResource;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +43,7 @@ public class ProjectFinanceController {
 
     @RequestMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-table")
     public RestResult<SpendProfileTableResource> getSpendProfileTable(@PathVariable("projectId") final Long projectId,
-                                                                 @PathVariable("organisationId") final Long organisationId) {
+                                                                      @PathVariable("organisationId") final Long organisationId) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -78,12 +74,18 @@ public class ProjectFinanceController {
         return projectFinanceService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", method = POST)
-    public RestResult<Void> markSpendProfileCompete(@PathVariable("projectId") final Long projectId,
-                                                    @PathVariable("organisationId") final Long organisationId,
-                                                    @PathVariable("complete") final Boolean complete) {
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", method = POST)
+    public RestResult<Void> markSpendProfileComplete(@PathVariable("projectId") final Long projectId,
+                                                    @PathVariable("organisationId") final Long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectFinanceService.markSpendProfile(projectOrganisationCompositeId, complete).toPostResponse();
+        return projectFinanceService.markSpendProfileComplete(projectOrganisationCompositeId).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", method = POST)
+    public RestResult<Void> markSpendProfileIncomplete(@PathVariable("projectId") final Long projectId,
+                                                    @PathVariable("organisationId") final Long organisationId) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.markSpendProfileIncomplete(projectOrganisationCompositeId).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/complete-spend-profiles-review", method = POST)

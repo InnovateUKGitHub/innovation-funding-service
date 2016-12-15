@@ -56,6 +56,7 @@ import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -77,6 +78,7 @@ import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -478,6 +480,14 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    protected OrganisationMapper organisationMapperMock;
+
+    @Mock
+    private SpendProfileTableCalculator spendProfileTableCalculator;
+
+
 
     @Before
     public void setupMockInjection() {

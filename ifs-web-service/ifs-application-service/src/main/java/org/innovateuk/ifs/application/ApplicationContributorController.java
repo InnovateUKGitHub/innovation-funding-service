@@ -66,6 +66,8 @@ public class ApplicationContributorController{
     private OrganisationService organisationService;
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -156,13 +158,13 @@ public class ApplicationContributorController{
     }
 
     private Long getAuthenticatedUserOrganisationId(UserResource user, List<InviteOrganisationResource> savedInvites) {
-		Optional<InviteOrganisationResource> matchingOrganisationResource = savedInvites.stream()
-				.filter(inviteOrg -> inviteOrg.getInviteResources().stream()
-						.anyMatch(inv -> user.getEmail().equals(inv.getEmail())))
-				.findFirst();
-		return matchingOrganisationResource.map((invOrgRes -> invOrgRes.getOrganisation())).orElse(null);
-	}
-    
+        Optional<InviteOrganisationResource> matchingOrganisationResource = savedInvites.stream()
+                .filter(inviteOrg -> inviteOrg.getInviteResources().stream()
+                        .anyMatch(inv -> user.getEmail().equals(inv.getEmail())))
+                .findFirst();
+        return matchingOrganisationResource.map((invOrgRes -> invOrgRes.getOrganisation())).orElse(null);
+    }
+
     /**
      * Add the invites from the database, to the ContributorsForm object.
      */
@@ -192,7 +194,7 @@ public class ApplicationContributorController{
 
     private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId, ApplicationResource application, UserResource leadApplicant) {
 
-        String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
+        String json = cookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !"".equals(json)) {
             ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
@@ -201,7 +203,7 @@ public class ApplicationContributorController{
                     // if the form was saved, validate and update cookie.
                     contributorsFormCookie.setTriedToSave(false);
                     String jsonState = JsonUtil.getSerializedObject(contributorsFormCookie);
-                    CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+                    cookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
                     validator.validate(contributorsForm, bindingResult);
@@ -254,7 +256,7 @@ public class ApplicationContributorController{
             if (!bindingResult.hasErrors()) {
                 saveContributors(applicationId, contributorsForm, response);
                 // empty cookie, since the invites are saved.
-                CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
+                cookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
                 if (newApplication != null && ApplicationStatusConstants.CREATED.getId().equals(application.getApplicationStatus())) {
                     applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
@@ -276,31 +278,31 @@ public class ApplicationContributorController{
     }
 
     private void validatePermissionToInvite(ContributorsForm contributorsForm, BindingResult bindingResult,
-			ApplicationResource application, UserResource leadApplicant, HttpServletRequest request) {
+                                            ApplicationResource application, UserResource leadApplicant, HttpServletRequest request) {
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
 
-    	if(leadApplicant!=null && leadApplicant.getId().equals(authenticatedUser.getId())){
-    		return;
-    	}
+        if(leadApplicant!=null && leadApplicant.getId().equals(authenticatedUser.getId())){
+            return;
+        }
 
-    	Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(authenticatedUser, getSavedInviteOrganisations(application));
-		
-    	contributorsForm.getOrganisations().forEach(invite -> {
-    		if(invite.getInvites() != null && !invite.getInvites().isEmpty() && (invite.getOrganisationId() == null || !invite.getOrganisationId().equals(authenticatedUserOrganisationId))) {
-    			// Could not add the element, so its a duplicate.
+        Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(authenticatedUser, getSavedInviteOrganisations(application));
+
+        contributorsForm.getOrganisations().forEach(invite -> {
+            if(invite.getInvites() != null && !invite.getInvites().isEmpty() && (invite.getOrganisationId() == null || !invite.getOrganisationId().equals(authenticatedUserOrganisationId))) {
+                // Could not add the element, so its a duplicate.
                 FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].organisationName", contributorsForm.getOrganisations().indexOf(invite), 0), null, false, new String[]{"CannotInviteOrganisation"}, null, "As you are not the lead applicant, you cannot invite people from organisations other than your own.");
                 bindingResult.addError(fieldError);
-    		}
-    	});
-	}
+            }
+        });
+    }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
         contributorsForm.getOrganisations().forEach(invite -> saveContributor(invite, applicationId, response));
     }
-    
+
     private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {
-    	List<ApplicationInviteResource> invites = new ArrayList<>();
+        List<ApplicationInviteResource> invites = new ArrayList<>();
         OrganisationResource existingOrganisation = null;
         if (organisationInvite.getOrganisationId() != null) {
             // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
@@ -409,7 +411,7 @@ public class ApplicationContributorController{
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
         String jsonState = JsonUtil.getSerializedObject(contributorsForm);
-        CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+        cookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {
