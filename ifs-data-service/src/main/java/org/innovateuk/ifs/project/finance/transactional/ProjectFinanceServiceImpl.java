@@ -118,11 +118,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project ->
-                validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
-                        projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
-                            List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
-                            return generateSpendProfileForPartnerOrganisations(project, organisationIds);
-                        }))
+               validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
+               projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
+                   List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
+                   return generateSpendProfileForPartnerOrganisations(project, organisationIds);
+               }))
         );
     }
 
@@ -287,13 +287,19 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+    public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        if(complete && table.getValidationMessages().hasErrors()){ // validate before marking as complete
+        if(table.getValidationMessages().hasErrors()) { // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
-            return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
+            return saveSpendProfileData(projectOrganisationCompositeId, table, true);
         }
+    }
+
+    @Override
+    public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+            return saveSpendProfileData(projectOrganisationCompositeId, table, false);
     }
 
     @Override

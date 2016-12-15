@@ -420,7 +420,7 @@ include::{snippets}/project/save-spend-profile/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/project/save-spend-profile/curl-request.adoc[]
 
-=== Mark Spend Profile as complete
+=== Mark Spend Profile as Complete
 ==== Success
 ===== Request
 include::{snippets}/project/mark-spend-profile-complete/http-request.adoc[]
@@ -431,6 +431,19 @@ include::{snippets}/project/mark-spend-profile-complete/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/mark-spend-profile-complete/curl-request.adoc[]
+
+
+=== Mark Spend Profile as Incomplete
+==== Success
+===== Request
+include::{snippets}/project/mark-spend-profile-incomplete/http-request.adoc[]
+include::{snippets}/project/mark-spend-profile-incomplete/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/mark-spend-profile-incomplete/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/mark-spend-profile-incomplete/curl-request.adoc[]
 
 === Get Viability
 ==== Success

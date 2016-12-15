@@ -52,15 +52,28 @@ public class ProjectFinanceServiceImplTest {
     }
 
     @Test
-    public void markSpendProfile() {
+    public void markSpendProfileComplete() {
 
         Long projectId = 1L;
         Long organisationId = 1L;
-        Boolean complete = true;
 
-        when(projectFinanceRestService.markSpendProfile(projectId, organisationId, complete)).thenReturn(restSuccess());
+        when(projectFinanceRestService.markSpendProfileComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.markSpendProfile(projectId, organisationId, complete);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        when(projectFinanceRestService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.markSpendProfileIncomplete(projectId, organisationId);
 
         assertTrue(result.isSuccess());
 

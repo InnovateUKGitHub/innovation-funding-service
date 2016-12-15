@@ -331,20 +331,39 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         Long projectId = 1L;
         Long organisationId = 1L;
-        Boolean complete = true;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.markSpendProfile(projectOrganisationCompositeId, complete)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", projectId, organisationId, complete)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
         )
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as complete"),
-                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete"),
-                                parameterWithName("complete").description("Flag to indicate if the Spend Profile can be marked as complete or not")
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete")
+                        )
+                ));
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
+        )
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as incomplete"),
+                                parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as incomplete")
                         )
                 ));
     }
