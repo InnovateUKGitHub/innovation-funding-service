@@ -52,6 +52,7 @@ IFS.competitionManagement.repeater = (function() {
           IFS.core.autoSave.fieldChanged('[name="removeArea"]');
           inst.closest('[id^="innovation-row"]').remove();
           IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]');
+          IFS.competitionManagement.setup.disableAlreadySelectedOptions();
           break;
       }
     },
@@ -83,6 +84,8 @@ IFS.competitionManagement.repeater = (function() {
       newRow.append('<button data-remove-row="innovationArea" value="'+count+'" class="buttonlink" type="button">Remove</button>');
 
       rows.last().after(newRow);
+      IFS.competitionManagement.setup.disableAlreadySelectedOptions(newRow.find('[name]'));
+
     },
     addCoFunder: function() {
       var count = 0;
