@@ -4,7 +4,9 @@ Documentation     INFUND-1987
 ...               INFUND-2307 Acceptance test: List of applications which are in assessment
 ...
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
-Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
+...
+...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so that I can see information and further actions for the competition
+Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
@@ -12,10 +14,13 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Competition status should be correct
     [Documentation]    INFUND-2307
+    ...
+    ...    INFUND-6602
     [Tags]    HappyPath
-    Given the user navigates to the page    ${COMP_ADMINISTRATOR_IN_ASSESSMENT}
+    Given The user clicks the button/link    link=Sustainable living models for the future
+    When The user clicks the button/link    jQuery=.button:contains("Applications")
     Then the user should see the text in the page    In assessment
-    Then the user should not see the text in the page    Competition open
+    And the user should not see the text in the page    Competition open
 
 Columns show of the submitted applications
     [Documentation]    INFUND-2307
@@ -124,10 +129,8 @@ Both calculations in the page should show the same
     ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-two-thirds span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
-
 the admin downloads the excel
     the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
-
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx

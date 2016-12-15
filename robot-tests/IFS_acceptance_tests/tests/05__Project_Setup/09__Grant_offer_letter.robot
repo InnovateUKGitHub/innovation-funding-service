@@ -2,6 +2,8 @@
 Documentation     INFUND-4851 As a project manager I want to be able to submit an uploaded Grant Offer Letter so that Innovate UK can review my signed copy
 ...
 ...               INFUND-6059 As the contracts team I want to be able to send a Grant Offer Letter to the partners so that the project can begin
+...
+...               INFUND-4849 As a partner I want to be able to download a Grant Offer Letter and Appendices
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -22,13 +24,15 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
-Project finance can access the GOL page
-    [Documentation]    INFUND-6409
-    [Tags]  Experian
-    [Setup]  log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(5) td.status.action a
-    And the user should not see an error in the page
+Project finance user uplaods the grant offer letter
+    [Documentation]    INFUND-6377
+    # note that this step is now required as all the following functionality is only unlocked once the grant offer letter has been sent to the partners
+    [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    When the user uploads the GOL    testing.pdf
+    And the user clicks the button/link    id=send-gol
+    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
+    Then the user should see the text in the page    The grant offer letter is now available for review
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848
@@ -86,7 +90,7 @@ PM should be able upload a file and then access the Submit button
     Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
 
 PM can view the generated Grant Offer Letter
-    [Documentation]    INFUND-6059
+    [Documentation]    INFUND-6059, INFUND-4849
     [Tags]    Pending
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
@@ -210,3 +214,8 @@ proj finance approves the spend profiles
     the user selects the checkbox      id=approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
     the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")
+
+the user uploads the GOL
+    [Arguments]    ${file_name}
+    Choose File    name=grantOfferLetter    ${UPLOAD_FOLDER}/${file_name}
+    Sleep    500ms
