@@ -7,15 +7,17 @@ public class FinanceCheckPartnerStatusResource {
     private Long id;
     private String name;
     private Viability viability;
+    private ViabilityStatus viabilityRagStatus;
     private Eligibility eligibility;
 
     public FinanceCheckPartnerStatusResource() {
     }
 
-    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, Eligibility eligibility) {
+    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityStatus viabilityRagStatus, Eligibility eligibility) {
         this.id = id;
         this.name = name;
         this.viability = viability;
+        this.viabilityRagStatus = viabilityRagStatus;
         this.eligibility = eligibility;
     }
 
@@ -49,6 +51,14 @@ public class FinanceCheckPartnerStatusResource {
 
     public void setViability(Viability viability) {
         this.viability = viability;
+    }
+
+    public ViabilityStatus getViabilityRagStatus() {
+        return viabilityRagStatus;
+    }
+
+    public void setViabilityRagStatus(ViabilityStatus viabilityRagStatus) {
+        this.viabilityRagStatus = viabilityRagStatus;
     }
 
     public enum Eligibility {
