@@ -47,10 +47,13 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -661,13 +664,28 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withLastName("Alufson")
                 .withInnovationArea(newCategoryResource()
                         .with(id(null))
-                        .withName("Earth Observation")
                         .build())
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com")
                 .withBusinessType(BUSINESS)
                 .withAdded(FALSE)
                 .build(1);
+
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(asList(newUser()
+                .withId(77L)
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withEmailAddress("worth.email.test+assessor1@gmail.com")
+                .withProfile(newProfile().withBusinessType(BUSINESS).build())
+                .build()));
+
+        when(userProfileServiceMock.getUserProfileStatus(77L)).thenReturn(serviceSuccess(newUserProfileStatusResource()
+                .withContractComplete(TRUE)
+                .withSkillsComplete(TRUE)
+                .withAffliliationsComplete(TRUE)
+                .build()));
+
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId("worth.email.test+assessor1@gmail.com", competitionId)).thenReturn(null);
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
