@@ -153,7 +153,7 @@
                     <tbody>
                         <tr th:each="assessor : ${model.assessors}">
                             <td><span th:text="${assessor.name}">John Barnes</span></td>
-                            <td th:text="${assessor.businessType.displayName}">Industry</td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
                             <td th:text="${assessor.innovationArea}">Electronics, sensors &amp; photonics, Materials</td>
                             <td>
                                 <span class="yes" th:if="${assessor.compliant}">Yes</span>
