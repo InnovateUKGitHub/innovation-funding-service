@@ -1,19 +1,27 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.FieldError;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -40,7 +48,6 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         long userId = 1L;
 
         ProjectResource project = newProjectResource().withId(projectId).build();
-        List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         FileEntryResource grantOfferLetter = newFileEntryResource().build();
         FileEntryResource signedGrantOfferLetter = newFileEntryResource().build();
@@ -135,22 +142,64 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
                 result.getResponse().getHeader("Content-Disposition"));
     }
+
     @Test
-    public void testUploadGrantOfferLetter() throws Exception {
+    public void testUploadSignedGrantOfferLetter() throws Exception {
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
+        MockMultipartFile uploadedFile = new MockMultipartFile("signedGrantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectService.addGeneratedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        ProjectResource project = newProjectResource().withId(123L).build();
+
+        ProjectUserResource pmUser = newProjectUserResource().withRoleName(UserRoleType.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
+        List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
+
+        when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
+        when(projectService.getGeneratedGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(
                 fileUpload("/project/123/offer").
                         file(uploadedFile).
-                        param("uploadGeneratedOfferLetterClicked", "")).
+                        param("uploadSignedGrantOfferLetterClicked", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/123/offer"));
+    }
+
+    @Test
+    public void testUploadSignedGrantOfferLetterGolNotSent() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("signedGrantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
+
+        ProjectResource project = newProjectResource().withId(123L).build();
+
+        ProjectUserResource pmUser = newProjectUserResource().withRoleName(UserRoleType.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
+        List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
+
+        when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
+        when(projectService.getSignedGrantOfferLetterFileDetails(123L)).thenReturn(Optional.empty());
+        when(projectService.getGeneratedGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(projectService.getAdditionalContractFileDetails(123L)).thenReturn(Optional.empty());
+        when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
+
+        MvcResult mvcResult = mockMvc.perform(
+                fileUpload("/project/123/offer").
+                        file(uploadedFile).
+                        param("uploadSignedGrantOfferLetterClicked", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter")).andReturn();
+        ProjectGrantOfferLetterForm form =  (ProjectGrantOfferLetterForm)mvcResult.getModelAndView().getModel().get("form");
+
+        assertEquals(1, form.getObjectErrors().size());
+        assertEquals(form.getObjectErrors(), form.getBindingResult().getFieldErrors("signedGrantOfferLetter"));
+        assertTrue(form.getObjectErrors().get(0) instanceof FieldError);
     }
 
     @Test

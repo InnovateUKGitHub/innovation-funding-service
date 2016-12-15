@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.css" />
+    <style>
+      code{
+        border: none;
+      }
+    </style>
+</head>
+<body>
+
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Prot component library', '/prototypes/prot-styles')" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+  <h1 class="heading-large">
+    <span class="heading-secondary">IFS elements</span>
+    Task / progress lists
+  </h1>
+
+  <div class="grid-row">
+    <div class="column-half">
+      <h2 class="heading-medium">Example task lists</h2>
+
+      <ul class="list-bullet">
+        <li><a href="/prototypes/984-assessor-application-overview">assessment overview (assessor)</a></li>
+        <li><a href="/prototypes/635-application-overview">application overview (applicant)</a></li>
+        <li><a href="/prototypes/4547-review-all-bank-details">bank details, in project setup (assessor)</a></li>
+        <li><a href="/prototypes/1588-project-status">project set up status (applicant)</a></li>
+        <li><a href="/prototypes/2469-comp-setup">competition set up (comp exec)</a></li>
+        <li><a href="/prototypes/5471-assign-to-application">application process (comp exec)</a></li>
+        <li><a href="/prototypes/4151-admin-competition-dash">projects in set up (comp exec)</a></li>
+      </ul>
+    </div>
+
+    <div class="column-half">
+      <h2 class="heading-medium">Example progress lists</h2>
+
+      <ul class="list-bullet extra-margin-bottom">
+        <li><a href="/prototypes/4151-admin-competition-dash">projects in set up (comp exec)</a></li>
+        <li><a href="/prototypes/675-dashboard">applicant dashboard (applicant)</a></li>
+        <li><a href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">assessor dashboard (assessor)</a></li>
+        <li><a href="/prototypes/871-assessor-comp-dashboard">assessor competition dashboard (assessor)</a></li>
+        <li><a href="/prototypes/4600-finances">application form</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <th:block th:include="prototypes/fragments/prot-elements :: prot-snippet('test')"  />
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/prism.js"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>

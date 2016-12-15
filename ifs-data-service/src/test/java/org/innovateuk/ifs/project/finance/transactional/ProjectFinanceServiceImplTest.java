@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
@@ -12,6 +12,8 @@ import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryTypeResource;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -24,7 +26,6 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -32,8 +33,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
@@ -52,10 +57,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -514,6 +515,49 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
+    @Test
+    public void markSpendProfileIncomplete() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withDuration(3L)
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withId(projectId)
+                .build();
+
+        SpendProfile spendProfileInDB = createSpendProfile(projectInDB,
+                // eligible costs
+                asMap(
+                        1L, new BigDecimal("100"),
+                        2L, new BigDecimal("180"),
+                        3L, new BigDecimal("55")),
+
+                // Spend Profile costs
+                asMap(
+                        1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("50")),
+                        2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                        3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
+
+        spendProfileInDB.setMarkedAsComplete(true);
+
+        OrganisationType organisationType = new OrganisationType();
+        organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+
+        ServiceResult<Void> result = service.markSpendProfileIncomplete(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertFalse(spendProfileInDB.isMarkedAsComplete());
+    }
 
     @Test
     public void markSpendProfileWhenActualTotalsGreaterThanEligibleCosts() {
@@ -550,7 +594,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
-        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
@@ -593,7 +637,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
-        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
 
@@ -657,14 +701,57 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViability(Viability.APPROVED);
+        projectFinanceInDB.setViabilityStatus(ViabilityStatus.GREEN);
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Viability> result = service.getViability(projectOrganisationCompositeId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.APPROVED, result.getSuccessObject());
+        assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
+        assertEquals(ViabilityStatus.GREEN, result.getSuccessObject().getViabilityStatus());
+
+    }
+
+    @Test
+    public void testSaveViabilityWhenViabilityAlreadyApproved() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViability(Viability.APPROVED);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+
+    }
+
+    @Test
+    public void testSaveViabilityWhenViabilityStatusIsUnset() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.UNSET);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(VIABILITY_RAG_STATUS_MUST_BE_SET));
+
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
 
     }
 
@@ -678,11 +765,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
         assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
+        assertEquals(ViabilityStatus.AMBER, projectFinanceInDB.getViabilityStatus());
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
 
     }

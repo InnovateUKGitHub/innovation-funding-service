@@ -133,8 +133,8 @@
       <th></th>
       <#assign years = TableData.yearEligibleCostTotal?keys>
       <#list years as year>
-        <th>${TableData.yearGrantAllocationTotal[year]}</th>
         <th>${TableData.yearEligibleCostTotal[year]}</th>
+        <th>${TableData.yearGrantAllocationTotal[year]}</th>
       </#list>
       <th></th>
       <th></th>

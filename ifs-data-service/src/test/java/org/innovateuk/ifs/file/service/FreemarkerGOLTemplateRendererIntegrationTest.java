@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.file.service;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,13 +13,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
+import static java.io.File.separator;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.io.File.separator;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -93,8 +91,6 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
         List<BigDecimal> grantPerYear = new LinkedList<>();
         Map<String, BigDecimal> yearEligibleCostTotal = new HashMap();
         Map<String, BigDecimal> yearGrantAllocationTotal = new HashMap();
-        BigDecimal eligibleCostGrandTotal = BigDecimal.valueOf(10000);
-        BigDecimal grantAllocationGrandTotal = BigDecimal.valueOf(10000);
 
         organisationAndGrantPercentageMap.put("Empire Ltd", 20);
         organisationAndGrantPercentageMap.put("Ludlow", 30);
@@ -132,8 +128,6 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearGrantAllocationTotal, eligibleCostGrandTotal, grantAllocationGrandTotal);
+                yearEligibleCostTotal, yearGrantAllocationTotal);
     }
-
-
 }
