@@ -10,7 +10,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 The User navigates to the Invite Dashboard
     [Documentation]    INFUND-6602 INFUND-6604
-    Given The user clicks the button/link    link=Sustainable living models for the future
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Invite assessors")
     Then The user should see the element    link=Find
     And The user should see the element    link=Invite
