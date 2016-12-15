@@ -8,10 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -580,6 +577,32 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         assertTrue(result.isSuccess());
         assertEquals(Boolean.TRUE, result.getSuccessObject());
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetter() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + ApprovalType.APPROVED;
+        setupPostWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        setupPostWithRestResultVerifications(expectedUrl, Void.class, null);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsSignedGrantOfferLetterApproved() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval";
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
+
+        RestResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        assertTrue(result.isSuccess());
     }
 
 }

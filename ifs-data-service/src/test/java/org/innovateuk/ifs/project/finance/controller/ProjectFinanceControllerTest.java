@@ -196,11 +196,9 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testGetViability() throws Exception {
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
-        ViabilityResource expectedViabilityResource = new ViabilityResource();
-        expectedViabilityResource.setViability(Viability.APPROVED);
-        expectedViabilityResource.setViabilityStatus(ViabilityStatus.GREEN);
+        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -213,7 +211,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void testSaveViability() throws Exception {
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
         Viability viability = Viability.APPROVED;
         ViabilityStatus viabilityStatus = ViabilityStatus.GREEN;
 

@@ -12,8 +12,7 @@ import org.innovateuk.ifs.project.finance.domain.CostCategory;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheckProcess;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -31,8 +30,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -231,13 +230,23 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Test
     public void testGetFinanceCheckSummary(){
+
         Long projectId = 123L;
         Long applicationId = 456L;
+
         Competition competition = newCompetition().build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
-        Organisation organisation = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().withProject(project).withOrganisation(organisation).build(3);
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
         List<ApplicationFinanceResource> applicationFinanceResourceList = newApplicationFinanceResource().build(3);
@@ -248,6 +257,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         process.setActivityState(pendingState);
         ProjectUserResource projectUser = newProjectUserResource().build();
         UserResource user = newUserResource().build();
+        ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityStatus.AMBER);
+        ViabilityResource viability3 = new ViabilityResource(Viability.PENDING, ViabilityStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
@@ -259,9 +270,31 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(2).getId())).thenReturn(process);
         when(projectUserMapperMock.mapToResource(process.getParticipant())).thenReturn(projectUser);
         when(userMapperMock.mapToResource(process.getInternalParticipant())).thenReturn(user);
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationType().getName())).thenReturn(true);
+
+        when(organisationFinanceDelegateMock.isUsingJesFinances(organisations[0].getOrganisationType().getName())).thenReturn(false);
+        when(organisationFinanceDelegateMock.isUsingJesFinances(organisations[1].getOrganisationType().getName())).thenReturn(true);
+
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
+
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
+
+        FinanceCheckSummaryResource summary = result.getSuccessObject();
+        List<FinanceCheckPartnerStatusResource> partnerStatuses = summary.getPartnerStatusResources();
+        assertEquals(3, partnerStatuses.size());
+
+        FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
+        assertEquals(FinanceCheckPartnerStatusResource.Viability.APPROVED, organisation1Results.getViability());
+        assertEquals(viability1.getViabilityStatus(), organisation1Results.getViabilityRagStatus());
+
+        FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
+        assertEquals(FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE, organisation2Results.getViability());
+        assertEquals(ViabilityStatus.UNSET, organisation2Results.getViabilityRagStatus());
+
+        FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
+        assertEquals(FinanceCheckPartnerStatusResource.Viability.REVIEW, organisation3Results.getViability());
+        assertEquals(viability3.getViabilityStatus(), organisation3Results.getViabilityRagStatus());
     }
 
     @Override

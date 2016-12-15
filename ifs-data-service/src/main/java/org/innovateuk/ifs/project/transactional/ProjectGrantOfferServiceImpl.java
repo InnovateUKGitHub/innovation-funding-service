@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.transactional;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -70,6 +71,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Autowired
     private FileTemplateRenderer fileTemplateRenderer;
 
+    @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
 
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
@@ -175,10 +178,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         //TODO Implement adding Finance data if approved otherwise skip generation of GOL.
         return getProject(projectId).
                 andOnSuccess(project -> fileTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
-                            andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
-                                    fileEntryResource).
-                                    andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
-                                            andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
+                        andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
+                                fileEntryResource).
+                                andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
+                                        andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
     private Map<String, Object> getTemplateData(Project project) {
@@ -293,8 +296,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true)));
+                andOnSuccess(project -> {
+                    if(golWorkflowHandler.isSent(project)) {
+                        return fileService.updateFile(fileEntryResource, inputStreamSupplier).
+                                andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true));
+                    } else {
+                        return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY);
+                    }
+                });
     }
 
     @Override
@@ -302,6 +311,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSignedGrantOfferLetter() == null) {
                 return serviceFailure(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
+            }
+            if(!golWorkflowHandler.sign(project)) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
             project.setOfferSubmittedDate(LocalDateTime.now());
             return serviceSuccess();

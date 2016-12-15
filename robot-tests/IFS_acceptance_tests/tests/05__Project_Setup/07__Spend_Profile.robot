@@ -378,10 +378,10 @@ Partners can see the Spend Profile section completed
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
-    Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
-    Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942
@@ -560,21 +560,13 @@ partners submit their finance contacts
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 partners submit bank details
-    log in as a different user            ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
-    log in as a different user            ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
-    log in as a different user            ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
+    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}
+    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}
+    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}
+
+partner submits his bank details
+    [Arguments]  ${email}
+    log in as a different user            ${email}    ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
     the user enters text to a text field  id=bank-acc-number  51406795
     the user enters text to a text field  id=bank-sort-code  404745
@@ -583,14 +575,14 @@ partners submit bank details
     the user clicks the button/link       jQuery=.button:contains("Submit")
 
 project finance approves bank details
-    log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${Katz_Id}/review-bank-details
-    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Approve account")
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${Meembee_Id}/review-bank-details
-    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    the user clicks the button/link    jQuery=.button:contains("Approve account")
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${Zooveo_Id}/review-bank-details
+    log in as a different user                   &{internal_finance_credentials}
+    proj finance approves partners bank details  ${Katz_Id}
+    proj finance approves partners bank details  ${Meembee_Id}
+    proj finance approves partners bank details  ${Zooveo_Id}
+
+proj finance approves partners bank details
+    [Arguments]  ${id}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${id}/review-bank-details
     the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     the user clicks the button/link    jQuery=.button:contains("Approve account")
 
