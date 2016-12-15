@@ -461,7 +461,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
-            verify(projectPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
+            verify(projectPermissionRules).partnersOnProjectCanViewGrantOfferPage(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
