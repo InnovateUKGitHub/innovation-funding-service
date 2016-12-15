@@ -232,9 +232,8 @@
         <h1 class="heading-xlarge">Funding information</h1>
     </div>
 
-    <form data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="additional"
+    <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
           th:action="@{(${editable} ? '' : 'additional/edit')}"
-          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
@@ -294,8 +293,7 @@
                                data-min-errormessage="Please enter a valid number" />
                         <input type="hidden"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
-                               th:value="${iteration.index != 0}"
-                               th:if="${isSetupAndLive}" />
+                               th:value="${iteration.index != 0}" />
 
                         <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
