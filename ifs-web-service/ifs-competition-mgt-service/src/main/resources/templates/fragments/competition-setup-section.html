@@ -89,12 +89,8 @@
                     </select>
                 </div>
             </th:block>
-
-            <div id="dynamic-row-pointer">
-                <input type="hidden" name="removeArea" />
-                <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
-            </div>
-
+            <input type="hidden" name="removeArea" />
+            <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
 
             <fieldset>
                 <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
