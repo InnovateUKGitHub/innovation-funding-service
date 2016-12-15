@@ -21,13 +21,14 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
+import java.util.function.BiFunction;
+
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.PROJECT_CREATED;
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SENT;
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SIGNED;
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_APPROVED;
 import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_REJECTED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
-
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
  *
@@ -95,16 +96,28 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return process != null && GOLState.SENT.equals(process.getActivityState());
     }
 
-
-    public boolean grantOfferLetterSent(Project project) {
+    boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
         GOLProcess process = getCurrentProcess(project);
         if(process == null)
             return false;
         ProjectUser projectUser = process.getParticipant();
         if(projectUser == null)
             return false;
-        return grantOfferLetterSent(project, projectUser);
+        return fn.apply(project, projectUser);
     }
+
+    public boolean grantOfferLetterSent(Project project) {
+        return getIfProjectAndUserValid(project, this::grantOfferLetterSent);
+    }
+
+    public boolean approve(Project project) {
+        return getIfProjectAndUserValid(project, this::grantOfferLetterApproved);
+    }
+
+    public boolean sign(Project project) {
+        return getIfProjectAndUserValid(project, this::grantOfferLetterSigned);
+    }
+
     @Override
     protected GOLProcess createNewProcess(Project target, ProjectUser participant) {
         return new GOLProcess(participant, target, null);
@@ -148,7 +161,7 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
     }
 
     private MessageBuilder<GOLOutcomes> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
-                                                                            GOLOutcomes event) {
+                                                                 GOLOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)
