@@ -14,8 +14,8 @@ public class AssessorCreatedInviteResource extends AssessorInviteResource {
     public AssessorCreatedInviteResource() {
     }
 
-    public AssessorCreatedInviteResource(String firstName, String lastName, CategoryResource innovationArea, boolean compliant, String email) {
-        super(firstName, lastName, innovationArea, compliant);
+    public AssessorCreatedInviteResource(String name, CategoryResource innovationArea, boolean compliant, String email) {
+        super(name, innovationArea, compliant);
         this.email = email;
     }
 
