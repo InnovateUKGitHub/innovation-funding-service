@@ -31,8 +31,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.InviteUtil.INVITE_HASH;
-import static org.innovateuk.ifs.util.InviteUtil.ORGANISATION_TYPE;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_TYPE;
 
 @Controller
 @RequestMapping("/organisation/create/type/")

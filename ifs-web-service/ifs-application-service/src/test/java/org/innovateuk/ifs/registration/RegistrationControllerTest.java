@@ -11,7 +11,7 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.InviteUtil;
+import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,8 +91,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
-        inviteHashCookie = new Cookie(InviteUtil.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
-        usedInviteHashCookie = new Cookie(InviteUtil.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
+        inviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
+        usedInviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
     }
 

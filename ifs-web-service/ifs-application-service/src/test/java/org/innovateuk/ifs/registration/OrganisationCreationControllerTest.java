@@ -11,7 +11,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matchers;
-import org.innovateuk.ifs.util.InviteUtil;
+import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,7 +95,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         organisationFormWithPostcodeInput = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
         organisationFormWithSelectedPostcode = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSave\":false,\"postcodeInput\":\""+POSTCODE_LOOKUP+"\",\"selectedPostcodeIndex\":\"0\",\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
         organisationFormWithEmptyPostcodeInput = new Cookie("organisationForm", encryptor.encrypt("{\"addressForm\":{\"triedToSearch\":true,\"triedToSave\":false,\"postcodeInput\":\"\",\"selectedPostcodeIndex\":null,\"selectedPostcode\":null,\"postcodeOptions\":[],\"manualAddress\":false},\"triedToSave\":false,\"organisationType\":{\"id\":1,\"name\":\"Business\",\"parentOrganisationType\":null},\"organisationSearchName\":null,\"searchOrganisationId\":\""+COMPANY_ID+"\",\"organisationSearching\":false,\"manualEntry\":false,\"useSearchResultAddress\":false,\"organisationSearchResults\":[],\"organisationName\":\"NOMENSA LTD\"}"));
-        inviteHash = new Cookie(InviteUtil.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
+        inviteHash = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
     }
 
     @Test

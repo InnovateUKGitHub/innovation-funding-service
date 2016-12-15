@@ -48,8 +48,8 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERAT
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.util.InviteUtil.INVITE_HASH;
-import static org.innovateuk.ifs.util.InviteUtil.ORGANISATION_TYPE;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_TYPE;
 
 
 /**

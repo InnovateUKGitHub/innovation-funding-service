@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.innovateuk.ifs.util.InviteUtil.INVITE_HASH;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 
 /**
  * This controller will handle all requests that are related to the create of a application.

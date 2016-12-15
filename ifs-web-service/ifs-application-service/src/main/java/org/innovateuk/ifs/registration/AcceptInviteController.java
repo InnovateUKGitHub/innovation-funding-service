@@ -1,24 +1,24 @@
 package org.innovateuk.ifs.registration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.InviteUtil.INVITE_HASH;
-import static org.innovateuk.ifs.util.InviteUtil.handleAcceptedInvite;
-import static org.innovateuk.ifs.util.InviteUtil.handleInvalidInvite;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 
 
 /**
@@ -47,9 +45,6 @@ public class AcceptInviteController extends BaseController {
     private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    private InviteRestService inviteRestService;
-
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
@@ -61,36 +56,35 @@ public class AcceptInviteController extends BaseController {
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private InviteService inviteService;
+    @Autowired
+    private InviteRestService inviteRestService;
+
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
             HttpServletRequest request,
             Model model) {
-        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
         cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
-        if (!invite.isSuccess()) {
-            handleInvalidInvite(response, cookieUtil);
-            return "never should get here because of exception.";
+        ApplicationInviteResource inviteResource = inviteService.getInviteByHash(hash, response);
+        if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
+            return "redirect:/login";
         } else {
-            ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
-                return handleAcceptedInvite(cookieFlashMessageFilter, response, cookieUtil);
-            } else {
-                cookieUtil.saveToCookie(response, INVITE_HASH, hash);
-                InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
+            cookieUtil.saveToCookie(response, INVITE_HASH, hash);
+            InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
-                // check if there already is a user with this emailaddress
-                RestResult<Boolean> existingUserSearch = inviteRestService.checkExistingUser(hash);
-                // User already registered?
-                String redirectUrl = handleExistingUser(hash, response, request, model, inviteResource, existingUserSearch, inviteOrganisation);
-                if (redirectUrl != null) return redirectUrl;
+            // check if there already is a user with this emailaddress
+            RestResult<Boolean> existingUserSearch = inviteRestService.checkExistingUser(hash);
+            // User already registered?
+            String redirectUrl = handleExistingUser(hash, response, request, model, inviteResource, existingUserSearch, inviteOrganisation);
+            if (redirectUrl != null) return redirectUrl;
 
-                model.addAttribute("invite", inviteResource);
-                addCreateAccountURL(model, inviteOrganisation);
-                return "registration/accept-invite";
-            }
+            model.addAttribute("invite", inviteResource);
+            addCreateAccountURL(model, inviteOrganisation);
+            return "registration/accept-invite";
         }
     }
 
@@ -131,29 +125,22 @@ public class AcceptInviteController extends BaseController {
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvitedOrganisation(HttpServletResponse response, HttpServletRequest request, Model model) {
-        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
-        if (invite.isSuccess()) {
-            ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
-                InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
-                OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
+        ApplicationInviteResource inviteResource = inviteService.getInviteByRequest(request, response);
+        if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
+            InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(inviteResource.getHash()).getSuccessObjectOrThrowException();
+            OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
-                cookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
+            cookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
 
-                model.addAttribute("invite", inviteResource);
-                model.addAttribute("organisation", organisation);
-                model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
-                model.addAttribute("registerUrl", RegistrationController.BASE_URL);
-                return "registration/confirm-invited-organisation";
-            } else {
-                return handleAcceptedInvite(cookieFlashMessageFilter, response, cookieUtil);
-            }
-        }else{
-            handleInvalidInvite(response, cookieUtil);
+            model.addAttribute("invite", inviteResource);
+            model.addAttribute("organisation", organisation);
+            model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
+            model.addAttribute("registerUrl", RegistrationController.BASE_URL);
+            return "registration/confirm-invited-organisation";
+        } else {
+            return "redirect:/login";
         }
-        return "";
     }
 
     /**

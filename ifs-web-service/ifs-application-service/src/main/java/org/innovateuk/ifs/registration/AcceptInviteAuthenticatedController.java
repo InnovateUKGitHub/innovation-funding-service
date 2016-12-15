@@ -12,12 +12,13 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
+import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.util.InviteUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,11 +54,14 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private InviteService inviteService;
+
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        String hash = cookieUtil.getCookieValue(request, InviteUtil.INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, InviteServiceImpl.INVITE_HASH);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invite.isSuccess()) {
@@ -79,12 +83,12 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                 model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
                 return "registration/confirm-registered-organisation";
             } else {
-                cookieUtil.removeCookie(response, InviteUtil.INVITE_HASH);
+                cookieUtil.removeCookie(response, InviteServiceImpl.INVITE_HASH);
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";
             }
         } else {
-            cookieUtil.removeCookie(response, InviteUtil.INVITE_HASH);
+            cookieUtil.removeCookie(response, InviteServiceImpl.INVITE_HASH);
             throw new InvalidURLException("Invite url is not valid", null);
         }
     }
@@ -93,32 +97,24 @@ public class AcceptInviteAuthenticatedController extends BaseController{
     public String confirmedInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        String hash = cookieUtil.getCookieValue(request, InviteUtil.INVITE_HASH);
-        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
+        ApplicationInviteResource inviteResource = inviteService.getInviteByRequest(request, response);
+        if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
+            InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(inviteResource.getHash()).getSuccessObjectOrThrowException();
 
-        if (invite.isSuccess()) {
-            ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
-                InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
+            Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
 
-                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
+            if (failureMessages.size() > 0) {
+                failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
 
-                if (failureMessages.size() > 0){
-                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
-
-                    return "registration/accept-invite-failure";
-                }
-                inviteRestService.acceptInvite(hash, loggedInUser.getId()).getSuccessObjectOrThrowException();
-                cookieUtil.removeCookie(response, InviteUtil.INVITE_HASH);
-                return "redirect:/application/"+ inviteResource.getApplication();
-
-            } else {
-                return InviteUtil.handleAcceptedInvite(cookieFlashMessageFilter, response, cookieUtil);
+                return "registration/accept-invite-failure";
             }
+            inviteRestService.acceptInvite(inviteResource.getHash(), loggedInUser.getId()).getSuccessObjectOrThrowException();
+            cookieUtil.removeCookie(response, InviteServiceImpl.INVITE_HASH);
+            return "redirect:/application/" + inviteResource.getApplication();
+
         } else {
-            InviteUtil.handleInvalidInvite(response, cookieUtil);
+            return "redirect:/login";
         }
-        return "";
     }
 
     private OrganisationResource getUserOrInviteOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {
