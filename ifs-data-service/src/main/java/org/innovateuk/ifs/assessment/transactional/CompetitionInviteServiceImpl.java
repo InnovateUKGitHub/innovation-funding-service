@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.mapper.CategoryMapper;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -17,7 +18,9 @@ import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserProfileService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -27,9 +30,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -40,7 +44,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -65,7 +69,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private CompetitionInviteMapper mapper;
+    private CompetitionInviteMapper competitionInviteMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Autowired
     private UserService userService;
@@ -73,17 +80,20 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserProfileService userProfileService;
+
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     @Override
@@ -114,18 +124,26 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        // TODO INFUND-6775
-        return serviceSuccess(
-                asList(new AvailableAssessorResource("Jeremy", "Alufson",
-                        new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com", BUSINESS, false)));
+        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetition(competitionId);
+
+        return serviceSuccess(assessors.stream()
+                .map(assessor -> {
+                    AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
+                    availableAssessor.setEmail(assessor.getEmail());
+                    availableAssessor.setName(assessor.getName());
+                    availableAssessor.setBusinessType(getBusinessType(assessor));
+                    availableAssessor.setCompliant(assessor.isProfileCompliant());
+                    availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
+                    // TODO INFUND-6865 Users should have innovation areas
+                    availableAssessor.setInnovationArea(null);
+                    return availableAssessor;
+                }).collect(toList()));
     }
 
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
-        // TODO INFUND-6412
-        return serviceSuccess(
-                asList(new AssessorCreatedInviteResource("Jeremy", "Alufson",
-                        new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com")));
+        return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
+                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreaForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail())));
     }
 
     @Override
@@ -140,7 +158,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 .andOnSuccess(innovationArea -> getCompetition(stagedInvite.getCompetitionId())
                         .andOnSuccess(competition -> inviteUserToCompetition(stagedInvite.getName(), stagedInvite.getEmail(), competition, innovationArea))
                 )
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+    }
+
+    private BusinessType getBusinessType(User assessor) {
+        return (assessor.getProfile() != null) ? assessor.getProfile().getBusinessType() : null;
+    }
+
+    private boolean wasInviteCreated(String email, long competitionId) {
+        ServiceResult<CompetitionInvite> result = getByEmailAndCompetition(email, competitionId);
+        return result.isSuccess() ? result.getSuccessObject().getStatus() == CREATED : FALSE;
     }
 
     private ServiceResult<Category> getInnovationArea(long innovationCategoryId) {
@@ -157,7 +184,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
         return getUserByEmail(stagedInvite.getEmail()) // I'm not particularly tied to finding by email, vs id
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     private ServiceResult<CompetitionInvite> inviteUserToCompetition(User user, long competitionId) {
@@ -270,5 +297,18 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private String getInviteCompetitionName(CompetitionParticipant participant) {
         return participant.getInvite().getTarget().getName();
+    }
+
+    private boolean isUserCompliant(CompetitionInvite competitionInvite) {
+        return competitionInvite.getUser() != null && competitionInvite.getUser().isProfileCompliant();
+    }
+
+    private CategoryResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {
+        boolean inviteForNewUser = competitionInvite.getUser() == null;
+        if (inviteForNewUser) {
+            return categoryMapper.mapToResource(competitionInvite.getInnovationArea());
+        }
+        // TODO INFUND-6865 User should have an innovation area
+        return null;
     }
 }

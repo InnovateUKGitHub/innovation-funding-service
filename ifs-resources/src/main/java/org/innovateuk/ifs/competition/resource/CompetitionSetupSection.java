@@ -61,6 +61,7 @@ public enum CompetitionSetupSection {
             return true;
         } if (competitionResource.isSetupAndLive()) {
 			return !(this.equals(INITIAL_DETAILS)
+					|| this.equals(MILESTONES)
                     //TODO INFUND-6675 & 6694 & 6695 : add editable sections here.
                     );
 		}

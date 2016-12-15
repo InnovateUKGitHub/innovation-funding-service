@@ -319,6 +319,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(projectFinance != null) {
+            projectFinance.setCreditReportConfirmed(reportPresent);
+            projectFinanceRepository.save(projectFinance);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(projectFinance != null) {
+            Boolean creditReport = projectFinance.getCreditReportConfirmed();
+            projectFinanceRepository.save(projectFinance);
+            return serviceSuccess(creditReport);
+        } else {
+            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+        }
+    }
+
+    @Override
     public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
         return financeRowService.financeChecksTotals(projectId);
     }

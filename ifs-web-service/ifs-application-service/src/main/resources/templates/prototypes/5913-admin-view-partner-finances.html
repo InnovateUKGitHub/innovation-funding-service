@@ -35,7 +35,7 @@
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:remove="tag" />
 
-		<h2>Administration support costs
+		<h2>Overheads
     		<span data-mirror="#section-total-2">&pound; 0</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:remove="tag" />
@@ -73,6 +73,96 @@
 	<p>This refers to other public funding that you have told us about.</p>
 
 	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" th:remove="tag" />
+
+  <th:block th:unless="${param.org != null and param.org[0] == 'growth'}">
+    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+      <dt>Organisation size</dt>
+      <dd>Medium</dd>
+
+      <dt>Staff count</dt>
+      <dd>340</dd>
+
+      <dt>Turnover</dt>
+      <dd>&pound;12,000,000</dd>
+    </dl>
+  </th:block>
+
+  <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+      <dt>Organisation size</dt>
+      <dd>Medium</dd>
+    </dl>
+  </th:block>
+
+  <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+
+    <h2 class="heading-medium">Organisation's projected growth</h2>
+
+    <div class="table-overflow extra-margin-bottom">
+      <table class="extra-margin-bottom">
+        <thead>
+          <tr>
+            <th></th>
+            <th scope="col" class="alignright width-small" id="current">Current</th>
+            <th scope="col" class="alignright width-small" id="1-year">1 year</th>
+            <th scope="col" class="alignright width-small" id="3-plus-years">3+ years</th>
+            <th scope="col" class="alignright width-small" id="5-plus-years">5+ years</th>
+            <th scope="col" class="alignright" id="percent-related">Proportion related to project (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Annual turnover (&pound;)</th>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12%</td>
+          </tr>
+          <tr>
+            <th scope="row">Annual profit (&pound;)</th>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12%</td>
+          </tr>
+          <tr>
+            <th scope="row">Exports (&pound;)</th>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12%</td>
+          </tr>
+          <tr>
+            <th scope="row">Research and development spend as a percentage of annual turnover</th>
+            <td class="numeric">12%</td>
+            <td class="numeric">12%</td>
+            <td class="numeric">12%</td>
+            <td class="numeric">12%</td>
+            <td class="numeric">12%</td>
+          </tr>
+          <tr>
+            <th scope="row">Research and development (Spend value)</th>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12,000</td>
+            <td class="numeric">12%</td>
+          </tr>
+          <tr>
+            <th scope="row">Staff count</th>
+            <td class="numeric">340</td>
+            <td class="numeric">340</td>
+            <td class="numeric">340</td>
+            <td class="numeric">340</td>
+            <td class="numeric">12%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </th:block>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

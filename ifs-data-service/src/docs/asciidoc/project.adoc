@@ -458,6 +458,7 @@ include::{snippets}/project/get-viability/response-fields.adoc[]
 ===== Curl Example
 include::{snippets}/project/get-viability/curl-request.adoc[]
 
+
 === Save Viability
 ==== Success
 ===== Request
@@ -469,6 +470,33 @@ include::{snippets}/project/save-viability/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/save-viability/curl-request.adoc[]
+
+
+=== Is Credit Report confirmed?
+==== Success
+===== Request
+include::{snippets}/project/get-credit-report/http-request.adoc[]
+include::{snippets}/project/get-credit-report/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-credit-report/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-credit-report/curl-request.adoc[]
+
+
+=== Save Credit Report confirmed
+==== Success
+===== Request
+include::{snippets}/project/set-credit-report/http-request.adoc[]
+include::{snippets}/project/set-credit-report/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/set-credit-report/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/set-credit-report/curl-request.adoc[]
+
 
 === Get Project Team Status
 ==== Success

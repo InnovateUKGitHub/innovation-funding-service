@@ -123,5 +123,4 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.leadTechnologistUserId = leadTechnologistUserId;
     }
 
-
 }

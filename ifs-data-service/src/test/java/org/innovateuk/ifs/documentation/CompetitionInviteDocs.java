@@ -31,7 +31,7 @@ public class CompetitionInviteDocs {
     public static final CompetitionInviteResourceBuilder competitionInviteResourceBuilder = newCompetitionInviteResource()
             .withIds(1L)
             .withCompetitionName("Juggling Craziness")
-            .withHash("abcdefghijkl")
+            .withHash("0519d73a-f062-4784-ae86-7a933a7de4c3")
             .withEmail("paul.plum@gmail.com");
 
     public static final CompetitionRejectionResource competitionInviteResource =

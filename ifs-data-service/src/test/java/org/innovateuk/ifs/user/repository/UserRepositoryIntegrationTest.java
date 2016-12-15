@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -106,5 +106,15 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(USER_COUNT, users.size());
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         assertFalse(emailAddresses.contains("new@example.com"));
+    }
+
+    @Test
+    public void test_findAvailableAssessors() {
+        List<User> users = repository.findAllAvailableAssessorsByCompetition(4L);
+        assertEquals(2, users.size());
+
+        List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
+        List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
+        assertTrue(emailAddresses.containsAll(expectedEmail));
     }
 }

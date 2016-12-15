@@ -117,4 +117,14 @@ public class ProjectFinanceController {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.saveViability(projectOrganisationCompositeId, viability, viabilityStatus).toPostResponse();
     }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}", method = POST)
+    public RestResult<Void> saveCreditReport(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId, @PathVariable("reportPresent") Boolean reportPresent) {
+        return projectFinanceService.saveCreditReport(projectId, organisationId, reportPresent).toPostResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/credit-report", method = GET)
+    public RestResult<Boolean> getCreditReport(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
+        return projectFinanceService.getCreditReport(projectId, organisationId).toGetResponse();
+    }
 }
