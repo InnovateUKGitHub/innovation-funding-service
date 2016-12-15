@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.junit.Test;
@@ -6,9 +6,9 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-public class FunderViewModelTest {
+public class FunderRowFormTest {
 
     @Test
     public void testGetAppendixFileDescription() throws Exception {
@@ -23,10 +23,10 @@ public class FunderViewModelTest {
                 .withFunderBudget(funderBudget)
                 .build();
 
-        FunderViewModel funderViewModel = new FunderViewModel(funderResource);
+        FunderRowForm funderRowForm = new FunderRowForm(funderResource);
 
-        assertEquals(coFunder, funderViewModel.getCoFunder());
-        assertEquals(funder, funderViewModel.getFunder());
-        assertEquals(funderBudget, funderViewModel.getFunderBudget());
+        assertEquals(coFunder, funderRowForm.getCoFunder());
+        assertEquals(funder, funderRowForm.getFunder());
+        assertEquals(funderBudget, funderRowForm.getFunderBudget());
     }
 }

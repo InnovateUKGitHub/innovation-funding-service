@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.form;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
@@ -34,4 +33,5 @@ public class AssessorsForm extends CompetitionSetupForm {
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
     }
+
 }
