@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.viability.viewmodel;
 
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 
+import java.time.LocalDate;
+
 /**
  * View model for the Viability page
  */
@@ -26,11 +28,13 @@ public class FinanceChecksViabilityViewModel {
 
     private Long projectId;
     private boolean viabilityConfirmed;
+    private String approverName;
+    private LocalDate approvalDate;
 
     public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
                                            Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
                                            Integer contributionToProject, String companyRegistrationNumber,
-                                           Integer turnover, Integer headCount, OrganisationSize organisationSize, Long projectId, boolean viabilityConfirmed) {
+                                           Integer turnover, Integer headCount, OrganisationSize organisationSize, Long projectId, boolean viabilityConfirmed, String approverName, LocalDate approvalDate) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -45,6 +49,8 @@ public class FinanceChecksViabilityViewModel {
         this.organisationSize = organisationSize;
         this.projectId = projectId;
         this.viabilityConfirmed = viabilityConfirmed;
+        this.approverName = approverName;
+        this.approvalDate = approvalDate;
     }
 
     public String getOrganisationName() {
@@ -97,5 +103,13 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isReadOnly() {
         return viabilityConfirmed;
+    }
+
+    public String getApproverName() {
+        return approverName;
+    }
+
+    public LocalDate getApprovalDate() {
+        return approvalDate;
     }
 }

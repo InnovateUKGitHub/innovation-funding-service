@@ -159,7 +159,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
         assertEquals(viability.getViabilityStatus(), form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(true, form.isViabilityConfirmedChecked());
+        assertEquals(true, form.isConfirmViabilityChecked());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         assertEquals(viability.getViabilityStatus(), form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
-        assertEquals(false, form.isViabilityConfirmedChecked());
+        assertEquals(false, form.isConfirmViabilityChecked());
     }
 
     @Test

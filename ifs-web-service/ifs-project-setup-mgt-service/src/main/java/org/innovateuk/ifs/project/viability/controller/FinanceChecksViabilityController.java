@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -124,9 +125,12 @@ public class FinanceChecksViabilityController {
         Integer headCount = null; // for this release, these will always be null
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
+        String approver = "Dave Smith";
+        LocalDate approvalDate = LocalDate.now();
+
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed);
+                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed, approver, approvalDate);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
