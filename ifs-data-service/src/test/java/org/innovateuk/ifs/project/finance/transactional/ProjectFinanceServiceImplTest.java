@@ -756,6 +756,26 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
+    public void testSaveViabilityWhenViabilityStatusIsUnsetButViabilityAlsoNotApproved() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.UNSET);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+
+        assertEquals(Viability.PENDING, projectFinanceInDB.getViability());
+        assertEquals(ViabilityStatus.UNSET, projectFinanceInDB.getViabilityStatus());
+    }
+
+    @Test
     public void testSaveViabilitySuccess() {
 
         Long projectId = 1L;
