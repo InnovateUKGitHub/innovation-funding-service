@@ -10,6 +10,7 @@ User can update initial details of a competition before notify date
     [Documentation]    INFUND-6661
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
     Given the user clicks the button/link    link=Initial details
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user should see that the element is disabled    id=openingDateDay
     And the user should see that the element is disabled    id=openingDateMonth
     And the user should see that the element is disabled    id=openingDateYear
