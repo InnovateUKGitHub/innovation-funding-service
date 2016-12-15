@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
+import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -66,6 +69,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void getCreatedInvite() {
+        Category category = newCategory().withName("category").build();
         long createdId = competitionInviteRepository.save(newCompetitionInvite()
                 .with(id(null))
                 .withName("tom poly")
@@ -74,6 +78,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withHash("hash")
                 .withCompetition(competition)
                 .withStatus(InviteStatus.CREATED)
+                .withInnovationArea(category)
                 .build())
                 .getId();
 

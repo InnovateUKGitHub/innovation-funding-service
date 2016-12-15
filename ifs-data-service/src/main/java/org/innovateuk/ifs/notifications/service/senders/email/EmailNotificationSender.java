@@ -53,14 +53,6 @@ public class EmailNotificationSender implements NotificationSender {
 
         return handlingErrors(new Error(EMAILS_NOT_SENT_MULTIPLE), () -> {
 
-            //EmailAddress from = fromNotificationSource(notification.getFrom());
-
-//            List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
-//                find(getSubject(notification, recipient), getPlainTextBody(notification, recipient), getHtmlBody(notification, recipient)).andOnSuccess((subject, plainTextBody, htmlBody) ->
-//                    emailService.sendEmail(from, singletonList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
-//                )
-//            );
-
             Map<NotificationTarget, EmailContent> templates = renderTemplates(notification).getSuccessObject();
 
             List<ServiceResult<List<EmailAddress>>> results = new ArrayList<>();

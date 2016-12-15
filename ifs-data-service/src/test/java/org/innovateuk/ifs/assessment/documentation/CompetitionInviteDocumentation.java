@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -164,7 +165,11 @@ public class CompetitionInviteDocumentation extends BaseControllerMockMVCTest<Co
 
         when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId))
+        ObjectMapper mapper = new ObjectMapper();
+
+        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(content)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

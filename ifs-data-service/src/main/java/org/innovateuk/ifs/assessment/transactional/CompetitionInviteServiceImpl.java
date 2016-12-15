@@ -30,14 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -51,6 +49,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
@@ -91,6 +90,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    enum Notifications {
+        INVITE_ASSESSOR
+    }
+
 
     @Override
     public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
@@ -99,7 +102,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
             NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
-            Notification notification = new Notification(systemNotificationSource, singletonList(recipient), null, null);
+            Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR,
+                    asMap("name", invite.getName(),
+                            "competitionName", invite.getTarget().getName(),
+                            "innovationArea", invite.getInnovationArea().getName(),
+                            "acceptsDate", invite.getTarget().getAssessorAcceptsDate().toString(),
+                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().toString()));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
             // TODO: this content needs to be attached to the returned resource.
             return serviceSuccess(invite);
@@ -216,9 +224,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {
         competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
 
-        // send email
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
-        Notification notification = new Notification(systemNotificationSource, singletonList(recipient), null, null);
+        Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR, emptyMap());
         notificationSender.sendEmailWithContent(notification, recipient, content);
 
         return invite;
