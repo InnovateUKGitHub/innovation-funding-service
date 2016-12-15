@@ -77,52 +77,101 @@
                 </div>
             </div>
 
-            <!--/* TODO INFUND-6453
-            <div class="grid-row sorting">
-                <div class="column-half">
-                    <span class="heading-large">20</span> assessors
-                </div>
+            <details class="extra-margin-bottom">
+                <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
 
-                <div class="column-half alignright">
-                    <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">
-                            <option value="">All</option>
-                        </select>
-                    </label>
-                    <button class="button button-secondary button-small" type="submit">Sort</button>
-                </div>
-            </div>
-            */-->
+                <form>
+                    <p>Enter the new assessor's details below to add them to your invite list.</p>
+
+                    <div class="table-overflow">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" id="innovation-sector" class="table-column-third">Innovation sector</th>
+                                    <th scope="col" id="innovation-area" class="table-column-two-thirds">Innovation area</th>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell-align-top width-40-percent">
+                                        <select class="form-control width-full" aria-labelledby="innovation-sector">
+                                            <option selected="selected">Please select an innovation sector</option>
+                                        </select>
+                                    </td>
+                                    <td class="cell-align-top width-40-percent">
+                                        <select class="form-control width-full" aria-labelledby="innovation-area">
+                                            <option selected="selected">Please select an innovation area</option>
+                                        </select>
+                                        <div>The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</div>
+                                    </td>
+                                    <td class="width-20-percent"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th id="invite-label-assessor-name" scope="col">Name</th>
+                                    <th id="invite-label-assessor-email" scope="col">Email</th>
+                                    <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="prototype-assessor-row-two">
+                                    <td class="width-40-percent">
+                                        <input type="text" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
+                                    </td>
+                                    <td class="width-40-percent">
+                                        <input type="text" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
+                                    </td>
+                                    <td class="alignright width-20-percent">
+                                        <button class="buttonlink" type="submit">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="alignright extra-margin">
+                            <button class="buttonlink" type="submit">Add another assessor of this type</button>
+                        </p>
+                    </div>
+
+                    <div class="alignright extra-margin-top">
+                        <button type="submit" class="button no-margin">Add assessor(s) to list</button>
+                    </div>
+                </form>
+            </details>
 
             <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
                 <table>
                     <thead>
-                        <tr>
-                            <th scope="col">Assessor name</th>
-                            <th scope="col">Email address</th>
-                            <th scope="col">Innovation area</th>
-                            <th scope="col">Contract and DOI</th>
-                            <th scope="col"><span class="hidden">Actions</span></th>
-                        </tr>
+                    <tr>
+                        <th scope="col">Assessor name</th>
+                        <th scope="col">Email address</th>
+                        <th scope="col">Innovation area</th>
+                        <th scope="col">Contract and DOI</th>
+                        <th scope="col"><span class="hidden">Actions</span></th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="assessor : ${model.assessors}">
-                            <td><span th:text="${assessor.name}">Dave Smith</span></td>
-                            <td th:text="${assessor.email}">dave@email.com</td>
-                            <td th:text="${assessor.innovationArea}">Earth Observation</td>
-                            <td>
-                                <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                                <span class="no" th:unless="${assessor.compliant}">No</span>
-                            </td>
-                            <td class="alignright">
-                                <!--
-                                TODO INFUND-6414
-                                <button class="button no-margin-right"><span class="hidden">John Barnes </span>Invite individual</button>
-                                <br />
-                                -->
-                                <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
-                            </td>
-                        </tr>
+                    <tr th:each="assessor : ${model.assessors}">
+                        <td><span th:text="${assessor.name}">Dave Smith</span></td>
+                        <td th:text="${assessor.email}">dave@email.com</td>
+                        <td th:text="${assessor.innovationArea}">Earth Observation</td>
+                        <td>
+                            <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                            <span class="no" th:unless="${assessor.compliant}">No</span>
+                        </td>
+                        <td class="alignright">
+                            <!--
+                            TODO INFUND-6414
+                            <button class="button no-margin-right"><span class="hidden">John Barnes </span>Invite individual</button>
+                            <br />
+                            -->
+                            <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </form>
