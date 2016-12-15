@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.mapper.CategoryMapper;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,10 +16,12 @@ import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -65,7 +68,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private CompetitionInviteMapper mapper;
+    private CompetitionInviteMapper competitionInviteMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Autowired
     private UserService userService;
@@ -76,14 +82,14 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     @Override
@@ -116,16 +122,14 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
         // TODO INFUND-6775
         return serviceSuccess(
-                asList(new AvailableAssessorResource("Jeremy", "Alufson",
+                asList(new AvailableAssessorResource("Jeremy Alufson",
                         new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com", BUSINESS, false)));
     }
 
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
-        // TODO INFUND-6412
-        return serviceSuccess(
-                asList(new AssessorCreatedInviteResource("Jeremy", "Alufson",
-                        new CategoryResource(null, "Earth Observation", null, null, null), true, "worth.email.test+assessor1@gmail.com")));
+        return serviceSuccess(CollectionFunctions.simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
+                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreaForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail())));
     }
 
     @Override
@@ -140,7 +144,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 .andOnSuccess(innovationArea -> getCompetition(stagedInvite.getCompetitionId())
                         .andOnSuccess(competition -> inviteUserToCompetition(stagedInvite.getName(), stagedInvite.getEmail(), competition, innovationArea))
                 )
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     private ServiceResult<Category> getInnovationArea(long innovationCategoryId) {
@@ -157,7 +161,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
         return getUserByEmail(stagedInvite.getEmail()) // I'm not particularly tied to finding by email, vs id
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
-                .andOnSuccessReturn(mapper::mapToResource);
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
 
     private ServiceResult<CompetitionInvite> inviteUserToCompetition(User user, long competitionId) {
@@ -270,5 +274,26 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private String getInviteCompetitionName(CompetitionParticipant participant) {
         return participant.getInvite().getTarget().getName();
+    }
+
+    private boolean isUserCompliant(CompetitionInvite competitionInvite) {
+        if (competitionInvite.getUser() == null) {
+            return false;
+        }
+        User user = competitionInvite.getUser();
+        Profile profile = competitionInvite.getUser().getProfile();
+        boolean skillsComplete = profile != null && profile.getSkillsAreas() != null;
+        boolean affiliationsComplete = user.getAffiliations() != null && !user.getAffiliations().isEmpty();
+        boolean contractComplete = profile != null && profile.getContractSignedDate() != null;
+        return skillsComplete && affiliationsComplete && contractComplete;
+    }
+
+    private CategoryResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {
+        boolean inviteForNewUser = competitionInvite.getUser() == null;
+        if (inviteForNewUser) {
+            return categoryMapper.mapToResource(competitionInvite.getInnovationArea());
+        }
+        // TODO INFUND-6865 User should have an innovation area
+        return null;
     }
 }

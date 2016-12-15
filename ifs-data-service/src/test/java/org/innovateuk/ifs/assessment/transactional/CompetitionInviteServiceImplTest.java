@@ -2,18 +2,15 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
-import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -21,12 +18,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -48,9 +45,13 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuild
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -69,10 +70,10 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     @Before
     public void setUp() {
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
+                .withDate(now().minusDays(1))
                 .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
         Competition competition = newCompetition().withName("my competition")
@@ -203,7 +204,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void openInvite_inviteExpired() throws Exception {
-        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(LocalDateTime.now().minusDays(1)).build();
+        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(now().minusDays(1)).build();
         CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
         when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(competitionInvite);
 
@@ -545,9 +546,9 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         long inviteId = 1L;
         CompetitionInvite invite = spy(
                 newCompetitionInvite()
-                .withCompetition(newCompetition().withName("my competition").build())
-                .withStatus(CREATED)
-                .build()
+                        .withCompetition(newCompetition().withName("my competition").build())
+                        .withStatus(CREATED)
+                        .build()
         );
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
@@ -657,8 +658,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         long competitionId = 1L;
 
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
-                .withFirstName("Jeremy")
-                .withLastName("Alufson")
+                .withName("Jeremy Alufson")
                 .withInnovationArea(newCategoryResource()
                         .with(id(null))
                         .withName("Earth Observation")
@@ -677,19 +677,90 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
 
-        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
-                .withFirstName("Jeremy")
-                .withLastName("Alufson")
-                .withInnovationArea(newCategoryResource()
-                        .with(id(null))
-                        .withName("Earth Observation")
+        Category innovationAreaCategory = newCategory().build();
+        CategoryResource innovationAreaCategoryResource = newCategoryResource()
+                .withName("Earth Observation")
+                .build();
+
+        // TODO INFUND-6865 Users should have innovation areas
+        User compliantUser = newUser()
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withContractSignedDate(now())
                         .build())
-                .withCompliant(TRUE)
-                .withEmail("worth.email.test+assessor1@gmail.com")
-                .build(1);
+                .build();
+
+        User nonCompliantUserNoSkills = newUser()
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas()
+                        .withContractSignedDate(now())
+                        .build())
+                .build();
+
+        User nonCompliantUserNoAffiliations = newUser()
+                .withAffiliations()
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withContractSignedDate(now())
+                        .build())
+                .build();
+
+        User nonCompliantUserNoContract = newUser()
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withContractSignedDate()
+                        .build())
+                .build();
+
+        List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
+                .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero")
+                .withEmail("john@email.com", "dave@email.com", "richard@email.com", "oliver@email.com")
+                .withUser(compliantUser, nonCompliantUserNoSkills, nonCompliantUserNoAffiliations, nonCompliantUserNoContract)
+                .withInnovationArea()
+                .build(4);
+
+        CompetitionInvite newUserInvite = newCompetitionInvite()
+                .withName("Christopher Soames")
+                .withEmail("christopher@email.com")
+                .withUser()
+                .withInnovationArea(innovationAreaCategory)
+                .build();
+
+        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
+                .withInnovationArea(null, null, null, null, innovationAreaCategoryResource)
+                .withCompliant(true, false, false, false, false)
+                .withEmail("john@email.com", "dave@email.com", "richard@email.com", "oliver@email.com", "christopher@email.com")
+                .build(5);
+
+        when(competitionInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED)).thenReturn(combineLists(existingUserInvites, newUserInvite));
+        when(categoryMapperMock.mapToResource(innovationAreaCategory)).thenReturn(innovationAreaCategoryResource);
 
         List<AssessorCreatedInviteResource> actual = competitionInviteService.getCreatedInvites(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, categoryMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByCompetitionIdAndStatus(competitionId, CREATED);
+        inOrder.verify(categoryMapperMock).mapToResource(innovationAreaCategory);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -834,7 +905,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     private CompetitionInvite createInviteExpectations(String name, String email, InviteStatus status, Competition competition, Category innovationArea) {
-        return createLambdaMatcher( invite -> {
+        return createLambdaMatcher(invite -> {
                     assertEquals(name, invite.getEmail());
                     assertEquals(email, invite.getName());
                     assertEquals(CREATED, invite.getStatus());
