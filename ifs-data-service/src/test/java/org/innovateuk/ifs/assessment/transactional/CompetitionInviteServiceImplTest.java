@@ -24,6 +24,7 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -659,18 +660,35 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
                 .withName("Jeremy Alufson")
-                .withInnovationArea(newCategoryResource()
-                        .with(id(null))
-                        .withName("Earth Observation")
-                        .build())
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com")
                 .withBusinessType(BUSINESS)
                 .withAdded(FALSE)
+                // TODO INFUND-6865 Users should have innovation areas
+                .withInnovationArea()
                 .build(1);
+
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(newUser()
+                .withFirstName("Jeremy")
+                .withLastName("Alufson")
+                .withEmailAddress("worth.email.test+assessor1@gmail.com")
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withBusinessType(BUSINESS)
+                        .withContractSignedDate(now())
+                        .build())
+                .build(1));
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+
+        verify(userRepositoryMock, only()).findAllAvailableAssessorsByCompetition(competitionId);
     }
 
     @Test

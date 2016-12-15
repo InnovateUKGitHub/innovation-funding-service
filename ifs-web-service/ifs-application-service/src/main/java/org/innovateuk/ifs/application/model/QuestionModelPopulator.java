@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.model;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.innovateuk.ifs.application.ApplicationFormController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
@@ -11,12 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.QuestionStatusRestService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -25,20 +18,20 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.ApplicationFormController.*;
 
@@ -77,15 +70,15 @@ public class QuestionModelPopulator {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         addFormAttributes(application, competition, user, model, form,
-            question, formInputs, userApplicationRoles);
+                question, formInputs, userApplicationRoles);
     }
 
     private void addFormAttributes(ApplicationResource application,
-        CompetitionResource competition,
-        UserResource user, Model model,
-        ApplicationForm form, QuestionResource question,
-        List<FormInputResource> formInputs,
-        List<ProcessRoleResource> userApplicationRoles){
+                                   CompetitionResource competition,
+                                   UserResource user, Model model,
+                                   ApplicationForm form, QuestionResource question,
+                                   List<FormInputResource> formInputs,
+                                   List<ProcessRoleResource> userApplicationRoles){
 
         addApplicationDetails(application, competition, user.getId(), question, model, form, userApplicationRoles);
         addNavigation(question, application.getId(), model);
@@ -101,12 +94,12 @@ public class QuestionModelPopulator {
     }
 
     private void addApplicationDetails(ApplicationResource application,
-        CompetitionResource competition,
-        Long userId,
-        QuestionResource questionResource,
-        Model model,
-        ApplicationForm form,
-        List<ProcessRoleResource> userApplicationRoles) {
+                                       CompetitionResource competition,
+                                       Long userId,
+                                       QuestionResource questionResource,
+                                       Model model,
+                                       ApplicationForm form,
+                                       List<ProcessRoleResource> userApplicationRoles) {
 
         if(form == null){
             form = new ApplicationForm();
@@ -127,7 +120,7 @@ public class QuestionModelPopulator {
 
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
-            model.addAttribute("leadOrganisation", org)
+                model.addAttribute("leadOrganisation", org)
         );
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -137,7 +130,7 @@ public class QuestionModelPopulator {
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
-        if(competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
+        if(null != competition.getCompetitionStatus() && competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
             Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
             return questionStatuses.size() > 0 &&
                     (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
@@ -152,7 +145,7 @@ public class QuestionModelPopulator {
         model.addAttribute("responses",mappedResponses);
         Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
-            values.put(k.toString(), v.getValue())
+                values.put(k.toString(), v.getValue())
         );
         form.setFormInput(values);
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -168,7 +161,7 @@ public class QuestionModelPopulator {
     }
 
     private void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
-        Long userId, Long currentQuestionId) {
+                                      Long userId, Long currentQuestionId) {
 
         if (isApplicationInViewMode(model, application, userOrganisation))
             return;
@@ -208,9 +201,9 @@ public class QuestionModelPopulator {
     private OrganisationResource getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
-            .filter(uar -> uar.getUser().equals(userId))
-            .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
-            .findFirst().get();
+                .filter(uar -> uar.getUser().equals(userId))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .findFirst().get();
     }
 
     private  void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
@@ -284,10 +277,10 @@ public class QuestionModelPopulator {
         RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(
-            failure -> new ArrayList<>(0),
-            success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                .collect(Collectors.toList()));
+                failure -> new ArrayList<>(0),
+                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
+                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
+                        .collect(Collectors.toList()));
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
@@ -340,8 +333,8 @@ public class QuestionModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
-            .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-            .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
-            .findFirst();
+                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .findFirst();
     }
 }

@@ -36,6 +36,10 @@ public class SecurityRuleUtil {
         return hasRole(user, ASSESSOR);
     }
 
+    public static boolean isCompExec(UserResource user) {
+        return hasRole(user, COMP_EXEC);
+    }
+
     private static boolean hasRole(UserResource user, UserRoleType type) {
         return user.hasRole(type);
     }

@@ -11,6 +11,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
+Resource          PS_Variables.robot
 
 *** Variables ***
 # Alternative Bank account pair:12345677 - 000004
