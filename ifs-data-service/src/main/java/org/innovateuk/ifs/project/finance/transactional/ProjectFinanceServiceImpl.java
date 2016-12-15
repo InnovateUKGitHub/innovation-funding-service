@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.Project;
@@ -15,11 +15,7 @@ import org.innovateuk.ifs.project.finance.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -47,6 +43,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -54,8 +52,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Service dealing with Project finance operations
@@ -286,23 +282,29 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+    public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        if(complete && table.getValidationMessages().hasErrors()){ // validate before marking as complete
+        if(table.getValidationMessages().hasErrors()) { // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
-            return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
+            return saveSpendProfileData(projectOrganisationCompositeId, table, true);
         }
+    }
+
+    @Override
+    public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+            return saveSpendProfileData(projectOrganisationCompositeId, table, false);
     }
 
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfileSubmittedDate() != null) {
-                return serviceFailure(new Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+                return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
             }
 
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
-                return serviceFailure(new Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+                return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
             }
 
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
@@ -315,9 +317,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
-        ViabilityResource viabilityResource = new ViabilityResource();
-        viabilityResource.setViability(projectFinance.getViability());
-        viabilityResource.setViabilityStatus(projectFinance.getViabilityStatus());
+        ViabilityResource viabilityResource = new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus());
 
         return serviceSuccess(viabilityResource);
 
@@ -336,11 +336,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {
 
-            return serviceFailure(new Error(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
 
         } else if (ViabilityStatus.UNSET == viabilityStatus) {
 
-            return serviceFailure(new Error(VIABILITY_RAG_STATUS_MUST_BE_SET));
+            return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
 
         } else {
             return serviceSuccess();
@@ -375,7 +375,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 andOnSuccess (
                         spendProfile -> {
                             if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
-                                return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+                                return serviceFailure(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED);
                             }
 
                             spendProfile.setMarkedAsComplete(markAsComplete);
