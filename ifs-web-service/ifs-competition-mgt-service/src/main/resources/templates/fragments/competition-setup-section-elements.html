@@ -412,9 +412,6 @@
                                 </thead>
                                 <tbody>
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
-
-                                        <input type="hidden" th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].formInput}"/>
-
                                         <tr th:id="${'guidance-'+iteration.index}">
                                             <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-subject'}">
