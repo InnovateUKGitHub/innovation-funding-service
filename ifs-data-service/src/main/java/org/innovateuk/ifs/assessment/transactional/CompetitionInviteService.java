@@ -55,8 +55,6 @@ public interface CompetitionInviteService {
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     @SecuredBySpring(value = "INVITE_NEW_USER",
             description = "The Competition Admin user, or the Competition Executive user can create a competition invite for a new user")
