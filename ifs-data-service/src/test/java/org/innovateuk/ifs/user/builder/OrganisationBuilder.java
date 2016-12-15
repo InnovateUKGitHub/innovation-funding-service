@@ -59,7 +59,7 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
         return withArraySetFieldByReflection("organisationSize", organisationSize);
     }
 
-    public OrganisationBuilder withOrganisationType(OrganisationTypeEnum type) {
-        return withOrganisationType(newOrganisationType().withOrganisationType(type).build());
+    public OrganisationBuilder withOrganisationType(OrganisationTypeEnum... type) {
+        return withOrganisationType(newOrganisationType().withOrganisationType(type).buildArray(type.length, OrganisationType.class));
     }
 }

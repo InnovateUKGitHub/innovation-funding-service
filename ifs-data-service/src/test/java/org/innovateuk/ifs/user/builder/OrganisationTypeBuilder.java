@@ -17,6 +17,13 @@ import static java.util.Collections.emptyList;
  */
 public class OrganisationTypeBuilder extends BaseBuilder<OrganisationType, OrganisationTypeBuilder> {
 
+    public OrganisationTypeBuilder withOrganisationType(OrganisationTypeEnum... organisationTypeEnums) {
+        return withArray((organisationTypeEnum, organisationType) -> {
+            setField("id", organisationTypeEnum.getOrganisationTypeId(), organisationType);
+            setField("name", organisationTypeEnum.name(), organisationType);
+        }, organisationTypeEnums);
+    }
+
     private OrganisationTypeBuilder(List<BiConsumer<Integer, OrganisationType>> multiActions) {
         super(multiActions);
     }
@@ -35,12 +42,5 @@ public class OrganisationTypeBuilder extends BaseBuilder<OrganisationType, Organ
     @Override
     protected OrganisationType createInitial() {
         return new OrganisationType();
-    }
-
-    public OrganisationTypeBuilder withOrganisationType(OrganisationTypeEnum... organisationTypeEnums) {
-        return withArray((organisationTypeEnum, organisationType) -> {
-            setField("id", organisationTypeEnum.getOrganisationTypeId(), organisationType);
-            setField("name", organisationTypeEnum.name(), organisationType);
-        }, organisationTypeEnums);
     }
 }
