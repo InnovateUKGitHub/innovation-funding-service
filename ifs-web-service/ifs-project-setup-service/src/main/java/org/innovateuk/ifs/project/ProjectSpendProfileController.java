@@ -3,18 +3,18 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
+import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.util.DateUtil;
 import org.innovateuk.ifs.project.util.FinancialYearDate;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
-import org.innovateuk.ifs.project.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
-import org.innovateuk.ifs.project.viewmodel.SpendProfileSummaryModel;
-import org.innovateuk.ifs.project.viewmodel.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -32,15 +32,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -95,6 +96,7 @@ public class ProjectSpendProfileController {
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
+
         return BASE_DIR + "/spend-profile";
     }
 
@@ -104,45 +106,82 @@ public class ProjectSpendProfileController {
                                    HttpServletRequest request,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         form.setTable(spendProfileTableResource);
 
-        if (spendProfileTableResource.getMarkedAsComplete()) {
-            markSpendProfileInComplete(model, projectId, organisationId, "redirect:/" + BASE_DIR + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
-        }
-        model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
+        if (!spendProfileTableResource.getMarkedAsComplete()) {
+            model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
 
-        return BASE_DIR + "/spend-profile";
+            return validationHandler.failNowOrSucceedWith(() -> BASE_DIR + "/spend-profile", () -> BASE_DIR + "/spend-profile");
+        } else {
+            ServiceResult<Void> result = markSpendProfileIncomplete(projectId, organisationId);
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> {
+
+                model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
+                return BASE_DIR + "/spend-profile";
+            });
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/edit", method = POST)
-    public String saveSpendProfile(@ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+    public String saveSpendProfile(Model model,
+                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/edit";
+        Supplier<String> failureView = () -> {
+
+            SpendProfileTableResource updatedTable = form.getTable();
+            SpendProfileTableResource originalTableWithUpdatedCosts = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+            originalTableWithUpdatedCosts.setMonthlyCostsPerCategoryMap(updatedTable.getMonthlyCostsPerCategoryMap());
+
+            ProjectResource project = projectService.getById(projectId);
+
+            return doEditSpendProfile(model, form, organisationId, loggedInUser, project, originalTableWithUpdatedCosts);
+        };
+
         String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
-        ValidationHandler customValidationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
-        if (customValidationHandler.hasErrors()) {
-            return failureView;
-        }
 
-        SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
-        spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+            spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
 
-        ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
+            ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
 
-        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> successView);
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> successView);
+        });
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
+    @RequestMapping(value = "/incomplete", method = POST)
+    public String markAsActionRequiredSpendProfile(Model model,
+                                                   @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
+                                                   BindingResult bindingResult,
+                                                   ValidationHandler validationHandler,
+                                                   @PathVariable("projectId") final Long projectId,
+                                                   @PathVariable("organisationId") final Long organisationId,
+                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
+        String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+
+        ServiceResult<Void> result = markSpendProfileIncomplete(projectId, organisationId);
+
+        return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> successView);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
@@ -152,6 +191,16 @@ public class ProjectSpendProfileController {
                                              @PathVariable("organisationId") final Long organisationId,
                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
+    }
+
+    private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
+                                      ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
+
+        form.setTable(spendProfileTableResource);
+
+        model.addAttribute("model", buildSpendProfileViewModel(project, organisationId, spendProfileTableResource, loggedInUser));
+
+        return BASE_DIR + "/spend-profile";
     }
 
     private String viewProjectManagerSpendProfile(Model model, Long projectId, UserResource loggedInUser) {
@@ -173,24 +222,7 @@ public class ProjectSpendProfileController {
                                             Long organisationId,
                                             String successView,
                                             UserResource loggedInUser) {
-        return markSpendProfile(model, projectId, organisationId, true, successView, loggedInUser);
-    }
-
-    private String markSpendProfileInComplete(Model model,
-                                              Long projectId,
-                                              Long organisationId,
-                                              String successView,
-                                              UserResource loggedInUser) {
-        return markSpendProfile(model, projectId, organisationId, false, successView, loggedInUser);
-    }
-
-    private String markSpendProfile(Model model,
-                                    Long projectId,
-                                    Long organisationId,
-                                    Boolean complete,
-                                    String successView,
-                                    UserResource loggedInUser) {
-        ServiceResult<Void> result = projectFinanceService.markSpendProfile(projectId, organisationId, complete);
+        ServiceResult<Void> result = projectFinanceService.markSpendProfileComplete(projectId, organisationId);
         if (result.isFailure()) {
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
             spendProfileViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
@@ -201,12 +233,17 @@ public class ProjectSpendProfileController {
         }
     }
 
+    private ServiceResult<Void> markSpendProfileIncomplete(Long projectId,
+                                                           Long organisationId) {
+
+        return projectFinanceService.markSpendProfileIncomplete(projectId, organisationId);
+    }
+
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId,
                                                                     final SpendProfileTableResource spendProfileTableResource, final UserResource loggedInUser) {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears(projectResource, spendProfileTableResource);
 
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
@@ -231,32 +268,6 @@ public class ProjectSpendProfileController {
         SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
     }
-
-    private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears(ProjectResource project, SpendProfileTableResource table) {
-        Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
-        Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
-        return IntStream.range(startYear, endYear + 1).
-                mapToObj(
-                        year -> {
-                            Set<Long> keys = table.getMonthlyCostsPerCategoryMap().keySet();
-                            BigDecimal totalForYear = BigDecimal.ZERO;
-
-                            for (Long key : keys) {
-                                List<BigDecimal> values = table.getMonthlyCostsPerCategoryMap().get(key);
-                                for (int i = 0; i < values.size(); i++) {
-                                    LocalDateResource month = table.getMonths().get(i);
-                                    FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
-                                    if (year == financialYearDate.getFiscalYear()) {
-                                        totalForYear = totalForYear.add(values.get(i));
-                                    }
-                                }
-                            }
-                            return new SpendProfileSummaryYearModel(year, totalForYear.toPlainString());
-                        }
-
-                ).collect(toList());
-    }
-
 
     private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
                                                                                                    final UserResource loggedInUser) {

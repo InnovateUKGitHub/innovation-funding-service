@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,6 +24,12 @@ public class ProjectFinance extends Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
+
+    @Enumerated(EnumType.STRING)
+    private Viability viability = Viability.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
 
     public ProjectFinance() {
     }
@@ -36,5 +46,21 @@ public class ProjectFinance extends Finance {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Viability getViability() {
+        return viability;
+    }
+
+    public void setViability(Viability viability) {
+        this.viability = viability;
+    }
+
+    public ViabilityStatus getViabilityStatus() {
+        return viabilityStatus;
+    }
+
+    public void setViabilityStatus(ViabilityStatus viabilityStatus) {
+        this.viabilityStatus = viabilityStatus;
     }
 }
