@@ -48,14 +48,12 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "user")
-    private List<ProcessRole> processRoles = new ArrayList<>();
-
+/*
     @ManyToMany
     @JoinTable(name = "user_organisation",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "organisation_id", referencedColumnName = "id")})
-    private List<Organisation> organisations = new ArrayList<>();
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    private List<Long> organisations = new ArrayList<>();
+*/
 
     @ManyToMany
     @JoinTable(name = "user_role",
@@ -73,9 +71,6 @@ public class User implements Serializable {
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
-    private Profile profile;
-
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
 
@@ -84,18 +79,17 @@ public class User implements Serializable {
     }
 
     public User(String firstName, String lastName, String email, String imageUrl,
-                List<ProcessRole> processRoles, String uid) {
+                String uid) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.imageUrl = imageUrl;
-        this.processRoles = processRoles;
         this.uid = uid;
     }
 
     public User(Long id, String firstName, String lastName, String email, String imageUrl,
-                List<ProcessRole> processRoles, String uid) {
-        this(firstName, lastName, email, imageUrl, processRoles, uid);
+                String uid) {
+        this(firstName, lastName, email, imageUrl, uid);
         this.id = id;
     }
 
@@ -119,7 +113,7 @@ public class User implements Serializable {
         return uid;
     }
 
-    @JsonIgnore
+/*    @JsonIgnore
     public List<ProcessRole> getProcessRoles() {
         return processRoles;
     }
@@ -152,7 +146,7 @@ public class User implements Serializable {
                 organisations.add(o);
             }
         });
-    }
+    }*/
 
     public List<Role> getRoles() {
         return roles;
@@ -199,7 +193,6 @@ public class User implements Serializable {
     public String getFirstName() {
         return firstName;
     }
-
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -280,6 +273,8 @@ public class User implements Serializable {
     public void setEthnicity(Ethnicity ethnicity) {
         this.ethnicity = ethnicity;
     }
+
+/*
     public Profile getProfile() {
         return profile;
     }
@@ -287,6 +282,7 @@ public class User implements Serializable {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
+*/
 
     public List<Affiliation> getAffiliations() {
         return affiliations;

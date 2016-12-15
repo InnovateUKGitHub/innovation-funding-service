@@ -27,8 +27,8 @@ public class UserResource {
     private String email;
     private String password;
     private UserStatus status;
-    private List<Long> organisations = new ArrayList<>();
-    private List<Long> processRoles = new ArrayList<>();
+    //private List<Long> organisations = new ArrayList<>();
+    //private List<Long> processRoles = new ArrayList<>();
     private List<RoleResource> roles = new ArrayList<>();
     private Gender gender;
     private Disability disability;
@@ -134,6 +134,7 @@ public class UserResource {
         this.password = password;
     }
 
+/*
     public List<Long> getOrganisations() {
         return this.organisations;
     }
@@ -141,7 +142,9 @@ public class UserResource {
     public void setOrganisations(List<Long> organisationIds) {
         this.organisations = organisationIds;
     }
+*/
 
+/*
     public List<Long> getProcessRoles() {
         return processRoles;
     }
@@ -149,6 +152,7 @@ public class UserResource {
     public void setProcessRoles(List<Long> processRoles) {
         this.processRoles = processRoles;
     }
+*/
 
     public List<RoleResource> getRoles() {
         return roles;
@@ -198,6 +202,7 @@ public class UserResource {
         this.ethnicity = ethnicity;
     }
 
+/*
     public Long getProfile() {
         return profile;
     }
@@ -205,6 +210,7 @@ public class UserResource {
     public void setProfile(Long profile) {
         this.profile = profile;
     }
+*/
 
     @Override
     public boolean equals(Object o) {
@@ -230,13 +236,13 @@ public class UserResource {
                 .append(email, that.email)
                 .append(password, that.password)
                 .append(status, that.status)
-                .append(organisations, that.organisations)
-                .append(processRoles, that.processRoles)
+                //.append(organisations, that.organisations)
+                //.append(processRoles, that.processRoles)
                 .append(roles, that.roles)
                 .append(gender, that.gender)
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
-                .append(profile, that.profile)
+                //.append(profile, that.profile)
                 .isEquals();
     }
 
@@ -254,13 +260,13 @@ public class UserResource {
                 .append(email)
                 .append(password)
                 .append(status)
-                .append(organisations)
-                .append(processRoles)
+                //.append(organisations)
+                //.append(processRoles)
                 .append(roles)
                 .append(gender)
                 .append(disability)
                 .append(ethnicity)
-                .append(profile)
+                //.append(profile)
                 .toHashCode();
     }
 }

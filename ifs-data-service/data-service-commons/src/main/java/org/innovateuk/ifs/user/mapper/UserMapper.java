@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
+//import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.mapstruct.Mapper;
@@ -12,11 +12,11 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-            OrganisationMapper.class,
+//            OrganisationMapper.class,
             RoleMapper.class,
-            ProcessRoleMapper.class,
+//            ProcessRoleMapper.class,
             EthnicityMapper.class,
-            ProfileMapper.class
+//            ProfileMapper.class
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {

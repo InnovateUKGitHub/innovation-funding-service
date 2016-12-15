@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.repository;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -16,11 +15,9 @@ import java.util.List;
 public interface ProcessRoleRepository extends PagingAndSortingRepository<ProcessRole, Long> {
     List<ProcessRole> findByUser(User user);
     List<ProcessRole> findByUserId(Long userId);
-    List<ProcessRole> findByUserAndApplication(User user, Application application);
     List<ProcessRole> findByUserAndApplicationId(User user, Long applicationId);
     List<ProcessRole> findByUserIdAndRoleAndApplicationId(Long userId, Role role, Long applicationId);
     List<ProcessRole> findByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, Long applicationId);
-    List<ProcessRole> findByApplication(Application application);
     List<ProcessRole> findByApplicationId(Long applicationId);
     List<ProcessRole> findByApplicationIdAndRoleId(Long applicationId, Long roleId);
     ProcessRole findOneByApplicationIdAndRoleId(Long applicationId, Long roleId);

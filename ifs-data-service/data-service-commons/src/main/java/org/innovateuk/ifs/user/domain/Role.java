@@ -25,8 +25,10 @@ public class Role {
      */
     private String url;
 
+/*
     @OneToMany(mappedBy = "role")
     private List<ProcessRole> processRoles = new ArrayList<>();
+*/
 
     @ManyToMany(mappedBy="roles")
     private List<User> users = new ArrayList<>();
@@ -35,24 +37,31 @@ public class Role {
     	// no-arg constructor
     }
 
+/*
+    // only used in tests
     public Role(Long id, String name, List<ProcessRole> processRoles) {
         this.id = id;
         this.name = name;
         this.processRoles = processRoles;
     }
+*/
 
     protected Boolean canEqual(Object other) {
         return other instanceof Role;
     }
 
+/*
+    // only used in tests
     @JsonIgnore
     public List<ProcessRole> getProcessRoles() {
         return processRoles;
     }
 
+    // not used
     public void setProcessRoles(List<ProcessRole> processRoles) {
         this.processRoles = processRoles;
     }
+*/
 
     public Long getId() {
         return id;
@@ -93,7 +102,7 @@ public class Role {
         return new EqualsBuilder()
             .append(this.id, rhs.id)
             .append(this.name, rhs.name)
-            .append(this.processRoles, rhs.processRoles)
+            //.append(this.processRoles, rhs.processRoles)
             .append(this.users, rhs.users)
             .isEquals();
     }
@@ -103,7 +112,7 @@ public class Role {
         return new HashCodeBuilder()
             .append(id)
             .append(name)
-            .append(processRoles)
+            //.append(processRoles)
             .append(users)
             .toHashCode();
     }
