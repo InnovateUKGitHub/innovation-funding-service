@@ -687,6 +687,42 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
+
+    @Test
+    public void testGetCrditReportSuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setIsCreditReport(Boolean.TRUE);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        ServiceResult<Boolean> result = service.getCreditReport(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.APPROVED, result.getSuccessObject());
+
+    }
+
+    @Test
+    public void testSaveCreditSuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, Boolean.TRUE);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Boolean.TRUE, projectFinanceInDB.getIsCreditReport());
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+
+    }
+
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {
         CostCategoryType costCategoryType = createCostCategoryType();
 

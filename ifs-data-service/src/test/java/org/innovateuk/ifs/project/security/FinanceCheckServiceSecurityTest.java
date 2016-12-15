@@ -48,16 +48,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
     }
 
-    @Test
-    public void testGetCreditReport() {
-        assertRolesCanPerform(() -> classUnderTest.getCreditReport(1L, 2L), PROJECT_FINANCE);
-    }
-
-    @Test
-    public void testSetCreditReport() {
-        assertRolesCanPerform(() -> classUnderTest.setCreditReport(1L, 2L, true), PROJECT_FINANCE);
-    }
-
     private void assertInternalRolesCanPerform(Runnable actionFn) {
         assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -112,11 +102,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
             return null;
         }
 
-        @Override
-        public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
-
-        @Override
-        public ServiceResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean creditReportPresent) { return null; }
     }
 }
 

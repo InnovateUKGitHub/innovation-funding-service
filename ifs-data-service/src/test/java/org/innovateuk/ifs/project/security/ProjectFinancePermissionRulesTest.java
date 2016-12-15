@@ -85,6 +85,34 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         });
     }
 
+    @Test
+    public void testProjectFinanceUserCanSaveCreditReport() {
+
+        Long projectId = 1L;
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
+            }
+        });
+    }
+
+    @Test
+    public void testProjectFinanceUserCanViewCreditReport() {
+
+        Long projectId = 1L;
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanViewCreditReport(projectId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewCreditReport(projectId, user));
+            }
+        });
+    }
+
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectFinancePermissionRules();

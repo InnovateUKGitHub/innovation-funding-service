@@ -51,14 +51,4 @@ public class FinanceCheckController {
     public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable("projectId") Long projectId){
         return financeCheckService.getFinanceCheckSummary(projectId).toGetResponse();
     }
-
-    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + "/credit-report/{reportPresent}", method = POST)
-    public RestResult<Void> saveCreditReport(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId, @PathVariable("reportPresent") Boolean reportPresent) {
-        return financeCheckService.setCreditReport(projectId, organisationId, reportPresent).toPostResponse();
-    }
-
-    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + "/credit-report", method = GET)
-    public RestResult<Boolean> getCreditReport(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
-        return financeCheckService.getCreditReport(projectId, organisationId).toGetResponse();
-    }
 }

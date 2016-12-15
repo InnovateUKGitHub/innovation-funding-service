@@ -24,8 +24,6 @@ public class ApplicationFinance extends Finance {
     @JoinColumn(name="financeFileEntryId", referencedColumnName="id")
     private FileEntry financeFileEntry;
 
-    private boolean isCreditReport;
-
     public ApplicationFinance() {
     	// no-arg constructor
     }
@@ -57,7 +55,4 @@ public class ApplicationFinance extends Finance {
         this.application = application;
     }
 
-    public boolean getIsCreditReport() { return isCreditReport; }
-
-    public void setIsCreditReport(boolean isCreditReport) { this.isCreditReport = isCreditReport; }
 }

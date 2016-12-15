@@ -34,12 +34,4 @@ public interface FinanceCheckService {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckSummaryResource.class, description = "Project finance users have the ability to view a summary of finance checks status for all partners" )
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
-
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "EDIT", securedType = FinanceCheck.class, description = "Project finance users have the ability to specify if a credit report is available" )
-    ServiceResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean reportPresent);
-
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance users have the ability to view if a credit report is available" )
-    ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId);
 }

@@ -115,34 +115,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
     }
 
-    @Override
-    public ServiceResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
-        return projectService.getProjectById(projectId).andOnSuccess(project -> {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication(), organisationId);
-            if(applicationFinance != null) {
-                applicationFinance.setIsCreditReport(reportPresent);
-                applicationFinanceRepository.save(applicationFinance);
-                return serviceSuccess();
-            } else {
-                return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
-            }
-        });
-    }
-
-    @Override
-    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
-        return projectService.getProjectById(projectId).andOnSuccess(project -> {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication(), organisationId);
-            if(applicationFinance != null) {
-                Boolean creditReport = applicationFinance.getIsCreditReport();
-                applicationFinanceRepository.save(applicationFinance);
-                return serviceSuccess(creditReport);
-            } else {
-                return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
-            }
-        });
-    }
-
     private ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(PartnerOrganisation partnerOrganisation) {
 
         return findFinanceCheckProcess(partnerOrganisation).andOnSuccessReturn(process ->

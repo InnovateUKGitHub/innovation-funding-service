@@ -44,15 +44,4 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
         return getWithRestResult(url, FinanceCheckProcessResource.class);
     }
 
-    @Override
-    public RestResult<Void> setCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
-        String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + "/credit-report/" + reportPresent;
-        return postWithRestResult(url, Void.class);
-    }
-
-    @Override
-    public RestResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
-        String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + "/credit-report";
-        return getWithRestResult(url, Boolean.class);
-    }
 }

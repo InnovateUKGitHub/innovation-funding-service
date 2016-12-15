@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -292,6 +294,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
             return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(projectFinance != null) {
+            projectFinance.setIsCreditReport(reportPresent);
+            projectFinanceRepository.save(projectFinance);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(projectFinance != null) {
+            Boolean creditReport = projectFinance.getIsCreditReport();
+            projectFinanceRepository.save(projectFinance);
+            return serviceSuccess(creditReport);
+        } else {
+            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
         }
     }
 

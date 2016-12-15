@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.resource.*;
 import org.junit.Before;
@@ -374,6 +375,35 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 ));
     }
 
+    @Test
+    public void getCreditReport() throws Exception {
+        String url = "/project/{projectId}/partner-organisation/{organisationId}/credit-report";
+        when(projectFinanceServiceMock.getCreditReport(123L, 234L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        mockMvc.perform(get(url, 123L, 234L)).
+                andExpect(status().isOk()).
+                andExpect(content().string("true")).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
+                                parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked")
+                        )
+                ));
+    }
+
+    @Test
+    public void setCreditReport() throws Exception {
+        String url = "/project/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}";
+        when(projectFinanceServiceMock.saveCreditReport(123L, 234L, Boolean.TRUE)).thenReturn(serviceSuccess());
+        mockMvc.perform(post(url, 123L, 234L, Boolean.TRUE)).
+                andExpect(status().isOk()).
+                andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
+                                parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked"),
+                                parameterWithName("reportPresent").description("The credit report flag")
+                        )
+                ));
+    }
     private Map<Long, BigDecimal> buildEligibleCostPerCategoryMap() {
 
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();

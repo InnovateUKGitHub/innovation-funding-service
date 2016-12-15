@@ -12,6 +12,8 @@ public class ProjectFinanceResource extends BaseFinanceResource {
 
     private Viability viability;
 
+    private Boolean isCreditReport;
+
     public Long getProject() {
         return super.getTarget();
     }
@@ -27,6 +29,10 @@ public class ProjectFinanceResource extends BaseFinanceResource {
     public void setViability(Viability viability) {
         this.viability = viability;
     }
+
+    public Boolean getIsCreditReport() { return isCreditReport; }
+
+    public void setIsCreditReport(Boolean isCreditReport) { this.isCreditReport = isCreditReport; }
 
     public ProjectFinanceResource(Long id, Long organisation, Long projectId, OrganisationSize organisationSize) {
         super(id, organisation, projectId, organisationSize);
@@ -55,6 +61,7 @@ public class ProjectFinanceResource extends BaseFinanceResource {
                 .append(organisationSize, that.organisationSize)
                 .append(viability, that.viability)
                 .append(financeOrganisationDetails, that.financeOrganisationDetails)
+                .append(isCreditReport, that.isCreditReport)
                 .isEquals();
     }
 
@@ -66,6 +73,7 @@ public class ProjectFinanceResource extends BaseFinanceResource {
                 .append(target)
                 .append(organisationSize)
                 .append(financeOrganisationDetails)
+                .append(isCreditReport)
                 .toHashCode();
     }
 }
