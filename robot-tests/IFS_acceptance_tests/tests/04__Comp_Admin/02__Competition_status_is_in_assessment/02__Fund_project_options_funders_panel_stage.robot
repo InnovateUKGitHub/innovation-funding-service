@@ -4,6 +4,7 @@ Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=P
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../05__Project_Setup/PS_Variables.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
