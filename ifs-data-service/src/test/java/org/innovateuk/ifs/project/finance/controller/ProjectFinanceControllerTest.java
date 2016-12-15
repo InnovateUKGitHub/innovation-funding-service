@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -145,7 +145,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void markSpendProfileCompete() throws Exception {
+    public void markSpendProfileComplete() throws Exception {
 
         Long projectId = 1L;
         Long organisationId = 1L;
@@ -154,12 +154,34 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.markSpendProfile(projectOrganisationCompositeId, true)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete/{complete}", projectId, organisationId, true)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId, true)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
                 .andExpect(status().isOk());
+
+        verify(projectFinanceServiceMock).markSpendProfileComplete(projectOrganisationCompositeId);
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId, true)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(table)))
+                .andExpect(status().isOk());
+
+        verify(projectFinanceServiceMock).markSpendProfileIncomplete(projectOrganisationCompositeId);
     }
 
     @Test
