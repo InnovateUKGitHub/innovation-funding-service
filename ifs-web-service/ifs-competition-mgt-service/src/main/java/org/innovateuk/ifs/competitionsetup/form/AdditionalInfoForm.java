@@ -30,12 +30,12 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
 
     @Valid
     @NotEmpty(message = "Please enter a funder")
-    private List<InitialDetailsForm.FunderRowForm> funders = new ArrayList<>();
+    private List<FunderRowForm> funders = new ArrayList<>();
 
     public AdditionalInfoForm() {
     }
 
-    public AdditionalInfoForm(String activityCode, String innovateBudget, String budgetCode, List<InitialDetailsForm.FunderRowForm> funders) {
+    public AdditionalInfoForm(String activityCode, String innovateBudget, String budgetCode, List<FunderRowForm> funders) {
         this.activityCode = activityCode;
         this.innovateBudget = innovateBudget;
         this.funders = funders;
@@ -82,11 +82,11 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
         this.budgetCode = budgetCode;
     }
 
-    public List<InitialDetailsForm.FunderRowForm> getFunders() {
+    public List<FunderRowForm> getFunders() {
         return funders;
     }
 
-    public void setFunders(List<InitialDetailsForm.FunderRowForm> funders) {
+    public void setFunders(List<FunderRowForm> funders) {
         this.funders = funders;
     }
 

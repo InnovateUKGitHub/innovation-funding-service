@@ -249,8 +249,8 @@ public class CompetitionSetupController {
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
         } else if (request.getParameterMap().containsKey("add-funder")) {
-            List<InitialDetailsForm.FunderRowForm> funders = competitionSetupForm.getFunders();
-            funders.add(new InitialDetailsForm.FunderRowForm(new CompetitionFunderResource()));
+            List<FunderRowForm> funders = competitionSetupForm.getFunders();
+            funders.add(new FunderRowForm(new CompetitionFunderResource()));
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {

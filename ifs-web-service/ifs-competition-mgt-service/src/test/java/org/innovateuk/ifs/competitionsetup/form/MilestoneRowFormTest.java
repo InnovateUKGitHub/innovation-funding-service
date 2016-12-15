@@ -1,12 +1,11 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MilestoneRowFormTest {
 

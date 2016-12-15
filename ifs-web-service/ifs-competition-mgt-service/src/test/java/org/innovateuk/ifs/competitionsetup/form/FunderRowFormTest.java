@@ -1,13 +1,12 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class FunderRowFormTest {
 
@@ -24,7 +23,7 @@ public class FunderRowFormTest {
                 .withFunderBudget(funderBudget)
                 .build();
 
-        InitialDetailsForm.FunderRowForm funderRowForm = new InitialDetailsForm.FunderRowForm(funderResource);
+        FunderRowForm funderRowForm = new FunderRowForm(funderResource);
 
         assertEquals(coFunder, funderRowForm.getCoFunder());
         assertEquals(funder, funderRowForm.getFunder());
