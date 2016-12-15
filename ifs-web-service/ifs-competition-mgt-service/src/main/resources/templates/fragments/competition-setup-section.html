@@ -295,7 +295,7 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}" />
 
-                        <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -460,7 +460,6 @@
     <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${competition.id}"
-          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           data-autosave="compSetup" data-section="eligibility">
 
         <fieldset th:if="${editable}" id="section-3-edit">
