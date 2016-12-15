@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -58,11 +58,12 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setOpeningDateYear(2020);
         competitionSetupForm.setCompetitionTypeId(2L);
         competitionSetupForm.setLeadTechnologistUserId(3L);
+        competitionSetupForm.setMarkAsCompleteAction(true);
 
         long innovationSectorId = 5L;
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
         CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().build();
-        competitionSetupForm.setInnovationAreaCategoryIds(singleton(innovationArea.getId()));
+        competitionSetupForm.setInnovationAreaCategoryIds(CollectionFunctions.asLinkedSet(innovationArea.getId(), 1L, 2L, 3L));
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());
@@ -85,7 +86,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(Long.valueOf(1L), competition.getExecutive());
         assertEquals(Long.valueOf(2L), competition.getCompetitionType());
         assertEquals(Long.valueOf(3L), competition.getLeadTechnologist());
-        assertEquals(singleton(Long.valueOf(innovationArea.getId())), competition.getInnovationAreas());     //TODO: INFUND-6479
+        assertEquals(CollectionFunctions.asLinkedSet(innovationArea.getId(), 1L, 2L, 3L), competition.getInnovationAreas());
         assertEquals(Long.valueOf(innovationSectorId), competition.getInnovationSector());
         assertEquals(LocalDateTime.of(2020, 12, 1, 0, 0), competition.getStartDate());
 

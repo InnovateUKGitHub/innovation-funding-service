@@ -92,7 +92,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         if(competition.getInnovationSector() != null) {
             List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
             List<CategoryResource> matchingChildren =
-                    children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());  //TODO: INFUND-6479
+                    children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());
 
             if (matchingChildren.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
                 return serviceFailure(asList(fieldError("innovationAreaCategoryIds",

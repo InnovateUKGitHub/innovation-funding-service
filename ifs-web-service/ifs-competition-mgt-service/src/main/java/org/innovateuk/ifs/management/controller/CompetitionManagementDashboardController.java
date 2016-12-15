@@ -77,7 +77,6 @@ public class CompetitionManagementDashboardController {
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
 
-    //TODO: INFUND-6479: Move this method into competitionService
     private List<String> formatInnovationAreaNames(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionTypes) {
 
         List<String> formattedList = new ArrayList<>();
