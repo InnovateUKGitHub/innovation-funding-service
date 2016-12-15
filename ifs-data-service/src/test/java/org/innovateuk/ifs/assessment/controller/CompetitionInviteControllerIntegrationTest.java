@@ -519,8 +519,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withStatus(InviteStatus.CREATED)
                 .build())
                 .getId();
-        RestResult<Void> serviceResult = controller.sendInvite(createdId);
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId);
         assertTrue(serviceResult.isSuccess());
-
     }
 }

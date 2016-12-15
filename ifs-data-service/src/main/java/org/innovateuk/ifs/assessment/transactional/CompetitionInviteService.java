@@ -66,7 +66,7 @@ public interface CompetitionInviteService {
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<Void> sendInvite(long inviteId);
+    ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> deleteInvite(String email, long competitionId);

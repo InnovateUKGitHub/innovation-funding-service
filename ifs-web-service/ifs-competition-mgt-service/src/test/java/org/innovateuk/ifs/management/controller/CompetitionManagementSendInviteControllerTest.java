@@ -43,11 +43,10 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     @Test
     public void inviteEmail() throws Exception {
         long inviteId = 4L;
-        long competitionId = 5L;
         AssessorInviteToSendResource invite = newAssessorInviteToSendResource().build();
         when(competitionInviteRestService.getCreated(inviteId)).thenReturn(restSuccess(invite));
 
-        mockMvc.perform(get("/competition/{competitionId}/assessors/invite/{inviteId}", competitionId, inviteId))
+        mockMvc.perform(get("/competition/assessors/invite/{inviteId}", inviteId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/send-invites"));
@@ -59,9 +58,10 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     public void sendEmail() throws Exception {
         long inviteId = 4L;
         long competitionId = 5L;
-        when(competitionInviteRestService.sendInvite(inviteId)).thenReturn(restSuccess());
+        AssessorInviteToSendResource invite = newAssessorInviteToSendResource().withCompetitionId(competitionId).build();
+        when(competitionInviteRestService.sendInvite(inviteId)).thenReturn(restSuccess(invite));
 
-        mockMvc.perform(post("/competition/{compeitionId}/assessors/invite/{inviteId}/send", competitionId, inviteId))
+        mockMvc.perform(post("/competition/assessors/invite/{inviteId}/send", inviteId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competitionId)));
 

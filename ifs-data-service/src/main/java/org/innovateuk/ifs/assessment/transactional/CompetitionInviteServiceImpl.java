@@ -191,13 +191,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<Void> sendInvite(long inviteId) {
-        return getById(inviteId).andOnSuccess(this::sendInvite);
+    public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId) {
+        return getById(inviteId).andOnSuccessReturn(this::sendInvite).andOnSuccessReturn(toSendMapper::mapToResource);
     }
 
-    private ServiceResult<Void> sendInvite(CompetitionInvite invite) {
+    private CompetitionInvite sendInvite(CompetitionInvite invite) {
         competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
-        return serviceSuccess();
+        return invite;
     }
 
     @Override

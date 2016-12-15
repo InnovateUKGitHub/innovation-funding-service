@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.management.form;
 
 /**
- * Created by peter.moreton on 13/12/2016.
+ * Form for sending competition invites
  */
 public class SendInviteForm {
+
     private String subject;
 
     private String content;

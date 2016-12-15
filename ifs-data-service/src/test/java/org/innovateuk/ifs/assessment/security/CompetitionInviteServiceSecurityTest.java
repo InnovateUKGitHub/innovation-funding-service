@@ -183,7 +183,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> sendInvite(long inviteId) {
+        public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId) {
             return null;
         }
 

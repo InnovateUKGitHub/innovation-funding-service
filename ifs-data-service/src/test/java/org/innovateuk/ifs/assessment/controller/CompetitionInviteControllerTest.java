@@ -407,7 +407,9 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
-        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess());
+        AssessorInviteToSendResource resource = new AssessorInviteToSendResource();
+
+        when(competitionInviteServiceMock.sendInvite(inviteId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId))
                 .andExpect(status().isOk());

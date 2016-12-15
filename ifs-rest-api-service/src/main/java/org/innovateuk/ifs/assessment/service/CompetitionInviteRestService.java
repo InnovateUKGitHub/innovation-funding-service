@@ -32,5 +32,5 @@ public interface CompetitionInviteRestService {
 
     RestResult<Void> deleteInvite(String email, long competitionId);
 
-    RestResult<Void> sendInvite(long inviteId);
+    RestResult<AssessorInviteToSendResource> sendInvite(long inviteId);
 }

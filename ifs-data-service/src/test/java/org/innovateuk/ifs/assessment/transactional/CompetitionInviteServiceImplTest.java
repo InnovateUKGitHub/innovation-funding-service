@@ -572,7 +572,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
 
-        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId);
+        ServiceResult<AssessorInviteToSendResource> serviceResult = competitionInviteService.sendInvite(inviteId);
 
         assertTrue(serviceResult.isSuccess());
 
