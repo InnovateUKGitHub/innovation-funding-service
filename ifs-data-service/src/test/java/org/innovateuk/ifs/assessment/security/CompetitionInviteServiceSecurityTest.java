@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
@@ -27,6 +28,8 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
 
+    private UserPermissionRules userPermissionRules;
+
     @Override
     protected Class<? extends CompetitionInviteService> getClassUnderTest() {
         return TestCompetitionInviteService.class;
@@ -38,6 +41,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         competitionInviteLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionInviteLookupStrategy.class);
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
         competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
+        userPermissionRules = getMockPermissionRulesBean(UserPermissionRules.class);
     }
 
     @Test
@@ -123,6 +127,15 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
                     verifyZeroInteractions(competitionParticipantPermissionRules);
                 }
         );
+    }
+
+    @Test
+    public void getAvailableAssessors() {
+        setLoggedInUser(null);
+
+        assertAccessDenied(() -> classUnderTest.getAvailableAssessors(1L), () -> {
+            verifyNoMoreInteractions(userPermissionRules);
+        });
     }
 
     public static class TestCompetitionInviteService implements CompetitionInviteService {
