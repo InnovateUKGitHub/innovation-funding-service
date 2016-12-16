@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import com.google.common.collect.Lists;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -315,6 +316,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(projectFinance != null) {
+            projectFinance.setCreditReportConfirmed(reportPresent);
+            projectFinanceRepository.save(projectFinance);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        if(projectFinance != null) {
+            Boolean creditReport = projectFinance.getCreditReportConfirmed();
+            projectFinanceRepository.save(projectFinance);
+            return serviceSuccess(creditReport);
+        } else {
+            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+        }
     }
 
     @Override

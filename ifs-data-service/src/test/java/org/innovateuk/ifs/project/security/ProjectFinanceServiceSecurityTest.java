@@ -215,6 +215,24 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
                 });
     }
 
+    @Test
+    public void testGetCreditReport() {
+        assertAccessDenied(() -> classUnderTest.getCreditReport(1L, 2L),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewCreditReport(1L, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSetCreditReport() {
+        assertAccessDenied(() -> classUnderTest.saveCreditReport(1L, 2L, Boolean.TRUE),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveCreditReport(1L, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
     @Override
     protected Class<TestProjectFinanceService> getClassUnderTest() {
         return TestProjectFinanceService.class;
@@ -280,6 +298,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
+        @Override
+        public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
+
+        @Override
+        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean creditReportPresent) { return null; }
     }
 
     private List<UserRoleType> getNonProjectFinanceUserRoles() {
