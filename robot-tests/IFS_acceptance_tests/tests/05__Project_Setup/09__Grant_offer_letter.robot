@@ -52,7 +52,7 @@ Partners should not be able to submit the Grant Offer
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
+    And the user should not see the element    jQuery=.button:contains("Send signed offer letter")
     Then the user goes back to the previous page
     And the user should see the element    jQuery=li.waiting:nth-child(8)
 
@@ -88,7 +88,7 @@ PM should be able upload a file and then access the Submit button
     When the lead uploads a grant offer letter    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
-    Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
+    Then the user should see the element    jQuery=.button:contains("Send signed offer letter")
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849
@@ -126,7 +126,7 @@ PM can view the uploaded Annex file
 PM Submits the Grant Offer letter
     [Documentation]    INFUND-4851
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
+    When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
     And the user clicks the button/link     jQuery=button:contains("Confirm submission")
     Then the user should not see an error in the page
 
