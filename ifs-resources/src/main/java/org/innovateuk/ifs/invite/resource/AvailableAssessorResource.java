@@ -17,8 +17,8 @@ public class AvailableAssessorResource extends AssessorInviteResource {
     public AvailableAssessorResource() {
     }
 
-    public AvailableAssessorResource(String firstName, String lastName, CategoryResource innovationArea, boolean compliant, String email, BusinessType businessType, boolean added) {
-        super(firstName, lastName, innovationArea, compliant);
+    public AvailableAssessorResource(String name, CategoryResource innovationArea, boolean compliant, String email, BusinessType businessType, boolean added) {
+        super(name, innovationArea, compliant);
         this.email = email;
         this.businessType = businessType;
         this.added = added;

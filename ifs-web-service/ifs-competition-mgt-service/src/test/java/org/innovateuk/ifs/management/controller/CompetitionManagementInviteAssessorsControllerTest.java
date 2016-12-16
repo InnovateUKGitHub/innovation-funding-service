@@ -233,8 +233,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
-                .withFirstName("Dave", "John")
-                .withLastName("Smith", "Barnes")
+                .withName("Dave Smith", "John Barnes")
                 .withInnovationArea(newCategoryResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
                         .buildArray(2, CategoryResource.class))
@@ -247,8 +246,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
-                .withFirstName("Dave", "John")
-                .withLastName("Smith", "Barnes")
+                .withName("Dave Smith", "John Barnes")
                 .withInnovationArea(newCategoryResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
                         .buildArray(2, CategoryResource.class))
@@ -259,8 +257,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
-                .withFirstName("Dave", "John")
-                .withLastName("Smith", "Barnes")
+                .withName("Dave Smith", "John Barnes")
                 .withInnovationArea(newCategoryResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
                         .buildArray(2, CategoryResource.class))
@@ -299,8 +296,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         forEachWithIndex(expectedAvailableAssessors, (i, availableAssessorResource) -> {
             AvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
-            String expectedName = availableAssessorResource.getFirstName() + " " + availableAssessorResource.getLastName();
-            assertEquals(expectedName, availableAssessorRowViewModel.getName());
+            assertEquals(availableAssessorResource.getName(), availableAssessorRowViewModel.getName());
             assertEquals(availableAssessorResource.getInnovationArea().getName(), availableAssessorRowViewModel.getInnovationArea());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
             assertEquals(availableAssessorResource.getEmail(), availableAssessorRowViewModel.getEmail());
@@ -317,8 +313,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         forEachWithIndex(expectedCreatedInvites, (i, createdInviteResource) -> {
             InvitedAssessorRowViewModel invitedAssessorRowViewModel = model.getAssessors().get(i);
-            String expectedName = createdInviteResource.getFirstName() + " " + createdInviteResource.getLastName();
-            assertEquals(expectedName, invitedAssessorRowViewModel.getName());
+            assertEquals(createdInviteResource.getName(), invitedAssessorRowViewModel.getName());
             assertEquals(createdInviteResource.getInnovationArea().getName(), invitedAssessorRowViewModel.getInnovationArea());
             assertEquals(createdInviteResource.isCompliant(), invitedAssessorRowViewModel.isCompliant());
             assertEquals(createdInviteResource.getEmail(), invitedAssessorRowViewModel.getEmail());
@@ -333,8 +328,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         forEachWithIndex(expectedInviteOverviews, (i, inviteOverviewResource) -> {
             OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
-            String expectedName = inviteOverviewResource.getFirstName() + " " + inviteOverviewResource.getLastName();
-            assertEquals(expectedName, overviewAssessorRowViewModel.getName());
+            assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
             assertEquals(inviteOverviewResource.getInnovationArea().getName(), overviewAssessorRowViewModel.getInnovationArea());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
