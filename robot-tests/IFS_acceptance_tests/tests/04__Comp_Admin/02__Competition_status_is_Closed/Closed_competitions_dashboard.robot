@@ -19,11 +19,13 @@ The user should be able to navigate to the Closed dashboard
 
 The user can Invite Assessors
     [Documentation]    INFUND-6604
+    [Tags]    Pending
+    #TODO Pending Due to Infund 6985
     When the user clicks the button/Link    link=Invite assessors
     Then The user should see the element    link=Overview
     And the user should see the element    link=Find
     And the user should see the element    link=Invite
-    [Teardown]    The user clicks the button/link    link=Competition
+    [Teardown]    The user clicks the button/link    link=All Competitions
 
 The user can Notify Assessors
     [Documentation]    INFUND-6458
