@@ -119,6 +119,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -1070,23 +1071,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getOnlyElementOrEmpty(projectManagers);
     }
 
+
     private List<NotificationTarget> getLiveProjectNotificationTarget(Project project) {
         List<NotificationTarget> notificationTargets = new ArrayList<>();
         User projectManager = getExistingProjectManager(project).get().getUser();
         NotificationTarget projectManagerTarget = createProjectManagerNotificationTarget(projectManager);
         List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser()));
-
-        int duplicateIdx = -1, i;
-        for (i = 0; i < financeTargets.size(); i++) {
-            if (financeTargets.get(i).getName().equals(projectManagerTarget.getName())) {
-                duplicateIdx = i;
-            }
-        }
-        if (duplicateIdx != -1) {
-            financeTargets.remove(duplicateIdx);
-        }
+        List<NotificationTarget> uniqueFinanceTargets = simpleFilterNot(financeTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
         notificationTargets.add(projectManagerTarget);
-        notificationTargets.addAll(financeTargets);
+        notificationTargets.addAll(uniqueFinanceTargets);
+
         return notificationTargets;
     }
 
