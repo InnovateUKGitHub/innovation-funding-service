@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.form.application;
 
-import org.innovateuk.ifs.competitionsetup.viewmodel.GuidanceRowForm;
+import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

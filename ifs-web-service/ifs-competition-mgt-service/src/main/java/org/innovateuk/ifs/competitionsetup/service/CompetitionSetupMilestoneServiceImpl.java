@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
-import org.apache.commons.collections4.map.LinkedMap;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,14 +37,14 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, LinkedMap<String, MilestoneViewModel> milestoneEntries, Long competitionId) {
+    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, MilestoneRowForm> milestoneEntries, Long competitionId) {
         List<MilestoneResource> updatedMilestones = new ArrayList();
 
         milestones.forEach(milestoneResource -> {
-            MilestoneViewModel milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
+            MilestoneRowForm milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
 
             if(milestoneWithUpdate != null) {
-                LocalDateTime temp = getMilestoneDate(milestoneWithUpdate.getDay(), milestoneWithUpdate.getMonth(), milestoneWithUpdate.getYear());
+                LocalDateTime temp = milestoneWithUpdate.getMilestoneAsDateTime();
                 if (temp != null) {
                     milestoneResource.setDate(temp);
                     updatedMilestones.add(milestoneResource);
@@ -55,7 +56,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public List<Error> validateMilestoneDates(LinkedMap<String, MilestoneViewModel> milestonesFormEntries) {
+    public List<Error> validateMilestoneDates(Map<String, MilestoneRowForm> milestonesFormEntries) {
         List<Error> errors =  new ArrayList<>();
         milestonesFormEntries.values().forEach(milestone -> {
 
@@ -86,25 +87,17 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         }
     }
 
-    private LocalDateTime getMilestoneDate(Integer day, Integer month, Integer year){
-        if (day != null && month != null && year != null){
-            return LocalDateTime.of(year, month, day, 0, 0);
-        } else {
-            return null;
-        }
-    }
-
     public void sortMilestones(MilestonesForm milestoneForm) {
-        LinkedMap<String, MilestoneViewModel> milestoneEntries = milestoneForm.getMilestoneEntries();
+        LinkedMap<String, MilestoneRowForm> milestoneEntries = milestoneForm.getMilestoneEntries();
         milestoneForm.setMilestoneEntries(sortMilestoneEntries(milestoneEntries.values()));
     }
 
-    private LinkedMap<String, MilestoneViewModel> sortMilestoneEntries(Collection<MilestoneViewModel> milestones) {
-        List<MilestoneViewModel> sortedMilestones = milestones.stream()
+    private LinkedMap<String, MilestoneRowForm> sortMilestoneEntries(Collection<MilestoneRowForm> milestones) {
+        List<MilestoneRowForm> sortedMilestones = milestones.stream()
                 .sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal())
                 .collect(Collectors.toList());
 
-        LinkedMap<String, MilestoneViewModel> milestoneFormEntries = new LinkedMap<>();
+        LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
         sortedMilestones.stream().forEachOrdered(milestone ->
                 milestoneFormEntries.put(milestone.getMilestoneType().name(), milestone)
         );

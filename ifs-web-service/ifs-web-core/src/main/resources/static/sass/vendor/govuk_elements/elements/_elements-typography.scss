@@ -244,6 +244,7 @@ hr {
   margin-top: $gutter;
   margin-bottom: $gutter;
   padding: 0;
+  clear:both;
   @include ie-lte(7) {
     color: $border-colour;
   }

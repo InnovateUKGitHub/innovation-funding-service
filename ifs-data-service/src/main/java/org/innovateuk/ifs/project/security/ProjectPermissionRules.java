@@ -213,4 +213,24 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
         return isCompAdmin(user) || isProjectFinanceUser(user);
     }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Comp admins & project finance can view the send status of Grant Offer Letter for a project")
+    public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Partners can view the send status of Grant Offer Letter for a project")
+    public boolean externalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_GRANT_OFFER", description = "A user can see grant offer page that they are partners on")
+    public boolean partnersOnProjectCanViewGrantOfferPage(ProjectResource project, UserResource user) {
+        return project != null && isPartner(project.getId(), user.getId());
+    }
+
 }
