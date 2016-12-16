@@ -55,7 +55,6 @@ ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    11
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION}    ${EMPIRE_LTD_ID}
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
 ${NEW_COMP_SETUP_COMPETITION}    10
-
 ${IN_ASSESSMENT_COMPETITION}    4
 ${IN_ASSESSMENT_COMPETITION_NAME}    Sustainable living models for the future
 ${IN_ASSESSMENT_APPLICATION_1}    22
@@ -199,3 +198,4 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
+${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
