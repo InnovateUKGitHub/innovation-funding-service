@@ -957,12 +957,34 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project projectInDB = newProject().withId(projectId).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
 
         assertTrue(result.isSuccess());
 
         assertEquals(true, projectInDB.getOtherDocumentsApproved());
+        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsFailureGenerateGolFails() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+
+        assertEquals(true, projectInDB.getOtherDocumentsApproved());
+        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
 
     }
 

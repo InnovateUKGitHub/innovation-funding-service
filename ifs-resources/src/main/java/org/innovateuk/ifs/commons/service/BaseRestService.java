@@ -70,6 +70,10 @@ public abstract class BaseRestService {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
+    protected RestResult<Void> postWithRestResult(String path) {
+        return postWithRestResult(path, Void.class);
+    }
+
     protected <T> RestResult<T> postWithRestResult(String path, Class<T> returnType) {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
     }
