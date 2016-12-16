@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -11,7 +10,6 @@ import static org.junit.Assert.*;
 public class MilestoneRowFormTest {
 
     @Test
-    @Ignore("Date-sensitive test - needs rewriting to account for date changes")
     public void testGetMilestoneViewModel() throws Exception {
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(3);
         String dayOfWeek = localDateTime.getDayOfWeek().name().substring(0,1)
