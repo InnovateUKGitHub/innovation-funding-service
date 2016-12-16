@@ -72,7 +72,7 @@
       }
     }
     &.read-only{
-      background-color: $panel-colour;
+      background-color: $highlight-colour;
       color: $secondary-text-colour;
     }
     &:last-child{

@@ -35,19 +35,19 @@ Labour
     Then Totals should be correct    css=#section-total-9    £ 48,000    css=[data-mirror="#section-total-9"]    £ 48,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
-Administration support costs
+Overhead costs
     [Documentation]    INFUND-192
     ...
-    ...    Acceptance tests for the Administration support costs section calculations
+    ...    Acceptance tests for the Overhead costs section calculations
     ...
     ...    INFUND-736z
-    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
     And user selects the admin costs    overheads-type-29    CUSTOM_RATE
     And the user enters text to a text field    css=[id$="customRate"]    30
     Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
-    [Teardown]    the user clicks the button/link    jQuery=button:contains("Administration support costs")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
     [Documentation]    INFUND-192
@@ -295,7 +295,7 @@ Admin costs total should be correct
     the user moves focus to the element    css=.app-submit-btn
     the user should see the element    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Element Should Contain    jQuery=button:contains("Administration support costs")    ${ADMIN_VALUE}
+    Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
 
 the grant value should be correct in the finance summary page
     The user navigates to the next page

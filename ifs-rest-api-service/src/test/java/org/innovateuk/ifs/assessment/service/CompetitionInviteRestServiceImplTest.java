@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.email.builders.EmailContentResourceBuilder;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -10,8 +12,10 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,6 +30,15 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     protected CompetitionInviteRestServiceImpl registerRestServiceUnderTest() {
         CompetitionInviteRestServiceImpl competitionInviteRestService = new CompetitionInviteRestServiceImpl();
         return competitionInviteRestService;
+    }
+
+    @Test
+    public void getCreatedInvite() throws Exception {
+        long inviteId = 1L;
+        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated",inviteId), AssessorInviteToSendResource.class, expected);
+        AssessorInviteToSendResource actual = service.getCreated(inviteId).getSuccessObject();
+        assertEquals(expected,actual);
     }
 
     @Test
@@ -131,5 +144,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         RestResult<Void> resultResult = service.deleteInvite(email, competitionId);
         assertTrue(resultResult.isSuccess());
+    }
+
+    @Test
+    public void sendInvite() {
+        long inviteId = 5L;
+        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
+        EmailContent email = newEmailContentResource().build();
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite",inviteId), AssessorInviteToSendResource.class, null, expected, OK);
+
+        AssessorInviteToSendResource actual = service.sendInvite(inviteId, email).getSuccessObject();
+        assertEquals(expected, actual);
     }
 }
