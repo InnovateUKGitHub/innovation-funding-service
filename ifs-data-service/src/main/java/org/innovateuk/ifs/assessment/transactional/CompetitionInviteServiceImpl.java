@@ -107,7 +107,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR,
                     asMap("name", invite.getName(),
                             "competitionName", invite.getTarget().getName(),
-                            "innovationArea", invite.getInnovationArea().getName(),
+                            "innovationArea", invite.getInnovationArea(),
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
                             "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter)));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
