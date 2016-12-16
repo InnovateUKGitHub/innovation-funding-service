@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -164,7 +165,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void sendInvite() {
-        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.sendInvite(1L));
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.sendInvite(1L, newEmailContentResource().build()));
     }
 
     @Test
