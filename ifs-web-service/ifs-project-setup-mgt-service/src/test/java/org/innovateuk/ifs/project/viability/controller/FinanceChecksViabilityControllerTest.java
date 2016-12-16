@@ -150,6 +150,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         assertTrue(viewModel.isLeadPartnerOrganisation());
         assertTrue(viewModel.isShowApprovalMessage());
+        assertTrue(viewModel.isShowBackToFinanceCheckButton());
+        assertFalse(viewModel.isShowSaveAndContinueButton());
+
         assertOrganisationDetails(industrialOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
@@ -188,6 +191,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         assertFalse(viewModel.isLeadPartnerOrganisation());
         assertTrue(viewModel.isShowApprovalMessage());
+        assertTrue(viewModel.isShowBackToFinanceCheckButton());
+        assertFalse(viewModel.isShowSaveAndContinueButton());
+
         assertOrganisationDetails(academicOrganisation, viewModel);
 
         assertEquals(Integer.valueOf(6868), viewModel.getTotalCosts());
