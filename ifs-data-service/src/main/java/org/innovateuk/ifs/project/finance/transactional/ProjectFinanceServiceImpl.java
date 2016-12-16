@@ -318,9 +318,20 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
         ViabilityResource viabilityResource = new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus());
+        viabilityResource.setViabilityApprovalDate(projectFinance.getViabilityApprovalDate());
+
+        setViabilityApprovalUser(viabilityResource, projectFinance.getViabilityApprovalUser());
 
         return serviceSuccess(viabilityResource);
 
+    }
+
+    private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
+
+        if (viabilityApprovalUser != null) {
+            viabilityResource.setViabilityApprovalUserFirstName(viabilityApprovalUser.getFirstName());
+            viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
+        }
     }
 
     @Override
@@ -329,6 +340,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
 
         return validateViability(projectFinance, viabilityStatus)
+                .andOnSuccess(() -> setViabilityApprovalUser(projectFinance))
                 .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
     }
 
@@ -347,10 +359,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    private ServiceResult<Void> setViabilityApprovalUser(ProjectFinance projectFinance) {
+        return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> projectFinance.setViabilityApprovalUser(currentUser));
+    }
+
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
 
         projectFinance.setViability(viability);
         projectFinance.setViabilityStatus(viabilityStatus);
+        projectFinance.setViabilityApprovalDate(LocalDate.now());
 
         projectFinanceRepository.save(projectFinance);
 
