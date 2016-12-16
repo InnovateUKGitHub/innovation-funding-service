@@ -2,14 +2,18 @@ package org.innovateuk.ifs.assessment.controller;
 
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,12 +22,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
+import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
@@ -58,6 +65,31 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         loginSystemRegistrationUser();
 
         competition = competitionRepository.findOne(1L);
+    }
+
+    @Test
+    public void getCreatedInvite() {
+        Category category = newCategory().withName("category").build();
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName("tom poly")
+                .withEmail("tom@poly.io")
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .withInnovationArea(category)
+                .build())
+                .getId();
+
+        loginCompAdmin();
+
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
+        assertTrue(serviceResult.isSuccess());
+
+        AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
+        assertEquals("tom poly", inviteResource.getRecipient());
     }
 
     @Test
@@ -482,5 +514,29 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.rejectInvite("hash", competitionRejectionResource);
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(RejectionReason.class, -1L)));
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName("tom poly")
+                .withEmail("tom@poly.io")
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .build())
+                .getId();
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
+
+        loginCompAdmin();
+
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
+        assertTrue(serviceResult.isSuccess());
     }
 }

@@ -189,6 +189,7 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
         return APPLICATION_FORM;
     }
 
@@ -230,6 +231,8 @@ public class ApplicationFormController {
         } else {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         }
+
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
 
         return APPLICATION_FORM;
     }
@@ -321,6 +324,7 @@ public class ApplicationFormController {
                 model.addAttribute("currentUser", user);
                 applicationModelPopulator.addUserDetails(model, application, user.getId());
                 applicationNavigationPopulator.addNavigation(question, applicationId, model);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -640,8 +644,10 @@ public class ApplicationFormController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
+
         if (section.getType() == SectionType.FINANCE &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
+            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
             return APPLICATION_FORM;
         }
 
@@ -660,6 +666,7 @@ public class ApplicationFormController {
         if(saveApplicationErrors.hasErrors()){
             validationHandler.addAnyErrors(saveApplicationErrors);
             setReturnToApplicationFormData(section, application, competition, user, model, form, applicationId);
+            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);

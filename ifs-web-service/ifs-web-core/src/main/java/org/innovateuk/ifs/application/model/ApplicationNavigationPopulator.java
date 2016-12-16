@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Component
@@ -14,6 +15,8 @@ public class ApplicationNavigationPopulator {
     public static final String SECTION_URL = "/section/";
     public static final String QUESTION_URL = "/question/";
     public static final String APPLICATION_BASE_URL = "/application/";
+
+    private static final String REFERER = "referer";
 
     @Autowired
     private QuestionService questionService;
@@ -80,5 +83,21 @@ public class ApplicationNavigationPopulator {
             model.addAttribute("nextUrl", nextUrl);
             model.addAttribute("nextText", nextText);
         }
+    }
+
+    /**
+     * This method creates a URL looking at referer in request.  Because 'back' will be different depending on
+     * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892)
+     */
+    public void addAppropriateBackURLToModel(Long appId, HttpServletRequest request, Model model){
+        String backURL;
+        String referer = request.getHeader(REFERER);
+
+        if(referer != null && referer.contains("/application/" + appId + "/summary")){
+            backURL = referer;
+        } else {
+            backURL = "/application/" + appId;
+        }
+        model.addAttribute("backURL", backURL);
     }
 }
