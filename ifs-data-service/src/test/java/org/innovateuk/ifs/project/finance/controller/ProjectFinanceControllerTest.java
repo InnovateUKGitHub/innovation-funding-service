@@ -223,6 +223,33 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void testGetCreditReport() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        when(projectFinanceServiceMock.getCreditReport(projectId, organisationId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/credit-report", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(projectFinanceServiceMock).getCreditReport(projectId, organisationId);
+    }
+
+    @Test
+    public void testSaveCreditReport() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        when(projectFinanceServiceMock.saveCreditReport(projectId, organisationId, true)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/credit-report/{viability}", projectId, organisationId, Boolean.TRUE))
+                .andExpect(status().isOk());
+
+        verify(projectFinanceServiceMock).saveCreditReport(projectId, organisationId, true);
+    }
+
     @Override
     protected ProjectFinanceController supplyControllerUnderTest() {
         return new ProjectFinanceController();
