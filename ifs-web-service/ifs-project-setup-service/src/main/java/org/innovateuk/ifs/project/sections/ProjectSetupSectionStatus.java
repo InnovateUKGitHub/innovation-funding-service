@@ -59,17 +59,13 @@ public class ProjectSetupSectionStatus {
         return EMPTY;
     }
 
-    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState,
-                                                   final boolean spendProfileApproved) {
+    public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {
         if (PENDING.equals(spendProfileState)) {
             return HOURGLASS;
         } else if (ACTION_REQUIRED.equals(spendProfileState)) {
             return FLAG;
         } else if (COMPLETE.equals(spendProfileState)) {
-            if (spendProfileApproved) {
                 return TICK;
-            }
-            return HOURGLASS;
         }
         return EMPTY;
     }

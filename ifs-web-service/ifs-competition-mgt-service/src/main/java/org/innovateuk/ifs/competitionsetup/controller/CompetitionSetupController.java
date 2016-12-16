@@ -19,7 +19,6 @@ import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.viewmodel.FunderViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,8 +249,8 @@ public class CompetitionSetupController {
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
         } else if (request.getParameterMap().containsKey("add-funder")) {
-            List<FunderViewModel> funders = competitionSetupForm.getFunders();
-            funders.add(new FunderViewModel(new CompetitionFunderResource()));
+            List<FunderRowForm> funders = competitionSetupForm.getFunders();
+            funders.add(new FunderRowForm(new CompetitionFunderResource()));
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {

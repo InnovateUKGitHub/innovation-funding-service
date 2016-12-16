@@ -75,6 +75,10 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
         return withArray((status, applicationInviteResource) -> setField("status", status, applicationInviteResource), statuses);
     }
 
+    public ApplicationInviteResourceBuilder withHash(String... hashes) {
+        return withArray((hash, applicationInviteResource) -> setField("hash", hash, applicationInviteResource), hashes);
+    }
+
     @Override
     protected void postProcess(int index, ApplicationInviteResource instance) {
         super.postProcess(index, instance);

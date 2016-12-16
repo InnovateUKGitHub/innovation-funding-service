@@ -605,7 +605,27 @@
             <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />-->
 
         <!--</div>-->
-        <div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=false,sortByType=2" th:remove="tag" />
+        <div class="grid-row sorting">
+            <div class="column-two-thirds">
+                <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+            </div>
+
+            <div class="column-third alignright">
+                <div class="form-group">
+                    <label for="sort-by">Sort by</label>
+                    <select name="sort-by" id="sort-by" class="form-control">
+                        <option value="Title">Assessor name</option>
+                        <option value="Employer">Email address</option>
+                        <option value="Innovation Area">Innovation area</option>
+                        <option value="Contract and DOI">Contract and DOI</option>
+                        <option value="Remove assessor">Remove assessor</option>
+                    </select>
+                </div>
+                <div class="alignright-button extra-margin extra-margin-bottom">
+                    <a href="#" class="button">Review and send group invite</a>
+                </div>
+            </div>
+        </div>
 
         <div class="table-overflow">
             <table>
@@ -613,9 +633,9 @@
                     <tr>
                         <th scope="col">Assessor name</th>
                         <th scope="col">Email address</th>
-                        <th scope="col" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}"></th>
-                        <th scope="col">Contract and DOI</th>
-                        <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                        <th scope="col">Innovation area</th>
+                        <th scope="col" class="aligncentre">Contract and DOI</th>
+                        <th scope="col" class="alignright">Remove assessor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -623,7 +643,7 @@
                         <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
                         <td>dave@email.com</td>
                         <td>Earth Observation</td>
-                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
                         <td class="alignright">
                             <a href="#">Remove from list</a>
                         </td>
@@ -632,7 +652,7 @@
                         <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
                         <td>chris@email.com</td>
                         <td>Internet of things</td>
-                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
                         <td class="alignright">
                             <a href="#">Remove from list</a>
                         </td>
@@ -641,7 +661,7 @@
                         <td><a href="/prototypes/5229-assessor-profile?name=Martin%20Trollope&amp;comp=assessment">Martin Trollope</a></td>
                         <td>martin@email.com</td>
                         <td>Internet of things</td>
-                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
                         <td class="alignright">
                             <a href="#">Remove from list</a>
                         </td>
@@ -650,7 +670,7 @@
                         <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
                         <td>chantel@email.com</td>
                         <td>Internet of things</td>
-                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
                         <td class="alignright">
                             <a href="#">Remove from list</a>
                         </td>
@@ -659,7 +679,7 @@
                         <td><a href="/prototypes/5229-assessor-profile?name=Richard%20Turner&amp;comp=assessment">Richard Turner</a></td>
                         <td>richard@email.com</td>
                         <td>Internet of thingss</td>
-                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
                         <td class="alignright">
                             <a href="#">Remove from list</a>
                         </td>
