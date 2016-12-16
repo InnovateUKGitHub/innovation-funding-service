@@ -93,8 +93,8 @@ Labour server side
 
 Admin costs client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=button:contains("Administration support costs")
-    Given the user clicks the button/link    jQuery=label:contains("Custom administration support cost")
+    Given the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    Given the user clicks the button/link    jQuery=label:contains("Custom overhead costs")
     And the user enters text to a text field    css=[id$="customRate"]    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank    This field cannot be left blank    #Entered two times the same error because this keyword expects two errors
     When the user enters text to a text field    css=[id$="customRate"]    101
@@ -119,7 +119,7 @@ Admin costs server side
     Then the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
     [Teardown]    Run keywords    Given the user clicks the button/link    jQuery=label:contains("20% of labour costs")
-    ...    AND    the user clicks the button/link    jQuery=button:contains("Administration support costs")
+    ...    AND    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials client side
     [Documentation]    INFUND-844

@@ -77,7 +77,7 @@ public class CompetitionManagementDashboardControllerTest {
         Mockito.when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
         Mockito.when(competitionService.getCompetitionCounts()).thenReturn(counts);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/projectSetup"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/projectSetup"))
                 .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))

@@ -346,11 +346,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Override
     public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
-        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance -> {
-            Boolean creditReport = projectFinance.getCreditReportConfirmed();
-            projectFinanceRepository.save(projectFinance);
-            return serviceSuccess(creditReport);
-        });
+        return getProjectFinance(projectId, organisationId).andOnSuccessReturn(ProjectFinance::getCreditReportConfirmed);
     }
 
     @Override
