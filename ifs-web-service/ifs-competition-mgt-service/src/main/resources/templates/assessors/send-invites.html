@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor'" th:remove="tag" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management competition-overview">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to Invite assessor',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" th:remove="tag" />
+
+            <div class="page-title">
+                <h1 class="heading-xlarge">
+                    <span class="heading-secondary" th:text="${model.competitionName}">Technology inspired</span>
+                    Invite to be an assessor
+                </h1>
+            </div>
+
+            <p class="heading-medium" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
+
+            <form th:action="@{/competition/assessors/invite/{inviteId}/send(inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+                <div class="form-group">
+                    <label class="form-label-bold" for="subject">Subject</label>
+                    <input class="form-control width-full" id="subject" name="subject" type="text" th:value='${model.emailContent.subject}' />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label-bold" for="message">Message</label>
+                    <textarea id="message" rows="16" class="form-control width-full" name="content" th:text="${model.emailContent.plainText}"/>
+                </div>
+
+                <div class="alignright">
+                    <button type="submit" class="button button-large">Send invite</button>
+                </div>
+            </form>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>
