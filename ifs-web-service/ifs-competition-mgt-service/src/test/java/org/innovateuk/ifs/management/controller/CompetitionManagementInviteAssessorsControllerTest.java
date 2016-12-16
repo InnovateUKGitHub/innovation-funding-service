@@ -28,6 +28,8 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -114,7 +116,21 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     public void invite() throws Exception {
         List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
 
+        List<CategoryResource> innovationSectors = newCategoryResource()
+                .withId(1L)
+                .withType(INNOVATION_SECTOR)
+                .withName("Innovation Sector 1")
+                .withChildren(
+                        newCategoryResource()
+                                .withId(2L, 3L)
+                                .withType(INNOVATION_AREA)
+                                .withName("Innovation Area 1", "Innovation Area 2")
+                                .build(2)
+                )
+                .build(1);
+
         when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(assessorCreatedInviteResources));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(innovationSectors);
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/invite", competition.getId()))
                 .andExpect(status().isOk())

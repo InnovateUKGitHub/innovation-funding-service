@@ -204,7 +204,11 @@ public class BaseUnitTest {
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
+<<<<<<< Updated upstream
     public CookieUtil cookieUtil;
+=======
+    public CategoryService categoryServiceMock;
+>>>>>>> Stashed changes
 
     @Spy
     @InjectMocks
