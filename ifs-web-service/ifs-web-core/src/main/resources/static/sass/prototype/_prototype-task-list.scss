@@ -14,7 +14,6 @@
       @include media-down(mobile) {
         display: block;
         width: 100%;
-        margin-bottom: 10px;
       }
     }
     .task-full-width{
@@ -29,37 +28,51 @@
       @include media-down(mobile) {
         display: block;
         width: 100%;
-        margin-bottom: 10px;
+        margin-top: 10px;
+        padding-left: 0;
       }
     }
     .secondary-notification{
       @extend .notification;
       color: $secondary-text-colour;
+
     }
     .action-required{
       @extend .notification;
       @extend  %action-required;
+      @include media-down(mobile) {
+        padding-left: 20px;
+      }
     }
     .task-status{
       position: absolute;
-      top: 50%;
+      bottom: 50%;
       right: 10px;
-      margin-top: -10px;
-      padding-left: 20px;
-      text-align: right;
-      font-size: 16px;
+      margin-bottom: -10px;
+      span {
+        padding-left: 20px;
+        text-align: right;
+        font-size: 16px;
+      }
+      @include media-down(mobile) {
+        position: static;
+        margin: 10px 0;
+        text-align: right;
+      }
     }
     .task-status-complete{
       @extend .task-status;
-      @extend %icon-tick;
       right: 0;
-      background-size: 14px;
-      background-position: left center;
-      color: $button-colour;
-      font-weight: bold;
+      span {
+        @extend %icon-tick;
+        background-size: 14px;
+        background-position: left center;
+        color: $button-colour;
+        font-weight: bold;
+      }
     }
     &.read-only{
-      background-color: $panel-colour;
+      background-color: $highlight-colour;
       color: $secondary-text-colour;
     }
     &:last-child{

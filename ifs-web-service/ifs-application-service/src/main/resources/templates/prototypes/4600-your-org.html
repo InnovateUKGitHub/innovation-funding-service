@@ -19,15 +19,15 @@
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation size'})" th:remove="tag" />
 
         <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
           <h2 class="heading-small no-margin">Organisation size determines funding</h2>
           <p>The organisation size is used to calculate your funding level in the application.</p>
-          <p>Changing this selection will reset the your funding level.</p>
+          <p>Changing this selection will reset your funding level.</p>
         </div>
 
-        <form action="#" >
+        <form action="#">
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
             <fieldset class="extra-margin-bottom">
@@ -84,15 +84,15 @@
                 Staff count
                 <span class="form-hint">Number of full time employees at your organisation.</span>
               </label>
-              <input type="text" class="form-control" id="staff-count" name="staff-count" />
+              <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
             </div>
 
             <div class="form-group">
               <label for="turnover" class="form-label-bold">
-                Turnover
-                <span class="form-hint">Your turnover from your last financial year.</span>
+                Turnover (&pound;)
+                <span class="form-hint">Your turnover from the last financial year.</span>
               </label>
-              <input type="text" class="form-control" id="turnover" name="turnover" />
+              <input type="text" class="form-control width-medium" id="turnover" name="turnover" />
             </div>
 
           </fieldset>
@@ -254,7 +254,7 @@
               </th:block>
 
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark your organisation as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 

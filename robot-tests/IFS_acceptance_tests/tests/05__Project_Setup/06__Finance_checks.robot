@@ -139,7 +139,7 @@ Status updates correctly for internal user's table
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.waiting      # MO  TODO pending due to INFUND-6952
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting       # Bank details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance Checks are actionable from the start-workaround for Private beta assessment
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
@@ -175,7 +175,7 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
-    the user navigates to the page    ${server}/management/dashboard/projectSetup
+    the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 

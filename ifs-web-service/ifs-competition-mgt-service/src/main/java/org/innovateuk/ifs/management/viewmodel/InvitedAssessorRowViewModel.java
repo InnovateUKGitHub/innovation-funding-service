@@ -6,13 +6,19 @@ package org.innovateuk.ifs.management.viewmodel;
 public class InvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private String email;
+    private long inviteId;
 
-    public InvitedAssessorRowViewModel(String name, String innovationArea, boolean compliant, String email) {
+    public InvitedAssessorRowViewModel(String name, String innovationArea, boolean compliant, String email, long inviteId) {
         super(name, innovationArea, compliant);
         this.email = email;
+        this.inviteId = inviteId;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public long getInviteId() {
+        return inviteId;
     }
 }

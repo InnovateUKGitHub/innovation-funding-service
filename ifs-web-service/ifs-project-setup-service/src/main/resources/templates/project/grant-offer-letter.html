@@ -44,13 +44,17 @@
 
             <h2 class="heading-medium">Grant offer letter</h2>
             <p>The grant offer should be read and approved by all project members. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
-            <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            <th:block th:if="${model.isGrantOfferLetterSent()}">
+                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            </th:block>
 
             <h2 class="heading-medium">Annex</h2>
             <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-            <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            <th:block th:if="${model.isGrantOfferLetterSent()}">
+                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            </th:block>
 
-            <div th:if="${!model.submitted and model.getGrantOfferLetterFile() != null}" class="upload-section">
+            <div th:if="${model.isGrantOfferLetterSent() and !model.submitted and model.getGrantOfferLetterFile() != null}" class="upload-section">
                 <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
                 The Project Manager is required to provide a signed copy of the grant offer letter.
                 <details>
@@ -84,8 +88,10 @@
                 </th:block>
             </div>
 
-            <a th:if="${model.isShowSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
-            <button th:if="${model.isShowDisabledSubmitButton()}" disabled="disabled" class="button">Submit signed offer letter</button>
+            <th:block th:if="${model.isGrantOfferLetterSent()}">
+                <a th:if="${model.isShowSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+                <button th:if="${model.isGrantOfferLetterSent() and model.isShowDisabledSubmitButton()}" disabled="disabled" class="button">Submit signed offer letter</button>
+            </th:block>
 
             <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
             <div th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>

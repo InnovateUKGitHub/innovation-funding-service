@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,6 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.util.CookieUtil.getCookieValue;
-import static org.innovateuk.ifs.util.CookieUtil.saveToCookie;
 import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
 
 /**
@@ -35,10 +34,13 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
 public class AcceptProjectInviteController extends BaseController {
 
     public static final String INVITE_HASH = "project_invite_hash";
+
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
     @Autowired
     private OrganisationRestService organisationRestService;
+    @Autowired
+    private CookieUtil cookieUtil;
 
     public static final String ACCEPT_INVITE_MAPPING = "/accept-invite/";
     public static final String ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING = "/registration/accept-invite-user-does-not-yet-exist-show-project";
@@ -65,7 +67,7 @@ public class AcceptProjectInviteController extends BaseController {
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
-            saveToCookie(response, INVITE_HASH, hash);
+            cookieUtil.saveToCookie(response, INVITE_HASH, hash);
             if (userExists && loggedInUser == null) {
                 return restSuccess(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW);
             } else if (userExists) {
@@ -93,24 +95,24 @@ public class AcceptProjectInviteController extends BaseController {
     }
 
     private String acceptInviteShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash)
-            .andOnSuccess(invite -> {
+                .andOnSuccess(invite -> {
 
-                ValidationMessages errors = errorMessages(loggedInUser, invite);
-                if (errors.hasErrors()) {
-                    return populateModelWithErrorsAndReturnErrorView(errors, model);
-                }
+                    ValidationMessages errors = errorMessages(loggedInUser, invite);
+                    if (errors.hasErrors()) {
+                        return populateModelWithErrorsAndReturnErrorView(errors, model);
+                    }
 
-                JoinAProjectViewModel japvm = new JoinAProjectViewModel();
-                japvm.setCompetitionName(invite.getCompetitionName());
-                japvm.setLeadApplicantName(invite.getLeadApplicant());
-                japvm.setOrganisationName(invite.getOrganisationName());
-                japvm.setLeadOrganisationName(invite.getLeadOrganisation());
-                japvm.setProjectName(invite.getProjectName());
-                model.addAttribute("model", japvm);
-                return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);
-            }).getSuccessObjectOrThrowException();
+                    JoinAProjectViewModel japvm = new JoinAProjectViewModel();
+                    japvm.setCompetitionName(invite.getCompetitionName());
+                    japvm.setLeadApplicantName(invite.getLeadApplicant());
+                    japvm.setOrganisationName(invite.getOrganisationName());
+                    japvm.setLeadOrganisationName(invite.getLeadOrganisation());
+                    japvm.setProjectName(invite.getProjectName());
+                    model.addAttribute("model", japvm);
+                    return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);
+                }).getSuccessObjectOrThrowException();
     }
 
     //======================================================
@@ -121,15 +123,15 @@ public class AcceptProjectInviteController extends BaseController {
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
                                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                    Model model) {
-        String hash = getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {
-            ValidationMessages errors = errorMessages(loggedInUser, invite);
-            if (errors.hasErrors()) {
-                return populateModelWithErrorsAndReturnErrorView(errors, model);
-            }
-            // Accept the invite - adding the user to the project
-            return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
-                    RedirectUtils.redirectToApplicationService(request, "/applicant/dashboard"));
+                    ValidationMessages errors = errorMessages(loggedInUser, invite);
+                    if (errors.hasErrors()) {
+                        return populateModelWithErrorsAndReturnErrorView(errors, model);
+                    }
+                    // Accept the invite - adding the user to the project
+                    return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
+                            RedirectUtils.redirectToApplicationService(request, "/applicant/dashboard"));
 
                 }
         ).getSuccessObject();

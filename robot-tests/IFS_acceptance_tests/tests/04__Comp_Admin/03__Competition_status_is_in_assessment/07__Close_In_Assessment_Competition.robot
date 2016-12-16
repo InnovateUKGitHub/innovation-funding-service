@@ -14,12 +14,12 @@ The Comp admin closes the competition In Assessment
     [Documentation]    INFUND-6459
     ...
     ...    INFUND-6602
-    When The user clicks the button/link    link=Sustainable living models for the future
+    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=.button:contains("Close assessment")
     Then The user should be redirected to the correct page    ${Comp_admin_all_competitions_page}
-    And The user should see the text in the element    css=section:nth-child(6)    Sustainable living models for the future
+    And The user should see the text in the element    css=section:nth-child(6)    ${IN_ASSESSMENT_COMPETITION_NAME}
 
 Assessors shouldn't see the closed competition
     [Documentation]    INFUND-6459
     [Setup]    Log in as a different user    &{assessor2_credentials}
-    Then The user should not see the element    link=Sustainable living models for the future
+    Then The user should not see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
