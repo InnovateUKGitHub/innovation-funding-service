@@ -79,7 +79,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                                                           CompetitionSetupSection section) {
 
         populateGeneralModelAttributes(model, competitionResource, section);
-		populateCompetitionStateModelAttributes(model, competitionResource, section);
 
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
@@ -256,6 +255,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		model.addAttribute("subTitle",
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
+
+		populateCompetitionStateModelAttributes(model, competitionResource, section);
 	}
 
 	private void populateCompetitionStateModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {

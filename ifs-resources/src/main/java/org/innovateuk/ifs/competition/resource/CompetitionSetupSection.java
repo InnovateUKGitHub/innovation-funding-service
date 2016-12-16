@@ -19,7 +19,7 @@ public enum CompetitionSetupSection {
 	ELIGIBILITY("eligibility", "Eligibility", emptyList(), false),
 	MILESTONES("milestones", "Milestones", emptyList(), true),
 	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
-	ASSESSORS("assessors", "Assessors", emptyList(), false);
+	ASSESSORS("assessors", "Assessors", emptyList(), true);
 	
 	private String path;
 	private String name;
@@ -69,11 +69,10 @@ public enum CompetitionSetupSection {
 		if (competitionResource.isSetupAndAfterNotifications()) {
             return true;
         }
-        if (competitionResource.isSetupAndLive() && this.getEditableAfterSetupAndLive()) {
-			return false;
+        if (competitionResource.isSetupAndLive()) {
+			return !this.getEditableAfterSetupAndLive();
 		}
 
 		return false;
 	}
-	
 }
