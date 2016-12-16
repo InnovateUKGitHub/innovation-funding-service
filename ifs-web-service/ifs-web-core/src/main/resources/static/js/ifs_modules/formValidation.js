@@ -62,8 +62,8 @@ IFS.core.formValidation = (function() {
       date : {
         fields : '.date-group input',
         messageInvalid : {
-          invalid : "Please enter a valid date",
-          future : "Please enter a future date"
+          invalid : "Please enter a valid date.",
+          future : "Please enter a future date."
         }
       },
       pattern : {
@@ -435,10 +435,11 @@ IFS.core.formValidation = (function() {
       var allFields = d.add(m).add(y);
       var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
       var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
+      var enabled = d.is('[readonly]') || m.is('[readonly]') || y.is('[readonly]');
       var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) && IFS.core.formValidation.checkNumber(y, false);
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid');
 
-      if(validNumbers && filledOut){
+      if(validNumbers && filledOut && enabled){
         var month = parseInt(m.val(), 10);
         var day = parseInt(d.val(), 10);
         var year = parseInt(y.val(), 10);
@@ -468,7 +469,7 @@ IFS.core.formValidation = (function() {
           valid = false;
         }
       }
-      else if (filledOut || fieldsVisited){
+      else if ((filledOut || fieldsVisited) && enabled){
         if(showMessage){ IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage); }
         allFields.attr({'data-date':''});
         valid = false;

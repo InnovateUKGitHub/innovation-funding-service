@@ -73,6 +73,8 @@ public class CompetitionResource {
     private String activityCode;
     private String innovateBudget;
 
+    private Boolean setupComplete;
+
     private boolean useResubmissionQuestion;
 
     public CompetitionResource() {
@@ -98,6 +100,16 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isOpen() {
         return CompetitionStatus.OPEN.equals(competitionStatus);
+    }
+
+    @JsonIgnore
+    public boolean isSetupAndLive() {
+        return Boolean.TRUE.equals(setupComplete) && startDate.isBefore(LocalDateTime.now());
+    }
+
+    @JsonIgnore
+    public boolean isSetupAndAfterNotifications() {
+        return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(LocalDateTime.now());
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -332,7 +344,9 @@ public class CompetitionResource {
         return competitionTypeName;
     }
 
-    public void setCompetitionTypeName(String competitionTypeName) { this.competitionTypeName = competitionTypeName; }
+    public void setCompetitionTypeName(String competitionTypeName) {
+        this.competitionTypeName = competitionTypeName;
+    }
 
     public Long getInnovationSector() {
         return innovationSector;
@@ -478,7 +492,6 @@ public class CompetitionResource {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-
     public Integer getAssessorCount() {
         return assessorCount;
     }
@@ -493,5 +506,13 @@ public class CompetitionResource {
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
+    }
+
+    public Boolean getSetupComplete() {
+        return setupComplete;
+    }
+
+    public void setSetupComplete(Boolean setupComplete) {
+        this.setupComplete = setupComplete;
     }
 }

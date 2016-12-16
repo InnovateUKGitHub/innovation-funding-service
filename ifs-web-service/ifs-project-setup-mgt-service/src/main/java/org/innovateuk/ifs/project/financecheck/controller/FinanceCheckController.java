@@ -22,7 +22,6 @@ import org.innovateuk.ifs.project.financecheck.form.FinanceCheckForm;
 import org.innovateuk.ifs.project.financecheck.form.FinanceCheckSummaryForm;
 import org.innovateuk.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
 import org.innovateuk.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSummaryViewModel;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;

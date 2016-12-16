@@ -73,6 +73,7 @@ public class AssessorCompetitionDashboardModelPopulator {
                 .isPresent();
 
         return new AssessorCompetitionDashboardViewModel(
+                competition.getId(),
                 competition.getName(),
                 competition.getDescription(),
                 competition.getLeadTechnologistName(),

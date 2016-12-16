@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            <!--/* TODO work coming in future user story
+            <!--/* TODO INFUND-6403
             <form>
                 <div class="search-filters">
                     <div class="grid-row">
@@ -139,38 +139,34 @@
             </div>
             */-->
 
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Assessor name</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Innovation area</th>
-                        <th scope="col">Contract and DOI</th>
-                        <th scope="col"><span class="hidden">Actions</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="assessor : ${model.assessors}">
-                        <td><span th:text="${assessor.name}">John Barnes</span></td>
-                        <td><span th:text="${assessor.businessType.displayName}">Industry</span></td>
-                        <td><span th:text="${assessor.innovationArea}">Electronics, sensors &amp; photonics, Materials</span></td>
-                        <td>
-                            <span class="yes" th:if="${assessor.compliant}">Yes</span>
-                            <span class="no" th:unless="${assessor.compliant}">No</span>
-                        </td>
-                        <td class="alignright">
-                            <form method="POST" th:action="@{/competition/{competitionId}/assessors/inviteUser(competitionId=${model.competitionId})}" th:unless="${assessor.added}">
-                                <input type="hidden" name="email" th:value="${assessor.email}"/>
-                                <button class="button button-secondary">Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
-                            </form>
-                            <form method="POST" th:action="@{/competition/{competitionId}/assessors/deleteInvite(competitionId=${model.competitionId})}" th:if="${assessor.added}">
-                                <input type="hidden" name="email" th:value="${assessor.email}"/>
-                                <button class="button button-secondary">Remove<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <form method="POST" th:action="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Assessor name</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Innovation area</th>
+                            <th scope="col">Contract and DOI</th>
+                            <th scope="col"><span class="hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="assessor : ${model.assessors}">
+                            <td><span th:text="${assessor.name}">John Barnes</span></td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
+                            <td th:text="${assessor.innovationArea}">Electronics, sensors &amp; photonics, Materials</td>
+                            <td>
+                                <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                                <span class="no" th:unless="${assessor.compliant}">No</span>
+                            </td>
+                            <td class="alignright">
+                                <button class="button button-secondary" name="add" th:value="${assessor.email}" th:unless="${assessor.added}">Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
+                                <button class="button button-secondary" name="remove" th:value="${assessor.email}" th:if="${assessor.added}">Remove<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>

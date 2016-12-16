@@ -23,6 +23,7 @@ public class CompetitionInviteResourceBuilderTest {
         LocalDateTime expectedBriefingDate = LocalDateTime.now().minusDays(1);
         BigDecimal expectedAssessorPay = BigDecimal.ONE;
         String expectedEmail = "tom@poly.io";
+        String expectedHash = "inviteHash";
 
         CompetitionInviteResource invite = newCompetitionInviteResource()
                 .withIds(expectedId)
@@ -32,6 +33,7 @@ public class CompetitionInviteResourceBuilderTest {
                 .withBriefingDate(expectedBriefingDate)
                 .withAssessorPay(expectedAssessorPay)
                 .withEmail(expectedEmail)
+                .withHash(expectedHash)
                 .build();
 
         assertEquals(expectedId, invite.getId());
@@ -41,6 +43,7 @@ public class CompetitionInviteResourceBuilderTest {
         assertEquals(expectedBriefingDate, invite.getBriefingDate());
         assertEquals(expectedAssessorPay, invite.getAssessorPay());
         assertEquals(expectedEmail, invite.getEmail());
+        assertEquals(expectedHash, invite.getHash());
     }
 
     @Test
@@ -52,6 +55,7 @@ public class CompetitionInviteResourceBuilderTest {
         LocalDateTime[] expectedBriefingDates = {LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(1).plusHours(1)};
         BigDecimal[] expectedAssessorPays = {BigDecimal.ONE, BigDecimal.TEN};
         String[] expectedEmails = {"tom@poly.io", "steve.smith@empire.com"};
+        String[] expectedHashes = {"hash1", "hash2"};
 
         List<CompetitionInviteResource> invites = newCompetitionInviteResource()
                 .withIds(expectedIds)
@@ -61,6 +65,7 @@ public class CompetitionInviteResourceBuilderTest {
                 .withBriefingDate(expectedBriefingDates)
                 .withAssessorPay(expectedAssessorPays)
                 .withEmail(expectedEmails)
+                .withHash(expectedHashes)
                 .build(2);
 
         CompetitionInviteResource first = invites.get(0);
@@ -71,6 +76,7 @@ public class CompetitionInviteResourceBuilderTest {
         assertEquals(expectedBriefingDates[0], first.getBriefingDate());
         assertEquals(expectedAssessorPays[0], first.getAssessorPay());
         assertEquals(expectedEmails[0], first.getEmail());
+        assertEquals(expectedHashes[0], first.getHash());
 
         CompetitionInviteResource second = invites.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -80,6 +86,7 @@ public class CompetitionInviteResourceBuilderTest {
         assertEquals(expectedBriefingDates[1], second.getBriefingDate());
         assertEquals(expectedAssessorPays[1], second.getAssessorPay());
         assertEquals(expectedEmails[1], second.getEmail());
+        assertEquals(expectedHashes[1], second.getHash());
 
 
     }

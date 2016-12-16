@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
@@ -8,7 +8,6 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,28 +15,27 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.nCopies;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Collections.nCopies;
-import static java.util.Optional.empty;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<CompetitionInviteController> {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected CompetitionInviteController supplyControllerUnderTest() {
@@ -152,7 +150,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource))
+                        .content(toJson(rejectionResource))
         ).andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).rejectInvite("hash", rejectionReasonResource, Optional.of(comment));
@@ -168,7 +166,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                        .content(toJson(rejectionResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectReasonError))));
     }
@@ -185,7 +183,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource))
+                        .content(toJson(rejectionResource))
         ).andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).rejectInvite("hash", rejectionReasonResource, empty());
@@ -203,7 +201,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                        .content(toJson(rejectionResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
     }
@@ -220,7 +218,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                        .content(toJson(rejectionResource)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
     }
@@ -239,7 +237,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         MvcResult result = mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hashNotExists")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource))
+                        .content(toJson(rejectionResource))
         ).andExpect(status().isNotFound())
                 .andReturn();
 
@@ -315,7 +313,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(
                 post("/competitioninvite/rejectInvite/{inviteHash}", "hash")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rejectionResource)))
+                        .content(toJson(rejectionResource)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(expectedError))));
 
@@ -324,7 +322,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void getAvailableAssessors() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
         when(competitionInviteServiceMock.getAvailableAssessors(competitionId)).thenReturn(serviceSuccess(expectedAvailableAssessorResources));
@@ -337,6 +335,34 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void getCreatedInvites() throws Exception {
+        long competitionId = 1L;
+        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource().build(2);
+
+        when(competitionInviteServiceMock.getCreatedInvites(competitionId)).thenReturn(serviceSuccess(expectedAssessorCreatedInviteResources));
+
+        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAssessorCreatedInviteResources)));
+
+        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId);
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+        List<AssessorInviteOverviewResource> expectedAssessorInviteOverviewResources = newAssessorInviteOverviewResource().build(2);
+
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId)).thenReturn(serviceSuccess(expectedAssessorInviteOverviewResources));
+
+        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAssessorInviteOverviewResources)));
+
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId);
+    }
+
+    @Test
     public void inviteUser() throws Exception {
         ExistingUserStagedInviteResource existingUserStagedInviteResource = new ExistingUserStagedInviteResource("firstname.lastname@example.com", 1L);
         CompetitionInviteResource expectedCompetitionInviteResource = newCompetitionInviteResource().build();
@@ -345,7 +371,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         mockMvc.perform(post("/competitioninvite/inviteUser")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(existingUserStagedInviteResource)))
+                .content(toJson(existingUserStagedInviteResource)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedCompetitionInviteResource)));
 
@@ -354,16 +380,15 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void deleteInvite() throws Exception {
-        String email = "firstname.lastname@email.com";
-        Long competitionId = 1L;
+        String email = "firstname.lastname@example.com";
+        long competitionId = 1L;
 
         when(competitionInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/deleteInvite")
+        mockMvc.perform(delete("/competitioninvite/deleteInvite")
                 .param("email", email)
-                .param("competitionId", String.valueOf(competitionId))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
 
         verify(competitionInviteServiceMock, only()).deleteInvite(email, competitionId);
     }

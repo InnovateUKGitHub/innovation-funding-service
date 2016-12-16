@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -14,15 +16,14 @@ import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
-
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -167,7 +168,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.markSpendProfile(projectOrganisationCompositeId, true),
+        assertAccessDenied(() -> classUnderTest.markSpendProfileComplete(projectOrganisationCompositeId),
                 () -> {
 
                     verify(projectFinancePermissionRules).partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, getLoggedInUser());
@@ -207,7 +208,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.APPROVED),
+        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.RED),
                 () -> {
                     verify(projectFinancePermissionRules).projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
@@ -247,7 +248,12 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+        public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
 
@@ -256,12 +262,12 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<Viability> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability) {
+        public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus) {
             return null;
         }
 

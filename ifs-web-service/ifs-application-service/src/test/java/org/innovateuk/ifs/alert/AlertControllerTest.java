@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.alert;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.junit.After;
 import org.junit.Before;
@@ -12,11 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -37,10 +36,16 @@ public class AlertControllerTest extends BaseUnitTest {
 
         super.setup();
 
-        List<AlertResource> alerts = new ArrayList<AlertResource>();
-        alerts.add(new AlertResource(1L, "Test Maintenance", AlertType.MAINTENANCE, LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(2)));
-
-        when(alertService.findAllVisibleByType(AlertType.MAINTENANCE)).thenReturn(alerts);
+        when(alertService.findAllVisibleByType(AlertType.MAINTENANCE))
+                .thenReturn(
+                        asList(newAlertResource()
+                                .withId(1L)
+                                .withMessage("Test Maintenance")
+                                .withType(AlertType.MAINTENANCE)
+                                .withValidFromDate(LocalDateTime.now().minusDays(2))
+                                .withValidToDate(LocalDateTime.now().plusDays(2))
+                                .build())
+                );
     }
 
     @After

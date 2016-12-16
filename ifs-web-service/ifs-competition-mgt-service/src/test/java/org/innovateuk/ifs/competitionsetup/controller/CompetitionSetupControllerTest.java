@@ -129,6 +129,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void setSectionAsIncomplete() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/edit"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
@@ -345,25 +348,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 any(CompetitionResource.class), any(CompetitionSetupSection.class));
 
         verify(validator).validate(any(AdditionalInfoForm.class), any(BindingResult.class));
-    }
-
-    @Test
-    public void testSendToDashboard() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withActivityCode("Activity Code")
-                .withInnovateBudget("Innovate Budget")
-                .withCompetitionCode("c123")
-                .withPafCode("p123")
-                .withBudgetCode("b123")
-                .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withFunders(CompetitionFundersFixture.getTestCoFunders())
-                .withId(COMPETITION_ID).build();
-
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/dashboard"));
     }
 
     @Test

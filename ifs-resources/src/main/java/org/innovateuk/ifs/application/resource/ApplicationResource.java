@@ -50,9 +50,8 @@ public class ApplicationResource {
 
     @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
-    @NotNull(message = "{validation.application.details.duration.in.months.max.digits}")
+    @NotNull
     private Long durationInMonths;
-
     private Long applicationStatus;
     private String applicationStatusName;
     private Long competition;
