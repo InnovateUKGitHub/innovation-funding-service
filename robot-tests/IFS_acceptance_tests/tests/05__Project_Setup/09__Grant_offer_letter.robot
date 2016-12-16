@@ -51,7 +51,7 @@ PM can view the grant offer letter page
     And the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
-Partners should not be able to submit the Grant Offer
+Partners should not be able to send the Grant Offer
     [Documentation]    INFUND-4851, INFUND-6133
     [Tags]
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
@@ -85,7 +85,7 @@ PM should not be able to upload big Grant Offer files
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
 
-PM should be able upload a file and then access the Submit button
+PM should be able upload a file and then access the Send button
     [Documentation]    INFUND-4851, INFUND-4972
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
@@ -136,7 +136,7 @@ PM can view the uploaded Annex file
     Then the user should not see an error in the page
     And the user goes back to the previous page
 
-PM Submits the Grant Offer letter
+PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
