@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,6 +15,12 @@ import java.util.Optional;
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
  */
 public interface CompetitionInviteService {
+
+
+    @SecuredBySpring(value = "GET_CREATED_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
@@ -52,22 +58,34 @@ public interface CompetitionInviteService {
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve created invites by competition")
     ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve invitation overview by competition")
     ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "INVITE_NEW_USER",
+            description = "The Competition Admin user, or the Competition Executive user can create a competition invite for a new user")
     ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "INVITE_EXISTING_USER",
+            description = "The Competition Admin user, or the Competition Executive user can create a competition invite for an existing user")
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<Void> sendInvite(long inviteId);
+    @SecuredBySpring(value = "SEND_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @SecuredBySpring(value = "DELETE_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     ServiceResult<Void> deleteInvite(String email, long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)

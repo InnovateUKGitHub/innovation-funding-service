@@ -2,18 +2,18 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
-import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -21,12 +21,14 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.time.LocalDateTime.now;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -41,19 +43,23 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -72,10 +78,10 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     @Before
     public void setUp() {
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
-                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
+                .withDate(now().minusDays(1))
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED, ASSESSOR_ACCEPTS).build(4);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
         Competition competition = newCompetition().withName("my competition")
@@ -88,23 +94,65 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompetition(competition)
                 .build();
 
+        CompetitionInvite createdInvite = newCompetitionInvite()
+                .withName("Joe Bloggs")
+                .withEmail("joebloggs@example.com")
+                .withCompetition(competition)
+                .withStatus(CREATED)
+                .withInnovationArea(newCategory().withName("innovation area").build())
+                .build();
+
         competitionParticipant = new CompetitionParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        AssessorInviteToSendResource expectedToSend = newAssessorInviteToSendResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(7L).build();
         user = newUser().withId(7L).build();
+        NotificationTarget recipient = new ExternalUserNotificationTarget(createdInvite.getName(), createdInvite.getEmail());
+        EmailContent content = new EmailContent("subject", "plain", "html");
+        Map<NotificationTarget, EmailContent> templatesMap = asMap(recipient, content);
 
-
+        when(competitionInviteRepositoryMock.findOne(5L)).thenReturn(createdInvite);
+        when(competitionInviteRepositoryMock.findOne(4L)).thenReturn(competitionInvite);
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
         when(competitionInviteRepositoryMock.save(same(competitionInvite))).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(same(competitionInvite))).thenReturn(expected);
+        when(assessorInviteToSendMapperMock.mapToResource(same(createdInvite))).thenReturn(expectedToSend);
 
         when(competitionParticipantRepositoryMock.getByInviteHash("inviteHash")).thenReturn(competitionParticipant);
 
         when(rejectionReasonRepositoryMock.findOne(1L)).thenReturn(rejectionReason);
 
         when(userRepositoryMock.findOne(7L)).thenReturn(user);
+
+        when(notificationSender.renderTemplates(any())).thenReturn(serviceSuccess(templatesMap));
+    }
+
+    @Test
+    public void getCreatedInvite() throws Exception {
+        when(notificationSender.sendEmailWithContent(any(), any(), any())).thenReturn(serviceSuccess(null));
+        ServiceResult<AssessorInviteToSendResource> inviteServiceResult = competitionInviteService.getCreatedInvite(5L);
+
+        assertTrue(inviteServiceResult.isSuccess());
+
+        AssessorInviteToSendResource resource = inviteServiceResult.getSuccessObjectOrThrowException();
+        assertEquals("my competition", resource.getCompetitionName());
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, assessorInviteToSendMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock, calls(1)).findOne(5L);
+        inOrder.verify(assessorInviteToSendMapperMock, calls(1)).mapToResource(any(CompetitionInvite.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getCreatedInvite_notCreated() throws Exception {
+        ServiceResult<AssessorInviteToSendResource> inviteServiceResult = competitionInviteService.getCreatedInvite(4L);
+
+        assertTrue(inviteServiceResult.isFailure());
+        assertTrue(inviteServiceResult.getFailure().is(new Error(COMPETITION_INVITE_ALREADY_SENT, "my competition")));
+
+        verify(competitionInviteRepositoryMock,only()).findOne(4L);
     }
 
     @Test
@@ -206,7 +254,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void openInvite_inviteExpired() throws Exception {
-        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(LocalDateTime.now().minusDays(1)).build();
+        Competition competition = newCompetition().withName("my competition").withAssessorAcceptsDate(now().minusDays(1)).build();
         CompetitionInvite competitionInvite = newCompetitionInvite().withCompetition(competition).build();
         when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(competitionInvite);
 
@@ -360,8 +408,6 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
-
-    // reject
 
     @Test
     public void rejectInvite() {
@@ -548,14 +594,20 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         long inviteId = 1L;
         CompetitionInvite invite = spy(
                 newCompetitionInvite()
-                .withCompetition(newCompetition().withName("my competition").build())
-                .withStatus(CREATED)
-                .build()
+                        .withCompetition(newCompetition().withName("my competition").build())
+                        .withStatus(CREATED)
+                        .build()
         );
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
+        when(notificationSender.sendEmailWithContent(any(), any(), any())).thenReturn(serviceSuccess(null));
 
-        ServiceResult<Void> serviceResult = competitionInviteService.sendInvite(inviteId);
+        ServiceResult<AssessorInviteToSendResource> serviceResult = competitionInviteService.sendInvite(inviteId, content);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(SENT, invite.getStatus());
@@ -572,11 +624,16 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withCompetition(newCompetition().withName("my competition").build())
                 .withStatus(SENT)
                 .build();
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
 
         when(competitionInviteRepositoryMock.findOne(inviteId)).thenReturn(invite);
 
         try {
-            competitionInviteService.sendInvite(inviteId);
+            competitionInviteService.sendInvite(inviteId, content);
             fail();
         } catch (RuntimeException e) {
             assertSame(IllegalStateException.class, e.getCause().getClass());
@@ -660,54 +717,129 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         long competitionId = 1L;
 
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
-                .withFirstName("Jeremy")
-                .withLastName("Alufson")
-                .withInnovationArea(newCategoryResource()
-                        .with(id(null))
-                        .build())
+                .withName("Jeremy Alufson")
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com")
                 .withBusinessType(BUSINESS)
                 .withAdded(FALSE)
+                // TODO INFUND-6865 Users should have innovation areas
+                .withInnovationArea()
                 .build(1);
 
-        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(asList(newUser()
-                .withId(77L)
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(newUser()
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
                 .withEmailAddress("worth.email.test+assessor1@gmail.com")
-                .withProfile(newProfile().withBusinessType(BUSINESS).build())
-                .build()));
-
-        when(userProfileServiceMock.getUserProfileStatus(77L)).thenReturn(serviceSuccess(newUserProfileStatusResource()
-                .withContractComplete(TRUE)
-                .withSkillsComplete(TRUE)
-                .withAffliliationsComplete(TRUE)
-                .build()));
-
-        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId("worth.email.test+assessor1@gmail.com", competitionId)).thenReturn(null);
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withBusinessType(BUSINESS)
+                        .withContractSignedDate(now())
+                        .build())
+                .build(1));
 
         List<AvailableAssessorResource> actual = competitionInviteService.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+
+        verify(userRepositoryMock, only()).findAllAvailableAssessorsByCompetition(competitionId);
     }
 
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
 
-        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
-                .withFirstName("Jeremy")
-                .withLastName("Alufson")
-                .withInnovationArea(newCategoryResource()
-                        .with(id(null))
-                        .withName("Earth Observation")
+        Category innovationAreaCategory = newCategory().build();
+        CategoryResource innovationAreaCategoryResource = newCategoryResource()
+                .withName("Earth Observation")
+                .build();
+
+        // TODO INFUND-6865 Users should have innovation areas
+        User compliantUser = newUser()
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withContractSignedDate(now())
                         .build())
-                .withCompliant(TRUE)
-                .withEmail("worth.email.test+assessor1@gmail.com")
-                .build(1);
+                .build();
+
+        User nonCompliantUserNoSkills = newUser()
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas()
+                        .withContractSignedDate(now())
+                        .build())
+                .build();
+
+        User nonCompliantUserNoAffiliations = newUser()
+                .withAffiliations()
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withContractSignedDate(now())
+                        .build())
+                .build();
+
+        User nonCompliantUserNoContract = newUser()
+                .withAffiliations(newAffiliation()
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
+                .withProfile(newProfile()
+                        .withSkillsAreas("Java")
+                        .withContractSignedDate()
+                        .build())
+                .build();
+
+        List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
+                .withId(1L,2L,3L,4L)
+                .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero")
+                .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com")
+                .withUser(compliantUser, nonCompliantUserNoSkills, nonCompliantUserNoAffiliations, nonCompliantUserNoContract)
+                .withInnovationArea()
+                .build(4);
+
+        CompetitionInvite newUserInvite = newCompetitionInvite()
+                .withId(5L)
+                .withName("Christopher Soames")
+                .withEmail("christopher@example.com")
+                .withUser()
+                .withInnovationArea(innovationAreaCategory)
+                .build();
+
+        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withInviteId(1L,2L,3L,4L,5L)
+                .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
+                .withInnovationArea(null, null, null, null, innovationAreaCategoryResource)
+                .withCompliant(true, false, false, false, false)
+                .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "christopher@example.com")
+                .build(5);
+
+        when(competitionInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED)).thenReturn(combineLists(existingUserInvites, newUserInvite));
+        when(categoryMapperMock.mapToResource(innovationAreaCategory)).thenReturn(innovationAreaCategoryResource);
 
         List<AssessorCreatedInviteResource> actual = competitionInviteService.getCreatedInvites(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, categoryMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByCompetitionIdAndStatus(competitionId, CREATED);
+        inOrder.verify(categoryMapperMock).mapToResource(innovationAreaCategory);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test

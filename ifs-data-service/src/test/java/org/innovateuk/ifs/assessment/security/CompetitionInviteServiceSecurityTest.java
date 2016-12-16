@@ -3,24 +3,33 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
+
+    private static final EnumSet<UserRoleType> ASSESSOR_MANAGEMENT_ROLES = EnumSet.of(COMP_ADMIN, COMP_EXEC);
 
     private CompetitionInvitePermissionRules competitionInvitePermissionRules;
     private CompetitionInviteLookupStrategy competitionInviteLookupStrategy;
@@ -130,15 +139,68 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void getAvailableAssessors() {
-        setLoggedInUser(null);
+    public void getCreatedInvites() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.getCreatedInvites(1L));
+    }
 
-        assertAccessDenied(() -> classUnderTest.getAvailableAssessors(1L), () -> {
-            verifyNoMoreInteractions(userPermissionRules);
-        });
+    @Test
+    public void getInvitationOverview() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.getInvitationOverview(1L));
+    }
+
+    @Test
+    public void getAvailableAssessors() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.getAvailableAssessors(1L));
+    }
+
+    @Test
+    public void inviteUser_existing() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()));
+    }
+
+    @Test
+    public void inviteUser_new() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()));
+    }
+
+    @Test
+    public void sendInvite() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.sendInvite(1L, newEmailContentResource().build()));
+    }
+
+    @Test
+    public void deleteInvite() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.deleteInvite("email", 1L));
+    }
+
+    private void runAsAllowedRoles(EnumSet<UserRoleType> allowedRoles, Runnable serviceCall) {
+        allowedRoles.forEach(roleType -> runAsRole(roleType, serviceCall));
+        complementOf(allowedRoles).forEach(roleType -> assertAccessDeniedAsRole(roleType, serviceCall, () -> {}));
+    }
+
+    private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
+        setLoggedInUser(
+                newUserResource()
+                        .withRolesGlobal(singletonList(
+                                newRoleResource()
+                                        .withType(roleType)
+                                        .build()
+                                )
+                        )
+                        .build());
+        serviceCall.run();
+    }
+
+    private void assertAccessDeniedAsRole(UserRoleType roleType, Runnable serviceCall, Runnable verifications) {
+        runAsRole(roleType, () -> assertAccessDenied(serviceCall, verifications) );
     }
 
     public static class TestCompetitionInviteService implements CompetitionInviteService {
+
+        @Override
+        public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
+            return null;
+        }
 
         @Override
         public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) {
@@ -196,7 +258,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> sendInvite(long inviteId) {
+        public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
             return null;
         }
 

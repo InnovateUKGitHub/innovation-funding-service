@@ -333,17 +333,21 @@ Application: Application process Page
     And the user should see the element    link=Finances
 
 Application: Business opportunity
-    [Documentation]    INFUND-5632 IN-5685 IN-5630
+    [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
     When the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user edits the assessed question information
-    And the user clicks the button/link    id=remove-guidance-row-2
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
     And the user sees the correct assessed question information
-    And the user should not see the text in the page    The business opportunity is plausible
+    And the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user selects the radio button    question.writtenFeedback    0
+    And the user selects the radio button    question.scored    0
+    And the user should not be able to edit the assessed question feedback
+    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Business opportunity
+    Then the user should not see the assessed question feedback
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Application details
@@ -375,7 +379,7 @@ Application: Scope
 
 
 Application: Scope Assessment questions
-    [Documentation]    INFUND-5631    INFUND-6044
+    [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
     Given the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user fills the scope assessment questions
     When the user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -383,9 +387,10 @@ Application: Scope Assessment questions
     Then the user checks the scope assessment questions
     And the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    0
-    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user should not be able to edit the scope feedback
+    And the user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Scope
-    Then the user should not see the text in the page    Guidance for assessing scope section
+    Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Project Summary
@@ -619,6 +624,8 @@ the user edits the assessed question information
     the user enters text to a text field    id=guidancerow-5-scorefrom    11
     the user enters text to a text field    id=guidancerow-5-scoreto    12
     the user enters text to a text field    id=guidancerow-5-justification    This is a justification
+    the user clicks the button/link    id=remove-guidance-row-2
+
 
 the user sees the correct assessed question information
     the user should see the text in the page    Assessment of this question
@@ -631,3 +638,30 @@ the user sees the correct assessed question information
     the user should see the text in the page    Scored
     the user should see the text in the page    Out of
     the user should not see the text in the page    The business opportunity is plausible
+
+the user should not be able to edit the scope feedback
+    the user should not see the element    id=question.assessmentGuidanceTitle
+    the user should not see the element    id=question.assessmentGuidance
+    the user should not see the element    id=guidanceRow-0-subject
+    the user should not see the element    id=guidanceRow-0-justification
+    the user should not see the element    jQuery=Button:contains("+Add guidance row")
+
+the user should not see the scope feedback
+    the user should not see the text in the page    Guidance for assessing scope
+    the user should not see the text in the page    Your answer should be based upon the following:
+    the user should not see the text in the page    One or more of the above requirements have not been satisfied
+
+the user should not be able to edit the assessed question feedback
+    the user should not see the element    id=question.assessmentGuidanceTitle
+    the user should not see the element    id=question.assessmentGuidance
+    the user should not see the element    id=guidanceRow-0-scorefrom
+    the user should not see the element    id=guidanceRow-0-scoreto
+    the user should not see the element    id=guidanceRow-0-justification
+    the user should not see the element    jQuery=Button:contains("+Add guidance row")
+    the user should not see the element    id=question.scoreTotal
+
+the user should not see the assessed question feedback
+    the user should not see the text in the page    Out of
+    the user should not see the text in the page    Guidance for assessing business opportunity
+    the user should not see the text in the page    Your score should be based upon the following:
+    the user should not see the text in the page    There is little or no business drive to the project.
