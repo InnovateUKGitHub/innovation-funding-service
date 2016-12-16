@@ -24,8 +24,5 @@ public class AssessorModelPopulator implements CompetitionSetupSectionModelPopul
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource) {
 		model.addAttribute("assessorOptions", competitionService.getAssessorOptionsForCompetitionType(competitionResource.getCompetitionType()));
-		model.addAttribute("preventEdit", sectionToPopulateModel().preventEdit(competitionResource));
-		model.addAttribute("isSetupAndLive", competitionResource.isSetupAndLive());
-		model.addAttribute("setupComplete", competitionResource.getSetupComplete());
 	}
 }
