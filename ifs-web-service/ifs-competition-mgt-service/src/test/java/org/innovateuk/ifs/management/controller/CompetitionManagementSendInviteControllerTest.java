@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
 import org.innovateuk.ifs.management.model.SendInvitePopulator;
 import org.junit.Before;
@@ -13,6 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,13 +62,14 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         long inviteId = 4L;
         long competitionId = 5L;
         AssessorInviteToSendResource invite = newAssessorInviteToSendResource().withCompetitionId(competitionId).build();
-        when(competitionInviteRestService.sendInvite(inviteId)).thenReturn(restSuccess(invite));
+        EmailContent emailContent = newEmailContentResource().build();
+        when(competitionInviteRestService.sendInvite(eq(inviteId), any(EmailContent.class))).thenReturn(restSuccess(invite));
 
         mockMvc.perform(post("/competition/assessors/invite/{inviteId}/send", inviteId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competitionId)));
 
-        verify(competitionInviteRestService, only()).sendInvite(inviteId);
+        verify(competitionInviteRestService, only()).sendInvite(eq(inviteId), any(EmailContent.class));
 
     }
 
