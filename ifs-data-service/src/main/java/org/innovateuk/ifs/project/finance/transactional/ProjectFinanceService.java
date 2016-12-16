@@ -61,7 +61,7 @@ public interface ProjectFinanceService {
     ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus);
 
     @PreAuthorize("hasPermission(#projectId, 'SAVE_CREDIT_REPORT')")
-    ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent);
+    ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent);
 
     @PreAuthorize("hasPermission(#projectId, 'VIEW_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId);

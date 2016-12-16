@@ -190,9 +190,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityViewModel viewModel = (FinanceChecksViabilityViewModel) model.get("model");
 
         assertFalse(viewModel.isLeadPartnerOrganisation());
-        assertTrue(viewModel.isShowApprovalMessage());
-        assertTrue(viewModel.isShowBackToFinanceCheckButton());
-        assertFalse(viewModel.isShowSaveAndContinueButton());
+        assertFalse(viewModel.isShowApprovalMessage());
+        assertFalse(viewModel.isShowBackToFinanceCheckButton());
+        assertTrue(viewModel.isShowSaveAndContinueButton());
 
         assertOrganisationDetails(academicOrganisation, viewModel);
 

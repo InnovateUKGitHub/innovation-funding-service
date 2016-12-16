@@ -28,13 +28,16 @@ public class FinanceChecksViabilityViewModel {
 
     private Long projectId;
     private boolean viabilityConfirmed;
+    private boolean approved;
     private String approverName;
     private LocalDate approvalDate;
 
     public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
                                            Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
                                            Integer contributionToProject, String companyRegistrationNumber,
-                                           Integer turnover, Integer headCount, OrganisationSize organisationSize, Long projectId, boolean viabilityConfirmed, String approverName, LocalDate approvalDate) {
+                                           Integer turnover, Integer headCount, OrganisationSize organisationSize,
+                                           Long projectId, boolean viabilityConfirmed,
+                                           boolean approved, String approverName, LocalDate approvalDate) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -49,6 +52,7 @@ public class FinanceChecksViabilityViewModel {
         this.organisationSize = organisationSize;
         this.projectId = projectId;
         this.viabilityConfirmed = viabilityConfirmed;
+        this.approved = approved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
     }
@@ -126,6 +130,6 @@ public class FinanceChecksViabilityViewModel {
     }
 
     private boolean isApproved() {
-        return approverName != null;
+        return approved;
     }
 }

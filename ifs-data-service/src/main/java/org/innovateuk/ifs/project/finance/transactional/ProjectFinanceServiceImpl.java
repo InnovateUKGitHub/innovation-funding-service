@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -320,27 +319,33 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean reportPresent) {
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(projectFinance != null) {
-            projectFinance.setCreditReportConfirmed(reportPresent);
-            projectFinanceRepository.save(projectFinance);
-            return serviceSuccess();
+    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
+
+        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
+               validateCreditReport(projectFinance).andOnSuccessReturnVoid(() -> {
+
+           projectFinance.setCreditReportConfirmed(reportPresent);
+           projectFinanceRepository.save(projectFinance);
+
+       }));
+    }
+
+    private ServiceResult<Void> validateCreditReport(ProjectFinance projectFinance) {
+        if (Viability.APPROVED == projectFinance.getViability()) {
+            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
         } else {
-            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+            return serviceSuccess();
         }
+
     }
 
     @Override
     public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(projectFinance != null) {
+        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance -> {
             Boolean creditReport = projectFinance.getCreditReportConfirmed();
             projectFinanceRepository.save(projectFinance);
             return serviceSuccess(creditReport);
-        } else {
-            return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
-        }
+        });
     }
 
     @Override
@@ -351,21 +356,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        ViabilityResource viabilityResource = new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus());
-
-        return serviceSuccess(viabilityResource);
-
+        return getProjectFinance(projectId, organisationId).andOnSuccessReturn(projectFinance ->
+                new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus()));
     }
 
     @Override
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return validateViability(projectFinance, viability, viabilityStatus)
-                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
+        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
+               validateViability(projectFinance, viability, viabilityStatus).andOnSuccess(() ->
+               saveViability(projectFinance, viability, viabilityStatus)));
     }
 
     private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
@@ -678,5 +684,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private Cost findSingleMatchingCostByCategory(CostGroup eligibleCosts, CostCategory category) {
         return simpleFindFirst(eligibleCosts.getCosts(), f -> f.getCostCategory().equals(category)).get();
+    }
+
+    private ServiceResult<ProjectFinance> getProjectFinance(Long projectId, Long organisationId) {
+        return find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(ProjectFinance.class, projectId, organisationId));
     }
 }

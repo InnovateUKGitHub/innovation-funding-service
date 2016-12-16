@@ -303,7 +303,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
 
         @Override
-        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean creditReportPresent) { return null; }
+        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean creditReportPresent) { return null; }
 
         @Override
         public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
