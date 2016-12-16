@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
 import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
-import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.lang.String.format;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -42,6 +40,9 @@ public class HomeController {
 
     @Autowired
     private RoleSelectionModelPopulator roleSelectionModelPopulator;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     public static String getRedirectUrlForUser(UserResource user) {
 
@@ -91,7 +92,7 @@ public class HomeController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
-            CookieUtil.saveToCookie(response, "role", form.getSelectedRole().getName());
+            cookieUtil.saveToCookie(response, "role", form.getSelectedRole().getName());
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> redirectToChosenDashboard(user, form.getSelectedRole().getName()));
         });

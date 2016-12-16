@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.service;
 
+
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
@@ -25,7 +26,9 @@ public interface ProjectFinanceRestService {
 
     RestResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
 
-    RestResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete);
+    RestResult<Void> markSpendProfileComplete(Long projectId, Long organisationId);
+
+    RestResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId);
 
     RestResult<Void> completeSpendProfilesReview(Long projectId);
 }

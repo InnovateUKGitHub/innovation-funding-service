@@ -53,7 +53,10 @@ public interface CompetitionInviteService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
+            description = "Competition Administrators and Executives can retrieve available assessors by competition",
+            additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)

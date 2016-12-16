@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-form">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Adding value'})" th:remove="tag" />
+
+<form method="post" class="form-serialize-js">
+	<div class="form-group extra-margin" id="0">
+		
+		<label class="form-label form-label-bold" for="1">10. How does financial support from Innovate UK and its funding partners add value?
+		</label>
+		
+		<div class="validation-messages">
+			
+		</div>
+		
+		<details role="group">
+		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
+		<span class="summary">What should I include in the financial support from Innovate UK section?</span>
+		</summary>
+		<div class="panel-indent" id="details-content-2" aria-hidden="false" style="display: block;">
+
+			<p>Justify why you're unable to fund the project yourself from commercial resources. Explain the difference this funding will make to your project. For example, will it lower the risk for you or speed up the process of getting your product to market? Tell us why this will benefit the UK.</p>
+
+		</div>
+		</details>
+		<div class="textarea-wrapped word-count">
+			<div class="textarea-header" id="formInput[1]">
+				<div class="assignee  assigned-to-me ">
+			        This question is assigned to
+			        <strong>Jesssica Doe</strong>
+			    </div>
+			</div>
+			<div class="readonly">
+				<p>Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.</p>
+
+				<p>UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
+			</div>
+		</div>
+		<div class="textarea-footer">
+			
+			<div class="assign-container">
+				<small><span>Last updated: </span>
+					<span>
+						<span>15 November 02:31PM</span>
+					</span>
+					by
+					<span>you</span>
+				</small>
+			</div>
+		
+			
+			<span class="count-label">
+				<small>
+					<span class="count-message">Words remaining:</span>
+					<span class="count-down positive" aria-live="polite">446</span>
+				</small>
+			</span>
+
+			<div class="extra-margin">
+				<button type="submit" name="mark_as_complete" class="button-secondary" formaction="#" value="1">Edit</button>
+			</div>
+			
+		</div>
+
+	</div>
+
+</form>
+
+<ul class="pagination">
+    <li class="prev">
+        <a rel="prev" title="Navigate to previous part" href="/prototypes/635-application-question9-collaborator">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">9. Funding</span>
+        </a>
+    </li>
+    <li class="next">
+        <a rel="next" title="Navigate to next part" href="/prototypes/631-finances-assigned-to-you-collaborator">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">Your finances</span>
+        </a>
+    </li>
+</ul>
+
+	<a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

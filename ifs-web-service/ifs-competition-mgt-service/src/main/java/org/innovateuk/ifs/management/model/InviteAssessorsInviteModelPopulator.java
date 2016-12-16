@@ -36,7 +36,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     }
 
     private InvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
-        return new InvitedAssessorRowViewModel(assessorCreatedInviteResource.getFullName(), assessorCreatedInviteResource.getInnovationAreaName(), assessorCreatedInviteResource.isCompliant(), assessorCreatedInviteResource.getEmail(), assessorCreatedInviteResource.getInviteId());
+        return new InvitedAssessorRowViewModel(assessorCreatedInviteResource.getName(), assessorCreatedInviteResource.getInnovationAreaName(), assessorCreatedInviteResource.isCompliant(), assessorCreatedInviteResource.getEmail(), assessorCreatedInviteResource.getInviteId());
     }
 
     @Override
