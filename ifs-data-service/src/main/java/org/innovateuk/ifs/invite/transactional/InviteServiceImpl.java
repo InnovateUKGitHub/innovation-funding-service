@@ -179,7 +179,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         } else {
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         }
-        notificationArguments.put("leadOrganisation", invite.getTarget().getLeadOrganisation().getName());
+        ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
+        Organisation organisation = organisationRepository.findOne(leadRole.getOrganisation());
+        notificationArguments.put("leadOrganisation", organisation.getName());
         notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
 
         if (invite.getTarget().getLeadApplicant().getTitle() != null) {
@@ -260,7 +262,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 invite.open();
                 if (invite.getInviteOrganisation().getOrganisation() == null && !user.getOrganisations().isEmpty()) {
-                    invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
+                    Organisation organisation = organisationRepository.findOne(user.getOrganisations().get(0));
+                    invite.getInviteOrganisation().setOrganisation(organisation);
                 }
                 invite = applicationInviteRepository.save(invite);
                 initializeInvitee(invite, user);
@@ -277,7 +280,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Application application = invite.getTarget();
         Role role = roleRepository.findOneByName(COLLABORATOR.getName());
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
-        ProcessRole processRole = new ProcessRole(user, application, role, organisation);
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
         processRoleRepository.save(processRole);
     }
 
@@ -314,7 +317,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
             Long applicationId = applicationInvite.getTarget().getId();
 
-            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
+            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), applicationInvite.getTarget().getId());
 
             setAssignedQuestionsToLeadApplicant(leadApplicantProcessRole, processRoles);
             setMarkedAsCompleteQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);

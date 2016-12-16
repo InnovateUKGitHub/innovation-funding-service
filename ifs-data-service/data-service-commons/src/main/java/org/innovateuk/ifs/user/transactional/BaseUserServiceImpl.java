@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * A Service that covers basic operations concerning Users
  */
 @Service
-public class UserServiceImpl extends UserTransactionalService implements UserService {
+public class BaseUserServiceImpl extends UserTransactionalService implements BaseUserService {
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     enum Notifications {
@@ -32,14 +32,11 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Autowired
-    private UserRepository repository;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Override
     public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
-        return find(repository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
+        return find(userRepository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
@@ -49,12 +46,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserResource>> findAll() {
-        return serviceSuccess(usersToResources(repository.findAll()));
+        return serviceSuccess(usersToResources(userRepository.findAll()));
     }
 
     @Override
     public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-        return serviceSuccess(usersToResources(repository.findByRoles_Name(roleType.getName())));
+        return serviceSuccess(usersToResources(userRepository.findByRoles_Name(roleType.getName())));
     }
 
     private List<UserResource> usersToResources(List<User> filtered) {

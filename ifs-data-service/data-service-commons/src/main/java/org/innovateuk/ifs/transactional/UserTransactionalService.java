@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Transactional
 public abstract class UserTransactionalService {
+
     @Autowired
     protected UserRepository userRepository;
 

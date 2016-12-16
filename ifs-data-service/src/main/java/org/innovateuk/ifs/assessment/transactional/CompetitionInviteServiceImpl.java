@@ -15,7 +15,9 @@ import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
@@ -76,6 +78,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private UserProfileService userProfileService;
@@ -161,7 +166,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private BusinessType getBusinessType(User assessor) {
-        return (assessor.getProfile() != null) ? assessor.getProfile().getBusinessType() : null;
+        Profile profile = profileRepository.findOne(assessor.getProfile());
+        return (profile != null) ? profile.getBusinessType() : null;
     }
 
     private boolean wasInviteCreated(String email, long competitionId) {

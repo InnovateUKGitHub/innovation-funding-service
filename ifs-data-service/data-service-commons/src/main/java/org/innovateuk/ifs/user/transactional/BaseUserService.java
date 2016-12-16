@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * A Service that covers basic operations concerning Users
  */
-public interface UserService {
+public interface BaseUserService {
 
     @NotSecured(value = "This UID method is needed prior to being able to put a User on the SecurityContext, and so it cannot be secured itself", mustBeSecuredByOtherServices = false)
     ServiceResult<UserResource> getUserResourceByUid(final String uid);

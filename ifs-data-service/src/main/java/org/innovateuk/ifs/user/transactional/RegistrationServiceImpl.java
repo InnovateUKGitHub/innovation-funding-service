@@ -120,8 +120,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
-                    user.setProfile(new Profile());
-                    user.getProfile().setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
+                    Profile profile = new Profile();
+                    user.setProfile(profile.getId());
+                    profile.setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
                     return createUserWithUid(user, userResource.getPassword());
                 });
     }
@@ -188,8 +189,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return find(organisation(organisationId)).andOnSuccessReturn(userOrganisation -> {
 
-            List<Organisation> userOrganisationList = new ArrayList<>();
-            userOrganisationList.add(userOrganisation);
+            List<Long> userOrganisationList = new ArrayList<>();
+            userOrganisationList.add(userOrganisation.getId());
             user.setOrganisations(userOrganisationList);
             return user;
         });

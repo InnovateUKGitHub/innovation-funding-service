@@ -118,13 +118,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
 
-            List<ProcessRole> usersProcessRoles = user.getProcessRoles();
+            List<Long> usersProcessRoles = user.getProcessRoles();
 
-            Organisation userOrganisation = usersProcessRoles.size() != 0
-                    ? usersProcessRoles.get(0).getOrganisation()
+            Long userOrganisation = usersProcessRoles.size() != 0
+                    ? processRoleRepository.findOne(usersProcessRoles.get(0)).getOrganisation()
                     : user.getOrganisations().get(0);
 
-            ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+            ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisation);
 
             List<ProcessRole> processRoles = new ArrayList<>();
             processRoles.add(processRole);
@@ -317,7 +317,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
-            List<Application> applications = simpleMap(roles, ProcessRole::getApplication);
+            List<Application> applications = simpleMap(roles, processRole -> {
+                Long appId = processRole.getApplication();
+                return applicationRepository.findOne(appId);
+            });
             return applicationsToResources(applications);
         });
     }
@@ -413,9 +416,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
-        return getProcessRole(id).andOnSuccessReturn(processRole ->
-                        applicationMapper.mapToResource(processRole.getApplication())
-        );
+        return getProcessRole(id).andOnSuccessReturn(processRole -> {
+            Long appId = processRole.getApplication();
+            Application application = applicationRepository.findOne(appId);
+            return applicationMapper.mapToResource(application);
+        });
     }
 
     // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
@@ -471,7 +476,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) 
 					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
 					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
+                .map(processRole -> {
+                    return organisationRepository.findOne(processRole.getOrganisation());
+                }).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()

@@ -10,9 +10,11 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -38,7 +40,7 @@ import static java.util.stream.Collectors.toSet;
  * A Service that covers basic operations concerning Users
  */
 @Service
-public class UserServiceImpl extends BaseTransactionalService implements UserService {
+public class UserServiceImpl extends UserTransactionalService implements UserService {
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     enum Notifications {
@@ -50,7 +52,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     private String webBaseUrl;
 
     @Autowired
-    private UserRepository repository;
+    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -75,7 +77,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
-        return find(repository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
+        return find(userRepository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
@@ -85,22 +87,22 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserResource>> findAll() {
-        return serviceSuccess(usersToResources(repository.findAll()));
+        return serviceSuccess(usersToResources(userRepository.findAll()));
     }
 
     @Override
     public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-        return serviceSuccess(usersToResources(repository.findByRoles_Name(roleType.getName())));
+        return serviceSuccess(usersToResources(userRepository.findByRoles_Name(roleType.getName())));
     }
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
-        return find(repository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
+        return find(userRepository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<UserResource> findInactiveByEmail(String email) {
-        return find(repository.findByEmailAndStatus(email, INACTIVE), notFoundError(User.class, email, INACTIVE)).andOnSuccessReturn(userMapper::mapToResource);
+        return find(userRepository.findByEmailAndStatus(email, INACTIVE), notFoundError(User.class, email, INACTIVE)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override

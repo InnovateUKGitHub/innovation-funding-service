@@ -27,8 +27,8 @@ public class UserResource {
     private String email;
     private String password;
     private UserStatus status;
-    //private List<Long> organisations = new ArrayList<>();
-    //private List<Long> processRoles = new ArrayList<>();
+    private List<Long> organisations = new ArrayList<>();
+    private List<Long> processRoles = new ArrayList<>();
     private List<RoleResource> roles = new ArrayList<>();
     private Gender gender;
     private Disability disability;
@@ -134,7 +134,6 @@ public class UserResource {
         this.password = password;
     }
 
-/*
     public List<Long> getOrganisations() {
         return this.organisations;
     }
@@ -142,9 +141,7 @@ public class UserResource {
     public void setOrganisations(List<Long> organisationIds) {
         this.organisations = organisationIds;
     }
-*/
 
-/*
     public List<Long> getProcessRoles() {
         return processRoles;
     }
@@ -152,7 +149,6 @@ public class UserResource {
     public void setProcessRoles(List<Long> processRoles) {
         this.processRoles = processRoles;
     }
-*/
 
     public List<RoleResource> getRoles() {
         return roles;
@@ -202,7 +198,6 @@ public class UserResource {
         this.ethnicity = ethnicity;
     }
 
-/*
     public Long getProfile() {
         return profile;
     }
@@ -210,7 +205,6 @@ public class UserResource {
     public void setProfile(Long profile) {
         this.profile = profile;
     }
-*/
 
     @Override
     public boolean equals(Object o) {

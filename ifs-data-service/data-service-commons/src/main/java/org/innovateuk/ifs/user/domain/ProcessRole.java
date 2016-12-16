@@ -17,37 +17,31 @@ public class ProcessRole {
     @JoinColumn(name="userId", referencedColumnName="id")
     private User user;
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name="applicationId", referencedColumnName="id")
-    //private Application application;
-    private Long applicationId;
+    private Long application;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="roleId", referencedColumnName="id")
     private Role role;
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name="organisationId", referencedColumnName="id")
-    //private Organisation organisation;
-    private Long organisationId;
+    private Long organisation;
 
     public ProcessRole(){
     	// no-arg constructor
     }
 
-    public ProcessRole(Long id, User user, Long applicationId, Role role, Long organisationId) {
+    public ProcessRole(Long id, User user, Long application, Role role, Long organisation) {
         this.id = id;
         this.user = user;
-        this.applicationId = applicationId;
+        this.application = application;
         this.role = role;
-        this.organisationId = organisationId;
+        this.organisation = organisation;
     }
 
-    public ProcessRole(User user, Long applicationId, Role role, Long organisationId) {
+    public ProcessRole(User user, Long application, Role role, Long organisation) {
         this.user = user;
-        this.applicationId = applicationId;
+        this.application = application;
         this.role = role;
-        this.organisationId = organisationId;
+        this.organisation = organisation;
     }
 
     public Role getRole() {
@@ -58,12 +52,12 @@ public class ProcessRole {
         return user;
     }
     @JsonIgnore
-    public Long getApplicationId() {
-        return applicationId;
+    public Long getApplication() {
+        return application;
     }
 
-    public Long getOrganisationId() {
-        return applicationId;
+    public Long getOrganisation() {
+        return application;
     }
 
     public Long getId() {
@@ -74,12 +68,12 @@ public class ProcessRole {
         this.role = role;
     }
 
-    public void setApplication(Long applicationId) {
-        this.applicationId = applicationId;
+    public void setApplication(Long application) {
+        this.application = application;
     }
 
-    public void setOrganisation(Long organisationId) {
-        this.organisationId = organisationId;
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
     }
 
     public void setUser(User user) {

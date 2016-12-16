@@ -29,6 +29,7 @@ import org.innovateuk.ifs.sil.experian.resource.Condition;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -123,7 +124,8 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     @Override
     public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
         Project project = projectRepository.findOne(projectId);
-        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisation());
         List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
         bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
         List<Organisation> organisations = simpleFilter(projectUsersHelper.getPartnerOrganisations(projectId), org -> !org.getId().equals(leadOrganisation.getId()));

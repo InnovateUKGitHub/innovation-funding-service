@@ -67,11 +67,12 @@ public class OrganisationPermissionRules {
         // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
         List<Long> applicationRoles = user.getProcessRoles();
         List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
-        List<Application> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplication);
-        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, Application::getProcessRoles));
-        List<Organisation> allOrganisationsLinkedToAnyOfUsersApplications = simpleMap(processRolesForAllApplications, ProcessRole::getOrganisation);
+        List<Long> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplication);
+        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId -> {
+            return processRoleRepository.findByApplicationId(applicationId);
+        }));
 
-        return simpleMap(allOrganisationsLinkedToAnyOfUsersApplications, Organisation::getId).contains(organisation.getId());
+        return simpleMap(processRolesForAllApplications, ProcessRole::getOrganisation).contains(organisation.getId());
     }
 
     @PermissionRule(value = "CREATE", description = "The System Registration User can create Organisations on behalf of non-logged in Users " +

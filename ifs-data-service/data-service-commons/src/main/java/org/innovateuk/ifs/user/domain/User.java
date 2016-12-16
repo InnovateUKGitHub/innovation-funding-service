@@ -48,12 +48,13 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-/*
+    @OneToMany(mappedBy = "user")
+    private List<Long> processRoles = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "user_organisation",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
     private List<Long> organisations = new ArrayList<>();
-*/
 
     @ManyToMany
     @JoinTable(name = "user_role",
@@ -73,6 +74,9 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
+
+    @Column(unique = true)
+    private Long profileId;
 
     public User() {
         // no-arg constructor
@@ -113,40 +117,44 @@ public class User implements Serializable {
         return uid;
     }
 
-/*    @JsonIgnore
-    public List<ProcessRole> getProcessRoles() {
+    @JsonIgnore
+    public List<Long> getProcessRoles() {
         return processRoles;
     }
 
+/*
     @JsonIgnore
     public List<ProcessRole> getProcessRolesForRole(UserRoleType role) {
         return processRoles.stream().filter(processRole -> processRole.getRole().getName().equals(role.getName())).collect(toList());
     }
+*/
 
     @JsonIgnore
-    public List<Organisation> getOrganisations() {
+    public List<Long> getOrganisations() {
         return organisations;
     }
 
-    public void setOrganisations(List<Organisation> organisations) {
+    public void setOrganisations(List<Long> organisations) {
         this.organisations = organisations;
     }
 
+/*
     public void addUserApplicationRole(ProcessRole... r) {
         if (this.processRoles == null) {
             this.processRoles = new ArrayList<>();
         }
         this.processRoles.addAll(asList(r));
     }
+*/
 
-    public void addUserOrganisation(Organisation... orgs) {
+    public void addUserOrganisation(Long... orgs) {
         organisations = organisations == null ? new ArrayList<>() : organisations;
-        asList(orgs).forEach(o -> {
-            if (!organisations.stream().map(Organisation::getId).collect(toList()).contains(o.getId())){
-                organisations.add(o);
+        asList(orgs).forEach(id -> {
+            if (!organisations.stream().collect(toList()).contains(id)) {
+                organisations.add(id);
             }
         });
-    }*/
+    }
 
     public List<Role> getRoles() {
         return roles;
@@ -274,15 +282,13 @@ public class User implements Serializable {
         this.ethnicity = ethnicity;
     }
 
-/*
-    public Profile getProfile() {
-        return profile;
+    public Long getProfile() {
+        return profileId;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setProfile(Long profileId) {
+        this.profileId = profileId;
     }
-*/
 
     public List<Affiliation> getAffiliations() {
         return affiliations;
