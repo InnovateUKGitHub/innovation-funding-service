@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
@@ -17,14 +19,12 @@ import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.viewmodel.FunderViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.profiling.ProfileExecution;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -41,16 +41,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
-import static org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils.isSendToDashboard;
-import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
+import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 
 /**
  * Controller for showing and handling the different competition setup sections
  */
 @Controller
 @RequestMapping("/competition/setup")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
@@ -93,15 +93,8 @@ public class CompetitionSetupController {
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-        	LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-
         model.addAttribute(READY_TO_OPEN_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         return "competition/setup";
     }
@@ -114,8 +107,16 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
     	}
 
+        CompetitionResource competition = competitionService.getById(competitionId);
+    	if(section.preventEdit(competition)) {
+            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competitionId, section));
+            return "redirect:/dashboard";
+        }
+
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
-        competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
+        if(!competition.isSetupAndLive()) {
+            competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
+        }
 
         return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
     }
@@ -133,13 +134,8 @@ public class CompetitionSetupController {
             return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
         }
 
+
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-        	LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
 
@@ -255,8 +251,8 @@ public class CompetitionSetupController {
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
         } else if (request.getParameterMap().containsKey("add-funder")) {
-            List<FunderViewModel> funders = competitionSetupForm.getFunders();
-            funders.add(new FunderViewModel(new CompetitionFunderResource()));
+            List<FunderRowForm> funders = competitionSetupForm.getFunders();
+            funders.add(new FunderRowForm(new CompetitionFunderResource()));
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {
@@ -349,16 +345,8 @@ public class CompetitionSetupController {
 
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, ValidationHandler validationHandler, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(isSendToDashboard(competition)) {
-        	LOG.error("Competition is not found in setup state");
-            return "redirect:/dashboard";
-        }
-
-
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
-            LOG.debug("Form errors");
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
             return "competition/setup";
         };

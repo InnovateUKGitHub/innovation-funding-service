@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.FinanceRowResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -33,7 +34,7 @@ import java.util.Set;
  */
 public final class ParameterizedTypeReferences {
 
-	private ParameterizedTypeReferences() {}
+    private ParameterizedTypeReferences() {}
 
     /**
      * Basic types
@@ -69,8 +70,12 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
-        return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
+    public static ParameterizedTypeReference<List<AssessorCreatedInviteResource>> assessorCreatedInviteResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorCreatedInviteResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessorInviteOverviewResource>> assessorInviteOverviewResourceListType() {
+        return new ParameterizedTypeReference<List<AssessorInviteOverviewResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
@@ -145,6 +150,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ApplicationFinanceResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<ProjectFinanceResource>> projectFinanceResourceListType() {
+        return new ParameterizedTypeReference<List<ProjectFinanceResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<OrganisationTypeResource>> organisationTypeResourceListType() {
         return new ParameterizedTypeReference<List<OrganisationTypeResource>>() {};
     }
@@ -203,5 +212,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {
         return new ParameterizedTypeReference<List<SectionResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
+        return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
     }
 }

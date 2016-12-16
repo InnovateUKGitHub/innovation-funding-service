@@ -70,15 +70,15 @@ Duration field client side
     [Documentation]    INFUND-43
     ...
     ...    INFUND-2843
-    [Tags]    Failing
+    [Tags]
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
-    Then the user should see an error    Your project should last between 1 and 36 months
+    Then the user should see an error    Your project should last between 1 and 36 months.
     When the user enters text to a text field    id=application_details-duration    -1
-    Then the user should see an error    Your project should last between 1 and 36 months
+    Then the user should see an error    Your project should last between 1 and 36 months.
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    Then the user should see an error    Your project should last between 1 and 36 months
+    Then the user should see an error    This field cannot be left blank
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -98,7 +98,7 @@ Application details server side
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then The user should see an error    Please enter the full title of the project
     And the user should see an error    Please enter a future date
-    And the user should see an error    Your project should last between 1 and 36 months
+    And the user should see an error    This field cannot be left blank
     And the user should see an error    Please enter the previous application number
     And the user should see an error    Please enter the previous application title
     And the user should see the element    css=.error-summary-list

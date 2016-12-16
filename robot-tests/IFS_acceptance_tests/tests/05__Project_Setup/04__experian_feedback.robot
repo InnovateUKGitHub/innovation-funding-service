@@ -8,6 +8,7 @@ Suite Setup       Log in as user    lee.bowman@innovateuk.test    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
 Resource          ../../resources/defaultResources.robot
+Resource          PS_Variables.robot
 
 *** Variables ***
 

@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.project.finance;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
@@ -9,6 +13,7 @@ import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -56,12 +61,42 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfile(Long projectId, Long organisationId, Boolean complete) {
-        return projectFinanceRestService.markSpendProfile(projectId, organisationId, complete).toServiceResult();
+    public ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId) {
+        return projectFinanceRestService.markSpendProfileComplete(projectId, organisationId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId) {
+        return projectFinanceRestService.markSpendProfileIncomplete(projectId, organisationId).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return projectFinanceRestService.completeSpendProfilesReview(projectId).toServiceResult();
+    }
+
+    @Override
+    public List<ProjectFinanceResource> getProjectFinances(Long projectId) {
+        return projectFinanceRestService.getProjectFinances(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ViabilityResource getViability(Long projectId, Long organisationId) {
+        return projectFinanceRestService.getViability(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
+        return projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).toServiceResult();
+    }
+
+    @Override
+    public boolean isCreditReportConfirmed(Long projectId, Long organisationId) {
+        return projectFinanceRestService.isCreditReportConfirmed(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
+        return projectFinanceRestService.saveCreditReportConfirmed(projectId, organisationId, confirmed).toServiceResult();
     }
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.security;
 
+
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -49,6 +50,11 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
     }
 
+    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "A project manager can mark partners spend profiles as incomplete")
+    public boolean projectManagerCanMarkSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isProjectManager(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
     @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a project manager can complete the projects spend profiles review")
     public boolean projectManagerCanCompleteSpendProfile(Long projectId, UserResource user) {
         return isProjectManager(projectId, user.getId());
@@ -70,5 +76,20 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(
+            value = "VIEW_CREDIT_REPORT",
+            description = "Project Finance Users can view the Credit Report flag")
+    public boolean projectFinanceUserCanViewCreditReport(Long projectId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "SAVE_CREDIT_REPORT",
+            description = "Project Finance Users can save Credit Report flag")
+    public boolean projectFinanceUserCanSaveCreditReport(Long projectId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
 
 }

@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
 
@@ -12,6 +10,8 @@ import java.util.List;
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }
  */
 public interface CompetitionInviteRestService {
+
+    RestResult<AssessorInviteToSendResource> getCreated(long inviteId);
 
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 
@@ -25,7 +25,13 @@ public interface CompetitionInviteRestService {
 
     RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
+    RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
+
+    RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
+
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
     RestResult<Void> deleteInvite(String email, long competitionId);
+
+    RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
 }

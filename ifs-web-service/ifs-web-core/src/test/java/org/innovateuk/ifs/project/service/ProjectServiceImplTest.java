@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -41,7 +42,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectServiceImplTest {
 
@@ -384,7 +384,7 @@ public class ProjectServiceImplTest {
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
         when(projectRestService.getGrantOfferFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = service.getGeneratedGrantOfferFile(123L);
+        Optional<ByteArrayResource> result = service.getGrantOfferFile(123L);
         assertEquals(content, result);
     }
 
@@ -396,7 +396,7 @@ public class ProjectServiceImplTest {
         Optional<FileEntryResource> response = Optional.of(returnedFile);
         when(projectRestService.getGrantOfferFileDetails(123L)).thenReturn(restSuccess(response));
 
-        Optional<FileEntryResource> result = service.getGeneratedGrantOfferFileDetails(123L);
+        Optional<FileEntryResource> result = service.getGrantOfferFileDetails(123L);
         assertEquals(response, result);
     }
 
@@ -446,19 +446,19 @@ public class ProjectServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                service.addGeneratedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                service.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
     }
 
     @Test
-    public void testRemoveGeneratedGrantOfferLetter() {
+    public void testRemoveGrantOfferLetter() {
         long projectId = 123L;
 
-        when(projectRestService.removeGeneratedGrantOfferLetter(projectId)).thenReturn(restSuccess());
+        when(projectRestService.removeGrantOfferLetter(projectId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.removeGeneratedGrantOfferLetter(projectId);
+        ServiceResult<Void> result = service.removeGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
     }
@@ -514,6 +514,92 @@ public class ProjectServiceImplTest {
         assertTrue(submitted.isSuccess());
 
         verify(projectInviteRestService).saveProjectInvite(invite);
+
+    }
+
+    @Test
+    public void testApproveOrRejectSignedGrantOfferLetter()  throws Exception {
+
+        when(projectRestService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectRestService).approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED);
+
+    }
+
+    @Test
+    public void testIsSignedGrantOfferLetterApproved()  throws Exception {
+
+        when(projectRestService.isSignedGrantOfferLetterApproved(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(projectRestService).isSignedGrantOfferLetterApproved(123L);
+
+    }
+
+    @Test
+    public void testGrantOfferLetterAlreadySent()  throws Exception {
+
+        when(projectRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(projectRestService).isGrantOfferLetterAlreadySent(123L);
+
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowed()  throws Exception {
+
+        when(projectRestService.isSendGrantOfferLetterAllowed(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(projectRestService).isSendGrantOfferLetterAllowed(123L);
+
+    }
+
+    @Test
+    public void testAddAdditionalContractFile()  throws Exception {
+
+        FileEntryResource createdFile = newFileEntryResource().build();
+
+        when(projectRestService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
+
+        ServiceResult<FileEntryResource> result =
+                service.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccessObject());
+
+        verify(projectRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+    }
+
+    @Test
+    public void testSendGrantOfferLetter()  throws Exception {
+
+        when(projectRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(123L);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectRestService).sendGrantOfferLetter(123L);
 
     }
 }

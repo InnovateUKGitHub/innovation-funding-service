@@ -2,10 +2,8 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +22,11 @@ public class CompetitionInviteController {
 
     @Autowired
     private CompetitionInviteService competitionInviteService;
+
+    @RequestMapping(value = "/getCreated/{inviteId}", method = RequestMethod.GET)
+    public RestResult<AssessorInviteToSendResource> getCreatedInvite(@PathVariable long inviteId) {
+        return competitionInviteService.getCreatedInvite(inviteId).toGetResponse();
+    }
 
     @RequestMapping(value = "/getInvite/{inviteHash}", method = RequestMethod.GET)
     public RestResult<CompetitionInviteResource> getInvite(@PathVariable String inviteHash) {
@@ -56,13 +59,28 @@ public class CompetitionInviteController {
         return competitionInviteService.getAvailableAssessors(competitionId).toGetResponse();
     }
 
+    @RequestMapping(value = "/getCreatedInvites/{competitionId}", method = RequestMethod.GET)
+    public RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(@PathVariable Long competitionId) {
+        return competitionInviteService.getCreatedInvites(competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/getInvitationOverview/{competitionId}", method = RequestMethod.GET)
+    public RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(@PathVariable Long competitionId) {
+        return competitionInviteService.getInvitationOverview(competitionId).toGetResponse();
+    }
+
     @RequestMapping(value = "/inviteUser", method = RequestMethod.POST)
     public RestResult<CompetitionInviteResource> inviteUser(@Valid @RequestBody ExistingUserStagedInviteResource existingUserStagedInvite) {
         return competitionInviteService.inviteUser(existingUserStagedInvite).toPostWithBodyResponse();
     }
 
-    @RequestMapping(value = "/deleteInvite", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteInvite", method = RequestMethod.DELETE)
     public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam Long competitionId) {
-        return competitionInviteService.deleteInvite(email, competitionId).toPostResponse();
+        return competitionInviteService.deleteInvite(email, competitionId).toDeleteResponse();
+    }
+
+    @RequestMapping(value = "/sendInvite/{inviteId}", method = RequestMethod.POST)
+    public RestResult<AssessorInviteToSendResource> sendInvite(@PathVariable long inviteId, @RequestBody EmailContent content) {
+        return competitionInviteService.sendInvite(inviteId, content).toPostWithBodyResponse();
     }
 }

@@ -79,6 +79,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                                                           CompetitionSetupSection section) {
 
         populateGeneralModelAttributes(model, competitionResource, section);
+		populateCompetitionStateModelAttributes(model, competitionResource, section);
+
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
         if(populator != null) {
@@ -241,7 +243,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		List<CompetitionSetupSection> completedSections = competitionService
 				.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competitionResource.getId());
 
-		boolean editable = !completedSections.contains(section);
+		boolean editable = !completedSections.contains(section) && !section.preventEdit(competitionResource);
 		model.addAttribute("editable", editable);
 
 		model.addAttribute("competition", competitionResource);
@@ -250,11 +252,18 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 		model.addAttribute("allSections", CompetitionSetupSection.values());
 		model.addAttribute("allCompletedSections", completedSections);
-        model.addAttribute("isInitialComplete", completedSections.contains(CompetitionSetupSection.INITIAL_DETAILS));
+        model.addAttribute("isInitialComplete", completedSections.contains(CompetitionSetupSection.INITIAL_DETAILS) || competitionResource.getSetupComplete());
 		model.addAttribute("subTitle",
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 	}
+
+	private void populateCompetitionStateModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
+		model.addAttribute("preventEdit", section.preventEdit(competitionResource));
+		model.addAttribute("isSetupAndLive", competitionResource.isSetupAndLive());
+		model.addAttribute("setupComplete", competitionResource.getSetupComplete());
+	}
+
 
 	private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
         if(!section.getSubsections().contains(subsection)) {

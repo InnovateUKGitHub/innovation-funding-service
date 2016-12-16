@@ -54,49 +54,51 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
-    	
-    	if(costTypeSupportedByHandler(costType)) {
+
+        if(costTypeSupportedByHandler(costType)) {
             Long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
-	        try{
-	            List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost();
-	            cost.forEach(c -> {
-	                c.setQuestion(question);
-	                c.setTarget(applicationFinance);
-	            });
-	            if(!cost.isEmpty()){
-	                applicationFinanceRowRepository.save(cost);
-	                return cost;
-	            }else{
-	                return new ArrayList<>();
-	            }
-	
-	        }catch (IllegalArgumentException e){
-	            LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
-	        }
-    	}
+            try{
+                List<ApplicationFinanceRow> cost = getCostHandler(costType).initializeCost();
+                cost.forEach(c -> {
+                    c.setQuestion(question);
+                    c.setTarget(applicationFinance);
+                });
+                if(!cost.isEmpty()){
+                    applicationFinanceRowRepository.save(cost);
+                    return cost;
+                }else{
+                    return new ArrayList<>();
+                }
+
+            }catch (IllegalArgumentException e){
+                LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
+            }
+        }
         return null;
     }
 
-	// TODO DW - INFUND-1555 - handle rest result
+    // TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
         return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId) {
-    	Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        costCategories = addCostsToCategories(costCategories, costs);
-        costCategories = calculateTotals(costCategories);
-        return costCategories;
+        return addCostsAndTotalsToCategories(costs);
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        costCategories = addCostsToCategories(costCategories, toApplicationFinanceRows(costs));
+        List<ApplicationFinanceRow> asApplicationCosts = toApplicationFinanceRows(costs);
+        return addCostsAndTotalsToCategories(asApplicationCosts);
+    }
+
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<ApplicationFinanceRow> asApplicationCosts) {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
+        costCategories = addCostsToCategories(costCategories, asApplicationCosts);
         costCategories = calculateTotals(costCategories);
         return costCategories;
     }
@@ -119,12 +121,18 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
-    	Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = getOrganisationFinances(applicationFinanceId);
+        return resetCosts(costCategories);
+    }
+
+    @Override
+    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition) {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = getProjectOrganisationFinances(projectFinanceId);
         return resetCosts(costCategories);
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
-    	Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
         for(FinanceRowType costType : FinanceRowType.values()) {
             FinanceRowCostCategory financeRowCostCategory = createCostCategoryByType(costType);
             costCategories.put(costType, financeRowCostCategory);
@@ -200,8 +208,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     private boolean costTypeSupportedByHandler(FinanceRowType costType) {
-		return !(FinanceRowType.YOUR_FINANCE.equals(costType) || FinanceRowType.ACADEMIC.equals(costType));
-	}
+        return !(FinanceRowType.YOUR_FINANCE.equals(costType) || FinanceRowType.ACADEMIC.equals(costType));
+    }
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
@@ -258,5 +266,4 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                 return new DefaultCostCategory();
         }
     }
-
 }

@@ -9,24 +9,27 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'initial/edit')}"
-          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="initial"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
+          th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <fieldset th:if="${editable}" id="section-1-edit">
 
             <legend class="visuallyhidden">Initial details</legend>
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                <label class="form-label" for="competitionSetupForm.title">
+                <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
                     <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
                           <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
                     </span>
                 </label>
-                <input th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                <input id="title"
+                       th:class="${#fields.hasErrors('title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        th:field="${competitionSetupForm.title}"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+                       data-required-errormessage="Please enter a title"
+                       th:readonly="${isSetupAndLive}" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
@@ -36,17 +39,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large"
-                        th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
-                        name="competitionTypeId"
-                        id="competitionTypeId"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.competitiontypeid.required}" />
+                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
-                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
-
+                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
 
 
@@ -58,15 +55,13 @@
                     </span>
                 </label>
 
-                <select class="form-control width-x-large"
-                        id="innovationSectorCategoryId"
-                        name="innovationSectorCategoryId"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}"
+                <select th:disabled="${isSetupAndLive}" th:readonly="${isSetupAndLive}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
+                        data-required-errormessage="Please select an innovation sector"
                         data-autosave-disabled="">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
+                <input th:if="${isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -76,14 +71,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large"
-                        name="innovationAreaCategoryId"
-                        id="innovationAreaCategoryId"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}" />
+                <select th:disabled="${isSetupAndLive}" class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
                     <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
+                <input type="hidden" th:if="${isSetupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryId}" />
             </div>
 
 
@@ -102,11 +94,11 @@
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
                           </label>
-                          <input th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
                                  required="required"
-                                 th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
+                                 data-required-errormessage="Please enter an opening day"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateDay}" />
                           <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
@@ -116,11 +108,11 @@
                           <label class="form-label" for="competitionSetupForm.openingDateMonth">
                               <span>Month</span>
                           </label>
-                          <input th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
-                                 th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
+                                 data-required-errormessage="Please enter an opening month"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
                           <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
@@ -130,11 +122,11 @@
                           <label class="form-label" for="competitionSetupForm.openingDateYear">
                               <span>Year</span>
                           </label>
-                          <input th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
-                                 th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                 data-required-errormessage="Please enter an opening year"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateYear}" />
                           <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
@@ -150,11 +142,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large"
-                        name="leadTechnologistUserId"
-                        id="leadTechnologistUserId"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.leadtechnologistuserid.required}">
+                <select class="form-control width-x-large" name="leadTechnologistUserId" id="leadTechnologistUserId" required="required" data-required-errormessage="Please select an Innovation Lead">
                     <option value="" th:selected="${competitionSetupForm.leadTechnologistUserId == null}" disabled="disabled">Please select &hellip;</option>
                     <option th:each="(competitionLeadTechUser : ${competitionLeadTechUsers})" th:text="${competitionLeadTechUser.name}" th:value="${competitionLeadTechUser.id}" th:selected="${competitionSetupForm.leadTechnologistUserId == competitionLeadTechUser.id}">Innovation Lead</option>
                 </select>
@@ -167,7 +155,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-medium" name="executiveUserId" id="executiveUserId" required="required" th:attr="data-required-errormessage=#{validation.initialdetailsform.executiveuserid.required}">
+                <select class="form-control width-medium" name="executiveUserId" id="executiveUserId" required="required" data-required-errormessage="Please select a competition executive">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
                     <option th:each="(competitionExecutiveUser : ${competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
                 </select>
@@ -222,7 +210,7 @@
                 </dd>
                </dl>
 
-            <button type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -244,8 +232,9 @@
         <h1 class="heading-xlarge">Funding information</h1>
     </div>
 
-    <form data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="additional"
-          th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
+          th:action="@{(${editable} ? '' : 'additional/edit')}"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">
@@ -284,8 +273,8 @@
                         <input required="required" class="form-control width-x-large"
                                th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
-                               data-maxlength-errormessage="Funder has a maximum length of 255 characters."
-                               data-required-errormessage="Please enter a funder name." />
+                               data-maxlength-errormessage="Funder has a maximum length of 255 characters"
+                               data-required-errormessage="Please enter a funder name" />
                     </div>
                 </div>
 
@@ -300,13 +289,13 @@
                                th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
                                th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
-                               data-required-errormessage="Please enter a budget."
-                               data-min-errormessage="Please enter a valid number."/>
+                               data-required-errormessage="Please enter a budget"
+                               data-min-errormessage="Please enter a valid number" />
                         <input type="hidden"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
-                               th:value="${iteration.index != 0}"/>
+                               th:value="${iteration.index != 0}" />
 
-                        <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -343,7 +332,8 @@
                            type="text"
                            th:field="${competitionSetupForm.pafNumber}"
                            required="required"
-                           data-required-errormessage="Please enter a PAF number." />
+                           data-required-errormessage="Please enter a PAF number"
+                           th:readonly="${isSetupAndLive}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -357,7 +347,8 @@
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}"
                            required="required"
-                           data-required-errormessage="Please enter a budget code." />
+                           data-required-errormessage="Please enter a budget code"
+                           th:readonly="${isSetupAndLive}"/>
                 </div>
 
 
@@ -368,12 +359,13 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
-                    type="text" required="required"
-                    th:field="${competitionSetupForm.activityCode}"
-                    maxlength="255"
-                    data-maxlength-errormessage="Activity code has a maximum length of 255 characters."
-                           data-required-errormessage="Please enter an activity code." />
+                    <input  th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                            type="text" required="required"
+                            th:field="${competitionSetupForm.activityCode}"
+                            maxlength="255"
+                            data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
+                            data-required-errormessage="Please enter an activity code"
+                            th:readonly="${isSetupAndLive}"/>
 
                 </div>
 
@@ -390,9 +382,10 @@
                            name="competitionCode"
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
-                           data-required-errormessage="Please generate a competition code."
-                           data-autosave-disabled="data-autosave-disabled" />
-                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
+                           data-required-errormessage="Please generate a competition code"
+                           data-autosave-disabled="data-autosave-disabled"
+                           th:readonly="${isSetupAndLive}"/>
+                    <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
@@ -417,11 +410,11 @@
                 <tr  th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
                         <td th:text="${funder.funder}">Funder Name</td>
-                        <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
+                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatDecimal(funder?.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
                         <td th:text="${funder.funder}">Co-Funder Name</td>
-                        <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
+                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatDecimal(funder?.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
                 </tbody>
@@ -438,7 +431,7 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -464,8 +457,10 @@
         <h1 class="heading-xlarge">Eligibility</h1>
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="eligibility">
+    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id}"
+          data-autosave="compSetup" data-section="eligibility">
 
         <fieldset th:if="${editable}" id="section-3-edit">
 
@@ -483,11 +478,11 @@
                             </span>
                         </legend>
                         <label class="block-label" for="comp-stream-yes" data-target="competition-stream-name-fields">
-                            <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option."></input>
+                            <input id="comp-stream-yes" value="yes" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
                         Yes
                         </label>
                         <label class="block-label" for="comp-stream-no">
-                            <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option."></input>
+                            <input id="comp-stream-no" value="no" type="radio" th:field="*{multipleStream}" required="required" data-required-errormessage="Please select a stream option"></input>
                         No
                         </label>
                     </fieldset>
@@ -509,8 +504,8 @@
                                th:field="*{streamName}"
                                maxlength="255"
                                required="required"
-                               data-required-errormessage="A stream name is required."
-                               data-maxlength-errormessage="Stream name has a maximum length of 255 characters." />
+                               data-required-errormessage="A stream name is required"
+                               data-maxlength-errormessage="Stream name has a maximum length of 255 characters" />
                     </fieldset>
                 </div>
             </div>
@@ -526,7 +521,7 @@
                     </legend>
 
                     <label th:each="collaborationLevel : ${collaborationLevels}" class="block-label" th:for="${'single-or-collaborative-' + collaborationLevel.code}">
-                        <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}" required="required" data-required-errormessage="Please select a collaboration level."></input>
+                        <input th:id="${'single-or-collaborative-' + collaborationLevel.code}" name="singleOrCollaborative" th:value="${collaborationLevel.code}" type="radio" th:checked="${competitionSetupForm.singleOrCollaborative == collaborationLevel.code}" required="required" data-required-errormessage="Please select a collaboration level"></input>
                         <span th:text="${collaborationLevel.name}" th:remove="tag" />
                     </label>
                 </fieldset>
@@ -544,7 +539,7 @@
 	                </legend>
 
 		            <label class="block-label" th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
-		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category." />
+		                <input th:value="${researchCategory.id}" type="checkbox" name="researchCategoryId" th:id="${'research-categories-' + researchCategory.id}" th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}" required="required" data-required-errormessage="Please select at least one research category" />
 		                <span th:text="${researchCategory.name}" th:remove="tag" />
 		            </label>
 		        </fieldset>
@@ -563,7 +558,7 @@
 					</legend>
 
 					 <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label" th:for="${'lead-applicant-type-' + leadApplicantType.code}">
-					    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}" required="required" data-required-errormessage="Please select a lead applicant type." />
+					    <input th:id="${'lead-applicant-type-' + leadApplicantType.code}" name="leadApplicantType" th:value="${leadApplicantType.code}" type="radio" th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}" required="required" data-required-errormessage="Please select a lead applicant type" />
 					    <span th:text="${leadApplicantType.name}" th:remove="tag" />
 					 </label>
 				</fieldset>
@@ -578,7 +573,7 @@
 	                          <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}" />
 	                    </span>
 	                </legend>
-	                <select class="form-control width-large" name="researchParticipationAmountId" id="researchParticipation" required="required" data-required-errormessage="Please select a research participation percentage." >
+	                <select class="form-control width-large" name="researchParticipationAmountId" id="researchParticipation" required="required" data-required-errormessage="Please select a research participation percentage" >
 	                    <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
 	                </select>
                 </fieldset>
@@ -594,11 +589,11 @@
 		                </span>
                     </legend>
                     <label class="block-label" for="comp-resubmissions-yes">
-                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option."></input>
+                        <input id="comp-resubmissions-yes" value="yes" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         Yes
                     </label>
                     <label class="block-label" for="comp-resubmissions-no">
-                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option."></input>
+                        <input id="comp-resubmissions-no" value="no" type="radio" th:field="*{resubmission}" required="required" data-required-errormessage="Please select a resubmission option"></input>
                         No
                     </label>
                 </fieldset>
@@ -638,7 +633,7 @@
 
             </dl>
 
-            <button type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -670,7 +665,8 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
-          data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="milestones"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
+          th:attr="data-competition=${competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
@@ -700,10 +696,11 @@
                 </thead>
                 <tbody>
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
+                      th:if="${milestoneEntry.value.milestoneType.presetDate}"
                       class="date-group form-group-row"
                       data-future-date=""
-                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date.'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone.'}">
+                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
 
                       <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
@@ -712,18 +709,24 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
                              th:value="${milestoneEntry.key}"  />
+                      <input type="hidden"
+                             required="required"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                             th:value="${milestoneEntry.value.editable}"  />
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
                           <input type="number"
                                  placeholder="DD"
                                  min="1"
                                  max="31"
+                                 data-maxlength-errormessage=""
                                  required="required"
                                  class="form-control width-small"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
-                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"/>
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
+                                 th:readonly="${!milestoneEntry.value.editable}" />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -734,7 +737,8 @@
                                 class="form-control width-small"
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
-                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'" />
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
+                                th:readonly="${!milestoneEntry.value.editable}"/>
                       </td>
                       <td class="year" >
                           <input type="number"
@@ -745,7 +749,8 @@
                                  required="required"
                                  class="form-control width-small"
                                  th:value="${milestoneEntry.value.year}"
-                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"/>
+                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
+                                 th:readonly="${!milestoneEntry.value.editable}" />
                           </td>
                     </tr>
                 </tbody>
@@ -766,7 +771,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}" >
+                    <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
+                        th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
                         <td th:text="${milestoneEntry.value.day}"></td>
@@ -775,7 +781,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button type="submit" class="button extra-margin">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
@@ -923,7 +929,7 @@
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
             </dl>
 
-            <button class="button">Edit</button>
+           <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 

@@ -2,21 +2,21 @@ package org.innovateuk.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -176,16 +176,7 @@ public class User implements Serializable {
 
     @JsonIgnore
     public String getName() {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (StringUtils.hasText(firstName)) {
-            stringBuilder.append(firstName)
-                    .append(" ");
-        }
-
-        stringBuilder
-                .append(lastName);
-
-        return stringBuilder.toString();
+        return Stream.of(this.getFirstName(), this.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
     }
 
     public String getLastName() {
@@ -295,5 +286,12 @@ public class User implements Serializable {
     public void setAffiliations(List<Affiliation> affiliations) {
         this.affiliations.clear();
         this.affiliations.addAll(affiliations);
+    }
+
+    public boolean isProfileCompliant() {
+        boolean skillsComplete = profile != null && profile.getSkillsAreas() != null;
+        boolean affiliationsComplete = affiliations != null && !affiliations.isEmpty();
+        boolean contractComplete = profile != null && profile.getContractSignedDate() != null;
+        return skillsComplete && affiliationsComplete && contractComplete;
     }
 }

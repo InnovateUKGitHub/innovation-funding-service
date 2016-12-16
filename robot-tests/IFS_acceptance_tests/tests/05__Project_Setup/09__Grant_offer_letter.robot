@@ -2,6 +2,10 @@
 Documentation     INFUND-4851 As a project manager I want to be able to submit an uploaded Grant Offer Letter so that Innovate UK can review my signed copy
 ...
 ...               INFUND-6059 As the contracts team I want to be able to send a Grant Offer Letter to the partners so that the project can begin
+...
+...               INFUND-4849 As a partner I want to be able to download a Grant Offer Letter and Appendices
+...
+...               INFUND-6091 As a partner / lead partner / project manager I want to get access to the GOL section in Project Setup when all other sections
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -11,27 +15,29 @@ Resource          PS_Variables.robot
 *** Test Cases ***
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
-    [Tags]    Experian
+    [Tags]    Experian    Pending
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO  TODO pending due to INFUND-6952
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(3).status.ok       # Bank details
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok       # Finance Checks
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.ok       # Spend Profile
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
-Project finance can access the GOL page
-    [Documentation]    INFUND-6409
-    [Tags]  Experian
-    [Setup]  log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(5) td.status.action a
-    And the user should not see an error in the page
+Project finance user uploads the grant offer letter
+    [Documentation]    INFUND-6377
+    [Tags]
+    # note that this step is now required as all the following functionality is only unlocked once the grant offer letter has been sent to the partners
+    [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    When the user clicks the button/link    id=send-gol
+    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
+    Then the user should see the text in the page    The grant offer letter is now available for review
 
 PM can view the grant offer letter page
-    [Documentation]    INFUND-4848
+    [Documentation]    INFUND-4848, INFUND-6091
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
@@ -39,6 +45,11 @@ PM can view the grant offer letter page
     Then the user should see the text in the page    The grant offer letter is provided by Innovate UK
     And the user should see the element    jQuery=label:contains(+ Upload)
     And the user should not see the text in the page    This document is awaiting signature by the Project Manager
+    Then the user goes back to the previous page
+    And the user should see the element    jQuery=li.require-action:nth-child(8)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
 Partners should not be able to submit the Grant Offer
     [Documentation]    INFUND-4851, INFUND-6133
@@ -84,9 +95,16 @@ PM should be able upload a file and then access the Submit button
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
+    # TODO - 6829 GOL uploaded but not submitted by PM shows wrong status
+    # And the user clicks the button/link    link=Project setup status
+    # Then the user goes back to the previous page
+    # And the user should see the element    jQuery=li.require-action:nth-child(8)
+    # When the user clicks the button/link    link=What's the status of each of my partners?
+    # And the user should see the text in the page    Project team status
+    # And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
 PM can view the generated Grant Offer Letter
-    [Documentation]    INFUND-6059
+    [Documentation]    INFUND-6059, INFUND-4849
     [Tags]    Pending
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
@@ -119,26 +137,30 @@ PM can view the uploaded Annex file
     And the user goes back to the previous page
 
 PM Submits the Grant Offer letter
-    [Documentation]    INFUND-4851
+    [Documentation]    INFUND-4851, INFUND-6091
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
-    And the user clicks the button/link     jQuery=button:contains("Confirm Submission")
+    And the user clicks the button/link     jQuery=button:contains("Confirm submission")
     Then the user should not see an error in the page
+    # TODO - It has to be checked that the dashabord staus for GOL shows hourglass. This has not been implemented yet.
+    # And the user should see the element    jQuery=li.waiting:nth-child(8)
 
 PM's dashboard should be updated
-    [Documentation]    INFUND-4851
+    [Documentation]    INFUND-4851, INFUND-6091
     [Tags]    Pending
     # TODO Pending due to INFUND-5998
     When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     # TODO - To be fixed when 'PM Submitting GOL' story is worked upon
     # Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
 
 Internal Dashboard should be updated
-    [Documentation]    INFUND-4851
+    [Documentation]    INFUND-4851, INFUND-6091
     [Tags]    Pending
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.ok
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting
     #TODO Pending due to INFUND-5998.
 
 *** Keywords ***

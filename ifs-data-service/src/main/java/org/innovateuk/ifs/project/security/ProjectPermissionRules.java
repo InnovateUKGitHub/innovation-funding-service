@@ -20,12 +20,12 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Comp admins can see project resources")
-    public boolean compAdminsCanViewProjects(final ProjectResource project, final UserResource user){
+    public boolean compAdminsCanViewProjects(final ProjectResource project, final UserResource user) {
         return isCompAdmin(user);
     }
 
     @PermissionRule(value = "READ", description = "Project finance users can see project resources")
-    public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user){
+    public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user) {
         return isProjectFinanceUser(user);
     }
 
@@ -139,7 +139,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "SUBMIT_OTHER_DOCUMENTS",
-                description = "Only a project manager can submit completed partner documents")
+            description = "Only a project manager can submit completed partner documents")
     public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
     }
@@ -161,50 +161,71 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "All partners can view team status")
-    public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user){
+    public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
 
     @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "Comp admins can see a team's status")
-    public boolean compAdminsCanViewTeamStatus(ProjectResource project, UserResource user){
+    public boolean compAdminsCanViewTeamStatus(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
     }
 
     @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "Project finance user can see a team's status")
-    public boolean projectFinanceUserCanViewTeamStatus(ProjectResource project, UserResource user){
+    public boolean projectFinanceUserCanViewTeamStatus(ProjectResource project, UserResource user) {
         return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
             value = "VIEW_STATUS",
             description = "All partners can view the project status")
-    public boolean partnersCanViewStatus(ProjectResource project, UserResource user){
+    public boolean partnersCanViewStatus(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
 
     @PermissionRule(
             value = "VIEW_STATUS",
             description = "Comp admins can see the project status")
-    public boolean compAdminsCanViewStatus(ProjectResource project, UserResource user){
+    public boolean compAdminsCanViewStatus(ProjectResource project, UserResource user) {
         return isCompAdmin(user);
     }
 
     @PermissionRule(
             value = "VIEW_STATUS",
             description = "Project finance user can see the project status")
-    public boolean projectFinanceUserCanViewStatus(ProjectResource project, UserResource user){
+    public boolean projectFinanceUserCanViewStatus(ProjectResource project, UserResource user) {
         return isProjectFinanceUser(user);
     }
 
     @PermissionRule(
             value = "SEND_GRANT_OFFER_LETTER",
             description = "Comp admins & project finance can send the Grant Offer Letter notification")
-    public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user){
+    public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
         return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
+            description = "Internal users can approve the signed Grant Offer Letter")
+    public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Comp admins & project finance can view the send status of Grant Offer Letter for a project")
+    public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Partners can view the send status of Grant Offer Letter for a project")
+    public boolean externalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
     }
 
 }

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,10 +14,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.junit.Assert.*;
 
 public class CompetitionTest {
     private Competition competition;
@@ -148,7 +146,7 @@ public class CompetitionTest {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
-        competitionResource.setEndDate(LocalDateTime.now().plusHours(3));
+        competitionResource.setEndDate(LocalDateTime.now().plusHours(3).plusMinutes(1));
         assertFalse(competitionResource.isClosingSoon());
     }
 

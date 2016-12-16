@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -15,7 +16,7 @@ import javax.persistence.ManyToOne;
 
 /**
  * Entity object similar to ApplicationFinance for storing values in finance_row tables which can be edited by
- * internal project finance users.  It also holds organiation size because internal users will be allowed to edit
+ * internal project finance users.  It also holds organisation size because internal users will be allowed to edit
  * organisation size as well.
  */
 @Entity
@@ -26,6 +27,11 @@ public class ProjectFinance extends Finance {
 
     @Enumerated(EnumType.STRING)
     private Viability viability = Viability.PENDING;
+
+    private boolean creditReportConfirmed = false;
+
+    @Enumerated(EnumType.STRING)
+    private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
 
     public ProjectFinance() {
     }
@@ -50,5 +56,17 @@ public class ProjectFinance extends Finance {
 
     public void setViability(Viability viability) {
         this.viability = viability;
+    }
+
+    public boolean getCreditReportConfirmed() { return creditReportConfirmed; }
+
+    public void setCreditReportConfirmed(boolean creditReportConfirmed) { this.creditReportConfirmed = creditReportConfirmed; }
+
+    public ViabilityStatus getViabilityStatus() {
+        return viabilityStatus;
+    }
+
+    public void setViabilityStatus(ViabilityStatus viabilityStatus) {
+        this.viabilityStatus = viabilityStatus;
     }
 }

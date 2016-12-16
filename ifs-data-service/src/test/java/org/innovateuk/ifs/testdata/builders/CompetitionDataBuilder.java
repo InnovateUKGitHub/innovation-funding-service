@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,14 +20,14 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.category.resource.CategoryType.*;
-import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.category.resource.CategoryType.*;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Generates data from Competitions, including any Applications taking part in this Competition
@@ -108,7 +109,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withSetupComplete() {
-        return asCompAdmin(data -> competitionSetupService.markAsSetup(data.getCompetition().getId()));
+        return asCompAdmin(data -> {
+            asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+                competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
+            });
+            competitionSetupService.markAsSetup(data.getCompetition().getId());
+        });
     }
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
