@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -215,6 +216,24 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
                 });
     }
 
+    @Test
+    public void testGetCreditReport() {
+        assertAccessDenied(() -> classUnderTest.getCreditReport(1L, 2L),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewCreditReport(1L, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSetCreditReport() {
+        assertAccessDenied(() -> classUnderTest.saveCreditReport(1L, 2L, Boolean.TRUE),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveCreditReport(1L, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
     @Override
     protected Class<TestProjectFinanceService> getClassUnderTest() {
         return TestProjectFinanceService.class;
@@ -278,6 +297,16 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+        @Override
+        public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
+
+        @Override
+        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean creditReportPresent) { return null; }
+
+        @Override
+        public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
             return null;
         }
     }

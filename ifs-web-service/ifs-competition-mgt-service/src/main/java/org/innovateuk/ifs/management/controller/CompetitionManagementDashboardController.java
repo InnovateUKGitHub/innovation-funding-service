@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.joining;
 
 @Controller
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementDashboardController {
     public static final String TEMPLATE_PATH = "dashboard/";
 
@@ -37,7 +39,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "live";
     }
 
-    @RequestMapping(value="/dashboard/projectSetup", method= RequestMethod.GET)
+    @RequestMapping(value="/dashboard/project-setup", method= RequestMethod.GET)
     public String projectSetup(Model model, HttpServletRequest request) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionService.getProjectSetupCompetitions();
         model.addAttribute("competitions", projectSetupCompetitions);
