@@ -189,7 +189,7 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
-        applicationNavigationPopulator.addAppropraiteBackURLToModel(applicationId, request, model);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
         return APPLICATION_FORM;
     }
 
@@ -232,7 +232,7 @@ public class ApplicationFormController {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         }
 
-        applicationNavigationPopulator.addAppropraiteBackURLToModel(applicationId, request, model);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
 
         return APPLICATION_FORM;
     }
@@ -324,7 +324,7 @@ public class ApplicationFormController {
                 model.addAttribute("currentUser", user);
                 applicationModelPopulator.addUserDetails(model, application, user.getId());
                 applicationNavigationPopulator.addNavigation(question, applicationId, model);
-                applicationNavigationPopulator.addAppropraiteBackURLToModel(applicationId, request, model);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -647,7 +647,7 @@ public class ApplicationFormController {
 
         if (section.getType() == SectionType.FINANCE &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
-            applicationNavigationPopulator.addAppropraiteBackURLToModel(applicationId, request, model);
+            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
             return APPLICATION_FORM;
         }
 
@@ -666,7 +666,7 @@ public class ApplicationFormController {
         if(saveApplicationErrors.hasErrors()){
             validationHandler.addAnyErrors(saveApplicationErrors);
             setReturnToApplicationFormData(section, application, competition, user, model, form, applicationId);
-            applicationNavigationPopulator.addAppropraiteBackURLToModel(applicationId, request, model);
+            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);

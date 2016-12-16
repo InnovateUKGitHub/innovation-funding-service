@@ -62,11 +62,11 @@ public class ApplicationNavigationPopulatorTest {
         Model model = mock(Model.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("referer")).thenReturn("/application/1");
-        target.addAppropraiteBackURLToModel(applicationId, request, model);
+        target.addAppropriateBackURLToModel(applicationId, request, model);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
 
         when(request.getHeader("referer")).thenReturn("/application/1/summary");
-        target.addAppropraiteBackURLToModel(applicationId, request, model);
+        target.addAppropriateBackURLToModel(applicationId, request, model);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
     }
 
