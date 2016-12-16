@@ -6,7 +6,7 @@
 
     <body th:with="context='assessment'" class="assessment assessment-overview">
         <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/assessment :: assessment-reject-assesment-modal (assessmentId=${assessmentId})" th:remove="tag" />
+        <div th:include="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${assessmentId})" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
         <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
 
@@ -77,7 +77,7 @@
             </div>
 
             <div class="alignright-button extra-margin">
-                <a class="button large" th:href="@{/{assessmentId}/summary(assessmentId=${assessmentId})}">Review assessment</a>
+                <a class="button large" th:href="@{/{assessmentId}/summary(assessmentId=${assessmentId})}">Review and complete your assessment</a>
             </div>
 
             <div class="extra-margin">
@@ -85,7 +85,7 @@
                     <summary><span class="summary">Unable to assess this application?</span></summary>
                     <div class="panel-indent">
                         <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
-                        <a th:href="@{/{assessmentId}/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assesment-modal" class="buttonlink">Reject this application</a>
+                        <a th:href="@{/{assessmentId}/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal" class="buttonlink">Reject this application</a>
                     </div>
                 </details>
             </div>

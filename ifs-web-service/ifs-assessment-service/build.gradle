@@ -1,11 +1,15 @@
 apply plugin: 'war'
+configurations {
+    providedRuntime
+}
 
 war {
     baseName = 'assessment'
 }
 
-configurations {
-    providedRuntime
+
+bootRepackage {
+    mainClass = 'org.innovateuk.ifs.Application'
 }
 
 dependencies {
@@ -18,7 +22,8 @@ dependencies {
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
 
-    testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(':ifs-resources').sourceSets.test.output
+    testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
@@ -42,6 +47,24 @@ task deployToTomcat(type: Copy) {
     from war
     into "$tomcatWebAppsDir"
     rename '(.*).war', 'assessment.war'
+}
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = 'assessment-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn buildDocker
 }
 
 task cleanDeploy() {

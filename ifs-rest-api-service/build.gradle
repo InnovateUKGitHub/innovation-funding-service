@@ -28,13 +28,13 @@ bootRepackage {
 ext['spring-restdocs.version']='1.1.2.RELEASE'
 
 dependencies {
-    compile project(':ifs-commons')
-    testCompile project(path: ':ifs-commons', configuration: 'forTesting')
+    compile project(':ifs-resources')
+    testCompile project(':ifs-resources').sourceSets.test.output
 }
 
 task client(type: Jar) {
     from(sourceSets.main.output) {
-        exclude "com/worth/ifs/Application.class"
+        exclude "org/innovateuk/ifs/Application.class"
     }
 }
 

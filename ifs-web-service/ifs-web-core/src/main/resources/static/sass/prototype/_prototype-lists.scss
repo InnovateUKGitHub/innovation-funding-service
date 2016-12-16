@@ -42,6 +42,17 @@ ol.list-style-type-roman{
       }
     }
 
+    p{
+      padding-left: 20px;
+    }
+
+    span{
+      &.form-hint{
+        margin: 0;
+        padding-top: 0.6em;
+      }
+    }
+
     .column-third{
       padding: 12px 0 0 20px;
       @include media-down(mobile) {
@@ -125,6 +136,15 @@ li.type-company{
   }
 }
 
+/*----- Readonly data view ----*/
+dl{
+  &.readonly-data{
+    dd{
+      margin-bottom: 1em;
+    }
+  }
+}
+
 /*----- Standard definition list ----*/
 
 dl.standard-definition-list{
@@ -163,6 +183,20 @@ dl.standard-definition-list{
       margin-left: 250px;
     }
   }
+
+  &.reduced-width{
+
+    margin-top: 0.5em;
+
+    dt{
+      width: 25%;
+      margin-bottom: 0.3em;
+    }
+    dd{
+      margin-bottom: 0.3em
+    }
+  }
+
   &.column-definition-list {
     dt {
       width: 33%;

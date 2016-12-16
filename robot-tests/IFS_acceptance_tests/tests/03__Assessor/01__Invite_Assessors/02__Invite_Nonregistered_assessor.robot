@@ -22,15 +22,6 @@ ${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition
 ${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 
 *** Test Cases ***
-Registered user should not allowed to accept other assessor invite
-    [Documentation]    INFUND-4895
-    [Tags]
-    [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
-    Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    When the user clicks the button/link    jQuery=.button:contains("Accept")
-    Then The user should see permissions error message
-    [Teardown]    logout as user
-
 Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228
     ...
@@ -38,8 +29,8 @@ Non-registered assessor: Accept invitation
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
-    When the user clicks the button/link    jQuery=.button:contains("Accept")
+    And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
+    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then the user should see the text in the page    Become an assessor for Innovate UK
     And the user should see the element    jQuery=.button:contains("Create account")
 
@@ -127,7 +118,6 @@ Non-registered assessor: Reject invitation
     ...    INFUND-5165
     [Tags]
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
-
     Then the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     When the user clicks the button/link    jQuery=button:contains("Reject")
@@ -137,14 +127,6 @@ Non-registered assessor: Reject invitation
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the assessor shouldn't be able to reject the rejected competition
     And the assessor shouldn't be able to accept the rejected competition
-    [Teardown]    The user closes the browser
-
-Assessor attempts to accept/reject an invitation which is already accepted
-    [Documentation]    INFUND-5165
-    [Tags]    Pending
-    [Setup]    The guest user opens the browser
-    Then the assessor shouldn't be able to accept the accepted competition
-    And the assessor shouldn't be able to reject the accepted competition
 
 *** Keywords ***
 the assessor fills in all fields
@@ -160,21 +142,8 @@ the user should not see the validation error in the create assessor form
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
-the assessor fills all fields with valid inputs
-    Select From List By Index    id=rejectReason    2
-    The user should not see the text in the page    This field cannot be left blank
-    The user enters text to a text field    id=rejectComment    Unable to assess this application.
-
 the assessor shouldn't be able to reject the rejected competition
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
-    the assessor is unable to see the invitation
-
-the assessor shouldn't be able to accept the accepted competition
-    When the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    the assessor is unable to see the invitation
-
-the assessor shouldn't be able to reject the accepted competition
-    When the user navigates to the page    ${Invitation_nonregistered_assessor3}
     the assessor is unable to see the invitation
 
 the assessor shouldn't be able to accept the rejected competition

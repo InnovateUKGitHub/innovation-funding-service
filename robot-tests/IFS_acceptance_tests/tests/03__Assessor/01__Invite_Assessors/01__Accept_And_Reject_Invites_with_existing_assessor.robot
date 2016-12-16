@@ -14,6 +14,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
 ...
 ...               INFUND-5001 As an assessor I want to see information about competitions that I have accepted to assess so that I can remind myself of the subject matter.
+...
+...               INFUND-5509 As an Assessor I can see details relating to work and payment, so that I can decide whether to accept it.
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -22,9 +24,10 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e
 ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
-${Invitation_existing_assessor2}    ${server}/assessment/invite/competition/469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
 ${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
+${Correct_date}    12 January to 28 January
 
 *** Test Cases ***
 Assessor dashboard should be empty
@@ -42,12 +45,10 @@ Existing assessor: Reject invitation
     [Documentation]    INFUND-4631
     ...
     ...    INFUND-5157
-    ...
-    ...    INFUND-5165
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_existing_assessor1}
-    and the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user should see the text in the page    You are invited to act as an assessor for the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
+    And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
@@ -56,8 +57,6 @@ Existing assessor: Reject invitation
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=button:contains("Reject")
     And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
-    And the assessor shouldn't be able to accept the rejected competition
-    And the assessor shouldn't be able to reject the rejected competition
 
 Existing assessor: Accept invitation
     [Documentation]    INFUND-228
@@ -66,28 +65,30 @@ Existing assessor: Accept invitation
     ...
     ...    INFUND-3716
     ...
-    ...    INFUND-5165
+    ...    INFUND-5509
     [Tags]    HappyPath
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    And the user should see the text in the page    You are invited to act as an assessor for the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
+    And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user clicks the button/link    jQuery=.button:contains("Accept")
+    And the user should see the text in the page    12 January 2018 to 28 January 2019: Assessment period
+    And the user should see the text in the page    taking place at 15 January 2018.
+    And the user should see the text in the page    100.00 per application.
+    When the user clicks the button/link    jQuery=.button:contains("Yes")
     Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${READY_TO_OPEN_COMPETITION_NAME}
-    And the assessor shouldn't be able to accept the accepted competition
-    And the assessor shouldn't be able to reject the accepted competition
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
     ...
-    ...             INFUND-5001
-    [Tags]
-    # Development work is not complete
+    ...    INFUND-5001
+    [Tags]    HappyPath
     Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
-    Then The user should see the element    css=.invite-to-assess
     And the user should see the text in the page    Upcoming competitions to assess
-   # And the user should see the text in the page    Photonics for health
-    And The user should see the text in the page    Assessment period:
+    And the assessor should see the correct date
+    When The user clicks the button/link    link=Photonics for health
+    And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Photonics for health'
+    And The user clicks the button/link    link=Back to your assessor dashboard
+    Then The user should see the text in the page    Upcoming competitions to assess
 
 When the assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
@@ -95,7 +96,6 @@ When the assessment period starts the comp moves to the comp for assessment
     Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
-
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
@@ -110,17 +110,22 @@ Number of days remaining until assessment submission
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
-    [Tags]    MySQL
+    [Tags]    MySQL    HappyPath
     Then the total calculation in dashboard should be correct    Competitions for assessment    //div[3]/ul/li
 
-Existing assessor shouldn't be able to accept other assessor's invitation
-    [Documentation]    INFUND-228
-    ...
-    ...    INFUND-304
+Registered user should not allowed to accept other assessor invite
+    [Documentation]    INFUND-4895
     [Tags]
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    when the user clicks the button/link    jQuery=button:contains(Accept)
+    When the user clicks the button/link    jQuery=.button:contains("Yes")
     Then The user should see permissions error message
+
+The user should not be able to accept or reject the same applications
+    [Documentation]    NFUND-5165
+    Then the assessor shouldn't be able to accept the rejected competition
+    And the assessor shouldn't be able to reject the rejected competition
+    Then the assessor shouldn't be able to accept the accepted competition
+    And the assessor shouldn't be able to reject the accepted competition
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
@@ -154,3 +159,7 @@ the assessor shouldn't be able to reject the accepted competition
 The assessor is unable to see the invitation
     The user should see the text in the page    This invitation is now closed
     The user should see the text in the page    You have already accepted or rejected this invitation.
+
+the assessor should see the correct date
+    ${Assessment_period}=    Get Text    css=.invite-to-assess .column-assessment-status.navigation-right .heading-small.no-margin
+    Should Be Equal    ${Assessment_period}    ${Correct_date}

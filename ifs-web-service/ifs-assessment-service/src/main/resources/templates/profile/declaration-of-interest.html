@@ -98,9 +98,9 @@
                         <table id="position-table">
                             <thead>
                                 <tr>
-                                    <th id="aria-position-org">Organisation</th>
-                                    <th id="aria-position-pos">Position</th>
-                                    <th><span class="visuallyhidden">Action</span></th>
+                                    <th scope="col" id="aria-position-org">Organisation</th>
+                                    <th scope="col" id="aria-position-pos">Position</th>
+                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -227,10 +227,10 @@
                         <table id="family-table">
                             <thead>
                                 <tr>
-                                    <th id="aria-family-rel">Relation</th>
-                                    <th id="aria-family-org">Organisation</th>
-                                    <th id="aria-family-pos">Position</th>
-                                    <th><span class="visuallyhidden">Action</span></th>
+                                    <th scope="col" id="aria-family-rel">Relation</th>
+                                    <th scope="col" id="aria-family-org">Organisation</th>
+                                    <th scope="col" id="aria-family-pos">Position</th>
+                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -343,7 +343,7 @@
                       <label class="block-label">
                           <input type="checkbox" th:field="*{accurateAccount}" required="required"
                                  data-required-errormessage="You must agree that your account is accurate." />
-                          <span th:text="|I confirm that for the financial year ended ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
+                          <span th:text="|I confirm that for the financial year ending ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>
                 </div>

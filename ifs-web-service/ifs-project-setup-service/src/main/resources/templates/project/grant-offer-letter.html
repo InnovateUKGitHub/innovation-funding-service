@@ -35,22 +35,26 @@
               <h3 class="heading-small no-margin-top">We are unable to approve the grant offer letter. We will return this to you. A member of Innovate UK will be in contact to discuss our requirements with you.</h3>
           </div>
           <div th:if="${model.offerAccepted}" class="success-alert extra-margin-bottom">
-                    <p>Your signed grant offer letter has been received and accepted by Innovate UK.</p>
+              <p>Your signed grant offer letter has been received and accepted by Innovate UK.</p>
             </div>
         </th:block>
 
         <th:block th:if="${model.leadPartner}">
             <p>The grant offer letter is provided by Innovate UK. It has been created using the information provided by your organisation and partners during the application and project setup stages. Please review the information below to complete the project setup stage.</p>
 
-              <h2 class="heading-medium">Grant offer letter</h2>
-              <p>The grant offer should be read and approved by all project members. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
-              <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            <h2 class="heading-medium">Grant offer letter</h2>
+            <p>The grant offer should be read and approved by all project members. It needs to be signed by your Project Manager and returned to Innovate UK.</p>
+            <th:block th:if="${model.isGrantOfferLetterSent()}">
+                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            </th:block>
 
-              <h2 class="heading-medium">Annex</h2>
-              <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-              <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            <h2 class="heading-medium">Annex</h2>
+            <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+            <th:block th:if="${model.isGrantOfferLetterSent()}">
+                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            </th:block>
 
-            <div th:unless="${model.submitted}" class="upload-section">
+            <div th:if="${model.isGrantOfferLetterSent() and !model.submitted and model.getGrantOfferLetterFile() != null}" class="upload-section">
                 <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
                 The Project Manager is required to provide a signed copy of the grant offer letter.
                 <details>
@@ -67,25 +71,27 @@
                     </div>
                 </details>
 
-                  <!-- /* file is not uploaded */-->
-                  <div th:classappend="${#fields.hasErrors('signedGrantOfferLetter') ? 'error' : ''}" th:unless="${model.signedGrantOfferLetterFile}">
-                      <th:block th:if="${#fields.hasErrors('signedGrantOfferLetter')}">
-                          <span class="error-message" th:each="err : ${#fields.errors('signedGrantOfferLetter')}" th:text="${err}"/>
-                      </th:block>
-                      <input th:field="*{signedGrantOfferLetter}" type="file" class="inputfile"/>
-                      <label for="signedGrantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
-                      <button name="uploadSignedGrantOfferLetterClicked" class="button-secondary" type="submit" data-for-file-upload="signedGrantOfferLetter">Save</button>
-                  </div>
-                  <!--/* file is uploaded */-->
-                  <th:block th:if="${model.signedGrantOfferLetterFile}">
-                      <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" class="uploaded-file" th:text="${model.signedGrantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-                      <!-- /* no controller for deleting the file just yet. Add this line with the proper name attribute when there is :)  */ -->
-                      <!-- /* <button name="removeSignedGrantOfferLetterClicked" class="button-secondary no-margin-right" type="submit">Remove</button> */ -->
-                  </th:block>
+                <!-- /* file is not uploaded */-->
+                <div th:classappend="${#fields.hasErrors('signedGrantOfferLetter') ? 'error' : ''}" th:unless="${model.signedGrantOfferLetterFile}">
+                    <th:block th:if="${#fields.hasErrors('signedGrantOfferLetter')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('signedGrantOfferLetter')}" th:text="${err}"/>
+                    </th:block>
+                    <input th:field="*{signedGrantOfferLetter}" type="file" class="inputfile"/>
+                    <label for="signedGrantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
+                    <button name="uploadSignedGrantOfferLetterClicked" class="button-secondary" type="submit" data-for-file-upload="signedGrantOfferLetter">Save</button>
+                </div>
+                <!--/* file is uploaded */-->
+                <th:block th:if="${model.signedGrantOfferLetterFile}">
+                    <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" class="uploaded-file" th:text="${model.signedGrantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
+                    <!-- /* no controller for deleting the file just yet. Add this line with the proper name attribute when there is :)  */ -->
+                    <!-- /* <button name="removeSignedGrantOfferLetterClicked" class="button-secondary no-margin-right" type="submit">Remove</button> */ -->
+                </th:block>
             </div>
 
-            <a th:if="${model.isShowSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
-            <button th:if="${model.isShowDisabledSubmitButton()}" disabled="disabled" class="button">Submit signed offer letter</button>
+            <th:block th:if="${model.isGrantOfferLetterSent()}">
+                <a th:if="${model.isShowSubmitButton()}" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}" data-js-modal="modal-confirm-grant-offer-letter" class="button">Submit signed offer letter</a>
+                <button th:if="${model.isGrantOfferLetterSent() and model.isShowDisabledSubmitButton()}" disabled="disabled" class="button">Submit signed offer letter</button>
+            </th:block>
 
             <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
             <div th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>
@@ -106,7 +112,6 @@
             <p>Annex 2 contains any additional contracts agreed upon during the application process. The signed grant offer letter agrees to the conditions set out in this appendix. </p>
             <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
         </th:block>
-
 
     </form>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

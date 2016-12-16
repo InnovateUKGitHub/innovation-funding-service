@@ -12,6 +12,10 @@ war {
     baseName = 'ifs-application-service'
 }
 
+bootRepackage {
+    mainClass = 'org.innovateuk.ifs.Application'
+}
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
@@ -21,7 +25,8 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
 
-    testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(':ifs-resources').sourceSets.test.output
+    testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -80,6 +85,26 @@ processTestResources {
     filesMatching("*.properties") {
         expand project.properties
     }
+}
+
+
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = war.baseName.replaceAll(/ifs-/, "")
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn build
+    dependsOn buildDocker
 }
 
 task cleanDeploy() {

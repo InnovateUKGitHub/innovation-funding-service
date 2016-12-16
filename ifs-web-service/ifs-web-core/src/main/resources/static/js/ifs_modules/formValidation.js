@@ -62,12 +62,12 @@ IFS.core.formValidation = (function() {
       date : {
         fields : '.date-group input',
         messageInvalid : {
-          invalid : "Please enter a valid date",
-          future : "Please enter a future date"
+          invalid : "Please enter a valid date.",
+          future : "Please enter a future date."
         }
       },
       pattern : {
-        fields : '[pattern]',
+        fields : '[pattern]:not([minlength])', //minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
         messageInvalid : "Please correct this field"
       },
       tel : {
@@ -326,6 +326,10 @@ IFS.core.formValidation = (function() {
               return true;
             }
           }
+        //HTML5 number input will return "" as val() if invalid number.
+        } else if (field.is(s.number.fields) && s.html5validationMode && field[0].validity.badInput) {
+          if(showMessage) { IFS.core.formValidation.setValid(field, errorMessage);}
+          return true;
         }
         else {
           if(field.val().length === 0){
@@ -431,10 +435,11 @@ IFS.core.formValidation = (function() {
       var allFields = d.add(m).add(y);
       var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'));
       var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0));
+      var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]');
       var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) && IFS.core.formValidation.checkNumber(y, false);
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid');
 
-      if(validNumbers && filledOut){
+      if(validNumbers && filledOut && enabled){
         var month = parseInt(m.val(), 10);
         var day = parseInt(d.val(), 10);
         var year = parseInt(y.val(), 10);
@@ -464,7 +469,7 @@ IFS.core.formValidation = (function() {
           valid = false;
         }
       }
-      else if (filledOut || fieldsVisited){
+      else if ((filledOut || fieldsVisited) && enabled){
         if(showMessage){ IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage); }
         allFields.attr({'data-date':''});
         valid = false;
@@ -577,7 +582,7 @@ IFS.core.formValidation = (function() {
         }
       }
 
-      if(jQuery('ul.error-summary-list [data-errorfield="'+name+'"]:contains('+message+')').length === 0){
+      if(jQuery('.error-summary-list [data-errorfield="'+name+'"]:contains('+message+'),.error-summary-list li:not([data-errorfield]):contains("'+message+'")').length === 0){
         jQuery('.error-summary-list').append('<li data-errorfield="'+name+'">'+message+'</li>');
       }
 

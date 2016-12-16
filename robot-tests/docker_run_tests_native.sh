@@ -58,10 +58,6 @@ function addTestFiles() {
 
     section "=> ADDING TEST FILES INTO DOCKER CONTAINER"
 
-    echo "=> Making the quarantined directory..."
-
-    clearDownFileRepository
-
     echo "***********Adding test files***************"
     docker cp ../../../robot-tests/upload_files/testing.pdf ifs_data_1:/tmp/testing.pdf
 

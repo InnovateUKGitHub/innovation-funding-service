@@ -23,7 +23,7 @@
                                                                             th:text="'Live ('+${counts.liveCount}+')'"></a>
         </li>
         <li id="section-2" th:class="${tab == 'projectSetup' ? 'selected' : ''}"><a
-                th:href="@{'/dashboard/projectSetup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"></a>
+                th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"></a>
         </li>
         <li id="section-3" th:class="${tab == 'upcoming' ? 'selected' : ''}"><a th:href="@{'/dashboard/upcoming'}"
                                                                                 th:text="'Upcoming ('+${counts.upcomingCount}+')'"></a>
@@ -43,19 +43,22 @@
                 <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
                 <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>
-            <a th:href="@{'/competition/'+${competition.id}}" th:if="${
+            <a th:href="@{/competition/{competitionId}/applications(competitionId=${competition.id})}" th:if="${
                 (competition.competitionStatus.name() == 'OPEN') or
-                (competition.competitionStatus.name() == 'IN_ASSESSMENT') or
                 (competition.competitionStatus.name() == 'FUNDERS_PANEL') or
                 (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')
               }">
                 <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
                 <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>
-            <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}" th:if="${
-                (competition.competitionStatus.name() == 'PROJECT_SETUP') or
-                (competition.competitionStatus.name() == 'CLOSED')
-              }">
+            <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}" th:if="${
+                T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED == competition.competitionStatus or
+                T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT == competition.competitionStatus}">
+                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
+                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
+            </a>
+            <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
+               th:if="${T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP == competition.competitionStatus}">
                 <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
                 <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>

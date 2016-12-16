@@ -3,6 +3,11 @@ apply plugin: 'war'
 war {
     baseName = 'management'
 }
+
+bootRepackage {
+    mainClass = 'org.innovateuk.ifs.Application'
+}
+
 configurations {
     providedRuntime
 }
@@ -17,7 +22,8 @@ dependencies {
     compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
 
-    testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(':ifs-resources').sourceSets.test.output
+    testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
     testCompile "com.openpojo:openpojo:0.8.3"
@@ -56,6 +62,18 @@ task deployToTomcat(type: Copy) {
     rename '(.*).war', 'management.war'
 }
 
+task buildDocker( type:Docker, dependsOn: build) {
+    push = false
+    applicationName = 'competition-management-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from war
+            into stageDir
+        }
+    }
+}
+
 task cleanDeploy() {
     build.mustRunAfter clean
     deployToTomcat.mustRunAfter build
@@ -63,3 +81,10 @@ task cleanDeploy() {
     dependsOn build
     dependsOn deployToTomcat
 }
+
+task cleanDeployServices() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn buildDocker
+}
+

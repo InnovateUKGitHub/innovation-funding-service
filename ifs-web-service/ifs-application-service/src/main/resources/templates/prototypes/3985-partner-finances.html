@@ -65,13 +65,13 @@
 	<p>After querying any costs with you any change made to your finances will be visible here. Please review this your finances after any changes are discussed to ensure they have been made as expected, you are responsible for the accuracy of the approved finances.</p>
 
 	<div class="collapsible section-overview extra-margin">
-	        
+
        	<h2>Labour
 	       <span data-mirror="#section-total-1">&pound; 126,207</span>
-       	</h2>	
+       	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:remove="tag" />
 
-		<h2>Administration support costs
+		<h2>Overheads
     		<span data-mirror="#section-total-2">&pound; 0</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:remove="tag" />
@@ -85,13 +85,13 @@
 	        <span data-mirror="#section-total-4">&pound; 0</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-capital" th:with="status=partnerView" th:remove="tag" />
-	    	
+
 	    <h2>Subcontracting costs
 	        <span data-mirror="#section-total-5">&pound; 150,000</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:with="status=partnerView" th:remove="tag" />
-	    
-    	<h2>Travel &amp; subsistence
+
+    	<h2>Travel and subsistence
 	        <span data-mirror="#section-total-6">&pound; 0</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-travel" th:with="status=partnerView" th:remove="tag" />
@@ -109,7 +109,7 @@
 	<p>This is any other applicable public sector funding that you have applied for or received for this project, that Innovate UK have been informed of.</p>
 
 	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" th:remove="tag" />
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -121,7 +121,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>
