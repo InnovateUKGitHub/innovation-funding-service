@@ -115,11 +115,8 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <!--
-                                TODO INFUND-6414
-                                <button class="button no-margin-right"><span class="hidden">John Barnes </span>Invite individual</button>
+                                <a class="button no-margin-right" th:href="@{/competition/assessors/invite/{inviteId}(inviteId=${assessor.inviteId})}">Invite individual</a>
                                 <br />
-                                -->
                                 <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
                             </td>
                         </tr>

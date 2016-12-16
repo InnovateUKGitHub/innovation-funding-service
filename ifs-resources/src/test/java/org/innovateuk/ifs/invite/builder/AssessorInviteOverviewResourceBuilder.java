@@ -29,12 +29,8 @@ public class AssessorInviteOverviewResourceBuilder extends BaseBuilder<AssessorI
         return new AssessorInviteOverviewResourceBuilder(emptyList());
     }
 
-    public AssessorInviteOverviewResourceBuilder withFirstName(String... value) {
-        return withArraySetFieldByReflection("firstName", value);
-    }
-
-    public AssessorInviteOverviewResourceBuilder withLastName(String... value) {
-        return withArraySetFieldByReflection("lastName", value);
+    public AssessorInviteOverviewResourceBuilder withName(String... value) {
+        return withArraySetFieldByReflection("name", value);
     }
 
     public AssessorInviteOverviewResourceBuilder withInnovationArea(CategoryResource... value) {

@@ -175,7 +175,7 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
-    the user navigates to the page    ${server}/management/dashboard/projectSetup
+    the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 

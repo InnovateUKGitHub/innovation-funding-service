@@ -1,48 +1,34 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
-
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.joining;
 
 /**
  * Abstract DTO for fields common to assessor invite resources.
  */
 abstract class AssessorInviteResource {
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private CategoryResource innovationArea;
     private boolean compliant;
+
 
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(String firstName, String lastName, CategoryResource innovationArea, boolean compliant) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    protected AssessorInviteResource(String name, CategoryResource innovationArea, boolean compliant) {
+        this.name = name;
         this.innovationArea = innovationArea;
         this.compliant = compliant;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public CategoryResource getInnovationArea() {
@@ -59,10 +45,6 @@ abstract class AssessorInviteResource {
 
     public void setCompliant(boolean compliant) {
         this.compliant = compliant;
-    }
-
-    public String getFullName() {
-        return Stream.of(this.getFirstName(), this.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
     }
 
     public String getInnovationAreaName() {
@@ -83,8 +65,7 @@ abstract class AssessorInviteResource {
 
         return new EqualsBuilder()
                 .append(compliant, that.compliant)
-                .append(firstName, that.firstName)
-                .append(lastName, that.lastName)
+                .append(name, that.name)
                 .append(innovationArea, that.innovationArea)
                 .isEquals();
     }
@@ -92,8 +73,7 @@ abstract class AssessorInviteResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(firstName)
-                .append(lastName)
+                .append(name)
                 .append(innovationArea)
                 .append(compliant)
                 .toHashCode();

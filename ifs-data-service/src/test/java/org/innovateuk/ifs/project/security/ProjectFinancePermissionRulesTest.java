@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.security.ProjectFinancePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -108,6 +107,34 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         setUpUserNotAsProjectManager(user);
 
         assertFalse(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void testProjectFinanceUserCanSaveCreditReport() {
+
+        Long projectId = 1L;
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
+            }
+        });
+    }
+
+    @Test
+    public void testProjectFinanceUserCanViewCreditReport() {
+
+        Long projectId = 1L;
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanViewCreditReport(projectId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewCreditReport(projectId, user));
+            }
+        });
     }
 
     @Override
