@@ -72,7 +72,11 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                         </span>
                     </label>
-                    <select th:disabled="${isSetupAndLive}" class="form-control width-x-large" th:name="innovationAreaCategoryIds[__${status.index}__]" th:id="innovationAreaCategoryId-__${status.index}__" required="required"
+                    <select th:disabled="${isSetupAndLive}"
+                            class="form-control width-x-large"
+                            th:name="innovationAreaCategoryIds[__${status.index}__]"
+                            th:id="innovationAreaCategoryId-__${status.index}__"
+                            required="required"
                             data-required-errormessage="Please select an innovation area">
                         <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == null}">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == innovationArea.id}">Innovation Area</option>
@@ -82,11 +86,18 @@
                 </div>
             </th:block>
             <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
-                <div class="form-group" th:id="innovation-row-0">
+                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds[0]')}? 'form-group error':'form-group'" th:id="innovation-row-0">
                     <label class="form-label" th:for="innovationAreaCategoryId-0">
                         <span class="form-label-bold">Innovation area</span>
+                        <span th:if="${#fields.hasErrors('innovationAreaCategoryIds[0]')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <select th:disabled="${isSetupAndLive}" class="form-control width-x-large" name="innovationAreaCategoryIds[0]" id="innovationAreaCategoryId-0" required="required"
+                    <select th:disabled="${isSetupAndLive}"
+                            class="form-control width-x-large"
+                            name="innovationAreaCategoryIds[0]"
+                            id="innovationAreaCategoryId-0"
+                            required="required"
                             data-required-errormessage="Please select an innovation area">
                         <option value="" disabled="disabled" selected="selected">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
