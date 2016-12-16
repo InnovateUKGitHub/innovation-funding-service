@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.viewmodel;
+package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * Milestone Form Entry for the Milestones form.
  */
-public class MilestoneViewModel {
+public class MilestoneRowForm {
     @Range(min = 1, max = 31)
     private Integer day;
     @Range(min = 1, max = 12)
@@ -20,19 +20,23 @@ public class MilestoneViewModel {
     private Integer year;
     private MilestoneType milestoneType;
     private String dayOfWeek;
+    private boolean editable;
 
-    private static final Log LOG = LogFactory.getLog(MilestoneViewModel.class);
+    private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 
-    public MilestoneViewModel() {
+    public MilestoneRowForm() {
         
     }
 
-    public MilestoneViewModel(MilestoneType milestoneType, LocalDateTime dateTime) {
+    public MilestoneRowForm(MilestoneType milestoneType, LocalDateTime dateTime) {
         this.setMilestoneType(milestoneType);
         if(dateTime != null) {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
+            this.editable = LocalDateTime.now().isBefore(dateTime);
+        } else {
+            this.editable = true;
         }
     }
 
@@ -80,6 +84,14 @@ public class MilestoneViewModel {
         return milestoneType.name();
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
     private String getNameOfDay() {
         String dayName =  getMilestoneDate(day, month, year);
         if(dayName == null) {
@@ -106,5 +118,13 @@ public class MilestoneViewModel {
         }
 
         return null;
+    }
+
+    public LocalDateTime getMilestoneAsDateTime(){
+        if (day != null && month != null && year != null){
+            return LocalDateTime.of(year, month, day, 0, 0);
+        } else {
+            return null;
+        }
     }
 }

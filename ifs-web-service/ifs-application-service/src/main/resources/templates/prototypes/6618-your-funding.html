@@ -27,7 +27,7 @@
           	<div class="form-group">
           		<label class="form-label" for="other-funding">
           			<span class="heading-medium">Enter your funding level (maximum 50%)</span>
-          			<span class="form-hint">Based on the project resarch area and your organisation size your maximum funding level is 50%</span>
+          			<span class="form-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
           		</label>
           		<details>
           		    <summary><span class="summary">What funding level should I enter?</span></summary>
@@ -155,7 +155,7 @@
           <div class="extra-margin">
             <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark your funding as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 

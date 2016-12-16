@@ -4,17 +4,20 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matchers;
+import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,13 +45,14 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
         this.setupFinances();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupCookieUtil();
     }
 
     @Test
     public void testChooseOrganisationType() throws Exception {
         mockMvc.perform(
                 get("/organisation/create/type/new-account-organisation-type")
-                .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/organisation-type"))
@@ -56,11 +60,12 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
                 .andExpect(model().attribute("organisationTypes", Matchers.hasSize(4)));
 
     }
+
     @Test
     public void testChooseOrganisationTypeResearchSelected() throws Exception {
         mockMvc.perform(
                 get("/organisation/create/type/new-account-organisation-type").param("organisationType", "2")
-                        .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/organisation-type"))
@@ -74,15 +79,18 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
      */
     @Test
     public void chooseOrganisationTypePostBusiness() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post("/organisation/create/type/new-account-organisation-type")
-                        .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "1")
 
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value("organisationType", URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8)))
-                .andExpect(view().name("redirect:/organisation/create/find-organisation"));
+                .andExpect(view().name("redirect:/organisation/create/find-organisation"))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
+
     }
 
 
@@ -91,14 +99,16 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
      */
     @Test
     public void chooseOrganisationTypePostResearch() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post("/organisation/create/type/new-account-organisation-type")
-                        .cookie(new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH))
+                        .cookie(new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "2")
 
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value("organisationType", URLEncoder.encode("{\"organisationType\":2}", CharEncoding.UTF_8)))
-                .andExpect(view().name("redirect:/organisation/create/type/new-account-organisation-type/?organisationType=2"));
+                .andExpect(view().name("redirect:/organisation/create/type/new-account-organisation-type/?organisationType=2"))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode("{\"organisationType\":2}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
     }
 }
