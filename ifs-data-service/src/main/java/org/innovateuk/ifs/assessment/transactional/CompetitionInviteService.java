@@ -74,6 +74,11 @@ public interface CompetitionInviteService {
     ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    @SecuredBySpring(value="INVITE_NEW_USERS",
+            description = "The Competition Admin user, or the Competition Executive user can create competition invites for new users")
+    ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId);
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     @SecuredBySpring(value = "INVITE_EXISTING_USER",
             description = "The Competition Admin user, or the Competition Executive user can create a competition invite for an existing user")
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
@@ -87,7 +92,4 @@ public interface CompetitionInviteService {
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
     ServiceResult<Void> deleteInvite(String email, long competitionId);
-
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
-    ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId);
 }
