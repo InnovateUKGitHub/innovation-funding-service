@@ -251,7 +251,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         				.param("openingDateMonth", "1")
         				.param("openingDateYear", "2016")
         				.param("innovationSectorCategoryId", "1")
-        				.param("innovationAreaCategoryIds", "1")
+        				.param("innovationAreaCategoryIds", "1", "2", "3")
         				.param("competitionTypeId", "1")
         				.param("leadTechnologistUserId", "1")
                         .param("title", "My competition")

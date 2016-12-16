@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -78,7 +77,6 @@ public class InitialDetailsSectionSaverTest {
 
         CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().withId(innovationAreaId).build();
         competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
-//      competitionSetupForm.setMarkAsCompleteAction(true);
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());
