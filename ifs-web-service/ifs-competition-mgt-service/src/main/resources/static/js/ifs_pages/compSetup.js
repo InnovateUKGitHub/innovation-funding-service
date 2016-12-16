@@ -96,12 +96,13 @@ IFS.competitionManagement.setup = (function() {
       else {
         //hide and remove values of the repeating fields because it is not a sector competition
 
-        //this has to be improved with a promise instead of this setTimeout.
-        jQuery('[data-remove-row="innovationArea"]').each(function() {
+        jQuery(jQuery('[data-remove-row="innovationArea"]').get().reverse()).each(function() {
+          //this has to be improved with a promise instead of this setTimeout.
+          //clicking last to first to not deal with back-end index timing issues
           var deleteButton = jQuery(this);
           setTimeout(function() {
             deleteButton.click();
-          }, 50);
+          }, 100);
         });
         jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'true');
       }
