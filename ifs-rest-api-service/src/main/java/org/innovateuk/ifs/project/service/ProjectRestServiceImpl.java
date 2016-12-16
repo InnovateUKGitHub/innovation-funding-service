@@ -191,7 +191,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Void> removeGeneratedGrantOfferLetter(Long projectId) {
+    public RestResult<Void> removeGrantOfferLetter(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/grant-offer");
     }
 

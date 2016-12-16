@@ -43,6 +43,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project/{projectId}/partner/documents")
 public class ProjectOtherDocumentsController {
 
+
     private static final String FORM_ATTR = "form";
 
     @Autowired
@@ -60,7 +61,7 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/confirm", method = GET)
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                           @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
@@ -71,7 +72,7 @@ public class ProjectOtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
-    public String submitPatnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
+    public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
         projectService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToOtherDocumentsPage(projectId);
     }
