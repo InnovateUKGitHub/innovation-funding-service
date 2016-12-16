@@ -209,12 +209,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return PENDING;
         }
 
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
-            return PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
-            return COMPLETE;
+        if (project.getOfferSubmittedDate() != null) {
+            if (golWorkflowHandler.isApproved(project)) {
+                return COMPLETE;
+            }
         }
 
         if(project.getOfferSubmittedDate() != null) {

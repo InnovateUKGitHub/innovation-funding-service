@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -14,6 +15,12 @@ import java.util.Optional;
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
  */
 public interface CompetitionInviteService {
+
+
+    @SecuredBySpring(value = "GET_CREATED_INVITE",
+            description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
+    ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
@@ -74,7 +81,7 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "SEND_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('competition_executive')")
-    ServiceResult<Void> sendInvite(long inviteId);
+    ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
 
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")
