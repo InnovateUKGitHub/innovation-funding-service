@@ -364,8 +364,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getProjectFinance(projectId, organisationId).andOnSuccessReturn(projectFinance ->
-                new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus()));
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccessReturn(projectFinance -> {
+                    ViabilityResource viabilityResource = new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus());
+                    viabilityResource.setViabilityApprovalDate(projectFinance.getViabilityApprovalDate());
+                    setViabilityApprovalUser(viabilityResource, projectFinance.getViabilityApprovalUser());
+
+                    return viabilityResource;
+                });
+    }
+
+    private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
+
+        if (viabilityApprovalUser != null) {
+            viabilityResource.setViabilityApprovalUserFirstName(viabilityApprovalUser.getFirstName());
+            viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
+        }
     }
 
     @Override
@@ -374,9 +388,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
-               validateViability(projectFinance, viability, viabilityStatus).andOnSuccess(() ->
-               saveViability(projectFinance, viability, viabilityStatus)));
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityStatus)
+                .andOnSuccess(() -> setViabilityApprovalUser(projectFinance))
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus)));
     }
 
     private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
@@ -392,10 +407,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
+    private ServiceResult<Void> setViabilityApprovalUser(ProjectFinance projectFinance) {
+        return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> projectFinance.setViabilityApprovalUser(currentUser));
+    }
+
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
 
         projectFinance.setViability(viability);
         projectFinance.setViabilityStatus(viabilityStatus);
+        projectFinance.setViabilityApprovalDate(LocalDate.now());
 
         projectFinanceRepository.save(projectFinance);
 
