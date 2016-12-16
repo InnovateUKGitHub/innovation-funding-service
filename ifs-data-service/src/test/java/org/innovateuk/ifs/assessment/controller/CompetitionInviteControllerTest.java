@@ -380,7 +380,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void deleteInvite() throws Exception {
-        String email = "firstname.lastname@email.com";
+        String email = "firstname.lastname@example.com";
         long competitionId = 1L;
 
         when(competitionInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
