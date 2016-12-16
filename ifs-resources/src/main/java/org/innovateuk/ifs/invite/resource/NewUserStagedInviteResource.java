@@ -2,10 +2,13 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class NewUserStagedInviteResource extends StagedInviteResource {
 
+    @NotEmpty
     private String name;
+    @NotEmpty
     private long innovationCategoryId;
 
     public NewUserStagedInviteResource() {
