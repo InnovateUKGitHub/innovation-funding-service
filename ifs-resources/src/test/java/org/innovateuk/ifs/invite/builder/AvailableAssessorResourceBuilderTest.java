@@ -19,8 +19,7 @@ public class AvailableAssessorResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        String expectedFirstName = "firstName";
-        String expectedLastName = "lastName";
+        String expectedName = "name";
         CategoryResource expectedInnovationArea = newCategoryResource().build();
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
@@ -28,8 +27,7 @@ public class AvailableAssessorResourceBuilderTest {
         Boolean expectedAdded = TRUE;
 
         AvailableAssessorResource availableAssessorResource = newAvailableAssessorResource()
-                .withFirstName(expectedFirstName)
-                .withLastName(expectedLastName)
+                .withName(expectedName)
                 .withInnovationArea(expectedInnovationArea)
                 .withCompliant(expectedCompliant)
                 .withEmail(expectedEmail)
@@ -37,8 +35,7 @@ public class AvailableAssessorResourceBuilderTest {
                 .withAdded(expectedAdded)
                 .build();
 
-        assertEquals(expectedFirstName, availableAssessorResource.getFirstName());
-        assertEquals(expectedLastName, availableAssessorResource.getLastName());
+        assertEquals(expectedName, availableAssessorResource.getName());
         assertEquals(expectedInnovationArea, availableAssessorResource.getInnovationArea());
         assertEquals(expectedCompliant, availableAssessorResource.isCompliant());
         assertEquals(expectedEmail, availableAssessorResource.getEmail());
@@ -48,8 +45,7 @@ public class AvailableAssessorResourceBuilderTest {
 
     @Test
     public void buildMany() {
-        String[] expectedFirstNames = {"firstName1", "firstName2"};
-        String[] expectedLastNames = {"lastName1", "lastName2"};
+        String[] expectedNames = {"name1", "name2"};
         CategoryResource[] expectedInnovationAreas = newCategoryResource().buildArray(2, CategoryResource.class);
         Boolean[] expectedCompliants = {TRUE, FALSE};
         String[] expectedEmails = {"email1", "email2"};
@@ -57,8 +53,7 @@ public class AvailableAssessorResourceBuilderTest {
         Boolean[] expectedAddeds = {TRUE, FALSE};
 
         List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
-                .withFirstName(expectedFirstNames)
-                .withLastName(expectedLastNames)
+                .withName(expectedNames)
                 .withInnovationArea(expectedInnovationAreas)
                 .withCompliant(expectedCompliants)
                 .withEmail(expectedEmails)
@@ -67,8 +62,7 @@ public class AvailableAssessorResourceBuilderTest {
                 .build(2);
 
         AvailableAssessorResource first = availableAssessorResources.get(0);
-        assertEquals(expectedFirstNames[0], first.getFirstName());
-        assertEquals(expectedLastNames[0], first.getLastName());
+        assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedInnovationAreas[0], first.getInnovationArea());
         assertEquals(expectedCompliants[0], first.isCompliant());
         assertEquals(expectedEmails[0], first.getEmail());
@@ -76,8 +70,7 @@ public class AvailableAssessorResourceBuilderTest {
         assertEquals(expectedAddeds[0], first.isAdded());
 
         AvailableAssessorResource second = availableAssessorResources.get(1);
-        assertEquals(expectedFirstNames[1], second.getFirstName());
-        assertEquals(expectedLastNames[1], second.getLastName());
+        assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedInnovationAreas[1], second.getInnovationArea());
         assertEquals(expectedCompliants[1], second.isCompliant());
         assertEquals(expectedEmails[1], second.getEmail());
