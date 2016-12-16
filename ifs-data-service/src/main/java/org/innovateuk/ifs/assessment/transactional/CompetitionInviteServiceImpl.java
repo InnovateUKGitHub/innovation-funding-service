@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.lang.Boolean.TRUE;
@@ -101,13 +102,14 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (invite.getStatus() != CREATED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
             NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
             Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR,
                     asMap("name", invite.getName(),
                             "competitionName", invite.getTarget().getName(),
                             "innovationArea", invite.getInnovationArea().getName(),
-                            "acceptsDate", invite.getTarget().getAssessorAcceptsDate().toString(),
-                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().toString()));
+                            "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
+                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter)));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
             AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
             resource.setEmailContent(content);
