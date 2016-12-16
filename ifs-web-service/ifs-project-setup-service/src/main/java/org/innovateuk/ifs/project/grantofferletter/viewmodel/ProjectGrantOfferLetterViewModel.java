@@ -105,4 +105,6 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     public boolean isProjectManager() {
         return projectManager;
     }
+
+    public boolean isGrantOfferLetterSent() { return isGrantOfferLetterSent; }
 }
