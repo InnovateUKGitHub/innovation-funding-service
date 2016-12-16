@@ -80,9 +80,9 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/inviteNewUsers/{competitionId}", method = RequestMethod.POST)
-    public RestResult<Void> inviteNewUsers(@Valid @RequestBody List<NewUserStagedInviteResource> newUserStagedInvites,
+    public RestResult<Void> inviteNewUsers(@Valid @RequestBody NewUserStagedInvitesResource newUserStagedInvites,
                                            @PathVariable Long competitionId) {
-        return competitionInviteService.inviteNewUsers(newUserStagedInvites, competitionId).toPostWithBodyResponse();
+        return competitionInviteService.inviteNewUsers(newUserStagedInvites.getInvites(), competitionId).toPostWithBodyResponse();
     }
 
     @RequestMapping(value = "/deleteInvite", method = RequestMethod.DELETE)
