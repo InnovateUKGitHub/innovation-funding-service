@@ -79,7 +79,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
     public void setUp() {
         List<Milestone> milestones = newMilestone()
                 .withDate(now().minusDays(1))
-                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED, ASSESSOR_ACCEPTS).build(4);
         milestones.addAll(newMilestone()
                 .withDate(now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
@@ -807,6 +807,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
+                .withId(1L,2L,3L,4L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero")
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com")
                 .withUser(compliantUser, nonCompliantUserNoSkills, nonCompliantUserNoAffiliations, nonCompliantUserNoContract)
@@ -814,6 +815,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build(4);
 
         CompetitionInvite newUserInvite = newCompetitionInvite()
+                .withId(5L)
                 .withName("Christopher Soames")
                 .withEmail("christopher@example.com")
                 .withUser()
@@ -821,6 +823,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withInviteId(1L,2L,3L,4L,5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
                 .withInnovationArea(null, null, null, null, innovationAreaCategoryResource)
                 .withCompliant(true, false, false, false, false)
