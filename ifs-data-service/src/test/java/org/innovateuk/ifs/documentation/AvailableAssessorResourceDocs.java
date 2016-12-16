@@ -7,8 +7,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class AvailableAssessorResourceDocs {
 
     public static final FieldDescriptor[] availableAssessorResourceFields = {
-            fieldWithPath("firstName").description("First name of the assessor"),
-            fieldWithPath("lastName").description("Last name of the assessor"),
+            fieldWithPath("name").description("Name of the assessor"),
             fieldWithPath("innovationArea").description("Innovation area of the assessor"),
             fieldWithPath("compliant").description("Flag to signify if the assessor is compliant. An assessor is compliant if, and only if they’ve completed their Skills and Business Type, and they’ve completed their DoI, and they’ve signed a Contract."),
             fieldWithPath("email").description("E-mail address of the assessor"),
