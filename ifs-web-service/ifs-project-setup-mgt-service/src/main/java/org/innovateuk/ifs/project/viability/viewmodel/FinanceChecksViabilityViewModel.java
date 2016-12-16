@@ -106,7 +106,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowApprovalMessage() {
-        return approverName != null;
+        return isApproved();
     }
 
     public String getApproverName() {
@@ -115,5 +115,17 @@ public class FinanceChecksViabilityViewModel {
 
     public LocalDate getApprovalDate() {
         return approvalDate;
+    }
+
+    public boolean isShowSaveAndContinueButton() {
+        return !isApproved();
+    }
+
+    public boolean isShowBackToFinanceCheckButton() {
+        return isApproved();
+    }
+
+    private boolean isApproved() {
+        return approverName != null;
     }
 }

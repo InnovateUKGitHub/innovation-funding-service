@@ -98,7 +98,8 @@
           <th:block  th:include="fragments/modals :: modal-confirm-viability" />
       </th:block>
       <hr/>
-      <button class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
+      <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
+      <a class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
