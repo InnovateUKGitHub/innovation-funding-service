@@ -3,6 +3,7 @@ package org.innovateuk.ifs.notifications.service.senders.email;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
@@ -12,8 +13,11 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import javax.sql.rowset.serial.SerialClob;
+import java.util.*;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -49,16 +53,41 @@ public class EmailNotificationSender implements NotificationSender {
 
         return handlingErrors(new Error(EMAILS_NOT_SENT_MULTIPLE), () -> {
 
-            EmailAddress from = fromNotificationSource(notification.getFrom());
+            Map<NotificationTarget, EmailContent> templates = renderTemplates(notification).getSuccessObject();
 
-            List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
-                find(getSubject(notification, recipient), getPlainTextBody(notification, recipient), getHtmlBody(notification, recipient)).andOnSuccess((subject, plainTextBody, htmlBody) ->
-                    emailService.sendEmail(from, singletonList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
-                )
-            );
+            List<ServiceResult<List<EmailAddress>>> results = new ArrayList<>();
+
+            for (Map.Entry<NotificationTarget, EmailContent> template : templates.entrySet()) {
+                results.add(sendEmailWithContent(notification, template.getKey(), template.getValue()));
+            }
 
             return processAnyFailuresOrSucceed(results, serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)), serviceSuccess(notification));
         });
+    }
+
+    @Override
+    public ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {
+        Map<NotificationTarget, EmailContent> contents = new HashMap<>();
+
+        for (NotificationTarget recipient : notification.getTo()) {
+            String subject = getSubject(notification, recipient).getSuccessObject();
+            String plainTextBody = getPlainTextBody(notification, recipient).getSuccessObject();
+            String htmlBody = getHtmlBody(notification, recipient).getSuccessObject();
+
+            contents.put(recipient, new EmailContent(subject, plainTextBody, htmlBody));
+        }
+
+        return serviceSuccess(contents);
+    }
+
+    @Override
+    public ServiceResult<List<EmailAddress>> sendEmailWithContent(Notification notification, NotificationTarget recipient, EmailContent emailContent) {
+        return emailService.sendEmail(
+                fromNotificationSource(notification.getFrom()),
+                singletonList(fromNotificationTarget(recipient)),
+                emailContent.getSubject(),
+                emailContent.getPlainText(),
+                emailContent.getHtmlText());
     }
 
     private ServiceResult<String> getSubject(Notification notification, NotificationTarget recipient) {
