@@ -34,7 +34,7 @@ Project finance user uploads the grant offer letter
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     When the user clicks the button/link    id=send-gol
     And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
-    Then the user should see the text in the page    The grant offer letter is now available for review
+    Then the user should not see the element  jQuery=.button:contains("Send to project team")
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
@@ -172,7 +172,7 @@ all the other sections of the project are completed
     the project finance user has approved bank details
     other documents have been uploaded and approved
     project finance generates the Spend Profile
-    all parteners submit their Spend Profile
+    all partners submit their Spend Profile
     proj finance approves the spend profiles
 
 the project finance user has approved bank details
@@ -210,7 +210,7 @@ project finance generates the Spend Profile
     the user clicks the button/link  jQuery=.button:contains("Generate Spend Profile")
     the user clicks the button/link  jQuery=.button:contains("Generate spend profile")
 
-all parteners submit their Spend Profile
+all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
     the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
