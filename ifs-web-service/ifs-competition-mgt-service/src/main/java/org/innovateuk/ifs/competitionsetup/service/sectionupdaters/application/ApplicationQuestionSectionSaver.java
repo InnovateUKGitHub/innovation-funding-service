@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class ApplicationQuestionSectionSaver extends AbstractApplicationSectionSaver implements CompetitionSetupSubsectionSaver {
 
 	@Override
-	public CompetitionSetupSubsection sectionToSave() {
+	public CompetitionSetupSubsection subsectionToSave() {
 		return CompetitionSetupSubsection.QUESTIONS;
 	}
 
