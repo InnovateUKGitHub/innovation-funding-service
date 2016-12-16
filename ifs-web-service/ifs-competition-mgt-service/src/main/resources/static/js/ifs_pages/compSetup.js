@@ -20,6 +20,11 @@ IFS.competitionManagement.setup = (function() {
         IFS.competitionManagement.setup.disableAlreadySelectedOptions();
       });
 
+      IFS.competitionManagement.setup.sectorCompetitionInnovationAreas('[name="competitionTypeId"]');
+      jQuery(".competition-management.competition-setup").on('change', '[name="competitionTypeId"]', function() {
+        IFS.competitionManagement.setup.sectorCompetitionInnovationAreas(this);
+      });
+
     },
     handleCompetitionCode : function() {
       jQuery(document).on('click', '#generate-code', function() {
@@ -64,12 +69,10 @@ IFS.competitionManagement.setup = (function() {
     handleInnovationSector : function(pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val();
       if(sector === null){
-        jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'true');
         var innovationCategory = jQuery('[name^="innovationAreaCategoryIds"]');
         innovationCategory.html('<option value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>');
       }
       else {
-        jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'false');
         var url = window.location.protocol + "//" + window.location.host+'/management/competition/setup/getInnovationArea/'+sector;
         jQuery.ajaxProtected({
           type: "GET",
@@ -83,6 +86,24 @@ IFS.competitionManagement.setup = (function() {
             jQuery(innovationCategory).trigger('ifsValidate');
           }
         });
+      }
+    },
+    sectorCompetitionInnovationAreas : function(el) {
+      var isSectorCompetition = (jQuery(el).val() == 5);
+      if(isSectorCompetition){
+        jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'false');
+      }
+      else {
+        //hide and remove values of the repeating fields because it is not a sector competition
+
+        //this has to be improved with a promise instead of this setTimeout.
+        jQuery('[data-remove-row="innovationArea"]').each(function() {
+          var deleteButton = jQuery(this);
+          setTimeout(function() {
+            deleteButton.click();
+          }, 50);
+        });
+        jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'true');
       }
     },
     fillInnovationAreas : function(currentAreas) {
