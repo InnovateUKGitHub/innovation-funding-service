@@ -535,6 +535,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withInnovationCategoryId(innovationArea.getId())
                 .build();
 
+        loginCompAdmin();
         RestResult<CompetitionInviteResource> serviceResult = controller.inviteNewUser(newUserStagedInvite);
 
         assertTrue(serviceResult.isSuccess());
@@ -551,6 +552,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
 
+        loginCompAdmin();
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
         assertTrue(serviceResult.isSuccess());
@@ -563,6 +565,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         Category innovationArea = categoryRepository.findOne(5L);
 
+        loginCompAdmin();
         List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competitionId, innovationArea.getId());
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competitionId);
 
@@ -575,6 +578,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         long categoryId = 10000L;
         assertNull(categoryRepository.findOne(categoryId));
 
+        loginCompAdmin();
         List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), categoryId);
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -592,8 +596,8 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         competitionInviteRepository.save(new CompetitionInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
 
+        loginCompAdmin();
         List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
-
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
         assertFalse(serviceResult.isSuccess());

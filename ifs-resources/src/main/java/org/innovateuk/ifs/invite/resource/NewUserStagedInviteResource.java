@@ -6,9 +6,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class NewUserStagedInviteResource extends StagedInviteResource {
 
-    @NotEmpty
+    @NotEmpty(message = "validation.newUserStagedInviteResource.name.required")
     private String name;
-    @NotEmpty
+
     private long innovationCategoryId;
 
     public NewUserStagedInviteResource() {
