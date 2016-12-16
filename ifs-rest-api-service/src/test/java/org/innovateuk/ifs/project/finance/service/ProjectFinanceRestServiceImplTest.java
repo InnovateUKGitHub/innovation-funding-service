@@ -182,4 +182,24 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         setupPostWithRestResultVerifications(postUrl, Void.class);
     }
+
+    @Test
+    public void testIsCreditReportConfirmed() {
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/credit-report", Boolean.class, true);
+        RestResult<Boolean> results = service.isCreditReportConfirmed(123L, 456L);
+        assertTrue(results.getSuccessObject());
+    }
+
+    @Test
+    public void testSaveCreditReportConfirmed() {
+
+        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/credit-report/true";
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.saveCreditReportConfirmed(123L, 456L, true);
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
+    }
 }

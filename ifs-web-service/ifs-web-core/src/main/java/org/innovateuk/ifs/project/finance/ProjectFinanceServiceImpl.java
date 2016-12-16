@@ -97,6 +97,6 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
     @Override
     public ServiceResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
-        return projectFinanceRestService.setCreditReportConfirmed(projectId, organisationId, confirmed).toServiceResult();
+        return projectFinanceRestService.saveCreditReportConfirmed(projectId, organisationId, confirmed).toServiceResult();
     }
 }

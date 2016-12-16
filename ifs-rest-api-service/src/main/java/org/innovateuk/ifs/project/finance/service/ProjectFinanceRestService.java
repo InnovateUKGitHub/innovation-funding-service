@@ -46,5 +46,5 @@ public interface ProjectFinanceRestService {
 
     RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId);
 
-    RestResult<Void> setCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
+    RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
 }

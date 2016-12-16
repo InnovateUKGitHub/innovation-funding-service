@@ -135,6 +135,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(viability);
+        when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -173,6 +174,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
+        when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).
@@ -198,7 +200,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         FinanceChecksViabilityForm form = (FinanceChecksViabilityForm) model.get("form");
 
         assertEquals(viability.getViabilityStatus(), form.getRagStatus());
-        assertEquals(false, form.isCreditReportConfirmed());
+        assertEquals(true, form.isCreditReportConfirmed());
         assertEquals(false, form.isConfirmViabilityChecked());
     }
 
@@ -208,17 +210,22 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long projectId = 123L;
         Long organisationId = 456L;
 
+        when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, true)).
+                thenReturn(serviceSuccess());
+
         when(projectFinanceService.saveViability(projectId, organisationId, Viability.APPROVED, ViabilityStatus.RED)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
             post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                 param("confirm-viability", "").
+                param("confirmViabilityChecked", "true").
                 param("creditReportConfirmed", "true").
                 param("ragStatus", "RED")).
             andExpect(status().is3xxRedirection()).
             andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
+        verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
         verify(projectFinanceService).saveViability(projectId, organisationId, Viability.APPROVED, ViabilityStatus.RED);
     }
 
@@ -228,17 +235,46 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long projectId = 123L;
         Long organisationId = 456L;
 
+        when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, false)).
+                thenReturn(serviceSuccess());
+
         when(projectFinanceService.saveViability(projectId, organisationId, Viability.PENDING, ViabilityStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                         param("save-and-continue", "").
-                        param("creditReportConfirmed", "true").
+                        param("creditReportConfirmed", "false").
                         param("ragStatus", "UNSET")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
+        verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, false);
+        verify(projectFinanceService).saveViability(projectId, organisationId, Viability.PENDING, ViabilityStatus.UNSET);
+    }
+
+    @Test
+    public void testSaveAndContinueWhenConfirmViabilityHasBeenUnselected() throws Exception {
+
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, true)).
+                thenReturn(serviceSuccess());
+
+        when(projectFinanceService.saveViability(projectId, organisationId, Viability.PENDING, ViabilityStatus.UNSET)).
+                thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                        param("save-and-continue", "").
+                        param("confirmViabilityChecked", "false").
+                        param("creditReportConfirmed", "true").
+                        param("ragStatus", "RED")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
+
+        verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
         verify(projectFinanceService).saveViability(projectId, organisationId, Viability.PENDING, ViabilityStatus.UNSET);
     }
 

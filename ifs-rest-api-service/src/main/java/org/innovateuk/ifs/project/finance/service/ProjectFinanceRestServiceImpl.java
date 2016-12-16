@@ -106,7 +106,7 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> setCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
+    public RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
         String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report/" + confirmed;
         return postWithRestResult(url);
     }
