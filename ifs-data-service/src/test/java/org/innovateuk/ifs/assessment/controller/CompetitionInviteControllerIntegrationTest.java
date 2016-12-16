@@ -82,6 +82,8 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build())
                 .getId();
 
+        loginCompAdmin();
+
         RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
         assertTrue(serviceResult.isSuccess());
 
@@ -531,6 +533,8 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withPlainText("plain")
                 .withHtmlText("html")
                 .build();
+
+        loginCompAdmin();
 
         RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
         assertTrue(serviceResult.isSuccess());

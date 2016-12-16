@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.email.resource;
 
-/**
- * Created by eamonnharrison on 14/12/2016.
- */
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class EmailContent {
 
     private String subject;
@@ -44,5 +44,29 @@ public class EmailContent {
 
     public void setHtmlText(String htmlText) {
         this.htmlText = htmlText;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EmailContent that = (EmailContent) o;
+
+        return new EqualsBuilder()
+                .append(subject, that.subject)
+                .append(plainText, that.plainText)
+                .append(htmlText, that.htmlText)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(subject)
+                .append(plainText)
+                .append(htmlText)
+                .toHashCode();
     }
 }
