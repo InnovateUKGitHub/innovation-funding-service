@@ -6,7 +6,10 @@ import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.resource.*;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -111,6 +114,21 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         }
         researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));
         return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
+    public List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId) {
+        List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
+        List<ProjectFinanceResource> financeResources = new ArrayList<>();
+
+        for(ProjectFinance finance : finances) {
+            ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getName());
+            EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(), finance.getProject().getApplication().getCompetition()));
+            financeResource.setFinanceOrganisationDetails(costs);
+            financeResources.add(financeResource);
+        }
+        return financeResources;
     }
 
     private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
