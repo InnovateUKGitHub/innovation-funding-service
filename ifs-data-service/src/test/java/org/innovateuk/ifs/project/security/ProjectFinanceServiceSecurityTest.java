@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -302,7 +303,12 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
 
         @Override
-        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, Boolean creditReportPresent) { return null; }
+        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean creditReportPresent) { return null; }
+
+        @Override
+        public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
+            return null;
+        }
     }
 
     private List<UserRoleType> getNonProjectFinanceUserRoles() {

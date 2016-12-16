@@ -478,6 +478,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
+            return null;
+        }
     }
 }
 

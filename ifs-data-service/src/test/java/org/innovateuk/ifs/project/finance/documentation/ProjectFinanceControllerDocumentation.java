@@ -5,14 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -36,7 +40,21 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.SpendProfileDocs.*;
 import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
+import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
+import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
+import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.finance.documentation.ProjectFinanceResponseFields.projectFinanceFields;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -373,11 +391,12 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         responseFields(viabilityResourceFields)
                 ));
     }
+
     @Test
     public void saveViability() throws Exception {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
         Viability viability = Viability.APPROVED;
         ViabilityStatus viabilityStatus = ViabilityStatus.GREEN;
 
@@ -427,6 +446,101 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         )
                 ));
     }
+
+    @Test
+    public void getProjectFinances() throws Exception {
+
+        Long projectId = 1L;
+
+        OrganisationResource industrialOrganisation = newOrganisationResource().
+                withName("Industrial Org").
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withCompanyHouseNumber("123456789").
+                build();
+
+        OrganisationResource academicOrganisation = newOrganisationResource().
+                withName("Academic Org").
+                withOrganisationSize(OrganisationSize.LARGE).
+                withCompanyHouseNumber("987654321").
+                build();
+
+        ProjectResource project = newProjectResource().build();
+
+        Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                        newLabourCost().
+                                withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                                withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
+                                withLabourDays(100, 120, 250).
+                                build(3)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                        newMaterials().
+                                withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                                withQuantity(1, 2).
+                                build(2)).
+                        build(),
+                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                        newGrantClaim().
+                                withGrantClaimPercentage(30).
+                                build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "Some source of funding").
+                                withFundingAmount(null, BigDecimal.valueOf(1000)).
+                                build(2)).
+                        build());
+
+        Map<FinanceRowType, FinanceRowCostCategory> academicOrganisationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                        newLabourCost().
+                                withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
+                                withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
+                                withLabourDays(100, 120, 120, 250).
+                                withName("direct_staff", "direct_staff", "exceptions_staff").
+                                build(4)).
+                        build(),
+                FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
+                        newOtherCost().
+                                withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                                withName("direct_costs", "exceptions_costs").
+                                build(2)).
+                        build(),
+                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
+                        newGrantClaim().
+                                withGrantClaimPercentage(100).
+                                build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "Some source of funding").
+                                withFundingAmount(null, BigDecimal.valueOf(1000)).
+                                build(2)).
+                        build());
+
+        List<ProjectFinanceResource> expectedFinances = newProjectFinanceResource().
+                withProject(project.getId()).
+                withOrganisation(academicOrganisation.getId(), industrialOrganisation.getId()).
+                withFinanceOrganisationDetails(academicOrganisationFinances, industrialOrganisationFinances).
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                build(2);
+
+        when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(serviceSuccess(expectedFinances));
+
+        mockMvc.perform(get("/project/{projectId}/project-finances", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedFinances)))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which finance totals are being retrieved")
+                        ),
+                        responseFields(projectFinanceFields)
+                ));
+    }
+
     private Map<Long, BigDecimal> buildEligibleCostPerCategoryMap() {
 
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = new LinkedHashMap<>();
