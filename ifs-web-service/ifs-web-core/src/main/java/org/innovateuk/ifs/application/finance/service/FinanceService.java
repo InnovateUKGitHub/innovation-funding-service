@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.application.finance.service;
 
-import java.util.List;
-
-import org.springframework.core.io.ByteArrayResource;
-
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.springframework.core.io.ByteArrayResource;
+
+import java.util.List;
 
 /**
  * {@code FinanceService} handles the finances for each of the applications. These finances

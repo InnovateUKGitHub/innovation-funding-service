@@ -26,7 +26,11 @@ IFS.core.disableSubmitUntilChecked = (function() {
       //if all if them are checked it is true
       var allChecked = true;
       jQuery('['+s.checkBoxesAttribute+'="'+submitButton+'"]').each(function() {
-        if(jQuery(this).prop('checked') === false){
+        var inst = jQuery(this);
+        var nonCheckedCheckbox = inst.is('[type="checkbox"]') && (inst.prop('checked') === false);
+        var EmptySelectValue = inst.is('select') && inst.val() === "UNSET";
+
+        if(nonCheckedCheckbox || EmptySelectValue){
           allChecked = false;
         }
       });

@@ -26,6 +26,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5441 As a Project Finance team member I want to be able to export submitted spend profile tables from academic organisations so that these may be distributed offline to Lead Technologists and Monitoring Officers
 ...
 ...               INFUND-6046 Spend Profile should have a link when Done
+...
+...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -349,6 +351,41 @@ Project Manager can choose cancel on the dialogue
     And the user clicks the button/link     jQuery=.button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Submit project spend profile")
 
+Project Manager can see the button Allow partner to edit
+    [Documentation]    INFUND-6350
+    [Tags]
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    Then the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
+    And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
+    Then the user clicks the button/link    link=${Meembee_Name}
+    And the user should see the element     jQuery=.button:contains("Allow partner to edit")
+
+Other partners cannot enable edit-ability by themselves
+    [Documentation]    INFUND-6350
+    [Tags]
+    [Setup]  log in as a different user       ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    When the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
+    Then the user should not see the element  jQuery=.button:contains("Allow partner to edit")
+
+PM can return edit rights to partners
+    [Documentation]    INFUND-6350
+    [Tags]    HappyPath
+    [Setup]  log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
+    When the user clicks the button/link     jQuery=.button:contains("Allow partner to edit")
+    Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
+
+Partner can receive edit rights to his SP
+    [Documentation]    INFUND-6350
+    [Tags]    HappyPath
+    [Setup]  log in as a different user     ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=li.require-action:nth-child(6)
+    When the user clicks the button/link    link=Spend profile
+    Then the user should see the element    jQuery=.button:contains("Edit spend profile")
+    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+
 Project Manager can submit the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
@@ -495,6 +532,7 @@ Project Finance still has a link to the spend profile after approval
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
+    [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
 
 *** Keywords ***
