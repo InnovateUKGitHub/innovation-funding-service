@@ -34,7 +34,7 @@ dependencies {
 
 task client(type: Jar) {
     from(sourceSets.main.output) {
-        exclude "com/worth/ifs/Application.class"
+        exclude "org/innovateuk/ifs/Application.class"
     }
 }
 

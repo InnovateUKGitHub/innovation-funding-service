@@ -13,6 +13,18 @@ include::{snippets}/project/add-grant-offer-letter/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/add-grant-offer-letter/curl-request.adoc[]
 
+=== Remove Grant Offer Letter
+
+==== Request
+include::{snippets}/project/remove-grant-offer-letter-file/http-request.adoc[]
+include::{snippets}/project/remove-grant-offer-letter-file/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/remove-grant-offer-letter-file/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/remove-grant-offer-letter-file/curl-request.adoc[]
+
 === Upload Additional Contract File during Project Setup
 For failure cases, please refer to the documentation for Form Input Response File Uploads.
 
@@ -79,3 +91,29 @@ include::{snippets}/project/get-additional-contract-file-entry-details/http-resp
 
 ==== Curl Example
 include::{snippets}/project/get-additional-contract-file-entry-details/curl-request.adoc[]
+
+
+=== Approve or Reject Signed Grant Offer Letter
+
+==== Request
+include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/http-request.adoc[]
+include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/curl-request.adoc[]
+
+
+=== Check if Signed Grant Offer Letter Is Approved
+
+==== Request
+include::{snippets}/project/signed-grant-offer-letter/approval/http-request.adoc[]
+include::{snippets}/project/signed-grant-offer-letter/approval/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/signed-grant-offer-letter/approval/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/signed-grant-offer-letter/approval/curl-request.adoc[]

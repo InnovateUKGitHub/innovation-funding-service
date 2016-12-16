@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1480 As an assessor I want to be able to update/edit my profile information so that it is up to date.
-Suite Setup       guest user log-in    &{assessor2_credentials}
+Suite Setup       Run Keywords    guest user log-in    &{assessor2_credentials}
+...               AND    User opens the edit details form
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -9,9 +10,7 @@ Resource          ../../../resources/defaultResources.robot
 Validations for invalid inputs
     [Documentation]    INFUND-1480
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("your details")
-    And the user clicks the button/link    jQuery=a:contains("Edit your details")
-    And the user should see the text in the page    Edit your details
+    Given the user should see the text in the page    Edit your details
     When The user enters text to a text field    id=firstName    Joy12
     And The user enters text to a text field    id=lastName    Archer12
     And the user enters text to a text field    id=phoneNumber    18549731414test
@@ -29,9 +28,9 @@ Validations for invalid inputs
     And the user should see an error    Please select an ethnicity
     And the user should see an error    Please select a gender
 
-Update profile
+Valid Profile Update
     [Documentation]    INFUND-1480
-    [Tags]
+    [Tags]    HappyPath
     When the assessor updates profile details
     And the user clicks the button/link    jQuery=a:contains("your details")
     Then the saved changes are visible
@@ -59,3 +58,7 @@ the saved changes are visible
     the user should see the text in the page    White
     the user should see the text in the page    Prefer not to say
     the user should see the text in the page    18549731414
+
+User opens the edit details form
+    Given the user clicks the button/link    jQuery=a:contains("your details")
+    And the user clicks the button/link    jQuery=a:contains("Edit your details")
