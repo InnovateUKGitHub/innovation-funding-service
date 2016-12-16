@@ -69,8 +69,8 @@ public enum CompetitionSetupSection {
 		if (competitionResource.isSetupAndAfterNotifications()) {
             return true;
         }
-        if (competitionResource.isSetupAndLive() && this.getEditableAfterSetupAndLive()) {
-			return false;
+        if (competitionResource.isSetupAndLive()) {
+			return !this.getEditableAfterSetupAndLive();
 		}
 
 		return false;
