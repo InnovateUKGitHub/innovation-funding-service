@@ -28,4 +28,6 @@ public interface UsersRolesService {
 
     @NotSecured(value = "TODO DW - INFUND-1555 - add correct permissions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(final Long applicationId);
+
+    ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId);
 }

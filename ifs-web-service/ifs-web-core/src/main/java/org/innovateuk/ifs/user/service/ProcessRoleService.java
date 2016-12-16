@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.service;
 
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface ProcessRoleService {
     Future<ProcessRoleResource> getById(Long id);
 
     List<ProcessRoleResource> getByApplicationId(Long applicationId);
+
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import static org.innovateuk.ifs.application.service.Futures.adapt;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.service.Futures.adapt;
 
 /**
  * This class contains methods to retrieve and store {@link ProcessRoleResource} related data,
