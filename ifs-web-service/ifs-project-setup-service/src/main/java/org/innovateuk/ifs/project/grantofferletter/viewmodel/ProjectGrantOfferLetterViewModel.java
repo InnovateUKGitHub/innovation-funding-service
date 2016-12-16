@@ -20,10 +20,11 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     private LocalDateTime submitDate;
     private boolean offerRejected;
     private boolean offerAccepted;
+    private boolean isGrantOfferLetterSent;
 
     public ProjectGrantOfferLetterViewModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                             FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                            LocalDateTime submitDate, boolean offerRejected, boolean offerAccepted, boolean projectManager) {
+                                            LocalDateTime submitDate, boolean offerRejected, boolean offerAccepted, boolean projectManager, boolean isGrantOfferLetterSent) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -34,6 +35,7 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
         this.offerRejected = offerRejected;
         this.offerAccepted = offerAccepted;
         this.projectManager = projectManager;
+        this.isGrantOfferLetterSent = isGrantOfferLetterSent;
     }
 
     @Override
@@ -113,4 +115,6 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     public boolean isProjectManager() {
         return projectManager;
     }
+
+    public boolean isGrantOfferLetterSent() { return isGrantOfferLetterSent; }
 }
