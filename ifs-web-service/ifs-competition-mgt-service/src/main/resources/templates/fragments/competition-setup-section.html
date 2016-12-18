@@ -85,11 +85,11 @@
                     <button th:if="${status.index > 0}" data-remove-row="" class="buttonlink" th:value="${status.index}" type="button">Remove</button>
                 </div>
             </th:block>
-            <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
-                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds[0]')}? 'form-group error':'form-group'" th:id="innovation-row-0">
+            <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds == null or competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
+                <div th:class="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group error':'form-group'" th:id="innovation-row-0">
                     <label class="form-label" th:for="innovationAreaCategoryId-0">
                         <span class="form-label-bold">Innovation area</span>
-                        <span th:if="${#fields.hasErrors('innovationAreaCategoryIds[0]')}" th:remove="tag">
+                        <span th:if="${#fields.hasErrors('innovationAreaCategoryIds')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}" />
                         </span>
                     </label>
