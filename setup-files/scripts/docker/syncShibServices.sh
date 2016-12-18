@@ -1,6 +1,9 @@
 #!/bin/bash
+dbip=$(oc get svc | grep ifs-database | awk '{print $2}')
+export dbip
+
 function executeMySQLCommand {
-    mysql ifs -uroot -ppassword -hifs-database -N -s -e "$1"
+    mysql ifs -uroot -ppassword -h${dbip} -N -s -e "$1"
 }
 
 export -f executeMySQLCommand
@@ -23,7 +26,7 @@ function addUserToShibboleth {
       uuid=$(echo ${response} | sed 's/.*"uuid":"\([^"]*\)".*/\1/g')
       executeMySQLCommand "update user set uid='${uuid}' where email='${emailAddress}';"
 
-      userStatus=$(executeMySQLCommand "select status from user where email='${emailAddress}';")
+      userStatus=$(executeMySQLCommand "select status from user where email='${emailAddress}';" )
 
       if [ "${userStatus}" == "ACTIVE" ]; then
         echo "User ${emailAddress} is active in MySQL, so activating them in Shibboleth"
@@ -38,10 +41,10 @@ export -f addUserToShibboleth
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
-for item in $( docker-compose ps -q shib ); do
+for item in $( docker ps -q --filter=ancestor=worth/shibboleth:1.0-SNAPSHOT ); do
     docker cp _delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
 done
 
-docker-compose exec -T shib /tmp/_delete-shib-users-remote.sh
+docker exec $( docker ps -q --filter=ancestor=worth/shibboleth:1.0-SNAPSHOT ) /tmp/_delete-shib-users-remote.sh
 
 mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
