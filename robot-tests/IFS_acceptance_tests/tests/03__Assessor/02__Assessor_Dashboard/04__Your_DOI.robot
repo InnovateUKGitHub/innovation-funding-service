@@ -14,7 +14,7 @@ Back to the dashboard link
     ...    INFUND-5432
     Given The user should see the element    link=your declaration of interest    #his checks the alert message on the top of the page
     When the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    And the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
+    And the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no

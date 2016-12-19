@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.email.builders.EmailContentResourceBuilder;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
@@ -151,7 +150,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         long inviteId = 5L;
         AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
         EmailContent email = newEmailContentResource().build();
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite",inviteId), AssessorInviteToSendResource.class, null, expected, OK);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), AssessorInviteToSendResource.class, email, expected, OK);
 
         AssessorInviteToSendResource actual = service.sendInvite(inviteId, email).getSuccessObject();
         assertEquals(expected, actual);

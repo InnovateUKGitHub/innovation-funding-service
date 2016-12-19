@@ -77,9 +77,9 @@
           </th:block>
             <!--<fieldset th:unless="${param.org != null and param.org[0] == 'growth' or param.status != null and param.status[0] == 'readOnly'}">-->
 
-          <fieldset th:unless="${param.org != null and param.org[0] == 'growth'}">
+          <fieldset th:unless="${param.org != null and param.org[0] == 'growth' or param.status != null and param.status[0] == 'readOnly'}">
 
-            <legend class="heading-medium">Staff count and turnover</legend>
+            <legend class="heading-medium visuallyhidden">Full time employees and turnover</legend>
 
             <div class="form-group">
               <label for="turnover" class="form-label-bold">
@@ -99,7 +99,7 @@
           </fieldset>
 
           <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
-            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="extra-margin-bottom">
                 <legend class="heading-medium no-margin-bottom">End of last financial year</legend>
                 <span class="form-hint">Enter the month and year that your last financial year finished.<br />For example: 12 2016</span>
                 <div class="date-group extra-margin">
@@ -170,11 +170,9 @@
                   </table>
                 </div>
               </div>
-            </fieldset>
-            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-              <legend class="heading-medium no-margin-bottom">Full time employees</legend>
-              <div class="form-group">
+              <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
                   <label for="staff-count" class="form-label-bold">
+                      Full time employees
                       <span class="form-hint">Number of full time employees at your organisation at the end of the last financial year.</span>
                   </label>
                   <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
