@@ -30,6 +30,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserProfileService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Service
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
+
+    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
@@ -101,6 +104,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
     enum Notifications {
         INVITE_ASSESSOR
     }
@@ -119,7 +125,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                             "competitionName", invite.getTarget().getName(),
                             "innovationArea", invite.getInnovationArea(),
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter)));
+                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
+                            "inviteUrl", String.format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
             AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
             resource.setEmailContent(content);
