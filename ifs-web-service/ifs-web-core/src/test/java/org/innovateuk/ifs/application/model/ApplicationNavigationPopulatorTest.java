@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -54,4 +55,19 @@ public class ApplicationNavigationPopulatorTest {
         verify(model).addAttribute(eq("nextUrl"), contains(nextQuestion.getId().toString()));
         verify(model).addAttribute(eq("nextText"), contains(nextQuestion.getShortName()));
     }
+
+    @Test
+    public void testAddAppropraiteBackURLToModel(){
+        Long applicationId = 1L;
+        Model model = mock(Model.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("referer")).thenReturn("/application/1");
+        target.addAppropriateBackURLToModel(applicationId, request, model);
+        verify(model).addAttribute(eq("backURL"), contains("/application/1"));
+
+        when(request.getHeader("referer")).thenReturn("/application/1/summary");
+        target.addAppropriateBackURLToModel(applicationId, request, model);
+        verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
+    }
+
 }
