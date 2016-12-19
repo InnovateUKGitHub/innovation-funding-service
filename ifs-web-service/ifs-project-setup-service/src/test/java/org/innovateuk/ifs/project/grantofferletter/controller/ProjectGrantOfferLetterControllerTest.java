@@ -63,6 +63,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 .withUser(userId)
                 .build(1));
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
+	    when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -79,6 +80,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         assertTrue(model.isShowSubmitButton());
         assertNull(model.getSubmitDate());
         assertFalse(model.isSubmitted());
+        assertFalse(model.isOfferApproved());
     }
 
     @Test
@@ -191,6 +193,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
 
         when(projectService.isGrantOfferLetterAlreadySent(123L)).thenReturn(serviceSuccess(Boolean.TRUE));
+ 	    when(projectService.isSignedGrantOfferLetterApproved(project.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").

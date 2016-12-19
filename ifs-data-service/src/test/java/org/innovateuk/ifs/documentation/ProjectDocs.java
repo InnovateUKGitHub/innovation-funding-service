@@ -27,7 +27,6 @@ public class ProjectDocs {
             fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
             fieldWithPath("additionalContractFile").description("Id of the File Entry that contains the additional contract file"),
             fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
-            fieldWithPath("offerRejected").description("Flag to indicate if grant offer has been rejected"),
             fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
             fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the project manager.")
     };
