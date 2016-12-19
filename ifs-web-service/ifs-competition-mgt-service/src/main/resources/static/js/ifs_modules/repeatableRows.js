@@ -1,4 +1,4 @@
-// Set up the handlers for adding and removing additional rows for declaration of interest fields
+// Set up the handlers for adding and removing additional rows for inviting assessors
 IFS.competitionManagement.repeatableRows = (function () {
   'use strict';
 
