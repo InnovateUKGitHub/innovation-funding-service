@@ -9,7 +9,7 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'initial/edit')}"
-          th:attrappend="data-autosave=${competition.setupComplete != true}?compSetup"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
@@ -29,7 +29,7 @@
                        th:field="${competitionSetupForm.title}"
                        required="required"
                        data-required-errormessage="Please enter a title"
-                       th:readonly="${competition.isSetupAndLive()}" />
+                       th:readonly="${isSetupAndLive}" />
             </div>
 
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group error':'form-group'">
@@ -39,11 +39,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or competition.isSetupAndLive()}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
+                <select class="form-control width-x-large" th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" name="competitionTypeId" id="competitionTypeId" required="required" data-required-errormessage="Please select a competition type">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.competitionTypeId == null}">Please select &hellip;</option>
                     <option th:each="(competitionType : ${competitionTypes})" th:if="${competitionType.active}" th:attr="data-stateaid=${competitionType.stateAid}" th:text="${competitionType.name}"  th:value="${competitionType.id}" th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                 </select>
-                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or competition.isSetupAndLive()}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
+                <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
 
 
@@ -55,13 +55,13 @@
                     </span>
                 </label>
 
-                <select th:disabled="${competition.isSetupAndLive()}" th:readonly="${competition.isSetupAndLive()}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
+                <select th:disabled="${isSetupAndLive}" th:readonly="${isSetupAndLive}" class="form-control width-x-large" id="innovationSectorCategoryId" name="innovationSectorCategoryId" required="required"
                         data-required-errormessage="Please select an innovation sector"
                         data-autosave-disabled="">
                     <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationSectorCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationSector : ${innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${competitionSetupForm.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
-                <input th:if="${competition.isSetupAndLive()}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
+                <input th:if="${isSetupAndLive}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
             </div>
 
             <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
@@ -71,11 +71,11 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
-                <select th:disabled="${competition.isSetupAndLive()}" class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
+                <select th:disabled="${isSetupAndLive}" class="form-control width-x-large" name="innovationAreaCategoryId" id="innovationAreaCategoryId" required="required" data-required-errormessage="Please select an innovation area">
                     <option th:if="${competitionSetupForm.innovationAreaCategoryId == null}" value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryId == null}">Please select &hellip;</option>
                     <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
-                <input type="hidden" th:if="${competition.isSetupAndLive()}" th:field="${competitionSetupForm.innovationAreaCategoryId}" />
+                <input type="hidden" th:if="${isSetupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryId}" />
             </div>
 
 
@@ -94,7 +94,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateDay">
                               <div>Day</div>
                           </label>
-                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
                                  required="required"
@@ -108,7 +108,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateMonth">
                               <span>Month</span>
                           </label>
-                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
@@ -122,7 +122,7 @@
                           <label class="form-label" for="competitionSetupForm.openingDateYear">
                               <span>Year</span>
                           </label>
-                          <input th:readonly="${competition.isSetupAndLive()}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
@@ -210,7 +210,7 @@
                 </dd>
                </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -232,8 +232,9 @@
         <h1 class="heading-xlarge">Funding information</h1>
     </div>
 
-    <form data-autosave="compSetup" th:attr="data-competition=${competition.id}" data-section="additional"
-          th:action="@{(${editable} ? '' : 'additional/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
+          th:action="@{(${editable} ? '' : 'additional/edit')}"
+          method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">
@@ -289,12 +290,12 @@
                                th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}" value=""
                                data-required-errormessage="Please enter a budget"
-                               data-min-errormessage="Please enter a valid number"/>
+                               data-min-errormessage="Please enter a valid number" />
                         <input type="hidden"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
-                               th:value="${iteration.index != 0}"/>
+                               th:value="${iteration.index != 0}" />
 
-                        <button th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="buttonlink alignright" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -331,7 +332,8 @@
                            type="text"
                            th:field="${competitionSetupForm.pafNumber}"
                            required="required"
-                           data-required-errormessage="Please enter a PAF number" />
+                           data-required-errormessage="Please enter a PAF number"
+                           th:readonly="${isSetupAndLive}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -345,7 +347,8 @@
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}"
                            required="required"
-                           data-required-errormessage="Please enter a budget code" />
+                           data-required-errormessage="Please enter a budget code"
+                           th:readonly="${isSetupAndLive}"/>
                 </div>
 
 
@@ -356,12 +359,13 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
-                    type="text" required="required"
-                    th:field="${competitionSetupForm.activityCode}"
-                    maxlength="255"
-                    data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
-                           data-required-errormessage="Please enter an activity code" />
+                    <input  th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                            type="text" required="required"
+                            th:field="${competitionSetupForm.activityCode}"
+                            maxlength="255"
+                            data-maxlength-errormessage="Activity code has a maximum length of 255 characters"
+                            data-required-errormessage="Please enter an activity code"
+                            th:readonly="${isSetupAndLive}"/>
 
                 </div>
 
@@ -379,8 +383,8 @@
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"
-                           data-autosave-disabled="data-autosave-disabled" />
-                    <button class="button button-secondary" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
+                           data-autosave-disabled="data-autosave-disabled"/>
+                    <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
@@ -405,11 +409,11 @@
                 <tr  th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
                         <td th:text="${funder.funder}">Funder Name</td>
-                        <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
+                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatDecimal(funder?.funderBudget, 0, 'COMMA', 0, 'POINT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
                         <td th:text="${funder.funder}">Co-Funder Name</td>
-                        <td class="numeric" th:text="${'&pound;' + #numbers.formatDecimal(funder.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
+                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatDecimal(funder?.funderBudget, 0, 'COMMA', 0, 'POINT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
                 </tbody>
@@ -426,7 +430,7 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -452,8 +456,10 @@
         <h1 class="heading-xlarge">Eligibility</h1>
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="eligibility">
+    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${competition.id}"
+          data-autosave="compSetup" data-section="eligibility">
 
         <fieldset th:if="${editable}" id="section-3-edit">
 
@@ -626,7 +632,7 @@
 
             </dl>
 
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
@@ -658,7 +664,7 @@
     </div>
 
     <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
-          th:attrappend="data-autosave=${competition.setupComplete != true}?compSetup"
+          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
@@ -774,7 +780,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
@@ -875,7 +881,7 @@
 
 
     <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="assessors">
+          th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
         <th:block th:if="${editable}" id="section-assessors-edit">
             <h2 class="heading-small">How many assessors are required for each application?</h2>
             <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
@@ -902,12 +908,12 @@
                     </span>
                 </label>
                 <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
-
-                       th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
+                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
                        data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="field-error"/>
+                       th:errorclass="field-error"
+                       th:readonly="${isSetupAndLive}"/>
             </div>
 
             <button class="button">Done</button>
@@ -922,7 +928,7 @@
                 <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
             </dl>
 
-           <button th:if="${!currentSection.preventEdit(competition)}" type="submit" class="button">Edit</button>
+           <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 

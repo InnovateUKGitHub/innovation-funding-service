@@ -13,17 +13,21 @@ import static java.util.Collections.emptyList;
  * It is used when recording which sections are marked as complete during the competition setup process.
  */
 public enum CompetitionSetupSection {
-	HOME("home", "Home Page", emptyList()),
-	INITIAL_DETAILS("initial", "Initial details", emptyList()),
-	ADDITIONAL_INFO("additional", "Funding information", emptyList()),
-	ELIGIBILITY("eligibility", "Eligibility", emptyList()),
-	MILESTONES("milestones", "Milestones", emptyList()),
-	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS)),
-	ASSESSORS("assessors", "Assessors", emptyList());
+	HOME("home", "Home Page", emptyList(), false),
+	INITIAL_DETAILS("initial", "Initial details", emptyList(), true),
+	ADDITIONAL_INFO("additional", "Funding information", emptyList(), true),
+	ELIGIBILITY("eligibility", "Eligibility", emptyList(), false),
+	MILESTONES("milestones", "Milestones", emptyList(), true),
+	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
+	ASSESSORS("assessors", "Assessors", emptyList(), true);
 	
 	private String path;
 	private String name;
 	private List<CompetitionSetupSubsection> subsections;
+
+
+
+	private Boolean editableAfterSetupAndLive;
 	
 	private static Map<String, CompetitionSetupSection> PATH_MAP;
 	
@@ -34,10 +38,11 @@ public enum CompetitionSetupSection {
 		}
 	};
 	
-	CompetitionSetupSection(String sectionPath, String sectionName, List<CompetitionSetupSubsection> subsections) {
+	CompetitionSetupSection(String sectionPath, String sectionName, List<CompetitionSetupSubsection> subsections, Boolean editableAfterSetupAndLive) {
 		this.path = sectionPath;
 		this.name = sectionName;
 		this.subsections = subsections;
+		this.editableAfterSetupAndLive = editableAfterSetupAndLive;
 	}
 	
 	public String getName() {
@@ -56,17 +61,18 @@ public enum CompetitionSetupSection {
 		return PATH_MAP.get(path);
 	}
 
+	public Boolean getEditableAfterSetupAndLive() {
+		return editableAfterSetupAndLive;
+	}
+
 	public boolean preventEdit(CompetitionResource competitionResource) {
 		if (competitionResource.isSetupAndAfterNotifications()) {
             return true;
-        } if (competitionResource.isSetupAndLive()) {
-			return !(this.equals(INITIAL_DETAILS)
-					|| this.equals(MILESTONES)
-                    //TODO INFUND-6675 & 6694 & 6695 : add editable sections here.
-                    );
+        }
+        if (competitionResource.isSetupAndLive()) {
+			return !this.getEditableAfterSetupAndLive();
 		}
 
 		return false;
 	}
-	
 }
