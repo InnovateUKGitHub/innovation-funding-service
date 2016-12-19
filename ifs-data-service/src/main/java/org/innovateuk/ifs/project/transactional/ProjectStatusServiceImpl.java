@@ -149,8 +149,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
         if(ApprovalType.APPROVED.equals(approvalType)) {
             return COMPLETE;
-        } else if(ApprovalType.REJECTED.equals(approvalType)) {
-            return PENDING;
+        }
+        if(ApprovalType.REJECTED.equals(approvalType)) {
+            return REJECTED;
         }
 
         if (project.getSpendProfileSubmittedDate() != null) {
