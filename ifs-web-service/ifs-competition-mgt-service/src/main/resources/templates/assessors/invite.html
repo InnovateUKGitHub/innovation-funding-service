@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <dl class="standard-definition-list extra-margin-top">
+            <dl class="standard-definition-list extra-margin">
                 <dt>Innovation sector</dt>
                 <dd th:text="${model.innovationSector}">Health and life sciences</dd>
 
@@ -83,38 +83,6 @@
                 <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}" method="POST" th:object="${form}">
                     <p>Enter the new assessor's details below to add them to your invite list.</p>
 
-                    <!-- TODO INFUND-6932: JS version required.
-                    <div class="table-overflow">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th scope="col" id="innovation-sector" class="table-column-third">Innovation sector</th>
-                                    <th scope="col" id="innovation-area" class="table-column-two-thirds">Innovation area</th>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="cell-align-top width-40-percent">
-                                    <select class="form-control width-full" aria-labelledby="innovation-sector">
-                                        <option selected="selected">Please select an innovation sector</option>
-                                    </select>
-                                </td>
-                                <td class="cell-align-top width-40-percent">
-                                    <select class="form-control width-full" aria-labelledby="innovation-area">
-                                        <option selected="selected">Please select an innovation area</option>
-                                    </select>
-                                    <div>The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</div>
-                                </td>
-                                <td class="width-20-percent"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    -->
-
-                    <!-- TODO INFUND-6932: Needs tidying up. -->
-
                     <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')}? error">
                         <label for="grouped-innovation-area" class="form-label-bold">
                             Innovation area
@@ -124,8 +92,9 @@
                                       th:text="${err}" />
                             </span>
                         </label>
+                        <p class="form-hint">The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</p>
                         <select th:field="*{selectedInnovationArea}" class="form-control width-full" aria-labelledby="innovation-area" id="grouped-innovation-area">
-                            <option th:selected="*{selectedInnovationArea} == null" value=""></option>
+                            <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
                             <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
                                 <option th:each="innovationArea : ${innovationSector.children}"
                                         th:value="${innovationArea.id}"
@@ -135,7 +104,7 @@
                         </select>
                     </div>
 
-                    <table>
+                    <table id="invite-table">
                         <thead>
                         <tr>
                             <th id="invite-label-assessor-name" scope="col">Name</th>
@@ -168,7 +137,7 @@
                                                th:text="${err}" />
                                      </span>
                                 </label>
-                                <input type="text"
+                                <input type="email"
                                        aria-labelledby="invite-label-assessor-email"
                                        class="form-control width-full"
                                        th:errorclass="field-error"
@@ -176,7 +145,7 @@
                                 />
                             </td>
                             <td class="alignright width-20-percent">
-                                <button class="buttonlink"
+                                <button class="buttonlink remove-another-row"
                                         name="removeNewUser"
                                         th:value="${iterStat.index}"
                                         type="submit">
@@ -188,7 +157,7 @@
                     </table>
 
                     <p class="alignright extra-margin">
-                        <button class="buttonlink" name="addNewUser" type="submit">Add another assessor of this type</button>
+                        <button class="buttonlink" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor of this type</button>
                     </p>
 
                     <div class="alignright extra-margin-top">
@@ -198,7 +167,7 @@
             </details>
 
             <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
-                <table>
+                <table class="extra-margin">
                     <thead>
                     <tr>
                         <th scope="col">Assessor name</th>
