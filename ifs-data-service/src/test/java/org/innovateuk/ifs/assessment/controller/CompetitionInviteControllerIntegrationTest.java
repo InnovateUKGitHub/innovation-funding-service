@@ -14,17 +14,12 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
@@ -550,7 +545,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     public void inviteNewUsers() throws Exception {
         Category innovationArea = categoryRepository.findOne(5L);
 
-        List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
+        NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
 
         loginCompAdmin();
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
@@ -566,7 +561,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         Category innovationArea = categoryRepository.findOne(5L);
 
         loginCompAdmin();
-        List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competitionId, innovationArea.getId());
+        NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competitionId, innovationArea.getId());
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competitionId);
 
         assertFalse(serviceResult.isSuccess());
@@ -579,7 +574,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertNull(categoryRepository.findOne(categoryId));
 
         loginCompAdmin();
-        List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), categoryId);
+        NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), categoryId);
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
         assertFalse(serviceResult.isSuccess());
@@ -597,7 +592,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         competitionInviteRepository.save(new CompetitionInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
 
         loginCompAdmin();
-        List<NewUserStagedInviteResource> newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
+        NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
         RestResult<Void> serviceResult = controller.inviteNewUsers(newUserInvites, competition.getId());
 
         assertFalse(serviceResult.isSuccess());
@@ -606,13 +601,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals("testname1@for-this.address", serviceResult.getFailure().getErrors().get(0).getFieldRejectedValue());
     }
 
-    private List<NewUserStagedInviteResource> buildNewUserInviteList(long competitionId, long categoryId) {
-        return newNewUserStagedInviteResource()
-                .withName("Test Name 1", "Test Name 2")
-                .withEmail("testname1@for-this.address", "testname2@for-this.address")
-                .withCompetitionId(competitionId)
-                .withInnovationCategoryId(categoryId)
-                .build(2);
+    private NewUserStagedInviteListResource buildNewUserInviteList(long competitionId, long categoryId) {
+        return new NewUserStagedInviteListResource(
+                newNewUserStagedInviteResource()
+                        .withName("Test Name 1", "Test Name 2")
+                        .withEmail("testname1@for-this.address", "testname2@for-this.address")
+                        .withCompetitionId(competitionId)
+                        .withInnovationCategoryId(categoryId)
+                        .build(2)
+        );
     }
 
     @Test

@@ -80,7 +80,7 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/inviteNewUsers/{competitionId}", method = RequestMethod.POST)
-    public RestResult<Void> inviteNewUsers(@Valid @RequestBody NewUserStagedInvitesResource newUserStagedInvites,
+    public RestResult<Void> inviteNewUsers(@Valid @RequestBody NewUserStagedInviteListResource newUserStagedInvites,
                                            @PathVariable Long competitionId) {
         return competitionInviteService.inviteNewUsers(newUserStagedInvites.getInvites(), competitionId).toPostWithBodyResponse();
     }

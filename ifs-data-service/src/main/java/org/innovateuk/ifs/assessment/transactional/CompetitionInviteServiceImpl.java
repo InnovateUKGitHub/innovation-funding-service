@@ -34,15 +34,14 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
-
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -241,8 +240,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                         "validation.competitionInvite.create.email.exists"
                                 ))
                         )
-                )
-        )
+                ))
                 .andOnSuccess(list -> aggregate(list))
                 .andOnSuccessReturnVoid();
     }

@@ -29,6 +29,7 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -414,14 +415,18 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         List<NewUserStagedInviteResource> newUserStagedInvites = newNewUserStagedInviteResource()
                 .withEmail("test1@test.com", "test2@test.com")
                 .withName("Test Name 1", "Test Name 2")
-                .withInnovationCategoryId(1L, 1L)
+                .withInnovationCategoryId(1L)
                 .build(2);
+
+        NewUserStagedInviteListResource newUserStagedInviteList = newNewUserStagedInviteListResource()
+                .withInvites(newUserStagedInvites)
+                .build();
 
         when(competitionInviteServiceMock.inviteNewUsers(newUserStagedInvites, 1L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/inviteNewUsers/{competitionId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(newUserStagedInvites)))
+                .content(toJson(newUserStagedInviteList)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 

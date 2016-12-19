@@ -260,21 +260,23 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void inviteNewUsers() throws Exception {
         long competitionId = 1L;
-        List<NewUserStagedInviteResource> newUserStagedInviteResources = newUserStagedInviteResourceBuilder.build(2);
+
+        NewUserStagedInviteListResource newUserStagedInviteListResource = newUserStagedInviteListResourceBuilder.build();
+        List<NewUserStagedInviteResource> newUserStagedInviteResources = newUserStagedInviteListResource.getInvites();
 
         when(competitionInviteServiceMock.inviteNewUsers(newUserStagedInviteResources, competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/inviteNewUsers/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(newUserStagedInviteResources)))
+                .content(toJson(newUserStagedInviteListResource)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
+                                parameterWithName("competitionId").description("Id of the competition to invite the users to")
                         ),
                         requestFields(
-                                fieldWithPath("[]").description("List of new users to be invited to assess the competition")
-                        ).andWithPrefix("[].", newUserStagedInviteResourceFields)
+                                fieldWithPath("invites[]").description("List of new users to be invited to assess the competition")
+                        ).andWithPrefix("invites[].", newUserStagedInviteResourceFields)
                 ));
 
         verify(competitionInviteServiceMock, only()).inviteNewUsers(newUserStagedInviteResources, competitionId);
