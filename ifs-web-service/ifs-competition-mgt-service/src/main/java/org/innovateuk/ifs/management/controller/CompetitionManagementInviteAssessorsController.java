@@ -8,9 +8,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInvitesResource;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -75,12 +76,8 @@ public class CompetitionManagementInviteAssessorsController {
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
     public String invite(Model model,
                          @PathVariable("competitionId") Long competitionId,
-                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                         BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//
-//        }
-
+                         @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                         @SuppressWarnings("unused") BindingResult bindingResult) {
         return doViewInvite(model, competitionId);
     }
 
@@ -93,34 +90,34 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     @RequestMapping(value = "/invite", params = {"addNewUser"}, method = RequestMethod.POST)
-    public String addNewUser(Model model,
-                             @PathVariable("competitionId") Long competitionId,
-                             @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        form.getInvites().add(new InviteNewAssessorsForm.NewAssessorInviteForm());
+    public String addNewUserToInviteView(Model model,
+                                         @PathVariable("competitionId") Long competitionId,
+                                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        form.getInvites().add(new InviteNewAssessorsRowForm());
         return doViewInvite(model, competitionId);
     }
 
     @RequestMapping(value = "/invite", params = {"removeNewUser"}, method = RequestMethod.POST)
-    public String removeNewUser(Model model,
-                                @PathVariable("competitionId") Long competitionId,
-                                @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                                @RequestParam(name = "removeNewUser") int position) {
+    public String removeNewUserFromInviteView(Model model,
+                                              @PathVariable("competitionId") Long competitionId,
+                                              @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                              @RequestParam(name = "removeNewUser") int position) {
         form.getInvites().remove(position);
         return doViewInvite(model, competitionId);
     }
 
     @RequestMapping(value = "/invite", params = {"inviteNewUsers"}, method = RequestMethod.POST)
-    public String inviteNewUsers(Model model,
-                                 @PathVariable("competitionId") Long competitionId,
-                                 @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler) {
+    public String inviteNewsUsersFromInviteView(Model model,
+                                                @PathVariable("competitionId") Long competitionId,
+                                                @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                                BindingResult bindingResult,
+                                                ValidationHandler validationHandler) {
         return validationHandler.failNowOrSucceedWith(
                 () -> invite(model, competitionId, form, bindingResult),
                 () -> {
                     RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
                             competitionId,
-                            formToResource(form, competitionId)
+                            newInviteFormToResource(form, competitionId)
                     );
 
                     return validationHandler.addAnyErrors(restResult)
@@ -159,7 +156,7 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/invite";
     }
 
-    private NewUserStagedInvitesResource formToResource(InviteNewAssessorsForm form, Long competitionId) {
+    private NewUserStagedInviteListResource newInviteFormToResource(InviteNewAssessorsForm form, Long competitionId) {
         List<NewUserStagedInviteResource> invites = form.getInvites().stream()
                 .map(newUserInvite -> new NewUserStagedInviteResource(
                         newUserInvite.getEmail(),
@@ -169,6 +166,6 @@ public class CompetitionManagementInviteAssessorsController {
                 ))
                 .collect(Collectors.toList());
 
-        return new NewUserStagedInvitesResource(invites);
+        return new NewUserStagedInviteListResource(invites);
     }
 }
