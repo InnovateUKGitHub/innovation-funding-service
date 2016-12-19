@@ -28,7 +28,6 @@ IFS.competitionManagement.loadOrder = {
   'competition-management' : {
     init : function() {
       IFS.competitionManagement.repeatableRows.init();
-
     }
   },
   'competition-setup' : {
