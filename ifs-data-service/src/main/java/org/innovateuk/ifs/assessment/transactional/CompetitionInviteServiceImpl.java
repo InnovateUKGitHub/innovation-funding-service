@@ -39,6 +39,7 @@ import java.util.*;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
@@ -126,7 +127,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                             "innovationArea", invite.getInnovationArea(),
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
                             "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                            "inviteUrl", String.format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
+                            "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
             AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
             resource.setEmailContent(content);
