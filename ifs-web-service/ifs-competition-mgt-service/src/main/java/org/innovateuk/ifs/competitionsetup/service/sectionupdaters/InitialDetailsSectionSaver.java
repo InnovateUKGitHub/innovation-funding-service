@@ -60,7 +60,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {

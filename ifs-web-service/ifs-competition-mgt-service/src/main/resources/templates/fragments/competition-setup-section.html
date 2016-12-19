@@ -413,8 +413,7 @@
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"
-                           data-autosave-disabled="data-autosave-disabled"
-                           th:readonly="${isSetupAndLive}"/>
+                           data-autosave-disabled="data-autosave-disabled"/>
                     <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
             </fieldset>
@@ -912,7 +911,7 @@
 
 
     <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}" data-autosave="compSetup" data-section="assessors">
+          th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
         <th:block th:if="${editable}" id="section-assessors-edit">
             <h2 class="heading-small">How many assessors are required for each application?</h2>
             <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group error':'form-group'">
@@ -939,12 +938,12 @@
                     </span>
                 </label>
                 <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
-
-                       th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
+                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
                        data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="field-error"/>
+                       th:errorclass="field-error"
+                       th:readonly="${isSetupAndLive}"/>
             </div>
 
             <button class="button">Done</button>

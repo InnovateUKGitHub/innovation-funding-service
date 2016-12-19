@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
@@ -10,6 +11,9 @@ import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSecti
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 
 /**
  * Competition setup section saver for the application -> finance form sub-section.
@@ -21,12 +25,13 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
     private CompetitionService competitionService;
 
 	@Override
-	public CompetitionSetupSubsection sectionToSave() {
-		return CompetitionSetupSubsection.FINANCES;
-	}
+	public CompetitionSetupSection sectionToSave() { return APPLICATION_FORM; }
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	public CompetitionSetupSubsection subsectionToSave() { return FINANCES; }
+
+	@Override
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
 		competition.setIncludeGrowthTable(form.isIncludeGrowthTable());
 		competition.setFullApplicationFinance(form.isFullApplicationFinance());
@@ -37,4 +42,5 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
 		return ApplicationFinanceForm.class.equals(clazz);
 	}
+
 }
