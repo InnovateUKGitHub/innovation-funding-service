@@ -20,7 +20,7 @@
         <div class="column-two-thirds">
             <div class="page-title">
                 <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
-                <h1 class="heading-xlarge">Grant Offer Letter</h1>
+                <h1 class="heading-xlarge">Grant offer letter</h1>
             </div>
         </div>
     </div>
@@ -80,19 +80,22 @@
     </form>
 
     <h2 class="heading-medium no-margin">Annex</h2>
-    <th:block th:if="${!model.isSentToProjectTeam()}">
 
-       <th:block th:if="${model.additionalContractFile}">
-            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
-            <th:block th:if="${model.getAdditionalContractFileContentAvailable()}">
-                <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
-            </th:block>
-           <th:block th:unless="${model.getAdditionalContractFileContentAvailable()}">
-               <p th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</p>
-           </th:block>
+    <th:block th:if="${model.additionalContractFile}">
+        <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+        <th:block th:if="${model.getAdditionalContractFileContentAvailable()}">
+            <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
         </th:block>
-        <th:block th:unless="${model.additionalContractFile}">
-            <div class="upload-section unstyled-view">
+        <th:block th:unless="${model.getAdditionalContractFileContentAvailable()}">
+            <p th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</p>
+        </th:block>
+    </th:block>
+    <th:block th:unless="${model.additionalContractFile}">
+        <div class="upload-section unstyled-view">
+            <th:block th:if="${model.isSentToProjectTeam()}">
+                None specified.
+            </th:block>
+            <th:block th:unless="${model.isSentToProjectTeam()}">
                 <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
                       th:object="${form}" method="post" enctype="multipart/form-data">
                     <p>Any additional supporting materials should be uploaded to the Annex.</p>
@@ -119,17 +122,8 @@
                         </details>
                     </div>
                 </form>
-            </div>
-        </th:block>
-    </th:block>
-    <th:block th:unless="${!model.isSentToProjectTeam()}">
-        <th:block th:if="${model.additionalContractFile != null}">
-            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
-            <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
-        </th:block>
-        <th:block th:unless="${model.additionalContractFile != null}">
-            None specified.
-        </th:block>
+            </th:block>
+        </div>
     </th:block>
 
     <div th:if="${!model.isSentToProjectTeam()}" th:remove="tag">
