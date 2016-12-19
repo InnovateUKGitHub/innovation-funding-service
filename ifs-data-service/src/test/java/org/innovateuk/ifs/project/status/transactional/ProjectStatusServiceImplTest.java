@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -216,6 +217,37 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        HashMap<UserRoleType, ProjectActivityStates> roles = new HashMap<UserRoleType, ProjectActivityStates>();
+        roles.put(COMP_ADMIN, NOT_REQUIRED);
+        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
+    }
+
+    @Test
+    public void getProjectStatusResourceByProjectSpendProfileRejected() {
+        Long projectId = 2345L;
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.REJECTED, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(REJECTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
