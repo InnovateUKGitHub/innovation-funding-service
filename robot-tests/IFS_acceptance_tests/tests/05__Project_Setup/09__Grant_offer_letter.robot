@@ -140,9 +140,9 @@ PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
-    And the user clicks the button/link     jQuery=button:contains("Confirm submission")
+    And the user clicks the button/link     jQuery=button:contains("Send to Innovate UK")
     Then the user should not see an error in the page
-    # TODO - It has to be checked that the dashabord staus for GOL shows hourglass. This has not been implemented yet.
+    # TODO - It has to be checked that the dashboard status for GOL shows hourglass. This has not been implemented yet.
     # And the user should see the element    jQuery=li.waiting:nth-child(8)
 
 PM's dashboard should be updated
