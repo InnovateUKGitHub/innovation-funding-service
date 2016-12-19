@@ -77,13 +77,10 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    private Boolean offerRejected;
-
     private Boolean otherDocumentsApproved;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
-
 
     public Project() {}
 
@@ -253,14 +250,6 @@ public class Project implements ProcessActivity {
 
     public void setAdditionalContractFile(FileEntry additionalContractFile) {
         this.additionalContractFile = additionalContractFile;
-    }
-
-    public Boolean isOfferRejected() {
-        return offerRejected;
-    }
-
-    public void setOfferRejected(Boolean offerRejected) {
-        this.offerRejected = offerRejected;
     }
 
     public FileEntry getGrantOfferLetter() {

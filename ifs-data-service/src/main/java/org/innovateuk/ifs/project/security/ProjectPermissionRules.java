@@ -228,4 +228,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isPartner(project.getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_GRANT_OFFER", description = "A user can see grant offer page that they are partners on")
+    public boolean partnersOnProjectCanViewGrantOfferPage(ProjectResource project, UserResource user) {
+        return project != null && isPartner(project.getId(), user.getId());
+    }
+
 }
