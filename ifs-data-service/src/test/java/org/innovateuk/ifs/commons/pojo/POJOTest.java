@@ -85,6 +85,7 @@ public class POJOTest {
             AvailableAssessorResource.class,
             AssessorCreatedInviteResource.class,
             AssessorInviteOverviewResource.class,
+            AssessorInviteToSendResource.class,
             Address.class,
             OrganisationType.class,
             Application.class,

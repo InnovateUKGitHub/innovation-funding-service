@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
             milestonesByCompetition.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
         }
 
-        LinkedMap<String, MilestoneViewModel> milestoneFormEntries = new LinkedMap<>();
+        LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
         milestonesByCompetition.stream().forEachOrdered(milestone -> {
             milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone));
         });
@@ -53,8 +53,8 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         return competitionSetupForm;
     }
 
-    private MilestoneViewModel populateMilestoneFormEntries(MilestoneResource milestone) {
-        return new MilestoneViewModel(milestone.getType(), milestone.getDate());
+    private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone) {
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate());
     }
 }
 

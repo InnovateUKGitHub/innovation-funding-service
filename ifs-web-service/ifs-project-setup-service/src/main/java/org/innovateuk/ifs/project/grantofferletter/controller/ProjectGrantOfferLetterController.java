@@ -99,6 +99,7 @@ public class ProjectGrantOfferLetterController {
         });
     }
 
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/grant-offer-letter", method = GET)
     public
@@ -106,8 +107,8 @@ public class ProjectGrantOfferLetterController {
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getGeneratedGrantOfferFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectService.getGrantOfferFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectService.getGrantOfferFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -152,20 +153,26 @@ public class ProjectGrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGeneratedGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
+        Boolean grantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
+
         boolean isProjectManager = getProjectManager(projectId)
                 .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
+
+        boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).isSuccess() ? projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject() : false;
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
-                project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager);
+                project.getOfferSubmittedDate(),
+                grantOfferLetterApproved,
+                isProjectManager,
+		isGrantOfferLetterSent);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {

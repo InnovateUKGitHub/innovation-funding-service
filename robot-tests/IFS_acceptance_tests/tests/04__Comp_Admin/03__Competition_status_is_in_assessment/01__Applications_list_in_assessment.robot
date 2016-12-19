@@ -17,7 +17,7 @@ Competition status should be correct
     ...
     ...    INFUND-6602
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Sustainable living models for the future
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
     Then the user should see the text in the page    In assessment
     And the user should not see the text in the page    Competition open

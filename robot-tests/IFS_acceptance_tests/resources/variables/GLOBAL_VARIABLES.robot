@@ -55,7 +55,6 @@ ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    11
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION}    ${EMPIRE_LTD_ID}
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
 ${NEW_COMP_SETUP_COMPETITION}    10
-
 ${IN_ASSESSMENT_COMPETITION}    4
 ${IN_ASSESSMENT_COMPETITION_NAME}    Sustainable living models for the future
 ${IN_ASSESSMENT_APPLICATION_1}    22
@@ -132,7 +131,7 @@ ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
 ${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
 ${COMP_MANAGEMENT_OPEN_COMP}    ${SERVER}/management/competition/setup/${FUNDERS_PANEL_COMPETITION}
-${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
+${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/${FUNDERS_PANEL_APPLICATION_2}/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${404_error_message}    Page not found
@@ -199,3 +198,4 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
+${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
