@@ -49,8 +49,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         LinkedMap<String, MilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 

@@ -87,7 +87,7 @@ Upcoming competition should be visible
     And the assessor should see the correct date
     When The user clicks the button/link    link=Photonics for health
     And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Photonics for health'
-    And The user clicks the button/link    link=Back to your assessor dashboard
+    And The user clicks the button/link    link=Back to assessor dashboard
     Then The user should see the text in the page    Upcoming competitions to assess
 
 When the assessment period starts the comp moves to the comp for assessment

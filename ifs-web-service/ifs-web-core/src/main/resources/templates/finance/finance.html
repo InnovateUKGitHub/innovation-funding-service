@@ -1058,7 +1058,7 @@
 	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" th:remove="tag" />
 	                </label>
 	                <input type="text"
-	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
 	                       th:name="${type +'-fundingSource-' + question.id + '-' + costIdentifier}"
 	                       class="form-control width-full"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-source'}"
@@ -1074,7 +1074,7 @@
 	                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" th:remove="tag" />
 	                </label>
 	                <input type="text"
-	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
 	                       th:name="${type +'-securedDate-' + question.id + '-' + costIdentifier}"
 	                       class="form-control width-medium"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-date'}"
@@ -1094,7 +1094,7 @@
 	              </label>
 	                <input class="form-control width-medium"
 	                       type="number"
-	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
 	                       th:name="${type +'-fundingAmount-' + question.id + '-' + costIdentifier}"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}"
 	                       ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
@@ -1106,7 +1106,7 @@
 	                       data-max-errormessage="You must enter a value less than 20 digits"
 	                       />
 	            </td>
-	            <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+	            <td th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
 	                <button th:unless="${cost.id == null}"
 	                        type="submit"
 	                        name="remove_cost"
