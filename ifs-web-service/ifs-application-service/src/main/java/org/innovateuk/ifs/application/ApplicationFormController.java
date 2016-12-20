@@ -62,6 +62,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
@@ -226,10 +228,13 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        if (FINANCE.equals(section.getType())) {
+        if (FINANCE.equals(section.getType()) ||
+                SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            model.addAttribute("isSubFinanceSection", TRUE);
         } else {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            model.addAttribute("isSubFinanceSection", FALSE);
         }
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
@@ -423,7 +428,7 @@ public class ApplicationFormController {
             if (isMarkSectionAsCompleteRequest(params)) {
                 application.setStateAidAgreed(form.isStateAidAgreed());
             } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
-                application.setStateAidAgreed(Boolean.FALSE);
+                application.setStateAidAgreed(FALSE);
             }
         }
 

@@ -119,11 +119,15 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         }
         form.setApplication(application);
 
-        addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation, allSections, inputs);
 
-        addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
+        if(SectionType.FINANCE.equals(section.getType().getParent().orElse(null))
+                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
+           addQuestionsDetails(model, application, form);
+           addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
+        }
+
         addCompletedDetails(model, application, userOrganisation);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -136,9 +140,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
 
-        if(form == null){
-            form = new Form();
-        }
         Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
             values.put(k.toString(), v.getValue())

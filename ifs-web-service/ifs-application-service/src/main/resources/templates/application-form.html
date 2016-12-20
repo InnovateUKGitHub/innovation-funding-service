@@ -59,19 +59,36 @@
 
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
             <input type="hidden" id="competition_id" th:value="${currentCompetition.getId()}"/>
-            <div th:if="${allReadOnly}" th:remove="tag">
-                <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
-            </div>
-            <div th:unless="${allReadOnly}" th:remove="tag">
-                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
-            </div>
-            <div th:if="${(currentCompetition.isOpen()) and (currentSection != null) and
-            (currentSection.getName() != null) and
-            (#strings.equals(currentSection.getName(), 'Your finances'))
+            <th:block th:if="${(currentCompetition.isOpen()) and (currentSection != null) and
+            (currentSection.getName() != null)
             and !completedSections?.contains(currentSection.getId())}">
-                <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"  th:remove="tag" />
-                <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
-            </div>
+                <th:block th:if="${#strings.equals(currentSection.getName(), 'Your project costs')}">
+                    <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+                </th:block>
+                <th:block th:if="${#strings.equals(currentSection.getName(), 'Your funding')}">
+                    <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+                </th:block>
+            </th:block>
+            <th:block th:if="${isSubFinanceSection}">
+                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id}, sectionId=${section.getParentSection()})}" class="button-secondary">
+                    Return to finances
+                </a>
+                <button type="submit" class="button">Mark as complete</button>
+            </th:block>
+            <th:block th:unless="${isSubFinanceSection}">
+                <ul>
+                    <li th:each="subSection : ${subSections.get(currentSection.id)}">
+                        <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id},sectionId=${subSection.id})}" th:text="${subSection.name}"></a>
+                    </li>
+                </ul>
+                <th:block th:if="${allReadOnly}">
+                    <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+                </th:block>
+                <th:block th:unless="${allReadOnly}">
+                    <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+                </th:block>
+            </th:block>
+
 
             <div class="alignright-button" th:if="${(currentSection != null) and (currentSection.getName() != null) and (#strings.equals(currentSection.getName(), 'Your finances'))}">
                 <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>

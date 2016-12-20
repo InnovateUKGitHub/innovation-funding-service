@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
@@ -15,11 +11,14 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -71,12 +70,21 @@ public class FinanceOverviewModelManager {
         model.addAttribute("financeSection", section);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
         List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
-        model.addAttribute("financeSectionChildren", financeSectionChildren);
+        List<SectionResource> financeSectionAndSubSectionChildren = financeSectionChildren;
+        financeSectionChildren.stream().forEach(sectionResource -> {
+                if (!sectionResource.getChildSections().isEmpty()) {
+                    financeSectionAndSubSectionChildren.addAll(
+                            sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
+                    );
+                }
+            }
+        );
+        model.addAttribute("financeSectionChildren", financeSectionAndSubSectionChildren);
 
         List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
 
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSectionChildren.stream()
-                .collect(Collectors.toMap(
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSectionAndSubSectionChildren.stream()
+                .collect(toMap(
                         SectionResource::getId,
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
@@ -86,7 +94,7 @@ public class FinanceOverviewModelManager {
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
     }
 
