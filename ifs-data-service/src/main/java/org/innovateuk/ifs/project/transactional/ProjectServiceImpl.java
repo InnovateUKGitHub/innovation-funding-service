@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -24,7 +27,12 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationSource;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -46,7 +54,13 @@ import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.resource.ProjectLeadStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -54,9 +68,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,28 +76,54 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.transactional.ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
+import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -95,6 +132,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
+
+    private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
+
+    private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -168,6 +209,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private FinanceChecksGenerator financeChecksGenerator;
 
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferLetterService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -176,7 +220,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
         INVITE_PROJECT_MANAGER,
-        GRANT_OFFER_LETTER_PROJECT_MANAGER
+        GRANT_OFFER_LETTER_PROJECT_MANAGER,
+        PROJECT_LIVE
     }
 
     @Override
@@ -246,8 +291,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
 
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(user ->
-               projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
-               workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+                projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
+                workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     @Override
@@ -275,12 +320,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).andOnSuccess(project ->
                 getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
 
-            if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                return serviceSuccess();
-            } else {
-                return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
-            }
-        }));
+                    if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
+                        return serviceSuccess();
+                    } else {
+                        return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
+                    }
+                }));
     }
 
     @Override
@@ -341,8 +386,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
         NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
-        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, project, projectManager);
+        Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
+        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, project, projectManager);
 
         ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(monitoringOfficerNotification, EMAIL);
         ServiceResult<Void> pmAssignedEmailSendResult = notificationService.sendNotification(projectManagerNotification, EMAIL);
@@ -464,7 +509,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
                     }
                     project.setOtherDocumentsApproved(approved);
-                    return serviceSuccess();
+                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
                 });
     }
 
@@ -538,6 +583,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         project.setExploitationPlan(null);
     }
 
+    private NotificationTarget createPartnerNotificationTargets(final ProjectUser user) {
+        return new ExternalUserNotificationTarget(user.getUser().getName(), user.getUser().getEmail());
+    }
+
+    private Notification createLiveProjectNotification(List<NotificationTarget> notificationTargets, Enum template) {
+
+        return new Notification(systemNotificationSource, notificationTargets, template, emptyMap());
+    }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
         String fullName = getProjectManagerFullName(projectManager);
@@ -671,12 +724,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
-        return inviteContact(projectId, inviteResource, INVITE_FINANCE_CONTACT);
+        return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT);
     }
 
     @Override
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-        return inviteContact(projectId, inviteResource, INVITE_PROJECT_MANAGER);
+        return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER);
     }
 
     @Override
@@ -755,13 +808,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return projectPartnerStatusResource;
     }
 
-    private ProjectActivityStates createGrantOfferLetterStatus(Project project) {
-        if(project.getOfferSubmittedDate() != null) {
-            return COMPLETE;
-        }
-        return NOT_STARTED;
-    }
-
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
         Notification notification = createInviteContactNotification(projectId, projectResource, kindOfNotification);
@@ -785,7 +831,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return serviceFailure(errors);
     }
 
-    private Notification createInviteContactNotification(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
+    private Notification createInviteContactNotification(Long projectId, InviteProjectResource projectResource, ProjectServiceImpl.Notifications kindOfNotification) {
         Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, projectResource);
         ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
         NotificationTarget notificationTarget = createInviteContactNotificationTarget(projectInvite);
@@ -973,9 +1019,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         List<Organisation> organisations = newProject.getOrganisations();
 
         List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
-            financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
-            costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
-            financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
+                financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
+                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+                                financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
 
         return processAnyFailuresOrSucceed(financeCheckResults);
     }
@@ -1018,14 +1064,27 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
 
         return setProjectManagerResult.andOnSuccessReturn(result ->
-               projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
-               workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+                projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
+                workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
         List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
+    }
+
+
+    private List<NotificationTarget> getLiveProjectNotificationTarget(Project project) {
+        List<NotificationTarget> notificationTargets = new ArrayList<>();
+        User projectManager = getExistingProjectManager(project).get().getUser();
+        NotificationTarget projectManagerTarget = createProjectManagerNotificationTarget(projectManager);
+        List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser()));
+        List<NotificationTarget> uniqueFinanceTargets = simpleFilterNot(financeTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
+        notificationTargets.add(projectManagerTarget);
+        notificationTargets.addAll(uniqueFinanceTargets);
+
+        return notificationTargets;
     }
 
     @Override
@@ -1043,7 +1102,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl);
 
-            Notification notification = new Notification(from, singletonList(pmTarget), Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+            Notification notification = new Notification(from, singletonList(pmTarget), ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
             ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
 
             if (!notificationResult.isSuccess()) {
@@ -1057,9 +1116,20 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         if (golWorkflowHandler.grantOfferLetterSent(project)) {
             return serviceSuccess();
         } else {
-            LOG.error(String.format("Set Grant Offer Letter workflow status to sent failed for project %s", project.getId()));
+            LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
+    }
+
+    private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
+
+        Project project = projectRepository.findOne(projectId);
+        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
+
+        Notification partnerNotification = createLiveProjectNotification(notificationTargets, Notifications.PROJECT_LIVE);
+        ServiceResult<Void> sendEmailResult = notificationService.sendNotification(partnerNotification, EMAIL);
+
+        return processAnyFailuresOrSucceed(sendEmailResult);
     }
 
     @Override
@@ -1084,4 +1154,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     return serviceSuccess(Boolean.TRUE);
                 });
     }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if(golWorkflowHandler.isReadyToApprove(project)) {
+                if(ApprovalType.APPROVED == approvalType) {
+                    if(!golWorkflowHandler.approve(project)) {
+                        LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                    }
+                    if(!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
+                        LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                    }
+                    notifyProjectIsLive(projectId);
+                    return serviceSuccess();
+                }
+            }
+            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
+    }
+
+
 }

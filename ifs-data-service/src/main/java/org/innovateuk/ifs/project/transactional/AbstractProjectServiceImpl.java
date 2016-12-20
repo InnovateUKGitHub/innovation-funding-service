@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
@@ -69,6 +70,9 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
+    private GOLWorkflowHandler golWorkflowHandler;
+
+    @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
@@ -110,7 +114,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
         if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
+            return monitoringOfficer.isPresent() ? COMPLETE : PENDING;
         } else {
             return NOT_STARTED;
         }
@@ -173,19 +177,23 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates spendProfileState,
-                                                    final ProjectActivityStates otherDocumentsState,
-                                                    final Project project) {
+                                                                 final ProjectActivityStates otherDocumentsState,
+                                                                 final Project project) {
         if(COMPLETE.equals(spendProfileState) && COMPLETE.equals(otherDocumentsState)) {
-            if(project.getGrantOfferLetter() != null) {
-                if(project.getSignedGrantOfferLetter() != null) {
-                    if (project.getOfferSubmittedDate() != null) {
-                        return COMPLETE;
-                    }
+            if(golWorkflowHandler.isApproved(project)) {
+                return COMPLETE;
+            } else {
+                if(golWorkflowHandler.isReadyToApprove(project)) {
                     return PENDING;
+                } else {
+                    if(golWorkflowHandler.isSent(project)) {
+                        return ACTION_REQUIRED;
+
+                    } else {
+                        return PENDING;
+                    }
                 }
-                return ACTION_REQUIRED;
             }
-            return NOT_STARTED;
         }
         return NOT_REQUIRED;
     }

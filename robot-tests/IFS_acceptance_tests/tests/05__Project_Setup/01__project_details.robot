@@ -42,6 +42,7 @@ Suite Setup       Run Keywords    delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
+Resource          PS_Variables.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK
@@ -71,7 +72,7 @@ Internal users can see Project Details not yet completed
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Tags]      HappyPath    Pending
+    [Tags]      HappyPath
     log in as a different user   &{Comp_admin1_credentials}
     #TODO Pending due to INFUND-6642
     When the user navigates to the page    ${internal_project_summary}

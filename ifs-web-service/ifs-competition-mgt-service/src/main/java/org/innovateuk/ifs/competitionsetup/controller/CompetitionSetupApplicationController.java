@@ -1,3 +1,4 @@
+
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.apache.commons.logging.Log;
@@ -5,8 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
@@ -16,9 +17,13 @@ import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionServi
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +43,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
@@ -52,6 +58,10 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Autowired
+    @Qualifier("mvcValidator")
+    private Validator validator;
 
     @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
@@ -126,10 +136,12 @@ public class CompetitionSetupApplicationController {
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
-                                         BindingResult bindingResult,
-                                         ValidationHandler validationHandler,
-                                         @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                         Model model) {
+                                            BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+        validateAssessmentGuidanceRows(competitionSetupForm, bindingResult);
+
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
@@ -142,8 +154,10 @@ public class CompetitionSetupApplicationController {
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
-                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                               Model model) {
+                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                            Model model) {
+        validateScopeGuidanceRows(competitionSetupForm, bindingResult);
+
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
@@ -182,6 +196,18 @@ public class CompetitionSetupApplicationController {
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, APPLICATION_DETAILS));
 
+    }
+
+    private void validateAssessmentGuidanceRows(ApplicationQuestionForm applicationQuestionForm, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(applicationQuestionForm.getQuestion().getWrittenFeedback())) {
+            ValidationUtils.invokeValidator(validator, applicationQuestionForm, bindingResult, GuidanceRowForm.GuidanceRowViewGroup.class);
+        }
+    }
+
+    private void validateScopeGuidanceRows(ApplicationProjectForm applicationProjectForm, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
+            ValidationUtils.invokeValidator(validator, applicationProjectForm, bindingResult, GuidanceRowResource.GuidanceRowGroup.class);
+        }
     }
 
     private String getFinancePage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {

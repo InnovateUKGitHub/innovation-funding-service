@@ -34,10 +34,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/", SpendProfileResource.class);
     }
 
-	@Override
-	public RestResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {
-		return postWithRestResult(projectRestURL + "/" + projectId + "/project-manager/" + projectManagerUserId, Void.class);
-	}
+    @Override
+    public RestResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/project-manager/" + projectManagerUserId, Void.class);
+    }
     @Override
     public RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/startdate?projectStartDate=" + projectStartDate, Void.class);
@@ -53,10 +53,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(projectRestURL + "/user/" + userId, projectResourceListType());
     }
 
-	@Override
-	public RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-		return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/finance-contact?financeContact=" + financeContactUserId, Void.class);
-	}
+    @Override
+    public RestResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/finance-contact?financeContact=" + financeContactUserId, Void.class);
+    }
 
     @Override
     public RestResult<List<ProjectUserResource>> getProjectUsersForProject(Long projectId) {
@@ -186,12 +186,12 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
 
     @Override
     public RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        String url = projectRestURL + "/" + projectId + "/grant-offer/generate?filename=" + originalFilename;
+        String url = projectRestURL + "/" + projectId + "/grant-offer?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
     }
 
     @Override
-    public RestResult<Void> removeGeneratedGrantOfferLetter(Long projectId) {
+    public RestResult<Void> removeGrantOfferLetter(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/grant-offer");
     }
 
@@ -247,5 +247,15 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent", Boolean.class);
+    }
+
+    @Override
+    public RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + approvalType, Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval", Boolean.class);
     }
 }

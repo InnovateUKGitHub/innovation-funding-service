@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -8,8 +10,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
  * Competition setup section saver for the additional info section.
@@ -28,10 +28,10 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 @Service
 public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
-    private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
+	private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
 
-    @Autowired
-    private CompetitionService competitionService;
+	@Autowired
+	private CompetitionService competitionService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -39,21 +39,11 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
-		competition.setActivityCode(additionalInfoForm.getActivityCode());
-		competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
-		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
-		competition.setPafCode(additionalInfoForm.getPafNumber());
-		additionalInfoForm.setCompetitionCode(competition.getCode());
-		competition.setFunders(new ArrayList());
-		additionalInfoForm.getFunders().forEach(funder -> {
-            CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
-            competitionFunderResource.setFunder(funder.getFunder());
-            competitionFunderResource.setFunderBudget(funder.getFunderBudget());
-            competitionFunderResource.setCoFunder(funder.getCoFunder());
-			competition.getFunders().add(competitionFunderResource);
-		});
+
+		setFieldsDisallowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
+		setFieldsAllowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
 
 		try {
 			competitionService.update(competition).getSuccessObjectOrThrowException();
@@ -63,6 +53,29 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		}
 
 		return serviceSuccess();
+	}
+
+
+	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
+		if(!competition.isSetupAndLive()) {
+			competition.setActivityCode(additionalInfoForm.getActivityCode());
+			competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
+			competition.setBudgetCode(additionalInfoForm.getBudgetCode());
+			competition.setPafCode(additionalInfoForm.getPafNumber());
+		}
+	}
+
+	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
+		additionalInfoForm.setCompetitionCode(competition.getCode());
+
+		competition.setFunders(new ArrayList());
+		additionalInfoForm.getFunders().forEach(funder -> {
+			CompetitionFunderResource competitionFunderResource = new CompetitionFunderResource();
+			competitionFunderResource.setFunder(funder.getFunder());
+			competitionFunderResource.setFunderBudget(funder.getFunderBudget());
+			competitionFunderResource.setCoFunder(funder.getCoFunder());
+			competition.getFunders().add(competitionFunderResource);
+		});
 	}
 
 	@Override
@@ -127,8 +140,6 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 			competitionResource.getFunders().add(i, funder);
 		}
 	}
-
-
 
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {

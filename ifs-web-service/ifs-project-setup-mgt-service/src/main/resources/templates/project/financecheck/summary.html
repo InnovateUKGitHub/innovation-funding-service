@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
 </head>
-<body th:with="context='comp-management'" class="competition-management finance-checks-overview">
+<body th:with="context='project-management'" class="competition-management finance-checks-overview">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -59,6 +59,7 @@
         <tr>
           <th scope="col">Organisation</th>
           <th scope="col">Viability</th>
+          <th scope="col">RAG</th>
           <th scope="col">Eligibility</th>
         </tr>
       </thead>
@@ -74,6 +75,8 @@
                       th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                       th:classappend="${'viability-' + status.index}"></span>
             </td>
+            <td th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
+                th:classappend="${'viability-rag-' + status.index}">Green</td>
             <td><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                    th:classappend="${'eligibility-' + status.index}"/></td>

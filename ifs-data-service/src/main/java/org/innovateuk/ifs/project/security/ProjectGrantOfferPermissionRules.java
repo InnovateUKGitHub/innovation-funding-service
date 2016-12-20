@@ -28,7 +28,7 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "VIEW_GRANT_OFFER_PARTNER",
+            value = "VIEW_GRANT_OFFER",
             description = "Partners can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
 
     public boolean partnersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
@@ -67,6 +67,13 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
             description = "Contracts team can send the grant offer letter")
     public boolean contractsTeamSendGrantOfferLetter(Long projectId, UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN);
+    }
+
+    @PermissionRule(
+            value = "APPROVE_SIGNED_GRANT_OFFER",
+            description = "Competitions team & Project Finance can approve signed grant offer letter")
+    public boolean internalUsersCanApproveSignedGrantOfferLetter(Long projectId, UserResource user) {
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
     }
 
 }

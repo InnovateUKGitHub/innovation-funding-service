@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
@@ -26,7 +27,6 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -34,9 +34,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
@@ -54,14 +59,14 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFinanceServiceImpl> {
+
+    private Long projectId = 123L;
+
+    private Long organisationId = 456L;
 
     @Mock
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
@@ -77,8 +82,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testGenerateSpendProfile() {
-
-        Long projectId = 123L;
 
         Project project = newProject().
                 withId(projectId).
@@ -200,8 +203,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void testGenerateSpendProfileButNotAllFinanceChecksCompleted() {
 
-        Long projectId = 123L;
-
         Project project = newProject().
                 withId(projectId).
                 withDuration(3L).
@@ -292,8 +293,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testGenerateSpendProfileCSV() {
-        Long projectId = 123L;
-        Long organisationId = 456L;
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
@@ -333,8 +332,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testGenerateSpendProfileCSVWithCategoryGroupLabelEmpty() {
-        Long projectId = 123L;
-        Long organisationId = 456L;
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
@@ -374,7 +371,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void getSpendProfileStatusByProjectIdApproved() {
-        Long projectId = 421L;
         List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.APPROVED, ApprovalType.APPROVED, ApprovalType.APPROVED).build(3);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
 
@@ -385,7 +381,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void getSpendProfileStatusByProjectIdRejected() {
-        Long projectId = 423L;
         List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.REJECTED, ApprovalType.APPROVED, ApprovalType.UNSET).build(3);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
 
@@ -396,7 +391,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void getSpendProfileStatusByProjectIdUnset() {
-        Long projectId = 254L;
         List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.UNSET, ApprovalType.UNSET, ApprovalType.UNSET).build(3);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
 
@@ -407,8 +401,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void approveSpendProfile() {
-        Long projectId = 49543L;
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
@@ -424,6 +419,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Long projectId = 4234L;
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
 
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
+
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
         assertTrue(resultNew.isSuccess());
@@ -433,12 +430,26 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verify(spendProfileRepositoryMock).save(spendProfileList);
     }
 
+    @Test
+    public void approveSpendProfileGenerateGolFails() {
+        Long projectId = 49544L;
+        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+
+        ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+        spendProfileList.forEach(spendProfile ->
+                assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
+        );
+        verify(spendProfileRepositoryMock).save(spendProfileList);
+    }
+
 
     @Test
     public void saveSpendProfileWhenValidationFails() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -459,9 +470,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void saveSpendProfileEnsureSpendProfileDomainIsCorrectlyUpdated() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -516,12 +524,49 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
+    @Test
+    public void markSpendProfileIncomplete() {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withDuration(3L)
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withId(projectId)
+                .build();
+
+        SpendProfile spendProfileInDB = createSpendProfile(projectInDB,
+                // eligible costs
+                asMap(
+                        1L, new BigDecimal("100"),
+                        2L, new BigDecimal("180"),
+                        3L, new BigDecimal("55")),
+
+                // Spend Profile costs
+                asMap(
+                        1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("50")),
+                        2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
+                        3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
+
+        spendProfileInDB.setMarkedAsComplete(true);
+
+        OrganisationType organisationType = new OrganisationType();
+        organisationType.setId(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
+
+        ServiceResult<Void> result = service.markSpendProfileIncomplete(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertFalse(spendProfileInDB.isMarkedAsComplete());
+    }
 
     @Test
     public void markSpendProfileWhenActualTotalsGreaterThanEligibleCosts() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -552,7 +597,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
-        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
@@ -561,9 +606,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void markSpendProfileSuccessWhenActualTotalsAreLessThanEligibleCosts() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -595,7 +637,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
 
-        ServiceResult<Void> result = service.markSpendProfile(projectOrganisationCompositeId, true);
+        ServiceResult<Void> result = service.markSpendProfileComplete(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
 
@@ -604,7 +646,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testCompleteSpendProfilesReviewSuccess() {
-        Long projectId = 1L;
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -622,7 +663,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testCompleteSpendProfilesReviewFailureWhenSpendProfileIncomplete() {
-        Long projectId = 1L;
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(null);
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -638,7 +678,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testCompleteSpendProfilesReviewFailureWhenAlreadySubmitted() {
-        Long projectId = 1L;
         Project projectInDb = new Project();
         projectInDb.setSpendProfileSubmittedDate(LocalDateTime.now());
         SpendProfile spendProfileInDb = new SpendProfile();
@@ -654,12 +693,19 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void testGetViabilitySuccess() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        Long userId = 7L;
+
+        User user = newUser()
+                .withId(userId)
+                .withFirstName("Lee")
+                .withLastName("Bowman")
+                .build();
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViability(Viability.APPROVED);
         projectFinanceInDB.setViabilityStatus(ViabilityStatus.GREEN);
+        projectFinanceInDB.setViabilityApprovalUser(user);
+        projectFinanceInDB.setViabilityApprovalDate(LocalDate.now());
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -667,16 +713,19 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
-        assertEquals(ViabilityStatus.GREEN, result.getSuccessObject().getViabilityStatus());
+        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+
+        assertEquals(Viability.APPROVED, returnedViabilityResource.getViability());
+        assertEquals(ViabilityStatus.GREEN, returnedViabilityResource.getViabilityStatus());
+
+        assertEquals("Lee", returnedViabilityResource.getViabilityApprovalUserFirstName());
+        assertEquals("Bowman", returnedViabilityResource.getViabilityApprovalUserLastName());
+        assertEquals(LocalDate.now(), returnedViabilityResource.getViabilityApprovalDate());
 
     }
 
     @Test
     public void testSaveViabilityWhenViabilityAlreadyApproved() {
-
-        Long projectId = 1L;
-        Long organisationId = 1L;
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViability(Viability.APPROVED);
@@ -696,9 +745,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void testSaveViabilityWhenViabilityStatusIsUnset() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
-
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
@@ -714,13 +760,43 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testSaveViabilitySuccess() {
+    public void testSaveViabilityWhenViabilityStatusIsUnsetButViabilityAlsoNotApproved() {
 
-        Long projectId = 1L;
-        Long organisationId = 1L;
+        Long userId = 7L;
+
+        User user = newUser().withId(userId).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.UNSET);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(Viability.PENDING, projectFinanceInDB.getViability());
+        assertEquals(ViabilityStatus.UNSET, projectFinanceInDB.getViabilityStatus());
+        assertEquals(user, projectFinanceInDB.getViabilityApprovalUser());
+        assertEquals(LocalDate.now(), projectFinanceInDB.getViabilityApprovalDate());
+
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+    }
+
+    @Test
+    public void testSaveViabilitySuccess() {
+        Long userId = 7L;
+
+        User user = newUser().withId(userId).build();
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
@@ -729,8 +805,54 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
         assertEquals(ViabilityStatus.AMBER, projectFinanceInDB.getViabilityStatus());
+        assertEquals(user, projectFinanceInDB.getViabilityApprovalUser());
+        assertEquals(LocalDate.now(), projectFinanceInDB.getViabilityApprovalDate());
+
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
 
+    }
+
+    @Test
+    public void testGetCreditReportSuccess() {
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setCreditReportConfirmed(true);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        ServiceResult<Boolean> result = service.getCreditReport(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(true, result.getSuccessObject());
+
+        verify(projectFinanceRepositoryMock).findByProjectIdAndOrganisationId(projectId, organisationId);
+    }
+
+    @Test
+    public void testSaveCreditSuccess() {
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(true, projectFinanceInDB.getCreditReportConfirmed());
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+
+    }
+
+    @Test
+    public void testSaveCreditFailsBecauseViabilityIsAlreadyApproved() {
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViability(Viability.APPROVED);
+
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
     }
 
     private SpendProfile createSpendProfile(Project projectInDB, Map<Long, BigDecimal> eligibleCostsMap, Map<Long, List<BigDecimal>> spendProfileCostsMap) {

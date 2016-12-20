@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
@@ -83,7 +87,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 project.getApplication().getFormattedId(),
                 getProjectPartnerCount(project.getId()),
                 null != project.getApplication().getLeadOrganisation() ? project.getApplication().getLeadOrganisation().getName() : "",
-                getProjectDetailsStatus(project),
+                projectDetailsStatus,
                 getBankDetailsStatus(project),
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
@@ -99,7 +103,11 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project){
-        return createProjectDetailsStatus(project);
+        return createProjectDetailsCompetitionStatus(project);
+    }
+
+    private ProjectActivityStates createProjectDetailsCompetitionStatus(Project project) {
+        return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project){
@@ -157,11 +165,20 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
-        return createMonitoringOfficerStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(), projectDetailsStatus);
+        return createMonitoringOfficerCompetitionStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(), projectDetailsStatus);
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
+    }
+
+    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
+            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
+        } else {
+            return NOT_STARTED;
+        }
+
     }
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){
@@ -192,12 +209,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return PENDING;
         }
 
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
-            return PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
-            return COMPLETE;
+        if (project.getOfferSubmittedDate() != null) {
+            if (golWorkflowHandler.isApproved(project)) {
+                return COMPLETE;
+            }
         }
 
         if(project.getOfferSubmittedDate() != null) {

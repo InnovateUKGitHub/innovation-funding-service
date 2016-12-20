@@ -2,12 +2,19 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
-import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -23,7 +30,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
-    public void test() {
+    public void testGenerateSpendProfile() {
 
         setupPostWithRestResultExpectations("/project/123/spend-profile/generate", Void.class, null, null, CREATED);
         service.generateSpendProfile(123L);
@@ -34,7 +41,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     public void saveSpendProfile() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
+        Long organisationId = 2L;
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
@@ -43,22 +50,39 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.saveSpendProfile(projectId, organisationId,  table);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile", Void.class, table);
+
 
         assertTrue(result.isSuccess());
 
     }
 
     @Test
-    public void markSpendProfile() {
+    public void markSpendProfileComplete() {
 
         Long projectId = 1L;
-        Long organisationId = 1L;
-        Boolean complete = true;
+        Long organisationId = 2L;
 
-        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete/" + complete,
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete",
                 OK);
 
-        RestResult<Void> result = service.markSpendProfile(projectId, organisationId,  complete);
+        RestResult<Void> result = service.markSpendProfileComplete(projectId, organisationId);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile/complete", Void.class, null);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markSpendProfileIncomplete() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/incomplete",
+                OK);
+
+        RestResult<Void> result = service.markSpendProfileIncomplete(projectId, organisationId);
+        setupPostWithRestResultVerifications("/project/1/partner-organisation/2/spend-profile/incomplete", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -72,6 +96,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.completeSpendProfilesReview(projectId);
+
+        setupPostWithRestResultVerifications("/project/1/complete-spend-profiles-review/", Void.class, null);
 
         assertTrue(result.isSuccess());
     }
@@ -96,6 +122,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
                 OK);
 
         RestResult<Void> result = service.acceptOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
+        setupPostWithRestResultVerifications("/project/1/spend-profile/approval/APPROVED", Void.class, null);
+
         assertTrue(result.isSuccess());
     }
 
@@ -110,6 +138,68 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        Assert.assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetProjectFinances() {
+
+        Long projectId = 123L;
+
+        List<ProjectFinanceResource> results = newProjectFinanceResource().build(2);
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/project-finances", projectFinanceResourceListType(), results);
+
+        RestResult<List<ProjectFinanceResource>> result = service.getProjectFinances(projectId);
+
+        assertEquals(results, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetViability() {
+
+        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", ViabilityResource.class, viability);
+
+        RestResult<ViabilityResource> results = service.getViability(123L, 456L);
+
+        assertEquals(Viability.APPROVED, results.getSuccessObject().getViability());
+        assertEquals(ViabilityStatus.GREEN, results.getSuccessObject().getViabilityStatus());
+    }
+
+    @Test
+    public void testSaveViability() {
+
+        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" +
+                Viability.APPROVED.name() + "/" + ViabilityStatus.RED.name();
+
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.RED);
+
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
+    }
+
+    @Test
+    public void testIsCreditReportConfirmed() {
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/credit-report", Boolean.class, true);
+        RestResult<Boolean> results = service.isCreditReportConfirmed(123L, 456L);
+        assertTrue(results.getSuccessObject());
+    }
+
+    @Test
+    public void testSaveCreditReportConfirmed() {
+
+        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/credit-report/true";
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.saveCreditReportConfirmed(123L, 456L, true);
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
     }
 }

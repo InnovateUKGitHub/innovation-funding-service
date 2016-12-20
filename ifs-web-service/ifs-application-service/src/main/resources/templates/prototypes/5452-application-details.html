@@ -32,16 +32,16 @@
                     <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
                 </div>
                 <fieldset>
+                    <div class="message-alert extra-margin-bottom">
+                        <h2 class="heading-small no-margin">Research area determines funding</h2>
+                        <p>The research area is used to calculate the funding for all collaborators in the application.</p>
+                        <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
+                    </div>
                     <div class="form-group">
                         <legend>
-                            <span class="form-label form-label-bold">Research area</span>
+                            <span class="heading-medium">Research area</span>
                             <span class="form-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
                         </legend>
-                        <div class="message-alert extra-margin-bottom">
-                            <h2 class="heading-small no-margin">Research area determines funding</h2>
-                            <p>The research area is used to calculate the funding for all collaborators in the application.</p>
-                            <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
-                        </div>
                         <label data-target="resubmission-details" class="block-label selected" for="feasibility-studies">
                             <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
                             Feasibility studies
@@ -59,7 +59,7 @@
                 <fieldset>
                     <div class="form-group">
                         <legend>
-                            <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
+                            <span class="heading-medium">Is this application a resubmission of a previous application?</span>
                             <span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
                         </legend>
                         <label data-target="resubmission-details" class="block-label" for="resubmission-yes">
@@ -92,26 +92,26 @@
                 <fieldset>
                     <div class="form-group">
                         <legend>
-                            <span class="form-label form-label-bold">Estimated timescales</span>
-                            <span>Project start date</span>
+                            <span class="heading-medium">Estimated timescales</span>
+                            <span class="form-hint">Project start date</span>
                             <span class="form-hint">For example: 31 12 2015</span>
                         </legend>
                         <div class="date-group" data-future-date="" data-field-group-name="application.startDate" data-field-group-id="application_details-startdate">
                             <input type="hidden" name="application.startDate" id="application_details-startdate" value="application.startDate" />
                             <div class="day">
-                                <label class="form-label" for="application_details-startdate_day">
+                                <label class="form-label-bold" for="application_details-startdate_day">
                                     <div>Day</div>
                                 </label>
                                 <input class="form-control width-extra-small null " type="number" placeholder="DD" id="application_details-startdate_day" name="application.startDate.dayOfMonth" min="1" max="31" />
                             </div>
                             <div class="month">
-                                <label class="form-label" for="application_details-startdate_month">
+                                <label class="form-label-bold" for="application_details-startdate_month">
                                     <div>Month</div>
                                 </label>
                                 <input class="form-control width-extra-small null " type="number" placeholder="MM" id="application_details-startdate_month" name="application.startDate.monthValue" min="1" max="12" />
                             </div>
                             <div class="year">
-                                <label class="form-label" for="application_details-startdate_year">
+                                <label class="form-label-bold" for="application_details-startdate_year">
                                     <div>Year</div>
                                 </label>
                                 <input class="form-control width-extra-small null " type="number" placeholder="YYYY" id="application_details-startdate_year" name="application.startDate.year" />
@@ -121,7 +121,7 @@
                     </div>
                     <div class="form-group">
                         <div class="form-group">
-                            <label class="form-label" for="application_details-duration">
+                            <label class="form-label-bold" for="application_details-duration">
                                 <div>Duration in months</div>
                             </label>
                             <input class="form-control width-extra-small null" type="number" id="application_details-duration" name="application.durationInMonths" value="51" />

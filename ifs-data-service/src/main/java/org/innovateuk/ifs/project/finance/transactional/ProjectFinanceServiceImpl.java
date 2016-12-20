@@ -1,25 +1,25 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import com.google.common.collect.Lists;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -47,6 +47,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -54,8 +56,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Service dealing with Project finance operations
@@ -96,6 +96,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
+    private FinanceRowService financeRowService;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -104,6 +107,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferLetterService;
 
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
@@ -143,7 +149,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         updateApprovalOfSpendProfile(projectId, approvalType);
-        return serviceSuccess();
+        return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 
     @Override
@@ -153,9 +159,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         if(spendProfiles.isEmpty()) {
             return serviceSuccess(ApprovalType.EMPTY);
         } else if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
-           return serviceSuccess(ApprovalType.REJECTED);
+            return serviceSuccess(ApprovalType.REJECTED);
         } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
-           return serviceSuccess(ApprovalType.APPROVED);
+            return serviceSuccess(ApprovalType.APPROVED);
         }
 
         return serviceSuccess(ApprovalType.UNSET);
@@ -220,7 +226,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             cr.setName(costCategory.getName());
             cr.setLabel(costCategory.getLabel());
             returnMap.put(costCategory.getId(), cr);
-         });
+        });
         return returnMap;
     }
 
@@ -286,23 +292,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> markSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, Boolean complete) {
+    public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        if(complete && table.getValidationMessages().hasErrors()){ // validate before marking as complete
+        if(table.getValidationMessages().hasErrors()) { // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
-            return saveSpendProfileData(projectOrganisationCompositeId, table, complete);
+            return saveSpendProfileData(projectOrganisationCompositeId, table, true);
         }
     }
 
+    @Override
+    public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+            return saveSpendProfileData(projectOrganisationCompositeId, table, false);
+    }
+
+    @Override
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfileSubmittedDate() != null) {
-                return serviceFailure(new Error(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED));
+                return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
             }
 
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
-                return serviceFailure(new Error(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION));
+                return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
             }
 
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
@@ -311,46 +324,102 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
+
+        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
+               validateCreditReport(projectFinance).andOnSuccessReturnVoid(() -> {
+
+           projectFinance.setCreditReportConfirmed(reportPresent);
+           projectFinanceRepository.save(projectFinance);
+
+       }));
+    }
+
+    private ServiceResult<Void> validateCreditReport(ProjectFinance projectFinance) {
+        if (Viability.APPROVED == projectFinance.getViability()) {
+            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+        } else {
+            return serviceSuccess();
+        }
+
+    }
+
+    @Override
+    public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) {
+        return getProjectFinance(projectId, organisationId).andOnSuccessReturn(ProjectFinance::getCreditReportConfirmed);
+    }
+
+    @Override
+    public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
+        return financeRowService.financeChecksTotals(projectId);
+    }
+
+    @Override
     public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        ViabilityResource viabilityResource = new ViabilityResource();
-        viabilityResource.setViability(projectFinance.getViability());
-        viabilityResource.setViabilityStatus(projectFinance.getViabilityStatus());
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccessReturn(projectFinance -> {
+                    ViabilityResource viabilityResource = new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus());
+                    viabilityResource.setViabilityApprovalDate(projectFinance.getViabilityApprovalDate());
+                    setViabilityApprovalUser(viabilityResource, projectFinance.getViabilityApprovalUser());
 
-        return serviceSuccess(viabilityResource);
+                    return viabilityResource;
+                });
+    }
 
+    private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
+
+        if (viabilityApprovalUser != null) {
+            viabilityResource.setViabilityApprovalUserFirstName(viabilityApprovalUser.getFirstName());
+            viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
+        }
     }
 
     @Override
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId());
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return validateViability(projectFinance, viabilityStatus)
-                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus));
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityStatus)
+                .andOnSuccess(() -> setViabilityApprovalUser(projectFinance, viability))
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus)));
     }
 
-    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {
+            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+        }
 
-            return serviceFailure(new Error(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
+        if (Viability.APPROVED == viability && ViabilityStatus.UNSET == viabilityStatus) {
+            return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
+        }
 
-        } else if (ViabilityStatus.UNSET == viabilityStatus) {
+        return serviceSuccess();
+    }
 
-            return serviceFailure(new Error(VIABILITY_RAG_STATUS_MUST_BE_SET));
-
+    private ServiceResult<Void> setViabilityApprovalUser(ProjectFinance projectFinance, Viability viability) {
+        if (Viability.APPROVED == viability) {
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> projectFinance.setViabilityApprovalUser(currentUser));
         } else {
             return serviceSuccess();
         }
+
     }
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
 
         projectFinance.setViability(viability);
         projectFinance.setViabilityStatus(viabilityStatus);
+
+        if (Viability.APPROVED == viability) {
+            projectFinance.setViabilityApprovalDate(LocalDate.now());
+        }
 
         projectFinanceRepository.save(projectFinance);
 
@@ -375,7 +444,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 andOnSuccess (
                         spendProfile -> {
                             if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
-                                return serviceFailure(new Error(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED));
+                                return serviceFailure(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED);
                             }
 
                             spendProfile.setMarkedAsComplete(markAsComplete);
@@ -473,7 +542,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 getCurrentlyLoggedInUser().andOnSuccess(user ->
                 spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
                 andOnSuccess(spendProfileCostCategorySummaries ->
-                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
+                generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
 
         return processAnyFailuresOrSucceed(generationResults);
     }
@@ -644,5 +713,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private Cost findSingleMatchingCostByCategory(CostGroup eligibleCosts, CostCategory category) {
         return simpleFindFirst(eligibleCosts.getCosts(), f -> f.getCostCategory().equals(category)).get();
+    }
+
+    private ServiceResult<ProjectFinance> getProjectFinance(Long projectId, Long organisationId) {
+        return find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(ProjectFinance.class, projectId, organisationId));
     }
 }

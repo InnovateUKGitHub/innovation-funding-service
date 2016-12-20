@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
+import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,25 +13,21 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.viewmodel.MilestoneViewModel;
-import org.apache.commons.collections4.map.LinkedMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -50,12 +49,11 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        LinkedMap<String, MilestoneViewModel> milestoneEntries = milestonesForm.getMilestoneEntries();
+        LinkedMap<String, MilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 
-        List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition.getId());
+        List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition);
         if(!errors.isEmpty()) {
             competitionSetupMilestoneService.sortMilestones(milestonesForm);
             return serviceFailure(errors);
@@ -64,16 +62,29 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         return serviceSuccess();
     }
 
-    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneViewModel> milestoneEntries, Long competitionId){
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
+    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneRowForm> milestoneEntries, CompetitionResource competition) {
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competition.getId());
+        Map<String, MilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
 
-        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(milestoneEntries);
+        //If competition is already set up only allow to save of future milestones.
+        if (Boolean.TRUE.equals(competition.getSetupComplete())) {
+            List<MilestoneType> futureTypes = milestones.stream()
+                    .filter(milestoneResource -> milestoneResource.getDate() == null || LocalDateTime.now().isBefore(milestoneResource.getDate()))
+                    .map(milestoneResource -> milestoneResource.getType())
+                    .collect(Collectors.toList());
+
+            filteredMilestoneEntries = CollectionFunctions.simpleFilter(milestoneEntries, (name, form) -> futureTypes.contains(form.getMilestoneType()));
+
+
+        }
+
+        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(filteredMilestoneEntries);
 
         if(!errors.isEmpty()) {
             return errors;
         }
 
-        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntries, competitionId);
+        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, filteredMilestoneEntries, competition.getId());
     }
 
     @Override

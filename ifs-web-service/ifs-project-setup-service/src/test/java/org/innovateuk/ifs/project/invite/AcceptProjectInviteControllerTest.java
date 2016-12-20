@@ -43,6 +43,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
+        setupCookieUtil();
     }
 
     @Test
@@ -54,7 +55,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
                 .andExpect(status().is2xxSuccessful())
-                        // Currently we tell them to log out and try again as there is not currently a way of forcing this
+                // Currently we tell them to log out and try again as there is not currently a way of forcing this
                 .andExpect(cookie().doesNotExist(AcceptProjectInviteController.INVITE_HASH))
                 .andExpect(view().name(AcceptProjectInviteController.ACCEPT_INVITE_FAILURE));
     }
@@ -68,7 +69,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
                 .andExpect(status().is2xxSuccessful())
-                        // Currently we tell them to log out and try again as there is not currently a way of forcing this
+                // Currently we tell them to log out and try again as there is not currently a way of forcing this
                 .andExpect(cookie().doesNotExist(AcceptProjectInviteController.INVITE_HASH))
                 .andExpect(view().name(AcceptProjectInviteController.ACCEPT_INVITE_FAILURE));
     }
@@ -80,11 +81,13 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         InviteProjectResource invite = newInviteProjectResource().withHash("hash").withStatus(SENT).withEmail(user.getEmail()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
-        mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
+        MvcResult result = mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(cookie().exists(AcceptProjectInviteController.INVITE_HASH))
-                .andExpect(cookie().value(AcceptProjectInviteController.INVITE_HASH, invite.getHash()))
-                .andExpect(view().name(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW));
+                .andExpect(view().name(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW))
+                .andReturn();
+
+        assertEquals(invite.getHash(), getDecryptedCookieValue(result.getResponse().getCookies(), AcceptProjectInviteController.INVITE_HASH));
     }
 
 
@@ -95,11 +98,13 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         InviteProjectResource invite = newInviteProjectResource().withHash("hash").withStatus(SENT).withEmail(inviteUser.getEmail()).build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
-        mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
+        MvcResult result = mockMvc.perform(get(ACCEPT_INVITE_MAPPING + invite.getHash()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(cookie().exists(AcceptProjectInviteController.INVITE_HASH))
-                .andExpect(cookie().value(AcceptProjectInviteController.INVITE_HASH, invite.getHash()))
-                .andExpect(redirectedUrl(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING));
+                .andExpect(redirectedUrl(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING))
+                .andReturn();
+
+        assertEquals(invite.getHash(), getDecryptedCookieValue(result.getResponse().getCookies(), AcceptProjectInviteController.INVITE_HASH));
     }
 
     @Test
@@ -121,7 +126,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(false));
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())).thenReturn(restSuccess(organisation));
-        MvcResult mvcResult = mockMvc.perform(get(ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING).cookie(new Cookie(AcceptProjectInviteController.INVITE_HASH, invite.getHash())))
+        MvcResult mvcResult = mockMvc.perform(get(ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING).cookie(new Cookie(AcceptProjectInviteController.INVITE_HASH, encryptor.encrypt(invite.getHash()))))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(ACCEPT_INVITE_SHOW_PROJECT)).andReturn();
         JoinAProjectViewModel model = (JoinAProjectViewModel)mvcResult.getModelAndView().getModel().get("model");
@@ -139,7 +144,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())).thenReturn(restSuccess(organisation));
-        MvcResult mvcResult = mockMvc.perform(get(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING).cookie(new Cookie(AcceptProjectInviteController.INVITE_HASH, invite.getHash())))
+        MvcResult mvcResult = mockMvc.perform(get(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING).cookie(new Cookie(AcceptProjectInviteController.INVITE_HASH, encryptor.encrypt(invite.getHash()))))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(ACCEPT_INVITE_SHOW_PROJECT)).andReturn();
         JoinAProjectViewModel model = (JoinAProjectViewModel)mvcResult.getModelAndView().getModel().get("model");

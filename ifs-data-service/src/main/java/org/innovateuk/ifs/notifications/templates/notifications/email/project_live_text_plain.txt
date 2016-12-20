@@ -1,0 +1,17 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+Innovate UK has reviewed and approved the signed grant offer letter you uploaded for your project.
+
+Next steps:
+
+review the grant offer letter and annex if provided
+the Project Manager will need to sign the document
+the signed grant offer letter should be sent to Innovate UK
+If you have any other questions around these documents please contact the competitions team using the details below.
+
+Yours sincerely,
+
+<@layout.senderPlainText/>
+</@layout.defaultPlainText>
