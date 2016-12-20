@@ -328,7 +328,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return getProject(projectId).andOnSuccess(project -> {
 
             project.setSpendProfileSubmittedDate(null);
-            projectRepository.save(project);
             return serviceSuccess();
         });
     }
