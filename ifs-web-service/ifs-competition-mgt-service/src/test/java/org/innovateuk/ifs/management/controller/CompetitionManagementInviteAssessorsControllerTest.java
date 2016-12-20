@@ -127,9 +127,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -256,9 +257,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, expectedForm.getInvites().size());
         assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -270,7 +272,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsRowForm newUserRow1 = new InviteNewAssessorsRowForm();
         newUserRow1.setName("Tester 1");
         newUserRow1.setEmail("test1@test.com");
-
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("removeNewUser", "0")
@@ -293,9 +294,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, expectedForm.getInvites().size());
         assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
         inOrder.verifyNoMoreInteractions();
     }
 
