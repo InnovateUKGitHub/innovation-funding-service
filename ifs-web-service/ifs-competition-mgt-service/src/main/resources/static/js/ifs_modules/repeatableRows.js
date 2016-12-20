@@ -61,11 +61,11 @@ IFS.competitionManagement.repeatableRows = (function () {
 
         jQuery(rowsInputs).each(function () {
           //regex will replace 1 or more numbers in the string with the new index value
-          var $row = jQuery(this);
-          var newId = $row.attr('id').replace(/\d+/g, rowIndex);
-          var newName = $row.attr('name').replace(/\d+/g, rowIndex);
+          var $rowInput = jQuery(this);
+          var newId = $rowInput.attr('id').replace(/\d+/g, rowIndex);
+          var newName = $rowInput.attr('name').replace(/\d+/g, rowIndex);
 
-          $row.attr({
+          $rowInput.attr({
             'id': newId,
             'name': newName
           });
