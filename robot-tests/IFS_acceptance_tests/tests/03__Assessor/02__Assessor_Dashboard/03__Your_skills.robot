@@ -56,7 +56,7 @@ Skills are saved correctly
     When the user clicks the button/link    jQuery=a:contains("your skills")
     Then The correct radio button should be selected
     And the user sees the text in the element    id=skillAreas    assessor skill areas text
-    [Teardown]    And the user clicks the button/link    link=Back to your assessor dashboard
+    [Teardown]    And the user clicks the button/link    link=Back to assessor dashboard
 
 *** Keywords ***
 The correct radio button should be selected

@@ -30,6 +30,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserProfileService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,8 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.*;
+import static java.lang.String.format;
+
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -64,6 +67,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Service
 @Transactional
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
+
+    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;
@@ -104,6 +109,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
     enum Notifications {
         INVITE_ASSESSOR
     }
@@ -122,7 +130,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                             "competitionName", invite.getTarget().getName(),
                             "innovationArea", invite.getInnovationArea(),
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter)));
+                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
+                            "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
             EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
             AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
             resource.setEmailContent(content);
