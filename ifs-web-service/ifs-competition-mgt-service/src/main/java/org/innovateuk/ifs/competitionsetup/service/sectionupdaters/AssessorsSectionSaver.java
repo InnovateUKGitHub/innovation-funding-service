@@ -9,6 +9,9 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+
 /**
  * Competition setup section saver for the assessor section.
  */
@@ -24,14 +27,29 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		
-		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
-		
-		competition.setAssessorCount(assessorsForm.getAssessorCount());
-		competition.setAssessorPay(assessorsForm.getAssessorPay());
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
-        return competitionService.update(competition);
+		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
+
+		if(!sectionToSave().preventEdit(competition)) {
+			setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
+			setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
+
+			return competitionService.update(competition);
+		}
+		else {
+			return serviceFailure(asList(new Error("COMPETITION_NOT_EDITABLE")));
+		}
+	}
+
+	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AssessorsForm assessorsForm) {
+		if(!competition.isSetupAndLive()) {
+			competition.setAssessorPay(assessorsForm.getAssessorPay());
+		}
+	}
+
+	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AssessorsForm assessorsForm) {
+		competition.setAssessorCount(assessorsForm.getAssessorCount());
 	}
 
 	@Override
