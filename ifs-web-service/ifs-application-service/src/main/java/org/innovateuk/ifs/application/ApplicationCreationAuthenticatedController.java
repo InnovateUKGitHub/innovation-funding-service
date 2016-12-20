@@ -44,11 +44,11 @@ public class ApplicationCreationAuthenticatedController {
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        HttpServletRequest request) {
-        model.addAttribute(COMPETITION_ID, competitionId);
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId).getSuccessObjectOrThrowException();
         if (Boolean.TRUE.equals(userHasApplication)) {
+            model.addAttribute(COMPETITION_ID, competitionId);
             return "create-application/confirm-new-application";
         } else {
             return createApplicationAndShowInvitees(user, competitionId);
