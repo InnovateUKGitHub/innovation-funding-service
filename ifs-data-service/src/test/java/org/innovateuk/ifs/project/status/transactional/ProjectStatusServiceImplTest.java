@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -244,8 +245,9 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
-        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(Optional.empty());
+        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -260,6 +262,44 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        HashMap<UserRoleType, ProjectActivityStates> roles = new HashMap<UserRoleType, ProjectActivityStates>();
+        roles.put(COMP_ADMIN, NOT_REQUIRED);
+        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
+    }
+
+    @Test
+    public void getProjectStatusFinanceContactIncomplete() {
+        Long projectId = 2345L;
+        Long organisationId = 123L;
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+        Organisation o = newOrganisation().withId(organisationId).build();
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        project.setPartnerOrganisations(po);
+
+        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(Optional.empty());
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(null);
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
         HashMap<UserRoleType, ProjectActivityStates> roles = new HashMap<UserRoleType, ProjectActivityStates>();

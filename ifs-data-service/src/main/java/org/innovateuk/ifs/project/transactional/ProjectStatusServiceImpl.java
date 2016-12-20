@@ -92,7 +92,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 getBankDetailsStatus(project),
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
-                getMonitoringOfficerStatus(project, projectDetailsStatus),
+                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project)),
                 getOtherDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
@@ -106,7 +106,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectActivityStates getProjectDetailsStatus(Project project){
         for(Organisation organisation : project.getOrganisations()){
             Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
-            if(financeContact == null){
+            if(financeContact == null || !financeContact.isPresent()){
                 return PENDING;
             }
         }
