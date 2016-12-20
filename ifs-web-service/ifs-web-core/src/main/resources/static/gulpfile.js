@@ -7,14 +7,23 @@ var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var sassLint = require('gulp-sass-lint');
 var compass = require('compass-importer');
+var filesExist = require('files-exist');
 
 // Path variables
-var node_modules_path = __dirname + '/../../../../../node_modules/';
+var nodeModulesPath = __dirname + '/../../../../../node_modules/';
+var vendorJsFiles = [
+  nodeModulesPath + 'js-cookie/src/js.cookie.js',
+  'js/vendor/jquery/jquery-ui.min.js',
+  'js/vendor/govuk/*.js',
+  '!js/vendor/govuk/ie.js',
+  'js/vendor/wysiwyg-editor/*.js',
+  '!js/vendor/wysiwyg-editor/hallo-src/*.js'
+];
 
-gulp.task('default',['js','css']);
+gulp.task('default', ['js', 'css']);
 
 //build all js
-gulp.task('js',['vendor','ifs-js']);
+gulp.task('js', ['vendor', 'ifs-js']);
 
 //concat and minify all the ifs files
 gulp.task('ifs-js', function () {
@@ -35,16 +44,10 @@ gulp.task('ifs-js', function () {
   .pipe(gulp.dest('js/dest'))
 });
 
+
 //concat and minify all the vendor files
-gulp.task('vendor',function(){
-  return gulp.src([
-    node_modules_path + 'js-cookie/src/js.cookie.js',
-    'js/vendor/jquery/jquery-ui.min.js',
-    'js/vendor/govuk/*.js',
-    '!js/vendor/govuk/ie.js',
-    'js/vendor/wysiwyg-editor/*.js',
-    '!js/vendor/wysiwyg-editor/hallo-src/*.js',
-  ])
+gulp.task('vendor', function() {
+  return gulp.src(filesExist(vendorJsFiles))
   .pipe(concat('vendor.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
@@ -75,5 +78,5 @@ gulp.task('css:watch', function () {
 });
 
 gulp.task('js:watch', function () {
-   gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js']);
+  gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js']);
 });
