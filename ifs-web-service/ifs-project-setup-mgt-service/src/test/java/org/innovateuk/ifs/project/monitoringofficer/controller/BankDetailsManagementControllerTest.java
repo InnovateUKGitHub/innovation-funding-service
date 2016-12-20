@@ -169,7 +169,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/15/organisation/11/review-bank-details")).
+                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details")).
                 andReturn();
 
         verify(bankDetailsService).updateBankDetails(project.getId(), updatedBankDetailsResource);
@@ -198,7 +198,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/15/organisation/11/review-bank-details")).
+                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details")).
                 andReturn();
 
         verify(bankDetailsService).updateBankDetails(project.getId(), updatedAddressBankDetailsResource);
@@ -227,7 +227,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/15/organisation/11/review-bank-details")).
+                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details")).
                 andReturn();
 
         verify(bankDetailsService).updateBankDetails(any(Long.class), any(BankDetailsResource.class));
