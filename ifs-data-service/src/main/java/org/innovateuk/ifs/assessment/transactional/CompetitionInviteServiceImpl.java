@@ -32,8 +32,8 @@ import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
@@ -62,6 +62,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
  */
 @Service
+@Transactional
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
@@ -221,7 +222,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    @Transactional
     public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
