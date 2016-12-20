@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -13,13 +15,10 @@ import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSet
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -61,7 +60,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Autowired
     public void setCompetitionSetupSubsectionSavers(Collection<CompetitionSetupSubsectionSaver> savers) {
-        subsectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
+        subsectionSavers = savers.stream().collect(Collectors.toMap(p -> p.subsectionToSave(), Function.identity()));
     }
 	
 	@Autowired
@@ -196,15 +195,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
-		if (competitionResource.getCompetitionStatus() != CompetitionStatus.COMPETITION_SETUP
-				&& competitionResource.getStartDate().isAfter(LocalDateTime.now())) {
+		if (competitionResource.getCompetitionStatus() != CompetitionStatus.COMPETITION_SETUP) {
 			return false;
 		}
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
 				(!competitionResource.getSectionSetupStatus().containsKey(section) ||
 						!competitionResource.getSectionSetupStatus().get(section))).findFirst();
 
-		return !notDoneSection.isPresent() ;
+		return !notDoneSection.isPresent();
 	}
 
 	@Override

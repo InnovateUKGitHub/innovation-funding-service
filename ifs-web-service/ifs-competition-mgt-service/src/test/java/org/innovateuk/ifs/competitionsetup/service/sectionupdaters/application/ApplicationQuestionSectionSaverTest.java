@@ -33,7 +33,7 @@ public class ApplicationQuestionSectionSaverTest {
 
     @Test
     public void testSectionToSave() {
-        assertEquals(CompetitionSetupSubsection.QUESTIONS, service.sectionToSave());
+        assertEquals(CompetitionSetupSubsection.QUESTIONS, service.subsectionToSave());
     }
 
     @Test
