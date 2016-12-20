@@ -95,7 +95,7 @@ PM should be able upload a file and then access the Submit button
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
-    # TODO - 6829 GOL uploaded but not submitted by PM shows wrong status
+    # TODO - 5998 GOL uploaded but not submitted by PM shows wrong status
     # And the user clicks the button/link    link=Project setup status
     # Then the user goes back to the previous page
     # And the user should see the element    jQuery=li.require-action:nth-child(8)
