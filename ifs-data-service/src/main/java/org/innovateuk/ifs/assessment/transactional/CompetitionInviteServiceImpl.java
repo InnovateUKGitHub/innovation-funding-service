@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
@@ -220,6 +221,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
