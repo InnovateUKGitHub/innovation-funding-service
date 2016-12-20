@@ -116,8 +116,7 @@ public class CompetitionManagementInviteAssessorsController {
                 () -> invite(model, competitionId, form, bindingResult),
                 () -> {
                     RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
-                            competitionId,
-                            newInviteFormToResource(form, competitionId)
+                            newInviteFormToResource(form, competitionId), competitionId
                     );
 
                     return validationHandler.addAnyErrors(restResult)

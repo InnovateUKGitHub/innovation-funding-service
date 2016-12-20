@@ -313,7 +313,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInvites(expectedInvites)
                 .build();
 
-        when(competitionInviteRestService.inviteNewUsers(competition.getId(), expectedInviteListResource))
+        when(competitionInviteRestService.inviteNewUsers(expectedInviteListResource, competition.getId()))
                 .thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
@@ -327,7 +327,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competition.getId())));
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).inviteNewUsers(competition.getId(), expectedInviteListResource);
+        inOrder.verify(competitionInviteRestService).inviteNewUsers(expectedInviteListResource, competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
