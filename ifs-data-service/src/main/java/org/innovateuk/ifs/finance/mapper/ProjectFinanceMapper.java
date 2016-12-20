@@ -39,7 +39,6 @@ public abstract class ProjectFinanceMapper extends BaseMapper<ProjectFinance, Pr
     @Override
     public abstract ProjectFinance mapToDomain(ProjectFinanceResource projectFinanceResource);
 
-
     public Long mapProjectFinanceToId(ProjectFinance object) {
         if (object == null) {
             return null;

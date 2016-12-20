@@ -200,7 +200,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
         expectedViabilityResource.setViabilityApprovalDate(LocalDate.now());
-        expectedViabilityResource.setViabilityApprovalUserLastName("Lee");
+        expectedViabilityResource.setViabilityApprovalUserFirstName("Lee");
         expectedViabilityResource.setViabilityApprovalUserLastName("Bowman");
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
