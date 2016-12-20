@@ -90,6 +90,10 @@ public class ProjectGrantOfferLetterSendViewModel {
 
     public Boolean getSignedGrantOfferLetterFileAvailable() { return signedGrantOfferLetterAvailable; }
 
+    public boolean isShowRemoveOfferLetterButton() {
+        return grantOfferLetterFile != null && !sentToProjectTeam;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

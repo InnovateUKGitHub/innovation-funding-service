@@ -75,7 +75,7 @@
         <th:block th:if="${model.grantOfferLetterFile}">
             <a th:href="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
                class="uploaded-file" th:text="${model.grantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-            <button name="removeGrantOfferLetterClicked" class="button-secondary no-margin-right"
+            <button th:if="${model.showRemoveOfferLetterButton}" name="removeGrantOfferLetterClicked" class="button-secondary no-margin-right"
                     type="submit">Remove
             </button>
         </th:block>
@@ -140,35 +140,6 @@
             Send to project team
         </button>
     </div>
-
-    <!-- disable GOL received by post INFUND-6377
-    <th:block th:if="${model.isSentToProjectTeam()}">
-        <h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
-        <p>If the grant offer letter has been received by post, please tick the box below.</p>
-
-        <div class="form-group">
-            <label class="block-label" for="gol-by-post">
-                <input id="gol-by-post" value="gol-by-post" type="checkbox" />
-                The grant offer letter has been received by post
-            </label>
-        </div>
-
-        <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
-
-        <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-            <button class="js-close close" aria-label="Close Popup">X</button>
-            <div>
-                <h2 class="heading-medium no-margin">Confirm receipt of posted grant offer letter</h2>
-                <p>The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
-                <hr />
-                <div class="alignright-button">
-                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                    <a th:href="@{'/project/{id}/offer/grant-offer-letter/received-by-post'}" class="button">Confirm</a>
-                </div>
-            </div>
-        </div>
-    </th:block>
-    -->
 
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
         <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
