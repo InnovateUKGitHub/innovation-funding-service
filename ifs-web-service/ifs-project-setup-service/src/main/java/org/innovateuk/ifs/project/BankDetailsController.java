@@ -72,6 +72,12 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        if (hasNonAddressErrors(bindingResult)) {
+            form.setBindingResult(bindingResult);
+            form.setObjectErrors(bindingResult.getAllErrors());
+            return bankDetails(model, projectId, loggedInUser, form);
+        }
+
         if (isNewAddressNotValid(form)) {
             addAddressNotProvidedValidationError(bindingResult, validationHandler);
             return bankDetails(model, projectId, loggedInUser, form);

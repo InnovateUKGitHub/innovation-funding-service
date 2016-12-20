@@ -125,6 +125,40 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     }
 
     @Test
+    public void testsubmitBankDetailsWhenInvalidAccountDetails() throws Exception {
+
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+
+        mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("sortCode", "1234WE").
+                param("accountNumber", "123tt678").
+                param("addressType", ADD_NEW.name())).
+                andExpect(view().name("project/bank-details")).
+                andExpect(model().hasErrors()).
+                andExpect(model().errorCount(2));
+
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
+    }
+
+    @Test
+    public void testsubmitBankDetailsWhenInvalidSortCode() throws Exception {
+
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+
+        mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("sortCode", "q234WE").
+                param("accountNumber", "12345678").
+                param("addressType", ADD_NEW.name())).
+                andExpect(view().name("project/bank-details")).
+                andExpect(model().hasErrors()).
+                andExpect(model().errorCount(1));
+
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
+    }
+
+    @Test
     public void testSearchAddressWithoutPostCode() throws Exception {
         ProjectResource projectResource = setUpMockingForsubmitBankDetails();
 
