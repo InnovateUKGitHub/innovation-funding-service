@@ -74,6 +74,14 @@ public class ValidationHandler {
         return successHandler.get();
     }
 
+    /**
+     * Similar to failNowOrSucceedWith, but allows skipping an individual field from validation check.
+     * Useful when we have custom validation for certain fields for example but not for everything.
+     * @param fieldName
+     * @param failureHandler
+     * @param successHandler
+     * @return
+     */
     public String failNowOrSucceedWithExceptForField(String fieldName, Supplier<String> failureHandler, Supplier<String> successHandler) {
 
         if (bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains(fieldName))).count() > 0) {
