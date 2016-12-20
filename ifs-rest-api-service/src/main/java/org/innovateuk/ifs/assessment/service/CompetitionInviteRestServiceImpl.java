@@ -69,7 +69,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> inviteNewUsers(long competitionId, NewUserStagedInviteListResource newUserStagedInvites) {
+    public RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites,  long competitionId) {
         return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "inviteNewUsers", competitionId), newUserStagedInvites, Void.class);
     }
 
