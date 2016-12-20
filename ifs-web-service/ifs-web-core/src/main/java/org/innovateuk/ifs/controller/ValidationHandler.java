@@ -74,6 +74,21 @@ public class ValidationHandler {
         return successHandler.get();
     }
 
+    public String failNowOrSucceedWithExceptForField(String fieldName, Supplier<String> failureHandler, Supplier<String> successHandler) {
+
+        if (bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains(fieldName))).count() > 0) {
+
+            if (bindingResultTarget != null) {
+                bindingResultTarget.setBindingResult(bindingResult);
+                bindingResultTarget.setObjectErrors(bindingResult.getAllErrors());
+            }
+
+            return failureHandler.get();
+        }
+
+        return successHandler.get();
+    }
+
     public boolean hasErrors() {
         return bindingResult.hasErrors();
     }
