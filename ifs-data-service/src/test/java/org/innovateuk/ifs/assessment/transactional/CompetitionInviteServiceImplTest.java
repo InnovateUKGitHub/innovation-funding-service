@@ -700,7 +700,7 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
-        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(null);
+        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(Optional.empty());
 
         assertFalse(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
 
