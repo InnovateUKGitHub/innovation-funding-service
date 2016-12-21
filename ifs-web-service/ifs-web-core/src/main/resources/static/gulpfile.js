@@ -33,14 +33,14 @@ gulp.task('ifs-js', function () {
     'js/fire.js'
   ])
   .pipe(standard())
+  .pipe(concat('ifs.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,
     breakOnWarning: false,
     quiet: false
   }))
-  .pipe(concat('ifs.min.js'))
-  .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
 });
 
 

@@ -14,14 +14,14 @@ gulp.task('js', function () {
     'js/ifs_pages/*.js'
   ])
   .pipe(standard())
+  .pipe(concat('comp-management.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('js/dest'))
   .pipe(standard.reporter('default', {
     breakOnError: true,
     breakOnWarning: false,
     quiet: false
   }))
-  .pipe(concat('comp-management.min.js'))
-  .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
 })
 gulp.task('css', function () {})
 gulp.task('css:watch', function () {})
