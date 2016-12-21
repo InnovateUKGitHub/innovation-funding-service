@@ -1,23 +1,23 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.builder.AddressBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,31 +36,29 @@ import org.mockito.Captor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -70,15 +69,14 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
@@ -342,16 +340,47 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Test
     public void testRemoveGrantOfferLetterFileEntry() {
 
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
         FileEntry existingGOLFile = newFileEntry().build();
         project.setGrantOfferLetter(existingGOLFile);
 
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
         when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
 
         ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
 
         assertTrue(result.isSuccess());
         assertNull(project.getGrantOfferLetter());
+
+        verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
         verify(fileServiceMock).deleteFile(existingGOLFile.getId());
+    }
+
+    @Test
+    public void testRemoveGrantOfferLetterFileEntryButWorkflowRejected() {
+
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
+        FileEntry existingGOLFile = newFileEntry().build();
+        project.setGrantOfferLetter(existingGOLFile);
+
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(false);
+
+        ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED));
+        assertEquals(existingGOLFile, project.getGrantOfferLetter());
+
+        verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
+        verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
     }
 
     @Test
