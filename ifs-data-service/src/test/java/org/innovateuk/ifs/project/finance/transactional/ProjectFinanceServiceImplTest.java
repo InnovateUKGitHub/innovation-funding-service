@@ -433,7 +433,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         assertTrue(project.getSpendProfileSubmittedDate() == null);
 
         verify(spendProfileRepositoryMock).save(spendProfileList);
-        verify(projectRepositoryMock).save(project);
     }
 
     @Test
