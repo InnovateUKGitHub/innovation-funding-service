@@ -517,7 +517,7 @@ Project Finance is able to Approve Spend Profile
     And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
 
-Status updates correctly for internal user's table
+Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
