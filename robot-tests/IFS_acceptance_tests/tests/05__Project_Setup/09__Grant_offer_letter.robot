@@ -21,7 +21,7 @@ Status updates correctly for internal user's table
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok       # Project details
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO  TODO pending due to INFUND-6952
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(3).status.ok       # Bank details
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok       # Finance Checks
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok       # Finance checks
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.ok       # Spend Profile
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
@@ -209,8 +209,8 @@ project finance generates the Spend Profile
     project finance approves Viability for  ${Gabtype_Id}
     project finance approves Viability for  ${Kazio_Id}
     the user navigates to the page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check
-    the user clicks the button/link  jQuery=.button:contains("Generate spend profile")
-    the user clicks the button/link   jQuery=div.column-half.alignright-button > button:contains("Generate spend profile")
+    the user clicks the button/link  jQuery=.generate-spend-profile-main-button
+    the user clicks the button/link  jQuery=#generate-spend-profile-modal-button
 
 project finance approves Viability for
     [Arguments]  ${partner}
