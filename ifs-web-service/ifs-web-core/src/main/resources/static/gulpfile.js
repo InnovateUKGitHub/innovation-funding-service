@@ -36,7 +36,7 @@ gulp.task('ifs-js', function () {
   .pipe(standard.reporter('default', {
     breakOnError: true,
     breakOnWarning: false,
-    quiet: true
+    quiet: false
   }))
   .pipe(concat('ifs.min.js'))
   .pipe(uglify())

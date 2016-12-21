@@ -17,7 +17,7 @@ gulp.task('js', function() {
   .pipe(standard.reporter('default', {
     breakOnError: true,
     breakOnWarning: false,
-    quiet: true
+    quiet: false
   }))
   .pipe(concat('assessment.min.js'))
   .pipe(uglify())

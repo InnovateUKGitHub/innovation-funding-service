@@ -17,7 +17,7 @@ gulp.task('js', function () {
     .pipe(standard.reporter('default', {
       breakOnError: true,
       breakOnWarning: false,
-      quiet: true
+      quiet: false
     }))
     .pipe(concat('project-setup.min.js'))
     .pipe(uglify())
