@@ -1,12 +1,12 @@
 apply plugin: 'war'
 
 war {
-    baseName = 'ifs-application-service'
+    baseName = 'application'
 }
 
 
 task deployToTomcat(type: Copy) {
-    from jar
+    from war
     into "$tomcatWebAppsDir"
     rename '(.*).war', 'ROOT.war'
 }
