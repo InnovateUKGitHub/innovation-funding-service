@@ -378,7 +378,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         if (!existingNonApprovedFinanceCheck.isPresent()) {
             return serviceSuccess();
         } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED);
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED_OR_NOT_APPLICABLE);
         }
     }
 
