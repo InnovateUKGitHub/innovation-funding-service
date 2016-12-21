@@ -7,8 +7,6 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -26,10 +24,10 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
-import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -57,6 +55,7 @@ import java.util.stream.Collectors;
 
 import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -87,9 +86,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
-
-    @Autowired
-    private OrganisationMapper organisationMapper;
 
     @Autowired
     private FileTemplateRenderer fileTemplateRenderer;
@@ -328,9 +324,16 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(project ->
-                getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeGrantOfferLetterFileFromProject(project))));
+               validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
+               getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+               fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+               removeGrantOfferLetterFileFromProject(project)))));
+    }
+
+    private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
+        return getCurrentlyLoggedInUser().andOnSuccess(user ->
+                golWorkflowHandler.removeGrantOfferLetter(project, user) ?
+                        serviceSuccess() : serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED));
     }
 
     private ServiceResult<FileEntry> getGrantOfferLetterFileEntry(Project project) {
