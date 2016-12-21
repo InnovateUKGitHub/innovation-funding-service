@@ -75,7 +75,7 @@ public class BankDetailsController extends AddressLookupBaseController {
 
         final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
 
-        return validationHandler.failNowOrSucceedWithExceptForField("addressForm", failureView,
+        return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
                 () -> {
                     if (isNewAddressNotValid(form)) {
                         addAddressNotProvidedValidationError(bindingResult, validationHandler);
@@ -112,7 +112,7 @@ public class BankDetailsController extends AddressLookupBaseController {
 
         final Supplier<String> failureView = () -> doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
 
-        return validationHandler.failNowOrSucceedWithExceptForField("addressForm", failureView,
+        return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
                 () -> doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser));
     }
 
