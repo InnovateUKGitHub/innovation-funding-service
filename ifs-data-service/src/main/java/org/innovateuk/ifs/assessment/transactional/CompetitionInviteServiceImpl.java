@@ -27,7 +27,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UserProfileService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,9 +96,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserProfileService userProfileService;
-
-    @Autowired
     private NotificationSender notificationSender;
 
     @Autowired
@@ -111,7 +107,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     enum Notifications {
         INVITE_ASSESSOR
     }
-
 
     @Override
     public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
