@@ -93,7 +93,7 @@ public class ProjectSetupStatusController {
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
-        ProjectActivityStates grantOfferLetterState = leadPartner ? teamStatus.getLeadPartnerStatus().getGrantOfferLetterStatus() : teamStatus.getOtherPartnersStatuses().get(0).getGrantOfferLetterStatus() ;
+        ProjectActivityStates grantOfferLetterState = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get().getGrantOfferLetterStatus();
 
         boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
 
