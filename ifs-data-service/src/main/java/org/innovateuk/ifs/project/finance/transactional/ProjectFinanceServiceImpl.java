@@ -325,11 +325,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private ServiceResult<Void> rejectSpendProfileSubmission(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            project.setSpendProfileSubmittedDate(null);
-            return serviceSuccess();
-        });
+        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setSpendProfileSubmittedDate(null));
     }
 
     @Override
