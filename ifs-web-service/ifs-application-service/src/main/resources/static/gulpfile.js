@@ -1,13 +1,13 @@
 // jshint ignore: start
-var gulp = require('gulp');
-var standard = require('gulp-standard');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
+var gulp = require('gulp')
+var standard = require('gulp-standard')
+var uglify = require('gulp-uglify')
+var concat = require('gulp-concat')
 
-gulp.task('default', ['js', 'css']);
+gulp.task('default', ['js', 'css'])
 
-//build all js
-gulp.task('js', function() {
+// build all js
+gulp.task('js', function () {
   return gulp.src([
     'js/ifsApplicationLoader.js',
     'js/ifs_modules/*.js',
@@ -22,6 +22,6 @@ gulp.task('js', function() {
   .pipe(concat('application.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
-});
-gulp.task('css', function() {});
-gulp.task('css:watch', function() {});
+})
+gulp.task('css', function () {})
+gulp.task('css:watch', function () {})
