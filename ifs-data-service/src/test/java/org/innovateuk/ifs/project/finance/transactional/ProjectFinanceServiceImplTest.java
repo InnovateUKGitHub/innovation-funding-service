@@ -763,53 +763,73 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     public void testSaveViabilityWhenViabilityStatusIsUnsetButViabilityAlsoNotApproved() {
 
         Long userId = 7L;
-
         User user = newUser().withId(userId).build();
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
-
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.PENDING, projectFinanceInDB.getViability());
-        assertEquals(ViabilityStatus.UNSET, projectFinanceInDB.getViabilityStatus());
-        assertEquals(user, projectFinanceInDB.getViabilityApprovalUser());
-        assertEquals(LocalDate.now(), projectFinanceInDB.getViabilityApprovalDate());
+        assertSaveViabilityResults(projectFinanceInDB, Viability.PENDING, ViabilityStatus.UNSET, null, null);
+    }
 
-        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+    @Test
+    public void testSaveViabilityWhenViabilityStatusIsSetButViabilityNotApproved() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.AMBER);
+
+        assertTrue(result.isSuccess());
+
+        assertSaveViabilityResults(projectFinanceInDB, Viability.PENDING, ViabilityStatus.AMBER, null, null);
     }
 
     @Test
     public void testSaveViabilitySuccess() {
-        Long userId = 7L;
 
+        Long userId = 7L;
         User user = newUser().withId(userId).build();
 
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
-
-        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
-        assertEquals(ViabilityStatus.AMBER, projectFinanceInDB.getViabilityStatus());
-        assertEquals(user, projectFinanceInDB.getViabilityApprovalUser());
-        assertEquals(LocalDate.now(), projectFinanceInDB.getViabilityApprovalDate());
+        assertSaveViabilityResults(projectFinanceInDB, Viability.APPROVED, ViabilityStatus.AMBER, user, LocalDate.now());
+
+    }
+
+    private ProjectFinance setUpSaveViabilityMocking(User user) {
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        return projectFinanceInDB;
+
+    }
+
+    private void assertSaveViabilityResults(ProjectFinance projectFinanceInDB, Viability expectedViability, ViabilityStatus expectedViabilityStatus,
+                                            User expectedApprovalUser, LocalDate expectedApprovalTime) {
+
+        assertEquals(expectedViability, projectFinanceInDB.getViability());
+        assertEquals(expectedViabilityStatus, projectFinanceInDB.getViabilityStatus());
+        assertEquals(expectedApprovalUser, projectFinanceInDB.getViabilityApprovalUser());
+        assertEquals(expectedApprovalTime, projectFinanceInDB.getViabilityApprovalDate());
 
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
-
     }
 
     @Test
