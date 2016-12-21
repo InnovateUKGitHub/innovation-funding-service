@@ -11,7 +11,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               INFUND-3766 As a project manager I want a summary page so I can review of all partners’ spend profiles that are marked as complete
 ...
-...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance Checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
+...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
 ...
 ...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
 ...
@@ -48,20 +48,20 @@ Project Finance user generates the Spend Profile
     Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
-    Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see the element    jQuery=.generate-spend-profile-main-button
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
+    When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
     Then the user should see the text in the page    This will generate a flat profile spend for all project partners.
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
 
 Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
-    And the user clicks the button/link    jQuery=.button:contains("Generate spend profile")
+    When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
+    And the user clicks the button/link    jQuery=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
@@ -483,7 +483,7 @@ Status updates correctly for internal user's table
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance Checks
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
