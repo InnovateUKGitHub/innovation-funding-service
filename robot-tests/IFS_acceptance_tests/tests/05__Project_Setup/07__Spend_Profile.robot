@@ -11,7 +11,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               INFUND-3766 As a project manager I want a summary page so I can review of all partners’ spend profiles that are marked as complete
 ...
-...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
+...               INFUND-5194 As a partner I want to be see the project costs that were input during Finance Checks showing in the default spend profile so that I can begin to review my spend profile using the approved figures
 ...
 ...               INFUND-4819 As an academic partner I want to be given an alternative view of the Spend Profile in Project Setup so that I can submit information approriate to an academic organisation
 ...
@@ -61,9 +61,9 @@ Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
-    And the user clicks the button/link    jQuery=#generate-spend-profile-modal-button
+    And the user clicks the button/link     jQuery=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 Lead partner can view spend profile page
@@ -641,6 +641,21 @@ project finance approves other documents
 
 project finance reviews Finance checks
     log in as a different user         &{internal_finance_credentials}
+    project finance approves Viability for  ${Katz_Id}
+    project finance approves Viability for  ${Meembee_Id}
+    project finance approves Eligibility
+
+project finance approves Viability for
+    [Arguments]  ${partner}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
+    the user selects the checkbox      id=costs-reviewed
+    the user selects the checkbox      id=project-viable
+    the user moves focus to the element  link=Contact us
+    the user selects the option from the drop-down menu  Green  id=rag-rating
+    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+
+project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
     the user fills in and approves project costs
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}
