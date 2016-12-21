@@ -48,22 +48,22 @@ Project Finance user generates the Spend Profile
     Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
-    Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see the element    jQuery=.button:contains("Generate spend profile")
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
+    When the user clicks the button/link    jQuery=.button:contains("Generate spend profile")
     Then the user should see the text in the page    This will generate a flat profile spend for all project partners.
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
 
 Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
-    And the user clicks the button/link    jQuery=.button:contains("Generate spend profile")
+    When the user clicks the button/link    jQuery=.button:contains("Generate spend profile")
+    And the user clicks the button/link     jQuery=div.column-half.alignright-button > button:contains("Generate spend profile")
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 Lead partner can view spend profile page
@@ -641,6 +641,21 @@ project finance approves other documents
 
 project finance reviews Finance checks
     log in as a different user         &{internal_finance_credentials}
+    project finance approves Viability for  ${Katz_Id}
+    project finance approves Viability for  ${Meembee_Id}
+    project finance approves Eligibility
+
+project finance approves Viability for
+    [Arguments]  ${partner}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
+    the user selects the checkbox      id=costs-reviewed
+    the user selects the checkbox      id=project-viable
+    the user moves focus to the element  link=Contact us
+    the user selects the option from the drop-down menu  Green  id=rag-rating
+    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+
+project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
     the user fills in and approves project costs
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}
