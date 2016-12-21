@@ -24,8 +24,7 @@
                    th:name="${'finance-grantclaimpercentage-' + question.id + '-' + organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}"
                    placeholder="0"
-                   data-min-errormessage="This field should be %min%% or higher"
-                   data-max-errormessage="This field should be %max%% or lower"
+                   th:attr="data-min-errormessage=#{javax.validation.constraints.Min.message(0)},data-max-errormessage=#{javax.validation.constraints.Max.message(__${organisationFinanceSize?.getMaxGrantClaimPercentage()}__)}"
                     />
             <span>%</span>
         </div>
