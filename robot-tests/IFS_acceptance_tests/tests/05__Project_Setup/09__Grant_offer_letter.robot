@@ -51,14 +51,14 @@ PM can view the grant offer letter page
     And the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
-Partners should not be able to submit the Grant Offer
+Partners should not be able to send the Grant Offer
     [Documentation]    INFUND-4851, INFUND-6133
     [Tags]
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the element    jQuery=.button:contains("Submit signed offer letter")
+    And the user should not see the element    jQuery=.button:contains("Send signed offer letter")
     Then the user goes back to the previous page
     And the user should see the element    jQuery=li.waiting:nth-child(8)
 
@@ -85,7 +85,7 @@ PM should not be able to upload big Grant Offer files
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
 
-PM should be able upload a file and then access the Submit button
+PM should be able upload a file and then access the Send button
     [Documentation]    INFUND-4851, INFUND-4972
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
@@ -94,7 +94,7 @@ PM should be able upload a file and then access the Submit button
     When the lead uploads a grant offer letter    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
-    Then the user should see the element    jQuery=.button:contains("Submit signed offer letter")
+    Then the user should see the element    jQuery=.button:contains("Send signed offer letter")
     # TODO - 6829 GOL uploaded but not submitted by PM shows wrong status
     # And the user clicks the button/link    link=Project setup status
     # Then the user goes back to the previous page
@@ -136,13 +136,13 @@ PM can view the uploaded Annex file
     Then the user should not see an error in the page
     And the user goes back to the previous page
 
-PM Submits the Grant Offer letter
+PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Submit signed offer letter")
-    And the user clicks the button/link     jQuery=button:contains("Confirm submission")
+    When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
+    And the user clicks the button/link     jQuery=button:contains("Send to Innovate UK")
     Then the user should not see an error in the page
-    # TODO - It has to be checked that the dashabord staus for GOL shows hourglass. This has not been implemented yet.
+    # TODO - It has to be checked that the dashboard status for GOL shows hourglass. This has not been implemented yet.
     # And the user should see the element    jQuery=li.waiting:nth-child(8)
 
 PM's dashboard should be updated
