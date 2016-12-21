@@ -130,7 +130,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         if (user == null) {
             throw new NullPointerException("user cannot be null");
         }
-        if (this.user != null && this.user.getId() != user.getId()) {
+        if (this.user != null && !this.user.getId().equals(user.getId())) {
             throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
         }
         this.user = user;
