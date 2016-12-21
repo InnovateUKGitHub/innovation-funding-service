@@ -27,8 +27,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UserProfileService;
-import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -42,9 +40,8 @@ import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.util.Collections.*;
 import static java.lang.String.format;
-
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -95,13 +92,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private AssessorInviteToSendMapper toSendMapper;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserProfileService userProfileService;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -115,7 +106,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     enum Notifications {
         INVITE_ASSESSOR
     }
-
 
     @Override
     public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
@@ -174,7 +164,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (invite.getUser() != null) {
                 return TRUE;
             }
-            return userService.findByEmail(invite.getEmail()).getOptionalSuccessObject().isPresent();
+
+            return userRepository.findByEmail(invite.getEmail()).isPresent();
         });
     }
 

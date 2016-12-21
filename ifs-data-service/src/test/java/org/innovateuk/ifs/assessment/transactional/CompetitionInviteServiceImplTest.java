@@ -28,11 +28,9 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
@@ -58,8 +56,8 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
@@ -651,9 +649,9 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(CompetitionInvite.class, "hash")));
 
-        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
-        inOrder.verify(userServiceMock, never()).findByEmail(isA(String.class));
+        inOrder.verify(userRepositoryMock, never()).findByEmail(isA(String.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -670,28 +668,28 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
 
-        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
-        inOrder.verify(userServiceMock, never()).findByEmail(isA(String.class));
+        inOrder.verify(userRepositoryMock, never()).findByEmail(isA(String.class));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void checkExistingUser_userExistsForEmail() throws Exception {
-        UserResource user = newUserResource().build();
+        User user = newUser().build();
 
         CompetitionInvite competitionInvite = newCompetitionInvite()
                 .withEmail("test@test.com")
                 .build();
 
         when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
-        when(userServiceMock.findByEmail("test@test.com")).thenReturn(serviceSuccess(user));
+        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(Optional.of(user));
 
         assertTrue(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
 
-        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
-        inOrder.verify(userServiceMock).findByEmail("test@test.com");
+        inOrder.verify(userRepositoryMock).findByEmail("test@test.com");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -702,13 +700,13 @@ public class CompetitionInviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
-        when(userServiceMock.findByEmail("test@test.com")).thenReturn(serviceFailure(notFoundError(UserResource.class, "hash")));
+        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(null);
 
         assertFalse(competitionInviteService.checkExistingUser("hash").getSuccessObjectOrThrowException());
 
-        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(competitionInviteRepositoryMock).getByHash("hash");
-        inOrder.verify(userServiceMock).findByEmail("test@test.com");
+        inOrder.verify(userRepositoryMock).findByEmail("test@test.com");
         inOrder.verifyNoMoreInteractions();
     }
 
