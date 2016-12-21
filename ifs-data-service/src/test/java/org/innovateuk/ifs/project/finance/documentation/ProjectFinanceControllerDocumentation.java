@@ -377,6 +377,9 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+        expectedViabilityResource.setViabilityApprovalDate(LocalDate.now());
+        expectedViabilityResource.setViabilityApprovalUserFirstName("Lee");
+        expectedViabilityResource.setViabilityApprovalUserLastName("Bowman");
 
         when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 

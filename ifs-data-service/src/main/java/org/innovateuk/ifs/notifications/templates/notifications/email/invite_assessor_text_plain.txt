@@ -10,9 +10,11 @@ The innovation area you have been assigned is: ${innovationArea.name}
 </#if>
 Assessment period: ${acceptsDate} - ${deadlineDate}
 
-Please visit our new online Innovation funding service to respond to this request
+Please visit our new online Innovation funding service to respond to this request: ${inviteUrl}
 
-John Dickson
+Yours sincerely,
 
 Competitions Team
 Innovate UK
+Tel: 0300 321 4357
+Email: competitions@innovateuk.gov.uk
