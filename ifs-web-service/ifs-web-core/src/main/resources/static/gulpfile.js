@@ -34,7 +34,7 @@ gulp.task('ifs-js', function () {
   ])
   .pipe(standard())
   .pipe(standard.reporter('default', {
-    breakOnError: false,
+    breakOnError: true,
     breakOnWarning: false,
     quiet: true
   }))
