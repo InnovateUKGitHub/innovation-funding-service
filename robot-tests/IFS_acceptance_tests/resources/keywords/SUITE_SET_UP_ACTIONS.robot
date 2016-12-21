@@ -191,14 +191,14 @@ the user marks finances as complete
     the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
+    wait for autosave
 
 the user marks the finances as complete
     the user selects the checkbox    id=agree-terms-page
     the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
+    wait for autosave
 
 Make the finances ready for mark as complete
     Applicant navigates to the finances of the Robot application
@@ -219,7 +219,7 @@ The user marks the academic application finances as incomplete
     When The user navigates to the academic application finances
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
-    Sleep    1s
+    wait for autosave
 
 Create new application
     Wait for autosave

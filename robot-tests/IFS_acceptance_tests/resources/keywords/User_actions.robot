@@ -22,7 +22,6 @@ The user clicks the button/link
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
-    sleep    100ms
     Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
 
 
