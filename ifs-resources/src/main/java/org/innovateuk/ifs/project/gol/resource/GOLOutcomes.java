@@ -8,6 +8,7 @@ import org.innovateuk.ifs.workflow.resource.OutcomeType;
 public enum GOLOutcomes implements OutcomeType {
 
     PROJECT_CREATED("project-created"),
+    GOL_REMOVED("gol-removed"),
     GOL_SENT("gol-sent"),
     GOL_SIGNED("gol-signed"),
     GOL_APPROVED("gol-approved"),
