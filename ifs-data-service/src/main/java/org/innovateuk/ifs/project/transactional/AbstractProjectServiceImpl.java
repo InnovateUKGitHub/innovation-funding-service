@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
@@ -73,6 +74,9 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
     protected PartnerOrganisationRepository partnerOrganisationRepository;
+
+    @Autowired
+    protected GOLWorkflowHandler golWorkflowHandler;
 
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);
@@ -173,21 +177,23 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates spendProfileState,
-                                                    final ProjectActivityStates otherDocumentsState,
-                                                    final Project project) {
+                                                                 final ProjectActivityStates otherDocumentsState,
+                                                                 final Project project,
+                                                                 final boolean isLeadPartner) {
+        ProjectActivityStates golState = NOT_REQUIRED;
         if(COMPLETE.equals(spendProfileState) && COMPLETE.equals(otherDocumentsState)) {
-            if(project.getGrantOfferLetter() != null) {
-                if(project.getSignedGrantOfferLetter() != null) {
-                    if (project.getOfferSubmittedDate() != null) {
-                        return COMPLETE;
-                    }
-                    return PENDING;
+            golState = isLeadPartner ? PENDING : NOT_REQUIRED;
+            if(golWorkflowHandler.isAlreadySent(project)) {
+                golState = isLeadPartner ? ACTION_REQUIRED : PENDING;
+                if(golWorkflowHandler.isReadyToApprove(project)) {
+                    golState = PENDING;
                 }
-                return ACTION_REQUIRED;
+                if (golWorkflowHandler.isApproved(project)) {
+                    golState =  COMPLETE;
+                }
             }
-            return NOT_STARTED;
         }
-        return NOT_REQUIRED;
+        return golState;
     }
 
     protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {

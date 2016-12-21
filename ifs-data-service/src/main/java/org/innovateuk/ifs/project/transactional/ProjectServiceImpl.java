@@ -770,7 +770,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(spendProfileStatus, otherDocumentsStatus, project);
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(spendProfileStatus, otherDocumentsStatus, project, partnerOrganisation.equals(leadOrganisation));
 
         ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
@@ -801,7 +801,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     financeChecksStatus,
                     spendProfileStatus,
                     NOT_REQUIRED,
-                    NOT_REQUIRED,
+                    grantOfferLetterStatus,
                     financeContactStatus);
         }
 
