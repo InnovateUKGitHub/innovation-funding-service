@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.apache.commons.beanutils.ConvertUtils.convert;
 import static org.apache.commons.beanutils.PropertyUtils.getPropertyType;
@@ -30,6 +31,16 @@ public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
         }
     }
 
+    public ServiceResult<Void> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm) {
+        if(!sectionToSave().preventEdit(competitionResource)) {
+            return doSaveSection(competitionResource, competitionSetupForm);
+        }
+        else {
+            return serviceFailure(asList(new Error("COMPETITION_NOT_EDITABLE", HttpStatus.BAD_REQUEST)));
+        }
+    }
+
+    protected abstract ServiceResult<Void> doSaveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));

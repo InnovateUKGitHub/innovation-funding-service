@@ -26,7 +26,6 @@ public class ProjectResource {
     private Long signedGrantOfferLetter;
     private Long grantOfferLetter;
     private Long additionalContractFile;
-    private Boolean offerRejected;
     private Boolean otherDocumentsApproved;
     private LocalDateTime spendProfileSubmittedDate;
 
@@ -150,14 +149,6 @@ public class ProjectResource {
 
     public void setAdditionalContractFile(Long additionalContractFile) {
         this.additionalContractFile = additionalContractFile;
-    }
-
-    public Boolean isOfferRejected() {
-        return offerRejected;
-    }
-
-    public void setOfferRejected(Boolean offerRejected) {
-        this.offerRejected = offerRejected;
     }
 
     public Long getGrantOfferLetter() {
