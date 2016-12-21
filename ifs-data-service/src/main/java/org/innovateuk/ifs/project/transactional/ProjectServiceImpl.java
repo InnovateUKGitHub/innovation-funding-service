@@ -789,7 +789,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     leadSpendProfileStatus,
                     otherDocumentsStatus,
                     grantOfferLetterStatus,
-                    financeContactStatus);
+                    financeContactStatus,
+                    golWorkflowHandler.isAlreadySent(project));
         } else {
             projectPartnerStatusResource = new ProjectPartnerStatusResource(
                     partnerOrganisation.getId(),
@@ -802,7 +803,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     spendProfileStatus,
                     NOT_REQUIRED,
                     NOT_REQUIRED,
-                    financeContactStatus);
+                    financeContactStatus,
+                    golWorkflowHandler.isAlreadySent(project));
         }
 
         return projectPartnerStatusResource;

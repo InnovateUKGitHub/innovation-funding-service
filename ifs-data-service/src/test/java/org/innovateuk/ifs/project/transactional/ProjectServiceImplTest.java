@@ -1614,7 +1614,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testIsGrantOfferLetterIsPending() {
+    public void testIsGrantOfferLetterIsPendingLeadPartner() {
 
         Role partnerRole = newRole().withType(FINANCE_CONTACT).build();
         User u = newUser().withEmailAddress("a@b.com").build();
@@ -1641,7 +1641,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
-        when(golWorkflowHandlerMock.isSent(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
