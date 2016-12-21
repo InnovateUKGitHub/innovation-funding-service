@@ -32,8 +32,8 @@ The user should see the element
 
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    sleep    500ms
-    Element Should Not Be Visible    ${NOT_VISIBLE_ELEMENT}
+    wait until element is not visible    ${NOT_VISIBLE_ELEMENT}
+
 
 
 The user should see the browser notification

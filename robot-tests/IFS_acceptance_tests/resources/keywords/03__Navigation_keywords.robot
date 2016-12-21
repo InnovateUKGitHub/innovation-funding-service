@@ -78,8 +78,7 @@ The user should be redirected to the correct page
 
 the user should be redirected to the correct page without the usual headers
     [Arguments]    ${URL}
-    Sleep    500ms
-    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
@@ -114,7 +113,6 @@ The user goes back to the previous page
     Go Back
 
 the user reloads the page
-    sleep    1s
     Wait for autosave
     Run Keyword And Ignore Error    Confirm Action
     Reload Page

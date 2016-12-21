@@ -186,7 +186,6 @@ the user edits the 'Project Summary' question
     sleep    1s
 
 the applicant adds some content and marks this section as complete
-    sleep    300ms
     Focus    css=#form-input-4 .editor
     Input Text    css=#form-input-4 .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
