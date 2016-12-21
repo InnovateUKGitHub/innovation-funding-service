@@ -1,9 +1,9 @@
 *** Settings ***
-Documentation     INFUND-5190: As a member of Project Finance I want to view an amended Finance Checks summary page so that I can see the projects and organisations requiring Finance Checks for the Private Beta competition
+Documentation     INFUND-5190: As a member of Project Finance I want to view an amended Finance checks summary page so that I can see the projects and organisations requiring Finance checks for the Private Beta competition
 ...
-...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
+...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance checks so that these details can be used to generate the default spend profile
 ...
-...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
+...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance checks for the Private Beta competition
 ...
 ...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
 ...
@@ -23,7 +23,7 @@ Project Finance user can see the finance check summary page
     [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element          jQuery=h2:contains("Finance Checks")
+    Then the user should see the element          jQuery=h2:contains("Finance checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
     [Teardown]  the user clicks the button/link  link=Competition Dashboard
@@ -36,7 +36,7 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=Review
-    Then the user should see that the element is disabled    jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
@@ -99,7 +99,7 @@ Approve Eligibility: Academic partner organisation
     Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-2    Approved
-    And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
+    And The user should see the element    jQuery=.generate-spend-profile-main-button
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
@@ -141,12 +141,12 @@ Status updates correctly for internal user's table
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting       # Bank details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance Checks are actionable from the start-workaround for Private beta assessment
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
 
-Other internal users do not have access to Finance Checks
+Other internal users do not have access to Finance checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
