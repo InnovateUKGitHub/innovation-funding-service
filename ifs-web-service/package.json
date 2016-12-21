@@ -17,7 +17,7 @@
     "node": "~6.9.2"
   },
   "standard": {
-    "globals": [ "jQuery", "IFS" ]
+    "globals": [ "Cookies", "IFS", "jQuery" ]
   },
   "private": true
 }
