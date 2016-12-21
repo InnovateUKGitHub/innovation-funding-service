@@ -1336,7 +1336,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_STARTED).
                 withBankDetailsStatus(PENDING).
-                withFinanceChecksStatus(ACTION_REQUIRED).
+                withFinanceChecksStatus(NOT_STARTED).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
@@ -1413,7 +1413,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(COMPLETE).
                 withMonitoringOfficerStatus(PENDING).
                 withBankDetailsStatus(PENDING).
-                withFinanceChecksStatus(ACTION_REQUIRED).
+                withFinanceChecksStatus(NOT_STARTED).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
