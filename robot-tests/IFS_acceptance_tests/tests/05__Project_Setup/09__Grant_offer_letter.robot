@@ -206,9 +206,21 @@ other documents have been uploaded and approved
 
 project finance generates the Spend Profile
     log in as a different user      &{internal_finance_credentials}
+    project finance approves Viability for  ${Gabtype_Id}
+    project finance approves Viability for  ${Kazio_Id}
     the user navigates to the page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check
-    the user clicks the button/link  jQuery=.button:contains("Generate Spend Profile")
     the user clicks the button/link  jQuery=.button:contains("Generate spend profile")
+    the user clicks the button/link   jQuery=div.column-half.alignright-button > button:contains("Generate spend profile")
+
+project finance approves Viability for
+    [Arguments]  ${partner}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
+    the user selects the checkbox      id=costs-reviewed
+    the user selects the checkbox      id=project-viable
+    the user moves focus to the element  link=Contact us
+    the user selects the option from the drop-down menu  Green  id=rag-rating
+    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
 
 all parteners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
