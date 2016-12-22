@@ -59,7 +59,7 @@
                            maxlength="70"
                            th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
                                     data-maxlength-errormessage=#{validation.standard.firstname.length.max},
-                                    data-required-errormessage=#{validation.standard.firstname.length.required}" />
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
