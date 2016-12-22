@@ -10,15 +10,10 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
-import static org.innovateuk.ifs.project.gol.resource.GOLState.*;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SENT;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SIGNED;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_APPROVED;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_REJECTED;
-
-
 import java.util.EnumSet;
+
+import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.*;
+import static org.innovateuk.ifs.project.gol.resource.GOLState.*;
 
 /**
  * Describes the workflow for the GOL section for Project Setup.
@@ -47,6 +42,11 @@ public class GOLWorkflow extends StateMachineConfigurerAdapter<GOLState, GOLOutc
                 .withExternal()
                     .source(PENDING)
                     .event(PROJECT_CREATED)
+                    .target(PENDING)
+                    .and()
+                .withExternal()
+                    .source(PENDING)
+                    .event(GOL_REMOVED)
                     .target(PENDING)
                     .and()
                 .withExternal()
