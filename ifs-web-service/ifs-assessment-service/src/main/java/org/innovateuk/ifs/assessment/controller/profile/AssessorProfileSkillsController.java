@@ -60,7 +60,7 @@ public class AssessorProfileSkillsController {
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
-        return "profile/innovation-areas";
+        return "profile/skills-edit";
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {

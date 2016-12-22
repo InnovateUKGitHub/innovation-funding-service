@@ -56,7 +56,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/innovation-areas"));
+                .andExpect(view().name("profile/skills-edit"));
 
         verify(userService).getProfileSkills(user.getId());
     }
@@ -91,7 +91,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "skillAreas"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -121,7 +121,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "skillAreas"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -149,7 +149,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
