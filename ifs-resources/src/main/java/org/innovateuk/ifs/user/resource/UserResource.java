@@ -230,13 +230,13 @@ public class UserResource {
                 .append(email, that.email)
                 .append(password, that.password)
                 .append(status, that.status)
-                //.append(organisations, that.organisations)
-                //.append(processRoles, that.processRoles)
+                .append(organisations, that.organisations)
+                .append(processRoles, that.processRoles)
                 .append(roles, that.roles)
                 .append(gender, that.gender)
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
-                //.append(profile, that.profile)
+                .append(profile, that.profile)
                 .isEquals();
     }
 
@@ -254,13 +254,13 @@ public class UserResource {
                 .append(email)
                 .append(password)
                 .append(status)
-                //.append(organisations)
-                //.append(processRoles)
+                .append(organisations)
+                .append(processRoles)
                 .append(roles)
                 .append(gender)
                 .append(disability)
                 .append(ethnicity)
-                //.append(profile)
+                .append(profile)
                 .toHashCode();
     }
 }
