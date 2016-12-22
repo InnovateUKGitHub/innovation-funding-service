@@ -130,7 +130,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
             ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
             if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
                 return ACTION_REQUIRED;
             }

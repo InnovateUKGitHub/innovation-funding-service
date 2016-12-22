@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.project.sections;
 
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 
-import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_REQUIRED;
+import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
