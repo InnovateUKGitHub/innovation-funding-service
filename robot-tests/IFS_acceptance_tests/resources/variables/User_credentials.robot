@@ -8,9 +8,9 @@
 &{unsuccessful_applicant_credentials}     email=worth.email.test.two+fundfailure@gmail.com    password=Passw0rd
 &{assessor_credentials}                   email=paul.plum@gmail.com    password=Passw0rd
 &{assessor2_credentials}                  email=felix.wilson@gmail.com    password=Passw0rd
-&{existing_assessor1_credentials}         email=worth.email.test+assessor1@gmail.com    password=Passw0rd
-&{nonregistered_assessor2_credentials}    email=worth.email.test+assessor2@gmail.com    password=Passw0rd
-&{nonregistered_assessor3_credentials}    email=worth.email.test+assessor3@gmail.com    password=Passw0rd123
+&{existing_assessor1_credentials}         email=jeremy.alufson@innovateuk.test    password=Passw0rd
+&{nonregistered_assessor2_credentials}    email=david.peters@innovateuk.test    password=Passw0rd
+&{nonregistered_assessor3_credentials}    email=thomas.fister@innovateuk.test    password=Passw0rd123
 &{internal_finance_credentials}           email=lee.bowman@innovateuk.test    password=Passw0rd
 &{comp_tech_one}                          email=ian.cooper@innovateuk.test    password=Passw0rd
 &{comp_tect_two}                          email=peter.freeman@innovateuk.test    password=Passw0rd
