@@ -151,8 +151,8 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus,  final Optional<SpendProfile> spendProfile) {
         ProjectActivityStates state = spendProfileStatus;
 
-        if(spendProfileStatus == COMPLETE) {
-            if(project.getSpendProfileSubmittedDate() == null) {
+        if (spendProfileStatus == COMPLETE) {
+            if (project.getSpendProfileSubmittedDate() == null) {
                 state = ACTION_REQUIRED;
             } else if (project.getSpendProfileSubmittedDate() != null && !spendProfile.get().getApproval().equals(ApprovalType.APPROVED)) {
                 state = PENDING;
@@ -165,8 +165,8 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         //TODO - Implement REJECT status when internal spend profile action story is completed
         if (spendProfile != null && spendProfile.isPresent() && financeCheckStatus.equals(COMPLETE)) {
             if (spendProfile.get().isMarkedAsComplete()) {
-                    if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
-                        return ACTION_REQUIRED;
+                if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
+                    return ACTION_REQUIRED;
                 }
                 return COMPLETE;
             } else {
@@ -176,16 +176,16 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         return NOT_STARTED;
     }
 
-    protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates spendProfileState,
+    protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates leadSpendProfileState,
                                                                  final ProjectActivityStates otherDocumentsState,
                                                                  final Project project,
                                                                  final boolean isLeadPartner) {
         ProjectActivityStates golState = NOT_REQUIRED;
-        if(COMPLETE.equals(spendProfileState) && COMPLETE.equals(otherDocumentsState)) {
+        if (COMPLETE.equals(leadSpendProfileState) && COMPLETE.equals(otherDocumentsState)) {
             golState = isLeadPartner ? PENDING : NOT_REQUIRED;
-            if(golWorkflowHandler.isAlreadySent(project)) {
+            if (golWorkflowHandler.isAlreadySent(project)) {
                 golState = isLeadPartner ? ACTION_REQUIRED : PENDING;
-                if(golWorkflowHandler.isReadyToApprove(project)) {
+                if (golWorkflowHandler.isReadyToApprove(project)) {
                     golState = PENDING;
                 }
                 if (golWorkflowHandler.isApproved(project)) {

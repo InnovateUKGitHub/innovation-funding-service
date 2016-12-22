@@ -1673,7 +1673,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(Boolean.FALSE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(LocalDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
@@ -1687,19 +1687,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
-        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.FALSE);
-
-        ServiceResult<ProjectTeamStatusResource> resultWhenGolIsNotSent = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
-
-        assertTrue(resultWhenGolIsNotSent.isSuccess() && NOT_REQUIRED.equals(resultWhenGolIsNotSent.getSuccessObject().getPartnerStatuses().remove(0).getGrantOfferLetterStatus()));
-
-        // Same flow but when GOL is in Ready To Approve state.
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
 
-        // Call the service again
-        ServiceResult<ProjectTeamStatusResource> resultWhenGolIsReadyToApprove = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(resultWhenGolIsReadyToApprove.isSuccess() && PENDING.equals(resultWhenGolIsReadyToApprove.getSuccessObject().getPartnerStatuses().get(0).getGrantOfferLetterStatus()));
+        assertTrue(result.isSuccess() && PENDING.equals(result.getSuccessObject().getPartnerStatuses().get(0).getGrantOfferLetterStatus()));
     }
 
     @Test
