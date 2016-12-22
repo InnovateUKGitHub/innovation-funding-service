@@ -21,7 +21,7 @@ Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    When the user clicks the button/link    jQuery=button:contains("Save")
     Then The user should see a summary error    Please correct the errors in the form below.
     And the user should see a field error    Please enter a principal employer.
     And the user should see a field error    Please enter your role with your principal employer.
@@ -35,14 +35,14 @@ Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]    HappyPath
     Given the user selects the radio button    hasAppointments    yes
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    When the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see a field error    Please enter an organisation.
     And the user should see a field error    Please enter a position.
     And the user selects the radio button    hasAppointments    no
     When the user selects the radio button    hasFinancialInterests    Yes
     And the user selects the radio button    hasFamilyAffiliations    Yes
     And the user selects the radio button    hasFamilyFinancialInterests    Yes
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see a field error    Please enter a relation.
     And the user should see a field error    Please enter an organisation.
     And the user should see a field error    Please enter a position.
@@ -66,7 +66,7 @@ Successful save for the DOI form
     ...
     ...    INFUND-5432
     [Tags]
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    When the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And The user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
     And the user clicks the button/link    jQuery=a:contains("your declaration of interest")
@@ -84,7 +84,7 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=familyFinancialInterests    My interests
     the user moves focus to the element    id=accurateAccount1
     Click Element    id=accurateAccount1
-    focus    jQuery=button:contains("Save and continue")
+    focus    jQuery=button:contains("Save")
     sleep    500ms
     Wait For Autosave
 

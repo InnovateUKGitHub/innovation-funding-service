@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Declaration of interest'" th:remove="tag"></div>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Edit declaration of interest'" th:remove="tag"></div>
     </head>
 
     <body th:with="context='assessment'" class="declaration-form">
@@ -10,10 +10,10 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" th:remove="tag" />
 
             <div class="hgroup">
-                <h1 class="heading-xlarge">Declaration of interest</h1>
+                <h1 class="heading-xlarge">Edit declaration of interest</h1>
             </div>
 
             <p>We will need to report if you, or a close family member, is connected to a body which conducts material financial transactions.</p>
@@ -348,7 +348,7 @@
                   </fieldset>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Save and continue</button>
+                <button class="button button-large extra-margin" type="submit">Save</button>
             </form>
             <input type="hidden" id="cacheTest" value="" />
 
