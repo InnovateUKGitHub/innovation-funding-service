@@ -56,7 +56,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/skills-edit"));
+                .andExpect(view().name("profile/skills"));
 
         verify(userService).getProfileSkills(user.getId());
     }
@@ -68,7 +68,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
 
         when(userService.updateProfileSkills(1L, businessType, skillsAreas)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/skills")
+        mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillsAreas))
@@ -83,7 +83,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = RandomStringUtils.random(5001);
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillAreas))
@@ -113,7 +113,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(101, "skill"));
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillAreas))
@@ -142,7 +142,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     public void submitSkills_incomplete() throws Exception {
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("skillAreas", skillAreas))
                 .andExpect(status().isOk())

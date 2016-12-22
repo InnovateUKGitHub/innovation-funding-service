@@ -16,7 +16,7 @@
 
             <p>These areas have been chosen as your current areas of expertise. They will influence the types of competition you will be invited to assess.</p>
 
-            <h2 class="heading-medium no-margin-bottom">Innovation areas &nbsp; <small><a th:href="@{/profile/skills}"> Edit your skills</a></small></h2>
+            <h2 class="heading-medium no-margin-bottom">Innovation areas &nbsp; <small><a th:href="@{/profile/skills/edit}"> Edit your skills</a></small></h2>
 
             <ul class="list-bullet">
                 <li>Digital sciences</li>
@@ -24,10 +24,10 @@
             </ul>
 
             <h2 class="heading-medium">Skill areas</h2>
-            <p>Human computer interaction, Wearables, IoT</p>
+            <p id="skillAreas" th:if="${form.skillAreas}" th:text="${form.skillAreas}" />
 
             <h2 class="heading-medium">Assessor type</h2>
-            <p>Business</p>
+            <p id="assessorType" th:if="${form.assessorType}" th:text="${form.assessorType}" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>

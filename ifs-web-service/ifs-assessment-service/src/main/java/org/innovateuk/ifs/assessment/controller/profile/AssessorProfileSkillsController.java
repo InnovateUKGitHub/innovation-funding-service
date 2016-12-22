@@ -33,21 +33,29 @@ public class AssessorProfileSkillsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
+    public String getReadonlySkills(Model model,
+                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                            @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
+                            BindingResult bindingResult) {
+        return doViewYourSkills(loggedInUser, model, form, bindingResult, true);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/edit")
     public String getSkills(Model model,
                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
                             @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
                             BindingResult bindingResult) {
-        return doViewYourSkills(loggedInUser, model, form, bindingResult);
+        return doViewYourSkills(loggedInUser, model, form, bindingResult, false);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/edit")
     public String submitSkills(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewYourSkills(loggedInUser, model, form, bindingResult);
+        Supplier<String> failureView = () -> doViewYourSkills(loggedInUser, model, form, bindingResult, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = userService.updateProfileSkills(loggedInUser.getId(), form.getAssessorType(), form.getSkillAreas());
@@ -56,11 +64,11 @@ public class AssessorProfileSkillsController {
         });
     }
 
-    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorProfileSkillsForm form, BindingResult bindingResult) {
+    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorProfileSkillsForm form, BindingResult bindingResult, boolean readonly) {
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
-        return "profile/skills-edit";
+        return readonly ? "profile/skills" : "profile/skills-edit";
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
