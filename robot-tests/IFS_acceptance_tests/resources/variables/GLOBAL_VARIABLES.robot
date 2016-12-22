@@ -200,4 +200,4 @@ ${database_port}    3306
 ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
-${READY_TO_OPEN_COMPETITION_ID}    11
+${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
