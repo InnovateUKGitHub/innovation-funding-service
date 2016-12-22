@@ -157,7 +157,7 @@ ${test_title}     test title
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
-${empty_field_warning_message}    This field cannot be left blank
+${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt

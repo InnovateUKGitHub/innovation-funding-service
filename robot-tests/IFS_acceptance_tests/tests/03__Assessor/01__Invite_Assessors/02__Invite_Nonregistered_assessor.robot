@@ -48,41 +48,41 @@ Create assessor account: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user clicks the button/link    jQuery=button:contains("Continue")
-    Then the user should see an error    Please enter a first name
-    And the user should see an error    Please enter a last name
-    And the user should see an error    Please select a gender
-    And the user should see an error    Please select an ethnicity
-    And the user should see an error    Please select a disability
-    And the user should see an error    Please enter a phone number
-    And the user should see an error    Please enter your password
-    And the user should see an error    Please re-type your password
-    And the user should see an error    Please enter a valid phone number
-    And the user should see an error    Input for your phone number has a minimum length of 8 characters
-    And the user should see an error    Your last name should have at least 2 characters
-    And the user should see an error    Your first name should have at least 2 characters
-    And the user should see an error    Password must at least be 10 characters
+    Then the user should see an error    Please enter a first name.
+    And the user should see an error    Please enter a last name.
+    And the user should see an error    Please select a gender.
+    And the user should see an error    Please select an ethnicity.
+    And the user should see an error    Please select a disability.
+    And the user should see an error    Please enter a phone number.
+    And the user should see an error    Please enter your password.
+    And the user should see an error    Please re-type your password.
+    And the user should see an error    Please enter a valid phone number.
+    And the user should see an error    Input for your phone number has a minimum length of 8 characters.
+    And the user should see an error    Your last name should have at least 2 characters.
+    And the user should see an error    Your first name should have at least 2 characters.
+    And the user should see an error    Password must at least be 10 characters.
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
     When The user enters text to a text field    id=firstName    Thomas
-    Then the user should not see the validation error in the create assessor form    Please enter a first name
+    Then the user should not see the validation error in the create assessor form    Please enter a first name.
     When The user enters text to a text field    id=lastName    Fister
-    Then the user should not see the validation error in the create assessor form    Please enter a last name
+    Then the user should not see the validation error in the create assessor form    Please enter a last name.
     When the user selects the radio button    gender    gender2
-    Then the user should not see the validation error in the create assessor form    Please select a gender
+    Then the user should not see the validation error in the create assessor form    Please select a gender.
     When the user selects the radio button    ethnicity    ethnicity2
-    Then the user should not see the validation error in the create assessor form    Please select an ethnicity
+    Then the user should not see the validation error in the create assessor form    Please select an ethnicity.
     When the user selects the radio button    disability    disability2
-    Then the user should not see the validation error in the create assessor form    Please select a disability
+    Then the user should not see the validation error in the create assessor form    Please select a disability.
     When the user enters text to a text field    id=phoneNumber    123123123123
-    Then the user should not see the validation error in the create assessor form    Please enter a phone number
-    And the user should not see the validation error in the create assessor form    Please enter a valid phone number
-    And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters
+    Then the user should not see the validation error in the create assessor form    Please enter a phone number.
+    And the user should not see the validation error in the create assessor form    Please enter a valid phone number.
+    And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters.
     When The user enters text to a text field    id=password    Passw0rd123
     And The user enters text to a text field    id=retypedPassword    Passw0rd123
-    Then the user should not see the validation error in the create assessor form    Please enter your password
-    And the user should not see the validation error in the create assessor form    Password must at least be 10 characters
+    Then the user should not see the validation error in the create assessor form    Please enter your password.
+    And the user should not see the validation error in the create assessor form    Password must at least be 10 characters.
     When the user clicks the button/link    id=postcode-lookup
     And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
 
@@ -121,7 +121,7 @@ Non-registered assessor: Reject invitation
     Then the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     When the user clicks the button/link    jQuery=button:contains("Reject")
-    Then the user should see an error    The reason cannot be blank
+    Then the user should see an error    The reason cannot be blank.
     And the assessor fills in all fields
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
