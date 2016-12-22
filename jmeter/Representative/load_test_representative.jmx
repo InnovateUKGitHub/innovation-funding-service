@@ -1309,7 +1309,7 @@ hello world</stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/application/${application_id}/form/add_cost/${travel_and_subsistence_row_id}</stringProp>
+          <stringProp name="HTTPSampler.path">/application/${application_id}/form/add_cost/${travel_subsistence_question_id}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1332,14 +1332,14 @@ hello world</stringProp>
               <elementProp name="formInputId" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">formInputId</stringProp>
-                <stringProp name="Argument.value">cost-travel-${travel_subsistence_form_input_id}-item</stringProp>
+                <stringProp name="Argument.value">cost-travel-${travel_subsistence_row_id}-item</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="fieldName" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">fieldName</stringProp>
-                <stringProp name="Argument.value">travel-item-${travel_subsistence_question_id}-${travel_subsistence_form_input_id}</stringProp>
+                <stringProp name="Argument.value">travel-item-${travel_subsistence_question_id}-${travel_subsistence_row_id}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -1387,14 +1387,14 @@ hello world</stringProp>
               <elementProp name="formInputId" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">formInputId</stringProp>
-                <stringProp name="Argument.value">cost-otherFunding-${other_funding_form_input_id}-otherPublicFunding-no</stringProp>
+                <stringProp name="Argument.value">cost-otherFunding-${other_funding_row_id}-otherPublicFunding-no</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="fieldName" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">fieldName</stringProp>
-                <stringProp name="Argument.value">other_funding-otherPublicFunding-${other_funding_question_id}-${other_funding_form_input_id}</stringProp>
+                <stringProp name="Argument.value">other_funding-otherPublicFunding-${other_funding_question_id}-${other_funding_row_id}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -1668,7 +1668,7 @@ hello world</stringProp>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="User Config" enabled="true">
           <stringProp name="filename">${users_csv}</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="variableNames">username,password,application_id,form_id,application_details_question_id,project_summary_question_id,public_description_question_id,project_exploitation_question_id,economic_benefit_question_id,funding_question_id,adding_value_question_id,your_finance_section_id,travel_and_subsistence_row_id,finance_overview_section_id,project_summary_form_input_id,public_description_form_input_id,project_exploitation_form_input_id,economic_benefit_form_input_id,funding_form_input_id,adding_value_form_input_id,travel_subsistence_form_input_id,travel_subsistence_question_id,other_funding_form_input_id,other_funding_question_id</stringProp>
+          <stringProp name="variableNames">username,password,application_id,form_id,application_details_question_id,project_summary_question_id,public_description_question_id,project_exploitation_question_id,economic_benefit_question_id,funding_question_id,adding_value_question_id,your_finance_section_id,finance_overview_section_id,project_summary_form_input_id,public_description_form_input_id,project_exploitation_form_input_id,economic_benefit_form_input_id,funding_form_input_id,adding_value_form_input_id,travel_subsistence_row_id,travel_subsistence_question_id,other_funding_row_id,other_funding_question_id</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">true</boolProp>
           <boolProp name="recycle">true</boolProp>
