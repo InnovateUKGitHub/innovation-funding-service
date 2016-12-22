@@ -19,6 +19,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -137,7 +138,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
 
     }
 
@@ -299,7 +300,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
         verify(projectFinanceService).markSpendProfileComplete(2L, 1L);
 
     }
@@ -375,7 +376,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
     }
 
     private ProjectTeamStatusResource buildProjectTeamStatusResource() {
@@ -429,6 +430,48 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(view().name("redirect:/project/1/partner-organisation/2/spend-profile"));
 
         verify(projectFinanceService).markSpendProfileIncomplete(1L, 2L);
+    }
+
+    @Test
+    public void viewSpendProfileSuccessfulViewModelPopulationInLeadPartnerOrganisation() throws Exception {
+
+        Long organisationId = 1L;
+        Long projectId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .build();
+
+        SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(true);
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+
+        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(Collections.emptyList())).thenReturn(serviceSuccess(asList(partnerOrganisationResource)));
+        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        ProjectUserResource projectUser = newProjectUserResource().withOrganisation(organisationId).withId(1L).build();
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(asList(projectUser));
+
+
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
+        expectedViewModel.setIsUserPartOfLeadOrganisation(true);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("project/spend-profile"));
+
+        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
+
     }
 
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {
@@ -515,7 +558,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false, false);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false, false, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

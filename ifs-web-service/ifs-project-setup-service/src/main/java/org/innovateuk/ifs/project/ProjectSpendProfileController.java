@@ -256,11 +256,13 @@ public class ProjectSpendProfileController {
 
         boolean leadPartner = isLeadPartner(partnerOrganisationService, projectResource.getId(), organisationId);
 
+        boolean isPartOfLeadOrganisation = isUserPartOfLeadOrganisation(projectResource.getId(), organisationId, loggedInUser);
+
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
                 spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()),
-                isApproved(projectResource.getId()), leadPartner);
+                isApproved(projectResource.getId()), leadPartner, isPartOfLeadOrganisation);
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {
@@ -321,5 +323,23 @@ public class ProjectSpendProfileController {
         );
 
         return returnedProjectUser.isPresent();
+    }
+
+    private boolean isUserPartOfLeadOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {
+
+        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
+        if(null != result && result.isSuccess()) {
+            Optional<PartnerOrganisationResource> leadOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
+            if(leadOrganisationResource.isPresent()) {
+                List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+                Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
+                        && projectUserResource.getOrganisation().equals(leadOrganisationResource.get().getOrganisation())
+                        && PARTNER.getName().equals(projectUserResource.getRoleName())
+                );
+                return returnedProjectUser.isPresent();
+            }
+        }
+        return false;
+
     }
 }
