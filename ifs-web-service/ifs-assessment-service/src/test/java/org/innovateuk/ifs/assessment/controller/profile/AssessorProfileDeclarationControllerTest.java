@@ -4,8 +4,11 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileFamilyAffiliationForm;
+import org.innovateuk.ifs.assessment.form.profile.populator.AssessorProfileDeclarationFormPopulator;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditDeclarationModelPopulator;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileEditDeclarationViewModel;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -50,7 +53,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AssessorProfileDeclarationControllerTest extends BaseControllerMockMVCTest<AssessorProfileDeclarationController> {
     @Spy
     @InjectMocks
+    private AssessorProfileEditDeclarationModelPopulator assessorProfileEditDeclarationModelPopulator;
+
+    @Spy
+    @InjectMocks
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AssessorProfileDeclarationFormPopulator assessorProfileDeclarationFormPopulator;
 
     @Override
     @Before
@@ -72,6 +83,81 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
+        String expectedPrincipalEmployer = "Big Name Corporation";
+        String expectedRole = "Financial Accountant";
+        String expectedProfessionalAffiliations = "Professional affiliations...";
+        String expectedFinancialInterests = "Other financial interests...";
+        String expectedFamilyFinancialInterests = "Other family financial interests...";
+
+        List<AffiliationResource> expectedAppointments = newAffiliationResource()
+                .withAffiliationType(PERSONAL)
+                .withOrganisation("Org 1", "Org 2")
+                .withPosition("Pos 1", "Post 2")
+                .withExists(TRUE)
+                .build(2);
+        List<AffiliationResource> expectedFamilyAffiliations = newAffiliationResource()
+                .withAffiliationType(FAMILY)
+                .withRelation("Relation 1", "Relation 2")
+                .withOrganisation("Org 1", "Org 2")
+                .withExists(TRUE)
+                .build(2);
+        AffiliationResource principalEmployer = newAffiliationResource()
+                .withAffiliationType(EMPLOYER)
+                .withExists(TRUE)
+                .withOrganisation(expectedPrincipalEmployer)
+                .withPosition(expectedRole)
+                .build();
+        AffiliationResource professionalAffiliations = newAffiliationResource()
+                .withAffiliationType(PROFESSIONAL)
+                .withExists(TRUE)
+                .withDescription(expectedProfessionalAffiliations)
+                .build();
+        AffiliationResource financialInterests = newAffiliationResource()
+                .withAffiliationType(PERSONAL_FINANCIAL)
+                .withExists(TRUE)
+                .withDescription(expectedFinancialInterests)
+                .build();
+        AffiliationResource familyFinancialInterests = newAffiliationResource()
+                .withAffiliationType(FAMILY_FINANCIAL)
+                .withExists(TRUE)
+                .withDescription(expectedFamilyFinancialInterests)
+                .build();
+
+        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(
+                expectedPrincipalEmployer,
+                expectedRole,
+                expectedProfessionalAffiliations,
+                expectedAppointments,
+                expectedFinancialInterests,
+                expectedFamilyAffiliations,
+                expectedFamilyFinancialInterests
+        );
+
+        when(userService.getUserAffiliations(user.getId())).thenReturn(combineLists(
+                combineLists(
+                        expectedAppointments,
+                        expectedFamilyAffiliations
+                ),
+                principalEmployer,
+                professionalAffiliations,
+                financialInterests,
+                familyFinancialInterests
+                )
+        );
+
+        mockMvc.perform(get("/profile/declaration"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("profile/declaration-of-interest"));
+
+        verify(userService).getUserAffiliations(user.getId());
+    }
+
+    @Test
+    public void getEditDeclaration() throws Exception {
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
         int year = 2016;
         setClockToStartOfDay(LocalDate.of(year, JANUARY, 1));
         LocalDate expectedDeclarationDate = getFinancialYearEndDate(year);
@@ -80,22 +166,18 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String expectedRole = "Financial Accountant";
         String expectedProfessionalAffiliations = "Professional affiliations...";
 
-        Boolean expectedHasAppointments = TRUE;
         List<AssessorProfileAppointmentForm> expectedAppointments = asList(
                 new AssessorProfileAppointmentForm("Org 1", "Pos 1"),
                 new AssessorProfileAppointmentForm("Org 2", "Pos 2")
         );
 
-        Boolean expectedHasFinancialInterests = TRUE;
         String expectedFinancialInterests = "Other financial interests...";
 
-        Boolean expectedHasFamilyAffiliations = TRUE;
         List<AssessorProfileFamilyAffiliationForm> expectedFamilyAffiliations = asList(
                 new AssessorProfileFamilyAffiliationForm("Relation 1", "Org 1", "Pos 1"),
                 new AssessorProfileFamilyAffiliationForm("Relation 2", "Org 2", "Pos 2")
         );
 
-        Boolean expectedHasFamilyFinancialInterests = TRUE;
         String expectedFamilyFinancialInterests = "Other family financial interests...";
 
         AffiliationResource principalEmployer = newAffiliationResource()
@@ -150,46 +232,45 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 )
         );
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setPrincipalEmployer(expectedPrincipalEmployer);
         expectedForm.setRole(expectedRole);
         expectedForm.setProfessionalAffiliations(expectedProfessionalAffiliations);
-        expectedForm.setHasAppointments(expectedHasAppointments);
+        expectedForm.setHasAppointments(TRUE);
         expectedForm.setAppointments(expectedAppointments);
-        expectedForm.setHasFinancialInterests(expectedHasFinancialInterests);
+        expectedForm.setHasFinancialInterests(TRUE);
         expectedForm.setFinancialInterests(expectedFinancialInterests);
-        expectedForm.setHasFamilyAffiliations(expectedHasFamilyAffiliations);
+        expectedForm.setHasFamilyAffiliations(TRUE);
         expectedForm.setFamilyAffiliations(expectedFamilyAffiliations);
-        expectedForm.setHasFamilyFinancialInterests(expectedHasFamilyFinancialInterests);
+        expectedForm.setHasFamilyFinancialInterests(TRUE);
         expectedForm.setFamilyFinancialInterests(expectedFamilyFinancialInterests);
 
-
-        mockMvc.perform(get("/profile/declaration"))
+        mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/declaration-of-interest"));
+                .andExpect(view().name("profile/declaration-of-interest-edit"));
 
         verify(userService).getUserAffiliations(user.getId());
     }
 
 
     @Test
-    public void getDeclaration_noAffiliations() throws Exception {
+    public void getEditDeclaration_noAffiliations() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
         // The form should have no fields populated
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
 
-        mockMvc.perform(get("/profile/declaration"))
+        mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm));
     }
 
     @Test
-    public void getDeclaration_noAppointments() throws Exception {
+    public void getEditDeclaration_noAppointments() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -203,13 +284,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasAppointments(FALSE);
 
-        mockMvc.perform(get("/profile/declaration"))
+        mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm));
     }
 
     @Test
-    public void getDeclaration_noFinancialInterests() throws Exception {
+    public void getEditDeclaration_noFinancialInterests() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -223,13 +304,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFinancialInterests(FALSE);
 
-        mockMvc.perform(get("/profile/declaration"))
+        mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm));
     }
 
     @Test
-    public void getDeclaration_noFamilyInterests() throws Exception {
+    public void getEditDeclaration_noFamilyInterests() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -243,13 +324,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFamilyAffiliations(FALSE);
 
-        mockMvc.perform(get("/profile/declaration"))
+        mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm));
     }
 
     @Test
-    public void getDeclaration_noFamilyFinancialInterests() throws Exception {
+    public void getEditDeclaration_noFamilyFinancialInterests() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -263,13 +344,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFamilyFinancialInterests(FALSE);
 
-        mockMvc.perform(get("/profile/declaration"))
+        mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm));
     }
 
     @Test
-    public void getDeclaration_beforeFinancialYearEndInCurrentYear() throws Exception {
+    public void getEditDeclaration_beforeFinancialYearEndInCurrentYear() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -279,16 +360,16 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         // Expect the declaration date to be the financial year end of the current year
         LocalDate expectedDeclarationDate = getFinancialYearEndDate(year);
 
-        MvcResult result = mockMvc.perform(get("/profile/declaration"))
+        MvcResult result = mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AssessorProfileDeclarationViewModel viewModel = (AssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileEditDeclarationViewModel viewModel = (AssessorProfileEditDeclarationViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(expectedDeclarationDate, viewModel.getDeclarationDate());
     }
 
     @Test
-    public void getDeclaration_onFinancialYearEndInCurrentYear() throws Exception {
+    public void getEditDeclaration_onFinancialYearEndInCurrentYear() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -298,16 +379,16 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         // Expect the declaration date to be the financial year end of the next year
         LocalDate expectedDeclarationDate = getFinancialYearEndDate(year).plusYears(1);
 
-        MvcResult result = mockMvc.perform(get("/profile/declaration"))
+        MvcResult result = mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AssessorProfileDeclarationViewModel viewModel = (AssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileEditDeclarationViewModel viewModel = (AssessorProfileEditDeclarationViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(expectedDeclarationDate, viewModel.getDeclarationDate());
     }
 
     @Test
-    public void getDeclaration_afterFinancialYearEndInCurrentYear() throws Exception {
+    public void getEditDeclaration_afterFinancialYearEndInCurrentYear() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -317,11 +398,11 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         // Expect the declaration date to be the financial year end of the next year
         LocalDate expectedDeclarationDate = getFinancialYearEndDate(year).plusYears(1);
 
-        MvcResult result = mockMvc.perform(get("/profile/declaration"))
+        MvcResult result = mockMvc.perform(get("/profile/declaration/edit"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AssessorProfileDeclarationViewModel viewModel = (AssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileEditDeclarationViewModel viewModel = (AssessorProfileEditDeclarationViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(expectedDeclarationDate, viewModel.getDeclarationDate());
     }
 
@@ -398,7 +479,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 expectedFinancialInterests,
                 expectedFamilyFinancialInterests))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/declaration")
+        mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -483,7 +564,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 expectedFinancialInterests,
                 expectedFamilyFinancialInterests))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/declaration")
+        mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -515,9 +596,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -534,7 +615,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeHasFieldErrors("form", "appointments"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -578,9 +659,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyAffiliations = "false";
         String hasFamilyFinancialInterests = "false";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -595,7 +676,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeHasFieldErrors("form", "appointments[0].position"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -683,7 +764,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 expectedFinancialInterests,
                 expectedFamilyFinancialInterests))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/declaration")
+        mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -720,9 +801,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -738,7 +819,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeHasFieldErrors("form", "financialInterests"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -785,9 +866,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -804,7 +885,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeHasFieldErrors("form", "familyAffiliations"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -848,9 +929,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyAffiliations = "true";
         String hasFamilyFinancialInterests = "false";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -866,7 +947,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeHasFieldErrors("form", "familyAffiliations[0].organisation"))
                 .andExpect(model().attributeHasFieldErrors("form", "familyAffiliations[0].position"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -956,7 +1037,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 expectedFinancialInterests,
                 expectedFamilyFinancialInterests))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/declaration")
+        mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -993,9 +1074,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyAffiliations = "false";
         String hasFamilyFinancialInterests = "true";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("principalEmployer", principalEmployer)
                 .param("role", role)
@@ -1011,7 +1092,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeHasFieldErrors("form", "familyFinancialInterests"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -1048,9 +1129,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         setClockToStartOfDay(LocalDate.of(year, JANUARY, 1));
         LocalDate expectedDeclarationDate = getFinancialYearEndDate(year);
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("accurateAccount", "false"))
                 .andExpect(status().isOk())
@@ -1064,7 +1145,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attributeHasFieldErrors("form", "hasFamilyAffiliations"))
                 .andExpect(model().attributeHasFieldErrors("form", "hasFamilyFinancialInterests"))
                 .andExpect(model().attributeHasFieldErrors("form", "accurateAccount"))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -1111,9 +1192,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("addAppointment", "")
                 .param("principalEmployer", principalEmployer)
@@ -1131,7 +1212,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -1170,9 +1251,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 // Remove the row at index 0
                 .param("removeAppointment", "0")
@@ -1191,7 +1272,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -1230,9 +1311,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("addFamilyMemberAffiliation", "")
                 .param("principalEmployer", principalEmployer)
@@ -1251,7 +1332,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -1290,9 +1371,9 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         String hasFamilyFinancialInterests = "true";
         String familyFinancialInterests = "Other family financial interests...";
 
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(expectedDeclarationDate);
+        AssessorProfileEditDeclarationViewModel expectedViewModel = new AssessorProfileEditDeclarationViewModel(expectedDeclarationDate);
 
-        MvcResult result = mockMvc.perform(post("/profile/declaration")
+        MvcResult result = mockMvc.perform(post("/profile/declaration/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("removeFamilyMemberAffiliation", "0")
                 .param("principalEmployer", principalEmployer)
@@ -1311,7 +1392,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/declaration-of-interest"))
+                .andExpect(view().name("profile/declaration-of-interest-edit"))
                 .andReturn();
 
         AssessorProfileDeclarationForm form = (AssessorProfileDeclarationForm) result.getModelAndView().getModel().get("form");
@@ -1337,7 +1418,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
 
     private void setClockToStartOfDay(LocalDate date) {
         Clock clock = Clock.fixed(date.atStartOfDay(systemDefault()).toInstant(), systemDefault());
-        AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator = (AssessorProfileDeclarationModelPopulator) ReflectionTestUtils.getField(controller, AssessorProfileDeclarationController.class, "assessorProfileDeclarationModelPopulator");
-        ReflectionTestUtils.setField(assessorProfileDeclarationModelPopulator, "clock", clock, Clock.class);
+        AssessorProfileEditDeclarationModelPopulator assessorProfileEditDeclarationModelPopulator =
+                (AssessorProfileEditDeclarationModelPopulator) ReflectionTestUtils.getField(
+                        controller,
+                        AssessorProfileDeclarationController.class,
+                        "assessorProfileEditDeclarationModelPopulator"
+                );
+
+        ReflectionTestUtils.setField(assessorProfileEditDeclarationModelPopulator, "clock", clock, Clock.class);
     }
 }
