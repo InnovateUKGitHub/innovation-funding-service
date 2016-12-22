@@ -70,8 +70,8 @@ Existing assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user should see the text in the page    12 January 2016 to 28 January 2017: Assessment period
-    # TODO And the user should see the text in the page    taking place at 15 January 2018.
+    And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
+    And the user should see the text in the page    taking place at 15 January 2016.
     And the user should see the text in the page    100.00 per application.
     When the user clicks the button/link    jQuery=.button:contains("Yes")
     Then The user should see the text in the page    Assessor dashboard
@@ -107,7 +107,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
     Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct    2017-01-28
+    And the calculation of the remaining days should be correct    2068-01-28
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
