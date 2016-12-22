@@ -28,7 +28,7 @@ Application questions mark as done validations
     And the user clicks the button/link    jQuery=.button:contains("Done")
     And the user should see the text in the page    Unable to mark as complete.
     And the user should see the text in the page    view the application section(s) to resolve the error.
-    And The user clicks the button/link    link=Business opportunity
+    And The user clicks the button/link    link=No question header entered
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
 
 Business opportunity Sever-side validations assessment questions
@@ -44,6 +44,8 @@ Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
     Given the user fills the empty question fields
+    And the user enters text to a text field    id=question.shortTitle    Test Heading
+    And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
@@ -58,7 +60,7 @@ Business opportunity: Autosave
     [Tags]
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
-    And The user clicks the button/link    link=Business opportunity
+    And The user clicks the button/link    link=Test Heading
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user should see the correct inputs in the Applications questions form
     And the user should see the correct inputs in assesment questions
@@ -67,8 +69,8 @@ Business opportunity: Mark as done
     [Documentation]    INFUND-5629
     [Tags]    HappyPath
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Business opportunity
-    Then The user should see the text in the page    Business opportunity
+    And the user clicks the button/link    link=Test Heading
+    Then The user should see the text in the page    Test Heading
     And The user should see the text in the page    Test title
     And The user should see the text in the page    Subtitle test
     And The user should see the text in the page    Test guidance title
@@ -96,6 +98,8 @@ the user leaves all the question field empty
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
     sleep    200ms
+    The user enters text to a text field    id=question.shortTitle    ${EMPTY}
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.title    ${EMPTY}
     the user moves focus and waits for autosave
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
@@ -126,6 +130,8 @@ the user moves focus and waits for autosave
     Wait For Autosave
 
 the user should see the correct inputs in the Applications questions form
+    ${input_value} =    Get Value    id=question.shortTitle
+    Should Be Equal    ${input_value}    Test Heading
     ${input_value} =    Get Value    id=question.title
     Should Be Equal    ${input_value}    Test title
     ${input_value} =    Get Value    id=question.subTitle
