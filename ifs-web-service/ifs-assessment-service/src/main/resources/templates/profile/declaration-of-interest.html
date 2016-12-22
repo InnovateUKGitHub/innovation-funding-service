@@ -39,7 +39,7 @@
             <p th:unless="${model.professionalAffiliations}">None declared</p>
 
             <h2 class="heading-medium">Appointments, directorships and consultancies</h2>
-            <table class="extra-margin" th:if="${model.financialInterests}">
+            <table class="extra-margin" th:if="${model.appointments}">
                 <thead>
                     <tr>
                         <th scope="col">Organisation</th>
@@ -47,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="appointment : *{appointments}">
+                    <tr th:each="appointment : ${model.appointments}">
                         <td th:text="${appointment.organisation}">Aptrans Ltd</td>
                         <td th:text="${appointment.position}">Executive consultant</td>
                     </tr>
@@ -69,7 +69,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="familyAffiliation : *{familyAffiliations}">
+                    <tr th:each="familyAffiliation : ${model.familyAffiliations}">
                         <td th:text="${familyAffiliation.relation}">Sister</td>
                         <td th:text="${familyAffiliation.organisation}">Innovate UK</td>
                         <td th:text="${familyAffiliation.position}">Executive consultant</td>
