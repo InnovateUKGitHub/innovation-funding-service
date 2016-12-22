@@ -83,7 +83,7 @@
 							  </label>
 							  <input type="tel" th:errorclass="field-error" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}"
 									 required="required" minlength="8" maxlength="20"
-									 th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(0,0,8)},
+									 th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
 									  data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
 									  data-tel-errormessage=#{validation.standard.phonenumber.format},
 									  data-required-errormessage=#{validation.standard.phonenumber.required}" />
