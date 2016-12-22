@@ -81,7 +81,8 @@
                             <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                                 <td class="numeric bold"><span>&pound;0</span></td>
                             </div>
-                            <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}" th:remove="tag">
+                            <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(1)},
+                            formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}" th:remove="tag">
                                 <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                                     <td class="numeric"
                                         th:with="formInputType=${formInput.type},category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
@@ -112,7 +113,7 @@
                             <span th:if="${financeTotal != null}" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                         </td>
                         <div th:remove="tag" th:each="financeSubSection : ${financeSectionChildren}"
-                             th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
+                             th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(1)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
                             <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                 th:if="${financeTotal != null}"
                                 th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />

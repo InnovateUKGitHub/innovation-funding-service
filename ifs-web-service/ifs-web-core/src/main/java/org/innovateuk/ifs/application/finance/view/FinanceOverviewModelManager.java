@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,20 +71,20 @@ public class FinanceOverviewModelManager {
         model.addAttribute("financeSection", section);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
         List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
-        List<SectionResource> financeSectionAndSubSectionChildren = financeSectionChildren;
+        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
         financeSectionChildren.stream().forEach(sectionResource -> {
                 if (!sectionResource.getChildSections().isEmpty()) {
-                    financeSectionAndSubSectionChildren.addAll(
+                    financeSubSectionChildren.addAll(
                             sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
                     );
                 }
             }
         );
-        model.addAttribute("financeSectionChildren", financeSectionAndSubSectionChildren);
+        model.addAttribute("financeSectionChildren", financeSubSectionChildren);
 
         List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
 
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSectionAndSubSectionChildren.stream()
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
                 .collect(toMap(
                         SectionResource::getId,
                         s -> filterQuestions(s.getQuestions(), allQuestions)
@@ -103,6 +104,6 @@ public class FinanceOverviewModelManager {
     }
 
     private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list){
-        return simpleFilter(list, input -> id.equals(input.getQuestion()));
+        return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
     }
 }

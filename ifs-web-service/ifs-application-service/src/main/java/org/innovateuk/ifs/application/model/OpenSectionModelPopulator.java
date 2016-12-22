@@ -315,8 +315,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
+        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
         boolean hasFinanceSection = false;
         Long financeSectionId = null;
@@ -342,6 +341,15 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
+    }
+
+    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
+        Set<Long> combinedMarkedAsComplete = new HashSet<>();
+
+        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));
+        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
+
+        return combinedMarkedAsComplete;
     }
 
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -36,8 +38,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.AjaxResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
@@ -63,7 +63,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
@@ -76,9 +78,6 @@ import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -229,9 +228,9 @@ public class ApplicationFormController {
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
         if (FINANCE.equals(section.getType()) ||
-                SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
+                isSubFinanceSection(section)) {
             openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-            model.addAttribute("isSubFinanceSection", TRUE);
+            model.addAttribute("isSubFinanceSection", isSubFinanceSection(section));
         } else {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
             model.addAttribute("isSubFinanceSection", FALSE);
@@ -240,6 +239,10 @@ public class ApplicationFormController {
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
 
         return APPLICATION_FORM;
+    }
+
+    private Boolean isSubFinanceSection(SectionResource section) {
+        return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
     }
 
     private void addFormAttributes(ApplicationResource application,

@@ -70,13 +70,13 @@
                 </th:block>
             </th:block>
             <th:block th:if="${isSubFinanceSection}">
-                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id}, sectionId=${section.getParentSection()})}" class="button-secondary">
+                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id}, sectionId=${currentSection.getParentSection()})}" class="button-secondary">
                     Return to finances
                 </a>
                 <button type="submit" class="button">Mark as complete</button>
             </th:block>
             <th:block th:unless="${isSubFinanceSection}">
-                <ul>
+                <ul th:if="${subSections != null and subSections.size() > 0}">
                     <li th:each="subSection : ${subSections.get(currentSection.id)}">
                         <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id},sectionId=${subSection.id})}" th:text="${subSection.name}"></a>
                     </li>

@@ -81,6 +81,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         addApplicationAndSections(application, competition, user.getId(), section, model, form, allSections);
         
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
 
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
         addNavigation(section, application.getId(), model);
@@ -94,13 +96,12 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("currentSectionId", section.getId());
         model.addAttribute("currentSection", section);
+        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("hasFinanceSection", true);
         model.addAttribute("financeSectionId", section.getId());
         model.addAttribute("allReadOnly", allReadOnly);
         model.addAttribute("form", form);
     }
-
-
 
     private void addApplicationDetails(ApplicationResource application,
         CompetitionResource competition,
