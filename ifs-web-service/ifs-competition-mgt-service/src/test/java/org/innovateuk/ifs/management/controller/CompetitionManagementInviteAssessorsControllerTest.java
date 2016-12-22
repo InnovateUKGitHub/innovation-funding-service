@@ -262,6 +262,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                         .withName("Earth Observation", "Healthcare, Analytical science")
                         .buildArray(2, CategoryResource.class))
                 .withCompliant(TRUE, FALSE)
+                .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus("Invite accepted", "Invite declined")
                 .withDetails("", "Invite declined as person is too busy")
                 .build(2);
@@ -331,6 +332,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
             assertEquals(inviteOverviewResource.getInnovationArea().getName(), overviewAssessorRowViewModel.getInnovationArea());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
+            assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
         });
