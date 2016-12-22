@@ -91,12 +91,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private Application application;
     private List<Organisation> organisations;
     private Role leadApplicantRole;
-    private Role projectManagerRole;
     private User user;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
-    private FileEntryResource fileEntryResource;
-    private PartnerOrganisation partnerOrganisation;
     private Project project;
     private List<OrganisationResource> organisationResources;
     private SpendProfileTableResource table;
@@ -157,7 +154,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withTown("town").build();
 
         leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
-        projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
                 withId(userId).
@@ -199,11 +195,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 withAddress(address).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
-                build();
-        fileEntryResource = newFileEntryResource().
-                withFilesizeBytes(1024).
-                withMediaType("application/pdf").
-                withName("grant_offer_letter").
                 build();
 
         FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
