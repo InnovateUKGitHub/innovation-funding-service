@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.error.Error;
@@ -104,12 +105,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private ValidationUtil validationUtil;
 
-
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
 
     @Autowired
     private ProjectGrantOfferService projectGrantOfferLetterService;
+
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
@@ -129,21 +132,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                }))
         );
-    }
-
-    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
-
-        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
-                financeCheckProcessRepository.findOneByTargetId(po.getId()));
-
-        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
-                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
-
-        if (!existingNonApprovedFinanceCheck.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED);
-        }
     }
 
     @Override
@@ -388,6 +376,43 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityStatus)
                 .andOnSuccess(() -> setViabilityApprovalUser(projectFinance, viability))
                 .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus)));
+    }
+
+    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
+        return validateFinanceChecksApprovedForSpendProfileGenerate(project).andOnSuccess(() ->
+                validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project));
+    }
+
+    private ServiceResult<Void> validateFinanceChecksApprovedForSpendProfileGenerate(Project project) {
+        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
+                financeCheckProcessRepository.findOneByTargetId(po.getId()));
+
+        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
+                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
+
+        if (!existingNonApprovedFinanceCheck.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED_OR_NOT_APPLICABLE);
+        }
+    }
+
+    private ServiceResult<Void> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
+
+        List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(project.getId());
+
+        Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
+                Viability.PENDING.equals(finance.getViability()) && !isUsingJesFinances(finance));
+
+        if (!existingReviewableFinance.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
+    private boolean isUsingJesFinances(ProjectFinance finance) {
+        return organisationFinanceDelegate.isUsingJesFinances(finance.getOrganisation().getOrganisationType().getName());
     }
 
     private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {

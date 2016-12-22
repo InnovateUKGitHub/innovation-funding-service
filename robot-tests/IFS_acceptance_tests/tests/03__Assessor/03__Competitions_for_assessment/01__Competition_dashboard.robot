@@ -38,8 +38,8 @@ Details of the competition are visible
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    12:00am Tuesday 12 January 2016
-    And the user should see the text in the page    12:00am Saturday 28 January 2017
+    And the user should see the text in the page    12:00am Thursday 12 January 2068
+    And the user should see the text in the page    12:00am Saturday 28 January 2068
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040

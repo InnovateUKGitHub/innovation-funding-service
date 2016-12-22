@@ -26,7 +26,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]
     Then The user should see the text in the page    Days left to submit
-    And the days remaining should be correct (Top of the page)    2017-01-28
+    And the days remaining should be correct (Top of the page)    2068-01-28
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540

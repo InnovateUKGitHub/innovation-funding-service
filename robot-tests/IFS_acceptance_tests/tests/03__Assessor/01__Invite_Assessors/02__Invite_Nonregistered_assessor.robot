@@ -18,8 +18,8 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
-${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
+${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:david.peters@innovateuk.test
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:thomas.fister@innovateuk.test
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
@@ -39,7 +39,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
-    And the user should see the text in the page    worth.email.test+assessor3@gmail.com
+    And the user should see the text in the page    thomas.fister@innovateuk.test
     And the user clicks the button/link    Link=Back
     And the user should see the text in the page    Become an assessor for Innovate UK
 
@@ -102,7 +102,7 @@ Create assessor account: Postcode lookup and save
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
-    When The user enters text to a text field    id=username    worth.email.test+assessor3@gmail.com
+    When The user enters text to a text field    id=username    thomas.fister@innovateuk.test
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}

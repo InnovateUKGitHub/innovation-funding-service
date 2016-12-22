@@ -6,7 +6,7 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-5645 As an assessor I want to be able to review annexes to the contract from the same screen so that I have all the information I need about assessing competitions
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
+Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot

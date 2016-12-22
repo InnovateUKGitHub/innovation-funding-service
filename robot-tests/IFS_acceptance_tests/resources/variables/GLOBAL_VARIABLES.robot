@@ -199,3 +199,5 @@ ${database_host}    ifs-database
 ${database_port}    3306
 ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
+${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
