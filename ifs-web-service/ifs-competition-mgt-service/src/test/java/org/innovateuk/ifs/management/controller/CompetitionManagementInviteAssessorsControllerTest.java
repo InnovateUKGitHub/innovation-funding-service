@@ -116,7 +116,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void invite() throws Exception {
         List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
-        setupDefaultInviteViewExpectations(assessorCreatedInviteResources);
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/invite", competition.getId()))
                 .andExpect(status().isOk())
@@ -237,7 +239,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void addNewUserToInviteView() throws Exception {
         List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
-        setupDefaultInviteViewExpectations(assessorCreatedInviteResources);
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
         InviteNewAssessorsForm form = new InviteNewAssessorsForm();
 
@@ -267,7 +271,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void removeNewUserFromInviteView() throws Exception {
         List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
-        setupDefaultInviteViewExpectations(assessorCreatedInviteResources);
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
         InviteNewAssessorsRowForm newUserRow1 = new InviteNewAssessorsRowForm();
         newUserRow1.setName("Tester 1");
@@ -436,18 +442,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         });
     }
 
-    private void setupDefaultInviteViewExpectations(List<AssessorCreatedInviteResource> assessorCreatedInviteResources) {
+    private List<CategoryResource> setupCategoryResources() {
+        return newCategoryResource()
+                .withType(INNOVATION_AREA)
+                .withName("Innovation Area 1", "Innovation Area 2")
+                .build(2);
+    }
+
+    private void setupDefaultInviteViewExpectations(List<AssessorCreatedInviteResource> assessorCreatedInviteResources,
+                                                    List<CategoryResource> children) {
         List<CategoryResource> innovationSectors = newCategoryResource()
-                .withId(1L)
                 .withType(INNOVATION_SECTOR)
                 .withName("Innovation Sector 1")
-                .withChildren(
-                        newCategoryResource()
-                                .withId(2L, 3L)
-                                .withType(INNOVATION_AREA)
-                                .withName("Innovation Area 1", "Innovation Area 2")
-                                .build(2)
-                )
+                .withChildren(children)
                 .build(1);
 
         when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(assessorCreatedInviteResources));

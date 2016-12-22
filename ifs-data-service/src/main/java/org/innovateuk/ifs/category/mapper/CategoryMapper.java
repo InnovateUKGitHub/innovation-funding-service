@@ -16,9 +16,9 @@ public abstract class CategoryMapper extends BaseMapper<Category, CategoryResour
     @Override
     public abstract Category mapToDomain(CategoryResource resource);
 
-    public abstract List<Category> mapToDomain(List<CategoryResource> categories);
+    public abstract List<Category> mapToDomain(List<CategoryResource> categoryResources);
 
-    public abstract List<CategoryResource> mapToResource(List<Category> categoryResources);
+    public abstract List<CategoryResource> mapToResource(List<Category> categories);
 
     public Long mapCategoryToId(Category object) {
         if (object == null) {

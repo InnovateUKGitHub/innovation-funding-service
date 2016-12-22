@@ -165,7 +165,10 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void inviteNewUsers() throws Exception {
-        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, ()-> classUnderTest.inviteNewUsers(singletonList(newNewUserStagedInviteResource().build()), 1L));
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.inviteNewUsers(
+                newNewUserStagedInviteResource().build(2), 1L
+                )
+        );
     }
 
     @Test

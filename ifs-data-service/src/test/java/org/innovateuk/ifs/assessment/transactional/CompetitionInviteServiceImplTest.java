@@ -68,7 +68,6 @@ import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
@@ -189,13 +188,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
-        inOrder.verify(competitionInviteMapperMock).mapToResource(any(CompetitionInvite.class));
+        inOrder.verify(competitionInviteMapperMock).mapToResource(isA(CompetitionInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void getInvite_hashNotExists() throws Exception {
-        when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(null);
+        when(competitionInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.getInvite("inviteHashNotExists");
 
@@ -256,14 +255,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionInviteMapperMock);
         inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
-        inOrder.verify(competitionInviteRepositoryMock).save(any(CompetitionInvite.class));
-        inOrder.verify(competitionInviteMapperMock).mapToResource(any(CompetitionInvite.class));
+        inOrder.verify(competitionInviteRepositoryMock).save(isA(CompetitionInvite.class));
+        inOrder.verify(competitionInviteMapperMock).mapToResource(isA(CompetitionInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void openInvite_hashNotExists() throws Exception {
-        when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(null);
+        when(competitionInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.openInvite("inviteHashNotExists");
 
@@ -282,7 +281,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .build(), SENT);
 
-        when(competitionInviteRepositoryMock.getByHash(anyString())).thenReturn(competitionInvite);
+        when(competitionInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(competitionInvite);
 
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.openInvite("inviteHashExpired");
 
@@ -1004,13 +1003,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
     @Test
     public void inviteUser_new_categoryNotFound() {
-        final String newAssessorName = "tom baldwin";
-        final String newAssessorEmail = "tom@poly.io";
-        final long innovationArea = 100L;
+        String newAssessorName = "tom baldwin";
+        String newAssessorEmail = "tom@poly.io";
+        long innovationArea = 100L;
 
-        final Competition competition = newCompetition().build();
+        Competition competition = newCompetition().build();
 
-        final NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
+        NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
                 .withEmail(newAssessorEmail)
                 .withName(newAssessorName)
                 .withCompetitionId(competition.getId())
@@ -1034,17 +1033,17 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
     @Test
     public void inviteUser_new_alreadyExists() {
-        final String newAssessorName = "tom baldwin";
-        final String newAssessorEmail = "tom@poly.io";
+        String newAssessorName = "tom baldwin";
+        String newAssessorEmail = "tom@poly.io";
 
-        final Competition competition = newCompetition().build();
+        Competition competition = newCompetition().build();
 
-        final Category innovationArea = newCategory()
+        Category innovationArea = newCategory()
                 .withName("machine learning")
                 .withType(INNOVATION_AREA)
                 .build();
 
-        final NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
+        NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
                 .withEmail(newAssessorEmail)
                 .withName(newAssessorName)
                 .withCompetitionId(competition.getId())
@@ -1064,17 +1063,17 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
     @Test
     public void inviteUser_new_competitionNotFound() {
-        final String newAssessorName = "tom baldwin";
-        final String newAssessorEmail = "tom@poly.io";
+        String newAssessorName = "tom baldwin";
+        String newAssessorEmail = "tom@poly.io";
 
-        final long competitionId = 10L;
+        long competitionId = 10L;
 
-        final Category innovationArea = newCategory()
+        Category innovationArea = newCategory()
                 .withName("machine learning")
                 .withType(INNOVATION_AREA)
                 .build();
 
-        final NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
+        NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
                 .withEmail(newAssessorEmail)
                 .withName(newAssessorName)
                 .withCompetitionId(competitionId)
@@ -1116,9 +1115,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(2);
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(anyString(), anyLong())).thenReturn(null);
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(isA(String.class), isA(Long.class))).thenReturn(null);
         when(categoryRepositoryMock.findByIdAndType(innovationArea.getId(), INNOVATION_AREA)).thenReturn(innovationArea);
-        when(competitionInviteRepositoryMock.save(any(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
+        when(competitionInviteRepositoryMock.save(isA(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -1162,7 +1161,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(testEmail2, competition.getId())).thenReturn(null);
 
         when(categoryRepositoryMock.findByIdAndType(innovationArea.getId(), INNOVATION_AREA)).thenReturn(innovationArea);
-        when(competitionInviteRepositoryMock.save(any(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
+        when(competitionInviteRepositoryMock.save(isA(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -1183,7 +1182,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void inviteNewUsers_competitionNotFound() throws Exception {
         long competitionId = 5L;
 
-        Category innovationArea =  newCategory()
+        Category innovationArea = newCategory()
                 .withName("machine learning")
                 .withType(INNOVATION_AREA)
                 .build();
@@ -1201,7 +1200,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(2);
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
-        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(anyString(), anyLong())).thenReturn(null);
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(isA(String.class), isA(Long.class))).thenReturn(null);
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competitionId);
 
@@ -1230,9 +1229,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(2);
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(anyString(), anyLong())).thenReturn(null);
+        when(competitionInviteRepositoryMock.getByEmailAndCompetitionId(isA(String.class), isA(Long.class))).thenReturn(null);
         when(categoryRepositoryMock.findByIdAndType(categoryId, INNOVATION_AREA)).thenReturn(null);
-        when(competitionInviteRepositoryMock.save(any(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
+        when(competitionInviteRepositoryMock.save(isA(CompetitionInvite.class))).thenReturn(new CompetitionInvite());
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -1314,7 +1313,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     private CompetitionInvite createInviteExpectations(String name, String email, InviteStatus status, Competition competition, Category innovationArea) {
-        return createLambdaMatcher( invite -> {
+        return createLambdaMatcher(invite -> {
                     assertEquals(name, invite.getName());
                     assertEquals(email, invite.getEmail());
                     assertEquals(status, invite.getStatus());
