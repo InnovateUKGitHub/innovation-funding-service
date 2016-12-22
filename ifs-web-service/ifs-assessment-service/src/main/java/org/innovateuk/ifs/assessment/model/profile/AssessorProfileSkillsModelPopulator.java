@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by eamonnharrison on 22/12/2016.
+ * Populater for assessor skills view model.
  */
 @Component
 public class AssessorProfileSkillsModelPopulator {
