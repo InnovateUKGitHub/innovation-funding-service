@@ -73,7 +73,7 @@ Email left blank
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
-    Then the user should see an error    Please enter your email.
+    Then the user should see an error    Please enter your email address.
 
 Invalid email no @ symbol
     [Documentation]    INFUND-885
