@@ -24,6 +24,7 @@ import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -49,6 +50,7 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
  */
 @Controller
 @RequestMapping("/competition/setup")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);

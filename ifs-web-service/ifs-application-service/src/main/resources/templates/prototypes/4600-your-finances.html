@@ -23,14 +23,13 @@
 
         <h2 class="heading-medium extra-margin">Provide the project costs for 'Empire Ltd'</h2>
 
-        <p>Only your organisation can see this level of detail. All members of your organisation can acesss and edit your finances We recommend assigning completion of your finances to one member of your team. <a href="#">Find out which project costs are eligible.</a></p>
+        <p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team. <a href="#">Find out which project costs are eligible.</a></p>
 
         <div class="collapsible section-overview">
 
             <h2>Labour<span data-mirror="#section-total-1">&pound; 126,207</span></h2>
               <th:block th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
               <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
-
             <h2>Overheads <span data-mirror="#section-total-2">&pound; 0</span></h2>
               <th:block th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
               <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
@@ -71,7 +70,7 @@
             <fieldset>
               <label for="org-eligible" class="block-label">
                 <input id="org-eligible" value="org-eligible" type="checkbox" />
-                I confirm that the project costs entered for my organisation are all eligible.
+                I confirm that the project costs entered for my organisation are eligible.
               </label>
             </fieldset>
           </div>
@@ -83,7 +82,7 @@
           <div class="extra-margin">
             <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark your project costs as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 

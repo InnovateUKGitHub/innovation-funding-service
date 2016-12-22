@@ -29,7 +29,7 @@ public class ApplicationFinanceSectionSaverTest {
 
     @Test
     public void testSectionToSave() {
-        assertEquals(CompetitionSetupSubsection.FINANCES, service.sectionToSave());
+        assertEquals(CompetitionSetupSubsection.FINANCES, service.subsectionToSave());
     }
 
     @Test

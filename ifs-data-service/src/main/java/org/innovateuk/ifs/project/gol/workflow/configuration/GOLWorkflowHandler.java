@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.gol.workflow.configuration;
 
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.gol.domain.GOLProcess;
 import org.innovateuk.ifs.project.gol.repository.GrantOfferLetterProcessRepository;
@@ -9,7 +8,7 @@ import org.innovateuk.ifs.project.gol.resource.GOLOutcomes;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.resource.ProjectDetailsState;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -23,11 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SENT;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_SIGNED;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_APPROVED;
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.GOL_REJECTED;
+import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
@@ -56,24 +51,28 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
     }
 
     public boolean grantOfferLetterSent(Project project, ProjectUser projectUser) {
-        return fireEvent(mandatoryValueAddedEvent(project, projectUser, GOL_SENT), project);
+        return fireEvent(externalUserEvent(project, projectUser, GOL_SENT), project);
     }
 
     public boolean grantOfferLetterSigned(Project project, ProjectUser projectUser) {
-        return fireEvent(mandatoryValueAddedEvent(project, projectUser, GOL_SIGNED), project);
+        return fireEvent(externalUserEvent(project, projectUser, GOL_SIGNED), project);
     }
 
     public boolean grantOfferLetterRejected(Project project, ProjectUser projectUser) {
-        return fireEvent(mandatoryValueAddedEvent(project, projectUser, GOL_REJECTED), project);
+        return fireEvent(externalUserEvent(project, projectUser, GOL_REJECTED), project);
     }
 
     public boolean grantOfferLetterApproved(Project project, ProjectUser projectUser) {
-        return fireEvent(mandatoryValueAddedEvent(project, projectUser, GOL_APPROVED), project);
+        return fireEvent(externalUserEvent(project, projectUser, GOL_APPROVED), project);
     }
 
     public boolean isSendAllowed(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && GOLState.PENDING.equals(process.getActivityState());
+    }
+
+    public boolean removeGrantOfferLetter(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, GOL_REMOVED), project);
     }
 
     public boolean isAlreadySent(Project project) {
@@ -160,11 +159,19 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<GOLOutcomes> mandatoryValueAddedEvent(Project project, ProjectUser projectUser,
-                                                                 GOLOutcomes event) {
+    private MessageBuilder<GOLOutcomes> externalUserEvent(Project project, ProjectUser projectUser,
+                                                          GOLOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
+    }
+
+    private MessageBuilder<GOLOutcomes> internalUserEvent(Project project, User internalUser,
+                                                          GOLOutcomes event) {
+        return MessageBuilder
+                .withPayload(event)
+                .setHeader("target", project)
+                .setHeader("internalParticipant", internalUser);
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.bankdetails.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -212,5 +213,25 @@ public class BankDetailsResource {
                 .append(manualApproval)
                 .append(verified)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("sortCode", sortCode)
+                .append("accountNumber", accountNumber)
+                .append("project", project)
+                .append("organisationAddress", organisationAddress)
+                .append("organisation", organisation)
+                .append("organisationTypeName", organisationTypeName)
+                .append("companyName", companyName)
+                .append("registrationNumber", registrationNumber)
+                .append("companyNameScore", companyNameScore)
+                .append("registrationNumberMatched", registrationNumberMatched)
+                .append("addressScore", addressScore)
+                .append("manualApproval", manualApproval)
+                .append("verified", verified)
+                .toString();
     }
 }

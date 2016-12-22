@@ -246,12 +246,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<ByteArrayResource> getGeneratedGrantOfferFile(Long projectId) {
+    public Optional<ByteArrayResource> getGrantOfferFile(Long projectId) {
         return projectRestService.getGrantOfferFile(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public Optional<FileEntryResource> getGeneratedGrantOfferFileDetails(Long projectId) {
+    public Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId) {
         return projectRestService.getGrantOfferFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
@@ -267,7 +267,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ServiceResult<Void> removeGrantOfferLetter(Long projectId) {
-        return projectRestService.removeGeneratedGrantOfferLetter(projectId).toServiceResult();
+        return projectRestService.removeGrantOfferLetter(projectId).toServiceResult();
     }
 
     @Override

@@ -24,13 +24,13 @@ public interface ProjectGrantOfferService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_PARTNER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_INTERNAL_USER')")
     public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPLOAD_SIGNED_GRANT_OFFER')")
@@ -43,6 +43,10 @@ public interface ProjectGrantOfferService {
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a grant offer letter" )
     ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource);
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a grant offer letter" )
+    ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId);
 
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )

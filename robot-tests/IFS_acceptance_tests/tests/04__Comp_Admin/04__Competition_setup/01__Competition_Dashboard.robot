@@ -41,7 +41,7 @@ Project setup Competitions
     When the user clicks the button/link    jQuery=a:contains(Project setup)    # We have used the JQuery selector for the link because the title will change according to the competitions number
     Then the user should see the text in the page    Project setup
     And the user should see the text in the page    ${PROJECT_SETUP_COMPETITION_NAME}
-    And the user should see the text in the page   3 projects
+    And the user should see the text in the page    3 projects
     And the user should not see the text in the page    ${READY_TO_OPEN_COMPETITION_NAME}    # this step verifies that the ready to open competitions are not visible in other tabs
 
 Project setup competition calculations
@@ -62,15 +62,12 @@ PS projects title and lead
     And the user should see the element    jQuery=tr:nth-child(3) th:contains("Elbow grease")
     And the user should see the element    jQuery=tr:nth-child(3) th:contains("Lead: Big Riffs And Insane Solos Ltd")
 
-PS projects status
+PS projects status page
     [Documentation]    INFUND-2610
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4)
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And The user should see the text in the page    Projects in setup
     [Teardown]    The user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions
@@ -86,7 +83,7 @@ Upcoming competitions calculations
     ...    INFUND-3876
     Then the total calculation in dashboard should be correct    In preparation    //section[1]/ul/li
     And the total calculation in dashboard should be correct    Ready to open    //section[2]/ul/li
-    And the total calculation in dashboard should be correct    Upcoming    //ul[@class="list-overview"]
+    And the total calculation in dashboard should be correct    Upcoming    //section/ul/li
 
 Upcoming competitions ready for open
     [Documentation]    INFUND-3003

@@ -6,7 +6,7 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
+${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0bf
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
 
 *** Test Cases ***

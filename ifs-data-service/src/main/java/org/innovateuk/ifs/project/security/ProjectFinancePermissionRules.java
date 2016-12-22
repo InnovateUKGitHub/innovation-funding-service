@@ -76,5 +76,20 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(
+            value = "VIEW_CREDIT_REPORT",
+            description = "Project Finance Users can view the Credit Report flag")
+    public boolean projectFinanceUserCanViewCreditReport(Long projectId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "SAVE_CREDIT_REPORT",
+            description = "Project Finance Users can save Credit Report flag")
+    public boolean projectFinanceUserCanSaveCreditReport(Long projectId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
 
 }

@@ -6,8 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
@@ -15,10 +15,10 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectFo
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);

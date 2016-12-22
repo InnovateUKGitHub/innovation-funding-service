@@ -7,8 +7,6 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -26,12 +24,13 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
-import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
+import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
@@ -57,6 +56,7 @@ import java.util.stream.Collectors;
 
 import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -67,6 +67,12 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
 
     static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
+
+    public static final String GOL_CONTENT_TYPE = "application/pdf";
+
+    public static final String DEFAULT_GOL_NAME = "grant_offer_letter.pdf";
+
+    public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
 
@@ -81,10 +87,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
-
-    @Autowired
-    private OrganisationMapper organisationMapper;
-
 
     @Autowired
     private FileTemplateRenderer fileTemplateRenderer;
@@ -215,12 +217,34 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
+    @Override
+    public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
+        return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
+            if(approval == ApprovalType.APPROVED) {
+                return getProject(projectId).andOnSuccess(project -> {
+                    if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+
+                        FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
+                        return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
+                                .andOnSuccess(() -> serviceSuccess()).
+                                        andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+                    } else {
+                        return serviceSuccess();
+                    }
+                });
+            } else {
+                return serviceSuccess();
+            }
+        });
+    }
+
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisation());
 
         Map<String, Object> templateReplacements = new HashMap<>();
         List<String> addresses = getAddresses(project);
+
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
@@ -251,6 +275,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         }
         return addressLines;
     }
+
+
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
         ServiceResult<Supplier<InputStream>> pdfSupplier = null;
@@ -302,9 +328,16 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(project ->
-                getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeGrantOfferLetterFileFromProject(project))));
+               validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
+               getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+               fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+               removeGrantOfferLetterFileFromProject(project)))));
+    }
+
+    private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
+        return getCurrentlyLoggedInUser().andOnSuccess(user ->
+                golWorkflowHandler.removeGrantOfferLetter(project, user) ?
+                        serviceSuccess() : serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED));
     }
 
     private ServiceResult<FileEntry> getGrantOfferLetterFileEntry(Project project) {

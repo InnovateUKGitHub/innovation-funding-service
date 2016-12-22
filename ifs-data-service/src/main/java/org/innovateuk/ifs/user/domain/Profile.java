@@ -93,6 +93,14 @@ public class Profile extends AuditableEntity {
         this.contractSignedDate = contractSignedDate;
     }
 
+    // TODO the profile belongs to a User so should the User be a member?
+    public boolean isCompliant(User user) {
+        boolean skillsComplete = skillsAreas != null;
+        boolean affiliationsComplete = user != null && !user.getAffiliations().isEmpty();
+        boolean contractComplete = contractSignedDate != null;
+        return skillsComplete && affiliationsComplete && contractComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
@@ -91,11 +92,11 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 project.getApplication().getFormattedId(),
                 getProjectPartnerCount(project.getId()),
                 null != leadOrganisation ? leadOrganisation.getName() : "",
-                getProjectDetailsStatus(project),
+                projectDetailsStatus,
                 getBankDetailsStatus(project),
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
-                getMonitoringOfficerStatus(project, projectDetailsStatus),
+                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project)),
                 getOtherDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
@@ -107,6 +108,12 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project){
+        for(Organisation organisation : project.getOrganisations()){
+            Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
+            if(financeContact == null || !financeContact.isPresent()){
+                return PENDING;
+            }
+        }
         return createProjectDetailsCompetitionStatus(project);
     }
 
@@ -169,11 +176,20 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
-        return createMonitoringOfficerStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(), projectDetailsStatus);
+        return createMonitoringOfficerCompetitionStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(), projectDetailsStatus);
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
+    }
+
+    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
+            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
+        } else {
+            return NOT_STARTED;
+        }
+
     }
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){
@@ -204,12 +220,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return PENDING;
         }
 
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
-            return PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
-            return COMPLETE;
+        if (project.getOfferSubmittedDate() != null) {
+            if (golWorkflowHandler.isApproved(project)) {
+                return COMPLETE;
+            }
         }
 
         if(project.getOfferSubmittedDate() != null) {

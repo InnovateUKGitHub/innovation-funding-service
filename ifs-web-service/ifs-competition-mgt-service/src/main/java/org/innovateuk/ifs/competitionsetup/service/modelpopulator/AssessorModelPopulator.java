@@ -25,5 +25,4 @@ public class AssessorModelPopulator implements CompetitionSetupSectionModelPopul
 	public void populateModel(Model model, CompetitionResource competitionResource) {
 		model.addAttribute("assessorOptions", competitionService.getAssessorOptionsForCompetitionType(competitionResource.getCompetitionType()));
 	}
-
 }

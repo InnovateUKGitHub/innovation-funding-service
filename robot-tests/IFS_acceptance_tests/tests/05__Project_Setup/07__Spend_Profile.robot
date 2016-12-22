@@ -26,6 +26,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5441 As a Project Finance team member I want to be able to export submitted spend profile tables from academic organisations so that these may be distributed offline to Lead Technologists and Monitoring Officers
 ...
 ...               INFUND-6046 Spend Profile should have a link when Done
+...
+...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -46,22 +48,22 @@ Project Finance user generates the Spend Profile
     Then the user should see the element    jQuery=a.eligibility-0:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
-    Then the user should see the element    jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see the element    jQuery=.generate-spend-profile-main-button
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
+    When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
     Then the user should see the text in the page    This will generate a flat profile spend for all project partners.
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
 
 Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Generate Spend Profile")
-    And the user clicks the button/link    jQuery=.button:contains("Generate spend profile")
+    When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
+    And the user clicks the button/link     jQuery=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 Lead partner can view spend profile page
@@ -349,6 +351,41 @@ Project Manager can choose cancel on the dialogue
     And the user clicks the button/link     jQuery=.button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Submit project spend profile")
 
+Project Manager can see the button Allow partner to edit
+    [Documentation]    INFUND-6350
+    [Tags]
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    Then the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
+    And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
+    Then the user clicks the button/link    link=${Meembee_Name}
+    And the user should see the element     jQuery=.button:contains("Allow partner to edit")
+
+Other partners cannot enable edit-ability by themselves
+    [Documentation]    INFUND-6350
+    [Tags]
+    [Setup]  log in as a different user       ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    When the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
+    Then the user should not see the element  jQuery=.button:contains("Allow partner to edit")
+
+PM can return edit rights to partners
+    [Documentation]    INFUND-6350
+    [Tags]    HappyPath
+    [Setup]  log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
+    When the user clicks the button/link     jQuery=.button:contains("Allow partner to edit")
+    Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
+
+Partner can receive edit rights to his SP
+    [Documentation]    INFUND-6350
+    [Tags]    HappyPath
+    [Setup]  log in as a different user     ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=li.require-action:nth-child(6)
+    When the user clicks the button/link    link=Spend profile
+    Then the user should see the element    jQuery=.button:contains("Edit spend profile")
+    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+
 Project Manager can submit the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
@@ -446,7 +483,7 @@ Status updates correctly for internal user's table
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance Checks
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
@@ -466,7 +503,7 @@ Project Finance is able to Reject Spend Profile
     #    Then the user should see the element    jQuery=h3:contains("The spend profile has been rejected")
     # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
-Project Finance is able to Approve Spend Profile\
+Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
@@ -479,6 +516,10 @@ Project Finance is able to Approve Spend Profile\
     When the user clicks the button/link    jQuery=button:contains("Approved")
     And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
+
+Status updates correctly for internal user's table after approval
+    [Documentation]    INFUND-5543
+    [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
@@ -495,6 +536,7 @@ Project Finance still has a link to the spend profile after approval
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
+    [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
 
 *** Keywords ***
@@ -603,6 +645,21 @@ project finance approves other documents
 
 project finance reviews Finance checks
     log in as a different user         &{internal_finance_credentials}
+    project finance approves Viability for  ${Katz_Id}
+    project finance approves Viability for  ${Meembee_Id}
+    project finance approves Eligibility
+
+project finance approves Viability for
+    [Arguments]  ${partner}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
+    the user selects the checkbox      id=costs-reviewed
+    the user selects the checkbox      id=project-viable
+    the user moves focus to the element  link=Contact us
+    the user selects the option from the drop-down menu  Green  id=rag-rating
+    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+
+project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
     the user fills in and approves project costs
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}

@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.project.gol.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,6 +34,12 @@ public class GOLProcess extends Process<ProjectUser, Project, GOLState> {
 
     public GOLProcess(ProjectUser participant, Project target, ActivityState originalState) {
         this.participant = participant;
+        this.target = target;
+        this.setActivityState(originalState);
+    }
+
+    public GOLProcess(User internalParticipant, Project target, ActivityState originalState) {
+        this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
     }

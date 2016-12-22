@@ -17,7 +17,7 @@ Competition status should be correct
     ...
     ...    INFUND-6602
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Sustainable living models for the future
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
     Then the user should see the text in the page    In assessment
     And the user should not see the text in the page    Competition open
@@ -130,7 +130,7 @@ Both calculations in the page should show the same
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
 the admin downloads the excel
-    the user downloads the file    john.doe@innovateuk.test    Passw0rd    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    the user downloads the file    ${Comp_admin1_credentials["email"]}    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
 
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
