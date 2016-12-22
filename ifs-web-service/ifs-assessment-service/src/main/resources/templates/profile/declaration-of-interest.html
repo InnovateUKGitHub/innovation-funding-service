@@ -39,7 +39,7 @@
             <p th:unless="${model.professionalAffiliations}">None declared</p>
 
             <h2 class="heading-medium">Appointments, directorships and consultancies</h2>
-            <table class="extra-margin" th:if="${model.appointments}">
+            <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
                 <thead>
                     <tr>
                         <th scope="col">Organisation</th>
@@ -53,14 +53,14 @@
                     </tr>
                 </tbody>
             </table>
-            <p th:unless="${model.financialInterests}">None declared</p>
+            <p th:if="${#lists.isEmpty(model.appointments)}">None declared</p>
 
             <h2 class="heading-medium no-margin-bottom">Other financial interests</h2>
             <p th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
             <p th:unless="${model.financialInterests}">None declared</p>
 
             <h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
-            <table class="extra-margin" th:if="${model.familyAffiliations}">
+            <table class="extra-margin" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
                 <thead>
                     <tr>
                         <th scope="col">Relation</th>
@@ -76,7 +76,7 @@
                     </tr>
                 </tbody>
             </table>
-            <p th:unless="${model.familyAffiliations}">None declared</p>
+            <p th:if="${#lists.isEmpty(model.familyAffiliations)}">None declared</p>
 
             <h2 class="heading-medium no-margin-bottom">Close family members' other financial interests</h2>
             <p th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
