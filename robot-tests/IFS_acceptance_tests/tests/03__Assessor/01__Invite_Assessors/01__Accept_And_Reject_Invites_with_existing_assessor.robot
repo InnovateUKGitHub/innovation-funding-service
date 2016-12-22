@@ -25,7 +25,7 @@ Resource          ../../../resources/defaultResources.robot
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
 ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:david.peters@innovateuk.test
-${Upcoming_comp_assessor1_dashboard}    ${server}/assessment/assessor/dashboard
+${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
 
 *** Test Cases ***
@@ -82,20 +82,21 @@ Upcoming competition should be visible
     ...
     ...    INFUND-5001
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Upcoming_comp_assessor1_dashboard}
+    Given the user navigates to the page    ${ASSESSOR_DASHBOARD}
     And the user should see the text in the page    Competitions for assessment
     And the assessor should see the correct date
     When The user clicks the button/link    link=Sustainable living models for the future
     # TODO And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Photonics for health'
-    # TODO And The user clicks the button/link    link=Back to assessor dashboard
-    # TODO Then The user should see the text in the page    Upcoming competitions to assess
+    And The user clicks the button/link    link=Back to assessor dashboard
+    Then The user should see the text in the page    Upcoming competitions to assess
 
 When the assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
     Then The user should not see the text in the page    Upcoming competitions to assess
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    Capture Page Screenshot
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
@@ -106,7 +107,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
     Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct    2019-01-28
+    And the calculation of the remaining days should be correct    2017-01-28
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
