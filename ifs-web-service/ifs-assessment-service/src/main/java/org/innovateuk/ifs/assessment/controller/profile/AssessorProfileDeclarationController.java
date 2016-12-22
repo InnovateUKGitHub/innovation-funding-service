@@ -95,7 +95,7 @@ public class AssessorProfileDeclarationController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> updateResult = userService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form));
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
+                    .failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
         });
     }
 

@@ -47,6 +47,10 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     }
 
     protected List<AffiliationResource> getAppointments(Map<AffiliationType, List<AffiliationResource>> affiliations) {
+        if (!hasAppointments(affiliations)) {
+            return emptyList();
+        }
+
         return getAffiliationsByType(PERSONAL, affiliations).orElse(emptyList());
     }
 
@@ -67,6 +71,10 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     }
 
     protected List<AffiliationResource> getFamilyAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
+        if (!hasFamilyAffiliations(affiliations)) {
+            return emptyList();
+        }
+
         return getAffiliationsByType(FAMILY, affiliations).orElse(emptyList());
     }
 
@@ -95,6 +103,6 @@ public abstract class AssessorProfileDeclarationBasePopulator {
                                             Map<AffiliationType, List<AffiliationResource>> affiliations) {
         return ofNullable(affiliations.get(affiliationType))
                 .map(affiliationsByType -> !(affiliationsByType.size() == 1 && FALSE == affiliationsByType.get(0).getExists()))
-                .orElse(null);
+                .orElse(FALSE);
     }
 }

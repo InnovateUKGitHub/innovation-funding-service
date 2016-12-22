@@ -38,7 +38,7 @@
             <p th:text="${model.professionalAffiliations}" th:if="${model.professionalAffiliations}">Professional affiliation</p>
             <p th:unless="${model.professionalAffiliations}">None declared</p>
 
-            <h2 class="heading-medium">Appointments, directorships and consultancies</h2>
+            <h2 class="heading-medium no-margin-bottom">Appointments, directorships and consultancies</h2>
             <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
                 <thead>
                     <tr>

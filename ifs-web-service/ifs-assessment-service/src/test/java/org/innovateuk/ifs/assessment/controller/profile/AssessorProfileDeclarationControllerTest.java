@@ -502,7 +502,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .param("familyFinancialInterests", familyFinancialInterests)
                 .param("accurateAccount", accurateAccount))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard"));
+                .andExpect(redirectedUrl("/profile/declaration"));
     }
 
     @Test
@@ -574,7 +574,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .param("hasFamilyFinancialInterests", hasFamilyFinancialInterests)
                 .param("accurateAccount", accurateAccount))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard"));
+                .andExpect(redirectedUrl("/profile/declaration"));
     }
 
     @Test
@@ -780,7 +780,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .param("hasFamilyFinancialInterests", hasFamilyFinancialInterests)
                 .param("accurateAccount", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard"));
+                .andExpect(redirectedUrl("/profile/declaration"));
     }
 
     @Test
@@ -1053,7 +1053,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .param("hasFamilyFinancialInterests", hasFamilyFinancialInterests)
                 .param("accurateAccount", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard"));
+                .andExpect(redirectedUrl("/profile/declaration"));
     }
 
     @Test

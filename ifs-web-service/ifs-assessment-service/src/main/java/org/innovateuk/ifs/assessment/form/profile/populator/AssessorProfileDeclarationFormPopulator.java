@@ -73,5 +73,4 @@ public class AssessorProfileDeclarationFormPopulator extends AssessorProfileDecl
                 )
                 .orElse(emptyList());
     }
-
 }
