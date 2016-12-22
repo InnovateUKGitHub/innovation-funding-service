@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCat
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -962,8 +963,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         NewUserStagedInviteResource newAssessor = newNewUserStagedInviteResource()
-                .withEmail(newAssessorName)
-                .withName(newAssessorEmail)
+                .withName(newAssessorName)
+                .withEmail(newAssessorEmail)
                 .withCompetitionId(competition.getId())
                 .withInnovationCategoryId(innovationArea.getId())
                 .build();
@@ -971,8 +972,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         CompetitionInvite competitionInvite = newCompetitionInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
-                .withEmail(newAssessorEmail)
                 .withName(newAssessorName)
+                .withEmail(newAssessorEmail)
                 .withInnovationArea(innovationArea)
                 .build();
 
@@ -986,8 +987,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(competitionInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionInvite);
         when(competitionInviteMapperMock.mapToResource(competitionInvite)).thenReturn(expectedInviteResource);
 
-        CompetitionInviteResource invite = service.inviteUser(newAssessor).getSuccessObjectOrThrowException();
+        ServiceResult<CompetitionInviteResource> serviceResult = service.inviteUser(newAssessor);
+        assertTrue(serviceResult.isSuccess());
 
+        CompetitionInviteResource invite = serviceResult.getSuccessObjectOrThrowException();
         assertEquals(expectedInviteResource, invite);
 
         InOrder inOrder = inOrder(categoryRepositoryMock, competitionRepositoryMock, competitionInviteRepositoryMock, competitionInviteMapperMock, userRepositoryMock);
