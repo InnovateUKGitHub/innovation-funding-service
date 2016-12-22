@@ -85,8 +85,8 @@ Upcoming competition should be visible
     Given the user navigates to the page    ${ASSESSOR_DASHBOARD}
     And the user should see the text in the page    Competitions for assessment
     And the assessor should see the correct date
-    When The user clicks the button/link    link=Sustainable living models for the future
-    # TODO And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Photonics for health'
+    When The user clicks the button/link    link=Home and industrial efficiency programme
+    And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Home and industrial efficiency programme'
     And The user clicks the button/link    link=Back to assessor dashboard
     Then The user should see the text in the page    Upcoming competitions to assess
 
