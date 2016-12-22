@@ -56,10 +56,10 @@ Skills are saved correctly
     [Documentation]    INFUND-5182
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("your skills")
-    And the user sees the text in the element    id=assessorType    BUSINESS
+    And the user sees the text in the element    id=assessorType    Business
     And the user sees the text in the element    id=skillAreas    assessor skill areas text
     [Teardown]    And the user clicks the button/link    link=Back to assessor dashboard
 
 *** Keywords ***
 The correct radio button should be selected
-    Then radio button should be set to    assessorType    Business
+    Then radio button should be set to    assessorType    BUSINESS
