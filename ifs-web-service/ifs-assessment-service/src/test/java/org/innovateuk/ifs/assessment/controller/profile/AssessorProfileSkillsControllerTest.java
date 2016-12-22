@@ -36,7 +36,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void getSkills() throws Exception {
+    public void getReadonlySkills() throws Exception {
         BusinessType businessType = BUSINESS;
         String skillsAreas = "skill1 skill2 skill3";
 
@@ -57,6 +57,32 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/skills"));
+
+        verify(userService).getProfileSkills(user.getId());
+    }
+
+    @Test
+    public void getEditableSkills() throws Exception {
+        BusinessType businessType = BUSINESS;
+        String skillsAreas = "skill1 skill2 skill3";
+
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+                .withUser(user.getId())
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build());
+
+        AssessorProfileSkillsForm expectedForm = new AssessorProfileSkillsForm();
+        expectedForm.setAssessorType(businessType);
+        expectedForm.setSkillAreas(skillsAreas);
+
+        mockMvc.perform(get("/profile/skills/edit"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(view().name("profile/skills-edit"));
 
         verify(userService).getProfileSkills(user.getId());
     }
