@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -72,42 +73,47 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        if (isNewAddressNotValid(form)) {
-            addAddressNotProvidedValidationError(bindingResult, validationHandler);
-            return bankDetails(model, projectId, loggedInUser, form);
-        }
+        final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
 
-        OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
+        return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
+                () -> {
+                    if (isNewAddressNotValid(form)) {
+                        addAddressNotProvidedValidationError(bindingResult, validationHandler);
+                        return bankDetails(model, projectId, loggedInUser, form);
+                    }
 
-        BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, organisationAddressResource, form);
-        ServiceResult<Void> updateResult = bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
+                    OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
+                    OrganisationAddressResource organisationAddressResource = getOrganisationAddressResourceOrNull(form, organisationResource, BANK_DETAILS);
 
-        if (updateResult.isFailure()) {
-            validationHandler.addAnyErrors(updateResult, asGlobalErrors());
-            return bankDetails(model, projectId, loggedInUser, form);
-        }
+                    BankDetailsResource bankDetailsResource = buildBankDetailsResource(projectId, organisationResource, organisationAddressResource, form);
+                    ServiceResult<Void> updateResult = bankDetailsRestService.submitBankDetails(projectId, bankDetailsResource).toServiceResult();
 
-        return redirectToBankDetails(projectId);
+                    if (updateResult.isFailure()) {
+                        validationHandler.addAnyErrors(updateResult, asGlobalErrors());
+                        return bankDetails(model, projectId, loggedInUser, form);
+                    }
+
+                    return redirectToBankDetails(projectId);
+                }
+        );
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     public String confirmBankDetails(Model model,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
-                                    BindingResult bindingResult,
-                                    @PathVariable("projectId") final Long projectId,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
+                                     BindingResult bindingResult,
+                                     ValidationHandler validationHandler,
+                                     @PathVariable("projectId") final Long projectId,
+                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
 
-        if (hasNonAddressErrors(bindingResult)) {
-            form.setBindingResult(bindingResult);
-            form.setObjectErrors(bindingResult.getAllErrors());
-            return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
-        }
-        return doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
+        final Supplier<String> failureView = () -> doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
+
+        return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
+                () -> doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
@@ -220,19 +226,13 @@ public class BankDetailsController extends AddressLookupBaseController {
         BankDetailsViewModel bankDetailsViewModel = new BankDetailsViewModel(project);
 
         Optional<OrganisationAddressResource> registeredAddress = getAddress(organisationResource, REGISTERED);
-        if(registeredAddress.isPresent()){
-            bankDetailsViewModel.setRegisteredAddress(registeredAddress.get().getAddress());
-        }
+        registeredAddress.ifPresent(organisationAddressResource -> bankDetailsViewModel.setRegisteredAddress(organisationAddressResource.getAddress()));
 
         Optional<OrganisationAddressResource> operatingAddress = getAddress(organisationResource, OPERATING);
-        if(operatingAddress.isPresent()){
-            bankDetailsViewModel.setOperatingAddress(operatingAddress.get().getAddress());
-        }
+        operatingAddress.ifPresent(organisationAddressResource -> bankDetailsViewModel.setOperatingAddress(organisationAddressResource.getAddress()));
 
         Optional<OrganisationAddressResource> bankAddress = getAddress(organisationResource, BANK_DETAILS);
-        if(bankAddress.isPresent()){
-            bankDetailsViewModel.setBankAddress(bankAddress.get().getAddress());
-        }
+        bankAddress.ifPresent(organisationAddressResource -> bankDetailsViewModel.setBankAddress(organisationAddressResource.getAddress()));
 
         return bankDetailsViewModel;
     }
