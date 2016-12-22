@@ -166,6 +166,45 @@ public class ValidationHandlerTest {
         assertTrue(testForm.getObjectErrors().get(1) instanceof FieldError);
     }
 
+    @Test
+    public void testFailOnErrorExceptGivenFieldWhenOtherErrorsExist() {
+        String fieldToSkip = "formField2";
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new TestForm(), "targetName");
+        bindingResult.addError(new ObjectError("form", "A global error message"));
+        bindingResult.rejectValue("formField", "Code1", "A field error 1");
+        bindingResult.rejectValue(fieldToSkip, "Code2", "A validation error message that should not cause failure");
+
+        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+
+        String result = validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains(fieldToSkip), () -> "failure", () -> "success");
+        assertEquals("failure", result);
+    }
+
+    @Test
+    public void testFailOnErrorExceptGivenFieldWhenGlobalErrorsExistAlongWithSkippedFieldError() {
+        String fieldToSkip = "formField2";
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new TestForm(), "targetName");
+        bindingResult.addError(new ObjectError("form", "A global error message"));
+        bindingResult.rejectValue(fieldToSkip, "Code2", "A validation error message that should not cause failure");
+
+        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+
+        String result = validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains(fieldToSkip), () -> "failure", () -> "success");
+        assertEquals("failure", result);
+    }
+
+    @Test
+    public void testSucceedWhenOnlySkippedFieldErrorPresent() {
+        String fieldToSkip = "formField2";
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new TestForm(), "targetName");
+        bindingResult.rejectValue(fieldToSkip, "Code2", "A validation error message that should not cause failure");
+
+        ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
+
+        String result = validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains(fieldToSkip), () -> "failure", () -> "success");
+        assertEquals("success", result);
+    }
+
     private class TestForm extends BaseBindingResultTarget {
 
         private String formField;
