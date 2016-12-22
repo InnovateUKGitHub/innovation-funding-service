@@ -69,11 +69,11 @@ function buildAndDeploy() {
     if [[ ${noDeploy} -eq 1 ]]
     then
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
-        ./gradlew composeUp
+        ./gradlew -Pcloud=development composeUp
         return
     else
         echo "=> Starting build and deploy script..."
-        ./gradlew cleanDeployServices -x test
+        ./gradlew -Pcloud=development cleanDeployServices -x test
     fi
 }
 
