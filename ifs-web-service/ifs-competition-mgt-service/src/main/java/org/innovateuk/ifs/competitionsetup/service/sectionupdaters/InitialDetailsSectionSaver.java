@@ -184,14 +184,14 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 LOG.error(e.getMessage());
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
-        } else if( "innovationAreaCategoryId".equals(fieldName)) {
-            processInnovationSector(value, competitionResource);
+        } else if( fieldName.startsWith("innovationAreaCategoryIds[")) {
+            processInnovationAreas(value, competitionResource);
             return competitionService.update(competitionResource);
         }
         return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
     }
 
-    private void processInnovationSector(String inputValue, CompetitionResource competitionResource) {
+    private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
         Long value = Long.parseLong(inputValue);
         if (competitionResource.getInnovationAreas().contains(value)) {
             competitionResource.getInnovationAreas().remove(value);

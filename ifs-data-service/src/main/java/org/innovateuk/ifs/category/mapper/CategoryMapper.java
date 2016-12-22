@@ -25,7 +25,7 @@ public abstract class CategoryMapper extends BaseMapper<Category, CategoryResour
         return object.getId();
     }
 
-    public String mapCategoryToString(Category object) {
+    public String mapCategoryToName(Category object) {
         return object.getName();
     }
 }
