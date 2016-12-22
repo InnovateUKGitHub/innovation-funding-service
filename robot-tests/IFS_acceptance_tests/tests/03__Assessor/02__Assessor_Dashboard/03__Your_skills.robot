@@ -62,4 +62,4 @@ Skills are saved correctly
 
 *** Keywords ***
 The correct radio button should be selected
-    Then radio button should be set to    assessorType    BUSINESS
+    Then radio button should be set to    assessorType    Business

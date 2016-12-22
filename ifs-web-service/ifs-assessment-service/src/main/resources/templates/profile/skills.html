@@ -27,7 +27,7 @@
             <p id="skillAreas" th:if="${form.skillAreas}" th:text="${form.skillAreas}" />
 
             <h2 class="heading-medium">Assessor type</h2>
-            <p id="assessorType" th:if="${form.assessorType}" th:text="${form.assessorType}" />
+            <p id="assessorType" th:if="${form.assessorType}" th:text="${form.assessorType.displayName}" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
