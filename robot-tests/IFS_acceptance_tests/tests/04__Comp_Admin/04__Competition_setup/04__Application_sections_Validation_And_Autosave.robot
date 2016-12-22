@@ -45,6 +45,7 @@ Business opportunity: Client side validations
     [Tags]    HappyPath
     Given the user fills the empty question fields
     And the user enters text to a text field    id=question.shortTitle    Test Heading
+    And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
     Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
     And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
