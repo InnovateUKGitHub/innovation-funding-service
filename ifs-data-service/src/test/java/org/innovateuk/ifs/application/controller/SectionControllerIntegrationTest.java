@@ -46,9 +46,9 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     private Long excludedSectionId;
     private Long collaboratorIdOne;
     private Long leadApplicantProcessRole;
-    private long leadApplicantOrganisationId;
-    private long collaboratorOneOrganisationId;
-    private long sectionIdYourFinances;
+    private Long leadApplicantOrganisationId;
+    private Long collaboratorOneOrganisationId;
+    private Long sectionIdYourProjectCostsFinances;
 
 
 
@@ -66,7 +66,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         collaboratorIdOne = 8L;
         collaboratorOneOrganisationId = 6L;
 
-        sectionIdYourFinances = 7L;
+        sectionIdYourProjectCostsFinances = 16L;
         addBasicSecurityUser();
     }
 
@@ -92,8 +92,8 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     public void testChildSectionsAreCompleteForAllOrganisations() throws Exception {
         excludedSections = null;
 
-        section = sectionRepository.findOne(sectionIdYourFinances);
-        assertEquals("Your finances", section.getName());
+        section = sectionRepository.findOne(sectionIdYourProjectCostsFinances);
+        assertEquals("Your project costs", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
         assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
@@ -119,7 +119,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     @Test
     @Rollback
     public void testMarkAsComplete(){
-        RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourFinances, applicationId, leadApplicantProcessRole);
+        RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourProjectCostsFinances, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccessObject();
         Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> m.getObjectId().equals(35L)).findFirst();
