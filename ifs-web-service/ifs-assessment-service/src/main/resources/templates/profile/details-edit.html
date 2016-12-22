@@ -112,6 +112,7 @@
                             <input th:field="*{ethnicity}"
                                    th:value="${eth.id}"
                                    type="radio"
+                                   required="required"
                                    th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
                             <span th:text="${eth.description}" th:remove="tag"/>
                         </label>
@@ -146,7 +147,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'field-error' : ''" type="text" />
+                        <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'field-error' : ''" type="text" />
                     </div>
                     <div th:class="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group error' : 'form-group'">
                         <label class="form-label visuallyhidden" for="addressForm.addressLine2">
@@ -173,7 +174,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.town}"  th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'field-error' : ''" type="text" />
+                        <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.town}"  th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'field-error' : ''" type="text" />
                     </div>
                     <div th:class="${#fields.hasErrors('*{addressForm.county}')} ? 'form-group error' : 'form-group'">
                         <label class="form-label" for="addressForm.county">
@@ -191,7 +192,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'field-error' : ''" type="text" />
+                        <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'field-error' : ''" type="text" />
                     </div>
                 </fieldset>
 
