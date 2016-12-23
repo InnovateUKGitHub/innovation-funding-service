@@ -383,8 +383,7 @@
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            data-required-errormessage="Please generate a competition code"
-                           data-autosave-disabled="data-autosave-disabled"
-                           th:readonly="${isSetupAndLive}"/>
+                           data-autosave-disabled="data-autosave-disabled"/>
                     <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
                 </div>
             </fieldset>
@@ -816,10 +815,10 @@
             <h2 class="heading-medium error-summary-heading">
                 Unable to mark as complete.
             </h2>
-
             <ul class="error-summary-list">
                 <li>view the application section(s) to resolve the error.</li>
             </ul>
+
         </div>
 
         <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
@@ -834,7 +833,10 @@
                 <div class="grey-box">
                     <h3 class="heading-small no-margin">Assessed questions</h3>
                     <ol class="list-number">
-                        <li th:each="question : ${questions}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
+                        <li th:each="question : ${questions}">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}"
+                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -845,6 +847,7 @@
                         <li><a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application details</a></li>
                         <li th:each="question : ${projectDetails}"><a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a></li>
                     </ol>
+
                 </div>
                 <div class="grey-box">
                     <h3 class="heading-small no-margin">Finances</h3>

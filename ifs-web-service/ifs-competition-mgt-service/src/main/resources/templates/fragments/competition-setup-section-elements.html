@@ -7,7 +7,8 @@
 
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Question heading</dt>
-                <dd class="column-two-thirds" th:text="${question.shortTitle}"></dd>
+                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
+                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}" th:text="${question.shortTitle}"></dd>
                 <dt class="column-third">Question title</dt>
                 <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
                 <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.title)}" th:text="${question.title}"></dd>

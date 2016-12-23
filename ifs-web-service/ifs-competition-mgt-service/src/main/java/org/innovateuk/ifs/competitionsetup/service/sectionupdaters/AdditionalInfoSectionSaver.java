@@ -28,10 +28,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
-    private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
+	private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
 
-    @Autowired
-    private CompetitionService competitionService;
+	@Autowired
+	private CompetitionService competitionService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -39,16 +39,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		if(!sectionToSave().preventEdit(competition)) {
-			return updateCompetitionAdditionalInfo(competition, competitionSetupForm);
-		}
-		else {
-			return serviceFailure(asList(new Error("COMPETITION_NOT_EDITABLE", HttpStatus.BAD_REQUEST)));
-		}
-	}
-
-	private ServiceResult<Void> updateCompetitionAdditionalInfo(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 
 		setFieldsDisallowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
@@ -63,6 +54,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 
 		return serviceSuccess();
 	}
+
 
 	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
 		if(!competition.isSetupAndLive()) {

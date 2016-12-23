@@ -29,6 +29,8 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
@@ -390,6 +392,45 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(content().json(toJson(expectedCompetitionInviteResource)));
 
         verify(competitionInviteServiceMock, only()).inviteUser(existingUserStagedInviteResource);
+    }
+
+    @Test
+    public void inviteNewUser() throws Exception {
+        NewUserStagedInviteResource newUserStagedInviteResource = new NewUserStagedInviteResource("test@test.com", 1L, "Test Name", 1L);
+        CompetitionInviteResource expectedCompetitionInviteResource = newCompetitionInviteResource().build();
+
+        when(competitionInviteServiceMock.inviteUser(newUserStagedInviteResource)).thenReturn(serviceSuccess(expectedCompetitionInviteResource));
+
+        mockMvc.perform(post("/competitioninvite/inviteNewUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(newUserStagedInviteResource)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedCompetitionInviteResource)));
+
+        verify(competitionInviteServiceMock, only()).inviteUser(newUserStagedInviteResource);
+    }
+
+    @Test
+    public void inviteNewUsers() throws Exception {
+        List<NewUserStagedInviteResource> newUserStagedInvites = newNewUserStagedInviteResource()
+                .withEmail("test1@test.com", "test2@test.com")
+                .withName("Test Name 1", "Test Name 2")
+                .withInnovationCategoryId(1L)
+                .build(2);
+
+        NewUserStagedInviteListResource newUserStagedInviteList = newNewUserStagedInviteListResource()
+                .withInvites(newUserStagedInvites)
+                .build();
+
+        when(competitionInviteServiceMock.inviteNewUsers(newUserStagedInvites, 1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/inviteNewUsers/{competitionId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(newUserStagedInviteList)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verify(competitionInviteServiceMock, only()).inviteNewUsers(newUserStagedInvites, 1L);
     }
 
     @Test
