@@ -37,6 +37,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @RequestMapping("/project")
 public class ProjectSetupStatusController {
 
+    public static final String PROJECT_SETUP_COMPLETE_PAGE = "project/setup-complete-status";
+    public static final String PROJECT_SETUP_PAGE = "project/setup-status";
     @Autowired
     private ProjectService projectService;
 
@@ -57,10 +59,12 @@ public class ProjectSetupStatusController {
             ":" + request.getServerPort() +
             "/applicant/dashboard";
 
-
-        model.addAttribute("model", getProjectSetupStatusViewModel(projectId, loggedInUser));
+        ProjectSetupStatusViewModel projectSetupStatusViewModel = getProjectSetupStatusViewModel(projectId, loggedInUser);
+        model.addAttribute("model", projectSetupStatusViewModel);
         model.addAttribute("url", dashboardUrl);
-        return "project/setup-status";
+        return projectSetupStatusViewModel.isProjectComplete()
+                ? PROJECT_SETUP_COMPLETE_PAGE
+                : PROJECT_SETUP_PAGE;
     }
 
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {

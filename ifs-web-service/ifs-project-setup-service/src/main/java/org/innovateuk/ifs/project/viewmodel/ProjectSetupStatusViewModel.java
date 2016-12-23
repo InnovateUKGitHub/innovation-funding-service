@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.project.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
 
 import java.util.Optional;
+
+import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 
 /**
  * A view model that backs the Project Status page
@@ -22,6 +23,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean leadPartner;
     private String monitoringOfficerName;
     private Long organisationId;
+    private boolean isProjectComplete;
     private SectionAccess companiesHouseSection;
     private SectionAccess projectDetailsSection;
     private SectionAccess monitoringOfficerSection;
@@ -165,5 +167,15 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public SectionStatus getGrantOfferLetterStatus() {
         return grantOfferLetterStatus;
+    }
+
+    public boolean isProjectComplete() {
+        return
+                projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
+                        && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
+                        && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
+                        && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
+                        && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.name());
+
     }
 }
