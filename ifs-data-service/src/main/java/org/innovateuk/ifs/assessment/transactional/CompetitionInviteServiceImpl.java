@@ -27,33 +27,34 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UserProfileService;
-import org.innovateuk.ifs.user.transactional.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -62,6 +63,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
  */
 @Service
+@Transactional
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
@@ -91,13 +93,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private AssessorInviteToSendMapper toSendMapper;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserProfileService userProfileService;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -111,7 +107,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     enum Notifications {
         INVITE_ASSESSOR
     }
-
 
     @Override
     public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
@@ -170,7 +165,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (invite.getUser() != null) {
                 return TRUE;
             }
-            return userService.findByEmail(invite.getEmail()).getOptionalSuccessObject().isPresent();
+
+            return userRepository.findByEmail(invite.getEmail()).isPresent();
         });
     }
 
@@ -206,11 +202,50 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
-        return getInnovationArea(stagedInvite.getInnovationCategoryId())
-                .andOnSuccess(innovationArea -> getCompetition(stagedInvite.getCompetitionId())
-                        .andOnSuccess(competition -> inviteUserToCompetition(stagedInvite.getName(), stagedInvite.getEmail(), competition, innovationArea))
-                )
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+        return getByEmailAndCompetition(stagedInvite.getEmail(), stagedInvite.getCompetitionId()).handleSuccessOrFailure(
+                failure -> getCompetition(stagedInvite.getCompetitionId())
+                        .andOnSuccess(competition -> getInnovationArea(stagedInvite.getInnovationCategoryId())
+                                .andOnSuccess(innovationArea ->
+                                        inviteUserToCompetition(
+                                                stagedInvite.getName(),
+                                                stagedInvite.getEmail(),
+                                                competition,
+                                                innovationArea
+                                        )
+                                )
+                        )
+                        .andOnSuccessReturn(competitionInviteMapper::mapToResource),
+                success -> serviceFailure(Error.globalError(
+                        "validation.competitionInvite.create.email.exists",
+                        singletonList(stagedInvite.getEmail())
+                ))
+        );
+    }
+
+    @Override
+    public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
+        return getCompetition(competitionId).andOnSuccessReturn(competition ->
+                mapWithIndex(newUserStagedInvites, (index, invite) ->
+                        getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
+                                failure -> getInnovationArea(invite.getInnovationCategoryId())
+                                        .andOnSuccess(innovationArea ->
+                                                inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
+                                        )
+                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
+                                                "invites[" + index + "].innovationArea",
+                                                invite.getInnovationCategoryId(),
+                                                "validation.competitionInvite.create.innovationArea.required"
+                                                ))
+                                        ),
+                                success -> serviceFailure(Error.fieldError(
+                                        "invites[" + index + "].email",
+                                        invite.getEmail(),
+                                        "validation.competitionInvite.create.email.exists"
+                                ))
+                        )
+                ))
+                .andOnSuccess(list -> aggregate(list))
+                .andOnSuccessReturnVoid();
     }
 
     private BusinessType getBusinessType(User assessor) {

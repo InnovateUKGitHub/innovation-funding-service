@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.invite.builder.RejectionReasonBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;

@@ -16,6 +16,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -35,9 +37,9 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     public void getCreatedInvite() throws Exception {
         long inviteId = 1L;
         AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated",inviteId), AssessorInviteToSendResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated", inviteId), AssessorInviteToSendResource.class, expected);
         AssessorInviteToSendResource actual = service.getCreated(inviteId).getSuccessObject();
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -132,6 +134,26 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         CompetitionInviteResource actual = service.inviteUser(existingUserStagesInviteResource).getSuccessObject();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void inviteNewUsers() throws Exception {
+        long competitionId = 1L;
+
+        NewUserStagedInviteListResource newUserStagedInviteListResource = newNewUserStagedInviteListResource()
+                .withInvites(
+                        newNewUserStagedInviteResource()
+                                .withName("Tester 1", "Tester 2")
+                                .withEmail("test1@test.com", "test2@test.com")
+                                .withInnovationCategoryId(1L)
+                                .build(2)
+                )
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "inviteNewUsers", competitionId), newUserStagedInviteListResource, OK);
+
+        RestResult<Void> restResult = service.inviteNewUsers(newUserStagedInviteListResource, competitionId);
+        assertTrue(restResult.isSuccess());
     }
 
     @Test

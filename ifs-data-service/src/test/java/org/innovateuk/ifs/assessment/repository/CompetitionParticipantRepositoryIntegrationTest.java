@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -149,14 +149,14 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getByUserRoleStatus() {
-        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", OPENED);
-
         User user = newUser()
-                .withId(3L)
                 .withFirstName("Professor")
                 .build();
 
-        CompetitionParticipant savedParticipant = repository.save(new CompetitionParticipant(user, invite));
+        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", OPENED);
+        invite.setUser(user);
+
+        CompetitionParticipant savedParticipant = repository.save(new CompetitionParticipant(invite));
         flushAndClearSession();
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), ASSESSOR);
@@ -176,19 +176,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     private CompetitionInvite buildNewCompetitionInvite(String name, String email, String hash, InviteStatus status) {
-        return buildNewCompetitionInvite(name, email, hash, status, competition, innovationArea);
-    }
-
-    private CompetitionInvite buildNewCompetitionInvite(
-            String name,
-            String email,
-            String hash,
-            InviteStatus status,
-            Competition competition,
-            Category innovationArea
-    ) {
-        return CompetitionInviteBuilder
-                .newCompetitionInviteWithoutId() // added this to prevent so we can persist
+        return newCompetitionInviteWithoutId() // added this to prevent so we can persist
                 .withName(name)
                 .withEmail(email)
                 .withHash(hash)
