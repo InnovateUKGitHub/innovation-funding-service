@@ -298,6 +298,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleMapper roleMapperMock;
 
     @Mock
+    protected ProcessRoleMapper processRoleMapperMock;
+
+    @Mock
     protected TokenService tokenServiceMock;
 
     @Mock
