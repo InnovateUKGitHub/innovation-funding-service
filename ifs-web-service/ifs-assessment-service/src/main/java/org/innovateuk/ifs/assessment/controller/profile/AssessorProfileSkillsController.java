@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileSkillsForm;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
@@ -30,14 +31,16 @@ public class AssessorProfileSkillsController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
     public String getReadonlySkills(Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                            @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
-                            BindingResult bindingResult) {
-        return doViewYourSkills(loggedInUser, model, form, bindingResult, true);
+                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser.getId()));
+        return "profile/skills";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/edit")
@@ -45,7 +48,7 @@ public class AssessorProfileSkillsController {
                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
                             @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
                             BindingResult bindingResult) {
-        return doViewYourSkills(loggedInUser, model, form, bindingResult, false);
+        return doViewYourSkills(loggedInUser, model, form, bindingResult);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/edit")
@@ -55,7 +58,7 @@ public class AssessorProfileSkillsController {
                                BindingResult bindingResult,
                                ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewYourSkills(loggedInUser, model, form, bindingResult, false);
+        Supplier<String> failureView = () -> doViewYourSkills(loggedInUser, model, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> result = userService.updateProfileSkills(loggedInUser.getId(), form.getAssessorType(), form.getSkillAreas());
@@ -64,11 +67,11 @@ public class AssessorProfileSkillsController {
         });
     }
 
-    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorProfileSkillsForm form, BindingResult bindingResult, boolean readonly) {
+    private String doViewYourSkills(UserResource loggedInUser, Model model, AssessorProfileSkillsForm form, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
-        return readonly ? "profile/skills" : "profile/skills-edit";
+        return "profile/skills-edit";
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
