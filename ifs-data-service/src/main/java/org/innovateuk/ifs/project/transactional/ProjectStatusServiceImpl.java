@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.project.transactional;
 
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
@@ -52,6 +53,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -117,12 +121,19 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
 
+    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId){
+        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        return result.map(Boolean::booleanValue).orElse(false);
+    }
+
     private ProjectActivityStates getBankDetailsStatus(Project project){
         // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
         for(Organisation organisation : project.getOrganisations()){
-            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            if(!bankDetails.isPresent()){
-                return PENDING;
+            if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
+                Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+                if (!bankDetails.isPresent()) {
+                    return PENDING;
+                }
             }
         }
 
