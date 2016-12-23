@@ -256,7 +256,7 @@ the user fills in project costs
 
 
 the project finance user downloads the bank details
-    the user downloads the file    lee.bowman@innovateuk.test    Passw0rd    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
+    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
 
 
 the user opens the excel and checks the content
