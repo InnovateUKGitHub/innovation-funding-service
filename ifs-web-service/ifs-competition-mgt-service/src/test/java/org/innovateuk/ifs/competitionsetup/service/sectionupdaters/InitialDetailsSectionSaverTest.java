@@ -21,12 +21,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -124,6 +122,23 @@ public class InitialDetailsSectionSaverTest {
         ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "openingDate", "20-10-2020", null);
 
         assertTrue(errors.isSuccess());
+        verify(competitionService).update(competition);
+    }
+
+    @Test
+    public void testAutoSaveInnovationAreaCategoryIds() {
+        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setInnovationAreas(Collections.singleton(999L));
+
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "autosaveInnovationAreaIds", "1,2, 3", null);
+
+        assertTrue(errors.isSuccess());
+        assertThat(competition.getInnovationAreas(), hasItems(1L, 2L, 3L));
+        assertThat(competition.getInnovationAreas(), hasSize(3));
         verify(competitionService).update(competition);
     }
 

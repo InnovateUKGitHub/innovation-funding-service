@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
+import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
@@ -12,25 +15,20 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
-import org.apache.commons.collections4.map.LinkedMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static java.util.Collections.singletonList;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -184,7 +182,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 LOG.error(e.getMessage());
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
-        } else if( fieldName.startsWith("innovationAreaCategoryIds[")) {
+        } else if( fieldName.equals("autosaveInnovationAreaIds")) {
             processInnovationAreas(value, competitionResource);
             return competitionService.update(competitionResource);
         }
@@ -192,12 +190,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     }
 
     private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
-        Long value = Long.parseLong(inputValue);
-        if (competitionResource.getInnovationAreas().contains(value)) {
-            competitionResource.getInnovationAreas().remove(value);
-        } else {
-            competitionResource.getInnovationAreas().add(value);
-        }
+        List<String> valueList = Arrays.asList(inputValue.split("\\s*,\\s*"));
+        Set<Long> valueSet = valueList.stream().map( value -> Long.parseLong(value) ).collect(Collectors.toSet());
+        competitionResource.setInnovationAreas(valueSet);
+
     }
 
 	@Override
