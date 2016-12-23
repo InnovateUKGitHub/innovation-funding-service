@@ -3,7 +3,8 @@ package org.innovateuk.ifs.category.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Resource Class for a generic {@link org.innovateuk.ifs.category.domain.Category}
@@ -14,12 +15,16 @@ public class CategoryResource {
     private CategoryType type;
 
     private Long parent;
-    private Set<Long> children;
+    private List<CategoryResource> children;
 
     public CategoryResource() {
     }
 
-    public CategoryResource(Long id, String name, CategoryType type, Long parent, Set<Long> children) {
+    public CategoryResource(Long id, String name, CategoryType type, Long parent) {
+        this(id, name, type, parent, new ArrayList<>());
+    }
+
+    public CategoryResource(Long id, String name, CategoryType type, Long parent, List<CategoryResource> children) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -59,11 +64,11 @@ public class CategoryResource {
         this.parent = parent;
     }
 
-    public Set<Long> getChildren() {
+    public List<CategoryResource> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<Long> children) {
+    public void setChildren(List<CategoryResource> children) {
         this.children = children;
     }
 

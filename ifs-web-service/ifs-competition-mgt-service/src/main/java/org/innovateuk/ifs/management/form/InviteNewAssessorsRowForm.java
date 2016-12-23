@@ -1,23 +1,23 @@
-package org.innovateuk.ifs.invite.resource;
+package org.innovateuk.ifs.management.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public abstract class StagedInviteResource {
+public class InviteNewAssessorsRowForm {
+
+    @NotEmpty(message = "{validation.standard.name.required}")
+    private String name;
 
     @NotEmpty(message = "{validation.standard.email.required}")
-    @Email(message = "{validation.standard.email.format}")
     private String email;
-    private long competitionId;
 
-    protected StagedInviteResource() {
+    public String getName() {
+        return name;
     }
 
-    protected StagedInviteResource(String email, long competitionId) {
-        this.email = email;
-        this.competitionId = competitionId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -28,24 +28,16 @@ public abstract class StagedInviteResource {
         this.email = email;
     }
 
-    public long getCompetitionId() {
-        return competitionId;
-    }
-
-    public void setCompetitionId(long competitionId) {
-        this.competitionId = competitionId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        StagedInviteResource that = (StagedInviteResource) o;
+        InviteNewAssessorsRowForm that = (InviteNewAssessorsRowForm) o;
 
         return new EqualsBuilder()
-                .append(competitionId, that.competitionId)
+                .append(name, that.name)
                 .append(email, that.email)
                 .isEquals();
     }
@@ -53,8 +45,8 @@ public abstract class StagedInviteResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(name)
                 .append(email)
-                .append(competitionId)
                 .toHashCode();
     }
 }

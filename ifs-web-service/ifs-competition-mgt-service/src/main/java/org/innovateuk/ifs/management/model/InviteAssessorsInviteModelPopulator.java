@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsInviteViewModel;
@@ -21,10 +24,14 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
     public InviteAssessorsInviteViewModel populateModel(CompetitionResource competition) {
         InviteAssessorsInviteViewModel model = super.populateModel(competition);
         model.setAssessors(getAssessors(competition));
+        model.setInnovationSectorOptions(getInnovationSectors());
         return model;
     }
 
@@ -34,6 +41,11 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
                 .map(this::getRowViewModel)
                 .collect(toList());
     }
+
+    private List<CategoryResource> getInnovationSectors() {
+        return categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR);
+    }
+
 
     private InvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
         return new InvitedAssessorRowViewModel(assessorCreatedInviteResource.getName(), assessorCreatedInviteResource.getInnovationAreaName(), assessorCreatedInviteResource.isCompliant(), assessorCreatedInviteResource.getEmail(), assessorCreatedInviteResource.getInviteId());
