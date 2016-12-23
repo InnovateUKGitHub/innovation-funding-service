@@ -247,12 +247,16 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		model.addAttribute("currentSectionFragment", "section-" + section.getPath());
 
 		model.addAttribute("allSections", CompetitionSetupSection.values());
-        model.addAttribute("isInitialComplete", competitionResource.getSectionSetupStatus().containsKey(CompetitionSetupSection.INITIAL_DETAILS) || competitionResource.getSetupComplete());
+        model.addAttribute("isInitialComplete", isInitialComplete(competitionResource));
 		model.addAttribute("subTitle",
 				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 
 		populateCompetitionStateModelAttributes(model, competitionResource, section);
+	}
+
+	private boolean isInitialComplete(CompetitionResource competitionResource) {
+		return competitionResource.getSectionSetupStatus().containsKey(CompetitionSetupSection.INITIAL_DETAILS) || competitionResource.getSetupComplete();
 	}
 
 	private void populateCompetitionStateModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
