@@ -388,7 +388,7 @@
                             type="text" required="required"
                             th:field="${competitionSetupForm.activityCode}"
                             maxlength="255"
-                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size(null,null,'255')},
+                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size},
                                      data-required-errormessage=#{validation.additionalinfoform.activitycode.required}"
                             th:readonly="${isSetupAndLive}"/>
 
