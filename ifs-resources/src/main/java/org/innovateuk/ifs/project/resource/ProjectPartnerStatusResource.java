@@ -40,11 +40,13 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
 
+    private boolean isGrantOfferLetterSent;
+
 
     //Required for Json Mapping.
     ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus) {
+    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus, boolean isGrantOfferLetterSent) {
         this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
@@ -56,6 +58,7 @@ public class ProjectPartnerStatusResource {
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.financeContactStatus = financeContactStatus;
+        this.isGrantOfferLetterSent = isGrantOfferLetterSent;
     }
 
     public Long getOrganisationId() {
@@ -154,6 +157,10 @@ public class ProjectPartnerStatusResource {
         this.financeContactStatus = financeContactStatus;
     }
 
+    public boolean getIsGrantOfferLetterSent() { return isGrantOfferLetterSent; }
+
+    public void setIsGrantOfferLetterSent(boolean isGrantOfferLetterSent) { this.isGrantOfferLetterSent = isGrantOfferLetterSent; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -172,6 +179,7 @@ public class ProjectPartnerStatusResource {
                 .append(monitoringOfficerStatus, that.monitoringOfficerStatus)
                 .append(otherDocumentsStatus, that.otherDocumentsStatus)
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
+                .append(isGrantOfferLetterSent, that.isGrantOfferLetterSent)
                 .isEquals();
     }
 
@@ -187,6 +195,7 @@ public class ProjectPartnerStatusResource {
                 .append(monitoringOfficerStatus)
                 .append(otherDocumentsStatus)
                 .append(grantOfferLetterStatus)
+                .append(isGrantOfferLetterSent)
                 .toHashCode();
     }
 
@@ -202,6 +211,7 @@ public class ProjectPartnerStatusResource {
                 .append("monitoringOfficerStatus", monitoringOfficerStatus)
                 .append("otherDocumentsStatus", otherDocumentsStatus)
                 .append("grantOfferLetterStatus", grantOfferLetterStatus)
+                .append("isGrantOfferLetterSent", isGrantOfferLetterSent)
                 .toString();
     }
 }
