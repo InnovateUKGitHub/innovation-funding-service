@@ -53,6 +53,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         setLoggedInUser(user);
 
         when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+                .withUser(user.getId())
                 .withBusinessType(businessType)
                 .withSkillsAreas(skillsAreas)
                 .build());
