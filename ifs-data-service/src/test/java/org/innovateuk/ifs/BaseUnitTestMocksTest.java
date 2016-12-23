@@ -495,6 +495,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected NotificationSender notificationSender;
 
+    @Mock
+    protected UsersRolesService usersRolesServiceMock;
+
     @Before
     public void setupMockInjection() {
         // Process mock annotations
