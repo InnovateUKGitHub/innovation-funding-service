@@ -28,9 +28,6 @@ remove the file from the operating system
    [Arguments]    ${filename}
     remove file    ${download_folder}/${filename}
 
-
-
-
 the file has been scanned for viruses
     Sleep    5s
 
