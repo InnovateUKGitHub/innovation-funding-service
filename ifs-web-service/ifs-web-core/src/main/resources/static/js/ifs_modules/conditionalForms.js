@@ -46,7 +46,7 @@ IFS.core.conditionalForms = (function() {
         target.attr('aria-hidden', 'false').removeClass('js-hidden');
         // show all error-messages from the data-target that were hidden - relies on validated field having a name that is unique on the page
         var visibleErrorMessageCount = 0;
-        if(input.closest('[data-target-hide-error-messages=true][data-target]')) {
+        if(input.closest('[data-target-hide-error-messages="true"][data-target]')) {
           jQuery(target).find('input').each(function(index, validatedInput) {
             jQuery(form).find('[aria-hidden="true"][data-errorfield="' + jQuery(validatedInput).prop('name') +'"]').each(function(index, errorMessage) {
               jQuery(errorMessage).attr('aria-hidden', 'false').removeClass('js-hidden');
@@ -67,11 +67,11 @@ IFS.core.conditionalForms = (function() {
         target.attr('aria-hidden', 'true');
         // hide all error-messages that come from within the data-target - relies on validated field having a name unique on page
         var numberOfHiddenErrorMessages = 0;
-        var controllingElement = input.closest('[data-target-hide-error-messages=true][data-target]');
+        var controllingElement = input.closest('[data-target-hide-error-messages="true"][data-target]');
         var numberOfErrors = form.find('.error-message').length;
         if(controllingElement) {
           jQuery(target).find('input').each(function(index, validatedInput) {
-            jQuery(form).find('.error-message[data-errorfield=' + jQuery(validatedInput).prop('name') + ']').each(function(index, errorMessage) {
+            jQuery(form).find('.error-message[data-errorfield="' + jQuery(validatedInput).prop('name') + '"]').each(function(index, errorMessage) {
               jQuery(errorMessage).removeClass('error-message');
               jQuery(errorMessage).attr('aria-hidden', 'true');
               numberOfHiddenErrorMessages += 1;
