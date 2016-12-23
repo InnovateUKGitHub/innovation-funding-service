@@ -83,7 +83,7 @@ Upcoming competitions calculations
     ...    INFUND-3876
     Then the total calculation in dashboard should be correct    In preparation    //section[1]/ul/li
     And the total calculation in dashboard should be correct    Ready to open    //section[2]/ul/li
-    And the total calculation in dashboard should be correct    Upcoming    //ul[@class="list-overview"]
+    And the total calculation in dashboard should be correct    Upcoming    //section/ul/li
 
 Upcoming competitions ready for open
     [Documentation]    INFUND-3003

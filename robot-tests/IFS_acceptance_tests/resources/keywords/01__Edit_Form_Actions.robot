@@ -200,4 +200,4 @@ The user enters multiple strings into a text field
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible    ${field}
-    wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
+    wait until keyword succeeds    30s    200ms    Input Text    ${field}    ${concatenated_string}

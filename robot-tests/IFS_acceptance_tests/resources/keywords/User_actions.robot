@@ -17,7 +17,7 @@ The user clicks the button/link
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     wait for autosave
-    wait until keyword succeeds    30s    30s    click element    ${BUTTON}
+    wait until keyword succeeds    30    200ms    click element    ${BUTTON}
 
 
 The user should not see the text in the page

@@ -36,7 +36,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void getSkills() throws Exception {
+    public void getReadonlySkills() throws Exception {
         BusinessType businessType = BUSINESS;
         String skillsAreas = "skill1 skill2 skill3";
 
@@ -56,7 +56,33 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/innovation-areas"));
+                .andExpect(view().name("profile/skills"));
+
+        verify(userService).getProfileSkills(user.getId());
+    }
+
+    @Test
+    public void getEditableSkills() throws Exception {
+        BusinessType businessType = BUSINESS;
+        String skillsAreas = "skill1 skill2 skill3";
+
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+                .withUser(user.getId())
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build());
+
+        AssessorProfileSkillsForm expectedForm = new AssessorProfileSkillsForm();
+        expectedForm.setAssessorType(businessType);
+        expectedForm.setSkillAreas(skillsAreas);
+
+        mockMvc.perform(get("/profile/skills/edit"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(view().name("profile/skills-edit"));
 
         verify(userService).getProfileSkills(user.getId());
     }
@@ -68,7 +94,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
 
         when(userService.updateProfileSkills(1L, businessType, skillsAreas)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/skills")
+        mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillsAreas))
@@ -83,7 +109,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = RandomStringUtils.random(5001);
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillAreas))
@@ -91,7 +117,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "skillAreas"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -113,7 +139,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(101, "skill"));
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillAreas))
@@ -121,7 +147,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "skillAreas"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -142,14 +168,14 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     public void submitSkills_incomplete() throws Exception {
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("skillAreas", skillAreas))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
