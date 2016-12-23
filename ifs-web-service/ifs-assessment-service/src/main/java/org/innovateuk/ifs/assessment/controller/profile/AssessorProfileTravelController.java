@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller to manage the Assessor Profile Terms of Contract page
+ * Controller to manage the Assessor Profile Travel and subsistence rates page
  */
 @Controller
 @RequestMapping("/profile/travel")
