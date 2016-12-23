@@ -254,7 +254,7 @@
 
         <form action="#" method="GET">
             <fieldset>
-                <h3 class="heading-medium no-margin">Filter <span th:text="${filterTitle}">TITLE</span></h3>
+                <legend class="heading-medium">Filter <span th:text="${filterTitle}">TITLE</span></legend>
 
                 <div class="grid-row">
                     <div class="column-third" th:unless="${type == 'submittedApplications'} or ${type == 'openApplications'} or ${type == 'notSubmittedApplications'}">
@@ -294,27 +294,82 @@
                         </div>
                     </div>
 
-                    <div th:class="${(type == 'submittedApplications' or type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-two-thirds' : 'column-third')}">
-                        <label class="form-label" for="filterSearch">Search</label>
-                        <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-                    </div>
+                    <th:block th:unless="${type == 'submittedApplications'}">
 
-                    <div th:if="${param.title != null}">
-                        <input type="hidden" id="title" name="title" th:value="${param.title[0]}" />
-                    </div>
+                      <div th:class="${(type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-two-thirds' : 'column-third')}">
+                          <label class="form-label" for="filterSearch">Search</label>
+                          <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                      </div>
 
-                    <div th:class="${(type == 'submittedApplications' or type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-third' : 'column-one alignright-button')}">
-                        <button class="button">Filter</button>
-                    </div>
+                      <div th:if="${param.title != null}">
+                          <input type="hidden" id="title" name="title" th:value="${param.title[0]}" />
+                      </div>
+
+                      <div th:class="${(type == 'submittedApplications' or type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-third' : 'column-one alignright-button')}">
+                          <button class="button">Filter</button>
+                      </div>
+
+                    </th:block>
+
+                  </div>
+
+                    <th:block th:if="${type == 'submittedApplications'}">
+
+                      <div class="grid-row">
+
+                        <div class="column-half">
+                          <div class="form-group">
+                            <label class="form-label" for="filterSearch">Search</label>
+                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                          </div>
+                        </div>
+
+                        <div class="column-half">
+            							<div class="form-group">
+            								<label class="form-label" for="fundingDecision">Funding decision</label>
+            								<select class="form-control" id="fundingDecision" name="fundingDecision">
+
+                              <th:block th:if="${param.fundingDecision != null}">
+                                <option th:value="${param.fundingDecision[0]}" th:text="${param.fundingDecision[0]}">FUNDING DECISION FILTER ITEM</option>
+                              </th:block>
+
+            									<option value="All">All</option>
+            									<option value="Blank">Blank</option>
+            									<option value="Successful">Successful</option>
+                              <option value="Unsuccessful">Unsuccessful</option>
+                              <option value="On hold">On hold</option>
+            								</select>
+            							</div>
+                        </div>
+
+                      </div>
+
+                      <div class="grid-row">
+
+                          <div class="column-half">
+                            <a th:href="@{?status=decision&#38;comp=panel}">Clear all filters</a>
+                          </div>
+
+                          <th:block th:if="${param.status != null and param.comp != null}">
+                            <input type="hidden" name="status" th:value="${param.status[0]}" />
+                            <input type="hidden" name="comp" th:value="${param.comp[0]}" />
+                          </th:block>
+
+                          <div class="column-half alignright">
+                            <button class="button" th:formaction="${#httpServletRequest.requestURI}">Filter</button>
+                          </div>
+
+                      </div>
+
+                    </th:block>
 
 
 
-                </div>
             </fieldset>
         </form>
     </div>
 
-    <div class="grid-row sorting">
+    <div class="grid-row sorting" th:unless="${type == 'submittedApplications'}">
         <div class="column-two-thirds">
 
             <div th:if="${param.filterInnovationArea == null}" th:remove="tag">

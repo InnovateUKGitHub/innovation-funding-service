@@ -2,7 +2,7 @@
 Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts of interest so that Innovate UK does not assign me assessments that are inappropriate for me.
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
+Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -14,7 +14,7 @@ Back to the dashboard link
     ...    INFUND-5432
     Given The user should see the element    link=your declaration of interest    #his checks the alert message on the top of the page
     When the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    And the user clicks the button/link    jQuery=a:contains("Back to your assessor dashboard")
+    And the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no

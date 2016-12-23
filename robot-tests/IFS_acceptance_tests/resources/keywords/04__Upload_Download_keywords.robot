@@ -5,9 +5,9 @@ Resource          ../defaultResources.robot
 The user downloads the file
     [Documentation]    Makes use of a download script that logs in, grabs a cookie and downloads
     ...     the file all in one package
-    [Arguments]    ${user}    ${password}    ${url}    ${filename}
-    Run and Return RC    ./download.py ${user} ${password} ${url} ${filename}
-    wait until keyword succeeds    300ms    1 seconds    Download should be done
+    [Arguments]    ${user}    ${url}    ${filename}
+    Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
+    wait until keyword succeeds    30s    200ms    Download should be done
 
 
 Download should be done
