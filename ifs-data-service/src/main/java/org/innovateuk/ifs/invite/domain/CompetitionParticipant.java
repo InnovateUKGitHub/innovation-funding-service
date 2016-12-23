@@ -52,10 +52,6 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     public CompetitionParticipant(CompetitionInvite invite) {
-        this(null, invite);
-    }
-
-    public CompetitionParticipant(User user, CompetitionInvite invite) {
         super();
         if (invite == null) {
             throw new NullPointerException("invite cannot be null");
@@ -69,7 +65,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
             throw new IllegalArgumentException("invite.status must be SENT or OPENED");
         }
 
-        this.user = user;
+        this.user = invite.getUser();
         this.competition = invite.getTarget();
         this.invite = invite;
         this.role = CompetitionParticipantRole.ASSESSOR;
@@ -134,7 +130,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         if (user == null) {
             throw new NullPointerException("user cannot be null");
         }
-        if (this.user != null) {
+        if (this.user != null && !this.user.getId().equals(user.getId())) {
             throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
         }
         this.user = user;

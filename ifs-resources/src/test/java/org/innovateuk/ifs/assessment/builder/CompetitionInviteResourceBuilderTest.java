@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.builder;
 
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.junit.Test;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -24,6 +26,7 @@ public class CompetitionInviteResourceBuilderTest {
         BigDecimal expectedAssessorPay = BigDecimal.ONE;
         String expectedEmail = "tom@poly.io";
         String expectedHash = "inviteHash";
+        CategoryResource expectedCategory = newCategoryResource().build();
 
         CompetitionInviteResource invite = newCompetitionInviteResource()
                 .withIds(expectedId)
@@ -34,6 +37,7 @@ public class CompetitionInviteResourceBuilderTest {
                 .withAssessorPay(expectedAssessorPay)
                 .withEmail(expectedEmail)
                 .withHash(expectedHash)
+                .withInnovationArea(expectedCategory)
                 .build();
 
         assertEquals(expectedId, invite.getId());
@@ -44,6 +48,7 @@ public class CompetitionInviteResourceBuilderTest {
         assertEquals(expectedAssessorPay, invite.getAssessorPay());
         assertEquals(expectedEmail, invite.getEmail());
         assertEquals(expectedHash, invite.getHash());
+        assertEquals(expectedCategory, invite.getInnovationArea());
     }
 
     @Test
@@ -56,6 +61,7 @@ public class CompetitionInviteResourceBuilderTest {
         BigDecimal[] expectedAssessorPays = {BigDecimal.ONE, BigDecimal.TEN};
         String[] expectedEmails = {"tom@poly.io", "steve.smith@empire.com"};
         String[] expectedHashes = {"hash1", "hash2"};
+        List<CategoryResource> expectedCategories = newCategoryResource().build(2);
 
         List<CompetitionInviteResource> invites = newCompetitionInviteResource()
                 .withIds(expectedIds)
@@ -66,6 +72,7 @@ public class CompetitionInviteResourceBuilderTest {
                 .withAssessorPay(expectedAssessorPays)
                 .withEmail(expectedEmails)
                 .withHash(expectedHashes)
+                .withInnovationArea(expectedCategories.get(0), expectedCategories.get(1))
                 .build(2);
 
         CompetitionInviteResource first = invites.get(0);
@@ -77,6 +84,7 @@ public class CompetitionInviteResourceBuilderTest {
         assertEquals(expectedAssessorPays[0], first.getAssessorPay());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedHashes[0], first.getHash());
+        assertEquals(expectedCategories.get(0), first.getInnovationArea());
 
         CompetitionInviteResource second = invites.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -87,7 +95,6 @@ public class CompetitionInviteResourceBuilderTest {
         assertEquals(expectedAssessorPays[1], second.getAssessorPay());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedHashes[1], second.getHash());
-
-
+        assertEquals(expectedCategories.get(1), second.getInnovationArea());
     }
 }
