@@ -79,6 +79,7 @@ public class CompetitionManagementDashboardControllerTest {
     public void projectSetupDashboard() throws Exception {
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
         Mockito.when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
