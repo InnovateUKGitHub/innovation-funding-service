@@ -8,6 +8,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -36,8 +37,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.lang.Short.parseShort;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -48,9 +53,6 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.lang.Short.parseShort;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 
 @Service
 public class BankDetailsServiceImpl implements BankDetailsService{
@@ -90,6 +92,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     @Autowired
     private ProjectUsersHelper projectUsersHelper;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -134,6 +139,10 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
 
+        if(!isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), org.getId())){
+            return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
+        }
+
         return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
                 failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
                 success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : ACTION_REQUIRED));
@@ -144,6 +153,11 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return find(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId),
                 new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION, asList(projectId, organisationId), HttpStatus.NOT_FOUND)).
                 andOnSuccessReturn(bankDetails -> bankDetailsMapper.mapToResource(bankDetails));
+    }
+
+    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId){
+        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        return result.map(Boolean::booleanValue).orElse(false);
     }
 
     private Address toExperianAddressFormat(AddressResource addressResource){
