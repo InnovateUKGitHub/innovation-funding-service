@@ -26,7 +26,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]
     Then The user should see the text in the page    Days left to submit
-    And the days remaining should be correct (Top of the page)    2017-01-28
+    And the days remaining should be correct (Top of the page)    2068-01-28
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540
@@ -43,7 +43,7 @@ Reject application (Unable to assess this application)
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
-    When the user navigates to the assessor page    ${SERVER}/assessment/59
+    When the user navigates to the assessor page    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
     Then The user should see permissions error message
 
 *** Keywords ***

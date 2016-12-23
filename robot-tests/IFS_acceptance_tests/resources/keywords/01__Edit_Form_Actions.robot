@@ -2,19 +2,7 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
-the user reloads the page
-    sleep    1s
-    Wait for autosave
-    Run Keyword And Ignore Error    Confirm Action
-    Reload Page
-    # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+
 
 the user selects the checkbox
     [Arguments]    ${checkbox}
@@ -120,13 +108,13 @@ Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
     ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    ${Mark_question_as_incomplete}
     Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_question_as_incomplete}
-    sleep    2s
+    wait for autosave
 
 The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    wait until keyword succeeds    30s    30s    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    wait until keyword succeeds    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Wait for autosave
 
@@ -150,7 +138,7 @@ the user clears the text from the element
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
     wait until element is visible    ${textfield}
-    wait until keyword succeeds    10    500ms    textfield should contain    ${textfield}    ${text}
+    wait until keyword succeeds    10    200ms    textfield should contain    ${textfield}    ${text}
 
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -198,7 +186,6 @@ the user edits the 'Project Summary' question
     sleep    1s
 
 the applicant adds some content and marks this section as complete
-    sleep    300ms
     Focus    css=#form-input-4 .editor
     Input Text    css=#form-input-4 .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
@@ -213,4 +200,4 @@ The user enters multiple strings into a text field
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible    ${field}
-    wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
+    wait until keyword succeeds    30s    200ms    Input Text    ${field}    ${concatenated_string}

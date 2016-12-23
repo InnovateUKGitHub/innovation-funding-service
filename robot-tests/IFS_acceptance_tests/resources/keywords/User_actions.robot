@@ -17,12 +17,11 @@ The user clicks the button/link
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     wait for autosave
-    wait until keyword succeeds    30s    30s    click element    ${BUTTON}
+    wait until keyword succeeds    30    200ms    click element    ${BUTTON}
 
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
-    sleep    100ms
     Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
 
 
@@ -32,8 +31,8 @@ The user should see the element
 
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    sleep    500ms
-    Element Should Not Be Visible    ${NOT_VISIBLE_ELEMENT}
+    wait until element is not visible    ${NOT_VISIBLE_ELEMENT}
+
 
 
 The user should see the browser notification
@@ -137,16 +136,25 @@ the user should see that the element is disabled
 
 The user fills the empty question fields
     The user enters text to a text field    id=question.title    Test title
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.subTitle    Subtitle test
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.guidanceTitle    Test guidance title
+    the user moves focus and waits for autosave
     The user enters text to a text field    css=.editor    Guidance text test
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=question.maxWords    150
+    the user moves focus and waits for autosave
 
 The user fills the empty assessment fields
     The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRow-0-scorefrom    30
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRow-0-scoreto    35
+    the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRow-0-justification    This is a justification
+    the user moves focus and waits for autosave
 
 The user checks the question fields
     The user should see the text in the page    Test title

@@ -12,4 +12,5 @@ Library           ../libs/IfsLibrary.py
 Library           DatabaseLibrary
 Library           robot.libraries.DateTime
 Library           String
+Library           CsvLibrary
 

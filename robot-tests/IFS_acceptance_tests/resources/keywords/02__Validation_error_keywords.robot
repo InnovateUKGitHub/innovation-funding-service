@@ -6,7 +6,7 @@ The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    sleep    100ms
+    Run Keyword And Ignore Error    Focus    link=Contact us
     wait until page contains element    jQuery=.error-message
     Wait Until Page Contains    ${ERROR_TEXT}
 
