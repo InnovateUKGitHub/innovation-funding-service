@@ -378,7 +378,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <div>
             <h2 class="heading-medium no-margin">Send grant offer letter</h2>
-            <p>The grant offer letter will now be sent to the applicants. The Project Manager will be informed by email.</p>
+            <p>The Project Manager will be told by email.</p>
             <hr />
             <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
                 <div class="column-half">
