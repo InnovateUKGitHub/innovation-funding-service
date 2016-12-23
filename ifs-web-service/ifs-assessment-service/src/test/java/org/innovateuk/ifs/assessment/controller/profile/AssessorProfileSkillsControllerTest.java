@@ -5,11 +5,13 @@ import org.innovateuk.ifs.assessment.form.profile.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,7 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsController> {
 
-    @Mock
+    @Spy
+    @InjectMocks
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Override
@@ -49,16 +52,21 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(skillsAreas, businessType);
+        ProfileSkillsResource expectedResource = newProfileSkillsResource()
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build();
 
-        when(assessorProfileSkillsModelPopulator.populateModel(user.getId())).thenReturn(expectedModel);
+        when(userService.getProfileSkills(user.getId())).thenReturn(expectedResource);
+
+        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(skillsAreas, businessType);
 
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("profile/skills"));
 
-        verify(assessorProfileSkillsModelPopulator).populateModel(user.getId());
+        verify(userService).getProfileSkills(user.getId());
     }
 
     @Test
