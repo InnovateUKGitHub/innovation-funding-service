@@ -42,7 +42,6 @@ public class ProjectSpendProfileViewModel {
     private boolean projectManager;
     private boolean approved;
     private boolean leadPartner;
-    private boolean userPartOfLeadOrganisation;
 
     public ProjectSpendProfileViewModel(ProjectResource project, OrganisationResource organisationResource, SpendProfileTableResource table,
                                         SpendProfileSummaryModel summary, Boolean markedAsComplete,
@@ -50,7 +49,7 @@ public class ProjectSpendProfileViewModel {
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
                                         Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation,
-                                        boolean isProjectManager, boolean approved, boolean leadPartner, boolean userPartOfLeadOrganisation) {
+                                        boolean isProjectManager, boolean approved, boolean leadPartner) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
         this.projectName = project.getName();
@@ -73,7 +72,6 @@ public class ProjectSpendProfileViewModel {
         this.projectManager = isProjectManager;
         this.approved = approved;
         this.leadPartner = leadPartner;
-        this.userPartOfLeadOrganisation = userPartOfLeadOrganisation;
     }
 
     public Long getProjectId() {
@@ -228,11 +226,6 @@ public class ProjectSpendProfileViewModel {
         this.leadPartner = leadPartner;
     }
 
-    public boolean isUserPartOfLeadOrganisation() { return userPartOfLeadOrganisation; }
-
-    public void setIsUserPartOfLeadOrganisation(boolean userPartOfLeadOrganisation) { this.userPartOfLeadOrganisation = userPartOfLeadOrganisation; }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -265,7 +258,6 @@ public class ProjectSpendProfileViewModel {
                 .append(projectManager, that.projectManager)
                 .append(approved, that.approved)
                 .append(leadPartner, that.leadPartner)
-                .append(userPartOfLeadOrganisation, that.userPartOfLeadOrganisation)
                 .isEquals();
     }
 
@@ -295,7 +287,6 @@ public class ProjectSpendProfileViewModel {
                 .append(projectManager)
                 .append(approved)
                 .append(leadPartner)
-                .append(userPartOfLeadOrganisation)
                 .toHashCode();
     }
 
@@ -325,7 +316,6 @@ public class ProjectSpendProfileViewModel {
                 .append("projectManager", projectManager)
                 .append("approved", approved)
                 .append("leadPartner", leadPartner)
-                .append("userPartOfLeadOrganisation", userPartOfLeadOrganisation)
                 .toString();
     }
 }

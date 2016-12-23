@@ -138,7 +138,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
 
     }
 
@@ -300,7 +300,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
         verify(projectFinanceService).markSpendProfileComplete(2L, 1L);
 
     }
@@ -376,7 +376,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
     }
 
     private ProjectTeamStatusResource buildProjectTeamStatusResource() {
@@ -455,7 +455,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
-        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(Collections.emptyList())).thenReturn(serviceSuccess(asList(partnerOrganisationResource)));
+        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectResource.getId())).thenReturn(serviceSuccess(asList(partnerOrganisationResource)));
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectUserResource projectUser = newProjectUserResource().withOrganisation(organisationId).withId(1L).build();
@@ -463,14 +463,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
-        expectedViewModel.setIsUserPartOfLeadOrganisation(true);
+        expectedViewModel.setLeadPartner(true);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(partnerOrganisationServiceMock, times(2)).getPartnerOrganisations(eq(projectResource.getId()));
+        verify(partnerOrganisationServiceMock).getPartnerOrganisations(eq(projectResource.getId()));
 
     }
 
@@ -558,7 +558,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false, false, false);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false, false);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {
