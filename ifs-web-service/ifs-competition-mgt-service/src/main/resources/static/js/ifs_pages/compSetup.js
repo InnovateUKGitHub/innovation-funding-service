@@ -68,7 +68,7 @@ IFS.competitionManagement.setup = (function() {
     },
     handleInnovationSector : function(pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val();
-      if(sector === null){
+      if(typeof(sector) === 'undefined' || sector === null){
         var innovationCategory = jQuery('[name^="innovationAreaCategoryIds"]');
         innovationCategory.html('<option value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>');
       }
@@ -82,6 +82,7 @@ IFS.competitionManagement.setup = (function() {
             IFS.competitionManagement.setup.filterInnovationAreasPageLoad(areas);
           }
           else {
+            IFS.core.autoSave.fieldChanged('[name="innovationSectorCategoryId"]');
             IFS.competitionManagement.setup.fillInnovationAreas(areas);
             jQuery(innovationCategory).trigger('ifsValidate');
           }
