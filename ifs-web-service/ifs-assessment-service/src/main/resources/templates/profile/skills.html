@@ -24,10 +24,10 @@
             </ul>
 
             <h2 class="heading-medium">Skill areas</h2>
-            <p id="skillAreas" th:if="${form.skillAreas}" th:text="${form.skillAreas}" />
+            <p id="skillAreas" th:if="${model.skillAreas}" th:text="${model.skillAreas}" />
 
             <h2 class="heading-medium">Assessor type</h2>
-            <p id="assessorType" th:if="${form.assessorType}" th:text="${form.assessorType.displayName}" />
+            <p id="assessorType" th:if="${model.assessorType}" th:text="${model.assessorType.displayName}" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>
