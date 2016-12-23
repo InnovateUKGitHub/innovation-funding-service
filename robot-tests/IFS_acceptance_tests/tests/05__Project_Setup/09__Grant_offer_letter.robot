@@ -42,6 +42,7 @@ Project Finance can download GOL
     [Tags]  HappyPath    Download
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user downloads the file        ${internal_finance_credentials["email"]}    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter    ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
 Project finance user uploads the grant offer letter
     [Documentation]    INFUND-6377

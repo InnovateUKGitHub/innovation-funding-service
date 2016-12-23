@@ -244,13 +244,13 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(2, bindingResult.getFieldErrorCount("lastName"));
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your first name should have at least {2} characters")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your first name should have at least {2} characters.")));
         assertTrue(bindingResult.getFieldErrors("firstName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a first name")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a first name.")));
         assertTrue(bindingResult.getFieldErrors("lastName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your last name should have at least {2} characters")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your last name should have at least {2} characters.")));
         assertTrue(bindingResult.getFieldErrors("lastName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a last name")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a last name.")));
     }
 
     @Test
@@ -283,16 +283,16 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(10, bindingResult.getFieldErrorCount());
-        assertEquals("Please select a title", bindingResult.getFieldError("title").getDefaultMessage());
-        assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
-        assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
-        assertEquals("Please enter a phone number", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
-        assertEquals("Please select a gender", bindingResult.getFieldError("gender").getDefaultMessage());
-        assertEquals("Please select an ethnicity", bindingResult.getFieldError("ethnicity").getDefaultMessage());
-        assertEquals("Please select a disability", bindingResult.getFieldError("disability").getDefaultMessage());
-        assertEquals("The address cannot be blank", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
-        assertEquals("The town cannot be blank", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
-        assertEquals("The postcode cannot be blank", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
+        assertEquals("Please select a title.", bindingResult.getFieldError("title").getDefaultMessage());
+        assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
+        assertEquals("Please select a gender.", bindingResult.getFieldError("gender").getDefaultMessage());
+        assertEquals("Please select an ethnicity.", bindingResult.getFieldError("ethnicity").getDefaultMessage());
+        assertEquals("Please select a disability.", bindingResult.getFieldError("disability").getDefaultMessage());
+        assertEquals("The address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
+        assertEquals("The town cannot be blank.", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
+        assertEquals("The postcode cannot be blank.", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
     }
 
     private UserResource buildTestUser() {

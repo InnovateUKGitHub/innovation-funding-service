@@ -2,11 +2,16 @@ package org.innovateuk.ifs.assessment.controller.profile;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileSkillsForm;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,6 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsController> {
 
+    @Spy
+    @InjectMocks
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+
     @Override
     protected AssessorProfileSkillsController supplyControllerUnderTest() {
         return new AssessorProfileSkillsController();
@@ -49,13 +58,11 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .withSkillsAreas(skillsAreas)
                 .build());
 
-        AssessorProfileSkillsForm expectedForm = new AssessorProfileSkillsForm();
-        expectedForm.setAssessorType(businessType);
-        expectedForm.setSkillAreas(skillsAreas);
+        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(skillsAreas, businessType);
 
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("profile/skills"));
 
         verify(userService).getProfileSkills(user.getId());
@@ -130,7 +137,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("skillAreas"));
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("skillAreas").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("skillAreas").getArguments()[1]);
     }
 
@@ -187,6 +194,6 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("assessorType"));
-        assertEquals("Please select an assessor type", bindingResult.getFieldError("assessorType").getDefaultMessage());
+        assertEquals("Please select an assessor type.", bindingResult.getFieldError("assessorType").getDefaultMessage());
     }
 }

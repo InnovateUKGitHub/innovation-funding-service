@@ -3,10 +3,9 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
-import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -28,12 +27,16 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -113,8 +116,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void invite() throws Exception {
         List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
+        List<CategoryResource> categoryResources = setupCategoryResources();
 
-        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(assessorCreatedInviteResources));
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/invite", competition.getId()))
                 .andExpect(status().isOk())
@@ -125,9 +129,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -228,6 +233,107 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         inOrder.verify(competitionInviteRestService).deleteInvite(email, competition.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void addNewUserToInviteView() throws Exception {
+        List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
+
+        InviteNewAssessorsForm form = new InviteNewAssessorsForm();
+
+        assertEquals(0, form.getInvites().size());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("addNewUser", "submit"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm expectedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsRowForm expectedNewUserRow = new InviteNewAssessorsRowForm();
+
+        assertEquals(1, expectedForm.getInvites().size());
+        assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
+
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void removeNewUserFromInviteView() throws Exception {
+        List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
+
+        InviteNewAssessorsRowForm newUserRow1 = new InviteNewAssessorsRowForm();
+        newUserRow1.setName("Tester 1");
+        newUserRow1.setEmail("test1@test.com");
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("removeNewUser", "0")
+                .param("invites[0].email", "test1@test.com")
+                .param("invites[0].name", "Tester 1")
+                .param("invites[1].email", "test2@test.com")
+                .param("invites[1].name", "Tester 2"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm expectedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+
+        InviteNewAssessorsRowForm expectedNewUserRow = new InviteNewAssessorsRowForm();
+        expectedNewUserRow.setName("Tester 2");
+        expectedNewUserRow.setEmail("test2@test.com");
+
+        assertEquals(1, expectedForm.getInvites().size());
+        assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
+
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView() throws Exception {
+        List<NewUserStagedInviteResource> expectedInvites = newNewUserStagedInviteResource()
+                .withEmail("test1@test.com", "test2@test.com")
+                .withName("Tester 1", "Tester 2")
+                .withInnovationCategoryId(1L)
+                .withCompetitionId(competition.getId())
+                .build(2);
+        NewUserStagedInviteListResource expectedInviteListResource = newNewUserStagedInviteListResource()
+                .withInvites(expectedInvites)
+                .build();
+
+        when(competitionInviteRestService.inviteNewUsers(expectedInviteListResource, competition.getId()))
+                .thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1")
+                .param("invites[0].email", "test1@test.com")
+                .param("invites[0].name", "Tester 1")
+                .param("invites[1].email", "test2@test.com")
+                .param("invites[1].name", "Tester 2"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competition.getId())));
+
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        inOrder.verify(competitionInviteRestService).inviteNewUsers(expectedInviteListResource, competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -336,5 +442,24 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
         });
+    }
+
+    private List<CategoryResource> setupCategoryResources() {
+        return newCategoryResource()
+                .withType(INNOVATION_AREA)
+                .withName("Innovation Area 1", "Innovation Area 2")
+                .build(2);
+    }
+
+    private void setupDefaultInviteViewExpectations(List<AssessorCreatedInviteResource> assessorCreatedInviteResources,
+                                                    List<CategoryResource> children) {
+        List<CategoryResource> innovationSectors = newCategoryResource()
+                .withType(INNOVATION_SECTOR)
+                .withName("Innovation Sector 1")
+                .withChildren(children)
+                .build(1);
+
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(assessorCreatedInviteResources));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(innovationSectors);
     }
 }
