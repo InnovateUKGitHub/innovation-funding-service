@@ -79,11 +79,11 @@
       <dt>Organisation size</dt>
       <dd>Medium</dd>
 
-      <dt>Staff count</dt>
-      <dd>340</dd>
-
       <dt>Turnover</dt>
       <dd>&pound;12,000,000</dd>
+
+      <dt>Full time employees</dt>
+      <dd>340</dd>
     </dl>
   </th:block>
 
@@ -98,70 +98,44 @@
 
     <h2 class="heading-medium">Organisation's projected growth</h2>
 
-    <div class="table-overflow extra-margin-bottom">
-      <table class="extra-margin-bottom">
-        <thead>
-          <tr>
-            <th></th>
-            <th scope="col" class="alignright width-small" id="current">Current</th>
-            <th scope="col" class="alignright width-small" id="1-year">1 year</th>
-            <th scope="col" class="alignright width-small" id="3-plus-years">3+ years</th>
-            <th scope="col" class="alignright width-small" id="5-plus-years">5+ years</th>
-            <th scope="col" class="alignright" id="percent-related">Proportion related to project (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Annual turnover (&pound;)</th>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12%</td>
-          </tr>
-          <tr>
-            <th scope="row">Annual profit (&pound;)</th>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12%</td>
-          </tr>
-          <tr>
-            <th scope="row">Exports (&pound;)</th>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12%</td>
-          </tr>
-          <tr>
-            <th scope="row">Research and development spend as a percentage of annual turnover</th>
-            <td class="numeric">12%</td>
-            <td class="numeric">12%</td>
-            <td class="numeric">12%</td>
-            <td class="numeric">12%</td>
-            <td class="numeric">12%</td>
-          </tr>
-          <tr>
-            <th scope="row">Research and development (Spend value)</th>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12,000</td>
-            <td class="numeric">12%</td>
-          </tr>
-          <tr>
-            <th scope="row">Staff count</th>
-            <td class="numeric">340</td>
-            <td class="numeric">340</td>
-            <td class="numeric">340</td>
-            <td class="numeric">340</td>
-            <td class="numeric">12%</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="grid-row">
+      <div class="column-half">
+        <div class="table-overflow extra-margin-bottom">
+          <table class="extra-margin-bottom">
+            <thead>
+              <tr>
+                <th scope="col">Section</th>
+                <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="annual-turnover">Annual Turnover</td>
+                <td class="numeric">200,000</td>
+              </tr>
+              <tr>
+                <td id="annual-profit">Annual Profit</td>
+                <td class="numeric">50,000</td>
+              </tr>
+              <tr>
+                <td id="annual-exports">Annual Exports</td>
+                <td class="numeric">50,000</td>
+              </tr>
+              <tr>
+                <td id="research">Research and development spend</td>
+                <td class="numeric">20,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
     </div>
+
+    <dl class="readonly-data extra-margin-bottom">
+      <dt>Full time employees</dt>
+      <dd>42</dd>
+    </dl>
   </th:block>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

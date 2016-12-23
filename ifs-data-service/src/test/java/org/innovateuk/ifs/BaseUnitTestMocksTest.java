@@ -490,7 +490,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
-    private SpendProfileTableCalculator spendProfileTableCalculator;
+    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
     protected NotificationSender notificationSender;

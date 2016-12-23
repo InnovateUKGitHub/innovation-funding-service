@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.category.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.CategoryType;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class CategoryResourceBuilder extends BaseBuilder<CategoryResource, CategoryResourceBuilder> {
     private CategoryResourceBuilder(List<BiConsumer<Integer, CategoryResource>> multiActions) {
@@ -47,7 +48,7 @@ public class CategoryResourceBuilder extends BaseBuilder<CategoryResource, Categ
         return withArray((parent, category) -> setField("parent", parent, category), parents);
     }
 
-    public CategoryResourceBuilder withChildren(List<Long>... childrens) {
-        return withArray((children, category) -> setField("children", children, category), childrens);
+    public CategoryResourceBuilder withChildren(Collection<CategoryResource>... childrens) {
+        return withArray((children, category) -> setField("children", new ArrayList<>(children), category), childrens);
     }
 }

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
@@ -91,7 +92,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 getBankDetailsStatus(project),
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
-                getMonitoringOfficerStatus(project, projectDetailsStatus),
+                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project)),
                 getOtherDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
@@ -103,6 +104,12 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project){
+        for(Organisation organisation : project.getOrganisations()){
+            Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
+            if(financeContact == null || !financeContact.isPresent()){
+                return PENDING;
+            }
+        }
         return createProjectDetailsCompetitionStatus(project);
     }
 
@@ -209,12 +216,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return PENDING;
         }
 
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
-            return PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
-            return COMPLETE;
+        if (project.getOfferSubmittedDate() != null) {
+            if (golWorkflowHandler.isApproved(project)) {
+                return COMPLETE;
+            }
         }
 
         if(project.getOfferSubmittedDate() != null) {

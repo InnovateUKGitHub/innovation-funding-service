@@ -40,7 +40,7 @@ First name left blank
     Then the user should see an error    Please enter a first name
     And the user should see an error    We were unable to create your account
     And the user cannot login with their new details    ${valid_email}    ${correct_password}
-    And the user logs out if they are logged in
+
 
 Last name left blank
     [Documentation]    -INFUND-885

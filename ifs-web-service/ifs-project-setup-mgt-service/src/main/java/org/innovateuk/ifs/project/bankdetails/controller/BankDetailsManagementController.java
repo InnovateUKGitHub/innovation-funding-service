@@ -148,8 +148,8 @@ public class BankDetailsManagementController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
-                        updatedOrganisationResource = organisationService.updateNameAndRegistration(updatedOrganisationResource);
-                        return doViewReviewBankDetails(updatedOrganisationResource, project, updatedBankDetailsResource, model, new ApproveBankDetailsForm());
+                        organisationService.updateNameAndRegistration(updatedOrganisationResource);
+                        return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
                     });
         });
     }
