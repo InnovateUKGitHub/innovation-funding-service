@@ -52,7 +52,7 @@
                         </label>
                     </th:block>
 
-                    <label for="new" class="block-label" data-target="finance-contact-table">
+                    <label for="new" class="block-label" data-target="finance-contact-table" data-target-hide-error-messages='true'>
                         <input id="new" name="financeContact" th:checked="${model.inviteAction} or *{financeContact == -1}" type="radio" value="-1" data-required-errormessage="You need to select a finance contact before you can continue." required="required" />
                         Add new team member
                         <span class="form-hint">A new team member will be invited to join the project</span>
