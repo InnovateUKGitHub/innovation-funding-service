@@ -267,9 +267,6 @@ the user opens the excel and checks the content
     ${eggs_details}=    get from list    ${contents}    2
     ${eggs_name}=    get from list    ${eggs_details}    0
     should be equal    ${eggs_name}    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    ${ludlow_details}=    get from list    ${contents}    2
-    ${ludlow_name}=    get from list    ${ludlow_details}    0
-    should be equal    ${ludlow_name}    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     ${application_number}=    get from list    ${empire_details}    1
     should be equal    ${application_number}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}
     ${postcode}=    get from list    ${empire_details}    8
@@ -280,6 +277,7 @@ the user opens the excel and checks the content
     should be equal    ${bank_account_number}    51406795
     ${bank_account_sort_code}=    get from list    ${empire_details}    11
     should be equal    ${bank_account_sort_code}    404745
+
 
 project finance approves Viability for
     [Arguments]  ${partner}
