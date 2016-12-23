@@ -52,12 +52,10 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        ProfileSkillsResource expectedResource = newProfileSkillsResource()
+        when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
                 .withBusinessType(businessType)
                 .withSkillsAreas(skillsAreas)
-                .build();
-
-        when(userService.getProfileSkills(user.getId())).thenReturn(expectedResource);
+                .build());
 
         AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(skillsAreas, businessType);
 
