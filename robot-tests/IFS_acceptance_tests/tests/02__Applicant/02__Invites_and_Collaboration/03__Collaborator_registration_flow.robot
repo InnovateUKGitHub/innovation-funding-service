@@ -35,12 +35,12 @@ User cannot continue if an organisation type is not selected
     [Tags]
     Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select an organisation type
+    Then the user should see the text in the page    Please select an organisation type.
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Given browser validations have been disabled
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select an organisation type
+    Then the user should see the text in the page    Please select an organisation type.
 
 User is able to select only one type
     [Documentation]    INFUND-1005
