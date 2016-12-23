@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.service;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.util.List;

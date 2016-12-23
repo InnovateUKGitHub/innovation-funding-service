@@ -71,6 +71,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
         mockMvc.perform(get("/application/create-authenticated/1"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("create-application/confirm-new-application"));
+        verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
     }
 
     @Test
@@ -89,6 +90,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
         verify(userAuthenticationService, atLeastOnce()).getAuthenticatedUser(any());
         // application needs to be created.
         verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
+        verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
     }
 
 
