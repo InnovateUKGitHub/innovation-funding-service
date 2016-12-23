@@ -338,7 +338,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(1, bindingResult.getErrorCount());
-        assertEquals("Please select at least one assessment to submit", bindingResult.getFieldError("assessmentIds").getDefaultMessage());
+        assertEquals("Please select at least one assessment to submit.", bindingResult.getFieldError("assessmentIds").getDefaultMessage());
     }
 
     @Test
