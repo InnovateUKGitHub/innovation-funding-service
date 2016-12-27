@@ -137,7 +137,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("skillAreas"));
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("skillAreas").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("skillAreas").getArguments()[1]);
     }
 
@@ -194,6 +194,6 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("assessorType"));
-        assertEquals("Please select an assessor type", bindingResult.getFieldError("assessorType").getDefaultMessage());
+        assertEquals("Please select an assessor type.", bindingResult.getFieldError("assessorType").getDefaultMessage());
     }
 }

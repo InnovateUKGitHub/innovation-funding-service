@@ -36,7 +36,7 @@
                             </span>
                         </legend>
                         <label class="block-label" th:each="role : ${model.ACCEPTED_ROLES}">
-                            <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" data-required-errormessage="Please select a role" />
+                            <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
                             <span th:text="${role.displayName}" th:remove="tag" />
                         </label>
                     </fieldset>

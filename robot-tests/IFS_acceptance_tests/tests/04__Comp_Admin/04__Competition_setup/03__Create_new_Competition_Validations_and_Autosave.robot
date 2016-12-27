@@ -35,15 +35,15 @@ Initial details: server-side validations
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see an error    Please enter a title
-    And the user should see an error    Please select a competition type
-    And the user should see an error    Please select an innovation sector
-    And the user should see an error    Please select an innovation area
-    And the user should see an error    Please enter an opening year
-    And the user should see an error    Please enter an opening day
-    And the user should see an error    Please enter an opening month
-    And the user should see an error    Please select an Innovation Lead
-    And the user should see an error    Please select a competition executive
+    Then the user should see an error    Please enter a title.
+    And the user should see an error    Please select a competition type.
+    And the user should see an error    Please select an innovation sector.
+    And the user should see an error    Please select an innovation area.
+    And the user should see an error    Please enter an opening year.
+    And the user should see an error    Please enter an opening day.
+    And the user should see an error    Please enter an opening month.
+    And the user should see an error    Please select an Innovation Lead.
+    And the user should see an error    Please select a competition executive.
 
 Initial details: client-side validations
     [Documentation]    INFUND-2982
@@ -52,23 +52,23 @@ Initial details: client-side validations
     [Tags]    HappyPath
     #TODO Remove the comments when the inf-5327 is fixed
     When the user enters text to a text field    id=title    Validations Test
-    Then the user should not see the error any more    Please enter a title
+    Then the user should not see the error any more    Please enter a title.
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    Then the user should not see the error any more    Please select a competition type
+    Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    Then the user should not see the error any more    Please select an innovation sector
+    Then the user should not see the error any more    Please select an innovation sector.
     When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
-    Then the user should not see the error any more    Please select an innovation area
+    Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
-    #Then the user should not see the error any more    Please enter an opening day
+    #Then the user should not see the error any more    Please enter an opening day.
     When the user enters text to a text field    Id=openingDateMonth    12
-    #Then the user should not see the error any more    Please enter an opening month
+    #Then the user should not see the error any more    Please enter an opening month.
     When the user enters text to a text field    id=openingDateYear    2017
-    #Then the user should not see the error any more    Please enter an opening year
+    #Then the user should not see the error any more    Please enter an opening year.
     When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    Then the user should not see the error any more    Please select an Innovation Lead
+    Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
-    Then The user should not see the text in the page    Please select a competition executive    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
+    Then The user should not see the text in the page    Please select a competition executive.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
 
 Initial details: Autosave
@@ -107,28 +107,28 @@ Funding information server-side validations
     Given the user clicks the button/link    link=Funding information
     And the user redirects to the page    Funding information    Reporting fields
     When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see an error    Please enter a funder name
-    And the user should see an error    Please enter a budget
-    And the user should see an error    Please enter a PAF number
-    And the user should see an error    Please enter a budget code
-    And the user should see an error    Please enter an activity code
-    And the user should see an error    Please generate a competition code
+    Then the user should see an error    Please enter a funder name.
+    And the user should see an error    Please enter a budget.
+    And the user should see an error    Please enter a PAF number.
+    And the user should see an error    Please enter a budget code.
+    And the user should see an error    Please enter an activity code.
+    And the user should see an error    Please generate a competition code.
 
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
-    Then the user should not see the error any more    Please generate a competition code
+    Then the user should not see the error any more    Please generate a competition code.
     When the user enters text to a text field    id=funders0.funder    FunderName
-    Then the user should not see the error any more    Please enter a funder name
+    Then the user should not see the error any more    Please enter a funder name.
     And the user enters text to a text field    id=0-funderBudget    20000
-    Then the user should not see the error any more    Please enter a budget
+    Then the user should not see the error any more    Please enter a budget.
     When the user enters text to a text field    id=pafNumber    2016
-    Then the user should not see the error any more    Please enter a PAF number
+    Then the user should not see the error any more    Please enter a PAF number.
     And the user enters text to a text field    id=budgetCode    2004
-    Then the user should not see the error any more    Please enter a budget code
+    Then the user should not see the error any more    Please enter a budget code.
     And the user enters text to a text field    id=activityCode    4242
-    Then The user should not see the error text in the page    Please enter an activity code
+    Then The user should not see the error text in the page    Please enter an activity code.
 
 Funding information Autosave
     [Documentation]    INFUND-4581

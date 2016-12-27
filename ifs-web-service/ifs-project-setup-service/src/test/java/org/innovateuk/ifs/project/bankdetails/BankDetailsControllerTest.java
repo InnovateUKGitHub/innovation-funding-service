@@ -147,8 +147,8 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
 
         BindingResult bindingResult = ((BankDetailsForm)result.getModelAndView().getModel().get(FORM_ATTR_NAME)).getBindingResult();
-        assertEquals("Please enter a valid account number", bindingResult.getFieldError("accountNumber").getDefaultMessage());
-        assertEquals("Please enter a valid sort code", bindingResult.getFieldError("sortCode").getDefaultMessage());
+        assertEquals("Please enter a valid account number.", bindingResult.getFieldError("accountNumber").getDefaultMessage());
+        assertEquals("Please enter a valid sort code.", bindingResult.getFieldError("sortCode").getDefaultMessage());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
 
         BindingResult bindingResult = ((BankDetailsForm)result.getModelAndView().getModel().get(FORM_ATTR_NAME)).getBindingResult();
-        assertEquals("Please enter a valid sort code", bindingResult.getFieldError("sortCode").getDefaultMessage());
+        assertEquals("Please enter a valid sort code.", bindingResult.getFieldError("sortCode").getDefaultMessage());
     }
 
     @Test

@@ -117,15 +117,15 @@
                 <input class="form-control form-control-3-4" id="username" name="j_username" type="email"
                 	value="#if($username)$encoder.encodeForHTML($username)#end"
                     required="required"
-                    data-required-errormessage="Please enter your e-mail address"
-                    data-email-errormessage="Please enter a valid e-mail address" />
+                    data-required-errormessage="Please enter your e-mail address."
+                    data-email-errormessage="Please enter a valid e-mail address." />
               </div>
 
               <div class="form-group">
                 <label for="password" class="form-label">#springMessageText("idp.login.password", "Password")</label>
                 <input class="form-control form-control-3-4" id="password" name="j_password" type="password" value=""
                        required="required"
-                       data-required-errormessage="Please enter your password">
+                       data-required-errormessage="Please enter your password.">
               </div>
             #end
 

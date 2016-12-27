@@ -57,10 +57,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           data-minlength-errormessage="Your first name should have at least 2 characters"
-                           data-maxlength-errormessage="Your first name cannot have more than 70 characters"
-                           data-required-errormessage="Please enter a first name"
-                    />
+                           th:attr="data-required-errormessage=#{validation.standard.firstname.required},
+                                    data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
@@ -77,9 +76,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           data-minlength-errormessage="Your last name should have at least 2 characters"
-                           data-maxlength-errormessage="Your last name cannot have more than 70 characters"
-                           data-required-errormessage="Please enter a last name"/>
+                           th:attr="data-required-errormessage=#{validation.standard.lastname.required},
+                                    data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
@@ -91,7 +90,11 @@
                             </span>
                         </legend>
                         <label class="block-label" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
-                            <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a gender"/>
+                            <input th:field="*{gender}"
+                                   th:value="${gen}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
                             <span th:text="${gen.displayName}" th:remove="tag"/>
                         </label>
                     </fieldset>
@@ -106,7 +109,11 @@
                             </span>
                         </legend>
                         <label class="block-label" th:each="eth : ${ethnicityOptions}">
-                            <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an ethnicity" />
+                            <input th:field="*{ethnicity}"
+                                   th:value="${eth.id}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
                             <span th:text="${eth.description}" th:remove="tag"/>
                         </label>
                     </fieldset>
@@ -121,7 +128,11 @@
                             </span>
                         </legend>
                         <label class="block-label" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
-                            <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
+                            <input th:field="*{disability}"
+                                   th:value="${dis}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
                             <span th:text="${dis.displayName}" th:remove="tag" />
                         </label>
                     </fieldset>
@@ -136,7 +147,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'field-error' : ''" type="text" />
+                        <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'field-error' : ''" type="text" />
                     </div>
                     <div th:class="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group error' : 'form-group'">
                         <label class="form-label visuallyhidden" for="addressForm.addressLine2">
@@ -163,7 +174,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.town}"  th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'field-error' : ''" type="text" />
+                        <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.town}"  th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'field-error' : ''" type="text" />
                     </div>
                     <div th:class="${#fields.hasErrors('*{addressForm.county}')} ? 'form-group error' : 'form-group'">
                         <label class="form-label" for="addressForm.county">
@@ -181,7 +192,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'field-error' : ''" type="text" />
+                        <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'field-error' : ''" type="text" />
                     </div>
                 </fieldset>
 
@@ -200,9 +211,10 @@
                            required="required"
                            minlength="8"
                            maxlength="20"
-                           data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
-                           data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
-                           data-required-errormessage="Please enter a phone number"/>
+                           th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
+                                    data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
+                                    data-required-errormessage=#{validation.standard.phonenumber.required}" />
+
                 </div>
 
                 <div class="form-group">

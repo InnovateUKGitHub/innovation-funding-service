@@ -5,20 +5,20 @@ IFS.core.formValidation = (function() {
     settings : {
       number : {
         fields : '[type="number"]:not([data-date])',
-        messageInvalid : 'This field can only accept whole numbers'
+        messageInvalid : 'This field can only accept whole numbers.'
       },
       min : {
         fields: '[min]:not([data-date])',
-        messageInvalid : 'This field should be %min% or higher'
+        messageInvalid : 'This field should be %min% or higher.'
       },
       max : {
         fields: '[max]:not([data-date])',
-        messageInvalid : 'This field should be %max% or lower'
+        messageInvalid : 'This field should be %max% or lower.'
       },
       passwordEqual: {
         field1 : '[name="password"]',
         field2 : '[name="retypedPassword"]',
-        messageInvalid : 'Passwords must match'
+        messageInvalid : 'Passwords must match.'
       },
       passwordPolicy : {
         fields : {
@@ -27,37 +27,37 @@ IFS.core.formValidation = (function() {
           lastname : '#lastName'
         },
         messageInvalid : {
-          lowercase : 'Password must contain at least one lower case letter',
-          uppercase : 'Password must contain at least one upper case letter',
-          number : 'Password must contain at least one number',
-          name : 'Password should not contain either your first or last name',
-          organisation : 'Password should not contain your organisation name',
-          tooWeak : 'Password is too weak'
+          lowercase : 'Password must contain at least one lower case letter.',
+          uppercase : 'Password must contain at least one upper case letter.',
+          number : 'Password must contain at least one number.',
+          name : 'Password should not contain either your first or last name.',
+          organisation : 'Password should not contain your organisation name.',
+          tooWeak : 'Password is too weak.'
         }
       },
       email : {
         fields : '[type="email"]',
-        messageInvalid : "Please enter a valid email address"
+        messageInvalid : "Please enter a valid email address."
       },
       required : {
         fields: '[required]:not([data-date])',
-        messageInvalid : "This field cannot be left blank"
+        messageInvalid : "This field cannot be left blank."
       },
       minlength : {
         fields : '[minlength]',
-        messageInvalid : "This field should contain at least %minlength% characters"
+        messageInvalid : "This field should contain at least %minlength% characters."
       },
       maxlength : {
         fields : '[maxlength]',
-        messageInvalid : "This field cannot contain more than %maxlength% characters"
+        messageInvalid : "This field cannot contain more than %maxlength% characters."
       },
       minwordslength : {
         fields : '[data-minwordslength]',
-        messageInvalid : "This field has a minimum number of words"
+        messageInvalid : "This field has a minimum number of words."
       },
       maxwordslength : {
         fields : '[data-maxwordslength]',
-        messageInvalid : "This field has a maximum number of words"
+        messageInvalid : "This field has a maximum number of words."
       },
       date : {
         fields : '.date-group input',
@@ -68,11 +68,11 @@ IFS.core.formValidation = (function() {
       },
       pattern : {
         fields : '[pattern]:not([minlength])', //minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
-        messageInvalid : "Please correct this field"
+        messageInvalid : "Please correct this field."
       },
       tel : {
         fields : '[type="tel"]',
-        messageInvalid : "Please enter a valid phone number"
+        messageInvalid : "Please enter a valid phone number."
       },
       typeTimeout : 1500,
       html5validationMode : false

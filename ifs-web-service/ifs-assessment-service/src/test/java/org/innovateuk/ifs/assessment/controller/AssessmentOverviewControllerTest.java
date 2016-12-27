@@ -284,7 +284,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("rejectReason"));
-        assertEquals("Please enter a reason", bindingResult.getFieldError("rejectReason").getDefaultMessage());
+        assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
@@ -341,7 +341,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("rejectComment"));
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("rejectComment").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
