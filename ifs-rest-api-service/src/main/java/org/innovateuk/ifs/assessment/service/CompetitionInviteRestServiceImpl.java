@@ -21,7 +21,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<AssessorInviteToSendResource> getCreated(long inviteId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "/getCreated", inviteId), AssessorInviteToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getCreated", inviteId), AssessorInviteToSendResource.class);
     }
 
     @Override
@@ -66,6 +66,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite) {
         return postWithRestResult(format("%s/%s", competitionInviteRestUrl, "inviteUser"), existingUserStagedInvite, CompetitionInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites,  long competitionId) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "inviteNewUsers", competitionId), newUserStagedInvites, Void.class);
     }
 
     @Override

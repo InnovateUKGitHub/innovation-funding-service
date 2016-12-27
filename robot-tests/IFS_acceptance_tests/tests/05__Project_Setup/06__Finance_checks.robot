@@ -23,10 +23,18 @@ Project Finance user can see the finance check summary page
     [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element          jQuery=h2:contains("Finance Checks")
+    Then the user should see the element          jQuery=table.table-progress
+    And the user should see the element          jQuery=h2:contains("Finance checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
     [Teardown]  the user clicks the button/link  link=Competition Dashboard
+
+Project finance approves Viability
+    [Documentation]  INFUND-7076
+    [Tags]  HappyPath
+    When project finance approves Viability for  1
+    Then project finance approves Viability for  2
+    # TODO some extra validation testing INFUND-7076
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
@@ -36,7 +44,7 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=Review
-    Then the user should see that the element is disabled    jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
@@ -99,7 +107,7 @@ Approve Eligibility: Academic partner organisation
     Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-2    Approved
-    And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
+    And The user should see the element    jQuery=.generate-spend-profile-main-button
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
@@ -141,12 +149,12 @@ Status updates correctly for internal user's table
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting       # Bank details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance Checks are actionable from the start-workaround for Private beta assessment
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
 
-Other internal users do not have access to Finance Checks
+Other internal users do not have access to Finance checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
@@ -248,7 +256,7 @@ the user fills in project costs
 
 
 the project finance user downloads the bank details
-    the user downloads the file    lee.bowman@innovateuk.test    Passw0rd    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
+    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
 
 
 the user opens the excel and checks the content
@@ -273,7 +281,19 @@ the user opens the excel and checks the content
     ${bank_account_sort_code}=    get from list    ${empire_details}    11
     should be equal    ${bank_account_sort_code}    404745
 
-
+project finance approves Viability for
+    [Arguments]  ${partner}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user should see the element     jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
+    Then the user should see the element    jQuery=h2:contains("Credit report")
+    And the user selects the checkbox       id=costs-reviewed
+    When the user should see the element    jQuery=h2:contains("Approve viability")
+    Then the user selects the checkbox      id=project-viable
+    And the user moves focus to the element  link=Contact us
+    When the user selects the option from the drop-down menu  Green  id=rag-rating
+    And the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    When the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
 
 
 

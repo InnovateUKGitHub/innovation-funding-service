@@ -18,15 +18,15 @@ Validations for invalid inputs
     And the user enters text to a text field    id=addressForm.town    ${EMPTY}
     And the user enters text to a text field    id=addressForm.postcode    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Save changes")
-    Then the user should see an error    Please enter a first name
-    And the user should see an error    Please enter a last name
-    And the user should see an error    Please enter a valid phone number
-    And the user should see an error    The address cannot be blank
-    And the user should see an error    The postcode cannot be blank
-    And the user should see an error    The town cannot be blank
-    And the user should see an error    Please select a disability
-    And the user should see an error    Please select an ethnicity
-    And the user should see an error    Please select a gender
+    Then the user should see an error    Please enter a first name.
+    And the user should see an error    Please enter a last name.
+    And the user should see an error    Please enter a valid phone number.
+    And the user should see an error    The address cannot be blank.
+    And the user should see an error    The postcode cannot be blank.
+    And the user should see an error    The town cannot be blank.
+    And the user should see an error    Please select a disability.
+    And the user should see an error    Please select an ethnicity.
+    And the user should see an error    Please select a gender.
 
 Valid Profile Update
     [Documentation]    INFUND-1480

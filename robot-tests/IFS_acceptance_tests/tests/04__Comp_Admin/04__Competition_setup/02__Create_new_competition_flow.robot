@@ -263,7 +263,9 @@ Eligibility: Mark as Done then Edit again
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
     And the user should see the text in the page    50%
-    And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
+    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Industrial research
+    And the user should see the text in the page    Experimental development
     And The user should not see the element    id=streamName
     When the user clicks the button/link    link=Competition setup
     When the user clicks the button/link    link=Eligibility

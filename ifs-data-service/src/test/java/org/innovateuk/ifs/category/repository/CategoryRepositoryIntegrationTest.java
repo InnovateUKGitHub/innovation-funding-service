@@ -2,7 +2,6 @@ package org.innovateuk.ifs.category.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.resource.CategoryType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,6 +36,17 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
 
         assertEquals(4, found.size());
         assertEquals(Long.valueOf(4L), found.get(3).getId());
+    }
+
+    @Test
+    public void findByTypeOrderByNameAsc() throws Exception {
+        List<Category> found = repository.findByTypeOrderByNameAsc(INNOVATION_SECTOR);
+
+        assertEquals(4, found.size());
+        assertEquals("Emerging and enabling technologies", found.get(0).getName());
+        assertEquals("Health and life sciences", found.get(1).getName());
+        assertEquals("Infrastructure systems", found.get(2).getName());
+        assertEquals("Materials and manufacturing", found.get(3).getName());
     }
 
     @Test

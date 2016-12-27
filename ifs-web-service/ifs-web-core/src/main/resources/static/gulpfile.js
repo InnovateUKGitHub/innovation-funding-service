@@ -1,16 +1,15 @@
 // jshint ignore: start
-var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var jscs = require('gulp-jscs');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var sassLint = require('gulp-sass-lint');
-var compass = require('compass-importer');
-var filesExist = require('files-exist');
+var gulp = require('gulp')
+var standard = require('gulp-standard')
+var uglify = require('gulp-uglify')
+var concat = require('gulp-concat')
+var sass = require('gulp-sass')
+var sassLint = require('gulp-sass-lint')
+var compass = require('compass-importer')
+var filesExist = require('files-exist')
 
 // Path variables
-var nodeModulesPath = __dirname + '/../../../../../node_modules/';
+var nodeModulesPath = __dirname + '/../../../../../node_modules/'
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
@@ -19,14 +18,14 @@ var vendorJsFiles = [
   '!js/vendor/govuk/ie.js',
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
-];
+]
 
-gulp.task('default', ['js', 'css']);
+gulp.task('default', ['js', 'css'])
 
-//build all js
-gulp.task('js', ['vendor', 'ifs-js']);
+// build all js
+gulp.task('js', ['vendor', 'ifs-js'])
 
-//concat and minify all the ifs files
+// concat and minify all the ifs files
 gulp.task('ifs-js', function () {
   return gulp.src([
     'js/ifsCoreLoader.js',
@@ -34,25 +33,24 @@ gulp.task('ifs-js', function () {
     'js/ifs_pages/*.js',
     'js/fire.js'
   ])
-  .pipe(jshint())
-  .pipe(jshint.reporter('jshint-stylish'))
-  // .pipe(jshint.reporter('fail'))
-  .pipe(jscs())
-  .pipe(jscs.reporter())
-  // .pipe(jscs.reporter('fail'))
+  .pipe(standard())
   .pipe(concat('ifs.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
-});
+  .pipe(standard.reporter('default', {
+    breakOnError: true,
+    breakOnWarning: false,
+    quiet: false
+  }))
+})
 
-
-//concat and minify all the vendor files
-gulp.task('vendor', function() {
+// concat and minify all the vendor files
+gulp.task('vendor', function () {
   return gulp.src(filesExist(vendorJsFiles))
   .pipe(concat('vendor.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
-});
+})
 
 gulp.task('css', function () {
   return gulp.src('./sass/**/*.scss')
@@ -68,16 +66,16 @@ gulp.task('css', function () {
     .pipe(sassLint.format())
     // .pipe(sassLint.failOnError())
     .pipe(sass({
-        importer: compass,
-        outputStyle: 'compressed'
-      }).on('error', sass.logError))
-    .pipe(gulp.dest('./css'));
-});
+      importer: compass,
+      outputStyle: 'compressed'
+    }).on('error', sass.logError))
+    .pipe(gulp.dest('./css'))
+})
 
 gulp.task('css:watch', function () {
-  gulp.watch('./sass/**/*.scss', ['css']);
-});
+  gulp.watch('./sass/**/*.scss', ['css'])
+})
 
 gulp.task('js:watch', function () {
-  gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js']);
-});
+  gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js'])
+})
