@@ -87,12 +87,13 @@
                             th:name="innovationAreaCategoryIds[__${status.index}__]"
                             th:id="innovationAreaCategoryId-__${status.index}__"
                             required="required"
+                            data-autosave-disabled=""
                             th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
                         <option value="" disabled="disabled" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == null}">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == innovationArea.id}">Innovation Area</option>
                     </select>
                     <input type="hidden" th:if="${isSetupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryIds}" />
-                    <button th:if="${status.index > 0}" data-remove-row="innovationArea" class="buttonlink" th:value="${status.index}" type="button">Remove</button>
+                    <button th:if="${status.index > 0}" data-remove-row="innovationArea" class="buttonlink no-margin" th:value="${status.index}" type="button">Remove</button>
                 </div>
             </th:block>
             <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds == null or competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
@@ -108,6 +109,7 @@
                             name="innovationAreaCategoryIds[0]"
                             id="innovationAreaCategoryId-0"
                             required="required"
+                            data-autosave-disabled=""
                             th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
                         <option value="" disabled="disabled" selected="selected">Please select &hellip;</option>
                         <option th:each="(innovationArea : ${innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}">Innovation Area</option>
@@ -115,7 +117,7 @@
                     <input type="hidden" th:if="${isSetupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryIds[0]}" />
                 </div>
             </th:block>
-            <input type="hidden" name="removeArea" />
+            <input type="hidden" name="autosaveInnovationAreaIds" />
             <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
 
             <fieldset>
