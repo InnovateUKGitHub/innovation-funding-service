@@ -36,6 +36,7 @@ IFS.core.loadOrder = {
       IFS.core.autoSubmitForm.init();
       IFS.core.pieChart.init();
       IFS.core.unsavedChanges.init();
+      IFS.core.debug.init();
     }
   }
 };
