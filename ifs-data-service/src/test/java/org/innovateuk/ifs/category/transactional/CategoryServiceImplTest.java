@@ -3,7 +3,6 @@ package org.innovateuk.ifs.category.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -39,14 +39,14 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         final CategoryResource expected2 = newCategoryResource()
                 .build();
 
-        when(categoryRepositoryMock.findByType(CategoryType.INNOVATION_AREA)).thenReturn(categories);
+        when(categoryRepositoryMock.findByTypeOrderByNameAsc(INNOVATION_AREA)).thenReturn(categories);
         when(categoryMapperMock.mapToResource(refEq(categories))).thenReturn(asList(expected1, expected2));
 
-        final List<CategoryResource> found = categoryService.getByType(CategoryType.INNOVATION_AREA).getSuccessObject();
+        final List<CategoryResource> found = categoryService.getByType(INNOVATION_AREA).getSuccessObject();
 
         assertEquals(expected1, found.get(0));
         assertEquals(expected2, found.get(1));
-        verify(categoryRepositoryMock, times(1)).findByType(CategoryType.INNOVATION_AREA);
+        verify(categoryRepositoryMock, times(1)).findByTypeOrderByNameAsc(INNOVATION_AREA);
     }
 
     @Test

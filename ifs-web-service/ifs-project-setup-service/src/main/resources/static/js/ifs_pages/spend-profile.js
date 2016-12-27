@@ -4,7 +4,7 @@ IFS.projectSetup.spendProfile = (function() {
   return {
     settings : {
       totalElement : 'input[id*=row-total-],#spend-profile-total-total',
-      message : 'Your total costs are higher than your eligible costs'
+      message : 'Your total costs are higher than your eligible costs.'
     },
     init : function() {
       s = this.settings;

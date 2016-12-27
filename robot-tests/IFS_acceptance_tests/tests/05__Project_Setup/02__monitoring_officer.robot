@@ -43,7 +43,7 @@ Status updates correctly for internal user's table
     Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action   # MO
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details are not yet provided by any partner yet
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks-always action flag for private beta
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
@@ -93,30 +93,30 @@ MO server-side validation
     [Tags]    HappyPath
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    Then the user should see an error    Please enter a first name
-    And the user should see an error    Please enter a last name
-    And the user should see an error    Please enter a valid email address
-    And the user should see an error    Please enter an email address
-    And the user should see an error    Please enter a phone number
-    And the user should see an error    Please enter a valid phone number
+    Then the user should see an error    Please enter a first name.
+    And the user should see an error    Please enter a last name.
+    And the user should see an error    Please enter a valid email address.
+    And the user should see an error    Please enter an email address.
+    And the user should see an error    Please enter a phone number.
+    And the user should see an error    Please enter a valid phone number.
 
 MO client-side validation
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
     When the user enters text to a text field    id=firstName    Abbey
-    Then the user should not see the validation error    Please enter a first name
+    Then the user should not see the validation error    Please enter a first name.
     When the user enters text to a text field    id=lastName    Abigail
-    Then the user should not see the validation error    Please enter a last name
+    Then the user should not see the validation error    Please enter a last name.
     When standard verification for email address follows
     When the user enters text to a text field    id=emailAddress    ${test_mailbox_one}+monitoringofficer@gmail.com
-    And the user should not see the validation error    Please enter a valid email address
-    And the user should not see the validation error    Please enter an email address
+    And the user should not see the validation error    Please enter a valid email address.
+    And the user should not see the validation error    Please enter an email address.
     When the user enters text to a text field    id=phoneNumber    0123
-    And the user should not see the validation error    Please enter a phone number
-    And the user should not see the validation error    Please enter a valid phone number
-    And the user should see an error    Input for your phone number has a minimum length of 8 characters
+    And the user should not see the validation error    Please enter a phone number.
+    And the user should not see the validation error    Please enter a valid phone number.
+    And the user should see an error    Input for your phone number has a minimum length of 8 characters.
     When the user enters text to a text field    id=phoneNumber    07438620303
-    Then the user should not see the validation error    Input for your phone number has a minimum length of 8 characters
+    Then the user should not see the validation error    Input for your phone number has a minimum length of 8 characters.
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706
@@ -226,15 +226,15 @@ Links to other sections in Project setup dependent on project details (applicabl
 *** Keywords ***
 standard verification for email address follows
     the user enters text to a text field    id=emailAddress    ${invalid_email_plain}
-    the user should see an error    Please enter a valid email address
+    the user should see an error    Please enter a valid email address.
     the user enters text to a text field    id=emailAddress    ${invalid_email_symbols}
-    the user should see an error    Please enter a valid email address
+    the user should see an error    Please enter a valid email address.
     the user enters text to a text field    id=emailAddress    ${invalid_email_no_username}
-    the user should see an error    Please enter a valid email address
+    the user should see an error    Please enter a valid email address.
     the user enters text to a text field    id=emailAddress    ${invalid_email_format}
-    the user should see an error    Please enter a valid email address
+    the user should see an error    Please enter a valid email address.
     the user enters text to a text field    id=emailAddress    ${invalid_email_no_at}
-    the user should see an error    Please enter a valid email address
+    the user should see an error    Please enter a valid email address.
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
