@@ -298,8 +298,8 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("firstName"));
         assertTrue(bindingResult.hasFieldErrors("lastName"));
         assertTrue(bindingResult.hasFieldErrors("addressForm.postcodeInput"));
-        assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
-        assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("validation.standard.postcodesearch.required", bindingResult.getFieldError("addressForm.postcodeInput").getCode());
     }
 

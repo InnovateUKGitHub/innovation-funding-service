@@ -2,9 +2,9 @@ IFS.projectSetup.spendProfile = (function () {
   'use strict'
   var s // private alias to settings
   return {
-    settings: {
-      totalElement: 'input[id*=row-total-],#spend-profile-total-total',
-      message: 'Your total costs are higher than your eligible costs'
+    settings : {
+      totalElement : 'input[id*=row-total-],#spend-profile-total-total',
+      message : 'Your total costs are higher than your eligible costs.'
     },
     init: function () {
       s = this.settings

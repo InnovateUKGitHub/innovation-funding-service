@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileSkillsForm;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
@@ -30,9 +31,19 @@ public class AssessorProfileSkillsController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
+    public String getReadonlySkills(Model model,
+                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser.getId()));
+        return "profile/skills";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/edit")
     public String getSkills(Model model,
                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
                             @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
@@ -40,7 +51,7 @@ public class AssessorProfileSkillsController {
         return doViewYourSkills(loggedInUser, model, form, bindingResult);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/edit")
     public String submitSkills(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
@@ -60,7 +71,7 @@ public class AssessorProfileSkillsController {
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(loggedInUser, form);
         }
-        return "profile/innovation-areas";
+        return "profile/skills-edit";
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
