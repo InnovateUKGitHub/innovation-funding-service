@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.project.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * A resource object to return finance check status for a project (for all partner organisations).
@@ -141,6 +145,16 @@ public class FinanceCheckSummaryResource {
 
     public boolean isFinanceChecksAllApproved() {
         return financeChecksAllApproved;
+    }
+
+    @JsonIgnore
+    public boolean isViabilityAllApprovedOrNotRequired() {
+
+        List<FinanceCheckPartnerStatusResource.Viability> relevantStatuses = asList(
+                FinanceCheckPartnerStatusResource.Viability.APPROVED,
+                FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE);
+
+        return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
     }
 
     public void setFinanceChecksAllApproved(boolean financeChecksAllApproved) {
