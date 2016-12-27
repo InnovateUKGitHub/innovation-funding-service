@@ -36,30 +36,30 @@ Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    Then the user should see an error    Please enter an account number
-    And the user should see an error    Please enter a sort code
-    And the user should see an error    You need to select a billing address before you can continue
+    Then the user should see an error    Please enter an account number.
+    And the user should see an error    Please enter a sort code.
+    And the user should see an error    You need to select a billing address before you can continue.
 
 Bank details client side validations
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
-    Then the user should not see the text in the page    Please enter an account number
+    Then the user should not see the text in the page    Please enter an account number.
     And the user should see an error    Please enter a valid account number
     When the user enters text to a text field    name=accountNumber    12345679
     And the user moves focus away from the element    name=accountNumber
-    Then the user should not see the text in the page    Please enter an account number
-    And the user should not see the text in the page    Please enter a valid account number
+    Then the user should not see the text in the page    Please enter an account number.
+    And the user should not see the text in the page    Please enter a valid account number.
     When the user enters text to a text field    name=sortCode    12345
     And the user moves focus away from the element    name=sortCode
-    Then the user should see an error    Please enter a valid sort code
+    Then the user should see an error    Please enter a valid sort code.
     When the user enters text to a text field    name=sortCode    123456
     And the user moves focus away from the element    name=sortCode
-    Then the user should not see the text in the page    Please enter a sort code
-    And the user should not see the text in the page    Please enter a valid sort code
+    Then the user should not see the text in the page    Please enter a sort code.
+    And the user should not see the text in the page    Please enter a valid sort code.
     When the user selects the radio button    addressType    REGISTERED
-    Then the user should not see the text in the page    You need to select a billing address before you can continue
+    Then the user should not see the text in the page    You need to select a billing address before you can continue.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282

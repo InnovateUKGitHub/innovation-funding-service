@@ -56,7 +56,7 @@ the user fills in rejection details
     And the user should see the element    id=rejectReason
     the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
     the user clicks the button/link    jquery=button:contains("Reject")
-    The user should see an error    Please enter a reason
+    The user should see an error    Please enter a reason.
     Select From List By Index    id=rejectReason    1
     the user should not see an error in the page
     The user enters text to a text field    id=rejectComment    Have conflicts with the area of expertise.
