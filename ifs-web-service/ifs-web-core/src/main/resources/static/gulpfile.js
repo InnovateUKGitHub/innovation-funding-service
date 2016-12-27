@@ -12,7 +12,8 @@ var filesExist = require('files-exist')
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
-  'js/vendor/jquery/jquery-ui.min.js',
+  nodeModulesPath + 'jquery/dist/jquery.js',
+  'js/vendor/jquery-ui/jquery-ui.min.js',
   'js/vendor/govuk/*.js',
   '!js/vendor/govuk/ie.js',
   'js/vendor/wysiwyg-editor/*.js',
