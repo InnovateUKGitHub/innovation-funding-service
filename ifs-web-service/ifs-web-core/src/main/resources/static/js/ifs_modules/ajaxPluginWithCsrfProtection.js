@@ -3,7 +3,7 @@
  *  Use this instead of globally applying the header using $.ajaxSetup which would affect all requests using jQuery, not just those going to IFS.
  *  Adapted from Django's guide to it's Double Cookie Submission prevention method - https://docs.djangoproject.com/ja/1.9/ref/csrf
  */
-(function () {
+;(function () {
   'use strict'
   jQuery.ajaxProtected = function (options) {
     var CSRF_HEADER_NAME = 'X-CSRF-TOKEN'
