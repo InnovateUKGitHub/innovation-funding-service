@@ -213,7 +213,7 @@ Lead partner can change the Start Date
     Given the user clicks the button/link    link=Target start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
-    Then the user should see a validation error    Please enter a future date
+    Then the user should see a validation error    Please enter a future date.
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
     And the user enters text to a text field    id=projectStartDate_year    2018
@@ -243,23 +243,23 @@ Inviting project manager server side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user clicks the button/link    id=invite-project-manager
-    Then the user should see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter an email address
+    Then the user should see the text in the page    Please enter a valid name.
+    And the user should see the text in the page    Please enter an email address.
 
 Inviting project manager client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid name
+    Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field    id=email-project-manager    test
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter a valid email address
+    Then the user should not see the text in the page    Please enter a valid name.
+    And the user should see the text in the page    Please enter a valid email address.
     When the user enters text to a text field    id=email-project-manager    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter an email address
-    And the user should not see the text in the page    Please enter a valid name
+    Then the user should not see the text in the page    Please enter an email address.
+    And the user should not see the text in the page    Please enter a valid name.
     And the user should not see an error in the page
 
 Partner invites a project manager
@@ -310,9 +310,9 @@ Lead partner selects a project manager
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see a validation error    You need to select a Project Manager before you can continue
+    Then the user should see a validation error    You need to select a Project Manager before you can continue.
     When the user selects the radio button    projectManager    projectManager1
-    And the user should not see the text in the page    You need to select a Project Manager before you can continue
+    And the user should not see the text in the page    You need to select a Project Manager before you can continue.
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should see the text in the page    Steve Smith
     And the user clicks the button/link    link=Project Manager
@@ -331,7 +331,7 @@ Lead partner can change the project address
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You need to select a project address before you can continue
+    Then the user should see the text in the page    You need to select a project address before you can continue.
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
@@ -395,23 +395,23 @@ Inviting finance contact server side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user clicks the button/link    id=invite-finance-contact
-    Then the user should see the text in the page    Please enter a valid name
-    And the user should see the text in the page    Please enter an email address
+    Then the user should see the text in the page    Please enter a valid name.
+    And the user should see the text in the page    Please enter an email address.
 
 Inviting finance contact client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid name
+    Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field    id=email-finance-contact    test
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter a valid name
+    Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter a valid email address
     When the user enters text to a text field    id=email-finance-contact    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page    Please enter an email address
-    And the user should not see the text in the page    Please enter a valid name
+    Then the user should not see the text in the page    Please enter an email address.
+    And the user should not see the text in the page    Please enter a valid name.
     And the user should not see an error in the page
 
 Partner invites a finance contact

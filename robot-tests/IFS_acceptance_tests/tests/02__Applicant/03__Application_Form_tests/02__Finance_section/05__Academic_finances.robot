@@ -29,8 +29,8 @@ Academic finance validations
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
     And Mark academic finances as complete
-    Then the user should see an error    This field should be 0 or higher
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    This field should be 0 or higher.
+    Then the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary-list
     And the field should not contain the currency symbol
 
@@ -198,7 +198,7 @@ Lead applicant marks the finances as incomplete
 
 the user can see the link for more JeS details
     the user should see the element    link=Je-S website
-    the user should see the element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+    the user should see the element    css=a[href="https://je-s.rcuk.ac.uk"]
 
 the applicant enters invalid inputs
     The user enters text to a text field    id=incurred-staff    100£

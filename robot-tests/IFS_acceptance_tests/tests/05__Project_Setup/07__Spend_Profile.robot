@@ -265,8 +265,8 @@ Academic partner spend profile server side validations
     And the user enters text to a text field         css=#row-32-2    3306  # Travel and subsistence
     And the user moves focus to the element          css=#row-33-5
     And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the text in the page    Your total costs are higher than your eligible costs
-    And the user should see the text in the page     This field should be 0 or higher
+    Then the user should see the text in the page    Your total costs are higher than your eligible costs.
+    And the user should see the text in the page     This field should be 0 or higher.
 
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846

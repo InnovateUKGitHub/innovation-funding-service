@@ -16,10 +16,10 @@ Business opportunity Server-side validations setup questions
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     When the user leaves all the question field empty
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
-    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
+    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank.
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
+    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
+    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
 
 Application questions mark as done validations
     [Documentation]    INFUND-6468
@@ -36,9 +36,9 @@ Business opportunity Sever-side validations assessment questions
     [Tags]    HappyPath
     Given the user leaves all the assesment questions empty
     When the user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then the user should see the text in the page    Please enter a from score
-    And the user should see the text in the page    Please enter a to score
-    And the user should see the text in the page    Please enter a justification
+    Then the user should see the text in the page    Please enter a from score.
+    And the user should see the text in the page    Please enter a to score.
+    And the user should see the text in the page    Please enter a justification.
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
@@ -47,13 +47,13 @@ Business opportunity: Client side validations
     And the user enters text to a text field    id=question.shortTitle    Test Heading
     And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
-    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank
-    And the user should not see the text in the page    Please enter a from score
-    And the user should not see the text in the page    Please enter a to score
-    And the user should not see the text in the page    Please enter a justification
+    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank.
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
+    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
+    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
+    And the user should not see the text in the page    Please enter a from score.
+    And the user should not see the text in the page    Please enter a to score.
+    And the user should not see the text in the page    Please enter a justification.
 
 Business opportunity: Autosave
     [Documentation]    INFUND-5629 INFUND-5685
@@ -89,8 +89,8 @@ Scope: Sever-side validations assessment questions
     Then the user should see the text in the page    Please enter a value.
     And the user should see the text in the page    Please enter a justification.
     And The user clicks the button/link    id=remove-guidance-row-2
-    And the user should not see the text in the page    Please enter a subject
-    And the user should not see the text in the page    Please enter a justification
+    And the user should not see the text in the page    Please enter a subject.
+    And the user should not see the text in the page    Please enter a justification.
 
 *** Keywords ***
 the user leaves all the question field empty
