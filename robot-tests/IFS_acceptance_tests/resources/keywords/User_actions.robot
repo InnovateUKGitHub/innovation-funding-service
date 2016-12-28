@@ -89,9 +89,9 @@ the address fields should be filled with dummy data
 
 
 the user submits their information
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    name=termsAndConditions
-    Select Checkbox    termsAndConditions
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');jQuery(document).on('click','label a',function(event){event.preventDefault();});
+    Focus    xpath=//*[@name="termsAndConditions"]/ancestor::label
+    Click Element    xpath=//*[@name="termsAndConditions"]/ancestor::label
     Submit Form
 
 the user cannot login with either password

@@ -34,7 +34,7 @@ User creates new account verifies email and login
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link    id=org-search
     the user clicks the button/link    LINK=INNOVATE LTD
-    the user selects the checkbox    id=address-same
+    the user selects the checkbox    address-same
     the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
