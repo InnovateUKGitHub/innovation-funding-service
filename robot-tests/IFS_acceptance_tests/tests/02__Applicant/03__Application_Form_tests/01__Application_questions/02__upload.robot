@@ -128,7 +128,7 @@ Collaborator can remove a file when the question is assigned
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     And the user should see the text in the page    ${valid_pdf}
-    When the user can remove the uploaded file    ${valid_pdf}
+    When the user can remove the uploaded file  remove_uploaded_file  ${valid_pdf}
     Then the user can re-assign the question back to the lead applicant
 
 Collaborators can upload a file when the question is assigned
