@@ -420,7 +420,7 @@ include::{snippets}/project/save-spend-profile/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/project/save-spend-profile/curl-request.adoc[]
 
-=== Mark Spend Profile as complete
+=== Mark Spend Profile as Complete
 ==== Success
 ===== Request
 include::{snippets}/project/mark-spend-profile-complete/http-request.adoc[]
@@ -431,6 +431,72 @@ include::{snippets}/project/mark-spend-profile-complete/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/mark-spend-profile-complete/curl-request.adoc[]
+
+
+=== Mark Spend Profile as Incomplete
+==== Success
+===== Request
+include::{snippets}/project/mark-spend-profile-incomplete/http-request.adoc[]
+include::{snippets}/project/mark-spend-profile-incomplete/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/mark-spend-profile-incomplete/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/mark-spend-profile-incomplete/curl-request.adoc[]
+
+=== Get Viability
+==== Success
+===== Request
+include::{snippets}/project/get-viability/http-request.adoc[]
+include::{snippets}/project/get-viability/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-viability/http-response.adoc[]
+include::{snippets}/project/get-viability/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-viability/curl-request.adoc[]
+
+
+=== Save Viability
+==== Success
+===== Request
+include::{snippets}/project/save-viability/http-request.adoc[]
+include::{snippets}/project/save-viability/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/save-viability/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/save-viability/curl-request.adoc[]
+
+
+=== Is Credit Report confirmed?
+==== Success
+===== Request
+include::{snippets}/project/get-credit-report/http-request.adoc[]
+include::{snippets}/project/get-credit-report/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-credit-report/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-credit-report/curl-request.adoc[]
+
+
+=== Save Credit Report confirmed
+==== Success
+===== Request
+include::{snippets}/project/set-credit-report/http-request.adoc[]
+include::{snippets}/project/set-credit-report/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/set-credit-report/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/set-credit-report/curl-request.adoc[]
+
 
 === Get Project Team Status
 ==== Success
@@ -524,6 +590,21 @@ include::{snippets}/project/get-finance-check-summary/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/get-finance-check-summary/curl-request.adoc[]
+
+
+=== Get Project Finances
+==== Success
+===== Request
+include::{snippets}/project/get-project-finances/http-request.adoc[]
+include::{snippets}/project/get-project-finances/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-project-finances/http-response.adoc[]
+include::{snippets}/project/get-project-finances/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-project-finances/curl-request.adoc[]
+
 
 
 === Get Spend Profile CSV

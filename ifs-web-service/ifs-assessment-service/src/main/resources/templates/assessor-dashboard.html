@@ -32,6 +32,30 @@
                 </ul>
             </div>
 
+            <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.pendingInvites)}">
+                <h2 class="heading-medium">Invitations to assess (<span th:text="${#lists.size(model.pendingInvites)}" />)</h2>
+                <ul class="boxed-list">
+                    <li th:each="pendingInvite : ${model.pendingInvites}">
+                        <div class="grid-row">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-medium"><a th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}" th:text="${pendingInvite.displayLabel}" /></h3>
+                                <p>You have been asked to assess this competition. Please respond.</p>
+                            </div>
+                            <div class="column-third">
+                                <h3 class="heading-medium">Assessment period</h3>
+                                <dl class="standard-definition-list reduced-width">
+                                  <dt>Begins</dt>
+                                  <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateFrom, 'd MMMM yyyy')}">15 November 2017</dd>
+
+                                  <dt>Ends</dt>
+                                  <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateTo, 'd MMMM yyyy')}">25 December 2017</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
             <div class="my-applications">
                 <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
                     <h2 class="heading-large">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
@@ -59,7 +83,7 @@
             </div>
 
             <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
-                <h2 class="heading-large">Upcoming competitions to assess</h2>
+                <h2 class="heading-large">Upcoming competitions to assess (<span th:text="${#lists.size(model.upcomingCompetitions)}" />)</h2>
                 <ul class="boxed-list">
                     <li th:each="upcomingCompetition : ${model.upcomingCompetitions}">
                         <div class="grid-row">
@@ -84,11 +108,8 @@
                 </ul>
             </div>
 
-            <h2 class="heading-medium">Your profile</h2>
+            <h2 class="heading-medium">Your contract</h2>
             <ul class="list-bullet">
-                <li>
-                    <a th:href="@{/profile/details}">your details</a>
-                </li>
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>
                 </li>
@@ -98,6 +119,28 @@
                 <li>
                     <a th:href="@{/profile/terms}">your contract</a>
                 </li>
+                <!--/* TODO INFUND-7061
+                <li>
+                    <a th:href="">travel and subsistence rates</a>
+                </li>
+                */-->
+            </ul>
+
+            <h2 class="heading-medium">Your profile</h2>
+            <ul class="list-bullet">
+                <li>
+                    <a th:href="@{/profile/details}">your details</a>
+                </li>
+                <!--/* TODO INFUND-7057
+                <li>
+                    <a th:href="">change your password</a>
+                </li>
+                */-->
+                <!--/* TODO INFUND-7058
+                <li>
+                    <a th:href="">read terms and conditions</a>
+                </li>
+                */-->
             </ul>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

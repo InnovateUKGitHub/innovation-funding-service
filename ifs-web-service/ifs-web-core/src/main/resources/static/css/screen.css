@@ -260,6 +260,11 @@ a:focus {
 .skiplink {
   position: absolute;
   left: -9999em;
+  /* Default link colour doesn't have enough contrast against $focus-colour */
+}
+
+.skiplink:focus, .skiplink:visited {
+  color: #0b0c0c;
 }
 
 .skiplink:focus {
@@ -391,7 +396,7 @@ button:focus {
   text-decoration: none;
   text-rendering: optimizeLegibility;
   border-bottom: 1px solid transparent;
-  background: url(/images/gov.uk_logotype_crown.png?0.19.1) no-repeat;
+  background: url(/images/gov.uk_logotype_crown.png?0.19.2) no-repeat;
   background-size: 36px 32px;
   background-position: 0 0;
 }
@@ -768,12 +773,12 @@ button:focus {
   height: 17px;
   overflow: hidden;
   text-indent: -999em;
-  background: url(/images/open-government-licence.png?0.19.1) 0 0 no-repeat;
+  background: url(/images/open-government-licence.png?0.19.2) 0 0 no-repeat;
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   #footer .footer-meta .footer-meta-inner .open-government-licence .logo a {
-    background-image: url(/images/open-government-licence_2x.png?0.19.1);
+    background-image: url(/images/open-government-licence_2x.png?0.19.2);
     background-size: 41px 17px;
   }
 }
@@ -825,7 +830,7 @@ button:focus {
 
 #footer .footer-meta .copyright a {
   display: block;
-  background-image: url(/images/govuk-crest.png?0.19.1);
+  background-image: url(/images/govuk-crest.png?0.19.2);
   background-repeat: no-repeat;
   background-position: 50% 0%;
   text-align: center;
@@ -841,7 +846,7 @@ button:focus {
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   #footer .footer-meta .copyright a {
-    background-image: url(/images/govuk-crest-2x.png?0.19.1);
+    background-image: url(/images/govuk-crest-2x.png?0.19.2);
     background-size: 125px 102px;
   }
 }
@@ -3110,6 +3115,10 @@ body.error {
   margin: 0;
 }
 
+.grid-row.sorting {
+  border-bottom: 1px solid #6f777b;
+}
+
 .column-fifth {
   padding: 0 15px;
   -webkit-box-sizing: border-box;
@@ -3919,6 +3928,25 @@ dl.standard-definition-list dd + dt {
   }
 }
 
+.highlight-panel {
+  background: #f8f8f8;
+  padding: 20px 0;
+}
+
+.highlight-panel-padded {
+  box-sizing: border-box;
+  line-height: 1.1em;
+  min-height: 80px;
+  padding: 0.52632em 0.78947em 0.26316em 0.78947em;
+}
+
+@media (max-width: 640px) {
+  .highlight-panel-padded {
+    margin-bottom: 15px;
+    min-height: auto;
+  }
+}
+
 /* SG
 
 # IFS/Pie chart basic
@@ -4472,7 +4500,7 @@ Large message panel
   clear: both;
 }
 
-.warning-alert, tr.form-group-row.error th:first-of-type, .upload-section.error {
+.warning-alert, tr.form-group-row.error > *:first-child, .upload-section.error {
   background: #f8f8f8 url("../images/warning-icon.png") 20px 50% no-repeat;
   padding: 20px 20px 10px 60px;
   border-left: 5px solid #b10e1e;
@@ -4670,7 +4698,7 @@ tr.form-group-row.error .error-message {
   display: none;
 }
 
-tr.form-group-row.error th:first-of-type {
+tr.form-group-row.error > *:first-child {
   background-position: 10px 50%;
   padding-left: 40px;
   margin: auto;
@@ -4989,8 +5017,8 @@ button.large,
 .button.large,
 input[type="button"].large {
   box-shadow: 0px 4px 0px #003618;
-  padding: 15px 45px;
   font-size: 18px;
+  padding: 15px 45px;
 }
 
 button.large.buttonlink, .assign-container .assign-button button.large,
@@ -5009,6 +5037,36 @@ button.large.buttonlink:hover, .assign-container .assign-button button.large:hov
 input[type="button"].large.buttonlink:hover,
 input[type="button"].large.buttonlink:focus {
   background: none;
+}
+
+button.button-clear,
+.button.button-clear,
+input[type="button"].button-clear {
+  background-color: transparent;
+  box-shadow: none;
+  color: #005ea5;
+  text-decoration: underline;
+}
+
+button.button-clear:hover, button.button-clear:focus,
+.button.button-clear:hover,
+.button.button-clear:focus,
+input[type="button"].button-clear:hover,
+input[type="button"].button-clear:focus {
+  background-color: transparent;
+  color: #000;
+  text-decoration: none;
+}
+
+button.button-small,
+.button.button-small,
+input[type="button"].button-small {
+  font-size: 16px;
+  padding: 5px 15px 3px;
+}
+
+table .button:last-child {
+  margin-right: 0;
 }
 
 .page-title {
@@ -5237,6 +5295,28 @@ span.no {
 
 .error-summary-list li:first-letter {
   text-transform: lowercase;
+}
+
+[data-selector-highlighter] {
+  background-color: #ccc;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 99;
+}
+
+[data-selector-highlighter] code {
+  background: black;
+  color: #fff;
+  line-height: 1.5;
+  box-sizing: content-box;
+  white-space: nowrap;
+  padding: 5px;
+  font-size: 1.5em;
+  width: 100%;
+  display: block;
+  min-height: 1.5em;
 }
 
 /* SG
@@ -5728,6 +5808,20 @@ span.status.waiting {
   background-size: 25px;
 }
 
+.search-filters {
+  background: #dee0e2;
+  margin-bottom: 40px;
+  padding: 20px;
+}
+
+.search-filters .form-control {
+  width: 100%;
+}
+
+.search-filters button {
+  margin: 20px 0 0 0;
+}
+
 /*
 ##11. Modals
 */
@@ -5992,6 +6086,20 @@ body [aria-hidden="true"] {
 
 .dl-pad dd {
   padding-bottom: 20px;
+}
+
+table .cell-align-top {
+  vertical-align: top;
+}
+
+table .width-40-percent {
+  box-sizing: border-box;
+  padding-right: 1em;
+  width: 40%;
+}
+
+table .width-40-percent .width-full {
+  width: 100%;
 }
 
 /* SG
@@ -7230,9 +7338,29 @@ The view is similar to the applications for assessment, but have a grey backgrou
   margin-bottom: 10px;
 }
 
+.guidance-row button.remove-guidance-row {
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .application-question-list dt,
 .application-question-list dd {
   margin-bottom: 15px;
+}
+
+.competition-setup select[disabled] {
+  background: #f8f8f8;
+  border: 1px solid #bfc1c3;
+  color: #0b0c0c;
+}
+
+[id="guidance-table"] td {
+  vertical-align: top;
+}
+
+[id="guidance-table"] td textarea {
+  margin: 0 !important;
 }
 
 .form-search {

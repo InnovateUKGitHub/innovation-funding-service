@@ -26,7 +26,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]
     Then The user should see the text in the page    Days left to submit
-    And the days remaining should be correct (Top of the page)    2017-01-28
+    And the days remaining should be correct (Top of the page)    2068-01-28
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540
@@ -43,7 +43,7 @@ Reject application (Unable to assess this application)
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
     [Tags]
-    When the user navigates to the assessor page    ${SERVER}/assessment/59
+    When the user navigates to the assessor page    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
     Then The user should see permissions error message
 
 *** Keywords ***
@@ -56,7 +56,7 @@ the user fills in rejection details
     And the user should see the element    id=rejectReason
     the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
     the user clicks the button/link    jquery=button:contains("Reject")
-    The user should see an error    Please enter a reason
+    The user should see an error    Please enter a reason.
     Select From List By Index    id=rejectReason    1
     the user should not see an error in the page
     The user enters text to a text field    id=rejectComment    Have conflicts with the area of expertise.

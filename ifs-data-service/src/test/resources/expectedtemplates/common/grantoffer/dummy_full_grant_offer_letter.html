@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="UTF-8"> </meta>
+    <title>Grant Offer Letter</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 1.5cm;
+            @top-center {
+                font-family: helvetica, arial, sans-serif;
+                font-size : 9pt;
+                content: "OFFICIAL"
+            }
+            @bottom-center {
+                font-family: helvetica, arial, sans-serif;
+                font-size : 9pt;
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+
+        @page:first {
+            margin: 1cm 1.5cm 1.5cm;
+
+            @top-center {
+                content: ""
+            }
+        }
+
+        @page land {
+            size:landscape;
+        }
+        body {
+            font-family: arial, helvetica, sans-serif;
+            font-size:10pt;
+            line-height:1.2;
+        }
+        .landscape {
+            page:land;
+        }
+        .page {
+            page-break-after: always;
+            width:100%;
+            display: block;
+        }
+        .page:last-child {
+            page-break-after: auto;
+        }
+        .textcenter {
+            text-align: center;
+        }
+        .textright {
+            text-align: right;
+        }
+        .bold,
+        em {
+            font-weight:bold;
+            font-style:normal;
+        }
+        h1,h2,h3 {
+            margin: 0;
+        }
+        h1 {
+            text-transform: uppercase;
+            font-size:10pt;
+            padding: 10pt 0;
+        }
+        h2 {
+            text-decoration:underline;
+            font-size:10pt;
+            padding: 10pt 0;
+        }
+        p {
+            margin:0;
+            padding:0;
+        }
+        p + p {
+            padding-top:10pt;
+        }
+        ul {
+            list-style:disc;
+            margin: 0;
+            padding:0 10pt 0 20pt;
+        }
+        ol {
+            list-style:lower-alpha;
+        }
+        ol ol {
+            list-style: lower-roman;
+        }
+        table {
+            margin:10px 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width:100%;
+        }
+        thead {
+            font-weight:bold;
+        }
+        th,
+        td {
+            padding: 0.1cm;
+            text-align: left;
+            border: 1px solid #000;
+        }
+        th.no-border,
+        td.no-border{
+            border:none;
+        }
+        .padding {
+            padding:5pt;
+        }
+        .signature {
+            margin-top:55pt;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="textcenter">
+        <!-- todo; figure out how we can make this a local url, relative paths don't work so would maybe sending the current environemnt url would work? -->
+        <img width="200" src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" />
+
+    </div>
+    <p>
+        Steve Smith<br/>
+        test2<br/>
+        Address1<br/>
+        Address2<br/>
+        Address3<br/>
+        TownCity<br/>
+        PostCode<br/>
+    </p>
+    <p class="bold">
+        Application number: 12334<br/>
+
+        Date: 12/21/2016
+    </p>
+    <p class="bold">
+        Dear Steve Smith,
+    </p>
+
+    <h1>Award confirmation letter</h1>
+    <p class="bold">
+        Steps to the future<br/>
+        Project Title: &lt;Time Machine&gt; &amp; &quot;Teleportation&quot;
+    </p>
+    <p>
+        I am pleased to inform you that subject to our standard Terms and Conditions,
+        as published on our Innovation Funding Service platform,
+        the Technology Strategy Board (operating as “Innovate UK”) hereby confirms its award of Grant funding towards the Project,
+        as permitted under section 5 of the Science and Technology Act 1965.
+    </p>
+    <p>
+        The confirmed total Grant amount, and individual allocations per Partner (if applicable), are detailed in the section ‘Eligible costs and grant allocations’.
+        These allocations reflect the outcome of financial reviews, undertaken by Innovate UK, of Project information submitted by the project team members as part of their application for funding, such reviews having been completed in consultation with the project team members.
+        The Grant profile included is therefore final, and is not subject to further negotiation. Any Special Conditions of Award, which supplement or override our standard Terms and Conditions, are included with this Letter in the annex.
+    </p>
+    <h2>Start and End Dates</h2>
+    <p>
+        In accordance with those submissions made as part of your application for funding,
+        we confirm that the Project shall commence on the <em>2016-12-26T15:23:02.409</em> and is expected to complete after 3,
+        subject to those provisions for suspension and/or withdrawal of funding outlined in our published Terms and Conditions.
+        Furthermore, you may only start work on the Project once you have completed the <em>Additional Acceptance Conditions</em> listed here under;
+        failure to do so may result in the Project being unable to start or,
+        in the event of project team members having commenced Project works before the Award has been confirmed,
+        any costs incurred during that period becoming ineligible for Grant.
+    </p>
+    <p>
+        Please note that your approved Project Start and End Dates may only be amended by seeking formal consent from Innovate UK for such a change through your nominated Monitoring Officer.
+    </p>
+    <h2>Additional Acceptance Conditions</h2>
+    <p>You must now:<br/>
+    <ul>
+        <li>accept this offer on behalf of all consortium partners (if any);</li>
+        <li>accept this offer of Grant by signing and uploading the Acceptance of Award using the digital service.</li>
+    </ul>
+    </p>
+    <p>
+        We wish you every success with your Project
+    </p>
+    <p>
+        Yours sincerely
+    </p>
+    <p>
+        Peter Hollinswaite<br/>
+        Head of Post-Award<br/>
+        On behalf of Innovate UK
+    </p>
+    <p class="textcenter"><br/>
+        Innovate UK is the trading name of the Technology Strategy Board <br/>
+        Innovate UK, North Star House, North Star Avenue, Swindon SN2 1UE <br/>
+        Tel:+44 (0)1793 442 700 <br/>
+        Email: support@innovateuk.org <br/>
+        www.innovateuk.gov.uk <br/>
+    </p>
+</div>
+<div class="page landscape">
+    <h1>Eligible cost and grant allocations</h1>
+    <p class="bold">
+        Application number: 12334<br/>
+        Date: 12/21/2016<br/>
+        Steps to the future<br/>
+        Project Title: &lt;Time Machine&gt; &amp; &quot;Teleportation&quot;
+    </p>
+    <table>
+        <thead>
+        <tr>
+            <th colspan="2" scope="col" class="no-border"></th>
+            <th colspan="2">2018/2019</th>
+            <th colspan="2">2016/2017</th>
+            <th colspan="2">2017/2018</th>
+            <th colspan="2" scope="col">Total</th>
+        </tr>
+        <tr>
+            <th scope="col">Organisation</th>
+            <th scope="col">% Grant</th>
+            <th scope="col">Eligible Cost (&#163;)</th>
+            <th scope="col">Grant available (&#163;)</th>
+            <th scope="col">Eligible Cost (&#163;)</th>
+            <th scope="col">Grant available (&#163;)</th>
+            <th scope="col">Eligible Cost (&#163;)</th>
+            <th scope="col">Grant available (&#163;)</th>
+            <!--  for the totals -->
+            <th scope="col">Eligible Cost (&#163;)</th>
+            <th scope="col">Grant available (&#163;)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Empire Ltd</td>
+            <td>20</td>
+            <td class="textright">1,000</td>
+            <td class="textright">1,000</td>
+            <td class="textright">1,200</td>
+            <td class="textright">1,200</td>
+            <td class="textright">1,100</td>
+            <td class="textright">1,100</td>
+            <td class="textright">3,300</td>
+            <td class="textright">3,300</td>
+        </tr>
+        <tr>
+            <td>Ludlow</td>
+            <td>30</td>
+            <td class="textright">1,000</td>
+            <td class="textright">1,000</td>
+            <td class="textright">1,200</td>
+            <td class="textright">1,200</td>
+            <td class="textright">1,100</td>
+            <td class="textright">1,100</td>
+            <td class="textright">3,300</td>
+            <td class="textright">3,300</td>
+        </tr>
+        <tr>
+            <td>EGGS</td>
+            <td>50</td>
+            <td class="textright">1,000</td>
+            <td class="textright">1,000</td>
+            <td class="textright">1,200</td>
+            <td class="textright">1,200</td>
+            <td class="textright">1,100</td>
+            <td class="textright">1,100</td>
+            <td class="textright">3,300</td>
+            <td class="textright">3,300</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td>Total (per annum)</td>
+            <td></td>
+            <td class="textright">2,300</td>
+            <td class="textright">2,300</td>
+            <td class="textright">3,000</td>
+            <td class="textright">3,000</td>
+            <td class="textright">2,600</td>
+            <td class="textright">2,600</td>
+            <td class="textright">7,900</td>
+            <td class="textright">7,900</td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="page">
+    <h1>Acceptance of award</h1>
+    <p class="bold">
+        Application number: 12334<br/>
+        Date: 12/21/2016<br/>
+        Innovate UK: Steps to the future<br/>
+        Project Title: &lt;Time Machine&gt; &amp; &quot;Teleportation&quot;
+    </p>
+    <p>
+        I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. I make the following declarations:
+    </p>
+    <ol>
+        <li>For the purposes of the offer:
+            <ol>
+                <li>Project Start Date 2016-12-26T15:23:02.409</li>
+                <li>Project Length  3 months</li>
+            </ol>
+        </li>
+    </ol>
+    <p>
+        For ease of administration, the Project Start Date should always lie on the start of a calendar month, and the Project End Date at the end of the last calendar month as defined by the Project Length.
+    </p>
+    <p class="signature">Signed: ………………………………………………………….</p>
+    <p>Director for and on behalf of test2</p>
+    <p class="signature">* insert name:.……………………………………......................... </p>
+    <p>Date: …………………………………………………………….</p>
+</div>
+</body>
+</html>

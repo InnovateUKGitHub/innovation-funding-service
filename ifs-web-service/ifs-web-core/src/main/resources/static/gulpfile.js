@@ -1,22 +1,62 @@
 // jshint ignore: start
-var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var jscs = require('gulp-jscs');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var sassLint = require('gulp-sass-lint');
+var gulp = require('gulp')
+var standard = require('gulp-standard')
+var uglify = require('gulp-uglify')
+var concat = require('gulp-concat')
+var sass = require('gulp-sass')
+var sassLint = require('gulp-sass-lint')
+var compass = require('compass-importer')
 var replace = require('gulp-replace');
-var compass = require('compass-importer');
+var filesExist = require('files-exist')
 
-var node_modules_path = __dirname + '/../../../../../node_modules/';
-var govuk_frontend_toolkit_path =  node_modules_path + 'govuk_frontend_toolkit/stylesheets';
-var govuk_template_toolkit_path =  node_modules_path + 'govuk_template_jinja/assets/stylesheets';
-var govuk_elements_sass_root =  node_modules_path + 'govuk-elements-sass/public/sass';
+// Path variables
+var nodeModulesPath = __dirname + '/../../../../../node_modules/'
+var govukFrontendToolkitPath =  nodeModulesPath + 'govuk_frontend_toolkit/stylesheets';
+var govukTemplateToolkitPath =  nodeModulesPath + 'govuk_template_jinja/assets/stylesheets';
+var govukElementsSassRoot =  nodeModulesPath + 'govuk-elements-sass/public/sass';
 
-gulp.task('default',['js','css']);
+var vendorJsFiles = [
+  nodeModulesPath + 'js-cookie/src/js.cookie.js',
+  nodeModulesPath + 'jquery/dist/jquery.js',
+  'js/vendor/jquery-ui/jquery-ui.min.js',
+  'js/vendor/govuk/*.js',
+  '!js/vendor/govuk/ie.js',
+  'js/vendor/wysiwyg-editor/*.js',
+  '!js/vendor/wysiwyg-editor/hallo-src/*.js'
+]
 
-//build all css
+gulp.task('default', ['js', 'css'])
+
+// build all js
+gulp.task('js', ['vendor', 'ifs-js'])
+
+// concat and minify all the ifs files
+gulp.task('ifs-js', function () {
+  return gulp.src([
+    'js/ifsCoreLoader.js',
+    'js/ifs_modules/*.js',
+    'js/ifs_pages/*.js',
+    'js/fire.js'
+  ])
+  .pipe(standard())
+  .pipe(concat('ifs.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('js/dest'))
+  .pipe(standard.reporter('default', {
+    breakOnError: true,
+    breakOnWarning: false,
+    quiet: false
+  }))
+})
+
+// concat and minify all the vendor files
+gulp.task('vendor', function () {
+  return gulp.src(filesExist(vendorJsFiles))
+  .pipe(concat('vendor.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('js/dest'))
+})
+
 gulp.task('css', function () {
   return gulp.src('./sass/**/*.scss')
     .pipe(sassLint({
@@ -31,9 +71,9 @@ gulp.task('css', function () {
     .pipe(sassLint.format())
     // .pipe(sassLint.failOnError())
     .pipe(sass({includePaths: [
-          govuk_frontend_toolkit_path,
-          govuk_template_toolkit_path,
-          govuk_elements_sass_root
+          govukFrontendToolkitPath,
+          govukTemplateToolkitPath,
+          govukElementsSassRoot
         ],
         importer: compass,
         outputStyle: 'expanded'
@@ -42,48 +82,11 @@ gulp.task('css', function () {
     .pipe(gulp.dest('./css'));
 });
 
-//build all js
-gulp.task('js',['vendor','ifs-js']);
-
-//concat and minify all the vendor files
-gulp.task('vendor',function(){
-  return gulp.src([
-    node_modules_path + 'jquery/dist/jquery.js',
-    node_modules_path + 'js-cookie/src/js.cookie.js',
-    'js/vendor/jquery-ui/jquery-ui.min.js',
-    'js/vendor/govuk/*.js',
-    '!js/vendor/govuk/ie.js',
-    'js/vendor/wysiwyg-editor/*.js',
-    '!js/vendor/wysiwyg-editor/hallo-src/*.js',
-  ])
-  .pipe(concat('vendor.min.js'))
-  .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
-});
-
-//concat and minify all the ifs files
-gulp.task('ifs-js', function () {
-  return gulp.src([
-    'js/ifsCoreLoader.js',
-    'js/ifs_modules/*.js',
-    'js/ifs_pages/*.js',
-    'js/fire.js'
-  ])
-  .pipe(jshint())
-  .pipe(jshint.reporter('jshint-stylish'))
-  // .pipe(jshint.reporter('fail'))
-  .pipe(jscs())
-  .pipe(jscs.reporter())
-  // .pipe(jscs.reporter('fail'))
-  .pipe(concat('ifs.min.js'))
-  .pipe(uglify())
-  .pipe(gulp.dest('js/dest'))
-});
 
 gulp.task('css:watch', function () {
-  gulp.watch('./sass/**/*.scss', ['css']);
-});
+  gulp.watch('./sass/**/*.scss', ['css'])
+})
 
 gulp.task('js:watch', function () {
-   gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js']);
-});
+  gulp.watch(['js/**/*.js', '!js/dest/*.js'], ['js'])
+})

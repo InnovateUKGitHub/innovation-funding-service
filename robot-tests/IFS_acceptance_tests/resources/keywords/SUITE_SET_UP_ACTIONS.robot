@@ -19,7 +19,7 @@ Login new application invite academic
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new academic application with the same user
     ...    AND    Delete the emails from both test mailboxes
-    ...    AND    Invite and accept the invitation        ${recipient}    ${subject}    ${pattern}
+    ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
     ...    AND    the user closes the browser
 
 new account complete all but one
@@ -69,7 +69,7 @@ the user marks the section as complete
     Wait Until Element Is Visible    css=#form-input-${form-id} .editor
     Input Text    css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
     Mouse Out    css=#form-input-${form-id} .editor
-    sleep    200ms
+    wait for autosave
     the user clicks the button/link    name=mark_as_complete
     the user clicks the button/link    css=.next
 
@@ -191,14 +191,14 @@ the user marks finances as complete
     the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
+    wait for autosave
 
 the user marks the finances as complete
     the user selects the checkbox    id=agree-terms-page
     the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
+    wait for autosave
 
 Make the finances ready for mark as complete
     Applicant navigates to the finances of the Robot application
@@ -219,4 +219,104 @@ The user marks the academic application finances as incomplete
     When The user navigates to the academic application finances
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
-    Sleep    1s
+    wait for autosave
+
+Create new application
+    Wait for autosave
+    go to    ${CREATE_APPLICATION_PAGE}
+    Input Text    id=application_name    Form test application
+    Click Element    css=#content > form > input
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+
+invite a registered user
+    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    the guest user opens the browser
+    the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link    jQuery=.button:contains("Create")
+    the user enters text to a text field    id=organisationSearchName    Innovate
+    the user clicks the button/link    id=org-search
+    the user clicks the button/link    LINK=INNOVATE LTD
+    the user selects the checkbox    address-same
+    the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user enters the details and clicks the create account    ${EMAIL_LEAD}
+    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    If you did not request an account with us
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link    jQuery=.button:contains("Sign in")
+    the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
+    the guest user clicks the log-in button
+    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    Input Text    name=organisations[1].organisationName    innovate
+    Input Text    name=organisations[1].invites[0].personName    Partner name
+    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
+    the user clicks the button/link    jQuery=.button:contains("Begin application")
+    the user should see the text in the page    Application overview
+    the user closes the browser
+    the guest user opens the browser
+
+we create a new user
+    [Arguments]    ${EMAIL_INVITED}
+    The user navigates to the page    ${COMPETITION_DETAILS_URL}
+    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Create account")
+    The user clicks the button/link    jQuery=.button:contains("Create")
+    The user enters text to a text field    id=organisationSearchName    Innovate
+    The user clicks the button/link    id=org-search
+    The user clicks the button/link    LINK=INNOVATE LTD
+    select Checkbox    address-same
+    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save")
+    The user enters the details and clicks the create account    ${EMAIL_INVITED}
+    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    If you did not request an account with us
+    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    The user clicks the button/link    jQuery=.button:contains("Sign in")
+    The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
+    The guest user clicks the log-in button
+    the user closes the browser
+
+the user follows the flow to register their organisation
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Create account")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=organisationSearchName    Innovate
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=INNOVATE LTD
+    And the user selects the checkbox    address-same
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+
+the user enters the details and clicks the create account
+    [Arguments]    ${REG_EMAIL}
+    Wait Until Page Contains Element    link=terms and conditions
+    Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
+    Input Text    id=firstName    Stuart
+    Input Text    id=lastName    ANDERSON
+    Input Text    id=phoneNumber    23232323
+    Input Text    id=email    ${REG_EMAIL}
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+the user fills the create account form
+    [Arguments]    ${NAME}    ${LAST_NAME}
+    Input Text    id=firstName    ${NAME}
+    Input Text    id=lastName    ${LAST_NAME}
+    Input Text    id=phoneNumber    0612121212
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
+    Select Checkbox    termsAndConditions
+    Submit Form

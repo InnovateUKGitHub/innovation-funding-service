@@ -104,9 +104,28 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.guidance-row button.remove-guidance-row {
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .application-question-list {
   dt,
   dd {
     margin-bottom: 15px;
+  }
+}
+.competition-setup {
+    select[disabled] {
+        background:  $grey-4;
+        border: 1px solid $border-colour;
+        color: $black;
+    }
+}
+
+[id="guidance-table"] td {
+  vertical-align:top;
+  textarea {
+    margin:0 !important; //strange bug where resizing sets a big margin in FF
   }
 }

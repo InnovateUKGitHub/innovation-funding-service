@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="app-overview">
+
+    <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+    <div th:include="fragments/layout :: body-start" th:remove="tag" />
+    <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+    <main id="content">
+
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your funding'})" th:remove="tag" />
+
+        <form>
+
+          <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+          	<div class="form-group">
+          		<label class="form-label" for="other-funding">
+          			<span class="heading-medium">Enter your funding level (maximum 50%)</span>
+          			<span class="form-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
+          		</label>
+          		<details>
+          		    <summary><span class="summary">What funding level should I enter?</span></summary>
+          		    <div class="panel-indent">
+          		    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
+          		    </div>
+          		</details>
+          		<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="" /> %
+          	</div>
+          </fieldset>
+
+          <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <dl class="readonly-data">
+              <dt>Your funding level</dt>
+              <dd>50%</dd>
+            </dl>
+          </th:block>
+
+          <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <h2 class="heading-medium no-margin-bottom">Other funding for this project</h2>
+            	<fieldset>
+            		<legend class="visuallyhidden">Other funding for this project</legend>
+            		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. You should also include details any offers of funding you have received.</p>
+            		<details>
+            			    <summary><span class="summary">What should I include in other funding?</span></summary>
+            			    <div class="panel-indent">
+            			    	You must provide details of other public funding that you are currently applying for (or have already applied for) in relation to this project. You do not need to include completed grants that were used to reach this point in the development process. This information is important as other public sector support counts as part of the funding you can receive for your project.
+            			    </div>
+            		</details>
+            		<div class="form-block inline">
+            			<label class="block-label" for="funding-yes">
+            				<input id="funding-yes" type="radio" name="funding-group" value="funding-yes"/>
+            				Yes
+            			</label>
+            			<label class="block-label" for="funding-no">
+            				<input id="funding-no" type="radio" name="funding-group" value="funding-no" checked="checked"/>
+            				No
+            			</label>
+            		</div>
+
+            		<div class="question" id="finance-other-funding">
+            			<div data-finance-subsection-table-container="34">
+            			    <div class="form-group">
+            			        <table>
+            			            <thead>
+            			                <tr>
+            			                    <th scope="col" id="funding-source">Source of funding</th>
+            			                    <th scope="col" class="width-large" id="funding-date">Date secured</th>
+            			                    <th scope="col" class="numeric width-medium" id="funding-amount">Funding amount (&pound;)</th>
+            			                </tr>
+            			            </thead>
+            			            <tbody>
+            			                <tr>
+            			                	<td>
+            			                		<label for="other-funding-source-1" class="visuallyhidden">Source of funding</label>
+            			                		<input type="text" id="other-funding-source-1" class="form-control width-full" aria-labelledby="funding-source" />
+            			                	</td>
+            			                	<td>
+            			                		<label for="other-funding-date-m-1" class="visuallyhidden">Date secured</label>
+            			                		<input type="text" id="other-funding-date-m-1" class="form-control width-small" placeholder="MM" aria-labelledby="funding-date" />
+            			                		<input type="text" id="other-funding-date-y-1" class="form-control width-small" placeholder="YYYY" aria-labelledby="funding-date" />
+            			                	</td>
+            			                	<td class="numeric">
+            			                		<label for="other-funding-amount-1" class="visuallyhidden">Funding amount (&pound;)</label>
+            			                		<input type="text" id="other-funding-amount-1" class="form-control width-full" aria-labelledby="funding-amount" />
+            			                	</td>
+            			                </tr>
+            			            </tbody>
+            			        </table>
+            			        <p class="alignright">
+            			            <a class="add-another-row" data-clone-rows="0" href="#">Add another source of funding</a>
+            			        </p>
+
+            			    </div>
+            			</div>
+            		</div>
+
+            	</fieldset>
+          </th:block>
+
+          <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+
+            <h2 class="heading-medium extra-margin-top">Other funding for this project</h2>
+
+            <table class="extra-margin-bottom">
+              <thead>
+                <tr>
+                  <th scope="col">Source of funding</th>
+                  <th scope="col">Date secured</th>
+                  <th scope="col" class="alignright">Funding amount (&pound;)</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th colspan="2" scope="row">Total other funding</th>
+                  <td class="numeric">34,000</td>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <th scope="row">National rail</th>
+                  <td>17 April 2016</td>
+                  <td class="numeric">34,000</td>
+                </tr>
+              </tbody>
+            </table>
+
+
+          </th:block>
+
+
+          <div class="form-group extra-margin-top" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset>
+              <label for="agree-terms" class="block-label">
+                <input id="agree-terms" value="agree-terms" type="checkbox"/>
+                As a member of this consortium I agree to the funding <a href="#">terms and conditions</a> set out by Innovate UK.
+              </label>
+            </fieldset>
+          </div>
+
+          <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <p>As a member of this consortium you have agreed to the <a href="#">terms and conditions</a> set out by Innovate UK.</p>
+          </th:block>
+
+          <div class="extra-margin">
+            <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+              <input type="hidden" name="status" value="readOnly" />
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
+              </button>
+            </th:block>
+
+            <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+              <a th:href="${#httpServletRequest.requestURI}">Edit your funding</a>
+            </th:block>
+          </div>
+
+      </form>
+
+      <div class="extra-margin">
+        <a href="/prototypes/4600-finances" class="button-secondary">Return to finances</a>
+      </div>
+
+      <ul class="pagination">
+          <li class="prev">
+              <a rel="prev" title="Navigate to previous part" href="/prototypes/4600-your-org">
+                  <span class="pagination-label">Previous</span>
+                  <span class="pagination-part-title">Your organisation</span>
+              </a>
+          </li>
+      </ul>
+
+        <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+        <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    </main>
+
+    <div th:include="fragments/layout :: footer" th:remove="tag" />
+    <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    <script type="text/javascript">
+
+      jQuery("input#agree-terms").on('click',function(e){
+        if ( jQuery(this).is(':checked') ) {
+          jQuery("#mark_as_complete").removeAttr('disabled');
+        }else{
+            jQuery("#mark_as_complete").attr('disabled', 'disabled');
+        }
+      });
+
+    	jQuery('input#funding-yes').on('click',function(e){
+    		//e.preventDefault();
+    		if ( jQuery(this).is(':checked') ) {
+    			jQuery("#finance-other-funding").show();
+    		}else{
+    			jQuery("#finance-other-funding").hide();
+    		}
+    	});
+
+    	jQuery('input#funding-no').on('click',function(e){
+    		//e.preventDefault();
+    		if ( jQuery(this).is(':checked') ) {
+    			jQuery("#finance-other-funding").hide();
+    		}else{
+    			jQuery("#finance-other-funding").show();
+    		}
+    	});
+
+    	jQuery('input#admin-support-radio-1').on('click',function(e){
+    		if ( jQuery(this).is(':checked') ) {
+    			jQuery("#admin-support-1").show();
+    			jQuery("#admin-support-2").hide();
+    			jQuery("#admin-support-3").hide();
+    			jQuery("#admin-support-4").hide();
+    		}
+    	});
+
+    	jQuery('input#admin-support-radio-2').on('click',function(e){
+    		if ( jQuery(this).is(':checked') ) {
+    			jQuery("#admin-support-1").hide();
+    			jQuery("#admin-support-2").show();
+    			jQuery("#admin-support-3").hide();
+    			jQuery("#admin-support-4").hide();
+    		}
+    	});
+
+    	jQuery('input#admin-support-radio-3').on('click',function(e){
+    		if ( jQuery(this).is(':checked') ) {
+    			jQuery("#admin-support-1").hide();
+    			jQuery("#admin-support-2").hide();
+    			jQuery("#admin-support-3").show();
+    			jQuery("#admin-support-4").hide();
+    		}
+    	});
+
+    	jQuery('input#admin-support-radio-4').on('click',function(e){
+    		if ( jQuery(this).is(':checked') ) {
+    			jQuery("#admin-support-1").hide();
+    			jQuery("#admin-support-2").hide();
+    			jQuery("#admin-support-3").hide();
+    			jQuery("#admin-support-4").show();
+    		}
+    	});
+
+    </script>
+
+</body>
+
+</html>

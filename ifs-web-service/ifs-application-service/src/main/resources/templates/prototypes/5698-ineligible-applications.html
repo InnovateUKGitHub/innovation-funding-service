@@ -21,7 +21,7 @@
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Ineligible applications'}, ${null})" th:remove="tag" />
 
-	<p class="extra-margin">The following applications have been marked as ineligible for assessment and have been removed from the list of applications for assessment. Unless otherwise stated the lead applicant has not been informed.</p>
+	<p class="extra-margin">The following applications have been marked as ineligible and removed from the assessment list. Unless otherwise stated, the lead applicant has not been informed.</p>
 
 	<div class="search-filters extra-margin">
 
@@ -66,23 +66,20 @@
 	</div>
 
 	<div class="grid-row sorting">
-		<div class="column-half">
+		<div class="column-two-thirds">
 			<h4><span class="heading-xlarge no-margin available">20</span> <strong>Applications</strong></h4>
 		</div>
-	</div>
-
-	<div class="table-actions-header">
-		<div class="table-actions-header-content">
-			<div>
-				<label class="form-checkbox form-label-bold" for="group-inform-one">
-					<input id="group-inform-one" value="group-inform-one" type="checkbox" />
-					Include all for group inform
-				</label>
-			</div>
-			<div>
-				<a href="#" class="button-secondary">Inform group</a>
-			</div>
-		</div>
+        <div class="column-third alignright">
+            <div class="form-group">
+                <label for="sort-by">Sort by</label>
+                <select name="sort-by" id="sort-by" class="form-control">
+                    <option value="Application number">Application number</option>
+                    <option value="Project title">Project title</option>
+                    <option value="Lead organisation">Lead organisation</option>
+                    <option value="Lead applicant">Lead applicant</option>
+                </select>
+            </div>
+        </div>
 	</div>
 
 	<div th:include="prototypes/fragments/manage-applications :: prototype-application-list10-table" th:remove="tag" />

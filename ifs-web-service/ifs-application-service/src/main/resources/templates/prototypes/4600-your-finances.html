@@ -23,31 +23,36 @@
 
         <h2 class="heading-medium extra-margin">Provide the project costs for 'Empire Ltd'</h2>
 
-        <p>Only your organisation can see this level of detail. All members of your organisation can acesss and edit your finances We recommend assigning completion of your finances to one member of your team. <a href="#">Find out which project costs are eligible.</a></p>
+        <p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team. <a href="#">Find out which project costs are eligible.</a></p>
 
         <div class="collapsible section-overview">
 
             <h2>Labour<span data-mirror="#section-total-1">&pound; 126,207</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
-
-            <h2>Administration support costs <span data-mirror="#section-total-2">&pound; 0</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:remove="tag" />
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+            <h2>Overheads <span data-mirror="#section-total-2">&pound; 0</span></h2>
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Materials<span data-mirror="#section-total-3">&pound; 10,076</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:remove="tag" />
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-materials" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Capital usage <span data-mirror="#section-total-4">&pound; 0</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-capital" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Subcontracting <span data-mirror="#section-total-5">&pound; 150,000</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
-            <h2>Travel &amp; subsistence <span data-mirror="#section-total-6">&pound; 0</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
+            <h2>Travel and subsistence <span data-mirror="#section-total-6">&pound; 0</span></h2>
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-travel" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Other costs <span data-mirror="#section-total-3">&pound; 0</span></h2>
-            <div th:include="prototypes/fragments/finance-questions :: finance-question-other" th:remove="tag" />
-
+              <th:block th:include="prototypes/fragments/finance-questions :: finance-question-other" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:include="prototypes/fragments/finance-review-questions :: finance-question-other" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
         </div>
 
         <div class="grid-row total-cost">
@@ -59,12 +64,35 @@
             </div>
         </div>
 
-        <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
+        <!-- <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" /> -->
+        <form class="extra-margin-bottom">
+          <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset>
+              <label for="org-eligible" class="block-label">
+                <input id="org-eligible" value="org-eligible" type="checkbox" />
+                I confirm that the project costs entered for my organisation are eligible.
+              </label>
+            </fieldset>
+          </div>
 
-        <div class="alignright-button extra-margin">
-            <button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
-		</button>
-        </div>
+          <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <p>All project costs have been confirmed by your organisation as eligible for funding</p>
+          </th:block>
+
+          <div class="extra-margin">
+            <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+              <input type="hidden" name="status" value="readOnly" />
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
+              </button>
+            </th:block>
+
+            <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+              <a th:href="${#httpServletRequest.requestURI}">Edit your project costs</a>
+            </th:block>
+          </div>
+        </form>
+
+        <a href="/prototypes/4600-finances" class="button-secondary">Return to finances</a>
 
         <ul class="pagination">
             <li class="next">
@@ -75,9 +103,6 @@
             </li>
         </ul>
 
-        <a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
-
-
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
         <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -86,6 +111,20 @@
     <div th:include="fragments/layout :: footer" th:remove="tag" />
     <div th:include="fragments/layout :: body-end" th:remove="tag" />
     <script type="text/javascript">
+
+      jQuery("input#org-eligible").on('click',function(e){
+        if ( jQuery(this).is(':checked') ) {
+          jQuery("#mark_as_complete").removeAttr('disabled');
+        }else{
+            jQuery("#mark_as_complete").attr('disabled', 'disabled');
+        }
+      });
+
+      jQuery("input[name='userType']").on('click',function(e){
+        if ( jQuery(this).is(':checked') ) {
+          jQuery("#continue").removeAttr('disabled');
+        }
+      });
 
     	jQuery('input#funding-yes').on('click',function(e){
     		//e.preventDefault();

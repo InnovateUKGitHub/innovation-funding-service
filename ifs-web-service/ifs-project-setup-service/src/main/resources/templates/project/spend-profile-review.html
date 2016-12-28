@@ -19,9 +19,15 @@
         <h1 class="heading-xlarge">Spend Profile</h1>
     </div>
 
-    <div th:if="${model.submitted}" th:remove="tag">
+    <div th:if="${model.submitted and !model.approved}" th:remove="tag">
         <div class="success-alert extra-margin-bottom">
-            <p><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
+            <p><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
+        </div>
+    </div>
+
+    <div th:if="${model.submitted and model.approved}" th:remove="tag">
+        <div class="success-alert extra-margin-bottom">
+            <p><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
         </div>
     </div>
 
@@ -29,8 +35,10 @@
 
     <div th:if="${model.submitted}" th:remove="tag">
         <h2 class="heading-medium">Profile spend</h2>
-        <p>All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application.
-           You may view the submitted spend profiles.</p>
+        <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
+           You may view these profiles.</p>
+        <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
+            You may view these profiles.</p>
 
         <a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
 

@@ -35,7 +35,7 @@
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:remove="tag" />
 
-		<h2>Administration support costs
+		<h2>Overheads
     		<span data-mirror="#section-total-2">&pound; 0</span>
        	</h2>
 		<div th:include="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:remove="tag" />
@@ -73,6 +73,70 @@
 	<p>This refers to other public funding that you have told us about.</p>
 
 	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" th:remove="tag" />
+
+  <th:block th:unless="${param.org != null and param.org[0] == 'growth'}">
+    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+      <dt>Organisation size</dt>
+      <dd>Medium</dd>
+
+      <dt>Turnover</dt>
+      <dd>&pound;12,000,000</dd>
+
+      <dt>Full time employees</dt>
+      <dd>340</dd>
+    </dl>
+  </th:block>
+
+  <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+      <dt>Organisation size</dt>
+      <dd>Medium</dd>
+    </dl>
+  </th:block>
+
+  <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+
+    <h2 class="heading-medium">Organisation's projected growth</h2>
+
+    <div class="grid-row">
+      <div class="column-half">
+        <div class="table-overflow extra-margin-bottom">
+          <table class="extra-margin-bottom">
+            <thead>
+              <tr>
+                <th scope="col">Section</th>
+                <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="annual-turnover">Annual Turnover</td>
+                <td class="numeric">200,000</td>
+              </tr>
+              <tr>
+                <td id="annual-profit">Annual Profit</td>
+                <td class="numeric">50,000</td>
+              </tr>
+              <tr>
+                <td id="annual-exports">Annual Exports</td>
+                <td class="numeric">50,000</td>
+              </tr>
+              <tr>
+                <td id="research">Research and development spend</td>
+                <td class="numeric">20,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <dl class="readonly-data extra-margin-bottom">
+      <dt>Full time employees</dt>
+      <dd>42</dd>
+    </dl>
+  </th:block>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

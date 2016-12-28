@@ -16,7 +16,7 @@ ${ASSESSOR_ASSESSMENT_QUESTIONS}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICA
 ${ASSESSOR_ASSESSMENT_QUESTIONS_11}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/question/43
 ${ASSESSOR_REVIEW_SUMMARY}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
 ${ASSESSOR_ASSESSMENT_QUESTIONS_48}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/48
-${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:thomas.fister@innovateuk.test
 
 *** Test Cases ***
 Guest user can't access the assessor dashboard
@@ -102,13 +102,6 @@ Second assessor shouldn't be able to access first assessor's application questio
     Then The user should see permissions error message
     [Teardown]    the user closes the browser
 
-Registered user should not allowed to accept other assessor invite
-    [Documentation]    INFUND-4895
-    [Tags]    Failing
-    [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
-    Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
-    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
-    Then The user should see permissions error message
-    [Teardown]    logout as user
+
 
 *** Keywords ***

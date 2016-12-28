@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
 </head>
-<body th:with="context='comp-management'" class="competition-management finance-checks-overview">
+<body th:with="context='project-management'" class="competition-management finance-checks-overview">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -21,7 +21,7 @@
           </div>
       </div>
       <div class="column-third alignright extra-margin">
-          <h2 class="bold-small blue-block">Finance Checks</h2>
+          <h2 class="bold-small blue-block">Finance checks</h2>
       </div>
   </div>
   <hr/>
@@ -58,24 +58,39 @@
       <thead>
         <tr>
           <th scope="col">Organisation</th>
+          <th scope="col">Viability</th>
+          <th scope="col">RAG</th>
           <th scope="col">Eligibility</th>
         </tr>
       </thead>
       <tbody>
-        <tr th:each="orgDetails : ${model.financeCheckSummaryResource.partnerStatusResources}">
+        <tr th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
             <th scope="row" th:text="${orgDetails.name}" />
-            <td><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}" th:text="${#strings.toLowerCase(orgDetails.eligibility.name())}" /></td>
+            <td>
+                <a th:if="${!orgDetails.viability.notApplicable}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                   th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                   th:classappend="${'viability-' + status.index}"/>
+
+                <span th:if="${orgDetails.viability.notApplicable}"
+                      th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                      th:classappend="${'viability-' + status.index}"></span>
+            </td>
+            <td th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
+                th:classappend="${'viability-rag-' + status.index}">Green</td>
+            <td><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                   th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
+                   th:classappend="${'eligibility-' + status.index}"/></td>
         </tr>
       </tbody>
   </table>
 
     <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}" th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
         <h3 class="heading-medium">Generate spend profile</h3>
-        <p>To get your spend profile, both viability and eligibility sections above must be approved for all partners.</p>
-        <p>This will then create individual flat profile spends for partners. Partners can edit their profile spends during the course of the project.</p>
+        <p>To get your spend profile, both viability and eligibility sections must be approved for all partners.</p>
+        <p>This will generate flat profile spends. Partners can edit their profile spends during the course of the project.</p>
 
-        <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled" class="button" >Generate Spend Profile</button>
-        <a th:unless="${model.showDisabledGenerateSpendProfilesButton}" th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}" data-js-modal="generate-spend-profile" class="button" >Generate Spend Profile</a>
+        <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled" class="button generate-spend-profile-main-button">Generate spend profile</button>
+        <a th:unless="${model.showDisabledGenerateSpendProfilesButton}" th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}" data-js-modal="generate-spend-profile" class="button generate-spend-profile-main-button">Generate spend profile</a>
         <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"  th:include="fragments/modals :: generate-spend-profile" />
     </form>
 

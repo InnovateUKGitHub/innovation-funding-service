@@ -176,7 +176,7 @@
                 <button type="button" class="js-close button buttonlink large">Cancel</button>
             </div>
             <div class="column-half alignright-button" method="post">
-                <button class="button large" name="submit-app-details">Generate spend profile</button>
+                <button id="generate-spend-profile-modal-button" class="button large" name="submit-app-details">Generate spend profile</button>
             </div>
         </div>
     </div>
@@ -311,12 +311,12 @@
 <div th:fragment="modal-confirm-grant-offer-letter">
     <div class="modal-confirm-grant-offer-letter" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
-        <h2 class="heading-medium no-margin">Confirm submission</h2>
-        <p>Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
+        <h2 class="heading-medium no-margin">Send to Innovate UK</h2>
+        <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
         <hr/>
         <div class="alignright-button">
             <button type="button" class="js-close button buttonlink large">Cancel</button>
-            <button class="button large" name="confirmSubmit">Confirm Submission</button>
+            <button class="button large" name="confirmSubmit">Send to Innovate UK</button>
         </div>
     </div>
 </div>
@@ -378,7 +378,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <div>
             <h2 class="heading-medium no-margin">Send grant offer letter</h2>
-            <p>The grant offer letter will now be sent to the applicants. The Project Manager will be informed by email.</p>
+            <p>The Project Manager will be told by email.</p>
             <hr />
             <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
                 <div class="column-half">
@@ -388,6 +388,42 @@
                     <button class="button large" type="submit">Send to project team</button>
                 </div>
             </form>
+        </div>
+    </div>
+</th:block>
+
+<!-- Confirmation of accepting signed grant offer letter -->
+<th:block th:fragment="modal-accept-signed-gol">
+    <div class="modal-accept-signed-gol" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <div>
+            <h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
+            <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
+            <hr />
+            <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed/APPROVED'}" method="post">
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large"  type="submit">Accept signed grant offer letter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<!-- confirmation of viability-->
+<th:block th:fragment="modal-confirm-viability">
+    <div class="modal-confirm-viability" role="dialog" aria-hidden="true">
+        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <h2 class="heading-medium no-margin-top">Confirm viability</h2>
+        <p>This partner will now be marked as viable for this project.</p>
+        <hr/>
+        <div class="column-half">
+            <button class="buttonlink js-close" type="button">Cancel</button>
+        </div>
+        <div class="column-half alignright-button">
+            <button class="button" name="confirm-viability">Confirm viability</button>
         </div>
     </div>
 </th:block>

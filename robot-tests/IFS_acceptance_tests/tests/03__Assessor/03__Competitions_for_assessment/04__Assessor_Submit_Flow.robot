@@ -33,7 +33,7 @@ Summary:All the sections are present
     [Tags]    HappyPath
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     and The user clicks the button/link    link=Intelligent Building
-    and The user clicks the button/link    jQuery=.button:contains("Review assessment")
+    and The user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
     Then The user should see the element    jQuery=h2:contains("Overall scores")
     And The user should see the element    jQuery=h2:contains("Review assessment")
     And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
@@ -44,7 +44,7 @@ Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    Days left to submit
-    And the days remaining should be correct (Top of the page)    2017-01-28
+    And the days remaining should be correct (Top of the page)    2068-01-28
 
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
@@ -80,7 +80,7 @@ Summary:Questions should show as complete
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/4
     Given The user clicks the button/link    link=Intelligent Building
     And the user adds score and feedback for every question
-    When the user clicks the button/link    link=Review assessment
+    When the user clicks the button/link    link=Review and complete your assessment
     Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Complete
     And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Complete
     And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Complete
@@ -148,7 +148,7 @@ Summary:Assessor should be able to re-edit before submit
     When the user selects the option from the drop-down menu    8    id=assessor-question-score
     And the user enters text to a text field    css=.editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
-    And the user clicks the button/link    jQuery=a:contains(Review assessment)
+    And the user clicks the button/link    jQuery=a:contains(Review and complete your assessment)
     When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
@@ -161,12 +161,12 @@ Summary:Funding Decision Validations
     ...    INFUND-5228
     [Tags]
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    And The user should see an error    Please indicate your decision
+    And The user should see an error    Please indicate your decision.
     And The user enters text to a text field    id=feedback    ${EMPTY}
     And The user enters text to a text field    id=comment    ${EMPTY}
     Then the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should see an error    Please enter your feedback
+    Then The user should see an error    Please enter your feedback.
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485
@@ -177,9 +177,10 @@ Summary:Word count check(Your feedback)
     ...
     ...    INFUND-5179
     [Tags]    HappyPath
+    [Setup]    browser validations have been disabled
     When the user enters multiple strings into a text field    id=feedback    test    5001
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    This field cannot contain more than 5,000 characters
+    Then the user should see an error    This field cannot contain more than 5,000 characters.
     When the user enters text to a text field    id=feedback    a a a a a a a a a a a a a a a a a a \ a a \ a a a \ a a a a a \ a a aa \ a a a a a \ a a a a a a a a \ a a a a a \ a a a \ a a a \ a a a \ a a a a \ a \ a a a a \ a a \ a a aa \ a a a a a a a a a a \ a a a a a \ aa a a a a a a a a a a a a a a
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
@@ -236,7 +237,7 @@ User Saves the Assessment as Not Recommended
     [Setup]
     Given The user clicks the button/link    link=Park living
     And the user adds score and feedback for every question
-    And the user clicks the button/link    jQuery=.button:contains("Review assessment")
+    And the user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
     When the user selects the radio button    fundingConfirmation    false
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)

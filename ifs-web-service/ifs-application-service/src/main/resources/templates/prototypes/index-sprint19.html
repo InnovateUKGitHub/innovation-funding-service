@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint19'"  th:remove="tag" />
+
+	<h1 class="heading-large">Sprint 19</h1>
+
+    <section>
+      <h2 class="heading-medium">INFUND-6607 Online style guide cleanup</h2>
+      <ul class="list-bullet">
+        <li><a href="/prototypes/prot-styles">INFUND-6726</a> Prototype style guide</li>
+      </ul>
+    </section>
+
+		<section>
+			<h2 class="heading-medium">Applicant</h2>
+
+			<ul class="list-bullet">
+
+				<li><a href="/prototypes/4600-your-finances">INFUND-6064</a> As an applicant I want to apply for a custom Overhead percentage so that my grant is accurate</li>
+                <li><a href="/prototypes/5452-application-details">INFUND-6800</a> Update Project details to support selecting research area</li>
+
+        <li>
+          <h3 class="heading-small">INFUND-6618</h3>
+          <p>Update finance checks, to ensure prototype is in its origional finished state allowing developers to pick up a completed design</p>
+          <list class="bullet">
+            <li><a href="/prototypes/4600-finances?status=initialView">INFUND-6804</a> Finances view on first load</li>
+            <li><a href="/prototypes/4600-finances">INFUND-6805</a> Updates to default finance page</li>
+            <li><a href="/prototypes/4600-your-finances">INFUND-6806</a> Updates to your project costs</li>
+            <li><a href="/prototypes/4600-your-org">INFUND-6807</a> Updates to standard your organisation page</li>
+            <li><a href="/prototypes/4600-your-org?org=growth">INFUND-6808</a> Updates to your organisation - Projected growth view</li>
+            <li><a href="/prototypes/6618-your-funding">INFUND-6809</a> Creation of your funding page</li>
+          </list>
+        </li>
+
+			</ul>
+
+		</section>
+
+    <section>
+
+      <h2 class="heading-medium">Comps team</h2>
+
+      <ul class="list-bullet">
+        <li>
+          <h3 class="heading-small">INFUND-1561</h3>
+          <p>As a comps team I need to be able to input the outcome of the funders panel by marking successful projects within IFS</p>
+
+          <ul class="list-bullet">
+            <li><a href="/prototypes/5721-dashboard?status=panel">INFUND-6981</a> Updates to Panel dashboard</li>
+            <li><a href="/prototypes/5721-dashboard?status=Inform">INFUND-6981</a> Updates to Inform dashboard</li>
+          </ul>
+
+        </li>
+      </ul>
+
+    </section>
+
+
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

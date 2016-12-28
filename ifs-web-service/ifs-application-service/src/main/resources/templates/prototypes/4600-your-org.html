@@ -19,153 +19,359 @@
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation size'})" th:remove="tag" />
+
+        <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+          <h2 class="heading-small no-margin">Organisation size determines funding</h2>
+          <p>The organisation size is used to calculate your funding level in the application.</p>
+          <p>Changing this selection will reset your funding level.</p>
+        </div>
 
         <form action="#">
 
-          <fieldset th:unless="${param.org != null and param.org[0] == 'growth'}">
+          <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset class="extra-margin-bottom">
+              <legend class="heading-medium no-margin-bottom">Organisation size</legend>
+              <p class="form-hint">To determine the level of funding you are eligible to receive, please provide your business size using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
+              <div class="form-block">
+                <label class="block-label" for="radio-1">
+                  <input id="radio-1" type="radio" name="radio-group" value="Micro"/>
+                  Micro / small
+                </label>
+                <label class="block-label" for="radio-2">
+                  <input id="radio-2" type="radio" name="radio-group" value="Medium"/>
+                  Medium
+                </label>
+                <label class="block-label" for="radio-3">
+                  <input id="radio-3" type="radio" name="radio-group" value="Large"/>
+                  Large
+                </label>
+              </div>
+            </fieldset>
+          </th:block>
 
-            <legend class="heading-large">Staff count and turnover</legend>
+          <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <th:block th:unless="${param.org != null and param.org[0] == 'growth'}">
+              <dl class="readonly-data">
+                <dt>Organisation size</dt>
+                <dd>Medium</dd>
 
-            <div class="form-group">
-              <label for="staff-count" class="form-label-bold">
-                Staff count
-                <span class="form-hint">Number of full time employees at your organisation.</span>
-              </label>
-              <input type="text" class="form-control" id="staff-count" name="staff-count" />
-            </div>
+                <dt>Staff count</dt>
+                <dd>340</dd>
+
+                <dt>Turnover</dt>
+                <dd>&pound;12,000,000</dd>
+              </dl>
+            </th:block>
+
+            <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+              <dl class="readonly-data">
+                <dt>Organisation size</dt>
+                <dd>Medium</dd>
+                <dt>End of last financial year</dt>
+                <dd>October 2016</dd>
+              </dl>
+            </th:block>
+
+
+          </th:block>
+            <!--<fieldset th:unless="${param.org != null and param.org[0] == 'growth' or param.status != null and param.status[0] == 'readOnly'}">-->
+
+          <fieldset th:unless="${param.org != null and param.org[0] == 'growth' or param.status != null and param.status[0] == 'readOnly'}">
+
+            <legend class="heading-medium visuallyhidden">Full time employees and turnover</legend>
 
             <div class="form-group">
               <label for="turnover" class="form-label-bold">
-                Turnover
-                <span class="form-hint">Your turnover from your last financial year.</span>
+                Turnover (&pound;)
+                <span class="form-hint">Your turnover from the last financial year.</span>
               </label>
-              <input type="text" class="form-control" id="turnover" name="turnover" />
+              <input type="text" class="form-control width-medium" id="turnover" name="turnover" />
+            </div>
+            <div class="form-group">
+              <label for="staff-count" class="form-label-bold">
+                Full time employees
+                <span class="form-hint">Number of full time employees at your organisation.</span>
+              </label>
+              <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
             </div>
 
           </fieldset>
 
           <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
-            <fieldset>
+            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="extra-margin-bottom">
+                <legend class="heading-medium no-margin-bottom">End of last financial year</legend>
+                <span class="form-hint">Enter the month and year that your last financial year finished.<br />For example: 12 2016</span>
+                <div class="date-group extra-margin">
+                    <div class="month">
+                        <label class="form-label" for="start-month">
+                            <div>Month</div>
+                        </label>
+                        <input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
+                    </div>
 
-              <legend class="heading-large no-margin-bottom">Projected growth</legend>
-
-              <p>Details relating to your projected growth for the next 5 years.</p>
-
-              <details>
-                <summary><span class="summary">What we need from the projected growth?</span></summary>
-                <div class="panel-indent">
-                  <p>
-                    GUIDANCE TEXT REQUIRED
-                  </p>
+                    <div class="year">
+                        <label class="form-label" for="start-year">
+                            <div>Year</div>
+                        </label>
+                        <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
+                    </div>
                 </div>
-              </details>
-
-                <div class="table-overflow extra-margin-bottom">
+            </fieldset>
+            <fieldset>
+              <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="heading-medium no-margin-bottom">Financial overview</legend>
+              <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="form-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}"  />
+              <h2 th:if="${param.status != null and param.status[0] == 'readOnly'}" class="heading-small">Financial overview</h2>
+              <div class="grid-row">
+                <div class="column-half">
                   <table class="extra-margin-bottom">
                     <thead>
                       <tr>
-                        <th></th>
-                        <th scope="col" id="current">Current</th>
-                        <th scope="col" id="1-year">1 year</th>
-                        <th scope="col" id="3-plus-years">3+ years</th>
-                        <th scope="col" id="5-plus-years">5+ years</th>
-                        <th scope="col" id="percent-related">Proportion related to project (%)</th>
+                        <th scope="col">Section</th>
+                        <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody th:unless="${param.status != null and param.status[0] == 'readOnly'}">
                       <tr>
-                        <th scope="row" id="turnover">Annual turnover</th>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover current" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover 1-year" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover 3-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover 5-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover percent-related" /></td>
+                        <td id="annual-turnover">Annual Turnover</td>
+                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-turnover" /></td>
                       </tr>
                       <tr>
-                        <th scope="row" id="profit">Annual profit</th>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="profit current" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="profit 1-year" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="profit 3-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="profit 5-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="profit percent-related" /></td>
+                        <td id="annual-profit">Annual Profit</td>
+                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-profit" /></td>
                       </tr>
                       <tr>
-                        <th scope="row" id="exports">Exports</th>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover current" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover 1-year" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover 3-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover 5-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="turnover percent-related" /></td>
+                        <td id="annual-exports">Annual Exports</td>
+                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-exports" /></td>
                       </tr>
                       <tr>
-                        <th scope="row" id="research">Research and development spend as a percentage of annual turnover</th>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="research current" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="research 1-year" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="research 3-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="research 5-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="research percent-related" /></td>
+                        <td id="research">Research and development spend</td>
+                        <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year research" /></td>
+                      </tr>
+                    </tbody>
+                    <tbody th:if="${param.status != null and param.status[0] == 'readOnly'}">
+                      <tr>
+                        <td id="annual-turnover">Annual Turnover</td>
+                        <td class="numeric">200,000</td>
                       </tr>
                       <tr>
-                        <th scope="row">Research and development (Spend value)</th>
-                        <td>&pound;0</td>
-                        <td>&pound;0</td>
-                        <td>&pound;0</td>
-                        <td>&pound;0</td>
-                        <td>0%</td>
+                        <td id="annual-profit">Annual Profit</td>
+                        <td class="numeric">50,000</td>
                       </tr>
                       <tr>
-                        <th scope="row" id="staff-count">Staff count</th>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="staff-count current" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="staff-count 1-year" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="staff-count 3-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="staff-count 5-plus-years" /></td>
-                        <td><input type="text" class="form-control width-full" aria-labelledby="staff-count percent-related" /></td>
+                        <td id="annual-exports">Annual Exports</td>
+                        <td class="numeric">50,000</td>
+                      </tr>
+                      <tr>
+                        <td id="research">Research and development spend</td>
+                        <td class="numeric">20,000</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-
+              </div>
+              <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+                  <label for="staff-count" class="form-label-bold">
+                      Full time employees
+                      <span class="form-hint">Number of full time employees at your organisation at the end of the last financial year.</span>
+                  </label>
+                  <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
+              </div>
             </fieldset>
+
+            <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+              <dl class="readonly-data extra-margin-bottom">
+                <dt>Full time employees</dt>
+                <dd>42</dd>
+              </dl>
+            </th:block>
+
+            <!--<fieldset>-->
+
+              <!--<legend class="heading-large no-margin-bottom">Projected growth</legend>-->
+
+              <!--<p>Details relating to your projected growth for the next 5 years.</p>-->
+
+              <!--<details th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                <!--<summary><span class="summary">What we need from the projected growth?</span></summary>-->
+                <!--<div class="panel-indent">-->
+                  <!--<p>-->
+                    <!--GUIDANCE TEXT REQUIRED-->
+                  <!--</p>-->
+                <!--</div>-->
+              <!--</details>-->
+
+
+
+                <!--<div class="table-overflow extra-margin-bottom">-->
+                  <!--<table class="extra-margin-bottom">-->
+                    <!--<thead>-->
+                      <!--<tr>-->
+                        <!--<th></th>-->
+                        <!--<th scope="col" class="alignright width-small" id="current">Current</th>-->
+                        <!--<th scope="col" class="alignright width-small" id="1-year">1 year</th>-->
+                        <!--<th scope="col" class="alignright width-small" id="3-plus-years">3+ years</th>-->
+                        <!--<th scope="col" class="alignright width-small" id="5-plus-years">5+ years</th>-->
+                        <!--<th scope="col" class="alignright" id="percent-related">Proportion related to project (%)</th>-->
+                      <!--</tr>-->
+                    <!--</thead>-->
+                    <!--<tbody>-->
+                      <!--<tr>-->
+                        <!--<th scope="row" id="turnover">Annual turnover (&pound;)</th>-->
+                        <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover current" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 1-year" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 3-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 5-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover percent-related" /></td>-->
+                        <!--</th:block>-->
+
+                        <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric" aria-labelledby="turnover current">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover 1-year">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover 3-plus-years">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover 5-plus-years">12,000</td>-->
+                          <!--<td class="numeric">12%</td>-->
+                        <!--</th:block>-->
+
+
+                      <!--</tr>-->
+                      <!--<tr>-->
+                        <!--<th scope="row" id="profit">Annual profit (&pound;)</th>-->
+                        <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit current" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit 1-year" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit 3-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit 5-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="profit percent-related" /></td>-->
+                        <!--</th:block>-->
+
+                        <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric" aria-labelledby="profit current">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="profit 1-year">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="profit 3-plus-years">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="profit 5-plus-years">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="profit percent-related">12%</td>-->
+                        <!--</th:block>-->
+                      <!--</tr>-->
+                      <!--<tr>-->
+                        <!--<th scope="row" id="exports">Exports (&pound;)</th>-->
+                        <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover current" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 1-year" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 3-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover 5-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="turnover percent-related" /></td>-->
+                        <!--</th:block>-->
+
+                        <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric" aria-labelledby="turnover current">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover 1-year">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover 3-plus-years">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover 5-plus-years">12,000</td>-->
+                          <!--<td class="numeric" aria-labelledby="turnover percent-related">12%</td>-->
+                        <!--</th:block>-->
+                      <!--</tr>-->
+                      <!--<tr>-->
+                        <!--<th scope="row" id="research">Research and development spend as a percentage of annual turnover</th>-->
+                        <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research current" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research 1-year" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research 3-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research 5-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="research percent-related" /></td>-->
+                        <!--</th:block>-->
+
+                        <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric" aria-labelledby="research current">12%</td>-->
+                          <!--<td class="numeric" aria-labelledby="research 1-year">12%</td>-->
+                          <!--<td class="numeric" aria-labelledby="research 3-plus-years">12%</td>-->
+                          <!--<td class="numeric" aria-labelledby="research 5-plus-years">12%</td>-->
+                          <!--<td class="numeric" aria-labelledby="research percent-related">12%</td>-->
+                        <!--</th:block>-->
+                      <!--</tr>-->
+                      <!--<tr>-->
+                        <!--<th scope="row">Research and development (Spend value)</th>-->
+                        <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric">&pound;0</td>-->
+                          <!--<td class="numeric">&pound;0</td>-->
+                          <!--<td class="numeric">&pound;0</td>-->
+                          <!--<td class="numeric">&pound;0</td>-->
+                          <!--<td class="numeric">0%</td>-->
+                        <!--</th:block>-->
+
+                        <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric">12,000</td>-->
+                          <!--<td class="numeric">12,000</td>-->
+                          <!--<td class="numeric">12,000</td>-->
+                          <!--<td class="numeric">12,000</td>-->
+                          <!--<td class="numeric">12%</td>-->
+                        <!--</th:block>-->
+                      <!--</tr>-->
+                      <!--<tr>-->
+                        <!--<th scope="row" id="staff-count">Staff count</th>-->
+                        <!--<th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count current" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count 1-year" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count 3-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count 5-plus-years" /></td>-->
+                          <!--<td class="numeric"><input type="text" class="form-control width-full" aria-labelledby="staff-count percent-related" /></td>-->
+                        <!--</th:block>-->
+
+                        <!--<th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">-->
+                          <!--<td class="numeric" aria-labelledby="staff-count current" >340</td>-->
+                          <!--<td class="numeric" aria-labelledby="staff-count 1-year" >340</td>-->
+                          <!--<td class="numeric" aria-labelledby="staff-count 3-plus-years" >340</td>-->
+                          <!--<td class="numeric" aria-labelledby="staff-count 5-plus-years" >340</td>-->
+                          <!--<td class="numeric" aria-labelledby="staff-count percent-related" >12%</td>-->
+                        <!--</th:block>-->
+                      <!--</tr>-->
+                    <!--</tbody>-->
+                  <!--</table>-->
+                <!--</div>-->
+
+            <!--</fieldset>-->
 
           </th:block>
 
-      	  <fieldset class="extra-margin">
-            <legend class="heading-large no-margin-bottom">Organisation size</legend>
-      		  <p class="form-hint">In order to work out how much funding you are able to receive, please provide your business size using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
-        		<div class="form-block">
-        			<label class="block-label selection-button-radio" for="radio-1">
-        				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
-        				Micro / small - claim up to 70%
-        			</label>
-        			<label class="block-label selection-button-radio" for="radio-2">
-        				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
-        				Medium - claim up to 60%
-        			</label>
-        			<label class="block-label selection-button-radio" for="radio-3">
-        				<input id="radio-3" type="radio" name="radio-group" value="Large"/>
-        				Large - claim up to 50%
-        			</label>
-        		</div>
-          </fieldset>
+          <div class="extra-margin">
+            <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
 
-          <div class="alignright-button extra-margin">
-        		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
-        		</button>
-        	</div>
+              <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
+                <input type="hidden" name="org" value="growth" />
+              </th:block>
+
+              <input type="hidden" name="status" value="readOnly" />
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
+              </button>
+            </th:block>
+
+            <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+              <a th:href="@{${(param.org != null and param.org[0] == 'growth' ? '?org=growth' : '?org=standard')}}">Edit your organisation</a>
+            </th:block>
+          </div>
 
         </form>
 
+        <div class="extra-margin">
+          <a href="/prototypes/4600-finances" class="button-secondary">Return to finances</a>
+        </div>
+
         <ul class="pagination">
             <li class="prev">
-                <a rel="next" title="Navigate to previous part" href="/prototypes/4600-your-finances">
+                <a rel="prev" title="Navigate to previous part" href="/prototypes/4600-your-finances">
                     <span class="pagination-label">Previous</span>
                     <span class="pagination-part-title">Your project costs</span>
                 </a>
             </li>
-        </ul>
 
-        <a href="/prototypes/635-application-overview" class="button-secondary">Save and return to application overview</a>
+            <li class="next">
+                <a rel="next" title="Navigate to next part" href="/prototypes/6618-your-funding">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Your funding</span>
+                </a>
+            </li>
+        </ul>
 
 
         <!-- END OFHARDCODED PROTOTYPE HTML -->

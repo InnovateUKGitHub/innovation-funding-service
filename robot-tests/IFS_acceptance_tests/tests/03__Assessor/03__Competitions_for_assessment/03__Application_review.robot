@@ -9,7 +9,9 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...
 ...               INFUND-3394 Acceptance Test: Assessor should be able to view the full application and finance summaries for assessment
 ...
-...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write. \
+...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write.
+...
+...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -114,9 +116,13 @@ Scope: Word count
 
 Scope: Guidance
     [Documentation]    INFUND-4142
+    ...
+    ...    INFUND-6281
     [Tags]    HappyPath
     When the user clicks the button/link    css=details summary
     Then the user should see the element    css=#details-content-0
+    And The user should see the text in the page    One or more of the above requirements have not been satisfied.
+    And The user should see the text in the page    Does it meet the scope of the competition as defined in the competition brief?
     And the user clicks the button/link    css=details summary
     And The user should not see the element    css=#details-content-0
 
@@ -141,6 +147,16 @@ Economic Benefit: Autosave
     And the user clicks the button/link    link=4. Economic benefit
     Then the user should see the text in the page    This is to test the feedback entry.
     And the user should see the text in the page    9
+    [Teardown]
+
+Economic Benefit: Guidance
+    [Documentation]    INFUND-6281
+    When The user clicks the button/link    css=.summary
+    Then the user should see the text in the page    The project is damaging to other stakeholders with no realistic mitigation or balance described.
+    And The user should see the text in the page    The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
+    And The user should see the text in the page    Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
+    And The user should see the text in the page    Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.
+    And The user should see the text in the page    Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.
     [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Finance overview
@@ -156,7 +172,7 @@ Status of the application should be In Progress
     [Tags]
     [Setup]    The user navigates to the page    ${assessor_dashboard_url}
     When The user clicks the button/link    link=Sustainable living models for the future
-    Then the status of the appllications should be correct    css=.boxed-list li:nth-child(2)    In progress
+    Then The user should see the text in the page    In progress
 
 *** Keywords ***
 the user clicks next and goes to the page

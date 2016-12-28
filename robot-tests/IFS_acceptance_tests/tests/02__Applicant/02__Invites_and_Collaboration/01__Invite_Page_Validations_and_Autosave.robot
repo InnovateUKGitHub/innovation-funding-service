@@ -36,7 +36,7 @@ Validations for the Email field
     [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
-    Then the user should see an error    Please enter a valid email address
+    Then the user should see an error    Please enter a valid email address.
 
 Validations for the name field
     [Documentation]    INFUND-901
@@ -66,20 +66,20 @@ Blank Partner organisation fields are not allowed
     [Tags]
     Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    ${EMPTY}    ${EMPTY}
-    Then the user should see an error    An organisation name is required
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    Please enter an email address
+    Then the user should see an error    An organisation name is required.
+    And the user should see an error    This field cannot be left blank.
+    And the user should see an error    Please enter an email address.
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    collaborator10_invalid_email
-    Then the user should see an error    Please enter a valid email address
+    Then the user should see an error    Please enter a valid email address.
 
 Already invite email should is not allowed
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
-    Then the user should see an error    You have already added this email address
+    Then the user should see an error    You have already added this email address.
 
 Link to add multiple partner organisation
     [Tags]    HappyPath

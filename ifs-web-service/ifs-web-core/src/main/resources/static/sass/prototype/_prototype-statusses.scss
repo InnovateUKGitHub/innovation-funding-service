@@ -1,4 +1,12 @@
 
+/*----- Action required icon ----*/
+%action-required {
+  background-image: url('../images/icons/icon-pencil.png');
+  background-repeat: no-repeat;
+  background-size: 14px;
+  background-position: 0 4px;
+}
+
 .collapsible {
 
   h2{

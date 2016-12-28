@@ -37,9 +37,9 @@
 		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>.
 	</p>
 
-	<form>
+	<form th:unless="${param.status != null and param.status[0] == 'signed'}">
 
-		<fieldset th:unless="${param.status != null and param.status[0] == 'signed'}">
+		<fieldset>
 
 			<legend class="visuallyhidden">Confirm terms and conditions</legend>
 
@@ -56,6 +56,11 @@
 		</fieldset>
 
 	</form>
+
+  <th:block th:if="${param.status != null and param.status[0] == 'signed'}">
+      <p class="extra-margin">You signed the contract on 13 December 2016.</p>
+      <a class="button-secondary app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Back to assessor dashboard</a>
+  </th:block>
 
 
 
