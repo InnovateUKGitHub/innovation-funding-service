@@ -146,7 +146,7 @@ Status updates correctly for internal user's table
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action  # Bank details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance checks
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
@@ -161,14 +161,14 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer
-    And the user should see the element    link = Bank details
     And the user should not see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
     And the user should not see the element    link = Grant offer letter
 
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-6018
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TODO pending due to INFUND-7090
     Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
     When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
@@ -210,7 +210,7 @@ Project Finance can see the progress of partners bank details
     Then the user navigates to the page             ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
-    And the user should see the element             jQuery=tr:nth-child(2) td:nth-child(2):contains("Review required")
+    And the user should see the element             jQuery=tr:nth-child(2) td:nth-child(2):contains("Not required")
     And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(2):contains("Review required")
     When the user clicks the button/link            link=Empire Ltd
     Then the user should see the text in the page   Empire Ltd - Account details
@@ -218,11 +218,12 @@ Project Finance can see the progress of partners bank details
     And the user should see the element             jQuery=a:contains("${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}")
     And the user should see the text in the page    7789123456
     And the user goes back to the previous page
-    When the user clicks the button/link    link=Ludlow
-    Then the user should see the text in the page    Ludlow - Account details
-    And the user should see the text in the page    Jessica Doe
-    And the user should see the text in the page    jessica.doe@ludlow.co.uk
-    And the user goes back to the previous page
+#   TODO: Ludow is now a partner not requesting any funding, so bank details will not exist - INFUND-7090
+#    When the user clicks the button/link    link=Ludlow
+#    Then the user should see the text in the page    Ludlow - Account details
+#    And the user should see the text in the page    Jessica Doe
+#    And the user should see the text in the page    jessica.doe@ludlow.co.uk
+#    And the user goes back to the previous page
     When the user clicks the button/link    link=EGGS
     Then the user should see the text in the page    EGGS - Account details
     And the user should see the text in the page    Pete Tom
