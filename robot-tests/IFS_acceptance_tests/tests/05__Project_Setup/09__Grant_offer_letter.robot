@@ -294,6 +294,19 @@ Non lead's status should be updated
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
 
+Non lead can see the GOL approved
+    [Documentation]  INFUND-6377
+    [Tags]
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user should see the element  jQuery=p:nth-child(4) a:contains("testing.pdf")
+
+Non lead can download the signed GOL
+    [Documentation]  INFUND-6377
+    [Tags]  Download
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
+    [Teardown]    remove the file from the operating system    testing.pdf
+
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
