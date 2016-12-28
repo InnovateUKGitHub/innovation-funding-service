@@ -91,7 +91,7 @@
                         </label>
                     </fieldset>
 
-                    <div class="panel-indent js-hidden" id="toggle-appointments">
+                    <div class="panel js-hidden" id="toggle-appointments">
                         <span th:if="${#fields.hasErrors('appointments')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('appointments')}" th:text="${err}" />
                         </span>
@@ -221,7 +221,7 @@
                         </label>
                     </fieldset>
 
-                    <div class="panel-indent js-hidden" id="toggle-familyAffiliations">
+                    <div class="panel js-hidden" id="toggle-familyAffiliations">
                         <span th:if="${#fields.hasErrors('familyAffiliations')}" th:remove="tag">
                             <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}" />
                         </span>
