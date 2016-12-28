@@ -56,5 +56,5 @@ the user enters the details and clicks the create account
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
     And the user selects the radio button    disability    disability2
-    Select Checkbox    termsAndConditions
+    And the user selects the checkbox    termsAndConditions
     Submit Form

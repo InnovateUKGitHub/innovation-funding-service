@@ -6,6 +6,7 @@ Resource          ../defaultResources.robot
 
 the user selects the checkbox
     [Arguments]    ${checkbox}
+    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
