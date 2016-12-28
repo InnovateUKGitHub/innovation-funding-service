@@ -292,8 +292,8 @@ project finance approves Viability for
     Then the user selects the checkbox      id=project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
-    And the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    When the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    Then the user clicks the button/link    css=#confirm-button
+    And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 
 

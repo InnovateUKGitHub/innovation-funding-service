@@ -220,21 +220,18 @@ PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
-    And the user clicks the button/link     jQuery=button:contains("Send to Innovate UK")
-    Then the user should not see an error in the page
-    # TODO - It has to be checked that the dashboard status for GOL shows hourglass. This has not been implemented yet.
-    # And the user should see the element    jQuery=li.waiting:nth-child(8)
+    Then the user clicks the button/link    jQuery=button:contains("Send to Innovate UK")
+    And the user should not see an error in the page
+    When the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=li.waiting:nth-child(8)
 
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
-    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
-    And the user should see the element    jQuery=li.waiting:nth-child(8)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    Given the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
-    # TODO - To be fixed when 'PM Submitting GOL' story is worked upon
-    # Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
 
 Internal Dashboard should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
@@ -243,8 +240,20 @@ Internal Dashboard should be updated
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
 
+Comp Admin can accept the signed grant offer letter
+    [Documentation]  INFUND-6377
+    [Tags]
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Given the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
+    Then the user navigates to the page      ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    And the user should see the element      jQuery=#content .button:contains("Accept signed grant offer letter")
+    When the user clicks the button/link     jQuery=#content .button:contains("Accept signed grant offer letter")
+    Then the user should see the element     jQuery=h2:contains("Accept signed grant offer letter")
+    When the user clicks the button/link     jQuery=.modal-accept-signed-gol button:contains("Cancel")
+    Then the user should not see an error in the page
+
 Internal user accepts signed grant offer letter
-    [Documentation]    INFUND-5998
+    [Documentation]    INFUND-5998, INFUND-6377
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
@@ -252,24 +261,26 @@ Internal user accepts signed grant offer letter
     Then the user should not see the text in the page  "Confirm receipt of signed grant offer letter"
     And the user clicks the button/link    jQuery=#content .button:contains("Accept signed grant offer letter")
     And the user clicks the button/link     jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
-    Then the user should not see the text in the page  "The grant offer letter has been received and accepted."
+    Then the user should see the element    jQuery=.success-alert h2:contains("The grant offer letter has been received and accepted.")
     And the user should not see the element     jQuery=#content .button:contains("Accept signed grant offer letter")
+    When the user navigates to the page       ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user should see the element  jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.ok
 
 Project manager's status should be updated
-    [Documentation]   INFUND-5998
+    [Documentation]   INFUND-5998, INFUND-6377
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element    jQuery=li.complete:nth-child(8)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
 
 Non lead's status should be updated
-    [Documentation]   INFUND-5998
-    [Tags]    HappyPath
+    [Documentation]   INFUND-5998, INFUND-6377
+    [Tags]
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element    jQuery=li.complete:nth-child(8)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
@@ -331,8 +342,8 @@ project finance approves Viability for
     the user selects the checkbox      id=project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    the user clicks the button/link    css=#confirm-button
+    the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
