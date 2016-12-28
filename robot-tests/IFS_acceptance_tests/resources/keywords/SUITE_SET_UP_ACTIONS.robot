@@ -268,7 +268,7 @@ we create a new user
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    address-same
+    The user selects the checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
