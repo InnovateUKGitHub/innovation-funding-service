@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: mysql
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: mysql
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_DATABASE
+            value: ifs
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          image: mysql:5.5.49
+          name: mysql
+          ports:
+          - containerPort: 3306
+          volumeMounts:
+          - name: mysql-tmp-storage
+            mountPath: /var/lib/mysql
+        volumes:
+          - emptyDir: {}
+            name: mysql-tmp-storage
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: data-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: data-service
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: data-service
+      spec:
+        containers:
+        - image: 721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/data-service:1.0-SNAPSHOT
+          name: data-service
+          ports:
+          - containerPort: 8080
+          resources: {}
+          volumeMounts:
+          - mountPath: /tmp/ifs-local
+            name: dir-1
+        volumes:
+        - emptyDir: {}
+          name: dir-1
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ifs-database
+  spec:
+    ports:
+    - name: 3306-tcp
+      port: 3306
+      targetPort: 3306
+    selector:
+      deploymentconfig: mysql
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: data-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: data-service
+  status:
+    loadBalancer: {}

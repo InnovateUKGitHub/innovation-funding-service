@@ -1,11 +1,54 @@
-#!/usr/bin/env bash
+#!/bin/sh
+set -e
 
-oc cluster up --routing-suffix=ifs-local-dev
+/bin/echo -e "\e[90m"
+oc cluster up #--routing-suffix=ifs-local-dev
+/bin/echo -e "\e[0m"
 
-oc login https://10.10.67.180:8443 --token=OeAK8IZlponYagtpILCjJRi0q2Tm52hwP07IYvSOf5Y
+DASHBOARD_URL=$(oc status | head -n 1 | awk '{print $8}')
 
-oc new-project test-project
+/bin/echo -e "\e[32m"
+echo "--------------------------------------------------------"
+echo ""
+echo "\tOpenshift is up on $DASHBOARD_URL"
+echo ""
+echo "\tPress a key then locate the authentication token and return to this screen"
+echo ""
+echo "--------------------------------------------------------"
+/bin/echo -e "\e[0m"
+read DUMMYVAR
 
-oc adm policy add-scc-to-user anyuid -n test-project -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+x-www-browser $DASHBOARD_URL#/console/command-line >/dev/null 2>/dev/null
+echo "Please provide the auth token: "
+read AUTH_TOKEN
+
+echo "oc login $DASHBOARD_URL --token=$AUTH_TOKEN"
+oc login $DASHBOARD_URL --token=$AUTH_TOKEN
+
+PROJECT_NAME=test-project
+echo oc new-project $PROJECT_NAME
+oc new-project $PROJECT_NAME
+
+oc adm policy add-scc-to-user anyuid -n $PROJECT_NAME -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+
+echo "Please modify the SCC anyuid with SYS_PTRACE"
+read DUMMYVAR
 
 oc create -f os-files/
+
+
+oc secrets add serviceaccount/default secrets/aws-secret-2 --for=pull
+
+
+
+# wait until the app is up
+
+# change ifs-local-dev to the dahsboard ip
+# change ifs-database ip to the mysql pod's custer ip
+# ./gradlew syncShib
+
+
+
+
+
+

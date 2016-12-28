@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: imap
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: imap
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: imap
+      spec:
+        containers:
+        - image: camptocamp/courier-imap
+          name: imap
+          ports:
+          - containerPort: 143
+          resources: {}
+        - image: camptocamp/smtp-sink
+          name: smtp
+          volumeMounts:
+          - name: smtp-maildir-storage
+            mountPath: /home/smtp/Maildir
+          resources: {}
+        - image: camptocamp/sqwebmail
+          name: webmail
+          ports:
+          - containerPort: 80
+          resources: {}
+        volumes:
+        - emptyDir: {}
+          name: smtp-maildir-storage
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: imap
+  spec:
+    ports:
+    - name: 80-tcp
+      port: 80
+      targetPort: 80
+    - name: 143-tcp
+      port: 143
+      targetPort: 143
+    selector:
+      deploymentconfig: imap
+  status:
+    loadBalancer: {}
