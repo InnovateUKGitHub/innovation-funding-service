@@ -278,7 +278,6 @@ the user opens the excel and checks the content
     ${bank_account_sort_code}=    get from list    ${empire_details}    11
     should be equal    ${bank_account_sort_code}    404745
 
-
 project finance approves Viability for
     [Arguments]  ${partner}
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check

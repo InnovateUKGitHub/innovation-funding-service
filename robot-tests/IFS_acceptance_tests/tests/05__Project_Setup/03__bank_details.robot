@@ -218,7 +218,7 @@ Project Finance can see the progress of partners bank details
     And the user should see the element             jQuery=a:contains("${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}")
     And the user should see the text in the page    7789123456
     And the user goes back to the previous page
-#   Ludow is now a partner not requesting any funding, so bank details will not exist - INFUND-7090
+#   TODO: Ludow is now a partner not requesting any funding, so bank details will not exist - INFUND-7090
 #    When the user clicks the button/link    link=Ludlow
 #    Then the user should see the text in the page    Ludlow - Account details
 #    And the user should see the text in the page    Jessica Doe
