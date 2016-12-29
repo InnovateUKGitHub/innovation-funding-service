@@ -184,7 +184,7 @@ The user navigates to the overview page of the Robot test application
     And the user clicks the button/link    link=Robot test application
 
 the user marks finances as complete
-    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     the user selects the radio button    financePosition-organisationSize    LARGE
     the user enters text to a text field    id=cost-financegrantclaim    20
     the user selects the checkbox    agree-terms-page
@@ -203,7 +203,7 @@ the user marks the finances as complete
 Make the finances ready for mark as complete
     Applicant navigates to the finances of the Robot application
     the user selects the radio button    financePosition-organisationSize    SMALL
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
 
 The user navigates to the academic application finances
     When the user navigates to the page    ${DASHBOARD_URL}

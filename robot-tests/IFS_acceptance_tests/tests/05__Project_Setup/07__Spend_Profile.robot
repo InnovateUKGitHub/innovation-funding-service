@@ -437,7 +437,7 @@ Project Finance is able to see Spend Profile approval page
     And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovation Lead
     Then the element should be disabled    jQuery=#accept-profile
-    When the user selects the checkbox    jQuery=#approvedByLeadTechnologist
+    When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
 
@@ -453,7 +453,7 @@ Comp Admin is able to see Spend Profile approval page
     Then the user should see the text in the page    Before taking this action please contact the project manager
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user selects the checkbox    jQuery=#approvedByLeadTechnologist
+    When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
     When the user clicks the button/link    jQuery=button:contains("Approved")
     Then the user should see the text in the page    Approved by Innovation Lead
@@ -507,7 +507,7 @@ Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    When the user selects the checkbox      jQuery=#approvedByLeadTechnologist
+    When the user selects the checkbox      approvedByLeadTechnologist
     Then the user should see the element    jQuery=button:contains("Approved")
     When the user clicks the button/link    jQuery=button:contains("Approved")
     Then the user should see the text in the page  Approved by Innovation Lead
@@ -652,8 +652,8 @@ project finance reviews Finance checks
 project finance approves Viability for
     [Arguments]  ${partner}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
-    the user selects the checkbox      id=costs-reviewed
-    the user selects the checkbox      id=project-viable
+    the user selects the checkbox      costs-reviewed
+    the user selects the checkbox      project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
     the user clicks the button/link    jQuery=.button:contains("Confirm viability")
@@ -665,7 +665,7 @@ project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}
     the user fills in and approves project costs
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}
-    the user selects the checkbox      id=costs-reviewed
+    the user selects the checkbox      costs-reviewed
     the user clicks the button/link    jQuery=.button:contains("Approve finances")
     the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
 
@@ -679,6 +679,6 @@ the user fills in and approves project costs
     Input Text    name=costs[6].value    £ 10,000
     the user moves focus to the element    id=costs-reviewed
     the user sees the text in the element    css=#content tfoot td    £ 60,000
-    the user selects the checkbox    id=costs-reviewed
+    the user selects the checkbox    costs-reviewed
     the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")

@@ -6,8 +6,9 @@ Resource          ../defaultResources.robot
 
 the user selects the checkbox
     [Arguments]    ${checkbox}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
     Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
-    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    Run Keyword If    '${status}' == 'PASS'     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -16,6 +17,21 @@ the user selects the checkbox
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
+
+the user unselects the checkbox
+    [Arguments]    ${checkbox}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
@@ -45,8 +61,8 @@ the user moves focus to the element
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    wait until element is visible    ${RADIO_BUTTON}
-    Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
+    #[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -58,8 +74,7 @@ the user sees that the radio button is selected
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
-    wait until element is visible    ${RADIO_BUTTON}
-    Radio Button Should Not Be Selected    ${RADIO_BUTTON}
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[not(contains(@class,"selected"))]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong

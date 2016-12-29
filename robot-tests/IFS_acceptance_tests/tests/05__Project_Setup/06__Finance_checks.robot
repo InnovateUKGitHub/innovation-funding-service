@@ -76,7 +76,7 @@ Approve Eligibility: Lead partner organisation
     [Tags]    HappyPath
     Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -89,7 +89,7 @@ Approve Eligibility: Collaborator partner organisation
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-1
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -101,7 +101,7 @@ Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     Then the user should see the text in the page    The partner finance eligibility has been approved
@@ -287,32 +287,10 @@ project finance approves Viability for
     And the user should see the element     jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     Then the user should see the element    jQuery=h2:contains("Credit report")
-    And the user selects the checkbox       id=costs-reviewed
+    And the user selects the checkbox       costs-reviewed
     When the user should see the element    jQuery=h2:contains("Approve viability")
-    Then the user selects the checkbox      id=project-viable
+    Then the user selects the checkbox      project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
     And the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     When the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -185,7 +185,7 @@ Lead applicant marks the finances as complete
     The user navigates to the academic application finances
     the user selects the radio button    financePosition-organisationSize    SMALL
     The user enters text to a text field    id=cost-financegrantclaim    20
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     the user closes the browser

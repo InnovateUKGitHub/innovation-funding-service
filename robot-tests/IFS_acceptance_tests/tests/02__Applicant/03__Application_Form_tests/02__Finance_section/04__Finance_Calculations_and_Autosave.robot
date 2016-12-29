@@ -115,16 +115,16 @@ Other Funding
     [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
     [Tags]    Failing
     #TODO INFUND-5394
-    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     Then the user should not see the element    jQuery=button:contains(Add another source of funding)
     And the applicant selects 'Yes' and fills two rows
     Then the total of the other funding should be correct
     And the applicant can leave the 'Your finances' page but the details are still saved
-    And the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    And the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     Then the user should not see the element    jQuery=button:contains(Add another source of funding)
     And the applicant cannot see the 'other funding' details
     Then the user reloads the page
-    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes) input
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes)
     Then the total of the other funding should be correct
 
 Funding level
@@ -261,7 +261,7 @@ The applicant can leave the 'Your finances' page but the details are still saved
     Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
 
 The applicant selects 'Yes' and fills two rows
-    the user clicks the button/link    jQuery=label:contains(Yes) input
+    the user clicks the button/link    jQuery=label:contains(Yes)
     Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
     the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2)
     the user should see the element    id=other-funding-table

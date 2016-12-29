@@ -155,9 +155,9 @@ Eligibility client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    When the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    When the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user moves focus and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
@@ -214,10 +214,10 @@ Assessor: Server-side validation
 Assessor: Client-side validation
     [Documentation]    INFUND-5641
     When The user enters text to a text field    id=assessorPay    1.1
-    And the user selects the checkbox    id=assessors-62
+    And the user selects the checkbox    assessors-62
     Then the user should see an error    This field can only accept whole numbers
     When The user enters text to a text field    id=assessorPay    120
-    And the user selects the checkbox    id=assessors-62
+    And the user selects the checkbox    assessors-62
     Then The user should not see the text in the page    This field can only accept whole numbers
 
 *** Keywords ***

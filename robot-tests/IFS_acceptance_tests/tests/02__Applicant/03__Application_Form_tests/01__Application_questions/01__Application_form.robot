@@ -21,11 +21,11 @@ Application details: Previous submission
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    When the user clicks the button/link    jQuery=label:contains(Yes)
     Then the user should see the text in the page    Please provide the details of this previous application
     And the user should see the text in the page    Previous application number
     And the user should see the text in the page    Previous application title
-    When the user clicks the button/link    jQuery=label:contains(No) input
+    When the user clicks the button/link    jQuery=label:contains(No)
     Then The user should not see the element    id=application_details-previousapplicationnumber
 
 Autosave in the form questions
