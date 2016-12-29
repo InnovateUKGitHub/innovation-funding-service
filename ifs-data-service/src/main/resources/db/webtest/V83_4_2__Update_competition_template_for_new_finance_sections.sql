@@ -40,8 +40,8 @@ UPDATE `section` SET `parent_section_id`=@sector_projectcost_fin_id WHERE `name`
 UPDATE `question` SET `section_id`=@programme_projectcost_fin_id WHERE `short_name`='Project finances' and `competition_id`=@programme_competition_template_id;
 UPDATE `question` SET `section_id`=@sector_projectcost_fin_id WHERE `short_name`='Project finances' and `competition_id`=@sector_competition_template_id;
 
-UPDATE `question` SET `section_id`=@programme_organisation_fin_id WHERE `short_name`='Organisation Size' and `competition_id`=@programme_competition_template_id;
-UPDATE `question` SET `section_id`=@sector_organisation_fin_id WHERE `short_name`='Organisation Size' and `competition_id`=@sector_competition_template_id;
+UPDATE `question` SET `section_id`=@programme_organisation_fin_id WHERE `short_name`='Business size' and `competition_id`=@programme_competition_template_id;
+UPDATE `question` SET `section_id`=@sector_organisation_fin_id WHERE `short_name`='Business size' and `competition_id`=@sector_competition_template_id;
 
 UPDATE `question` SET `section_id`=@programme_funding_fin_id WHERE `short_name`='Other funding' and `competition_id`=@programme_competition_template_id;
 UPDATE `question` SET `section_id`=@programme_funding_fin_id WHERE `short_name`='Funding level' and `competition_id`=@programme_competition_template_id;
