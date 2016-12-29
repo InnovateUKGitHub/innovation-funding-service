@@ -194,7 +194,7 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-finances-capital-usage-utilisation    100
     the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
-    the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
+    the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing)
     sleep    200ms
     the user moves focus to the element    jQuery=button:contains(Add another asset)
     the user clicks the button/link    jQuery=button:contains(Add another asset)
@@ -204,7 +204,7 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-utilisation    100
     the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
-    the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing) input
+    the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing)
     the user moves focus to the element    css=.app-submit-btn
 
 the applicant fills the 'capital usage' field to a negative value
@@ -215,7 +215,7 @@ the applicant fills the 'capital usage' field to a negative value
     the user enters text to a text field    css=.form-finances-capital-usage-utilisation    100
     the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
-    the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
+    the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing)
     the user moves focus to the element    css=.app-submit-btn
 
 the Applicant fills the Travel fields
@@ -287,7 +287,7 @@ Totals should be correct
 
 User selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    the user clicks the button/link    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]
+    the user clicks the button/link    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]/ancestor::label
     the user moves focus to the element    css=.app-submit-btn
 
 Admin costs total should be correct

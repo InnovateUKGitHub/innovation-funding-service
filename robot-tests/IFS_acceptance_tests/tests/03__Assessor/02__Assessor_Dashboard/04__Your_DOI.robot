@@ -82,8 +82,8 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=familyAffiliations0.organisation    Innovate
     the user enters text to a text field    id=familyAffiliations0.position    Director
     the user enters text to a text field    id=familyFinancialInterests    My interests
-    the user moves focus to the element    id=accurateAccount1
-    Click Element    id=accurateAccount1
+    the user moves focus to the element    css=.selection-button-checkbox
+    the user selects the checkbox    accurateAccount1
     focus    jQuery=button:contains("Save and continue")
     sleep    500ms
     Wait For Autosave
