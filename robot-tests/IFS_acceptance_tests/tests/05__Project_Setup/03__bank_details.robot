@@ -8,15 +8,20 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-4903 As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
 ...
 ...               INFUND-6018 Partner should see a flag in Bank Details, when he needs to take an action
-Suite Setup       project details are submitted by all users
+Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 
+# Alternative Bank account pair:12345677 - 000004 #
+# Another valid B account pair: 51406795 - 404745 #
+
+# Note that the Bank details scenario where the Partner is not eligible for funding
+# and thus doesn't need to fill in his Bank details, will be tested in the File 01__project_details.robot
+# whith use of project id = 3 TODO
+
 *** Variables ***
-# Alternative Bank account pair:12345677 - 000004
-# Another valid B account pair: 51406795 - 404745
 
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners
@@ -261,14 +266,14 @@ the user submits the bank account details
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
-project details are submitted by all users
-    user submits his personal details  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
-    user submits his personal details  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${Bluezoom_Id}
-    user submits his personal details  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Eadel_Id}
+finance contacts are submitted by all users
+    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${Bluezoom_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Eadel_Id}
     logout as user
     close any open browsers
 
-user submits his personal details
+user submits his finance contacts
     [Arguments]  ${user}  ${id}
     guest user log-in  ${user}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
