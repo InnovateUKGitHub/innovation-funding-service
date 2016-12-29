@@ -92,6 +92,28 @@ ${PS_BD_APPLICATION_PARTNER_FINANCE}         Ryan Welch
 ${PS_BD_APPLICATION_ACADEMIC_EMAIL}          sara.armstrong@npath.example.com
 ${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
 
+#Project: New materials for lighter stock
+# EF = Experian feedback
+${Ntag_Id}        41
+${Ntag_Name}      Ntag
+${Jetpulse_Id}    42
+${Jetpulse_Name}  Jetpulse
+${Wikivu_Id}      43
+${Wikivu_Name}    Wikivu
+${PS_EF_Competition_Id}         10
+${PS_EF_Competition_Name}       Rolling stock future developments
+${PS_EF_APPLICATION_GOL}        36
+${PS_EF_APPLICATION_NUMBER}     00000036
+${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
+${PS_EF_APPLICATION_HEADER}     ${PS_EF_APPLICATION_NUMBER}: ${PS_EF_APPLICATION_TITLE}
+${PS_EF_APPLICATION_PROJECT}    6
+${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
+${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
+${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}      steven.hicks@ntag.example.com
+${PS_EF_APPLICATION_PM_EMAIL}                steven.hicks@ntag.example.com
+${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
+${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
+
 #Old variables - to be refactored
 ${PROJECT_SETUP_COMPETITION}    8
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy

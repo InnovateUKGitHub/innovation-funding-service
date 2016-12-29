@@ -4,7 +4,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-4054 As a Project Finance team member I want to be able to review and amend unverified partner bank details to ensure they are suitable for approval
 ...
 ...               INFUND-4903: As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
-Suite Setup       Log in as user    lee.bowman@innovateuk.test    Passw0rd
+Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -145,5 +145,35 @@ the text box should be editable
     [Arguments]    ${text_field}
     wait until element is visible    ${text_field}
     Element Should Be Enabled    ${text_field}
+
+all preliminary steps are completed
+    finance contacts are submitted by all users
+    project lead submits project details
+    logout as user
+    close any open browsers
+
+finance contacts are submitted by all users
+    user submits his finance contacts  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}  ${Wikivu_Id}
+    user submits his finance contacts  ${PS_EF_APPLICATION_PARTNER_EMAIL}  ${Jetpulse_Id}
+    user submits his finance contacts  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${Ntag_Id}
+
+user submits his finance contacts
+    [Arguments]  ${user}  ${id}
+    guest user log-in  ${user}  ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
+    the user selects the radio button  financeContact  financeContact1
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+project lead submits project details
+    log in as a different user         ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-address
+    the user selects the radio button  addressType  address-use-org
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-manager
+    the user selects the radio button  projectManager  projectManager2
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Submit")
 
 
