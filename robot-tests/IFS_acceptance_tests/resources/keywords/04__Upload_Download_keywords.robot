@@ -5,9 +5,9 @@ Resource          ../defaultResources.robot
 The user downloads the file
     [Documentation]    Makes use of a download script that logs in, grabs a cookie and downloads
     ...     the file all in one package
-    [Arguments]    ${user}    ${password}    ${url}    ${filename}
-    Run and Return RC    ./download.py ${user} ${password} ${url} ${filename}
-    wait until keyword succeeds    300ms    1 seconds    Download should be done
+    [Arguments]    ${user}    ${url}    ${filename}
+    Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
+    wait until keyword succeeds    30s    200ms    Download should be done
 
 
 Download should be done
@@ -28,9 +28,6 @@ remove the file from the operating system
    [Arguments]    ${filename}
     remove file    ${download_folder}/${filename}
 
-
-
-
 the file has been scanned for viruses
     Sleep    5s
 
@@ -45,9 +42,9 @@ the user can see the option to upload a file on the page
     Page Should Contain    Upload
 
 the user can remove the uploaded file
-    [Arguments]    ${file_name}
+    [Arguments]  ${name}  ${file_name}
     Reload Page
-    Click Button    name=remove_uploaded_file
+    Click Button    name=${name}
     Wait Until Page Does Not Contain    Remove
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}

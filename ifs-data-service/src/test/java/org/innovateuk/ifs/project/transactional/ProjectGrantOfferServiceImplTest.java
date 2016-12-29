@@ -1,30 +1,33 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.builder.AddressBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,50 +38,48 @@ import org.mockito.Captor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
@@ -88,16 +89,13 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private Long userId = 7L;
 
     private Application application;
-    private Organisation organisation;
+    private List<Organisation> organisations;
     private Role leadApplicantRole;
-    private Role projectManagerRole;
     private User user;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
-    private FileEntryResource fileEntryResource;
-    private PartnerOrganisation partnerOrganisation;
     private Project project;
-    private OrganisationResource organisationResource;
+    private List<OrganisationResource> organisationResources;
     private SpendProfileTableResource table;
 
     @Captor
@@ -115,10 +113,11 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Before
     public void setUp() {
 
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30).withApplication(456L).withOrganisation(3L)
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30)
+                .withApplication(456L).withOrganisation(3L)
                 .build();
         table = new SpendProfileTableResource();
-
+        table.setMarkedAsComplete(true);
         table.setMonthlyCostsPerCategoryMap(asMap(
                 1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
                 2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
@@ -137,14 +136,15 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))
         ));
         table.setCostCategoryResourceMap(asMap(
-                1L, newCostCategoryResource(),
-                2L, newCostCategoryResource()
+                1L, newCostCategoryResource().withName("Labour").build(),
+                2L, newCostCategoryResource().withName("Materials").build(),
+                3L, newCostCategoryResource().withName("Other").build()
         ));
         table.setMonths(asList(
                 new LocalDateResource(1, 3, 2019),new LocalDateResource(1, 4, 2019)));
 
-        organisation = newOrganisation().withOrganisationType(ACADEMIC).build();
-        organisationResource = newOrganisationResource().build();
+        organisations = newOrganisation().withOrganisationType(ACADEMIC).build(3);
+        organisationResources = newOrganisationResource().build(3);
 
         Competition competition = newCompetition().build();
 
@@ -154,20 +154,19 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withTown("town").build();
 
         leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
-        projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
                 withId(userId).
                 build();
 
         leadApplicantProcessRole = newProcessRole().
-                withOrganisation(organisation).
+                withOrganisation(organisations.get(0)).
                 withRole(leadApplicantRole).
                 withUser(user).
                 build();
 
         leadPartnerProjectUser = newProjectUser().
-                withOrganisation(organisation).
+                withOrganisation(this.organisations.get(0)).
                 withRole(PROJECT_PARTNER).
                 withUser(user).
                 build();
@@ -181,10 +180,14 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 build();
 
-        partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisations.get(0)).build();
+        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisations.get(1)).build();
+        PartnerOrganisation partnerOrganisation3 = newPartnerOrganisation().withOrganisation(organisations.get(2)).build();
 
         List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
         partnerOrganisations.add(partnerOrganisation);
+        partnerOrganisations.add(partnerOrganisation2);
+        partnerOrganisations.add(partnerOrganisation3);
 
         project = newProject().
                 withId(projectId).
@@ -193,19 +196,35 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
-        fileEntryResource = newFileEntryResource().
-                withFilesizeBytes(1024).
-                withMediaType("application/pdf").
-                withName("grant_offer_letter").
-                build();
 
+        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
+                .withTotalPercentageGrant(BigDecimal.valueOf(25))
+                .build();
+
+        List<BigDecimal> monthlyTotals = asList(
+                BigDecimal.valueOf(50),
+                BigDecimal.valueOf(10),
+                BigDecimal.valueOf(20));
+
+        List<BigDecimal> yearlyCosts = asList(
+                BigDecimal.valueOf(500),
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(200));
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationMapperMock.mapToResource(organisation)).thenReturn(organisationResource);
+        when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
+        when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
+        when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
         when(organisationFinanceDelegateMock.isUsingJesFinances(ACADEMIC.name())).thenReturn(true);
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisation.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
                 .thenReturn(ServiceResult.serviceSuccess(table));
+        when(spendProfileTableCalculatorMock.calculateMonthlyTotals(table.getMonthlyCostsPerCategoryMap(),
+                table.getMonths().size())).thenReturn(monthlyTotals);
+        when(spendProfileTableCalculatorMock.calculateEligibleCostPerYear(any(ProjectResource.class), any(List.class), any(List.class))).thenReturn(yearlyCosts);
+        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
     }
 
     @Test
@@ -342,16 +361,47 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Test
     public void testRemoveGrantOfferLetterFileEntry() {
 
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
         FileEntry existingGOLFile = newFileEntry().build();
         project.setGrantOfferLetter(existingGOLFile);
 
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
         when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
 
         ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
 
         assertTrue(result.isSuccess());
         assertNull(project.getGrantOfferLetter());
+
+        verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
         verify(fileServiceMock).deleteFile(existingGOLFile.getId());
+    }
+
+    @Test
+    public void testRemoveGrantOfferLetterFileEntryButWorkflowRejected() {
+
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
+        FileEntry existingGOLFile = newFileEntry().build();
+        project.setGrantOfferLetter(existingGOLFile);
+
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(false);
+
+        ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED));
+        assertEquals(existingGOLFile, project.getGrantOfferLetter());
+
+        verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
+        verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
     }
 
     @Test
@@ -391,6 +441,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30).withApplication(456L).withOrganisation(3L)
                 .build();
+        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
+                .withTotalPercentageGrant(BigDecimal.valueOf(25))
+                .build();
 
         Map<String, Object> templateArgs = new HashMap<String, Object>();
         templateArgs.put("ProjectLength", 10L);
@@ -413,6 +466,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
         when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
         when(organisationFinanceDelegateMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
