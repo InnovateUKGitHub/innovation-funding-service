@@ -74,7 +74,7 @@ the user sees that the radio button is selected
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
-    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[not(contains(@class,"selected"))]
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
