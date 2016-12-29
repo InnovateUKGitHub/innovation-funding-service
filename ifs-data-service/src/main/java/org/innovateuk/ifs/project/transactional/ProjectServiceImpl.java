@@ -722,7 +722,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);

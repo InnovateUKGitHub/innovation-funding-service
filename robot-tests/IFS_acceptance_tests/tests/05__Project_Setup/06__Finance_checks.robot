@@ -267,9 +267,6 @@ the user opens the excel and checks the content
     ${eggs_details}=    get from list    ${contents}    2
     ${eggs_name}=    get from list    ${eggs_details}    0
     should be equal    ${eggs_name}    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    ${ludlow_details}=    get from list    ${contents}    3
-    ${ludlow_name}=    get from list    ${ludlow_details}    0
-    should be equal    ${ludlow_name}    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     ${application_number}=    get from list    ${empire_details}    1
     should be equal    ${application_number}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}
     ${postcode}=    get from list    ${empire_details}    8
@@ -292,5 +289,5 @@ project finance approves Viability for
     Then the user selects the checkbox      project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
-    And the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    When the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    Then the user clicks the button/link    css=#confirm-button
+    And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")

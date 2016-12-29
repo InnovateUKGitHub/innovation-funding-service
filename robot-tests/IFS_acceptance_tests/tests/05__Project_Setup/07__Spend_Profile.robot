@@ -656,8 +656,8 @@ project finance approves Viability for
     the user selects the checkbox      project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    the user clicks the button/link    css=#confirm-button
+    the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
