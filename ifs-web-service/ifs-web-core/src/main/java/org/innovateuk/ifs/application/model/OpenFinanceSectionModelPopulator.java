@@ -31,8 +31,8 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Class for populating the model for the "Your Finances" section
@@ -100,7 +100,12 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         model.addAttribute("hasFinanceSection", true);
         model.addAttribute("financeSectionId", section.getId());
         model.addAttribute("allReadOnly", allReadOnly);
+        model.addAttribute("isSubFinanceSection", isSubFinanceSection(section));
         model.addAttribute("form", form);
+    }
+
+    private Boolean isSubFinanceSection(SectionResource section) {
+        return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
     }
 
     private void addApplicationDetails(ApplicationResource application,

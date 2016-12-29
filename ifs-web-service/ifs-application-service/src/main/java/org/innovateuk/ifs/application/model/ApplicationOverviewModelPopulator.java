@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
@@ -18,8 +20,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
-import static org.innovateuk.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -224,7 +223,7 @@ public class ApplicationOverviewModelPopulator {
     private Boolean isUserFinanceSectionCompleted(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
+        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, FINANCE);
 
         Long eachCollaboratorFinanceSectionId = null;
         if(!eachOrganisationFinanceSections.isEmpty()) {

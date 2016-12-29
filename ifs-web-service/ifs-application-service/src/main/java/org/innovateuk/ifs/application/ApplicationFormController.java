@@ -66,7 +66,6 @@ import static java.lang.Boolean.FALSE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
@@ -227,23 +226,13 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        if (FINANCE.equals(section.getType()) ||
-                isSubFinanceSection(section)) {
-            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-            model.addAttribute("isSubFinanceSection", isSubFinanceSection(section));
-        } else {
-            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-            model.addAttribute("isSubFinanceSection", FALSE);
-        }
+        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
 
         return APPLICATION_FORM;
     }
 
-    private Boolean isSubFinanceSection(SectionResource section) {
-        return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
-    }
 
     private void addFormAttributes(ApplicationResource application,
                                    CompetitionResource competition,
