@@ -2156,8 +2156,7 @@ ol {
   margin-bottom: 5px;
 }
 
-.list-bullet, .error-summary-list, [contenteditable="true"] ul,
-.textarea-wrapped .readonly ul {
+.list list-bullet {
   list-style-type: disc;
   padding-left: 20px;
 }
@@ -4526,6 +4525,11 @@ Small dialog warning usually used as a warning before submitting a form
 ```
 
 */
+.form-hint, small {
+  display: block;
+  margin-bottom: 5px;
+}
+
 textarea[readonly],
 textarea[disabled],
 input[readonly],
@@ -4533,7 +4537,7 @@ input[disabled],
 div.readonly {
   color: #0b0c0c;
   background: #f8f8f8;
-  border: 1px solid #bfc1c3;
+  border-color: #bfc1c3;
 }
 
 .form-group .form-finances-subcontracting-cost {
@@ -4636,7 +4640,12 @@ select.form-control.width-x-large,
 
 input.form-control + button.button,
 select.form-control + button.button {
-  line-height: 1;
+  line-height: 1.15;
+}
+
+input.form-control.field-error + button.button,
+select.form-control.field-error + button.button {
+  line-height: 1.35;
 }
 
 table td.bold {
@@ -4729,7 +4738,7 @@ tr.form-group-row.error td:first-child {
 .textarea-wrapped textarea,
 .textarea-wrapped [contenteditable="true"],
 .textarea-wrapped .readonly {
-  border: 1px solid #bfc1c3;
+  border: 2px solid;
   min-height: 250px;
   margin: 0;
   padding: 5px 10px;
@@ -5253,10 +5262,6 @@ span.yes {
 
 span.no {
   padding-left: 28px;
-}
-
-.error-summary-list li:first-letter {
-  text-transform: lowercase;
 }
 
 [data-selector-highlighter] {
@@ -6163,6 +6168,11 @@ button.ui-state-active .fa-list-unordered {
   background-repeat: no-repeat;
 }
 
+.hallotoolbar .list {
+  margin: 0;
+  padding: 0;
+}
+
 .fa {
   height: 12px;
   width: 12px;
@@ -6286,6 +6296,15 @@ button.ui-state-active .fa-list-unordered {
 
 .contributorsForm .alignright-button {
   padding: 10px 0;
+}
+
+.button {
+  margin: 0 15px 15px 0;
+}
+
+.form-hint, small {
+  display: block;
+  margin-bottom: 5px;
 }
 
 /* Prototype css for testing */
@@ -6897,7 +6916,7 @@ ol.list-style-type-roman {
   }*/
 }
 
-.list-overview .list-bullet li, .list-overview .error-summary-list li, .list-overview [contenteditable="true"] ul li, [contenteditable="true"] .list-overview ul li, .list-overview
+.list-overview .list-bullet li, .list-overview [contenteditable="true"] ul li, [contenteditable="true"] .list-overview ul li, .list-overview
 .textarea-wrapped .readonly ul li,
 .textarea-wrapped .readonly .list-overview ul li {
   border: none;

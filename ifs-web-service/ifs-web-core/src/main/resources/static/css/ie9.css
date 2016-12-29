@@ -1946,7 +1946,7 @@ ol {
   padding: 0;
 }
 
-.list-bullet, .error-summary-list, [contenteditable="true"] ul,
+.list-bullet, [contenteditable="true"] ul,
 .textarea-wrapped .readonly ul {
   list-style-type: disc;
   padding-left: 20px;
@@ -1958,7 +1958,7 @@ ol {
   padding-left: 20px;
 }
 
-.list-bullet, .error-summary-list, [contenteditable="true"] ul,
+.list-bullet, [contenteditable="true"] ul,
 .textarea-wrapped .readonly ul,
 .list-number,
 [contenteditable="true"] ol,
@@ -1967,7 +1967,7 @@ ol {
   margin-bottom: 20px;
 }
 
-.list-bullet li, .error-summary-list li, [contenteditable="true"] ul li,
+.list-bullet li, [contenteditable="true"] ul li,
 .textarea-wrapped .readonly ul li,
 .list-number li, [contenteditable="true"] ol li,
 .textarea-wrapped .readonly ol li {
@@ -3814,6 +3814,11 @@ Small dialog warning usually used as a warning before submitting a form
 ```
 
 */
+.form-hint, small {
+  display: block;
+  margin-bottom: 5px;
+}
+
 textarea[readonly],
 textarea[disabled],
 input[readonly],
@@ -3821,7 +3826,7 @@ input[disabled],
 div.readonly {
   color: #0b0c0c;
   background: #f8f8f8;
-  border: 1px solid #bfc1c3;
+  border-color: #bfc1c3;
 }
 
 .form-group .form-finances-subcontracting-cost {
@@ -3924,7 +3929,12 @@ select.form-control.width-x-large,
 
 input.form-control + button.button,
 select.form-control + button.button {
-  line-height: 1;
+  line-height: 1.15;
+}
+
+input.form-control.field-error + button.button,
+select.form-control.field-error + button.button {
+  line-height: 1.35;
 }
 
 table td.bold {
@@ -4017,7 +4027,7 @@ tr.form-group-row.error td:first-child {
 .textarea-wrapped textarea,
 .textarea-wrapped [contenteditable="true"],
 .textarea-wrapped .readonly {
-  border: 1px solid #bfc1c3;
+  border: 2px solid;
   min-height: 250px;
   margin: 0;
   padding: 5px 10px;
@@ -4526,10 +4536,6 @@ span.yes {
 
 span.no {
   padding-left: 28px;
-}
-
-.error-summary-list li:first-letter {
-  text-transform: lowercase;
 }
 
 [data-selector-highlighter] {
@@ -5413,6 +5419,11 @@ button.ui-state-active .fa-list-unordered {
   background-repeat: no-repeat;
 }
 
+.hallotoolbar .list {
+  margin: 0;
+  padding: 0;
+}
+
 .fa {
   height: 12px;
   width: 12px;
@@ -5546,6 +5557,15 @@ button.ui-state-active .fa-list-unordered {
 
 .contributorsForm .alignright-button {
   padding: 10px 0;
+}
+
+.button {
+  margin: 0 15px 15px 0;
+}
+
+.form-hint, small {
+  display: block;
+  margin-bottom: 5px;
 }
 
 /*
@@ -6082,11 +6102,10 @@ The view is similar to the applications for assessment, but have a grey backgrou
   box-sizing: border-box;
 }
 
-.app-dashboard .competition-details .list-bullet, .app-dashboard .competition-details .error-summary-list, .app-dashboard .competition-details [contenteditable="true"] ul, [contenteditable="true"] .app-dashboard .competition-details ul, .app-dashboard .competition-details
+.app-dashboard .competition-details .list-bullet, .app-dashboard .competition-details [contenteditable="true"] ul, [contenteditable="true"] .app-dashboard .competition-details ul, .app-dashboard .competition-details
 .textarea-wrapped .readonly ul,
 .textarea-wrapped .readonly .app-dashboard .competition-details ul,
 .assessor-dashboard .competition-details .list-bullet,
-.assessor-dashboard .competition-details .error-summary-list,
 .assessor-dashboard .competition-details [contenteditable="true"] ul, [contenteditable="true"]
 .assessor-dashboard .competition-details ul,
 .assessor-dashboard .competition-details
@@ -6094,7 +6113,6 @@ The view is similar to the applications for assessment, but have a grey backgrou
 .textarea-wrapped .readonly
 .assessor-dashboard .competition-details ul,
 .assessor-comp-dashboard .competition-details .list-bullet,
-.assessor-comp-dashboard .competition-details .error-summary-list,
 .assessor-comp-dashboard .competition-details [contenteditable="true"] ul, [contenteditable="true"]
 .assessor-comp-dashboard .competition-details ul,
 .assessor-comp-dashboard .competition-details
