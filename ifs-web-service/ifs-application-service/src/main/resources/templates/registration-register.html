@@ -158,21 +158,21 @@
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Email</span>
 
-                        <span th:if="${invitee}">
+                        <th:block th:if="${invitee}">
                             <span class="form-hint">You will need this to sign into your account, the provided email is:
-                                <br/>
+                                <br/>a
                             <strong><span th:remove="tag" th:text="${registrationForm.email}"></span></strong>
                             </span>
-                        </span>
-                        <span th:unless="${invitee}">
+                        </th:block>
+                        <th:block th:unless="${invitee}">
                             <span class="form-hint">You will need this to sign into your account</span>
                             <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
                                   <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
                             </span>
-                        </span>
+                        </th:block>
                     </label>
 
-                    <span th:unless="${invitee}">
+                    <th:block th:unless="${invitee}">
                         <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}"
                                type="email"
                                th:field="*{email}"
@@ -180,7 +180,7 @@
                                required="required"
                                th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                         data-required-errormessage=#{validation.standard.email.required}" />
-                    </span>
+                    </th:block>
                 </div>
 
 
