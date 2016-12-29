@@ -13,23 +13,6 @@ Resource          PS_Variables.robot
 *** Variables ***
 
 *** Test Cases ***
-Project Finance can see Bank Details
-    [Documentation]    INFUND-4903, INFUND-4903
-    [Tags]  HappyPath
-    Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    And the user should see the element           jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
-    When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3) a
-    Then the user navigates to the page           ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
-    And the user should see the text in the page  each partner has submitted their bank details
-    Then the user should see the element          jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(1) a:contains("Empire Ltd")
-    # And the user should see the element         jQuery=tr:nth-child(2) td:nth-child(2):contains("Pending")  TODO INFUND-5966
-    # And the user should see the element         jQuery=tr:nth-child(3) td:nth-child(2):contains("Pending")  TODO Upcoming functionality covering Academic user
-    When the user clicks the button/link          link=Empire Ltd
-    Then the user should see the element          jQuery=.button:contains("Approve bank account details")
-
 The user can see the company name with score
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]    HappyPath

@@ -66,6 +66,31 @@ ${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
 ${PS_SP_APPLICATION_PARTNER_EMAIL}           kimberly.fowler@meembee.example.com
 ${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
 
+#Project: Grade crossing manufacture and supply
+# BD = Bank Details
+${Eadel_Id}       44
+${Eadel_Name}     Eadel
+${Bluezoom_Id}    45
+${Bluezoom_Name}  Bluezoom
+${Npath_Id}       46
+${Npath_Name}     Npath
+${PS_BD_Competition_Id}         10
+${PS_BD_Competition_Name}       Rolling stock future developments
+${PS_BD_APPLICATION_GOL}        37
+${PS_BD_APPLICATION_NUMBER}     00000037
+${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
+${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_NUMBER}: ${PS_BD_APPLICATION_TITLE}
+${PS_BD_APPLICATION_PROJECT}    7
+${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Eadel_Id}
+${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Eadel_Name}
+${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@eadel.example.com
+${PS_BD_APPLICATION_PM_EMAIL}                diane.scott@eadel.example.com
+${PS_BD_APPLICATION_LEAD_FINANCE}            Diane Scott
+${PS_BD_APPLICATION_LEAD_TELEPHONE}          49692921151
+${PS_BD_APPLICATION_PARTNER_EMAIL}           ryan.welch@bluezoom.example.com
+${PS_BD_APPLICATION_PARTNER_FINANCE}         Ryan Welch
+${PS_BD_APPLICATION_ACADEMIC_EMAIL}          sara.armstrong@npath.example.com
+${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
 
 #Old variables - to be refactored
 ${PROJECT_SETUP_COMPETITION}    8
