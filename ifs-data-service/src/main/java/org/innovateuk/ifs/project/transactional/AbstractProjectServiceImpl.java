@@ -121,14 +121,22 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     }
 
-    protected ProjectActivityStates createBankDetailStatus(final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
+    protected ProjectActivityStates createBankDetailStatus(Long projectId, Long applicationId, Long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
         } else {
-            if (COMPLETE.equals(financeContactStatus)) {
-                return ACTION_REQUIRED;
+            Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+
+            boolean seeksFunding = result.map(Boolean::booleanValue).orElse(false);
+
+            if(!seeksFunding){
+                return NOT_REQUIRED;
             } else {
-                return NOT_STARTED;
+                if (COMPLETE.equals(financeContactStatus)) {
+                    return ACTION_REQUIRED;
+                } else {
+                    return NOT_STARTED;
+                }
             }
         }
     }
