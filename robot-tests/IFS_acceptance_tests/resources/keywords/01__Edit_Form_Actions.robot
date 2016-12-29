@@ -6,19 +6,8 @@ Resource          ../defaultResources.robot
 
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    Select Checkbox    ${checkbox}
-    # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
-    # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
-
-the user unselects the checkbox
-    [Arguments]    ${checkbox}
-    Unselect Checkbox    ${checkbox}
+    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -30,8 +19,8 @@ the user unselects the checkbox
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
-    the user should see the element    ${RADIO_BUTTON}
-    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should see the element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
+    Click Element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong

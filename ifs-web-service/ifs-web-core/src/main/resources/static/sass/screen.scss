@@ -1,5 +1,3 @@
-//govuk template
-
 $browser-minimum-versions : (
 	"chrome": null,
 	"firefox": null,
@@ -7,9 +5,20 @@ $browser-minimum-versions : (
 	"safari": null,
 	"opera": null
 );
-@import "compass/css3";
 
-@import "govuk";
+// Path to assets for use with the file-url function
+// in the govuk frontend toolkit's url-helpers partial
+$path: "/images/";
+
+// Import all of the govuk-elements-sass files
+// ===========================================
+@import "govuk-template";
+@import "govuk-elements";
+
+// Import all IFS files
+// ===========================================
+@import "compass/css3";
+// @import "govuk";
 @import "components";
 @import "pages";
-@import "print";  
+@import "print";

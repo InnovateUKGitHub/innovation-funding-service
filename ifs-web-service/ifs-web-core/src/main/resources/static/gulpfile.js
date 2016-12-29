@@ -6,10 +6,15 @@ var concat = require('gulp-concat')
 var sass = require('gulp-sass')
 var sassLint = require('gulp-sass-lint')
 var compass = require('compass-importer')
+var replace = require('gulp-replace');
 var filesExist = require('files-exist')
 
 // Path variables
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
+var govukFrontendToolkitPath =  nodeModulesPath + 'govuk_frontend_toolkit/stylesheets';
+var govukTemplateToolkitPath =  nodeModulesPath + 'govuk_template_jinja/assets/stylesheets';
+var govukElementsSassRoot =  nodeModulesPath + 'govuk-elements-sass/public/sass';
+
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
@@ -65,12 +70,18 @@ gulp.task('css', function () {
     }))
     .pipe(sassLint.format())
     // .pipe(sassLint.failOnError())
-    .pipe(sass({
-      importer: compass,
-      outputStyle: 'compressed'
-    }).on('error', sass.logError))
-    .pipe(gulp.dest('./css'))
-})
+    .pipe(sass({includePaths: [
+          govukFrontendToolkitPath,
+          govukTemplateToolkitPath,
+          govukElementsSassRoot
+        ],
+        importer: compass,
+        outputStyle: 'expanded'
+      }).on('error', sass.logError))
+    .pipe(replace('url(images/', 'url(/images/'))
+    .pipe(gulp.dest('./css'));
+});
+
 
 gulp.task('css:watch', function () {
   gulp.watch('./sass/**/*.scss', ['css'])

@@ -89,7 +89,7 @@
                               <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
+                        <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
                             <input th:field="*{gender}"
                                    th:value="${gen}"
                                    type="radio"
@@ -108,7 +108,7 @@
                               <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label" th:each="eth : ${ethnicityOptions}">
+                        <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
                             <input th:field="*{ethnicity}"
                                    th:value="${eth.id}"
                                    type="radio"
@@ -127,7 +127,7 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <label class="block-label" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
+                        <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
                             <input th:field="*{disability}"
                                    th:value="${dis}"
                                    type="radio"

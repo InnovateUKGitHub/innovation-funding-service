@@ -164,11 +164,19 @@
 			<input id="admin-support-radio-2" type="radio" name="admin-support-radio-group" value="20%" checked="checked" />
 			20% of labour costs
 		</label>
+<<<<<<< HEAD
 		<label class="block-label selection-button-radio" for="admin-support-radio-3">
+			<input id="admin-support-radio-3" type="radio" name="admin-support-radio-group" value="Custom" />
+			Custom administration support cost
+		</label>
+		<label class="block-label selection-button-radio" for="admin-support-radio-4">
+=======
+		<label class="block-label" for="admin-support-radio-3">
 			<input id="admin-support-radio-3" type="radio" name="admin-support-radio-group" value="overheads" />
 			Calculate overheads
 		</label>
 		<!-- <label class="block-label" for="admin-support-radio-4">
+>>>>>>> eb9403d6ca9e642012d5c831e3b786c8bce583af
 			<input id="admin-support-radio-4" type="radio" name="admin-support-radio-group" value="Special rate" />
 			Special rate agreed with Innovate UK
 		</label> -->

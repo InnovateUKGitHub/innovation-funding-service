@@ -36,7 +36,7 @@ create new account for submitting
     And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    jQuery=.button:contains("Search")
     And the user clicks the button/link    link=HIVE IT LIMITED
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
@@ -187,15 +187,15 @@ the user marks finances as complete
     the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
     the user selects the radio button    financePosition-organisationSize    LARGE
     the user enters text to a text field    id=cost-financegrantclaim    20
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
+    the user selects the checkbox    agree-terms-page
+    the user selects the checkbox    agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     wait for autosave
 
 the user marks the finances as complete
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
+    the user selects the checkbox    agree-terms-page
+    the user selects the checkbox    agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
     wait for autosave
@@ -268,7 +268,7 @@ we create a new user
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    address-same
+    The user selects the checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
@@ -305,7 +305,7 @@ the user enters the details and clicks the create account
     And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    Select Checkbox    termsAndConditions
+    the user selects the checkbox    termsAndConditions
     Submit Form
 
 the user fills the create account form
@@ -318,5 +318,5 @@ the user fills the create account form
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
     And the user selects the radio button    disability    disability2
-    Select Checkbox    termsAndConditions
+    And the user selects the checkbox    termsAndConditions
     Submit Form

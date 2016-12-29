@@ -23,7 +23,7 @@
                 </ul>
             </div>
 
-            <div class="panel-indent">
+            <div class="panel">
                 <p>The profile that you are creating will be linked to the following organisation <br/>
                     <strong><div th:text="${organisationName}"/></strong></p>
             </div>
@@ -90,7 +90,7 @@
                                       <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
                                     </span>
                         </legend>
-                        <label class="block-label" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
+                        <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
                             <input th:field="*{gender}" th:value="${gen}" type="radio" required="required"
                                     th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
                                              data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
@@ -107,7 +107,7 @@
                                   <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
                                 </span>
                         </legend>
-                        <label class="block-label" th:each="eth : ${ethnicityOptions}">
+                        <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
                             <input th:field="*{ethnicity}"
                                    th:value="${eth.id}"
                                    type="radio"
@@ -126,7 +126,7 @@
                                     <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
                                 </span>
                         </legend>
-                        <label class="block-label" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
+                        <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
                             <input th:field="*{disability}"
                                     th:value="${dis}"
                                     type="radio"
@@ -235,7 +235,7 @@
                         <span class="visuallyhidden">Terms and conditions</span>
                         <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                       </legend>
-                      <label class="block-label" for="termsAndConditions">
+                      <label class="block-label selection-button-checkbox" for="termsAndConditions">
                           <input id="termsAndConditions"
                                  value="1"
                                  type="checkbox"

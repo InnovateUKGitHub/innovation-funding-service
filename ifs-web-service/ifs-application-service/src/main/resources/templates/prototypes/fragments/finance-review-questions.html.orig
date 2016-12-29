@@ -216,7 +216,11 @@
 
 <div th:fragment="finance-question-admin-support">
 
+<<<<<<< HEAD
+	<p>Administration support costs are related expenses incurred as a result of delivering the project.</p>
+=======
 	<p>Overheads are related expenses incurred as a result of delivering the project.</p>
+>>>>>>> eb9403d6ca9e642012d5c831e3b786c8bce583af
 
 	<fieldset class="extra-margin">
 		<legend class="visuallyhidden">Admin support</legend>
