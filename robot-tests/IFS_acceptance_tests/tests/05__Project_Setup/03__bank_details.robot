@@ -315,5 +315,4 @@ the user opens the excel and checks the content
     ${bank_account_number}=     get from list  ${eadel_details}  10
     should be equal             ${bank_account_number}  12345677
     ${bank_account_sort_code}=  get from list  ${eadel_details}  11
-    should be equal             ${bank_account_sort_code}  4
-    # TODO update with INFUND-7175
+    should be equal             ${bank_account_sort_code}  000004
