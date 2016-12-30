@@ -25,7 +25,7 @@
       </div>
   </div>
 
-    <h2 class="heading-medium"><div th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}" th:remove="tag" /> : <div th:text="${model.financeCheckSummaryResource.projectName}" th:remove="tag" /></h2>
+    <h2 class="heading-medium"><th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}"/> : <th:block th:text="${model.financeCheckSummaryResource.projectName}"/></h2>
 
     <hr/>
 

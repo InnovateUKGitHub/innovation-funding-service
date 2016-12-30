@@ -12,7 +12,7 @@
 </div>
 
 <div th:fragment="competition-id-and-name(competitionId, competitionName)" th:remove="tag">
-    <p class="subtitle"><div th:text="${#numbers.formatInteger(competitionId,8)}" th:remove="tag" /> : <div th:text="${competitionName}" th:remove="tag" /></p>
+    <p class="subtitle"><th:block th:text="${#numbers.formatInteger(competitionId,8)}"/> : <th:block th:text="${competitionName}"/></p>
 </div>
 
 <!-- competition status with blue block -->
