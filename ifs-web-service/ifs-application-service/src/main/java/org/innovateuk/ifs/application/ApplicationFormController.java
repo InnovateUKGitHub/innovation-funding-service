@@ -226,7 +226,13 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        if(SectionType.FINANCE.equals(section.getType().getParent().orElse(null))
+                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        }
+
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
 

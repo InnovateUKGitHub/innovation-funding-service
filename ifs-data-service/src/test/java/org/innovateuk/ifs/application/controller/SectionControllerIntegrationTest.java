@@ -49,7 +49,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     private Long leadApplicantOrganisationId;
     private Long collaboratorOneOrganisationId;
     private Long sectionIdYourProjectCostsFinances;
-    private Long otherFundingSection;
+    private Long fundingSection;
 
 
 
@@ -69,7 +69,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         collaboratorOneOrganisationId = 6L;
 
         sectionIdYourProjectCostsFinances = 16L;
-        otherFundingSection=335L;
+        fundingSection = 18L;
         addBasicSecurityUser();
     }
 
@@ -122,7 +122,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     @Test
     @Rollback
     public void testMarkAsComplete(){
-        RestResult<List<ValidationMessages>> result = controller.markAsComplete(otherFundingSection, applicationId, leadApplicantProcessRole);
+        RestResult<List<ValidationMessages>> result = controller.markAsComplete(fundingSection, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccessObject();
         Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> m.getObjectId().equals(35L)).findFirst();

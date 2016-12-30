@@ -433,6 +433,9 @@ public class BaseUnitTest {
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
+                    if (s.getType() == null) {
+                        s.setType(SectionType.GENERAL);
+                    }
                     when(sectionService.getById(s.getId())).thenReturn(s);
                 }
         );
