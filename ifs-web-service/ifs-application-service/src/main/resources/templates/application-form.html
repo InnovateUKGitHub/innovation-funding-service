@@ -57,8 +57,47 @@
                 </div>
             </div>
 
+            <th:block th:if="${currentSection != null and currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
+                <ul th:if="${subSections != null and subSections.size() > 0}"
+                    class="list-overview">
+
+                    <li class="grid-row" th:classappend="section" th:each="subSection : ${subSections.get(currentSection.id)}">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">
+                                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id},sectionId=${subSection.id})}"
+                                   th:text="${subSection.name}"></a>
+                            </h3>
+                        </div>
+                        <img class="section-status complete"
+                             src="/images/field/field-done-right.png"
+                             th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
+                             width="30"
+                             height="30"
+                             th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
+                             th:title="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
+                             th:if="${sectionsMarkedAsComplete.contains(subSection.id)}"/>
+                        <img class="section-status assigned"
+                             src="/images/field/field-assigned-right.png"
+                             th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
+                             width="30"
+                             height="30"
+                             th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
+                             th:title="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
+                             th:unless="${sectionsMarkedAsComplete.contains(subSection.id)}"/>
+                    </li>
+                </ul>
+            </th:block>
+
             <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
             <input type="hidden" id="competition_id" th:value="${currentCompetition.getId()}"/>
+
+            <div th:if="${allReadOnly}" th:remove="tag">
+                <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+            </div>
+            <div th:unless="${allReadOnly}" th:remove="tag">
+                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+            </div>
+
             <th:block th:if="${(currentCompetition.isOpen()) and (currentSection != null) and
             (currentSection.getName() != null)
             and !completedSections?.contains(currentSection.getId())}">
@@ -81,40 +120,6 @@
                     </a>
                 </div>
             </th:block>
-            <th:block th:unless="${isSubFinanceSection}">
-                <ul th:if="${subSections != null and subSections.size() > 0}"
-                    class="list-overview">
-
-                    <li class="grid-row" th:classappend="section" th:each="subSection : ${subSections.get(currentSection.id)}">
-                        <div class="column-two-thirds">
-                            <h3 class="heading-small">
-                                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id},sectionId=${subSection.id})}"
-                                    th:text="${subSection.name}"></a>
-                            </h3>
-                        </div>
-                            <img class="section-status complete"
-                                 src="/images/field/field-done-right.png"
-                                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
-                                 width="30"
-                                 height="30"
-                                 th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
-                                 th:title="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
-                                 th:if="${sectionsMarkedAsComplete.contains(subSection.id)}"/>
-                            <img class="section-status assigned"
-                                 src="/images/field/field-assigned-right.png"
-                                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
-                                 width="30"
-                                 height="30"
-                                 th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
-                                 th:title="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
-                                 th:unless="${sectionsMarkedAsComplete.contains(subSection.id)}"/>
-                    </li>
-                </ul>
-
-                <a th:href="@{/application/{id}(id=${currentApplication.id})}"
-                   class="button-secondary extra-margin">Return to application overview</a>
-            </th:block>
-
 
             <ul class="pagination" th:if="${previousUrl != '' and nextUrl !=''}">
                 <li class="prev" th:if="${previousUrl}">

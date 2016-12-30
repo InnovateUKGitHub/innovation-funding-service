@@ -90,7 +90,9 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
-        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionStatus.OPEN);
+        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)
+                || SectionType.FINANCE.equals(section.getType());
+
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
