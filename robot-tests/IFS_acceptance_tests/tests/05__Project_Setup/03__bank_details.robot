@@ -253,6 +253,21 @@ Project Finance can see Bank Details
     When the user clicks the button/link          link=${Eadel_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
+Other internal users do not have access to bank details export
+    [Documentation]  INFUND-5852
+    [Tags]
+    [Setup]  log in as a different user       &{Comp_admin1_credentials}
+    When the user navigates to the page       ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    Then the user should not see the element  link=Export all bank details
+    And the user navigates to the page and gets a custom error message  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  You do not have the necessary permissions for your request
+
+Project Finance user can export bank details
+    [Documentation]  INFUND-5852
+    [Tags]  Download
+    When the project finance user downloads the bank details
+    Then the user opens the excel and checks the content
+    [Teardown]  remove the file from the operating system  bank_details.csv
+
 *** Keywords ***
 the user moves focus away from the element
     [Arguments]    ${element}
@@ -279,3 +294,26 @@ user submits his finance contacts
     the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
     the user selects the radio button  financeContact  financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")
+
+the project finance user downloads the bank details
+    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
+
+the user opens the excel and checks the content
+    ${contents}=                read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
+    ${eadel_details}=           get from list  ${contents}  7
+    ${eadel}=                   get from list  ${eadel_details}  0
+    should be equal             ${eadel}  ${Eadel_Name}
+    ${Npath_details}=           get from list  ${contents}  8
+    ${Npath}=                   get from list  ${Npath_details}  0
+    should be equal             ${Npath}  ${Npath_Name}
+    ${application_number}=      get from list  ${eadel_details}  1
+    should be equal             ${application_number}  ${PS_BD_APPLICATION_NUMBER}
+    ${postcode}=                get from list  ${eadel_details}  8
+    should be equal             ${postcode}  CH64 3RU
+    ${bank_account_name}=       get from list  ${eadel_details}  9
+    should be equal             ${bank_account_name}  ${Eadel_Name}
+    ${bank_account_number}=     get from list  ${eadel_details}  10
+    should be equal             ${bank_account_number}  12345677
+    ${bank_account_sort_code}=  get from list  ${eadel_details}  11
+    should be equal             ${bank_account_sort_code}  4
+    # TODO update with INFUND-7175
