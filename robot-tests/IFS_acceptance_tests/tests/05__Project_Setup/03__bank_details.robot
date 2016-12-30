@@ -191,14 +191,14 @@ Bank details for non-lead partner
     When the user selects the radio button         addressType  ADD_NEW
     Then the user enters text to a text field      id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup
-    And the user clicks the button/link            jQuery=button:contains("Use selected address")
+    And the user clicks the button/link            jQuery=.button:contains("Use selected address")
     And the address fields should be filled
     When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link            jquery=button:contains("Cancel")
+    And the user clicks the button/link            jquery=.button:contains("Cancel")
     Then the user should not see an error in the page
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link            jQuery=button:contains("Submit")
+    And the user clicks the button/link            jQuery=.button:contains("Submit")
     And the user should see the element            jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            jQuery=ul li.complete:nth-child(2)
