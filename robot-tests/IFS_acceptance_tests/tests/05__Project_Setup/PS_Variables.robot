@@ -96,6 +96,8 @@ ${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
 # EF = Experian feedback
 ${Ntag_Id}        41
 ${Ntag_Name}      Ntag
+${Ntag_No}        18451018
+${Ntag_Street}    39357 Fisk Drive
 ${Jetpulse_Id}    42
 ${Jetpulse_Name}  Jetpulse
 ${Wikivu_Id}      43

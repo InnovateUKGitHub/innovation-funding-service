@@ -13,50 +13,64 @@ Resource          PS_Variables.robot
 *** Variables ***
 
 *** Test Cases ***
-The user can see the company name with score
+Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
-    And the user clicks the button/link     link=Empire Ltd
-    Then the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    # note that this user does not have a dashboard yet, so we need to browse to this page directly for now
-    And the user should see the text in the page    Empire Ltd
-    And the user should see the element    css = tr:nth-child(1) .no
+    [Setup]  guest user log-in            &{internal_finance_credentials}
+    Given the user navigates to the page  ${server}/management/dashboard/project-setup
+    When the user clicks the button/link  link=${PS_EF_Competition_Name}
+    Then the user should see the element  jQuery=#table-project-status tr:nth-child(1) td:nth-child(2).status.ok
+    And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(3).status.action
+    And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action
+    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action a
+    And the user navigates to the page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
-The user can see the company number with status
+Project Finance can see the company name with score
+    [Documentation]  INFUND-3763
+    [Tags]
+    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
+    And the user clicks the button/link           link=${Ntag_Name}
+    Then the user navigates to the page           ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    And the user should see the text in the page  ${Ntag_Name}
+    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(3):contains("3 / 9")
+
+Project Finance can see the company number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Company Number
-    And the user should see the text in the page    60674010
-    And the user should see the element    css = tr:nth-child(2) .no
+    And the user should see the text in the page     ${Ntag_No}
+    And the user should see the element              jQuery=tr:nth-child(2) td:nth-child(3):contains("No Match")
 
-The user can see the account number with status
+Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Bank account number / Sort code
     And the user should see the text in the page    51406795 / 404745
-    And the user should see the element    css = tr:nth-child(3) .no
+    And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(3):contains("No Match")
 
-The user can see the address with score
+Project Finance can see the address with score
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Address
-    And the user should see the element    css = tr:nth-child(4) .yes
+    And the user should see the text in the page     ${Ntag_Street}, London, E17 5LR
+    And the user should see the element              jQuery=tr:nth-child(4) td:nth-child(3):contains("7 / 9")
 
-The user has the options to edit the details and to approve the bank details
+Project Finance has the options to edit the details and to approve the bank details
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the element    link=Change bank account details
     And the user should see the element    jQuery=.button:contains("Approve bank account details")
 
-The user can change address and companies house details
+Project Finance can change address and companies house details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
-    Given the user clicks the button/link        link=Change bank account details
-    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details/change
+    Given the user navigates to the page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    Then the user clicks the button/link  link=Change bank account details
+    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
     And the text box should be editable          id=company-name
-    When the user enters text to a text field    id=street    Empire Road
-    And the user enters text to a text field     id=company-name    Empire Ltd
-    And the user enters text to a text field     id=companies-house-number    60674011
+    When the user enters text to a text field    id=street  ${Ntag_Street}
+    And the user enters text to a text field     id=company-name  ${Ntag_Name}
+    And the user enters text to a text field     id=companies-house-number  ${Ntag_No}
 
 Bank account number and sort code validations client side
     [Documentation]    INFUND-4054
@@ -83,36 +97,36 @@ Bank account number and sort code validations server side
      Then the user should see the text in the page    Please enter a valid account number
      And the user should see the text in the page    Please enter a valid sort code
 
-The user cancels bank details changes
+Project Finance cancels bank details changes
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
-    Then the user should be redirected to the correct page           ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details
+    Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     When the user clicks the button/link          link=Change bank account details
     Then the text box should be editable          id=company-name
     And the user moves focus to the element       id=street
-    Then the user sees the text in the text field    id=street    Montrose House 1
+    Then the user sees the text in the text field    id=street  ${Ntag_Street}
     When the user clicks the button/link    jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
     Then the text box should be editable    id=company-name
 
-The user updates bank account details
+Project Finance updates bank account details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
-    When the user enters text to a text field     id=street    Montrose House 2
-    And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
-    And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
-    Then the user should see the text in the page  Empire Ltd - Account details
-    When the user clicks the button/link          link=Change bank account details
-    Then the user sees the text in the text field    id=street    Montrose House 2
-    When the user clicks the button/link    jQuery=.column-half.alignright button:contains("Update bank account details")
-    Then the user clicks the button/link    jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+    When the user enters text to a text field      id=street    Montrose House 2
+    And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
+    And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+    Then the user should see the text in the page  ${Ntag_Name} - Account details
+    When the user clicks the button/link           link=Change bank account details
+    Then the user sees the text in the text field  id=street    Montrose House 2
+    When the user clicks the button/link           jQuery=.column-half.alignright button:contains("Update bank account details")
+    Then the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
 
-The user approves the bank details
+Project Finance approves the bank details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details/
-    And the user should see the text in the page  Empire Ltd - Account details
+    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    And the user should see the text in the page  ${Ntag_Name} - Account details
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Approve bank account details")    #Checking here that the option is still available
@@ -121,23 +135,17 @@ The user approves the bank details
     Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
     And the user should see the text in the page    The bank details provided have been approved.
 
-
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    log in as a different user    john.doe@innovateuk.test    Passw0rd
-    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
-
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
-    [Setup]    log in as a different user    steve.smith@empire.com    Passw0rd
-    the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/review-bank-details    You do not have the necessary permissions for your request
-
-
-
-
+    [Setup]    log in as a different user  ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
 
 
 *** Keywords ***
@@ -149,6 +157,7 @@ the text box should be editable
 all preliminary steps are completed
     finance contacts are submitted by all users
     project lead submits project details
+    eligible partners submit their bank details
     logout as user
     close any open browsers
 
@@ -165,7 +174,7 @@ user submits his finance contacts
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 project lead submits project details
-    log in as a different user         ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    log in as a different user         ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-address
     the user selects the radio button  addressType  address-use-org
     the user clicks the button/link    jQuery=.button:contains("Save")
@@ -176,4 +185,17 @@ project lead submits project details
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
+eligible partners submit their bank details
+    the user fills in his bank details  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}
+    the user fills in his bank details  ${PS_EF_APPLICATION_PARTNER_EMAIL}
+    the user fills in his bank details  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}
 
+the user fills in his bank details
+    [Arguments]  ${user}
+    log in as a different user            ${user}  ${short_password}
+    the user navigates to the page        ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/bank-details
+    the user enters text to a text field  name=accountNumber  51406795
+    the user enters text to a text field  name=sortCode  404745
+    the user selects the radio button     addressType  address-use-org
+    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link       jQuery=.button:contains("Submit")
