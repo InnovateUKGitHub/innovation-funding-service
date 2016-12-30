@@ -51,7 +51,7 @@ ${project_details_submitted_message}    The project details have been submitted 
 Internal users can see Project Details not yet completed
     [Documentation]  INFUND-5856
     [Tags]    HappyPath
-    [Setup]  log in as user                         john.doe@innovateuk.test    Passw0rd
+    [Setup]  log in as user                         &{Comp_admin1_credentials}
     Given the user navigates to the page            ${internal_project_summary}
     Then the user should not see the element        jQuery=#table-project-status tr:nth-child(1) td.status.ok a   #Check here that there is no Green-Check
     When the user clicks the button/link            jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
@@ -64,7 +64,7 @@ Internal users can see Project Details not yet completed
     Then the user should see the element            jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
     And the user should see the element             jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
-    When Log in as a different user                 lee.bowman@innovateuk.test    Passw0rd
+    When Log in as a different user                 &{internal_finance_credentials}
     Then the user navigates to the page             ${internal_project_summary}
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
@@ -74,7 +74,6 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Tags]      HappyPath
     log in as a different user   &{Comp_admin1_credentials}
-    #TODO Pending due to INFUND-6642
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting     #Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status              #MO
@@ -119,7 +118,7 @@ Non-lead partner can see the project setup page
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    [Setup]    Log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
@@ -228,7 +227,7 @@ Lead partner can change the Start Date
 Option to invite a project manager
     [Documentation]    INFUND-3483
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
@@ -376,10 +375,40 @@ Non lead partner nominates finance contact
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
+# Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
+# and not in Bank Details. Because for this scenario there are testing data for project 3.
+Non lead partner not eligible for funding
+    [Documentation]  INFUND-7090
+    [Tags]  HappyPath
+    Given the user navigates to the page      ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    And the user should see the element       jQuery=ul li.complete:nth-child(2)
+    Then the user should not see the element  jQuery=ul li.require-action:nth-child(4)
+    #    The user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details  You do not have the necessary permissions for your request  TODO INFUND-7174
+    When the user navigates to the page       ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    And the user clicks the button/link       link=What's the status of each of my partners?
+    Then the user navigates to the page       ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    And the user should see the element       jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
+
+Other partners can see who needs to provide Bank Details
+    [Documentation]  INFUND-7090
+    [Tags]
+    [Setup]  log in as a different user   &{lead_applicant_credentials}
+    Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    Then the user should see the element  jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
+    And the user should see the element   jQuery=#table-project-status tr:nth-child(3) td:nth-child(4):contains("-")
+
+Project Finance should see the eligible partners
+    [Documentation]  INFUND-7090
+    [Tags]  HappyPath
+    [Setup]  log in as a different user   &{internal_finance_credentials}
+    Given the user navigates to the page  ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
+    Then the user should see the element  jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")
+    And the user should see the element   jQuery=tr:nth-child(2):contains("Not required")
+
 Option to invite a finance contact
     [Documentation]    INFUND-3579
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
+    [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     And the user should see the text in the page    Finance contacts
