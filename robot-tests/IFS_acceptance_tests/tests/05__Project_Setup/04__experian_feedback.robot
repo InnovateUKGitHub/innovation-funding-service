@@ -4,6 +4,8 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-4054 As a Project Finance team member I want to be able to review and amend unverified partner bank details to ensure they are suitable for approval
 ...
 ...               INFUND-4903: As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
+...
+...               INFUND-6714 Proj finance cannot change account details
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
@@ -123,7 +125,7 @@ Project Finance updates bank account details
     Then the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
 
 Project Finance approves the bank details
-    [Documentation]    INFUND-4054
+    [Documentation]    INFUND-4054, INFUND-6714
     [Tags]    HappyPath
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name} - Account details
@@ -134,6 +136,7 @@ Project Finance approves the bank details
     And the user clicks the button/link    jQuery=.button:contains("Approve account")
     Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
     And the user should see the text in the page    The bank details provided have been approved.
+    And the user should not see the text in the page  We are unable to save your bank account details
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
