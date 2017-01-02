@@ -54,7 +54,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName, String leadTechnologist, String compExecutive) {
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName, String leadTechnologist, String compExecutive, String budgetCode, String pafCode, String code, String activityCode) {
 
         return asCompAdmin(data -> {
 
@@ -75,6 +75,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setCompetitionType(competitionType.getId());
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
                 competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
+                competition.setPafCode(pafCode);
+                competition.setCode(code);
+                competition.setBudgetCode(budgetCode);
+                competition.setActivityCode(activityCode);
             });
         });
     }
@@ -222,6 +226,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
     }
+
+
 
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
 

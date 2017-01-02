@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -8,12 +10,11 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,11 +23,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
@@ -55,6 +56,10 @@ class CsvUtils {
 
     static List<CompetitionLine> readCompetitions() {
         return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+    }
+
+    static List<CompetitionFunderLine> readCompetitionFunders() {
+        return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }
 
     static List<ApplicationLine> readApplications() {
@@ -351,6 +356,11 @@ class CsvUtils {
         String leadTechnologist;
         String compExecutive;
         boolean setupComplete;
+        String budgetCode;
+        String code;
+        String paf_code;
+        String activity_code;
+
 
         private CompetitionLine(List<String> line) {
 
@@ -373,6 +383,25 @@ class CsvUtils {
             leadTechnologist = nullable((line.get(i++)));
             compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
+            budgetCode = nullable(line.get(i++));
+            code = nullable(line.get(i++));
+            paf_code = nullable(line.get(i++));
+            activity_code = nullable(line.get(i++));
+        }
+    }
+
+    static class CompetitionFunderLine {
+        String competitionName;
+        String funder;
+        BigDecimal funder_budget;
+        boolean co_funder;
+
+        private CompetitionFunderLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            funder = nullable(line.get(i++));
+            funder_budget = nullableBigDecimal(line.get(i++));
+            co_funder = nullableBoolean(line.get(i++));
         }
     }
 
@@ -512,6 +541,16 @@ class CsvUtils {
         }
 
         return Integer.valueOf(s);
+    }
+
+    private static BigDecimal nullableBigDecimal(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return new BigDecimal(s);
     }
 
     private static boolean nullableBoolean(String s) {
