@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -10,6 +8,8 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
@@ -344,6 +344,11 @@ class CsvUtils {
         String innovationArea;
         String innovationSector;
         String researchCategory;
+        String collaborationLevel;
+        String leadApplicantType;
+        Integer researchRatio;
+        Boolean resubmission;
+        Boolean multiStream;
         LocalDateTime openDate;
         LocalDateTime submissionDate;
         LocalDateTime fundersPanelDate;
@@ -371,6 +376,11 @@ class CsvUtils {
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
+            collaborationLevel = nullable(line.get(i++));
+            leadApplicantType = nullable(line.get(i++));
+            researchRatio = nullableInteger(line.get(i++));
+            resubmission = nullableBoolean(line.get(i++));
+            multiStream = nullableBoolean(line.get(i++));
             openDate = nullableDateTime(line.get(i++));
             submissionDate = nullableDateTime(line.get(i++));
             fundersPanelDate = nullableDateTime(line.get(i++));

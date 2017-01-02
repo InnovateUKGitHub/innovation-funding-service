@@ -5,10 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -54,7 +51,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName, String leadTechnologist, String compExecutive, String budgetCode, String pafCode, String code, String activityCode) {
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
+                                                String innovationSectorName, String researchCategoryName, String leadTechnologist,
+                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode,
+                                                Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission) {
 
         return asCompAdmin(data -> {
 
@@ -64,6 +64,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 Long innovationArea = getCategoryIdOrNull(INNOVATION_AREA, innovationAreaName);
                 Long innovationSector = getCategoryIdOrNull(INNOVATION_SECTOR, innovationSectorName);
                 Long researchCategory = getCategoryIdOrNull(RESEARCH_CATEGORY, researchCategoryName);
+
+                CollaborationLevel collaborationLevel =  CollaborationLevel.fromCode(collaborationLevelCode);
+                LeadApplicantType leadApplicantType = LeadApplicantType.BUSINESS.fromCode(leadApplicantTypeCode);
 
                 competition.setName(name);
                 competition.setDescription(description);
@@ -79,6 +82,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setCode(code);
                 competition.setBudgetCode(budgetCode);
                 competition.setActivityCode(activityCode);
+                competition.setCollaborationLevel(collaborationLevel);
+                competition.setLeadApplicantType(leadApplicantType);
+                competition.setMaxResearchRatio(researchRatio);
+                competition.setResubmission(resubmission);
+                competition.setMultiStream(multiStream);
             });
         });
     }

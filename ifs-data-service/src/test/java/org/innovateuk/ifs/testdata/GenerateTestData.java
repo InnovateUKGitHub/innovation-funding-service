@@ -638,18 +638,19 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
-
         CompetitionDataBuilder basicInformation =
                 existingCompetitionId.map(id -> competitionDataBuilder.
                         withExistingCompetition(1L).
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.paf_code, line.code, line.activity_code)
+                                line.budgetCode, line.paf_code, line.code, line.activity_code,
+                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission)
                 ).orElse(competitionDataBuilder.
                         createCompetition().
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.paf_code, line.code, line.activity_code).
+                                line.budgetCode, line.paf_code, line.code, line.activity_code,
+                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
                 withOpenDate(line.openDate).
