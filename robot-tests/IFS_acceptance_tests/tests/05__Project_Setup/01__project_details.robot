@@ -368,9 +368,9 @@ Non lead partner nominates finance contact
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
+
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 3.
-
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090
     [Tags]    HappyPath
