@@ -1,19 +1,12 @@
 package org.innovateuk.ifs.management.controller;
 
-import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.time.LocalDateTime;
-
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.application.service.AssessorFeedbackService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,13 +16,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
-import org.innovateuk.ifs.application.service.AssessorFeedbackService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
+import java.time.LocalDateTime;
+
+import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementApplicationsControllerTest {
@@ -78,6 +72,28 @@ public class CompetitionManagementApplicationsControllerTest {
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+
+    @Test
+    public void getByCompetitionIdForClosedCompetition() throws Exception {
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(CLOSED).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+
+        when(applicationSummarySortFieldService.sortFieldForClosedCompetition(null)).thenReturn("sortfield");
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(resource);
+
+        mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-closed"))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "sortfield"))
+                .andExpect(model().attribute("activeTab", "allApplications"));
+
+        verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+        verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
     
     @Test

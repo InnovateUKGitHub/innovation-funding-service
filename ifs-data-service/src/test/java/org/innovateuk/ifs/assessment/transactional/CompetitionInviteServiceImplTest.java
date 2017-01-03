@@ -25,6 +25,7 @@ import org.mockito.InOrder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +45,6 @@ import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCat
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -124,10 +124,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         String email = "john@email.com";
         String name = "John Barnes";
 
+        LocalDateTime acceptsDate = LocalDateTime.of(2016, 12, 20, 12, 0, 0);
+        LocalDateTime deadlineDate = LocalDateTime.of(2017, 1, 17, 12, 0, 0);
+
         Competition competition = newCompetition()
                 .withName("my competition")
-                .withAssessorAcceptsDate(LocalDateTime.of(2016, 12, 20, 12, 0, 0))
-                .withAssessorDeadlineDate(LocalDateTime.of(2017, 1, 17, 12, 0, 0))
+                .withAssessorAcceptsDate(acceptsDate)
+                .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
         Category innovationArea = newCategory().withName("innovation area").build();
@@ -137,8 +140,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Map<String, Object> expectedNotificationArguments = asMap("name", name,
                 "competitionName", "my competition",
                 "innovationArea", innovationArea,
-                "acceptsDate", "20 December 2016",
-                "deadlineDate", "17 January 2017",
+                "acceptsDate", acceptsDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
+                "deadlineDate", deadlineDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
         AssessorInviteToSendResource expectedAssessorInviteToSendResource = newAssessorInviteToSendResource()
