@@ -127,7 +127,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project){
-        // Show hourglass when there is at least one org which hasn't submitted bank details but is required to and none awaiting approval.
+        // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
         for(Organisation organisation : project.getOrganisations()){
             if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
@@ -142,8 +142,6 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 }
             }
         }
-
-        // otherwise show a tick
         if(incomplete) {
             return PENDING;
         } else {
