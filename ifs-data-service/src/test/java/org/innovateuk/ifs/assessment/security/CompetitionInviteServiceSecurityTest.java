@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -162,8 +164,16 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
+    public void inviteNewUsers() throws Exception {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.inviteNewUsers(
+                newNewUserStagedInviteResource().build(2), 1L
+                )
+        );
+    }
+
+    @Test
     public void sendInvite() {
-        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.sendInvite(1L));
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.sendInvite(1L, newEmailContentResource().build()));
     }
 
     @Test
@@ -194,6 +204,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     public static class TestCompetitionInviteService implements CompetitionInviteService {
+
+        @Override
+        public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
+            return null;
+        }
 
         @Override
         public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) {
@@ -246,7 +261,12 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> sendInvite(long inviteId) {
+        public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
             return null;
         }
 

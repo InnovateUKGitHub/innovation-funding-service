@@ -1,13 +1,15 @@
 package org.innovateuk.ifs.project.transactional;
 
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
@@ -52,6 +54,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
 
+    @Autowired
+    private FinanceRowService financeRowService;
+
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
         Competition competition = competitionRepository.findOne(competitionId);
@@ -91,7 +96,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 getBankDetailsStatus(project),
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
-                getMonitoringOfficerStatus(project, projectDetailsStatus),
+                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project)),
                 getOtherDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
@@ -103,6 +108,12 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getProjectDetailsStatus(Project project){
+        for(Organisation organisation : project.getOrganisations()){
+            Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
+            if(financeContact == null || !financeContact.isPresent()){
+                return PENDING;
+            }
+        }
         return createProjectDetailsCompetitionStatus(project);
     }
 
@@ -110,12 +121,19 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
 
+    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId){
+        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        return result.map(Boolean::booleanValue).orElse(false);
+    }
+
     private ProjectActivityStates getBankDetailsStatus(Project project){
         // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
         for(Organisation organisation : project.getOrganisations()){
-            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            if(!bankDetails.isPresent()){
-                return PENDING;
+            if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
+                Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+                if (!bankDetails.isPresent()) {
+                    return PENDING;
+                }
             }
         }
 
@@ -123,7 +141,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         for(Organisation organisation : project.getOrganisations()){
             Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
             ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
             if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
                 return ACTION_REQUIRED;
             }
@@ -209,12 +227,10 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             return PENDING;
         }
 
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && project.isOfferRejected()) {
-            return PENDING;
-        }
-
-        if (project.getOfferSubmittedDate() != null && project.isOfferRejected() != null && !project.isOfferRejected()) {
-            return COMPLETE;
+        if (project.getOfferSubmittedDate() != null) {
+            if (golWorkflowHandler.isApproved(project)) {
+                return COMPLETE;
+            }
         }
 
         if(project.getOfferSubmittedDate() != null) {

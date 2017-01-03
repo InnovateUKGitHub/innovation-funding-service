@@ -3,23 +3,6 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-
-
-
-	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
-		<style>
-			#application-list tbody tr{
-				display: none;
-			}
-			.pagination{
-				display: none;
-			}
-			#application-list tbody tr.filtered-result{
-				display: table-row;
-			}
-		</style>
-	</div>
-
 </head>
 
 <body class="dashboard-internal full-width show-applications">
@@ -68,29 +51,29 @@
         <div class="grid-row extra-margin-bottom">
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">3</span><br />
-              <small>applications being funded</small>
+              <span class="heading-large">287</span><br />
+              <small>applications</small>
             </div>
   				</div>
 
   				<div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">6</span><br />
-              <small>applications</small>
+              <span class="heading-large">2</span><br />
+              <small>applications being funded</small>
             </div>
   				</div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">4</span><br />
-              <small>applications not submitted</small>
+              <span class="heading-large">281</span><br />
+              <small>applications not being funded</small>
             </div>
           </div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">4</span><br />
-              <small>applications removed</small>
+              <span class="heading-large">3</span><br />
+              <small>applications on hold</small>
             </div>
           </div>
 
@@ -131,12 +114,40 @@
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
+		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
+
+      <div class="grid-row sorting">
+        <div class="column-half">
+          <div class="form-group no-margin">
+            <fieldset class="inline">
+              <label class="block-label" for="select-all">
+                <input id="select-all" value="select-all" type="checkbox" />
+                Select all applications
+              </label>
+              <p><span class="heading-xlarge extra-margin-left" id="applications-selected">10</span> applications selected</p>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="column-half alignright">
+
+          <span class="extra-margin-right">Mark applicaton as</span>
+
+          <button class="button button-secondary">Successful</button>
+          <button class="button button-secondary">Unsuccessful</button>
+          <button class="button button-secondary">On hold</button>
+
+        </div>
+
+
+      </div>
+
 
 			<div class="table-overflow">
 				<table id="application-list">
 					<thead>
 						<tr>
+              <th scope="col" id="select-applications-label">Select application(s)</th>
 							<th scope="col">Application number</th>
 							<th scope="col">Project title</th>
 							<th scope="col">Lead</th>
@@ -155,6 +166,7 @@
 					</thead>
 					<tbody>
 						<tr class="filtered-result">
+              <td><input type="checkbox" name="app-row-1" aria-labelledby="select-applications-label" /></td>
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
 							<td>Machine learning in robots</td>
 							<td>PWC</td>
@@ -175,6 +187,7 @@
               </th:block>
 						</tr>
 						<tr class="filtered-result">
+              <td><input type="checkbox" name="app-row-2" aria-labelledby="select-applications-label" /></td>
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
 							<td>Robots that learn</td>
 							<td>Max Digital</td>
@@ -195,6 +208,7 @@
               </th:block>
 						</tr>
 						<tr class="filtered-result">
+              <td><input type="checkbox" name="app-row-3" aria-labelledby="select-applications-label" /></td>
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
 							<td>AI in learning</td>
 							<td>BBC</td>
@@ -215,6 +229,7 @@
               </th:block>
 						</tr>
 						<tr class="filtered-result">
+              <td><input type="checkbox" name="app-row-4" aria-labelledby="select-applications-label" /></td>
 							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
 							<td>Progressive machines</td>
 							<td>Kingfisher</td>

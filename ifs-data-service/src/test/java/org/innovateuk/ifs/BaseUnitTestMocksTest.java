@@ -18,6 +18,7 @@ import org.innovateuk.ifs.application.transactional.AssessorFeedbackService;
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -56,6 +57,7 @@ import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -234,6 +236,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
+
+    @Mock
+    protected AssessorInviteToSendMapper assessorInviteToSendMapperMock;
 
     @Mock
     protected CompetitionInviteService competitionInviteServiceMock;
@@ -485,9 +490,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
-    private SpendProfileTableCalculator spendProfileTableCalculator;
+    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
-
+    @Mock
+    protected NotificationSender notificationSender;
 
     @Before
     public void setupMockInjection() {

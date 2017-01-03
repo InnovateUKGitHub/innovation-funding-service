@@ -185,6 +185,6 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("selectedRole"));
-        assertEquals("Please select a role", bindingResult.getFieldError("selectedRole").getDefaultMessage());
+        assertEquals("Please select a role.", bindingResult.getFieldError("selectedRole").getDefaultMessage());
     }
 }

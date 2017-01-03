@@ -131,7 +131,7 @@ ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
 ${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
 ${COMP_MANAGEMENT_OPEN_COMP}    ${SERVER}/management/competition/setup/${FUNDERS_PANEL_COMPETITION}
-${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
+${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/${FUNDERS_PANEL_APPLICATION_2}/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${404_error_message}    Page not found
@@ -157,7 +157,7 @@ ${test_title}     test title
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
-${empty_field_warning_message}    This field cannot be left blank
+${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
@@ -199,3 +199,5 @@ ${database_host}    ifs-database
 ${database_port}    3306
 ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
+${UPCOMING_COMPETITION_TO_ASSESS_ID}    11

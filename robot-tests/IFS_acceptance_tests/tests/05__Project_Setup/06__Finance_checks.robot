@@ -23,10 +23,18 @@ Project Finance user can see the finance check summary page
     [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element          jQuery=h2:contains("Finance Checks")
+    Then the user should see the element          jQuery=table.table-progress
+    And the user should see the element          jQuery=h2:contains("Finance checks")
     And the user should see the text in the page  Overview
     And the table row has expected values
     [Teardown]  the user clicks the button/link  link=Competition Dashboard
+
+Project finance approves Viability
+    [Documentation]  INFUND-7076
+    [Tags]  HappyPath
+    When project finance approves Viability for  1
+    Then project finance approves Viability for  2
+    # TODO some extra validation testing INFUND-7076
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
@@ -36,7 +44,7 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Queries raised
     And The user should not see the text in the page    Notes
     When the user should see the element    link=Review
-    Then the user should see that the element is disabled    jQuery=.button:contains("Generate Spend Profile")
+    Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
@@ -99,7 +107,7 @@ Approve Eligibility: Academic partner organisation
     Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-2    Approved
-    And The user should see the element    jQuery=.button:contains("Generate Spend Profile")
+    And The user should see the element    jQuery=.generate-spend-profile-main-button
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
@@ -111,13 +119,6 @@ Project Finance user can view academic Jes form
     When the user clicks the button/link    link=jes-form53.pdf
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
-
-Project Finance user can export bank details
-    [Documentation]    INFUND-5852
-    [Tags]    Download
-    When the project finance user downloads the bank details
-    Then the user opens the excel and checks the content
-    [Teardown]    remove the file from the operating system    bank_details.csv
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -141,24 +142,17 @@ Status updates correctly for internal user's table
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting       # Bank details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance Checks are actionable from the start-workaround for Private beta assessment
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
 
-Other internal users do not have access to Finance Checks
+Other internal users do not have access to Finance checks
     [Documentation]    INFUND-4821
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-
-Other internal users do not have access to bank details export
-    [Documentation]    INFUND-5852
-    [Tags]
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-    Then the user should not see the element    link=Export all bank details
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    You do not have the necessary permissions for your request
 
 
 *** Keywords ***
@@ -175,7 +169,7 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
-    the user navigates to the page    ${server}/management/dashboard/projectSetup
+    the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
@@ -233,7 +227,6 @@ the users fill out project details
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
-
 the user fills in project costs
     Input Text    name=costs[0].value    £ 8,000
     Input Text    name=costs[1].value    £ 2,000
@@ -246,34 +239,19 @@ the user fills in project costs
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
-
-the project finance user downloads the bank details
-    the user downloads the file    lee.bowman@innovateuk.test    Passw0rd    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
-
-
-the user opens the excel and checks the content
-    ${contents}=    read csv file    ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${empire_details}=    get from list    ${contents}    1
-    ${empire_name}=    get from list    ${empire_details}    0
-    should be equal    ${empire_name}    ${empire_ltd_name}
-    ${eggs_details}=    get from list    ${contents}    2
-    ${eggs_name}=    get from list    ${eggs_details}    0
-    should be equal    ${eggs_name}    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    ${ludlow_details}=    get from list    ${contents}    3
-    ${ludlow_name}=    get from list    ${ludlow_details}    0
-    should be equal    ${ludlow_name}    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    ${application_number}=    get from list    ${empire_details}    1
-    should be equal    ${application_number}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}
-    ${postcode}=    get from list    ${empire_details}    8
-    should be equal    ${postcode}    CH64 3RU
-    ${bank_account_name}=    get from list    ${empire_details}    9
-    should be equal    ${bank_account_name}    ${empire_ltd_name}
-    ${bank_account_number}=    get from list    ${empire_details}    10
-    should be equal    ${bank_account_number}    51406795
-    ${bank_account_sort_code}=    get from list    ${empire_details}    11
-    should be equal    ${bank_account_sort_code}    404745
-
-
+project finance approves Viability for
+    [Arguments]  ${partner}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user should see the element     jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
+    Then the user should see the element    jQuery=h2:contains("Credit report")
+    And the user selects the checkbox       id=costs-reviewed
+    When the user should see the element    jQuery=h2:contains("Approve viability")
+    Then the user selects the checkbox      id=project-viable
+    And the user moves focus to the element  link=Contact us
+    When the user selects the option from the drop-down menu  Green  id=rag-rating
+    Then the user clicks the button/link    css=#confirm-button
+    And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 
 

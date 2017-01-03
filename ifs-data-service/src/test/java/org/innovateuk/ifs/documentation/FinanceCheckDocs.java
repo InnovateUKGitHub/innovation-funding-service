@@ -16,6 +16,7 @@ public class FinanceCheckDocs {
 
     public static final FieldDescriptor[] financeCheckSummaryResourceFields = {
             fieldWithPath("projectId").description("Id or project that the status is from"),
+            fieldWithPath("projectName").description("Name of project that the status is from"),
             fieldWithPath("competitionId").description("Id of competition that the project is from"),
             fieldWithPath("competitionName").description("Name of competition that the project is from"),
             fieldWithPath("projectStartDate").description("Expected start date of project"),

@@ -1,28 +1,27 @@
 // jshint ignore: start
-var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var jscs = require('gulp-jscs');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
+var gulp = require('gulp')
+var standard = require('gulp-standard')
+var uglify = require('gulp-uglify')
+var concat = require('gulp-concat')
 
-gulp.task('default',['js','css']);
+gulp.task('default', ['js', 'css'])
 
-//build all js
-gulp.task('js', function() {
-   return gulp.src([
-      'js/ifsProjectSetupLoader.js',
-      'js/ifs_modules/*.js',
-      'js/ifs_pages/*.js',
+// build all js
+gulp.task('js', function () {
+  return gulp.src([
+    'js/ifsProjectSetupLoader.js',
+    'js/ifs_modules/*.js',
+    'js/ifs_pages/*.js'
    	])
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    // .pipe(jshint.reporter('fail'))
-    .pipe(jscs())
-    .pipe(jscs.reporter())
-    // .pipe(jscs.reporter('fail'))
+    .pipe(standard())
     .pipe(concat('project-setup.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('js/dest'))
-});
-gulp.task('css', function() {});
-gulp.task('css:watch', function() {});
+    .pipe(standard.reporter('default', {
+      breakOnError: true,
+      breakOnWarning: false,
+      quiet: false
+    }))
+})
+gulp.task('css', function () {})
+gulp.task('css:watch', function () {})

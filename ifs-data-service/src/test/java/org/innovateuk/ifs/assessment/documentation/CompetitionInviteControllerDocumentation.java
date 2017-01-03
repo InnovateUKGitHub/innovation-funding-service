@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -50,6 +52,23 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void setup() {
         this.document = document("competitioninvite/{method-name}",
                 preprocessResponse(prettyPrint()));
+    }
+
+    @Test
+    public void getCreatedInvite() throws Exception {
+        long inviteId = 1L;
+        AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
+
+        when(competitionInviteServiceMock.getCreatedInvite(inviteId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/competitioninvite/getCreated/{inviteId}", inviteId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("inviteId").description("Id of the created invite being requested")
+                        ),
+                        responseFields(assessorToSendFields)
+                ));
     }
 
     @Test
@@ -204,7 +223,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
     @Test
     public void inviteUser() throws Exception {
-        ExistingUserStagedInviteResource existingUserStagedInviteResource = new ExistingUserStagedInviteResource("firstname.lastname@example.com", 1L);
+        ExistingUserStagedInviteResource existingUserStagedInviteResource = existingUserStagedInviteResourceBuilder.build();
 
         when(competitionInviteServiceMock.inviteUser(existingUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
 
@@ -213,10 +232,54 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .content(toJson(existingUserStagedInviteResource)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
+                        requestFields(existingUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
                 ));
 
         verify(competitionInviteServiceMock, only()).inviteUser(existingUserStagedInviteResource);
+    }
+
+    @Test
+    public void inviteNewUser() throws Exception {
+        NewUserStagedInviteResource newUserStagedInviteResource = newUserStagedInviteResourceBuilder.build();
+
+        when(competitionInviteServiceMock.inviteUser(newUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
+
+        mockMvc.perform(post("/competitioninvite/inviteNewUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(newUserStagedInviteResource)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        requestFields(newUserStagedInviteResourceFields),
+                        responseFields(competitionInviteFields)
+                ));
+
+        verify(competitionInviteServiceMock, only()).inviteUser(newUserStagedInviteResource);
+    }
+
+    @Test
+    public void inviteNewUsers() throws Exception {
+        long competitionId = 1L;
+
+        NewUserStagedInviteListResource newUserStagedInviteListResource = newUserStagedInviteListResourceBuilder.build();
+        List<NewUserStagedInviteResource> newUserStagedInviteResources = newUserStagedInviteListResource.getInvites();
+
+        when(competitionInviteServiceMock.inviteNewUsers(newUserStagedInviteResources, competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/inviteNewUsers/{competitionId}", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(newUserStagedInviteListResource)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to invite the users to")
+                        ),
+                        requestFields(
+                                fieldWithPath("invites[]").description("List of new users to be invited to assess the competition")
+                        ).andWithPrefix("invites[].", newUserStagedInviteResourceFields)
+                ));
+
+        verify(competitionInviteServiceMock, only()).inviteNewUsers(newUserStagedInviteResources, competitionId);
     }
 
     @Test
@@ -238,5 +301,32 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 ));
 
         verify(competitionInviteServiceMock, only()).deleteInvite(email, competitionId);
+    }
+
+    @Test
+    public void sendInvite() throws Exception {
+        long inviteId = 1L;
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain text")
+                .withHtmlText("<html>html text</htm>")
+                .build();
+
+        AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
+
+        when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(content)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("inviteId").description("Id of the created invite being sent")
+                        ),
+                        responseFields(assessorToSendFields)
+                ));
     }
 }

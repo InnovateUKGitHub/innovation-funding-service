@@ -85,6 +85,7 @@ public class POJOTest {
             AvailableAssessorResource.class,
             AssessorCreatedInviteResource.class,
             AssessorInviteOverviewResource.class,
+            AssessorInviteToSendResource.class,
             Address.class,
             OrganisationType.class,
             Application.class,
@@ -150,7 +151,8 @@ public class POJOTest {
             GuidanceRowResource.class,
             AssessmentSubmissionsResource.class,
             NewUserStagedInviteResource.class,
-            ExistingUserStagedInviteResource.class
+            ExistingUserStagedInviteResource.class,
+            NewUserStagedInviteListResource.class
             );
 
     @Before

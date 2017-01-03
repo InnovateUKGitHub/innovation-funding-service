@@ -63,7 +63,14 @@
 				<label class="form-label" for="company-name">
 					<span class="form-label-bold">Company name</span>
 				</label>
-				<input type="text" data-required-errormessage="Please enter a company or organisation name" th:errorclass="field-error" required="required" id="company-name" name="company-name" class="form-control" th:field="*{organisationName}"/>
+				 <input type="text"
+				 		th:attr="data-required-errormessage=#{validation.bankdetailsresource.project.required}"
+						th:errorclass="field-error"
+						required="required"
+						id="company-name"
+						name="company-name"
+						class="form-control"
+						th:field="*{organisationName}"/>
 			</div>
 
 
@@ -72,7 +79,7 @@
 					<span class="form-label-bold">Companies house number</span>
 				</label>
 				<p class="form-hint">For example: 1548965</p>
-				<input type="text" data-required-errormessage="Please enter a companies house registration number" data-minlength-errormessage="Please enter a valid companies house registration number" th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="companies-house-number" name="companies-house-number" class="form-control" th:field="*{registrationNumber}"/>
+				<input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-minlength-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="companies-house-number" name="companies-house-number" class="form-control" th:field="*{registrationNumber}"/>
 			</div>
 
 
@@ -90,7 +97,7 @@
 					<span class="form-label-bold">Account number</span>
 				</label>
 				<p class="form-hint">For example: 1548965</p>
-				<input type="text" data-required-errormessage="Please enter an account number" data-minlength-errormessage="Please enter a valid account number" th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="bank-acc-number" class="form-control" th:field="*{accountNumber}"/>
+				<input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-minlength-errormessage=#{validation.standard.accountnumber.format}"  th:errorclass="field-error" required="required" maxlength="8" minlength="8" id="bank-acc-number" class="form-control" th:field="*{accountNumber}"/>
 			</div>
 
 			<div class="form-group ">
@@ -98,7 +105,7 @@
 					<span class="form-label-bold">Sort code</span>
 				</label>
 				<p class="form-hint">For example: 311212</p>
-				<input type="text" data-required-errormessage="Please enter a sort code" data-minlength-errormessage="Please enter a valid sort code" th:errorclass="field-error" required="required" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+				<input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-minlength-errormessage=#{validation.standard.sortcode.format}" th:errorclass="field-error" required="required" maxlength="6" minlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
 			</div>
 
 			<h2 class="heading-medium no-margin-bottom">Billing address</h2>
@@ -113,7 +120,8 @@
 				<label class="form-label" for="street">
 					<span class="form-label-bold">Street</span>
 				</label>
-				<input class="form-control street" id="street" name="street" type="text" value="" th:field="*{addressForm.selectedPostcode.addressLine1}"/>
+				<input class="form-control street"
+ id="street" name="street" type="text" value="" th:field="*{addressForm.selectedPostcode.addressLine1}"/>
 			</div>
 			<div class="form-group">
 				<label class="form-label visuallyhidden" for="street-2">

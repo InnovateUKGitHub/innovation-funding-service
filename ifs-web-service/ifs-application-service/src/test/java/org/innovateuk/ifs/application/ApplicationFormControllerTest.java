@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -125,7 +127,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
-        mockMvc.perform(get("/application/1/form/section/"+currentSectionId))
+        mockMvc.perform(get("/application/1/form/section/"+currentSectionId).header("referer", "/application/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
@@ -135,6 +137,28 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(model().attribute("userIsLeadApplicant", true))
                 .andExpect(model().attribute("leadApplicant", users.get(0)))
                 .andExpect(model().attribute("currentSectionId", currentSectionId));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
+    }
+
+    @Test
+    public void testApplicationFormWithOpenSectionWhenTraveresedFromSummaryPage() throws Exception {
+
+        Long currentSectionId = sectionResources.get(2).getId();
+
+        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+        mockMvc.perform(get("/application/1/form/section/"+currentSectionId).header("referer", "/application/1/summary"))
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attribute("currentApplication", application))
+                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("userIsLeadApplicant", true))
+                .andExpect(model().attribute("leadApplicant", users.get(0)))
+                .andExpect(model().attribute("currentSectionId", currentSectionId));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -152,7 +176,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(model().attribute("hasFinanceSection", true))
                 .andExpect(model().attribute("financeSectionId", currentSectionId))
                 .andExpect(model().attribute("allReadOnly", false));
-
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -196,6 +220,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param(ApplicationFormController.EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
 
@@ -304,6 +329,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.TERMS_AGREED_KEY));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -318,6 +344,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -373,6 +400,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
+
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -392,6 +421,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationNumber").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationTitle").getCode());
+
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -410,6 +441,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -422,6 +454,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Min", bindingResult.getFieldError("application.durationInMonths").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -434,6 +467,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Max", bindingResult.getFieldError("application.durationInMonths").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -453,6 +487,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         assertNull(bindingResult.getFieldError("application.previousApplicationNumber"));
         assertNull(bindingResult.getFieldError("application.previousApplicationTitle"));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test
@@ -499,6 +534,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().hasErrors());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
     @Test

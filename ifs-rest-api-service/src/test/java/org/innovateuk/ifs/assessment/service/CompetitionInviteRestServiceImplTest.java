@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -10,9 +11,13 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -26,6 +31,15 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     protected CompetitionInviteRestServiceImpl registerRestServiceUnderTest() {
         CompetitionInviteRestServiceImpl competitionInviteRestService = new CompetitionInviteRestServiceImpl();
         return competitionInviteRestService;
+    }
+
+    @Test
+    public void getCreatedInvite() throws Exception {
+        long inviteId = 1L;
+        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated", inviteId), AssessorInviteToSendResource.class, expected);
+        AssessorInviteToSendResource actual = service.getCreated(inviteId).getSuccessObject();
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -123,6 +137,26 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void inviteNewUsers() throws Exception {
+        long competitionId = 1L;
+
+        NewUserStagedInviteListResource newUserStagedInviteListResource = newNewUserStagedInviteListResource()
+                .withInvites(
+                        newNewUserStagedInviteResource()
+                                .withName("Tester 1", "Tester 2")
+                                .withEmail("test1@test.com", "test2@test.com")
+                                .withInnovationCategoryId(1L)
+                                .build(2)
+                )
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "inviteNewUsers", competitionId), newUserStagedInviteListResource, OK);
+
+        RestResult<Void> restResult = service.inviteNewUsers(newUserStagedInviteListResource, competitionId);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
     public void deleteInvite() {
         String email = "firstname.lastname@example.com";
         long competitionId = 1L;
@@ -131,5 +165,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         RestResult<Void> resultResult = service.deleteInvite(email, competitionId);
         assertTrue(resultResult.isSuccess());
+    }
+
+    @Test
+    public void sendInvite() {
+        long inviteId = 5L;
+        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
+        EmailContent email = newEmailContentResource().build();
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), AssessorInviteToSendResource.class, email, expected, OK);
+
+        AssessorInviteToSendResource actual = service.sendInvite(inviteId, email).getSuccessObject();
+        assertEquals(expected, actual);
     }
 }

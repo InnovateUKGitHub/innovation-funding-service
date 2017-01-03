@@ -23,13 +23,13 @@ Day field client side
     [Tags]    HappyPath
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_day    0
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_day    -1
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
     #TODO this test case fails when running the HappyPath.
@@ -41,13 +41,13 @@ Month field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_month    0
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_month    13
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_month    -1
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -60,9 +60,9 @@ Year field client side
     ...    AND    the user enters text to a text field    id=application_details-duration    15
     ...    AND    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
     When the applicant inserts an invalid date
-    Then the user should see an error    Please enter a future date
+    Then the user should see an error    Please enter a future date.
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    Then the user should see an error    Please enter a future date
+    Then the user should see an error    Please enter a future date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -78,7 +78,7 @@ Duration field client side
     When the user enters text to a text field    id=application_details-duration    -1
     Then the user should see an error    Your project should last between 1 and 36 months.
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    This field cannot be left blank.
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -96,11 +96,11 @@ Application details server side
     And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field    id=application_details-duration    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then The user should see an error    Please enter the full title of the project
-    And the user should see an error    Please enter a future date
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    Please enter the previous application number
-    And the user should see an error    Please enter the previous application title
+    Then The user should see an error    Please enter the full title of the project.
+    And the user should see an error    Please enter a future date.
+    And the user should see an error    This field cannot be left blank.
+    And the user should see an error    Please enter the previous application number.
+    And the user should see an error    Please enter the previous application title.
     And the user should see the element    css=.error-summary-list
     [Teardown]   Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
                      ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
@@ -110,7 +110,7 @@ Empty text area
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
-    Then the user should see an error    Please enter some text
+    Then the user should see an error    Please enter some text.
     When The user enters text to a text field    css=#form-input-11 .editor    Test 123
     Then the applicant should not see the validation error any more
 

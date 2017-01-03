@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,11 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 public class CompetitionInviteRestServiceImpl extends BaseRestService implements CompetitionInviteRestService {
 
     private static final String competitionInviteRestUrl = "/competitioninvite";
+
+    @Override
+    public RestResult<AssessorInviteToSendResource> getCreated(long inviteId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getCreated", inviteId), AssessorInviteToSendResource.class);
+    }
 
     @Override
     public RestResult<CompetitionInviteResource> getInvite(String inviteHash) {
@@ -63,7 +69,19 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites,  long competitionId) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "inviteNewUsers", competitionId), newUserStagedInvites, Void.class);
+    }
+
+    @Override
     public RestResult<Void> deleteInvite(String email, long competitionId) {
         return deleteWithRestResult(format("%s/%s?competitionId=%s&email=%s", competitionInviteRestUrl, "deleteInvite", competitionId, email), Void.class);
     }
+
+    @Override
+    public RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), content, AssessorInviteToSendResource.class);
+    }
+
+
 }

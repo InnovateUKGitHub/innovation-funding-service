@@ -4,17 +4,17 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
-import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
-import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
-import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
-import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
+import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
+import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
@@ -107,7 +108,11 @@ public class BankDetailsManagementController {
         return validationHandler.performActionOrBindErrorsToField("",
                 faliureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
-                () -> bankDetailsService.updateBankDetails(projectId, bankDetailsResource));
+                () -> {
+                    Void result = bankDetailsService.updateBankDetails(projectId, bankDetailsResource).getSuccessObjectOrThrowException();
+                    return serviceSuccess(result);
+                }
+        );
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
@@ -148,8 +153,8 @@ public class BankDetailsManagementController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
-                        updatedOrganisationResource = organisationService.updateNameAndRegistration(updatedOrganisationResource);
-                        return doViewReviewBankDetails(updatedOrganisationResource, project, updatedBankDetailsResource, model, new ApproveBankDetailsForm());
+                        organisationService.updateNameAndRegistration(updatedOrganisationResource);
+                        return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
                     });
         });
     }

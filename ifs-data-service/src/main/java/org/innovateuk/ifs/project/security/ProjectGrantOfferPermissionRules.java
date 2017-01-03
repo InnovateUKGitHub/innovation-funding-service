@@ -28,7 +28,7 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "VIEW_GRANT_OFFER_PARTNER",
+            value = "VIEW_GRANT_OFFER",
             description = "Partners can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
 
     public boolean partnersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
