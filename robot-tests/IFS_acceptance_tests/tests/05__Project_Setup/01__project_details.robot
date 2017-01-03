@@ -36,6 +36,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5979 Consortium table - Project details - should update when partners submit their Finance Contacts
 ...
 ...               INFUND-5805 As a successful applicant I want to be able to view the grant terms and conditions from my dashboard so that I can confirm what I agreed to in the application
+...
+...               INFUND-6781 Spend Profile is accessible before preliminary sections are completed
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -501,15 +503,24 @@ Non-lead partner cannot change start date, project manager or project address
     And the user should not see the element    link=Project Manager
     And the user should not see the element    link=Project address
 
+Internal user should see project details are incomplete
+    [Documentation]    INFUND-6781
+    [Tags]
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page     ${internal_project_summary}
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting
+    Then the user should see the text in the page  	Not yet completed
+
 Academic Partner nominates Finance contact
-    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979
+    [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
     [Tags]    HappyPath
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
-    And the user clicks the button/link    link=Project setup status
-    And the user clicks the button/link    link=Project details
+    When the user clicks the button/link    link=Project setup status
+    Then the user should not see the element    jQuery=li.require-action:nth-child(4)
+    When the user clicks the button/link    link=Project details
     Then the user should see the text in the page  Finance contacts
     And the user should see the text in the page   Partner
     And the user clicks the button/link            link=EGGS
@@ -520,6 +531,7 @@ Academic Partner nominates Finance contact
     And the user should see the element     link=EGGS
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
+    And the user should see the element    jQuery=li.require-action:nth-child(4)
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
