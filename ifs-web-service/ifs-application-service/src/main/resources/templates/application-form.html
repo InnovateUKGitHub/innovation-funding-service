@@ -94,7 +94,7 @@
             <div th:if="${allReadOnly}" th:remove="tag">
                 <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>
-            <div th:unless="${isSubFinanceSection or allReadOnly}" th:remove="tag">
+            <div th:unless="${isSubFinanceSection == true or allReadOnly}" th:remove="tag">
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
 
