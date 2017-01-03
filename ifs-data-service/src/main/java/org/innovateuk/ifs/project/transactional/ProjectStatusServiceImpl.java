@@ -127,28 +127,28 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project){
-        // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
+        // Show hourglass when there is at least one org which hasn't submitted bank details but is required to and none awaiting approval.
+        boolean incomplete = false;
         for(Organisation organisation : project.getOrganisations()){
             if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-                if (!bankDetails.isPresent()) {
-                    return PENDING;
+                ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+                ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
+                if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
+                    incomplete = true;
+                }
+                if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
+                    return ACTION_REQUIRED;
                 }
             }
         }
 
-        // Show action required by internal user (pending flag) when all bank details submitted but at least one requires manual approval.
-        for(Organisation organisation : project.getOrganisations()){
-            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
-            if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
-                return ACTION_REQUIRED;
-            }
-        }
-
         // otherwise show a tick
-        return COMPLETE;
+        if(incomplete) {
+            return PENDING;
+        } else {
+            return COMPLETE;
+        }
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
