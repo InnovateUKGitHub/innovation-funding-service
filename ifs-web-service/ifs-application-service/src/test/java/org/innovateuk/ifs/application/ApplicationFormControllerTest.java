@@ -175,7 +175,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(model().attribute("currentSectionId", currentSectionId))
                 .andExpect(model().attribute("hasFinanceSection", true))
                 .andExpect(model().attribute("financeSectionId", currentSectionId))
-                .andExpect(model().attribute("allReadOnly", false));
+                .andExpect(model().attribute("allReadOnly", true));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
