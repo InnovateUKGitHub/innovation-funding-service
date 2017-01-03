@@ -646,8 +646,12 @@ public class ApplicationFormController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
 
-        if (section.getType() == SectionType.FINANCE &&
+        if (section.getType() == SectionType.FUNDING_FINANCES &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
+            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            return APPLICATION_FORM;
+        } else if (section.getType() == SectionType.PROJECT_COST_FINANCES &&
+                !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
             applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
             return APPLICATION_FORM;
         }
@@ -693,7 +697,17 @@ public class ApplicationFormController {
                 bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
                 return false;
-            } else if (!form.isStateAidAgreed()) {
+            }
+        }
+        return true;
+    }
+
+    private boolean validStateAidForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
+                                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
+                                                       CompetitionResource competition, UserResource user, Model model
+    ) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+            if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
                 return false;

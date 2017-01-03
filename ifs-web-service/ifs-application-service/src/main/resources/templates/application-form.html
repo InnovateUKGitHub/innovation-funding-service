@@ -94,7 +94,7 @@
             <div th:if="${allReadOnly}" th:remove="tag">
                 <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>
-            <div th:unless="${allReadOnly}" th:remove="tag">
+            <div th:unless="${isSubFinanceSection or allReadOnly}" th:remove="tag">
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
 
@@ -110,7 +110,7 @@
             </th:block>
             <th:block th:if="${isSubFinanceSection}">
                 <div>
-                    <button th:unless="${sectionsMarkedAsComplete.contains(currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
+                    <button id="mark-all-as-complete" th:unless="${sectionsMarkedAsComplete.contains(currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
                     <button th:if="${sectionsMarkedAsComplete.contains(currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="button"
                             th:text="${'Edit ' + currentSection.name}">Edit</button>
                 </div>
