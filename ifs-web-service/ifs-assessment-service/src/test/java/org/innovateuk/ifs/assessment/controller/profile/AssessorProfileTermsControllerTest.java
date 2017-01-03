@@ -178,7 +178,7 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("agreesToTerms"));
-        assertEquals("Please agree to the terms and conditions", bindingResult.getFieldError("agreesToTerms").getDefaultMessage());
+        assertEquals("Please agree to the terms and conditions.", bindingResult.getFieldError("agreesToTerms").getDefaultMessage());
 
         verify(userService, only()).getProfileContract(user.getId());
     }

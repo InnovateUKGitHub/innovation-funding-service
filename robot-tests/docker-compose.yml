@@ -22,6 +22,8 @@ services:
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
       - DBUS_SESSION_BUS_ADDRESS=/dev/null
+      - no_proxy=localhost
+      - HUB_ENV_no_proxy=localhost
     volumes:
       - /dev/shm:/dev/shm
     ports:

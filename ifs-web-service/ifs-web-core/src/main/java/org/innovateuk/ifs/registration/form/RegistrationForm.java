@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
  * read all the request attributes to get to the form data.
  */
 
-@FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
+@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class RegistrationForm {
 
 

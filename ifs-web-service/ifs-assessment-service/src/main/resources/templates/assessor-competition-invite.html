@@ -23,7 +23,7 @@
                 <h2 class="heading-medium no-margin">
                     <span th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|" th:remove="tag">21 March 2017 to 28 March 2017: Assessment period</span>
                 </h2>
-                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<span th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
+                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<span th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}" th:remove="tag">100</span> per application.</p>
 
                 <p th:if="${model.briefingDate}">The assessor webinar briefing will last one hour,
                     taking place at <span th:text="${#temporals.format(model.briefingDate, 'dd MMMM yyyy')}" th:remove="tag">21 March 2017</span>.

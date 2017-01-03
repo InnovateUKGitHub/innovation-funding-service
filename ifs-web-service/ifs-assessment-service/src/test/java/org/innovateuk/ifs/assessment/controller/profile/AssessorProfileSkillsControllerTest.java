@@ -2,11 +2,16 @@ package org.innovateuk.ifs.assessment.controller.profile;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileSkillsForm;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,13 +35,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsController> {
 
+    @Spy
+    @InjectMocks
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+
     @Override
     protected AssessorProfileSkillsController supplyControllerUnderTest() {
         return new AssessorProfileSkillsController();
     }
 
     @Test
-    public void getSkills() throws Exception {
+    public void getReadonlySkills() throws Exception {
+        BusinessType businessType = BUSINESS;
+        String skillsAreas = "skill1 skill2 skill3";
+
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+                .withUser(user.getId())
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillsAreas)
+                .build());
+
+        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(skillsAreas, businessType);
+
+        mockMvc.perform(get("/profile/skills"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(view().name("profile/skills"));
+
+        verify(userService).getProfileSkills(user.getId());
+    }
+
+    @Test
+    public void getEditableSkills() throws Exception {
         BusinessType businessType = BUSINESS;
         String skillsAreas = "skill1 skill2 skill3";
 
@@ -53,10 +86,10 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         expectedForm.setAssessorType(businessType);
         expectedForm.setSkillAreas(skillsAreas);
 
-        mockMvc.perform(get("/profile/skills"))
+        mockMvc.perform(get("/profile/skills/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/innovation-areas"));
+                .andExpect(view().name("profile/skills-edit"));
 
         verify(userService).getProfileSkills(user.getId());
     }
@@ -68,7 +101,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
 
         when(userService.updateProfileSkills(1L, businessType, skillsAreas)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/skills")
+        mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillsAreas))
@@ -83,7 +116,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = RandomStringUtils.random(5001);
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillAreas))
@@ -91,7 +124,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "skillAreas"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -104,7 +137,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("skillAreas"));
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("skillAreas").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("skillAreas").getArguments()[1]);
     }
 
@@ -113,7 +146,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(101, "skill"));
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillAreas))
@@ -121,7 +154,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "skillAreas"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -142,14 +175,14 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     public void submitSkills_incomplete() throws Exception {
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        MvcResult result = mockMvc.perform(post("/profile/skills")
+        MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("skillAreas", skillAreas))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "assessorType"))
-                .andExpect(view().name("profile/innovation-areas"))
+                .andExpect(view().name("profile/skills-edit"))
                 .andReturn();
 
         AssessorProfileSkillsForm form = (AssessorProfileSkillsForm) result.getModelAndView().getModel().get("form");
@@ -161,6 +194,6 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("assessorType"));
-        assertEquals("Please select an assessor type", bindingResult.getFieldError("assessorType").getDefaultMessage());
+        assertEquals("Please select an assessor type.", bindingResult.getFieldError("assessorType").getDefaultMessage());
     }
 }

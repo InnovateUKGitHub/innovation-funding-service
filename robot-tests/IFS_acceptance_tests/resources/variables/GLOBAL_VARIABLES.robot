@@ -157,7 +157,7 @@ ${test_title}     test title
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
-${empty_field_warning_message}    This field cannot be left blank
+${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
@@ -199,3 +199,5 @@ ${database_host}    ifs-database
 ${database_port}    3306
 ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
+${UPCOMING_COMPETITION_TO_ASSESS_ID}    11

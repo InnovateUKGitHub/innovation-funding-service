@@ -157,6 +157,8 @@ public class ProjectGrantOfferLetterController {
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
+        Boolean grantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
+
         boolean isProjectManager = getProjectManager(projectId)
                 .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
 
@@ -167,8 +169,10 @@ public class ProjectGrantOfferLetterController {
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                project.getOfferSubmittedDate(), project.isOfferRejected() != null && project.isOfferRejected(),
-                project.isOfferRejected() != null && !project.isOfferRejected(), isProjectManager, isGrantOfferLetterSent);
+                project.getOfferSubmittedDate(),
+                grantOfferLetterApproved,
+                isProjectManager,
+		isGrantOfferLetterSent);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
