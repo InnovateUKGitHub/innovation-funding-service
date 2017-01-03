@@ -193,12 +193,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-            public CompetitionDataBuilder withNewMilestones() {
+    public CompetitionDataBuilder withNewMilestones() {
 
         return asCompAdmin(data -> {
-
             Stream.of(MilestoneType.presetValues()).forEach(type -> {
-                milestoneService.create(type, data.getCompetition().getId());
+                if(milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId()).getSuccessObjectOrThrowException().getId() == null) {
+                    milestoneService.create(type, data.getCompetition().getId());
+                }
             });
         });
     }
@@ -238,8 +239,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
     }
-
-
 
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
 

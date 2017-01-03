@@ -644,7 +644,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                                 line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission)
+                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
+                        withNewMilestones()
+
                 ).orElse(competitionDataBuilder.
                         createCompetition().
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
