@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
@@ -330,6 +331,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
 
         Project project = createProjectStatusResource(projectId, ApprovalType.REJECTED, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
 
+        when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
         ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
