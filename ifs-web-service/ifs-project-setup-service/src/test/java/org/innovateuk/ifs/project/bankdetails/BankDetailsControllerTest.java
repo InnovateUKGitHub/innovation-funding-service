@@ -14,6 +14,8 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 
@@ -31,6 +33,7 @@ import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_N
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -122,6 +125,52 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
 
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
 
+    }
+
+    @Test
+    public void testsubmitBankDetailsWhenInvalidAccountDetails() throws Exception {
+
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+
+        MvcResult result = mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("sortCode", "1234WE").
+                param("accountNumber", "123tt678").
+                param("addressType", ADD_NEW.name())).
+                andExpect(view().name("project/bank-details")).
+                andExpect(model().hasErrors()).
+                andExpect(model().errorCount(2)).
+                andExpect(model().attributeHasFieldErrors(FORM_ATTR_NAME, "accountNumber")).
+                andExpect(model().attributeHasFieldErrors(FORM_ATTR_NAME, "sortCode")).
+                andReturn();
+
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
+
+        BindingResult bindingResult = ((BankDetailsForm)result.getModelAndView().getModel().get(FORM_ATTR_NAME)).getBindingResult();
+        assertEquals("Please enter a valid account number.", bindingResult.getFieldError("accountNumber").getDefaultMessage());
+        assertEquals("Please enter a valid sort code.", bindingResult.getFieldError("sortCode").getDefaultMessage());
+    }
+
+    @Test
+    public void testsubmitBankDetailsWhenInvalidSortCode() throws Exception {
+
+        ProjectResource projectResource = setUpMockingForsubmitBankDetails();
+
+        MvcResult result = mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("sortCode", "q234WE").
+                param("accountNumber", "12345678").
+                param("addressType", ADD_NEW.name())).
+                andExpect(view().name("project/bank-details")).
+                andExpect(model().hasErrors()).
+                andExpect(model().errorCount(1)).
+                andExpect(model().attributeHasFieldErrors(FORM_ATTR_NAME, "sortCode")).
+                andReturn();
+
+        verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
+
+        BindingResult bindingResult = ((BankDetailsForm)result.getModelAndView().getModel().get(FORM_ATTR_NAME)).getBindingResult();
+        assertEquals("Please enter a valid sort code.", bindingResult.getFieldError("sortCode").getDefaultMessage());
     }
 
     @Test

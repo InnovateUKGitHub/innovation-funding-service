@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.gol.repository.GrantOfferLetterProcessReposito
 import org.innovateuk.ifs.project.gol.resource.GOLOutcomes;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -20,10 +21,15 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.*;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +71,26 @@ public class GOLWorkflowHandlerIntegrationTest extends
 
         verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
 
+    }
+
+    @Test
+    public void testGrantOfferLetterRemoved() throws Exception {
+
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                GOLState.PENDING, GOLState.PENDING, GOLOutcomes.GOL_REMOVED);
+    }
+
+    @Test
+    public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() throws Exception {
+
+        asList(GOLState.values()).forEach(startingState -> {
+
+            if (startingState != GOLState.PENDING) {
+                callWorkflowAndCheckTransitionFailsInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)), startingState);
+            }
+        });
     }
 
     @Test
@@ -146,7 +172,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
 
         // Set the current state in the GOL Process
         ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess(null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -168,6 +194,56 @@ public class GOLWorkflowHandlerIntegrationTest extends
         verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
     }
 
+    private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
+
+        Project project = newProject().build();
+        User internalUser = newUser().build();
+
+        // Set the current state in the GOL Process
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
+
+        // Set the destination state which we expect when the event is fired
+        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState());
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, destinationGOLState.getBackingState())).thenReturn(expectedActivityState);
+
+        // Call the workflow here
+        boolean result = workflowMethodToCall.apply(project, internalUser);
+
+        assertTrue(result);
+
+        // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
+        // This can be done by building the expected GOLProcess object (say X) and verifying that X was the object that was saved.
+        GOLProcess expectedGolProcess = new GOLProcess(internalUser, project, expectedActivityState);
+
+        // Ensure the correct event was fired by the workflow
+        expectedGolProcess.setProcessEvent(expectedEventToBeFired.getType());
+
+        verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
+    }
+
+    private void callWorkflowAndCheckTransitionFailsInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, GOLState currentGOLState) {
+
+        Project project = newProject().build();
+        User internalUser = newUser().build();
+
+        // Set the current state in the GOL Process
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
+
+        // Set the destination state which we expect when the event is fired
+        ActivityState expectedActivityState = currentActivityState;
+
+        // Call the workflow here
+        boolean result = workflowMethodToCall.apply(project, internalUser);
+
+        assertFalse(result);
+
+        verify(grantOfferLetterProcessRepositoryMock, never()).save(isA(GOLProcess.class));
+    }
+
     private void callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser(Function<Project, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();
@@ -175,7 +251,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
 
         // Set the current state in the GOL Process
         ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess(null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
         currentGOLProcess.setParticipant(projectUser);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -39,6 +40,10 @@ public class AssessorInviteOverviewResourceBuilder extends BaseBuilder<AssessorI
 
     public AssessorInviteOverviewResourceBuilder withCompliant(Boolean... value) {
         return withArraySetFieldByReflection("compliant", value);
+    }
+
+    public AssessorInviteOverviewResourceBuilder withBusinessType(BusinessType... value) {
+        return withArraySetFieldByReflection("businessType", value);
     }
 
     public AssessorInviteOverviewResourceBuilder withStatus(String... value) {

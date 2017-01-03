@@ -48,11 +48,10 @@ IFS.competitionManagement.repeater = (function() {
           IFS.competitionManagement.repeater.reindexRows('tr[id^="guidance-"]');
           break;
         case 'innovationArea':
-          jQuery('[name="removeArea"]').val(inst.val());
-          IFS.core.autoSave.fieldChanged('[name="removeArea"]');
           inst.closest('[id^="innovation-row"]').remove();
           IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]');
-          IFS.competitionManagement.setup.disableAlreadySelectedOptions();
+          IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions();
+          IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds();
           break;
       }
     },
@@ -84,8 +83,7 @@ IFS.competitionManagement.repeater = (function() {
       newRow.append('<button data-remove-row="innovationArea" value="'+count+'" class="buttonlink" type="button">Remove</button>');
 
       rows.last().after(newRow);
-      IFS.competitionManagement.setup.disableAlreadySelectedOptions(newRow.find('[name]'));
-
+      IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions();
     },
     addCoFunder: function() {
       var count = 0;

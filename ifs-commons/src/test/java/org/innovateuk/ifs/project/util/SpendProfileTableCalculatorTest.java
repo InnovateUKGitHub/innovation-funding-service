@@ -223,15 +223,11 @@ public class SpendProfileTableCalculatorTest {
         months.add(localDateResource2);
         months.add(localDateResource3);
 
-        Map<String, Integer> organisationAndGrantAllocations = new HashMap<>();
-        organisationAndGrantAllocations.put(ROW_NAME_3, 30);
-        organisationAndGrantAllocations.put(ROW_NAME_4, 20);
-
-        Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectResource, TABLE_DATA2, months, organisationAndGrantAllocations);
+        Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectResource, TABLE_DATA2, months, BigDecimal.valueOf(25));
 
         assertTrue(yearlyGrantAllocationTotal.size() == 2);
-        assertEquals(yearlyGrantAllocationTotal.get("2019"), BigDecimal.valueOf(5.3));
-        assertEquals(yearlyGrantAllocationTotal.get("2018"), BigDecimal.valueOf(8.7));
+        assertEquals(yearlyGrantAllocationTotal.get("2019"), BigDecimal.valueOf(9));
+        assertEquals(yearlyGrantAllocationTotal.get("2018"), BigDecimal.valueOf(12));
     }
 
     @Test
@@ -247,4 +243,12 @@ public class SpendProfileTableCalculatorTest {
         assertEquals(profileYears.get(0), "2018");
         assertEquals(profileYears.get(1), "2019");
     }
+
+    @Test
+    public void tesGetAllocationValue() {
+        BigDecimal allocationValue = spendProfileTableCalculator.getAllocationValue(BigDecimal.valueOf(212153), BigDecimal.valueOf(30));
+
+        assertEquals(allocationValue, BigDecimal.valueOf(63645));
+    }
+
 }

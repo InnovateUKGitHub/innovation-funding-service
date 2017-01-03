@@ -25,11 +25,17 @@ IFS.competitionManagement.loadOrder = {
       IFS.competitionManagement.various.init();
     }
   },
+  'competition-management' : {
+    init : function() {
+      IFS.competitionManagement.repeatableRows.init();
+    }
+  },
   'competition-setup' : {
     init : function() {
-      IFS.competitionManagement.setup.init();
-      IFS.competitionManagement.repeater.init();
+      IFS.competitionManagement.initialDetails.init();
       IFS.competitionManagement.milestones.init();
+      IFS.competitionManagement.fundingInformation.init();
+      IFS.competitionManagement.repeater.init();
       IFS.core.finance.init();
     }
   }

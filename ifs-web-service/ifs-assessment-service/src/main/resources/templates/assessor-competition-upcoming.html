@@ -25,7 +25,7 @@
                 <p>Assessment period for reading, scoring, providing written comments and submitting to our online
                     service. Each assessor could receive up to 10 applications to assess. This depends on the
                     application response. Our assessment fee for this competition is &pound;<span
-                            th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
+                            th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}" th:remove="tag">100</span> per application.</p>
 
                 <p th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
                     hour webinar on <span th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}"
