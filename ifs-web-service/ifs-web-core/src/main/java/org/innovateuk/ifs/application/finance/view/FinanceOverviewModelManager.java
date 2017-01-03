@@ -69,17 +69,7 @@ public class FinanceOverviewModelManager {
         sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
         model.addAttribute("financeSection", section);
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
-        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
-        financeSectionChildren.stream().forEach(sectionResource -> {
-                if (!sectionResource.getChildSections().isEmpty()) {
-                    financeSubSectionChildren.addAll(
-                            sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
-                    );
-                }
-            }
-        );
+        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
         model.addAttribute("financeSectionChildren", financeSubSectionChildren);
 
         List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
@@ -97,6 +87,21 @@ public class FinanceOverviewModelManager {
                 .values().stream().flatMap(a -> a.stream())
                 .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
+    }
+
+    private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
+        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
+        financeSectionChildren.stream().forEach(sectionResource -> {
+                    if (!sectionResource.getChildSections().isEmpty()) {
+                        financeSubSectionChildren.addAll(
+                                sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
+                        );
+                    }
+                }
+        );
+        return financeSubSectionChildren;
     }
 
     private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list){

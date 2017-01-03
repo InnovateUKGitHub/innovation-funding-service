@@ -203,7 +203,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId=0L;
+        Long organisationId = 0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }
@@ -315,7 +315,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
+        Set<Long> sectionsMarkedAsComplete = convertToCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
         boolean hasFinanceSection = false;
         Long financeSectionId = null;
@@ -343,7 +343,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
     }
 
-    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
+    private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
         Set<Long> combinedMarkedAsComplete = new HashSet<>();
 
         completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));

@@ -130,10 +130,10 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         addUserDetails(model, application, userId);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation, allSections, inputs);
 
-        if(SectionType.FINANCE.equals(section.getType().getParent().orElse(null))
-                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-           addQuestionsDetails(model, application, form);
-           addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
+        //Parent finance section has no assignable or question details.
+        if (!SectionType.FINANCE.equals(section.getType())) {
+            addQuestionsDetails(model, application, form);
+            addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
         }
 
         addCompletedDetails(model, application, userOrganisation);

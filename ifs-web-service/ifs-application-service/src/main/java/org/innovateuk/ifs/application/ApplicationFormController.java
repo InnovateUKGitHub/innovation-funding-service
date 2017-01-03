@@ -62,7 +62,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -226,12 +225,10 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        if(SectionType.FINANCE.equals(section.getType().getParent().orElse(null))
-                || SectionType.OVERVIEW_FINANCES.equals(section.getType())
-                || SectionType.FINANCE.equals(section.getType())) {
-            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-        } else {
+        if(SectionType.GENERAL.equals(section.getType())) {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         }
 
 
@@ -427,7 +424,7 @@ public class ApplicationFormController {
             if (isMarkSectionAsCompleteRequest(params)) {
                 application.setStateAidAgreed(form.isStateAidAgreed());
             } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
-                application.setStateAidAgreed(FALSE);
+                application.setStateAidAgreed(Boolean.FALSE);
             }
         }
 
