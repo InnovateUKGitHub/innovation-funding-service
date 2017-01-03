@@ -14,16 +14,14 @@
 
 */
 
-.form-hint{
-  display: block;
-  margin-bottom:5px; //to still match the old gds styles. We might want to think of removing this
-}
+
 
 textarea[readonly],
 textarea[disabled],
 input[readonly],
 input[disabled],
-div.readonly{
+div.readonly,
+.textarea-wrapped div.readonly{
     color: $black;
     background: $grey-4;
     border-color: $border-colour;
@@ -188,7 +186,7 @@ tr.form-group-row.error {
 
     .textarea-header {
         font-size:14px;
-        border:  1px solid $border-colour;
+        border:  2px solid $border-colour;
         border-bottom:none;
         background: $grey-4 0 0 no-repeat;
         min-height:60px;

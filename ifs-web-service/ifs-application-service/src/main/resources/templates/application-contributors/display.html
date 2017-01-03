@@ -24,8 +24,7 @@
 
     <div th:if="${organisationInvites.size() == 0}" th:remove="tag">
       <h2 class="heading-medium">
-        <span th:remove="tag" th:text="${leadOrganisation.name}"/>
-        <small>(Lead organisation)</small>
+          <th:block th:text="${leadOrganisation.name}"/><small>(Lead organisation)</small>
       </h2>
       <ul class="list list-bullet">
         <li>

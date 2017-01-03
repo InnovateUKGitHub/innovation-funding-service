@@ -66,7 +66,7 @@ Finance checks client-side validations
     When the user enters text to a text field    name=costs[6].value    ${Empty}
     Then the user should see an error    Please enter any other cost
     When the user enters text to a text field    name=costs[0].value    -1
-    And the user moves focus to the element    id=costs-reviewed
+    And the user moves focus to the element    css=[for="costs-reviewed"]
     Then the user should see an error    This field should be 0 or higher
     And The user should not see the text in the page    Please enter a labour cost
 
@@ -235,7 +235,7 @@ the user fills in project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    id=costs-reviewed
+    the user moves focus to the element    css=[for="costs-reviewed"]
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
