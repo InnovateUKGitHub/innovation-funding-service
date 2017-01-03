@@ -614,7 +614,7 @@ Internal user can see the Project details as sumbmitted
 the user should see a validation error
     [Arguments]    ${ERROR1}
     Focus    jQuery=button:contains("Save")
-    sleep    300ms
+    wait for autosave
     Then the user should see an error    ${ERROR1}
 
 the matching status checkbox is updated

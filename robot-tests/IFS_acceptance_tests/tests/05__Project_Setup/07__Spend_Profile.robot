@@ -543,7 +543,7 @@ Project finance user cannot access external users' spend profile page
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+
 
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
