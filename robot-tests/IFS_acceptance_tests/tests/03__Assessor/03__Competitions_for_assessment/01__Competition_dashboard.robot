@@ -38,8 +38,8 @@ Details of the competition are visible
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    12:00am Tuesday 12 January 2016
-    And the user should see the text in the page    12:00am Saturday 28 January 2017
+    And the user should see the text in the page    12:00am Thursday 12 January 2068
+    And the user should see the text in the page    12:00am Saturday 28 January 2068
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
@@ -78,7 +78,7 @@ Reject an application for assessment
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
-    Then the user should see an error    Please enter a reason
+    Then the user should see an error    Please enter a reason.
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     And the application for assessment should be removed

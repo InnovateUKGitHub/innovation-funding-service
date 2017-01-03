@@ -205,6 +205,8 @@ public class BaseUnitTest {
     public PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
     public CookieUtil cookieUtil;
+    @Mock
+    public CategoryService categoryServiceMock;
 
     @Spy
     @InjectMocks

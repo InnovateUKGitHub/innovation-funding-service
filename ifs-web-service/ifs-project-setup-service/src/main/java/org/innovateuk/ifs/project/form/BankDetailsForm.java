@@ -2,16 +2,13 @@ package org.innovateuk.ifs.project.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 
 public class BankDetailsForm extends ProjectDetailsAddressForm {
-    @NotEmpty(message="{validation.standard.sortcode.required}")
     @Pattern(regexp = "\\d{6}", message = "{validation.standard.sortcode.format}")
     private String sortCode;
 
-    @NotEmpty(message="{validation.standard.accountnumber.required}")
     @Pattern(regexp = "\\d{8}", message = "{validation.standard.accountnumber.format}")
     private String accountNumber;
 

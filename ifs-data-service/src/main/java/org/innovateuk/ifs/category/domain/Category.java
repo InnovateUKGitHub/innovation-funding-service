@@ -3,6 +3,8 @@ package org.innovateuk.ifs.category.domain;
 import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OrderBy;
 import java.util.List;
 
 @Entity
@@ -20,6 +22,7 @@ public class Category {
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
+    @OrderBy("name ASC")
     private List<Category> children;
 
     @OneToMany(mappedBy="category")

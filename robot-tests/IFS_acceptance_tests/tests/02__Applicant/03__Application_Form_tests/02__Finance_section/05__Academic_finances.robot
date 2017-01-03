@@ -20,7 +20,6 @@ Academic finances should be editable when lead marks them as complete
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     When The user navigates to the academic application finances
     Then the user should not see the element    css=#incurred-staff[readonly]
-    And the user logs out if they are logged in
     [Teardown]    Lead applicant marks the finances as incomplete
 
 Academic finance validations
@@ -30,8 +29,8 @@ Academic finance validations
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
     And Mark academic finances as complete
-    Then the user should see an error    This field should be 0 or higher
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    This field should be 0 or higher.
+    Then the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary-list
     And the field should not contain the currency symbol
 
@@ -192,15 +191,14 @@ Lead applicant marks the finances as complete
     the user closes the browser
 
 Lead applicant marks the finances as incomplete
-    Given guest user log-in    steve.smith@empire.com    Passw0rd
+    Given log in as a different user    steve.smith@empire.com    Passw0rd
     When The user navigates to the academic application finances
     And the user clicks the button/link    jQuery=button:contains("Edit")
-    And Close Browser
-    #And Switch to the first browser
+
 
 the user can see the link for more JeS details
     the user should see the element    link=Je-S website
-    the user should see the element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+    the user should see the element    css=a[href="https://je-s.rcuk.ac.uk"]
 
 the applicant enters invalid inputs
     The user enters text to a text field    id=incurred-staff    100£
