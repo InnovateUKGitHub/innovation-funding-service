@@ -127,7 +127,6 @@ public class InitialDetailsSectionSaverTest {
 
     @Test
     public void testAutoSaveInnovationAreaCategoryIds() {
-        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setInnovationAreas(Collections.singleton(999L));
