@@ -15,22 +15,11 @@
     </script>
 
     <!--[if gt IE 9]><!--><link href="/css/screen.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
-    <!--[if IE 7]><link href="/css/ie7.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie7.css')}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 8]><link href="/css/ie8.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie8.css')}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if IE 9]><link href="/css/ie9.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie9.css')}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 7]><!--><link href="/css/ie7.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie7.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
+    <!--[if IE 8]><!--><link href="/css/ie8.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie8.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
+    <!--[if IE 9]><!--><link href="/css/ie9.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie9.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
 
-    <!--[if IE 8]>
-    <script type="text/javascript">
-      (function(){if(window.opera){return;}
-       setTimeout(function(){var a=document,g,b={families:(g=
-       ["nta"]),urls:["/css/govuk_template/fonts-ie8.css"]},
-       c="/js/vendor/goog/webfont-debug.js",d="script",
-       e=a.createElement(d),f=a.getElementsByTagName(d)[0],h=g.length;WebFontConfig
-       ={custom:b},e.src=c,f.parentNode.insertBefore(e,f);for(;h=h-1;a.documentElement
-       .className+=' wf-'+g[h].replace(/\s/g,'').toLowerCase()+'-n4-loading');},0)
-      })()
-    </script>
-    <![endif]-->
+    <!--[if IE 8]><!--><link href="/css/fonts-ie8.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/fonts-ie8.css')}" media="all" rel="stylesheet" /><!--<![endif]-->
     <!--[if gte IE 9]><!-->
         <script type="text/javascript">
         <!--//--><![CDATA[//><!--
