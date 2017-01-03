@@ -28,7 +28,7 @@ Terms and Conditions
     When the user clicks the button/link    link=Download terms of contract
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf
     And The user goes back to the previous page
-    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/terms
+    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/contract
 
 Review Annexes
     [Documentation]    INFUND-5645

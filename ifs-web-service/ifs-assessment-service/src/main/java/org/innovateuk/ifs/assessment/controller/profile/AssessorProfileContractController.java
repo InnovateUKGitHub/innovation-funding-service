@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
-import org.innovateuk.ifs.assessment.form.profile.AssessorProfileTermsForm;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileTermsAnnexModelPopulator;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileTermsModelPopulator;
+import org.innovateuk.ifs.assessment.form.profile.AssessorProfileContractForm;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileContractAnnexModelPopulator;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileContractModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProfileContractResource;
@@ -27,14 +27,14 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * Controller to manage the Assessor Profile Terms of Contract page
  */
 @Controller
-@RequestMapping("/profile/terms")
-public class AssessorProfileTermsController {
+@RequestMapping("/profile/contract")
+public class AssessorProfileContractController {
 
     @Autowired
-    private AssessorProfileTermsModelPopulator assessorProfileTermsModelPopulator;
+    private AssessorProfileContractModelPopulator assessorProfileContractModelPopulator;
 
     @Autowired
-    private AssessorProfileTermsAnnexModelPopulator assessorProfileTermsAnnexModelPopulator;
+    private AssessorProfileContractAnnexModelPopulator assessorProfileContractAnnexModelPopulator;
 
     @Autowired
     private UserService userService;
@@ -48,30 +48,30 @@ public class AssessorProfileTermsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getTerms(Model model,
-                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                           @ModelAttribute(FORM_ATTR_NAME) AssessorProfileTermsForm form) {
+    public String getContract(Model model,
+                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                              @ModelAttribute(FORM_ATTR_NAME) AssessorProfileContractForm form) {
         ProfileContractResource profileContract = userService.getProfileContract(loggedInUser.getId());
         populateFormWithExistingValues(form, profileContract);
-        return doViewTerms(model, profileContract);
+        return doViewContract(model, profileContract);
     }
 
     @RequestMapping(value = "/annex/{annex}", method = RequestMethod.GET)
     public String getAnnex(Model model, @PathVariable("annex") ContractAnnexParameter annex) {
-        model.addAttribute("model", assessorProfileTermsAnnexModelPopulator.populateModel(annex));
+        model.addAttribute("model", assessorProfileContractAnnexModelPopulator.populateModel(annex));
         return "profile/annex";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String submitTerms(Model model,
+    public String submitContract(Model model,
                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                              @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileTermsForm form,
+                              @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileContractForm form,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> {
             ProfileContractResource profileContract = userService.getProfileContract(loggedInUser.getId());
-            return doViewTerms(model, profileContract);
+            return doViewContract(model, profileContract);
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -81,12 +81,12 @@ public class AssessorProfileTermsController {
         });
     }
 
-    private String doViewTerms(Model model, ProfileContractResource profileContract) {
-        model.addAttribute("model", assessorProfileTermsModelPopulator.populateModel(profileContract));
-        return "profile/terms";
+    private String doViewContract(Model model, ProfileContractResource profileContract) {
+        model.addAttribute("model", assessorProfileContractModelPopulator.populateModel(profileContract));
+        return "profile/contract";
     }
 
-    private void populateFormWithExistingValues(AssessorProfileTermsForm form, ProfileContractResource profileContract) {
+    private void populateFormWithExistingValues(AssessorProfileContractForm form, ProfileContractResource profileContract) {
         form.setAgreesToTerms(profileContract.isCurrentAgreement());
     }
 }

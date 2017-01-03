@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.assessment.viewmodel.profile;
 
-import org.innovateuk.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter;
 
 /**
- * Holder of model attributes for the Contract Terms Annex view.
+ * Holder of model attributes for the Assessor Profile Terms of Contract Annex view.
  */
-public class AssessorProfileTermsAnnexViewModel {
+public class AssessorProfileContractAnnexViewModel {
 
     private ContractAnnexParameter annex;
     private String text;
 
-    public AssessorProfileTermsAnnexViewModel(ContractAnnexParameter annex, String text) {
+    public AssessorProfileContractAnnexViewModel(ContractAnnexParameter annex, String text) {
         this.annex = annex;
         this.text = text;
     }
@@ -43,7 +43,7 @@ public class AssessorProfileTermsAnnexViewModel {
             return false;
         }
 
-        AssessorProfileTermsAnnexViewModel that = (AssessorProfileTermsAnnexViewModel) o;
+        AssessorProfileContractAnnexViewModel that = (AssessorProfileContractAnnexViewModel) o;
 
         return new EqualsBuilder()
                 .append(annex, that.annex)
