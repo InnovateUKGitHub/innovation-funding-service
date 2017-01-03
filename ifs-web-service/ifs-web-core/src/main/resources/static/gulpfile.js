@@ -5,15 +5,17 @@ var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
 var sass = require('gulp-sass')
 var sassLint = require('gulp-sass-lint')
-var compass = require('compass-importer')
-var replace = require('gulp-replace');
+var replace = require('gulp-replace')
 var filesExist = require('files-exist')
 
 // Path variables
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
-var govukFrontendToolkitPath =  nodeModulesPath + 'govuk_frontend_toolkit/stylesheets';
-var govukTemplateToolkitPath =  nodeModulesPath + 'govuk_template_jinja/assets/stylesheets';
-var govukElementsSassRoot =  nodeModulesPath + 'govuk-elements-sass/public/sass';
+
+var govukNodeModules = [
+  nodeModulesPath + 'govuk_frontend_toolkit/**/*',
+  nodeModulesPath + 'govuk_template_jinja/**/*',
+  nodeModulesPath + 'govuk-elements-sass/**/*'
+]
 
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
@@ -24,6 +26,10 @@ var vendorJsFiles = [
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
+
+gulp.task('copy-gds', function () {
+  return gulp.src(filesExist(govukNodeModules, {checkGlobs: true}),{base: nodeModulesPath}).pipe(gulp.dest('sass/vendor/'))
+})
 
 gulp.task('default', ['js', 'css'])
 
@@ -57,7 +63,7 @@ gulp.task('vendor', function () {
   .pipe(gulp.dest('js/dest'))
 })
 
-gulp.task('css', function () {
+gulp.task('css', ['copy-gds'], function () {
   return gulp.src('./sass/**/*.scss')
     .pipe(sassLint({
       files: {
@@ -69,19 +75,16 @@ gulp.task('css', function () {
       config: '.sass-lint.yml'
     }))
     .pipe(sassLint.format())
-    // .pipe(sassLint.failOnError())
     .pipe(sass({includePaths: [
-          govukFrontendToolkitPath,
-          govukTemplateToolkitPath,
-          govukElementsSassRoot
-        ],
-        importer: compass,
-        outputStyle: 'expanded'
-      }).on('error', sass.logError))
+      'sass/vendor/govuk_frontend_toolkit/stylesheets',
+      'sass/vendor/govuk_template_jinja/assets/stylesheets',
+      'sass/vendor/govuk-elements-sass/public/sass'
+    ],
+      outputStyle: 'compressed'
+    }).on('error', sass.logError))
     .pipe(replace('url(images/', 'url(/images/'))
-    .pipe(gulp.dest('./css'));
-});
-
+    .pipe(gulp.dest('./css'))
+})
 
 gulp.task('css:watch', function () {
   gulp.watch('./sass/**/*.scss', ['css'])
