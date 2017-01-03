@@ -88,7 +88,6 @@ buildscript {
         classpath 'org.owasp:dependency-check-gradle:1.4.0'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.13"
         classpath "se.transmode.gradle:gradle-docker:1.2"
-        classpath 'cz.malohlava:visteg:1.0.0'
     }
 
 }
@@ -96,7 +95,6 @@ buildscript {
 
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
-apply plugin: 'cz.malohlava.visteg'
 
 sonarqube {
     properties {
@@ -109,27 +107,15 @@ sonarqube {
     }
 }
 
-visteg {
-    enabled        = true
-    colouredNodes  = true
-    colouredEdges  = true
-    destination    = 'build/reports/visteg.dot'
-    exporter       = 'dot'
-    colorscheme    = 'spectral11'
-    nodeShape      = 'box'
-    startNodeShape = 'hexagon'
-    endNodeShape   = 'doubleoctagon'
-}
-
 dockerCompose {
     useComposeFiles = ['docker-compose-services.yml' ,'docker-compose-services-dev.yml']
     removeContainers = false
-    removeImages = "Local" // Other accepted values are: "All" and "Local"
+    removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
 
 }
 
-task happyServiceTests(type:Exec) {
+task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
     commandLine './micro_run_tests.sh', '-hn'
 }
