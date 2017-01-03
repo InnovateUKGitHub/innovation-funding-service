@@ -28,10 +28,13 @@ public class Organisation {
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
 
-    @OneToMany(mappedBy="organisation")
+    @OneToMany(mappedBy="organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
-    @ManyToMany(mappedBy="organisations")
+    @ManyToMany
+    @JoinTable(name = "user_organisation",
+            joinColumns = @JoinColumn(name = "organisation_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation",

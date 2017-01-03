@@ -42,6 +42,11 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
+    public RestResult<OrganisationResource> getOrganisationByUserId(Long userId) {
+        return getWithRestResult(organisationRestURL + "/findByUserId/" + userId, OrganisationResource.class);
+    }
+
+    @Override
     public RestResult<OrganisationResource> create(OrganisationResource organisation) {
         return postWithRestResultAnonymous(organisationRestURL + "/create", organisation, OrganisationResource.class);
     }

@@ -48,14 +48,6 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "user")
-    private List<Long> processRoles = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(name = "user_organisation",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
-    private List<Long> organisations = new ArrayList<>();
-
     @ManyToMany
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -115,45 +107,6 @@ public class User implements Serializable {
 
     public String getUid() {
         return uid;
-    }
-
-    @JsonIgnore
-    public List<Long> getProcessRoles() {
-        return processRoles;
-    }
-
-/*
-    @JsonIgnore
-    public List<ProcessRole> getProcessRolesForRole(UserRoleType role) {
-        return processRoles.stream().filter(processRole -> processRole.getRole().getName().equals(role.getName())).collect(toList());
-    }
-*/
-
-    @JsonIgnore
-    public List<Long> getOrganisations() {
-        return organisations;
-    }
-
-    public void setOrganisations(List<Long> organisations) {
-        this.organisations = organisations;
-    }
-
-/*
-    public void addUserApplicationRole(ProcessRole... r) {
-        if (this.processRoles == null) {
-            this.processRoles = new ArrayList<>();
-        }
-        this.processRoles.addAll(asList(r));
-    }
-*/
-
-    public void addUserOrganisation(Long... orgs) {
-        organisations = organisations == null ? new ArrayList<>() : organisations;
-        asList(orgs).forEach(id -> {
-            if (!organisations.stream().collect(toList()).contains(id)) {
-                organisations.add(id);
-            }
-        });
     }
 
     public List<Role> getRoles() {

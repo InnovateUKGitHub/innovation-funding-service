@@ -261,9 +261,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 invite.open();
-                if (invite.getInviteOrganisation().getOrganisation() == null && !user.getOrganisations().isEmpty()) {
-                    Organisation organisation = organisationRepository.findOne(user.getOrganisations().get(0));
-                    invite.getInviteOrganisation().setOrganisation(organisation);
+                List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
+                if (invite.getInviteOrganisation().getOrganisation() == null && !usersOrganisations.isEmpty()) {
+                    invite.getInviteOrganisation().setOrganisation(usersOrganisations.get(0));
                 }
                 invite = applicationInviteRepository.save(invite);
                 initializeInvitee(invite, user);

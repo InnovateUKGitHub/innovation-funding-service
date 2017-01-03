@@ -173,7 +173,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     private ServiceResult<Void> validateUserIsInSameOrganisation(InviteProjectResource invite, User user) {
 
-        List<Long> usersOrganisations = user.getOrganisations();
+        List<Long> usersOrganisations = simpleMap(organisationRepository.findByUsers(user), Organisation::getId);
 
         if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);

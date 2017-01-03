@@ -33,6 +33,11 @@ public class OrganisationController {
         return organisationService.findById(organisationId).toGetResponse();
     }
 
+    @RequestMapping("/findByUserId/{userId}")
+    public RestResult<OrganisationResource> findByUserId(@PathVariable("usersId") final Long userId) {
+        return organisationService.findByUserId(userId).toGetResponse();
+    }
+
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public RestResult<OrganisationResource> create(@RequestBody OrganisationResource organisation) {
         return organisationService.create(organisation).toPostCreateResponse();

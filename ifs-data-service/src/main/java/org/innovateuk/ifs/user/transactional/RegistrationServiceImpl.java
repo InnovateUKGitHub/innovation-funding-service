@@ -186,12 +186,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> addOrganisationToUser(User user, Long organisationId) {
-
         return find(organisation(organisationId)).andOnSuccessReturn(userOrganisation -> {
-
-            List<Long> userOrganisationList = new ArrayList<>();
-            userOrganisationList.add(userOrganisation.getId());
-            user.setOrganisations(userOrganisationList);
+            List<User> users = userOrganisation.getUsers();
+            users.add(user);
+            userOrganisation.setUsers(users);
             return user;
         });
     }

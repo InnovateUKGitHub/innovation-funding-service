@@ -26,18 +26,20 @@ public class RegistrationServiceImpl implements RegistrationService {
         Map<String, String> modelAttributes = new HashMap<>();
 
         if (!inviteResource.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
-            // Invite is for different emailaddress then current logged in user.
+            // Invite is for different email address than current logged in user.
             modelAttributes.put("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
-        } else if (inviteOrganisation.getOrganisation() != null && !inviteOrganisation.getOrganisation().equals(loggedInUser.getOrganisations().get(0))) {
-            // Invite Organisation is already confirmed, with different organisation than the current users organisation.
-            OrganisationResource userOrganisationResource = organisationService.getOrganisationByIdForAnonymousUserFlow(loggedInUser.getOrganisations().get(0));
+        } else if (inviteOrganisation.getOrganisation() != null) {
+            OrganisationResource userOrganisation = organisationService.getOrganisationForUser(loggedInUser.getId());
+            if (!inviteOrganisation.getOrganisation().equals(userOrganisation.getId())) {
+                // Invite Organisation is already confirmed, with different organisation than the current users organisation.
+                OrganisationResource userOrganisationResource = organisationService.getOrganisationByIdForAnonymousUserFlow(userOrganisation.getId());
 
-            if(inviteOrganisation.getOrganisationNameConfirmed().equals(userOrganisationResource.getName())) {
-                modelAttributes.put("failureMessageKey", "registration.JOINING_SAME_ORGANISATIONS");
-            } else {
-                modelAttributes.put("failureMessageKey", "registration.MULTIPLE_ORGANISATIONS");
+                if (inviteOrganisation.getOrganisationNameConfirmed().equals(userOrganisationResource.getName())) {
+                    modelAttributes.put("failureMessageKey", "registration.JOINING_SAME_ORGANISATIONS");
+                } else {
+                    modelAttributes.put("failureMessageKey", "registration.MULTIPLE_ORGANISATIONS");
+                }
             }
-
         }
         return modelAttributes;
     }

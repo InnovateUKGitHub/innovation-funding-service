@@ -45,7 +45,7 @@ public class Application implements ProcessActivity {
     @Max(100)
     private BigDecimal completion = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy="application")
+    @OneToMany(mappedBy="applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy="application")

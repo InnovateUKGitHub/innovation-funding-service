@@ -27,8 +27,6 @@ public class UserResource {
     private String email;
     private String password;
     private UserStatus status;
-    private List<Long> organisations = new ArrayList<>();
-    private List<Long> processRoles = new ArrayList<>();
     private List<RoleResource> roles = new ArrayList<>();
     private Gender gender;
     private Disability disability;
@@ -134,22 +132,6 @@ public class UserResource {
         this.password = password;
     }
 
-    public List<Long> getOrganisations() {
-        return this.organisations;
-    }
-
-    public void setOrganisations(List<Long> organisationIds) {
-        this.organisations = organisationIds;
-    }
-
-    public List<Long> getProcessRoles() {
-        return processRoles;
-    }
-
-    public void setProcessRoles(List<Long> processRoles) {
-        this.processRoles = processRoles;
-    }
-
     public List<RoleResource> getRoles() {
         return roles;
     }
@@ -230,8 +212,6 @@ public class UserResource {
                 .append(email, that.email)
                 .append(password, that.password)
                 .append(status, that.status)
-                .append(organisations, that.organisations)
-                .append(processRoles, that.processRoles)
                 .append(roles, that.roles)
                 .append(gender, that.gender)
                 .append(disability, that.disability)
@@ -254,8 +234,6 @@ public class UserResource {
                 .append(email)
                 .append(password)
                 .append(status)
-                .append(organisations)
-                .append(processRoles)
                 .append(roles)
                 .append(gender)
                 .append(disability)

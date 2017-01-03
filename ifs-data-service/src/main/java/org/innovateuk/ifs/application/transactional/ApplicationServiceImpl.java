@@ -118,11 +118,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
 
-            List<Long> usersProcessRoles = user.getProcessRoles();
+            List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
+            List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
 
             Long userOrganisation = usersProcessRoles.size() != 0
-                    ? processRoleRepository.findOne(usersProcessRoles.get(0)).getOrganisation()
-                    : user.getOrganisations().get(0);
+                    ? usersProcessRoles.get(0).getOrganisation()
+                    : usersOrganisations.get(0).getId();
 
             ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisation);
 

@@ -67,6 +67,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    public ServiceResult<OrganisationResource> findByUserId(final Long userId) {
+        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        if (organisations.size() == 0) return null; // TODO
+        return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
+    }
+
+    @Override
     public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
         return update(organisationToCreate);
     }

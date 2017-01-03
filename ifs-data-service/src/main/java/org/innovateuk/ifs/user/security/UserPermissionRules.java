@@ -145,8 +145,7 @@ public class UserPermissionRules {
     }
 
     private List<ProcessRole> getFilteredProcessRoles(UserResource user, Predicate<ProcessRole> filter) {
-        List<Long> applicationRoles = user.getProcessRoles();
-        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
+        List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         return simpleFilter(processRoles, filter);
     }
 

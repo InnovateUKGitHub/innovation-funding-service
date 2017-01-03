@@ -26,7 +26,9 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Assessment findOneByParticipantId(Long participantId);
 
-    List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
+    // TODO: confirm that that ParticipantApplicationCompetitionId == TargetCompetitionId always
+    //List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
+    List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 
     @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
             "  THEN 'TRUE'" +

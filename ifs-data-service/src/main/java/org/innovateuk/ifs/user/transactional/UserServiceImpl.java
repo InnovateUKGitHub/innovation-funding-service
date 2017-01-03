@@ -9,15 +9,12 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -32,9 +32,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.time.LocalDateTime.now;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * A Service that covers basic operations concerning Users
@@ -74,26 +71,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private PasswordPolicyValidator passwordPolicyValidator;
-
-    @Override
-    public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
-        return find(userRepository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<UserResource> getUserById(final Long id) {
-        return super.getUser(id).andOnSuccessReturn(userMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<List<UserResource>> findAll() {
-        return serviceSuccess(usersToResources(userRepository.findAll()));
-    }
-
-    @Override
-    public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-        return serviceSuccess(usersToResources(userRepository.findByRoles_Name(roleType.getName())));
-    }
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {

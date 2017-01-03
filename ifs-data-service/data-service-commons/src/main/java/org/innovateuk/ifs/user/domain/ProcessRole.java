@@ -17,31 +17,31 @@ public class ProcessRole {
     @JoinColumn(name="userId", referencedColumnName="id")
     private User user;
 
-    private Long application;
+    private Long applicationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="roleId", referencedColumnName="id")
     private Role role;
 
-    private Long organisation;
+    private Long organisationId;
 
     public ProcessRole(){
     	// no-arg constructor
     }
 
-    public ProcessRole(Long id, User user, Long application, Role role, Long organisation) {
+    public ProcessRole(Long id, User user, Long applicationId, Role role, Long organisationId) {
         this.id = id;
         this.user = user;
-        this.application = application;
+        this.applicationId = applicationId;
         this.role = role;
-        this.organisation = organisation;
+        this.organisationId = organisationId;
     }
 
-    public ProcessRole(User user, Long application, Role role, Long organisation) {
+    public ProcessRole(User user, Long applicationId, Role role, Long organisationId) {
         this.user = user;
-        this.application = application;
+        this.applicationId = applicationId;
         this.role = role;
-        this.organisation = organisation;
+        this.organisationId = organisationId;
     }
 
     public Role getRole() {
@@ -53,11 +53,11 @@ public class ProcessRole {
     }
     @JsonIgnore
     public Long getApplication() {
-        return application;
+        return applicationId;
     }
 
     public Long getOrganisation() {
-        return application;
+        return organisationId;
     }
 
     public Long getId() {
@@ -68,12 +68,12 @@ public class ProcessRole {
         this.role = role;
     }
 
-    public void setApplication(Long application) {
-        this.application = application;
+    public void setApplication(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
-    public void setOrganisation(Long organisation) {
-        this.organisation = organisation;
+    public void setOrganisation(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public void setUser(User user) {

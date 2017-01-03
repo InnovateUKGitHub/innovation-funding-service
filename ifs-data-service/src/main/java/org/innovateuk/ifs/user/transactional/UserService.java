@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * A Service that covers basic operations concerning Users
  */
-public interface UserService extends BaseUserService {
+public interface UserService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findByEmail(final String email);
