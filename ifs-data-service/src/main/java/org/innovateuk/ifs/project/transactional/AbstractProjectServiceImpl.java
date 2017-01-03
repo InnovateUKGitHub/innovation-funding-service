@@ -159,8 +159,8 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus,  final Optional<SpendProfile> spendProfile) {
         ProjectActivityStates state = spendProfileStatus;
 
-        if (spendProfileStatus == COMPLETE) {
-            if (project.getSpendProfileSubmittedDate() == null) {
+        if(spendProfileStatus == COMPLETE || spendProfileStatus == PENDING) {
+            if(spendProfile.get().getApproval().equals(ApprovalType.REJECTED) || project.getSpendProfileSubmittedDate() == null) {
                 state = ACTION_REQUIRED;
             } else if (project.getSpendProfileSubmittedDate() != null && !spendProfile.get().getApproval().equals(ApprovalType.APPROVED)) {
                 state = PENDING;
@@ -170,11 +170,10 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
-        //TODO - Implement REJECT status when internal spend profile action story is completed
         if (spendProfile != null && spendProfile.isPresent() && financeCheckStatus.equals(COMPLETE)) {
             if (spendProfile.get().isMarkedAsComplete()) {
-                if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
-                    return ACTION_REQUIRED;
+                    if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
+                        return PENDING;
                 }
                 return COMPLETE;
             } else {
