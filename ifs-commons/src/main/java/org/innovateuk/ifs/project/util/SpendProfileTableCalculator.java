@@ -108,7 +108,10 @@ public class SpendProfileTableCalculator {
         return yearEligibleCostTotal;
     }
 
-    public Map<String, BigDecimal> createYearlyGrantAllocationTotal(ProjectResource project, Map<String, List<BigDecimal>> tableData, List<LocalDateResource> months, Map<String, Integer> organisationAndGrantPercent) {
+    public Map<String, BigDecimal> createYearlyGrantAllocationTotal(ProjectResource project,
+                                                                    Map<String, List<BigDecimal>> tableData,
+                                                                    List<LocalDateResource> months,
+                                                                    BigDecimal totalGrantPercentage) {
         Map<String, BigDecimal> yearGrantAllocationTotal = new LinkedHashMap<>();
         Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
         Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
@@ -125,28 +128,28 @@ public class SpendProfileTableCalculator {
                                     FinancialYearDate financialYearDate = new FinancialYearDate(DateUtil.asDate(month.getLocalDate()));
                                     if (year == financialYearDate.getFiscalYear()) {
                                         totalForYear = totalForYear.add(values.get(i));
-                                        totalForYear = totalForYear.multiply(BigDecimal.valueOf(organisationAndGrantPercent.get(key)))
-                                                .divide(BigDecimal.valueOf(100))
-                                                .setScale(1, RoundingMode.CEILING);
-                                        yearGrantAllocationTotal.put(String.valueOf(year), totalForYear);
                                     }
                                 }
                             }
+                            totalForYear = getAllocationValue(totalForYear, totalGrantPercentage);
                             yearGrantAllocationTotal.put(String.valueOf(year), totalForYear);
                         }
                 );
         return yearGrantAllocationTotal;
     }
 
-
+    public BigDecimal getAllocationValue(BigDecimal value, BigDecimal percentage){
+        BigDecimal percent = percentage.divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+        return value.multiply(percent).setScale(0, BigDecimal.ROUND_DOWN);
+    }
     public List<String> generateSpendProfileYears(ProjectResource project) {
         Integer startYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate())).getFiscalYear();
         Integer endYear = new FinancialYearDate(DateUtil.asDate(project.getTargetStartDate().plusMonths(project.getDurationInMonths()))).getFiscalYear();
         LinkedList<String> years = new LinkedList<>();
         IntStream.range(startYear, endYear + 1).forEach(
-                     year -> {
-                         years.add(String.valueOf(year));
-                     });
+                year -> {
+                    years.add(String.valueOf(year));
+                });
         return years;
     }
 
@@ -204,6 +207,4 @@ public class SpendProfileTableCalculator {
         }
         return totalForYear;
     }
-
-
 }

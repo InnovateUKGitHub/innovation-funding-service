@@ -59,7 +59,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="labour">Labour</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost labour" data-required-errormessage="Please enter a labour cost" th:errorclass="field-error" required="required" name="costs[0].value" th:value="*{#numbers.formatInteger(costs[__0__].value,1,'NONE')}"/>
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost labour" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.labour}" th:errorclass="field-error" required="required" name="costs[0].value" th:value="*{#numbers.formatInteger(costs[__0__].value,1,'NONE')}"/>
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__0__].value,1,'COMMA')}" />
                         </th:block>
@@ -68,7 +68,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="admin-support-costs">Overhead costs</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost admin-support-costs" data-required-errormessage="Please enter an admin support cost" th:errorclass="field-error" required="required" name="costs[1].value" th:value="*{#numbers.formatInteger(costs[__1__].value,1,'NONE')}"/>
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost admin-support-costs" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.overheads}" th:errorclass="field-error" required="required" name="costs[1].value" th:value="*{#numbers.formatInteger(costs[__1__].value,1,'NONE')}"/>
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__1__].value,1,'COMMA')}" />
                         </th:block>
@@ -77,7 +77,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="materials">Materials</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost materials" data-required-errormessage="Please enter a materials cost" th:errorclass="field-error" required="required" name="costs[2].value" th:value="*{#numbers.formatInteger(costs[__2__].value,1,'NONE')}"/>
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost materials" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.materials}" th:errorclass="field-error" required="required" name="costs[2].value" th:value="*{#numbers.formatInteger(costs[__2__].value,1,'NONE')}"/>
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__2__].value,1,'COMMA')}" />
                         </th:block>
@@ -86,7 +86,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="capital-usage">Capital usage</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost capital-usage" data-required-errormessage="Please enter a capital usage cost" th:errorclass="field-error" required="required"  name="costs[3].value" th:value="*{#numbers.formatInteger(costs[__3__].value,1,'NONE')}"/>
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost capital-usage" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.capitalusage}" th:errorclass="field-error" required="required"  name="costs[3].value" th:value="*{#numbers.formatInteger(costs[__3__].value,1,'NONE')}"/>
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__3__].value,1,'COMMA')}" />
                         </th:block>
@@ -95,7 +95,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="subcontracting-costs">Subcontracting costs</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost subcontracting-costs" data-required-errormessage="Please enter subcontracting cost" th:errorclass="field-error" required="required"  name="costs[4].value" th:value="*{#numbers.formatInteger(costs[__4__].value,1,'NONE')}" />
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost subcontracting-costs" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.subcontracting}" th:errorclass="field-error" required="required"  name="costs[4].value" th:value="*{#numbers.formatInteger(costs[__4__].value,1,'NONE')}" />
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__4__].value,1,'COMMA')}" />
                         </th:block>
@@ -104,7 +104,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="travel-subsistence">Travel and subsistence</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost travel-subsistence" data-required-errormessage="Please enter a travel and subsistence cost" th:errorclass="field-error" required="required"  name="costs[5].value" th:value="*{#numbers.formatInteger(costs[__5__].value,1,'NONE')}"/>
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost travel-subsistence" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.travelsubsistence}" th:errorclass="field-error" required="required"  name="costs[5].value" th:value="*{#numbers.formatInteger(costs[__5__].value,1,'NONE')}"/>
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__5__].value,1,'COMMA')}" />
                         </th:block>
@@ -113,7 +113,7 @@
                 <tr class="form-group-row">
                     <th scope="row" id="other-costs">Other costs</th>
                     <td class="alignright">
-                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost other-costs" data-required-errormessage="Please enter any other cost" th:errorclass="field-error" required="required" name="costs[6].value" th:value="*{#numbers.formatInteger(costs[__6__].value,1,'NONE')}"/>
+                        <input th:unless="${model.financeChecksApproved}" type="number" class="form-control alignright" min="0" aria-labelledby="project-cost other-costs" th:attr="data-required-errormessage=#{validation.project.eligibility.cost.other}" th:errorclass="field-error" required="required" name="costs[6].value" th:value="*{#numbers.formatInteger(costs[__6__].value,1,'NONE')}"/>
                         <th:block th:if="${model.financeChecksApproved}">
                             &pound;<th:block th:text="*{#numbers.formatInteger(costs[__6__].value,1,'COMMA')}" />
                         </th:block>

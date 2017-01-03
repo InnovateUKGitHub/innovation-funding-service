@@ -1,48 +1,47 @@
-IFS.core.disableSubmitUntilChecked = (function() {
-  "use strict";
-  var s;
+IFS.core.disableSubmitUntilChecked = (function () {
+  'use strict'
+  var s
   return {
-    settings : {
-      checkBoxesAttribute : 'data-disable-button-until-checked'
+    settings: {
+      checkBoxesAttribute: 'data-disable-button-until-checked'
     },
-    init : function() {
-      s = this.settings;
-      jQuery('body').on('change', '['+s.checkBoxesAttribute+']', function() {
-        IFS.core.disableSubmitUntilChecked.checkButtonStates(this);
-      });
-      jQuery('['+s.checkBoxesAttribute+']').each(function() {
-        IFS.core.disableSubmitUntilChecked.checkButtonStates(this);
-      });
+    init: function () {
+      s = this.settings
+      jQuery('body').on('change', '[' + s.checkBoxesAttribute + ']', function () {
+        IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
+      })
+      jQuery('[' + s.checkBoxesAttribute + ']').each(function () {
+        IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
+      })
     },
-    checkButtonStates : function(el) {
-      var button = jQuery(el).attr(s.checkBoxesAttribute);
-      if(jQuery(button).length){
-        var allChecked = IFS.core.disableSubmitUntilChecked.checkAllChecked(button);
-        IFS.core.disableSubmitUntilChecked.updateButton(button, allChecked);
+    checkButtonStates: function (el) {
+      var button = jQuery(el).attr(s.checkBoxesAttribute)
+      if (jQuery(button).length) {
+        var allChecked = IFS.core.disableSubmitUntilChecked.checkAllChecked(button)
+        IFS.core.disableSubmitUntilChecked.updateButton(button, allChecked)
       }
     },
-    checkAllChecked : function(submitButton) {
-      //we loop over all checkboxes which have the same attribute,
-      //if all if them are checked it is true
-      var allChecked = true;
-      jQuery('['+s.checkBoxesAttribute+'="'+submitButton+'"]').each(function() {
-        var inst = jQuery(this);
-        var nonCheckedCheckbox = inst.is('[type="checkbox"]') && (inst.prop('checked') === false);
-        var EmptySelectValue = inst.is('select') && inst.val() === "UNSET";
+    checkAllChecked: function (submitButton) {
+      // we loop over all checkboxes which have the same attribute,
+      // if all if them are checked it is true
+      var allChecked = true
+      jQuery('[' + s.checkBoxesAttribute + '="' + submitButton + '"]').each(function () {
+        var inst = jQuery(this)
+        var nonCheckedCheckbox = inst.is('[type="checkbox"]') && (inst.prop('checked') === false)
+        var EmptySelectValue = inst.is('select') && inst.val() === 'UNSET'
 
-        if(nonCheckedCheckbox || EmptySelectValue){
-          allChecked = false;
+        if (nonCheckedCheckbox || EmptySelectValue) {
+          allChecked = false
         }
-      });
-      return allChecked;
+      })
+      return allChecked
     },
-    updateButton : function(button, state) {
-      if(state === true){
-        jQuery(button).removeAttr('aria-disabled').removeClass('disabled').prop("disabled", false);
-      }
-      else {
-        jQuery(button).attr({'aria-disabled': 'true'}).addClass('disabled').prop("disabled", true);
+    updateButton: function (button, state) {
+      if (state === true) {
+        jQuery(button).removeAttr('aria-disabled').removeClass('disabled').prop('disabled', false)
+      } else {
+        jQuery(button).attr({'aria-disabled': 'true'}).addClass('disabled').prop('disabled', true)
       }
     }
-  };
-})();
+  }
+})()

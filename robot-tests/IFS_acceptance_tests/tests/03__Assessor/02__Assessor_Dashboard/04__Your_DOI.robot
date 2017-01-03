@@ -2,7 +2,7 @@
 Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts of interest so that Innovate UK does not assign me assessments that are inappropriate for me.
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
+Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -46,7 +46,7 @@ Server-side when Yes selected at yes/no
     Then the user should see a field error    Please enter a relation.
     And the user should see a field error    Please enter an organisation.
     And the user should see a field error    Please enter a position.
-    And the user should see a field error    Please enter your family's financial interests.
+    And the user should see a field error    Please enter your family&rsquo;s financial interests.
     And the user should see a field error    Please enter your financial interests.
 
 Client-side validations
@@ -56,7 +56,7 @@ Client-side validations
     Then The user should not see the text in the page    Please enter a principal employer.
     And The user should not see the text in the page    Please enter your role with your principal employer.
     And The user should not see the text in the page    Please enter your financial interests.
-    And The user should not see the text in the page    Please enter your family's financial interests.
+    And The user should not see the text in the page    Please enter your family&rsquo;s financial interests.
     And The user should not see the text in the page    Please tell us if any of your close family members have any appointments, directorships or consultancies.
     And The user should not see the text in the page    Please tell us if any of your close family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.

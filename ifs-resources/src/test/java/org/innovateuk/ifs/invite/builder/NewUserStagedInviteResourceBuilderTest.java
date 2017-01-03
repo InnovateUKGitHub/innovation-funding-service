@@ -8,7 +8,7 @@ import java.util.List;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.junit.Assert.assertEquals;
 
-public class NewUserStagedResourceBuilderTest {
+public class NewUserStagedInviteResourceBuilderTest {
 
     @Test
     public void buildOne() {
