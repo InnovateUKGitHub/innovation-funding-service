@@ -28,6 +28,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/user";
+    private static final String processRoleRestURL = "/processrole";
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
@@ -334,6 +335,19 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         setupGetWithRestResultExpectations(format("%s/id/%s/profileStatus", usersUrl, userId), UserProfileStatusResource.class, expected, OK);
 
         UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+
+    @Test
+    public void userHasApplicationForCompetition() {
+        Long userId = 1L;
+        Long competitionId = 2L;
+        Boolean expected = true;
+
+        setupGetWithRestResultExpectations(format("%s/userHasApplicationForCompetition/%s/%s", processRoleRestURL, userId, competitionId), Boolean.class, expected, OK);
+
+        Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
     }
 }
