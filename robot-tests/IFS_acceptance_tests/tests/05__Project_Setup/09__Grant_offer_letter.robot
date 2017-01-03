@@ -6,6 +6,14 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-4849 As a partner I want to be able to download a Grant Offer Letter and Appendices
 ...
 ...               INFUND-6091 As a partner / lead partner / project manager I want to get access to the GOL section in Project Setup when all other sections
+...
+...               INFUND-6377 As a member of the Competitions team I want to be able to select when the signed Grant Offer Letter has been approved so that Innovate UK can notify the Project Manager
+...
+...               INFUND-5998 As the contracts team I need to view, remove and/or re-upload the Grant Offer Letter
+...
+...               INFUND-6829 GOL uploaded but not submitted by PM shows wrong status
+...
+...               INFUND-7027 Partners can access the GOL before the internal user hits Send to proj team
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -15,46 +23,102 @@ Resource          PS_Variables.robot
 *** Test Cases ***
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
-    [Tags]    Experian    Pending
+    [Tags]    Experian
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO  TODO pending due to INFUND-6952
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(3).status.ok       # Bank details
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok       # Finance checks
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.ok       # Spend Profile
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
-Project finance user uploads the grant offer letter
-    [Documentation]    INFUND-6377
-    [Tags]
-    # note that this step is now required as all the following functionality is only unlocked once the grant offer letter has been sent to the partners
-    [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
+Project finance user selects the grant offer letter
+    [Documentation]  INFUND-6377
+    [Tags]  HappyPath
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
+    Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    And the user should see the element     jQuery=h2:contains("Grant offer letter")
+    And the user should see the element     link=grant_offer_letter.pdf
+    And the user should see the element     jQuery=button.button-secondary:contains("Remove")
+
+Project Finance can download GOL
+    [Documentation]  INFUND-6377
+    [Tags]  HappyPath    Download
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    When the user clicks the button/link    id=send-gol
+    Then the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+
+Lead should not be able to see GOL until it is sent by IUK
+    [Documentation]  INFUND-7027
+    [Tags]
+    [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    And the user should see the element              jQuery=li.waiting:nth-child(8)
+    When the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should not see the element         link=Grant offer letter
+
+Non lead should not be able to see GOL until it is sent by IUK
+    [Documentation]  INFUND-7027
+    [Tags]
+    [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should not see the element         jQuery=li.complete:nth-child(8)
+    And the user should not see the element          jQuery=li.action:nth-child(8)
+    When the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should not see the element         link=Grant offer letter
+
+Project finance user removes the grant offer letter
+    [Documentation]    INFUND-6377, INFUND-5988
+    [Tags]    HappyPath
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    Then the user can remove the uploaded file  removeGrantOfferLetterClicked  grant_offer_letter.pdf
+    And the user should see the element         css=label[for="grantOfferLetter"]
+
+Comp Admin user uploads new grant offer letter
+    [Documentation]    INFUND-6377, INFUND-5988
+    [Tags]    HappyPath
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    Then the user uploads a file           grantOfferLetter  ${valid_pdf}
+    And the user should see the element    jQuery=button.button-secondary:contains("Remove")
+    When the user uploads a file           annex  ${valid_pdf}
+    And the user clicks the button/link    id=send-gol
     And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
     Then the user should not see the element  jQuery=.button:contains("Send to project team")
+    And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
     [Tags]    HappyPath
-    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
-    When the user clicks the button/link    link=Grant offer letter
+    Then the user should see the element     jQuery=li.require-action:last-of-type
+    When the user clicks the button/link     link=Grant offer letter
     Then the user should see the text in the page    The grant offer letter is provided by Innovate UK
     And the user should see the element    jQuery=label:contains(+ Upload)
     And the user should not see the text in the page    This document is awaiting signature by the Project Manager
-    Then the user goes back to the previous page
-    And the user should see the element    jQuery=li.require-action:nth-child(8)
+    And the user goes back to the previous page
     When the user clicks the button/link    link=What's the status of each of my partners?
-    And the user should see the text in the page    Project team status
+    Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
 Partners should not be able to send the Grant Offer
     [Documentation]    INFUND-4851, INFUND-6133
     [Tags]
-    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
@@ -65,9 +129,9 @@ Partners should not be able to send the Grant Offer
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    [Setup]    Log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    Then the user should see the element     jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer
     And the user should see the element    link = Bank details
@@ -78,95 +142,204 @@ Links to other sections in Project setup dependent on project details (applicabl
 PM should not be able to upload big Grant Offer files
     [Documentation]    INFUND-4851, INFUND-4972
     [Tags]
-    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link    link=Grant offer letter
-    When the lead uploads a grant offer letter    ${too_large_pdf}
+    When the user uploads a file             signedGrantOfferLetter    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     And the user goes back to the previous page
 
 PM should be able upload a file and then access the Send button
-    [Documentation]    INFUND-4851, INFUND-4972
+    [Documentation]    INFUND-4851, INFUND-4972, INFUND-6829
     [Tags]    HappyPath
-    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link    link=Grant offer letter
-    When the lead uploads a grant offer letter    ${valid_pdf}
+    When the user uploads a file             signedGrantOfferLetter   ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Send signed offer letter")
-    # TODO - 6829 GOL uploaded but not submitted by PM shows wrong status
-    # And the user clicks the button/link    link=Project setup status
-    # Then the user goes back to the previous page
-    # And the user should see the element    jQuery=li.require-action:nth-child(8)
-    # When the user clicks the button/link    link=What's the status of each of my partners?
-    # And the user should see the text in the page    Project team status
-    # And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+    And the user clicks the button/link    link=Project setup status
+    And the user should see the element    jQuery=li.require-action:nth-child(8)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849
-    [Tags]    Pending
-    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
     Then the user should see the element  jQuery=ul li.require-action:nth-child(8)
     When the user clicks the button/link  link=Grant offer letter
     Then the user should see the element  jQuery=h2:contains("Grant offer letter")
-#    And the user should see the element   link=grant-offer-letter
-#    Then the user clicks the button/link  link=grant-offer-letter
-#TODO Pending due to INFUND-5998. In 5998 the CompAdmin can upload the GOL
+
+PM can download the grant offer letter
+    [Documentation]    INFUND-5998
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+
 
 Other external users can see the uploaded Grant Offer letter
     [Documentation]    INFUND-6059
-    [Tags]    Pending
-    Given log in as a different user      ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    [Tags]    HappyPath
+    Given log in as a different user      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     And the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
     Then the user should see the element  jQuery=ul li.waiting:nth-child(8)
     When the user clicks the button/link  link=Grant offer letter
     Then the user should see the element  jQuery=h2:contains("Grant offer letter")
-#    And the user should see the element   link=grant-offer-letter
-#    Then the user clicks the button/link  link=grant-offer-letter
-#TODO Pending due to INFUND-5998. In 5998 the CompAdmin can upload the GOL
+
+Non lead partner can download the grant offer letter
+    [Documentation]    INFUND-5998
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file        ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+
+Non lead partner can download the annex
+    [Documentation]    INFUND-5998
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file        ${PS_GOL_APPLICATION_PARTNER_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
+    [Teardown]    remove the file from the operating system    annex.pdf
+
+Academic users can see the uploaded Grant Offer letter
+    [Documentation]    INFUND-5998
+    [Tags]    HappyPath
+    Given log in as a different user      ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
+    And the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/
+    Then the user should see the element  jQuery=ul li.waiting:nth-child(8)
+    When the user clicks the button/link  link=Grant offer letter
+    Then the user should see the element  jQuery=h2:contains("Grant offer letter")
+
+Academic partner can download the grant offer letter
+    [Documentation]    INFUND-5998
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file        ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+
+Academic partner can download the annex
+    [Documentation]    INFUND-5998
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file        ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
+    [Teardown]    remove the file from the operating system    annex.pdf]
 
 PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
     [Tags]    HappyPath
-    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     When the user clicks the button/link     link=${valid_pdf}
     Then the user should not see an error in the page
     And the user goes back to the previous page
 
+PM can download the annex
+    [Documentation]    INFUND-5998
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
+    [Teardown]    remove the file from the operating system    annex.pdf
+
 PM Sends the Grant Offer letter
-    [Documentation]    INFUND-4851, INFUND-6091
+    [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
-    And the user clicks the button/link     jQuery=button:contains("Send to Innovate UK")
-    Then the user should not see an error in the page
-    # TODO - It has to be checked that the dashboard status for GOL shows hourglass. This has not been implemented yet.
-    # And the user should see the element    jQuery=li.waiting:nth-child(8)
+    Then the user clicks the button/link    jQuery=button:contains("Send to Innovate UK")
+    And the user should not see an error in the page
+    When the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=li.waiting:nth-child(8)
 
-PM's dashboard should be updated
-    [Documentation]    INFUND-4851, INFUND-6091
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5998
-    When the user clicks the button/link    link=What's the status of each of my partners?
+PM's status should be updated
+    [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
+    [Tags]    HappyPath
+    Given the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
-    # TODO - To be fixed when 'PM Submitting GOL' story is worked upon
-    # Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
 
 Internal Dashboard should be updated
-    [Documentation]    INFUND-4851, INFUND-6091
-    [Tags]    Pending
+    [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
+    [Tags]    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting
-    #TODO Pending due to INFUND-5998.
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+
+Internal user can download the signed GOL
+    [Documentation]    INFUND-6377
+    [Tags]  Download
+    Given the user navigates to the page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    Then the user should see the element  jQuery=#content > p:nth-child(12) > a
+    And the user downloads the file  ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
+    [Teardown]    remove the file from the operating system  testing.pdf
+
+Comp Admin can accept the signed grant offer letter
+    [Documentation]  INFUND-6377
+    [Tags]
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Given the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
+    Then the user navigates to the page      ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    And the user should see the element      jQuery=#content .button:contains("Accept signed grant offer letter")
+    When the user clicks the button/link     jQuery=#content .button:contains("Accept signed grant offer letter")
+    Then the user should see the element     jQuery=h2:contains("Accept signed grant offer letter")
+    When the user clicks the button/link     jQuery=.modal-accept-signed-gol button:contains("Cancel")
+    Then the user should not see an error in the page
+
+Internal user accepts signed grant offer letter
+    [Documentation]    INFUND-5998, INFUND-6377
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    &{internal_finance_credentials}
+    Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+    Then the user should not see the text in the page  "Confirm receipt of signed grant offer letter"
+    And the user clicks the button/link    jQuery=#content .button:contains("Accept signed grant offer letter")
+    And the user clicks the button/link     jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
+    Then the user should see the element    jQuery=.success-alert h2:contains("The grant offer letter has been received and accepted.")
+    And the user should not see the element     jQuery=#content .button:contains("Accept signed grant offer letter")
+    When the user navigates to the page       ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user should see the element  jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.ok
+
+Project manager's status should be updated
+    [Documentation]   INFUND-5998, INFUND-6377
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    And the user should see the element    jQuery=li.complete:nth-child(8)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+
+Non lead's status should be updated
+    [Documentation]   INFUND-5998, INFUND-6377
+    [Tags]
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    And the user should see the element    jQuery=li.complete:nth-child(8)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+
+Non lead can see the GOL approved
+    [Documentation]  INFUND-6377
+    [Tags]
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user should see the element  jQuery=p:nth-child(4) a:contains("testing.pdf")
+    And the user should see the element   jQuery=.success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK. Project setup is now complete.")
+
+Non lead can download the signed GOL
+    [Documentation]  INFUND-6377
+    [Tags]  Download
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user downloads the file      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
+    [Teardown]    remove the file from the operating system    testing.pdf
 
 *** Keywords ***
-the lead uploads a grant offer letter
-    [Arguments]    ${file_name}
-    choose file    name=signedGrantOfferLetter    ${upload_folder}/${file_name}
+the user uploads a file
+    [Arguments]  ${name}  ${file}
+    choose file    name=${name}    ${upload_folder}/${file}
 
 all the other sections of the project are completed
     the project finance user has approved bank details
@@ -192,7 +365,7 @@ the project finance user approves bank details for
     the user should see the text in the page  The bank details provided have been approved.
 
 other documents have been uploaded and approved
-    log in as a different user        ${PS_GOL_APPLICATION_PM_EMAIL}    Passw0rd
+    log in as a different user        ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner/documents
     choose file    name=collaborationAgreement    ${upload_folder}/testing.pdf
     choose file    name=exploitationPlan    ${upload_folder}/testing.pdf
@@ -219,8 +392,8 @@ project finance approves Viability for
     the user selects the checkbox      id=project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    the user clicks the button/link    css=#confirm-button
+    the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd

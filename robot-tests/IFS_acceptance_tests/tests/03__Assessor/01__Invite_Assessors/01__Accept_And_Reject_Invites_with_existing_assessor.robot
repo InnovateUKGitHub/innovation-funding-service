@@ -52,7 +52,7 @@ Existing assessor: Reject invitation
     And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
-    Then the user should see an error    The reason cannot be blank
+    Then the user should see an error    The reason cannot be blank.
     And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=button:contains("Reject")
@@ -72,7 +72,7 @@ Existing assessor: Accept invitation
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
     And the user should see the text in the page    taking place at 15 January 2016.
-    And the user should see the text in the page    100.00 per application.
+    And the user should see the text in the page    100 per application.
     When the user clicks the button/link    jQuery=.button:contains("Yes")
     Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}

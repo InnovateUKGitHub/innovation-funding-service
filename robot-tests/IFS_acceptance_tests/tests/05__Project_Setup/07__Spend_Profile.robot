@@ -265,8 +265,8 @@ Academic partner spend profile server side validations
     And the user enters text to a text field         css=#row-32-2    3306  # Travel and subsistence
     And the user moves focus to the element          css=#row-33-5
     And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the text in the page    Your total costs are higher than your eligible costs
-    And the user should see the text in the page     This field should be 0 or higher
+    Then the user should see the text in the page    Your total costs are higher than your eligible costs.
+    And the user should see the text in the page     This field should be 0 or higher.
 
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
@@ -503,7 +503,7 @@ Project Finance is able to Reject Spend Profile
     #    Then the user should see the element    jQuery=h3:contains("The spend profile has been rejected")
     # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
-Project Finance is able to Approve Spend Profile\
+Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
@@ -516,6 +516,10 @@ Project Finance is able to Approve Spend Profile\
     When the user clicks the button/link    jQuery=button:contains("Approved")
     And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
+
+Status updates correctly for internal user's table after approval
+    [Documentation]    INFUND-5543
+    [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
@@ -652,8 +656,8 @@ project finance approves Viability for
     the user selects the checkbox      id=project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
-    the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    the user clicks the button/link    css=#confirm-button
+    the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
