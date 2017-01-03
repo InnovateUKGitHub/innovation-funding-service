@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.application.service.Futures.adapt;
  * This class contains methods to retrieve and store {@link ProcessRoleResource} related data,
  * through the RestService {@link UserRestService}.
  */
-// TODO DW - INFUND-1555 - return RestResults from this Service
+// TODO DW - INFUND-7205 - return RestResults from this Service
 @Service
 public class ProcessRoleServiceImpl implements ProcessRoleService {
     @Autowired
