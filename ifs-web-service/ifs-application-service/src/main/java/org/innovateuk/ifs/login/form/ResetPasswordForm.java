@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-@FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
+@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class ResetPasswordForm {
     @NotEmpty(message = "{validation.standard.password.required}")
     @Size(min = 10, max = 30, message = "{validation.standard.password.length.range}")

@@ -42,7 +42,7 @@
                             data-max_words="100"
                             data-maxwordslength="100"
                             data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                            data-maxlength-errormessage="This field cannot contain more than 5,000 characters"
+                            th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,5000)}"
                             th:errorclass="field-error"
                             rows="4"
                             th:field="*{skillAreas}"></textarea>
@@ -62,7 +62,11 @@
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
                         <label class="block-label" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
-                            <input th:field="*{assessorType}" th:value="${type}" type="radio" required="required" data-required-errormessage="Please select an assessor type"/>
+                            <input th:field="*{assessorType}"
+                                   th:value="${type}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.assessortype.required}" />
                             <span th:text="${type.displayName}" th:remove="tag"/>
                         </label>
                     </fieldset>

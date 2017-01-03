@@ -27,7 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -108,7 +109,7 @@ public class ProjectSetupStatusController {
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
         SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
         SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation);
-        SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
+        SectionAccess bankDetailsAccess = ProjectActivityStates.NOT_REQUIRED.equals(bankDetailsState) ? NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(organisation);
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
         SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);

@@ -59,9 +59,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           data-minlength-errormessage="Your first name should have at least 2 characters"
-                           data-maxlength-errormessage="Your first name cannot have more than 70 characters"
-                           data-required-errormessage="Please enter a first name"/>
+                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
@@ -78,9 +78,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           data-minlength-errormessage="Your last name should have at least 2 characters"
-                           data-maxlength-errormessage="Your last name cannot have more than 70 characters"
-                           data-required-errormessage="Please enter a last name"/>
+                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
                 <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
                     <label class="form-label" for="phoneNumber">
@@ -96,9 +96,9 @@
                            minlength="8"
                            maxlength="20"
                            required="required"
-                           data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
-                           data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
-                           data-required-errormessage="Please enter a phone number"/>
+                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(8)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max(20)},
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
                 <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
                     <label class="form-label" for="email">
@@ -124,8 +124,8 @@
                                th:field="*{email}"
                                maxlength="256"
                                required="required"
-                               data-maxlength-errormessage="Your email address has a maximum length of 256 characters"
-                               data-required-errormessage="Please enter your email" />
+                               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                        data-required-errormessage=#{validation.standard.email.required}" />
                     </span>
                 </div>
 
@@ -151,10 +151,9 @@
                            required="required"
                            minlength="10"
                            maxlength="30"
-                           data-required-errormessage="Password must contain some text"
-                           data-minlength-errormessage="Password must at least be 10 characters"
-                           data-maxlength-errormessage="Password must not be more than 30 characters"
-                            />
+                           th:attr="data-required-errormessage=#{validation.standard.password.required},
+                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'10')},
+                                    data-maxlength-errormessage=#{validation.standard.password.length.max}" />
                 </div>
                 <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
                     <label class="form-label" for="retypedPassword">
@@ -169,9 +168,9 @@
                            required="required"
                            minlength="10"
                            maxlength="30"
-                           data-required-errormessage="Password must contain some text"
-                           data-minlength-errormessage="Password must at least be 10 characters"
-                           data-maxlength-errormessage="Password must not be more than 30 characters"
+                           th:attr="data-required-errormessage=#{validation.standard.retypedpassword.required},
+                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'10')},
+                                    data-maxlength-errormessage=#{validation.standard.password.length.max(30)}"
                            />
                 </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
@@ -181,7 +180,7 @@
                         <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                       </legend>
                       <label class="block-label" for="termsAndConditions">
-                          <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" data-required-errormessage="In order to register an account you have to agree to the Terms and Conditions" />
+                          <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}"  />
                           I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
                       </label>
                   </fieldset>
