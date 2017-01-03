@@ -61,6 +61,10 @@ get yesterday
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
 
+get next year
+    ${year} =  get time    year    NOW + 365d
+    [Return]  ${year}
+
 Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
     ${yesterday} =    get yesterday
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
