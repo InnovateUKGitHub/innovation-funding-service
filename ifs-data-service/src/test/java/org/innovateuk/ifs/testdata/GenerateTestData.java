@@ -643,13 +643,13 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withExistingCompetition(1L).
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.paf_code, line.code, line.activity_code,
+                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                                 line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission)
                 ).orElse(competitionDataBuilder.
                         createCompetition().
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.paf_code, line.code, line.activity_code,
+                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                                 line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).

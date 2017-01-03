@@ -363,9 +363,10 @@ class CsvUtils {
         boolean setupComplete;
         String budgetCode;
         String code;
-        String paf_code;
-        String activity_code;
-
+        String pafCode;
+        String activityCode;
+        Integer assessorCount;
+        BigDecimal assessorPay;
 
         private CompetitionLine(List<String> line) {
 
@@ -395,8 +396,10 @@ class CsvUtils {
             setupComplete = nullableBoolean(line.get(i++));
             budgetCode = nullable(line.get(i++));
             code = nullable(line.get(i++));
-            paf_code = nullable(line.get(i++));
-            activity_code = nullable(line.get(i++));
+            pafCode = nullable(line.get(i++));
+            activityCode = nullable(line.get(i++));
+            assessorCount = nullableInteger(line.get(i++));
+            assessorPay = nullableBigDecimal(line.get(i++));
         }
     }
 

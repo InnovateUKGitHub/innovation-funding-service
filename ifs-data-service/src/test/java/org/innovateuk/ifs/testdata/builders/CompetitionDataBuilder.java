@@ -6,9 +6,11 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -53,7 +55,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
-                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode,
+                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
                                                 Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission) {
 
         return asCompAdmin(data -> {
@@ -87,6 +89,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
+                competition.setAssessorPay(assessorPay);
+                competition.setAssessorCount(assessorCount);
             });
         });
     }
