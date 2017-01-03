@@ -2,20 +2,28 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -25,6 +33,8 @@ import static java.lang.String.format;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 public class CompetitionManagementInviteAssessorsController {
+
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private CompetitionService competitionService;
@@ -64,14 +74,58 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
-    public String invite(Model model, @PathVariable("competitionId") Long competitionId) {
+    public String invite(Model model,
+                         @PathVariable("competitionId") Long competitionId,
+                         @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                         @SuppressWarnings("unused") BindingResult bindingResult) {
         return doViewInvite(model, competitionId);
     }
 
     @RequestMapping(value = "/invite", params = {"remove"}, method = RequestMethod.POST)
-    public String removeInviteFromInviteView(Model model, @PathVariable("competitionId") Long competitionId, @RequestParam(name = "remove") String email) {
+    public String removeInviteFromInviteView(Model model,
+                                             @PathVariable("competitionId") Long competitionId,
+                                             @RequestParam(name = "remove") String email) {
         deleteInvite(email, competitionId);
         return doViewInvite(model, competitionId);
+    }
+
+    @RequestMapping(value = "/invite", params = {"addNewUser"}, method = RequestMethod.POST)
+    public String addNewUserToInviteView(Model model,
+                                         @PathVariable("competitionId") Long competitionId,
+                                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        form.getInvites().add(new InviteNewAssessorsRowForm());
+        return doViewInvite(model, competitionId);
+    }
+
+    @RequestMapping(value = "/invite", params = {"removeNewUser"}, method = RequestMethod.POST)
+    public String removeNewUserFromInviteView(Model model,
+                                              @PathVariable("competitionId") Long competitionId,
+                                              @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                              @RequestParam(name = "removeNewUser") int position) {
+        form.getInvites().remove(position);
+        return doViewInvite(model, competitionId);
+    }
+
+    @RequestMapping(value = "/invite", params = {"inviteNewUsers"}, method = RequestMethod.POST)
+    public String inviteNewsUsersFromInviteView(Model model,
+                                                @PathVariable("competitionId") Long competitionId,
+                                                @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                                BindingResult bindingResult,
+                                                ValidationHandler validationHandler) {
+        return validationHandler.failNowOrSucceedWith(
+                () -> invite(model, competitionId, form, bindingResult),
+                () -> {
+                    RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
+                            newInviteFormToResource(form, competitionId), competitionId
+                    );
+
+                    return validationHandler.addAnyErrors(restResult)
+                            .failNowOrSucceedWith(
+                                    () -> invite(model, competitionId, form, bindingResult),
+                                    () -> format("redirect:/competition/%s/assessors/invite", competitionId)
+                            );
+                }
+        );
     }
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET)
@@ -99,5 +153,18 @@ public class CompetitionManagementInviteAssessorsController {
         CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition));
         return "assessors/invite";
+    }
+
+    private NewUserStagedInviteListResource newInviteFormToResource(InviteNewAssessorsForm form, Long competitionId) {
+        List<NewUserStagedInviteResource> invites = form.getInvites().stream()
+                .map(newUserInvite -> new NewUserStagedInviteResource(
+                        newUserInvite.getEmail(),
+                        competitionId,
+                        newUserInvite.getName(),
+                        form.getSelectedInnovationArea()
+                ))
+                .collect(Collectors.toList());
+
+        return new NewUserStagedInviteListResource(invites);
     }
 }

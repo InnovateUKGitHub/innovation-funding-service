@@ -6,7 +6,7 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
+${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0bf
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
 
 *** Test Cases ***
@@ -35,12 +35,12 @@ User cannot continue if an organisation type is not selected
     [Tags]
     Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select an organisation type
+    Then the user should see the text in the page    Please select an organisation type.
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Given browser validations have been disabled
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select an organisation type
+    Then the user should see the text in the page    Please select an organisation type.
 
 User is able to select only one type
     [Documentation]    INFUND-1005

@@ -1,14 +1,19 @@
 package org.innovateuk.ifs.project.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * A resource object to return finance check status for a project (for all partner organisations).
  */
 public class FinanceCheckSummaryResource {
     private Long projectId;
+    private String projectName;
     private Long competitionId;
     private String competitionName;
     private LocalDate projectStartDate;
@@ -26,8 +31,9 @@ public class FinanceCheckSummaryResource {
     public FinanceCheckSummaryResource() {
     }
 
-    public FinanceCheckSummaryResource(Long projectId, Long competitionId, String competitionName, LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
+    public FinanceCheckSummaryResource(Long projectId, String projectName, Long competitionId, String competitionName, LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
         this.projectId = projectId;
+        this.projectName = projectName;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.partnerStatusResources = partnerStatusResources;
@@ -143,6 +149,16 @@ public class FinanceCheckSummaryResource {
         return financeChecksAllApproved;
     }
 
+    @JsonIgnore
+    public boolean isViabilityAllApprovedOrNotRequired() {
+
+        List<FinanceCheckPartnerStatusResource.Viability> relevantStatuses = asList(
+                FinanceCheckPartnerStatusResource.Viability.APPROVED,
+                FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE);
+
+        return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
+    }
+
     public void setFinanceChecksAllApproved(boolean financeChecksAllApproved) {
         this.financeChecksAllApproved = financeChecksAllApproved;
     }
@@ -153,5 +169,13 @@ public class FinanceCheckSummaryResource {
 
     public void setSpendProfileGeneratedDate(LocalDate spendProfileGeneratedDate) {
         this.spendProfileGeneratedDate = spendProfileGeneratedDate;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }
