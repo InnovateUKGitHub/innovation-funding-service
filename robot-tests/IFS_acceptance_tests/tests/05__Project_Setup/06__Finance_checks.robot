@@ -120,13 +120,6 @@ Project Finance user can view academic Jes form
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
 
-Project Finance user can export bank details
-    [Documentation]    INFUND-5852
-    [Tags]    Download
-    When the project finance user downloads the bank details
-    Then the user opens the excel and checks the content
-    [Teardown]    remove the file from the operating system    bank_details.csv
-
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
@@ -160,13 +153,6 @@ Other internal users do not have access to Finance checks
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-
-Other internal users do not have access to bank details export
-    [Documentation]    INFUND-5852
-    [Tags]
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-    Then the user should not see the element    link=Export all bank details
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    You do not have the necessary permissions for your request
 
 
 *** Keywords ***
@@ -241,7 +227,6 @@ the users fill out project details
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
-
 the user fills in project costs
     Input Text    name=costs[0].value    £ 8,000
     Input Text    name=costs[1].value    £ 2,000
@@ -254,33 +239,6 @@ the user fills in project costs
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
-
-the project finance user downloads the bank details
-    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
-
-
-the user opens the excel and checks the content
-    ${contents}=    read csv file    ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${empire_details}=    get from list    ${contents}    1
-    ${empire_name}=    get from list    ${empire_details}    0
-    should be equal    ${empire_name}    ${empire_ltd_name}
-    ${eggs_details}=    get from list    ${contents}    2
-    ${eggs_name}=    get from list    ${eggs_details}    0
-    should be equal    ${eggs_name}    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    ${ludlow_details}=    get from list    ${contents}    3
-    ${ludlow_name}=    get from list    ${ludlow_details}    0
-    should be equal    ${ludlow_name}    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    ${application_number}=    get from list    ${empire_details}    1
-    should be equal    ${application_number}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}
-    ${postcode}=    get from list    ${empire_details}    8
-    should be equal    ${postcode}    CH64 3RU
-    ${bank_account_name}=    get from list    ${empire_details}    9
-    should be equal    ${bank_account_name}    ${empire_ltd_name}
-    ${bank_account_number}=    get from list    ${empire_details}    10
-    should be equal    ${bank_account_number}    51406795
-    ${bank_account_sort_code}=    get from list    ${empire_details}    11
-    should be equal    ${bank_account_sort_code}    404745
-
 project finance approves Viability for
     [Arguments]  ${partner}
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -292,8 +250,8 @@ project finance approves Viability for
     Then the user selects the checkbox      id=project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
-    And the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    When the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
+    Then the user clicks the button/link    css=#confirm-button
+    And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 
 
