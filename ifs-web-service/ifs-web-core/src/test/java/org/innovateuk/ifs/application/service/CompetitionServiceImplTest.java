@@ -96,23 +96,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_getCompletedCompetitionSetupSectionStatusesByCompetitionId() throws Exception {
-    	CompetitionResource comp = newCompetitionResource().withId(1L).build();
-    	comp.getSectionSetupStatus().put(CompetitionSetupSection.INITIAL_DETAILS, true);
-    	comp.getSectionSetupStatus().put(CompetitionSetupSection.ADDITIONAL_INFO, false);
-    	comp.getSectionSetupStatus().put(CompetitionSetupSection.ELIGIBILITY, true);
-    	
-    	when(competitionsRestService.getCompetitionById(1L)).thenReturn(restSuccess(comp));
-    	
-    	List<CompetitionSetupSection> result = service.getCompletedCompetitionSetupSectionStatusesByCompetitionId(1L);
-    	
-    	assertEquals(2, result.size());
-    	assertEquals(CompetitionSetupSection.INITIAL_DETAILS, result.get(0));
-    	assertEquals(CompetitionSetupSection.ELIGIBILITY, result.get(1));
-    }
-
-
-    @Test
     public void test_getAllCompetitionTypes() throws Exception {
         CompetitionTypeResource type1 = newCompetitionTypeResource().withStateAid(false).withName("Type 1").withId(1L).build();
 
