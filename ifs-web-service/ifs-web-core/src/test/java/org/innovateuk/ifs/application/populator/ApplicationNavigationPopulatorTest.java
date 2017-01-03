@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.model;
+package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;

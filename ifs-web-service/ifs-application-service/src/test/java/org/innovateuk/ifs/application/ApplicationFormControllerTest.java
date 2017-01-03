@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.model.*;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;

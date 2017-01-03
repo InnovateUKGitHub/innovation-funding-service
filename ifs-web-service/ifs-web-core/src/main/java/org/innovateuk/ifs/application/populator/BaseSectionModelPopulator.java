@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.application.model;
+package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -12,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * class with methods that are used on every model for sectionPages

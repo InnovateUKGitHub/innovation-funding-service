@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.model;
+package org.innovateuk.ifs.application.populator;
 
 import java.util.List;
 import java.util.Optional;

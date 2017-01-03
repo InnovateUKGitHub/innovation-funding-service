@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.model.*;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.commons.error.Error;
@@ -90,6 +90,7 @@ public class ApplicationFormController {
 
     public static final String QUESTION_URL = "/question/";
     public static final String QUESTION_ID = "questionId";
+    public static final String MODEL_ATTRIBUTE_MODEL = "model";
     public static final String MODEL_ATTRIBUTE_FORM = "form";
     public static final String APPLICATION_ID = "applicationId";
     public static final String APPLICATION_FORM = "application-form";
