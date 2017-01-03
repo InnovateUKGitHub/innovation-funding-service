@@ -18,8 +18,8 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720 #invitation for assessor:worth.email.test+assessor2@gmail.com
-${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/${OPEN_COMPETITION}e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932 #invitation for assessor:worth.email.test+assessor3@gmail.com
+${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:david.peters@innovateuk.test
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:thomas.fister@innovateuk.test
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
@@ -39,7 +39,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
-    And the user should see the text in the page    worth.email.test+assessor3@gmail.com
+    And the user should see the text in the page    thomas.fister@innovateuk.test
     And the user clicks the button/link    Link=Back
     And the user should see the text in the page    Become an assessor for Innovate UK
 
@@ -48,41 +48,41 @@ Create assessor account: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user clicks the button/link    jQuery=button:contains("Continue")
-    Then the user should see an error    Please enter a first name
-    And the user should see an error    Please enter a last name
-    And the user should see an error    Please select a gender
-    And the user should see an error    Please select an ethnicity
-    And the user should see an error    Please select a disability
-    And the user should see an error    Please enter a phone number
-    And the user should see an error    Please enter your password
-    And the user should see an error    Please re-type your password
-    And the user should see an error    Please enter a valid phone number
-    And the user should see an error    Input for your phone number has a minimum length of 8 characters
-    And the user should see an error    Your last name should have at least 2 characters
-    And the user should see an error    Your first name should have at least 2 characters
-    And the user should see an error    Password must at least be 10 characters
+    Then the user should see an error    Please enter a first name.
+    And the user should see an error    Please enter a last name.
+    And the user should see an error    Please select a gender.
+    And the user should see an error    Please select an ethnicity.
+    And the user should see an error    Please select a disability.
+    And the user should see an error    Please enter a phone number.
+    And the user should see an error    Please enter your password.
+    And the user should see an error    Please re-type your password.
+    And the user should see an error    Please enter a valid phone number.
+    And the user should see an error    Input for your phone number has a minimum length of 8 characters.
+    And the user should see an error    Your last name should have at least 2 characters.
+    And the user should see an error    Your first name should have at least 2 characters.
+    And the user should see an error    Password must at least be 10 characters.
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
     When The user enters text to a text field    id=firstName    Thomas
-    Then the user should not see the validation error in the create assessor form    Please enter a first name
+    Then the user should not see the validation error in the create assessor form    Please enter a first name.
     When The user enters text to a text field    id=lastName    Fister
-    Then the user should not see the validation error in the create assessor form    Please enter a last name
+    Then the user should not see the validation error in the create assessor form    Please enter a last name.
     When the user selects the radio button    gender    gender2
-    Then the user should not see the validation error in the create assessor form    Please select a gender
+    Then the user should not see the validation error in the create assessor form    Please select a gender.
     When the user selects the radio button    ethnicity    ethnicity2
-    Then the user should not see the validation error in the create assessor form    Please select an ethnicity
+    Then the user should not see the validation error in the create assessor form    Please select an ethnicity.
     When the user selects the radio button    disability    disability2
-    Then the user should not see the validation error in the create assessor form    Please select a disability
+    Then the user should not see the validation error in the create assessor form    Please select a disability.
     When the user enters text to a text field    id=phoneNumber    123123123123
-    Then the user should not see the validation error in the create assessor form    Please enter a phone number
-    And the user should not see the validation error in the create assessor form    Please enter a valid phone number
-    And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters
+    Then the user should not see the validation error in the create assessor form    Please enter a phone number.
+    And the user should not see the validation error in the create assessor form    Please enter a valid phone number.
+    And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters.
     When The user enters text to a text field    id=password    Passw0rd123
     And The user enters text to a text field    id=retypedPassword    Passw0rd123
-    Then the user should not see the validation error in the create assessor form    Please enter your password
-    And the user should not see the validation error in the create assessor form    Password must at least be 10 characters
+    Then the user should not see the validation error in the create assessor form    Please enter your password.
+    And the user should not see the validation error in the create assessor form    Password must at least be 10 characters.
     When the user clicks the button/link    id=postcode-lookup
     And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
 
@@ -102,7 +102,7 @@ Create assessor account: Postcode lookup and save
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
-    When The user enters text to a text field    id=username    worth.email.test+assessor3@gmail.com
+    When The user enters text to a text field    id=username    thomas.fister@innovateuk.test
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
@@ -121,7 +121,7 @@ Non-registered assessor: Reject invitation
     Then the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
     When the user clicks the button/link    jQuery=button:contains("Reject")
-    Then the user should see an error    The reason cannot be blank
+    Then the user should see an error    The reason cannot be blank.
     And the assessor fills in all fields
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.

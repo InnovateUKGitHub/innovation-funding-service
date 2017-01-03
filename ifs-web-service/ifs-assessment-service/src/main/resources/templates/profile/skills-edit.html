@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Your skills'" th:remove="tag"></div>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Edit your skills'" th:remove="tag"></div>
     </head>
 
     <body th:with="context='assessment'">
@@ -13,11 +13,10 @@
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
             <div class="hgroup">
-                <h1 class="heading-xlarge">Your skills</h1>
-                <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
+                <h1 class="heading-xlarge">Edit your skills</h1>
             </div>
 
-            <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
+            <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                     <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
                     <ul class="error-summary-list">
@@ -43,7 +42,7 @@
                             data-max_words="100"
                             data-maxwordslength="100"
                             data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                            data-maxlength-errormessage="This field cannot contain more than 5,000 characters"
+                            th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,5000)}"
                             th:errorclass="field-error"
                             rows="4"
                             th:field="*{skillAreas}"></textarea>
@@ -63,13 +62,17 @@
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
                         <label class="block-label" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
-                            <input th:field="*{assessorType}" th:value="${type}" type="radio" required="required" data-required-errormessage="Please select an assessor type"/>
+                            <input th:field="*{assessorType}"
+                                   th:value="${type}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.assessortype.required}" />
                             <span th:text="${type.displayName}" th:remove="tag"/>
                         </label>
                     </fieldset>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Continue</button>
+                <button class="button button-large extra-margin" type="submit">Save</button>
             </form>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

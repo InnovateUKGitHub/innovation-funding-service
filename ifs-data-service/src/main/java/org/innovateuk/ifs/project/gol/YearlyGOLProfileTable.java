@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
+
 /**
  *
  **/
@@ -65,12 +67,28 @@ public class YearlyGOLProfileTable {
     }
 
 
-
     public BigDecimal getGrantAllocationGrandTotal() {
         return yearGrantAllocationTotal.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getEligibleCostGrandTotal() {
-        return   yearEligibleCostTotal.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+        return yearEligibleCostTotal.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public Map<String, BigDecimal> getEligibleCostGrandTotalPerOrganisation() {
+        return simpleMapValue(organisationEligibleCostTotal, costs -> {
+            return costs
+                    .stream()
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        });
+    }
+    public Map<String, BigDecimal> getGrantAllocationGrandTotalPerOrganisation() {
+        return simpleMapValue(organisationGrantAllocationTotal, costs -> {
+            return costs
+                    .stream()
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        });
+    }
+
+
 }

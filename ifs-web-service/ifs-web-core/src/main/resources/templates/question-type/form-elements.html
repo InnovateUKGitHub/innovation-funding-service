@@ -230,7 +230,7 @@
                               (questionAssignee?.assignee==null and !userIsLeadApplicant)}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
                   data-editor="md"
-                  data-required-errormessage="Please enter some text"
+                  th:attr="data-required-errormessage=#{validation.field.please.enter.some.text}"
                   required="required"></textarea>
 
         <div class="textarea-footer">
