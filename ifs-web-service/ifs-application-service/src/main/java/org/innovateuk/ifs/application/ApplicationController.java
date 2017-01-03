@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.model.ApplicationModelPopulator;
@@ -25,9 +28,6 @@ import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -272,34 +272,6 @@ public class ApplicationController {
     @RequestMapping(value = "/terms-and-conditions")
     public String termsAndConditions(){
         return "application-terms-and-conditions";
-    }
-
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
-    @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", params= {"singleFragment=true"}, method = RequestMethod.POST)
-    public String assignQuestionAndReturnSectionFragmentIndividualSection(ApplicationForm form, Model model,
-                                                         @PathVariable("applicationId") final Long applicationId,
-                                                         @RequestParam("sectionId") final Optional<Long> sectionId,
-                                                         HttpServletRequest request, HttpServletResponse response){
-
-        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
-    }
-
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
-    @ProfileExecution
-    @RequestMapping(value = "/{applicationId}", params = {"singleFragment=true"}, method = RequestMethod.POST)
-    public String assignQuestionAndReturnSectionFragment(ApplicationForm form, Model model,
-                                                         @PathVariable("applicationId") final Long applicationId,
-                                                         @RequestParam("sectionId") final Optional<Long> sectionId,
-                                                         HttpServletRequest request, HttpServletResponse response){
-
-        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
     }
 
     @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
