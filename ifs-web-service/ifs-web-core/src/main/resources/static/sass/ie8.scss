@@ -8,8 +8,9 @@ $browser-minimum-versions : (
 
 
 @import "compass/css3";
+@import "govuk-template";
+@import "govuk-elements";
 
-@import "govuk";
 @import "components";
 @import "pages";
 @import "print";
