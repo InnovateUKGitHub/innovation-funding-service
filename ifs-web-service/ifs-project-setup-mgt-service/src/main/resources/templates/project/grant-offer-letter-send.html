@@ -135,7 +135,7 @@
         </th:block>
     </th:block>
 
-    <div th:if="${!model.isSentToProjectTeam()}" th:remove="tag">
+    <div th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}" th:remove="tag">
         <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
             Send to project team
         </button>

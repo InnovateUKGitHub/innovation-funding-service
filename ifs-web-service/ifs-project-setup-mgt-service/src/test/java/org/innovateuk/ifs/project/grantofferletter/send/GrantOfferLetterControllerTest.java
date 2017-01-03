@@ -273,18 +273,12 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
                         file(uploadedFile).param("uploadGrantOfferLetterClicked", "")).
-                andExpect(status().isOk()).
-                andExpect(view().name("project/grant-offer-letter-send")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
         ProjectGrantOfferLetterSendForm form = (ProjectGrantOfferLetterSendForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getGrantOfferLetter());
-
-        ProjectGrantOfferLetterSendViewModel model = (ProjectGrantOfferLetterSendViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(new FileDetailsViewModel(createdFileDetails), model.getGrantOfferLetterFile());
-        assertEquals(null, model.getSignedGrantOfferLetterFile());
-        assertTrue(model.getGrantOfferLetterFileContentAvailable());
-
     }
 
     @Test
