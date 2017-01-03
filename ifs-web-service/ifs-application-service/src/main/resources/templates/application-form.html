@@ -10,17 +10,17 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=${backURL}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=${backURL}" th:remove="tag" />
 
-    <div th:include="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" th:remove="tag" />
+    <div th:include="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" th:remove="tag" />
       	<div class="page-title">
-            <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
+            <div th:include="fragments/elements :: application-title (application=${model.application.currentApplication})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
         <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
-                th:with="appIsClosed=${!currentCompetition.isOpen() or !currentApplication.isOpen()}, readonly=${!currentCompetition.isOpen() or !currentApplication.isOpen()}" novalidate="novalidate">
+                th:with="appIsClosed=${model.application.applicationIsClosed}, readonly=${model.application.applicationIsReadOnly}" novalidate="novalidate">
             <!--/* To disable submission on pressing return (INFUND-6892) */-->
-            <div th:unless="${allReadOnly}" th:remove="tag">
+            <div th:unless="${model.application.allReadOnly}" th:remove="tag">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
             </div>
 
@@ -33,8 +33,10 @@
                 </ul>
             </div>
 
-            <div class="question" th:each="formInput, status : ${questionFormInputs?.get(currentQuestion?.id)}" th:id="'form-input-'+${formInput.id}"
-                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
+            <div class="question" th:each="formInput, status : ${model.currentQuestionFormInputs}" th:id="'form-input-'+${formInput.id}"
+                 th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
+                 questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
+                 currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser})">
                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
 
@@ -57,15 +59,15 @@
                 </div>
             </div>
 
-            <input type="hidden" id="application_id" th:value="${currentApplication.getId()}"/>
-            <input type="hidden" id="competition_id" th:value="${currentCompetition.getId()}"/>
-            <div th:if="${allReadOnly}" th:remove="tag">
-                <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+            <input type="hidden" id="application_id" th:value="${model.application.currentApplication.getId()}"/>
+            <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.getId()}"/>
+            <div th:if="${model.application.allReadOnly}" th:remove="tag">
+                <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>
-            <div th:unless="${allReadOnly}" th:remove="tag">
+            <div th:unless="${model.application.allReadOnly}" th:remove="tag">
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
-            <div th:if="${(currentCompetition.isOpen()) and (currentSection != null) and
+            <div th:if="${(model.application.currentCompetition.isOpen()) and (currentSection != null) and
             (currentSection.getName() != null) and
             (#strings.equals(currentSection.getName(), 'Your finances'))
             and !completedSections?.contains(currentSection.getId())}">
@@ -73,21 +75,22 @@
                 <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
             </div>
 
+
             <div class="alignright-button" th:if="${(currentSection != null) and (currentSection.getName() != null) and (#strings.equals(currentSection.getName(), 'Your finances'))}">
                 <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>
             </div>
 
-            <ul class="pagination" th:if="${previousUrl != '' and nextUrl !=''}">
-                <li class="prev" th:if="${previousUrl}">
-                    <a th:href="@{${previousUrl}}" rel="prev" title="Navigate to previous part">
+            <ul class="pagination" th:if="${model.navigation.hasNavigation}">
+                <li class="prev" th:if="${model.navigation.previousUrl}">
+                    <a th:href="@{${model.navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
                         <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title" th:text="${previousText}">Business proposition</span>
+                        <span class="pagination-part-title" th:text="${model.navigation.previousText}">Business proposition</span>
                     </a>
                 </li>
-                <li class="next" th:if="${nextUrl}">
-                    <a th:href="@{${nextUrl}}" rel="next" title="Navigate to next part">
+                <li class="next" th:if="${model.navigation.nextUrl}">
+                    <a th:href="@{${model.navigation.nextUrl}}" rel="next" title="Navigate to next part">
                         <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title" th:text="${nextText}">Funding</span>
+                        <span class="pagination-part-title" th:text="${model.navigation.nextText}">Funding</span>
                     </a>
                 </li>
             </ul>

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel;
+import org.innovateuk.ifs.application.viewmodel.QuestionAssignableViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionNavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.ApplicationFormController.*;
@@ -85,15 +85,20 @@ public class QuestionModelPopulator {
                                    List<ProcessRoleResource> userApplicationRoles){
 
         form = initializeApplicationForm(form);
+        OrganisationResource userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
-        QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, form, userApplicationRoles);
+        QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, userOrganisation, form, userApplicationRoles);
         QuestionNavigationViewModel questionNavigationViewModel = addNavigation(question, application.getId());
+        QuestionAssignableViewModel questionAssignableViewModel = addAssignableDetails(application, userOrganisation, user.getId(), question.getId());
 
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
         questionFormInputs.put(question.getId(), formInputs);
 
         QuestionViewModel questionViewModel = new QuestionViewModel(user, questionFormInputs, question.getShortName(), question,
-                questionApplicationViewModel, questionNavigationViewModel);
+                questionApplicationViewModel, questionNavigationViewModel, questionAssignableViewModel);
+
+        addQuestionsDetails(questionViewModel, application, form);
+        addUserDetails(questionViewModel, application, user.getId());
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -111,12 +116,12 @@ public class QuestionModelPopulator {
                                                                CompetitionResource competition,
                                                                Long userId,
                                                                QuestionResource questionResource,
+                                                               OrganisationResource userOrganisation,
                                                                ApplicationForm form,
                                                                List<ProcessRoleResource> userApplicationRoles) {
 
         form.setApplication(application);
 
-        OrganisationResource userOrganisation = getUserOrganisation(userId, userApplicationRoles);
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
         Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
         Boolean allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
@@ -129,10 +134,9 @@ public class QuestionModelPopulator {
                 questionApplicationViewModel.setLeadOrganisation(org)
         );
 
-        addQuestionsDetails(questionApplicationViewModel, application, form);
-        addUserDetails(questionApplicationViewModel, application, userId);
+
         addApplicationFormDetailInputs(application, form);
-        addAssignableDetails(questionApplicationViewModel, application, userOrganisation, userId, questionResource.getId());
+
 
         return questionApplicationViewModel;
     }
@@ -147,10 +151,10 @@ public class QuestionModelPopulator {
         }
     }
 
-    private void addQuestionsDetails(QuestionApplicationViewModel questionApplicationViewModel, ApplicationResource application, ApplicationForm form) {
+    private void addQuestionsDetails(QuestionViewModel questionViewModel, ApplicationResource application, ApplicationForm form) {
         List<FormInputResponseResource> responses = getFormInputResponses(application);
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
-        questionApplicationViewModel.setResponses(mappedResponses);
+        questionViewModel.setResponses(mappedResponses);
         Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
                 values.put(k.toString(), v.getValue())
@@ -158,20 +162,21 @@ public class QuestionModelPopulator {
         form.setFormInput(values);
     }
 
-    private void addUserDetails(QuestionApplicationViewModel questionApplicationViewModel, ApplicationResource application, Long userId) {
+    private void addUserDetails(QuestionViewModel questionViewModel, ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
-        questionApplicationViewModel.setUserIsLeadApplicant(userIsLeadApplicant);
-        questionApplicationViewModel.setLeadApplicant(leadApplicant);
+        questionViewModel.setUserIsLeadApplicant(userIsLeadApplicant);
+        questionViewModel.setLeadApplicant(leadApplicant);
     }
 
-    private void addAssignableDetails(QuestionApplicationViewModel questionApplicationViewModel, ApplicationResource application, OrganisationResource userOrganisation,
+    private QuestionAssignableViewModel addAssignableDetails(ApplicationResource application, OrganisationResource userOrganisation,
                                       Long userId, Long currentQuestionId) {
 
-        if (isApplicationInViewMode(questionApplicationViewModel, application, userOrganisation))
-            return;
+        if (isApplicationInView(application, userOrganisation)) {
+            return new QuestionAssignableViewModel();
+        }
 
         Map<Long, QuestionStatusResource> questionAssignees;
         QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId, application.getId(), userOrganisation.getId());
@@ -186,23 +191,14 @@ public class QuestionModelPopulator {
 
         List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
-        questionApplicationViewModel.setQuestionAssignee(questionAssignee);
-        questionApplicationViewModel.setAssignableUsers(processRoleService.findAssignableProcessRoles(application.getId()));
-        questionApplicationViewModel.setPendingAssignableUsers(pendingAssignableUsers);
-        questionApplicationViewModel.setQuestionAssignees(questionAssignees);
-        questionApplicationViewModel.setNotifications(notifications);
+        return new QuestionAssignableViewModel(questionAssignee, processRoleService.findAssignableProcessRoles(application.getId()), pendingAssignableUsers, questionAssignees, notifications);
     }
 
-    private boolean isApplicationInViewMode(QuestionApplicationViewModel questionApplicationViewModel, ApplicationResource application, OrganisationResource userOrganisation) {
+    private Boolean isApplicationInView(ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
-            //Application Not open, so add empty lists
-            questionApplicationViewModel.setAssignableUsers(CompletableFuture.completedFuture(new ArrayList<ProcessRoleResource>()));
-            questionApplicationViewModel.setPendingAssignableUsers(new ArrayList<ApplicationInviteResource>());
-            questionApplicationViewModel.setQuestionAssignees(new HashMap<Long, QuestionStatusResource>());
-            questionApplicationViewModel.setNotifications(new ArrayList<QuestionStatusResource>());
-            return true;
+            return Boolean.TRUE;
         }
-        return false;
+        return Boolean.FALSE;
     }
 
     private OrganisationResource getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {

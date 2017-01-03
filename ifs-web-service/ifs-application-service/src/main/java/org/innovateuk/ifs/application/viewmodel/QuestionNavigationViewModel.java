@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.springframework.util.StringUtils;
+
 /**
  * TODO - comments that make sense
  */
@@ -39,5 +41,9 @@ public class QuestionNavigationViewModel {
 
     public void setNextText(String nextText) {
         this.nextText = nextText;
+    }
+
+    public Boolean getHasNavigation(){
+        return !StringUtils.isEmpty(previousUrl) && !StringUtils.isEmpty(nextUrl);
     }
 }
