@@ -175,7 +175,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(model().attribute("currentSectionId", currentSectionId))
                 .andExpect(model().attribute("hasFinanceSection", true))
                 .andExpect(model().attribute("financeSectionId", currentSectionId))
-                .andExpect(model().attribute("allReadOnly", false));
+                .andExpect(model().attribute("allReadOnly", true));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
@@ -321,7 +321,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
-        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your finances")).withType(SectionType.FINANCE).build());
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -335,7 +335,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationFinanceMarkAsCompleteFailWithStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
-        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your finances")).withType(SectionType.FINANCE).build());
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))

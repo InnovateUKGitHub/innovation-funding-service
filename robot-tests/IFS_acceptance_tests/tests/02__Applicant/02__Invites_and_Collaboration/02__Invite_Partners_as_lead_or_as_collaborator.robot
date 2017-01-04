@@ -234,11 +234,13 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    the user should see the text in the page    NOMENSA LTD
+    And the user should see the element    link=Your project costs
+    And the user should see the element    link=Your organisation
+    And the user should see the element    link=Your funding
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view team members and add collaborators
-    the user should see the text in the page    NOMENSA LTD
+    Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
     ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])

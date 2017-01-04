@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -36,8 +38,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.AjaxResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
@@ -62,7 +62,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
@@ -74,9 +76,6 @@ import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -226,16 +225,19 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        if (FINANCE.equals(section.getType())) {
-            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-        } else {
+        if(SectionType.GENERAL.equals(section.getType())
+                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         }
+
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
 
         return APPLICATION_FORM;
     }
+
 
     private void addFormAttributes(ApplicationResource application,
                                    CompetitionResource competition,
@@ -645,8 +647,12 @@ public class ApplicationFormController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
 
-        if (section.getType() == SectionType.FINANCE &&
+        if (section.getType() == SectionType.FUNDING_FINANCES &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
+            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            return APPLICATION_FORM;
+        } else if (section.getType() == SectionType.PROJECT_COST_FINANCES &&
+                !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
             applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
             return APPLICATION_FORM;
         }
@@ -692,7 +698,17 @@ public class ApplicationFormController {
                 bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
                 return false;
-            } else if (!form.isStateAidAgreed()) {
+            }
+        }
+        return true;
+    }
+
+    private boolean validStateAidForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
+                                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
+                                                       CompetitionResource competition, UserResource user, Model model
+    ) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+            if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
                 return false;
