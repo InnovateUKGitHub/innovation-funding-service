@@ -48,7 +48,7 @@ Client-side validations and Submit
     ...
     ...    INFUND-5432
     [Tags]    HappyPath
-    When the user selects the checkbox    id=agreesToTerms1
+    When the user selects the checkbox    agreesToTerms1
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}

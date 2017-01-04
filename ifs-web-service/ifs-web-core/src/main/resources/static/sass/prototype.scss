@@ -1,6 +1,7 @@
-@import "compass/css3";
-
-@import "govuk";
+// Import all of the govuk-elements-sass files
+// ===========================================
+@import "govuk-template";
+@import "govuk-elements";
 @import "components";
 
 /* Prototype css for testing */

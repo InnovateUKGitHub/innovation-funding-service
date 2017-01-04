@@ -99,7 +99,7 @@ Business organisation (partner accepts invitation)
     And the user enters text to a text field    id=organisationSearchName    Nomensa
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
@@ -210,7 +210,7 @@ the user adds new collaborator
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add another person')
-    sleep    300ms
+    wait for autosave
 
 The status of the invited people should be correct in the application team page
     the user should see the text in the page    Adrian Booth

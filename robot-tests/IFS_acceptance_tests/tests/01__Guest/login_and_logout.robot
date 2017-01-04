@@ -160,7 +160,7 @@ Clear the login fields
     When the user enters text to a text field    id=id_password    ${EMPTY}
     And the user enters text to a text field    id=id_retypedPassword    ${EMPTY}
     Mouse Out    id=id_retypedPassword
-    sleep    200ms
+    wait for autosave
 
 the user clicks the forgot psw link
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    click element    link=Forgot your password?

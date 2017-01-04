@@ -66,7 +66,7 @@ Finance checks client-side validations
     When the user enters text to a text field    name=costs[6].value    ${Empty}
     Then the user should see an error    Please enter any other cost
     When the user enters text to a text field    name=costs[0].value    -1
-    And the user moves focus to the element    id=costs-reviewed
+    And the user moves focus to the element    css=[for="costs-reviewed"]
     Then the user should see an error    This field should be 0 or higher
     And The user should not see the text in the page    Please enter a labour cost
 
@@ -76,7 +76,7 @@ Approve Eligibility: Lead partner organisation
     [Tags]    HappyPath
     Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -89,7 +89,7 @@ Approve Eligibility: Collaborator partner organisation
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-1
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -101,7 +101,7 @@ Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     Then the user should see the text in the page    The partner finance eligibility has been approved
@@ -191,7 +191,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+
 
 the users fill out project details
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
@@ -235,7 +235,7 @@ the user fills in project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    id=costs-reviewed
+    the user moves focus to the element    css=[for="costs-reviewed"]
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
@@ -245,32 +245,10 @@ project finance approves Viability for
     And the user should see the element     jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     Then the user should see the element    jQuery=h2:contains("Credit report")
-    And the user selects the checkbox       id=costs-reviewed
+    And the user selects the checkbox       costs-reviewed
     When the user should see the element    jQuery=h2:contains("Approve viability")
-    Then the user selects the checkbox      id=project-viable
+    Then the user selects the checkbox      project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
     Then the user clicks the button/link    css=#confirm-button
     And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

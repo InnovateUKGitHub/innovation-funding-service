@@ -35,7 +35,7 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label" th:each="role : ${model.ACCEPTED_ROLES}">
+                        <label class="block-label selection-button-radio" th:each="role : ${model.ACCEPTED_ROLES}">
                             <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
                             <span th:text="${role.displayName}" th:remove="tag" />
                         </label>
