@@ -58,4 +58,9 @@ public class ProcessRoleController {
     public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id) {
         return applicationService.findByProcessRole(id).toGetResponse();
     }
+
+    @RequestMapping("userHasApplicationForCompetition/{userId}/{competitionId}")
+    public RestResult<Boolean> userHasApplicationForCompetition(@PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId) {
+        return usersRolesService.userHasApplicationForCompetition(userId, competitionId).toGetResponse();
+    }
 }

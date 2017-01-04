@@ -69,6 +69,11 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
         return serviceSuccess(new ArrayList<>(assignableProcessRoleResources));
     }
 
+    @Override
+    public ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
+        return serviceSuccess(processRoleRepository.countByUserIdAndApplicationCompetitionId(userId, competitionId) > 0);
+    }
+
     private List<ProcessRoleResource> processRolesToResources(final List<ProcessRole> processRoles) {
         return simpleMap(processRoles, processRoleMapper::mapToResource);
     }
