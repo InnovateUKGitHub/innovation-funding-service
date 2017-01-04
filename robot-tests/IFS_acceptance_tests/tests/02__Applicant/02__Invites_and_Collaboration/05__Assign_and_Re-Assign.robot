@@ -184,13 +184,19 @@ Lead marks finances as complete and collaborator should be able to edit them
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
-    And the user enters the funding level
+    Then the user should see the element   link=Your project costs
+    And the user should see the element    link=Your organisation
+    And the user should see the element    link=Your funding
+    When the user clicks the button/link   link=Your project costs
+    Then the user fills in the project costs
+    When the user enters the funding level
     And the user selects the checkbox    id=agree-terms-page
     And the user selects the checkbox    id=agree-state-aid-page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     And the user should see the text in the page    Project details
     Then Collaborator should be able to edit finances again
     [Teardown]    the user closes the browser
+
 
 The question is disabled for other collaborators
     [Documentation]    INFUND-275
@@ -263,3 +269,83 @@ Steve smith assigns a questions to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
     the user closes the browser
+
+the user fills in the project costs
+    the user fills in Labour
+    the user fills in Overhead costs
+    the user fills in Material
+    the user fills in Capital usage
+    the user fills in Subcontracting costs
+    the user fills in Travel and subsistence
+    the user fills in Other Costs
+    the user selects the checkbox    css=#agree-state-aid-page
+    the user clicks the button/link  jQuery=button:contains("Mark as complete")
+
+the user fills in Labour
+    the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
+    the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
+    the user enters text to a text field       css=[name^="labour-labourDaysYearly"]    230
+    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
+    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
+    the user moves focus to the element        jQuery=button:contains('Add another role')
+    the user clicks the button/link            jQuery=button:contains('Add another role')
+    the user should see the element            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
+    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
+    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
+    the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
+
+the user fills in Overhead costs
+    the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
+    the user selects the radio button  overheads-type-29-1456  cost-overheads-1456-rateType_1
+    the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
+
+the user fills in Material
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Materials")
+    the user should see the element       css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Materials")
+
+the user fills in Capital usage
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Capital usage")
+    the user enters text to a text field  jQuery=textarea.form-control[name^=capital_usage-description]  some description
+    Click Element                         jQuery=label:contains("New")
+    the user enters text to a text field  css=.form-finances-capital-usage-depreciation  10
+    the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
+    the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
+    the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
+    focus                                 jQuery=#section-total-12[readonly]
+    the user should see the element       jQuery=#section-total-12[readonly]
+    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Capital usage")
+
+the user fills in Subcontracting costs
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Subcontracting costs")
+    the user enters text to a text field  css=.form-finances-subcontracting-company  SomeName
+    the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-country]  Netherlands
+    the user enters text to a text field  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
+    the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-subcontractingCost]  1000
+    focus                                 css=#section-total-13[readonly]
+    textfield should contain              css=#section-total-13[readonly]  £ 1,000
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Subcontracting costs")
+
+the user fills in Travel and subsistence
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Travel and subsistence")
+    the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    focus                                 css=#section-total-14[readonly]
+    textfield should contain              css=#section-total-14[readonly]  £ 1,000
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Travel and subsistence")
+
+the user fills in Other Costs
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
+    the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
+    the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
+    focus                                 css=#section-total-15
+    textfield should contain              css=#section-total-15  £ 50
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
