@@ -55,6 +55,7 @@ The applicant assigns the question to the collaborator
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
+    the user reloads the page
     Wait Until Element Is Not Visible    css=div.event-alert
     The user clicks the button/link    css=.assign-button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
