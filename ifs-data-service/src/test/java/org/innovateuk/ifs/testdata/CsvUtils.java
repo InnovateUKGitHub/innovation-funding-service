@@ -394,10 +394,10 @@ class CsvUtils {
             leadTechnologist = nullable((line.get(i++)));
             compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
-            budgetCode = nullable(line.get(i++));
-            code = nullable(line.get(i++));
             pafCode = nullable(line.get(i++));
+            budgetCode = nullable(line.get(i++));
             activityCode = nullable(line.get(i++));
+            code = nullable(line.get(i++));
             assessorCount = nullableInteger(line.get(i++));
             assessorPay = nullableBigDecimal(line.get(i++));
         }
