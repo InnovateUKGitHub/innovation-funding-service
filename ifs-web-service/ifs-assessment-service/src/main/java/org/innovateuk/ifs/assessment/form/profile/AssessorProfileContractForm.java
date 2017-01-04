@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.form.profile;
 
-import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -13,10 +13,10 @@ import java.util.List;
 /**
  * Form field model for the Assessor Profile Terms of Contract page
  */
-public class AssessorProfileTermsForm implements BindingResultTarget {
+public class AssessorProfileContractForm implements BindingResultTarget {
 
-    @NotNull(message = "{validation.assessorprofiletermsform.terms.required}")
-    @AssertTrue(message = "{validation.assessorprofiletermsform.terms.required}")
+    @NotNull(message = "{validation.assessorprofilecontractform.terms.required}")
+    @AssertTrue(message = "{validation.assessorprofilecontractform.terms.required}")
     private Boolean agreesToTerms;
 
     private BindingResult bindingResult;
@@ -52,11 +52,15 @@ public class AssessorProfileTermsForm implements BindingResultTarget {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        AssessorProfileTermsForm that = (AssessorProfileTermsForm) o;
+        AssessorProfileContractForm that = (AssessorProfileContractForm) o;
 
         return new EqualsBuilder()
                 .append(agreesToTerms, that.agreesToTerms)
