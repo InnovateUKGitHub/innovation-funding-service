@@ -19,7 +19,7 @@
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
 
                 <p>You must complete your profile before we can assign you applications.</p>
-                <ul class="list-bullet extra-margin-top">
+                <ul class="list list-bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
                         <a th:href="@{/profile/skills}">your skills</a>
                     </li>
@@ -109,7 +109,7 @@
             </div>
 
             <h2 class="heading-medium">Your contract</h2>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>
                 </li>
@@ -119,15 +119,13 @@
                 <li>
                     <a th:href="@{/profile/terms}">your contract</a>
                 </li>
-                <!--/* TODO INFUND-7061
                 <li>
-                    <a th:href="">travel and subsistence rates</a>
+                    <a th:href="@{/profile/travel}">travel and subsistence rates</a>
                 </li>
-                */-->
             </ul>
 
             <h2 class="heading-medium">Your profile</h2>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/details}">your details</a>
                 </li>

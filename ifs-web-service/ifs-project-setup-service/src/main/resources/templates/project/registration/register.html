@@ -23,7 +23,7 @@
                 </ul>
             </div>
 
-            <div class="panel-indent">
+            <div class="panel">
                 <p>The profile that you are creating will be linked to the following organisation <br/>
                     <strong><div th:text="${organisationName}"/></strong></p>
             </div>
@@ -134,7 +134,7 @@
                     <label class="form-label" for="password">
                         <span class="form-label-bold">Create password</span>
                         <span class="form-hint">Your password is case-sensitive and needs to:
-                          <ul class="list-bullet">
+                          <ul class="list list-bullet">
                             <li>be between 10 and 30 characters long</li>
                             <li>contain at least 1 capital letter</li>
                             <li>contain at least 1 number</li>
@@ -179,7 +179,7 @@
                         <span class="visuallyhidden">Terms and conditions</span>
                         <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                       </legend>
-                      <label class="block-label" for="termsAndConditions">
+                      <label class="block-label selection-button-checkbox" for="termsAndConditions">
                           <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}"  />
                           I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
                       </label>
