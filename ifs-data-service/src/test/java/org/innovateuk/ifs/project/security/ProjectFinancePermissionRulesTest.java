@@ -86,27 +86,27 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectManagerCanIncompleteAnySpendProfile() throws Exception {
+    public void testLeadPartnerCanIncompleteAnySpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
 
-        setUpUserAsProjectManager(project, user);
+        setupUserAsLeadPartner(project, user);
 
-        assertTrue(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
+        assertTrue(rules.leadPartnerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
     }
 
     @Test
-    public void testPartnerCannotIncompleteSpendProfile() throws Exception {
+    public void testNonLeadPartnerCannotIncompleteSpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId =
                 new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
 
-        setUpUserNotAsProjectManager(user);
+        setupUserNotAsLeadPartner(project, user);
 
-        assertFalse(rules.projectManagerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
+        assertFalse(rules.leadPartnerCanMarkSpendProfileIncomplete(projectOrganisationCompositeId, user));
     }
 
     @Test
@@ -135,6 +135,30 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertFalse(rules.projectFinanceUserCanViewCreditReport(projectId, user));
             }
         });
+    }
+
+    @Test
+    public void testLeadPartnerCanViewAnySpendProfileData() throws Exception {
+
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setupUserAsLeadPartner(project, user);
+
+        assertTrue(rules.leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
+    }
+    @Test
+    public void testUserNotLeadPartnerCannotViewSpendProfile() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId =
+                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
+
+        setupUserNotAsLeadPartner(project, user);
+
+        assertFalse(rules.leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
     }
 
     @Override

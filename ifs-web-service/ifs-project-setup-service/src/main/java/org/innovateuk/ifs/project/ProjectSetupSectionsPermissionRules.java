@@ -22,6 +22,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -87,10 +88,16 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection);
     }
 
-    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "A project manager can access certain methods which are unavailable to others")
-    public boolean userIsProjectManager(Long projectId, UserResource user) {
+    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")
+    public boolean userCanMarkSpendProfileIncomplete(Long projectId, UserResource user) {
+        Long leadOrganisation = projectService.getLeadOrganisation(projectId).getId();
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> user.getId().equals(pu.getUser()) && UserRoleType.PROJECT_MANAGER.getName().equals(pu.getRoleName())) != null;
+        Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(user.getId())
+                && projectUserResource.getOrganisation().equals(leadOrganisation)
+                && PARTNER.getName().equals(projectUserResource.getRoleName())
+        );
+
+        return returnedProjectUser.isPresent();
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {

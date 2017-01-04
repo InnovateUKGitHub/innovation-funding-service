@@ -330,7 +330,7 @@
                 </div>
             </th:block>
 
-            <div th:if="${model.leadPartner and !model.userPartOfThisOrganisation and model.markedAsComplete}">
+            <div th:if="${model.leadPartner and model.userPartOfThisOrganisation and model.markedAsComplete}">
                 <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
                 <form method="post"
                       th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">

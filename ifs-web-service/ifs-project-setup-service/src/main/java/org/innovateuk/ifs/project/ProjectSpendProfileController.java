@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
-import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.util.DateUtil;
-import org.innovateuk.ifs.project.util.FinancialYearDate;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
@@ -33,9 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
@@ -82,7 +76,8 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        if (userHasProjectManagerRole(loggedInUser, projectId)) {
+        if (userHasProjectManagerRole(loggedInUser, projectId)
+            || (isUserPartOfThisOrganisation(projectId, organisationId, loggedInUser) && isLeadPartner(partnerOrganisationService, projectId, organisationId))) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
