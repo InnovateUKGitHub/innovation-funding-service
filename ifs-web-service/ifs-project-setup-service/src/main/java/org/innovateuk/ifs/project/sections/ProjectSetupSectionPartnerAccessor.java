@@ -61,6 +61,10 @@ public class ProjectSetupSectionPartnerAccessor {
             return NOT_ACCESSIBLE;
         }
 
+        if(!projectSetupProgressChecker.isOrganisationRequiringFunding(organisation)){
+            return NOT_ACCESSIBLE;
+        }
+
         if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
             return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +

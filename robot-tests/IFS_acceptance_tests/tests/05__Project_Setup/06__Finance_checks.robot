@@ -191,7 +191,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+
 
 the users fill out project details
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -171,6 +172,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
         return withArray((id, object) -> setField("assessorPay", id, object), assessorPay);
+    }
+
+    public CompetitionResourceBuilder withSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
+        return with(competition -> setField("sectionSetupStatus", sectionSetupStatus, competition));
     }
 
     @Override

@@ -99,5 +99,4 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
         return isProjectFinanceUser(user);
     }
-
 }

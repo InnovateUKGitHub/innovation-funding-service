@@ -505,7 +505,6 @@ Assessor: Should have a Green Check
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the total should be correct
@@ -555,7 +554,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
-    sleep    500ms
+    wait for autosave
 
 the weekdays should be correct
     element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu

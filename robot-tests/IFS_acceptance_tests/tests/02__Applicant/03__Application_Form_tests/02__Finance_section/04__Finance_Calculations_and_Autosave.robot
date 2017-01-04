@@ -154,7 +154,7 @@ the applicant edits the working days field
     the user clears the text from the element    css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    250
     the user moves focus to the element    css=.app-submit-btn
-    Sleep    200ms
+    wait for autosave
 
 the Applicant fills the Materials fields
     the user clicks the button/link    jQuery=button:contains("Materials")
@@ -195,7 +195,7 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing) input
-    sleep    200ms
+    wait for autosave
     the user moves focus to the element    jQuery=button:contains(Add another asset)
     the user clicks the button/link    jQuery=button:contains(Add another asset)
     the user should see the element    css=.form-row:nth-child(2) .form-finances-capital-usage-npv
@@ -305,10 +305,10 @@ the grant value should be correct in the finance summary page
 auto-save should work for the "Grant" field
     the user clears the text from the element    id=cost-financegrantclaim
     the user moves focus to the element    jQuery= button:contains('Save and return')
-    Sleep    500ms
+    wait for autosave
     the user enters text to a text field    id=cost-financegrantclaim    25
     the user moves focus to the element    jQuery= button:contains('Save and return')
-    Sleep    300ms
+    wait for autosave
     the user reloads the page
     Run Keyword And Ignore Error    confirm action
     the user moves focus to the element    jQuery= button:contains('Save and return')

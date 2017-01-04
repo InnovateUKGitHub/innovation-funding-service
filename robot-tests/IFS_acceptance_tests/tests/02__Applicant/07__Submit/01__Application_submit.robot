@@ -130,7 +130,7 @@ The user marks the finances as complete
     the user selects the checkbox    id=agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
+
 
 the applicant marks the first section as complete
     the user clicks the button/link    link=Application Overview

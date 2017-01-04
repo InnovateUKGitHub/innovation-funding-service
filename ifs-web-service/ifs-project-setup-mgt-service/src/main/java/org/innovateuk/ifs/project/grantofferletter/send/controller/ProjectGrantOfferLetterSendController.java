@@ -90,15 +90,15 @@ public class ProjectGrantOfferLetterSendController {
                                              @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
-                                             Model model) {
+                                             Model model)
+    {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, "grantOfferLetter", form, () -> {
 
-        MultipartFile file = form.getGrantOfferLetter();
-        ServiceResult<FileEntryResource> generateResult = projectService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
-                file.getOriginalFilename(), getMultipartFileBytes(file));
+            MultipartFile file = form.getGrantOfferLetter();
 
-        validationHandler.addAnyErrors(generateResult);
-
-        return doViewGrantOfferLetterSend(projectId, model, form);
+            return projectService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+                    file.getOriginalFilename(), getMultipartFileBytes(file));
+        });
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -128,7 +128,7 @@ public class ProjectGrantOfferLetterSendController {
 
         ServiceResult<Void> generateResult = projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType);
 
-        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> {return doViewGrantOfferLetterSend(projectId, model, form);}
+        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> doViewGrantOfferLetterSend(projectId, model, form)
         );
     }
 

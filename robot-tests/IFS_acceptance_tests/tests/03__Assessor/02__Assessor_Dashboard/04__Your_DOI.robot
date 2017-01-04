@@ -85,7 +85,6 @@ the user correctly fills out the role, principle employer and accurate fields
     the user moves focus to the element    id=accurateAccount1
     Click Element    id=accurateAccount1
     focus    jQuery=button:contains("Save and continue")
-    sleep    500ms
     Wait For Autosave
 
 the user should see the correct inputs in the declaration form
