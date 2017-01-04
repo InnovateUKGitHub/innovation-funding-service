@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter;
 
 /**
- * Holder of model attributes for the Assessor Profile Terms of Contract Annex view.
+ * Holder of model attributes for the Assessor Profile Contract Annex view.
  */
 public class AssessorProfileContractAnnexViewModel {
 

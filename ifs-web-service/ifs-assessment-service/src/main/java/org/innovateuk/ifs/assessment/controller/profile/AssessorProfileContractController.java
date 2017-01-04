@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
- * Controller to manage the Assessor Profile Terms of Contract page
+ * Controller to manage the Assessor Profile Contract page
  */
 @Controller
 @RequestMapping("/profile/contract")

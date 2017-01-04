@@ -6,7 +6,7 @@ import org.innovateuk.ifs.user.resource.ProfileContractResource;
 import org.springframework.stereotype.Component;
 
 /**
- * Build the model for the Assessor Profile Terms of Contract view.
+ * Build the model for the Assessor Profile Contract view.
  */
 @Component
 public class AssessorProfileContractModelPopulator {

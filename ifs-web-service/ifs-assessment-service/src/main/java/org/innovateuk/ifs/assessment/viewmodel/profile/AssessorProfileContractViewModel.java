@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.LocalDateTime;
 
 /**
- * Holder of model attributes for the Assessor Profile Terms of Contract view.
+ * Holder of model attributes for the Assessor Profile Contract view.
  */
 public class AssessorProfileContractViewModel {
 
