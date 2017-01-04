@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,8 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,7 +37,6 @@ public class ApplicationNavigationPopulatorTest {
     public void testAddNavigation() {
         SectionResource section = SectionResourceBuilder.newSectionResource().build();
         Long applicationId = 1L;
-        Model model = mock(Model.class);
         String previousName = "prev";
         String nextName = "next";
         QuestionResource previousQuestion = QuestionResourceBuilder.newQuestionResource()
@@ -48,12 +50,12 @@ public class ApplicationNavigationPopulatorTest {
         when(sectionService.getSectionByQuestionId(previousQuestion.getId())).thenReturn(previousSection);
         when(sectionService.getSectionByQuestionId(nextQuestion.getId())).thenReturn(nextSection);
 
-        target.addNavigation(section, applicationId, model);
+        NavigationViewModel result = target.addNavigation(section, applicationId);
 
-        verify(model).addAttribute(eq("previousUrl"), contains(previousQuestion.getId().toString()));
-        verify(model).addAttribute(eq("previousText"), contains(previousQuestion.getShortName()));
-        verify(model).addAttribute(eq("nextUrl"), contains(nextQuestion.getId().toString()));
-        verify(model).addAttribute(eq("nextText"), contains(nextQuestion.getShortName()));
+        assertTrue(result.getPreviousUrl().contains(previousQuestion.getId().toString()));
+        assertEquals(previousQuestion.getShortName(), result.getPreviousText());
+        assertTrue(result.getNextUrl().contains(nextQuestion.getId().toString()));
+        assertEquals(nextQuestion.getShortName(), result.getNextText());
     }
 
     @Test

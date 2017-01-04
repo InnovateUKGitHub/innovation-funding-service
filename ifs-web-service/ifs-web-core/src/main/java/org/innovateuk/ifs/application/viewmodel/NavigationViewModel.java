@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 /**
  * TODO - comments that make sense
  */
-public class QuestionNavigationViewModel {
+public class NavigationViewModel {
     private String previousUrl;
     private String previousText;
     private String nextUrl;

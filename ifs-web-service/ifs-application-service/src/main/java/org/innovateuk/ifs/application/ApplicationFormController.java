@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -91,6 +92,7 @@ public class ApplicationFormController {
     public static final String QUESTION_URL = "/question/";
     public static final String QUESTION_ID = "questionId";
     public static final String MODEL_ATTRIBUTE_MODEL = "model";
+    public static final String MODEL_ATTRIBUTE_MODEL_NAV = "model.navigation";
     public static final String MODEL_ATTRIBUTE_FORM = "form";
     public static final String APPLICATION_ID = "applicationId";
     public static final String APPLICATION_FORM = "application-form";
@@ -247,7 +249,6 @@ public class ApplicationFormController {
                                    List<ProcessRoleResource> userApplicationRoles){
         applicationModelPopulator.addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        applicationNavigationPopulator.addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
         if(question.isPresent()) {
@@ -324,8 +325,10 @@ public class ApplicationFormController {
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
                 applicationModelPopulator.addUserDetails(model, application, user.getId());
-                applicationNavigationPopulator.addNavigation(question, applicationId, model);
+                NavigationViewModel navigation = applicationNavigationPopulator.addNavigation(question, applicationId);
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+
+                model.addAttribute(MODEL_ATTRIBUTE_MODEL_NAV, navigation);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -678,10 +681,13 @@ public class ApplicationFormController {
                                                 UserResource user, Model model, ApplicationForm form, Long applicationId) {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
-        applicationNavigationPopulator.addNavigation(section, applicationId, model);
+        NavigationViewModel navigation = applicationNavigationPopulator.addNavigation(section, applicationId);
+
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
         applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
+
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL_NAV, navigation);
     }
 
     private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,

@@ -4,15 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionAssignableViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionNavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -37,34 +35,48 @@ import org.springframework.ui.Model;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.ApplicationFormController.*;
+import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
+import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_MODEL;
 
 /**
  * View model for the single question pages
  */
 @Component
-public class QuestionModelPopulator {
+public class QuestionModelPopulator extends BaseModelPopulator {
     private static final Log LOG = LogFactory.getLog(QuestionModelPopulator.class);
+
     @Autowired
     private ApplicationService applicationService;
+
     @Autowired
     private CompetitionService competitionService;
+
     @Autowired
     private ProcessRoleService processRoleService;
+
     @Autowired
     private OrganisationService organisationService;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private QuestionService questionService;
+
     @Autowired
     private InviteRestService inviteRestService;
+
     @Autowired
     private SectionService sectionService;
+
     @Autowired
     private FormInputService formInputService;
+
     @Autowired
     private FormInputResponseService formInputResponseService;
+
+    @Autowired
+    private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form) {
         QuestionResource question = questionService.getById(questionId);
@@ -85,17 +97,17 @@ public class QuestionModelPopulator {
                                    List<ProcessRoleResource> userApplicationRoles){
 
         form = initializeApplicationForm(form);
-        OrganisationResource userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
         QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, userOrganisation, form, userApplicationRoles);
-        QuestionNavigationViewModel questionNavigationViewModel = addNavigation(question, application.getId());
+        NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question, application.getId());
         QuestionAssignableViewModel questionAssignableViewModel = addAssignableDetails(application, userOrganisation, user.getId(), question.getId());
 
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
         questionFormInputs.put(question.getId(), formInputs);
 
         QuestionViewModel questionViewModel = new QuestionViewModel(user, questionFormInputs, question.getShortName(), question,
-                questionApplicationViewModel, questionNavigationViewModel, questionAssignableViewModel);
+                questionApplicationViewModel, navigationViewModel, questionAssignableViewModel);
 
         addQuestionsDetails(questionViewModel, application, form);
         addUserDetails(questionViewModel, application, user.getId());
@@ -104,19 +116,13 @@ public class QuestionModelPopulator {
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
-    private ApplicationForm initializeApplicationForm(ApplicationForm form) {
-        if(null == form){
-            form = new ApplicationForm();
-        }
 
-        return form;
-    }
 
     private QuestionApplicationViewModel addApplicationDetails(ApplicationResource application,
                                                                CompetitionResource competition,
                                                                Long userId,
                                                                QuestionResource questionResource,
-                                                               OrganisationResource userOrganisation,
+                                                               Optional<OrganisationResource> userOrganisation,
                                                                ApplicationForm form,
                                                                List<ProcessRoleResource> userApplicationRoles) {
 
@@ -127,7 +133,7 @@ public class QuestionModelPopulator {
         Boolean allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
 
         QuestionApplicationViewModel questionApplicationViewModel = new QuestionApplicationViewModel(completedDetails, allReadOnly
-                , application, competition, userOrganisation);
+                , application, competition, userOrganisation.orElse(null));
 
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
@@ -171,15 +177,16 @@ public class QuestionModelPopulator {
         questionViewModel.setLeadApplicant(leadApplicant);
     }
 
-    private QuestionAssignableViewModel addAssignableDetails(ApplicationResource application, OrganisationResource userOrganisation,
+    private QuestionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation,
                                       Long userId, Long currentQuestionId) {
 
-        if (isApplicationInView(application, userOrganisation)) {
+        if (isApplicationInViewMode(application, userOrganisation)) {
             return new QuestionAssignableViewModel();
         }
 
         Map<Long, QuestionStatusResource> questionAssignees;
-        QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId, application.getId(), userOrganisation.getId());
+
+        QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId, application.getId(), getUserOrganisationId(userOrganisation));
         questionAssignees = new HashMap<>();
         if(questionStatusResource != null) {
             questionAssignees.put(currentQuestionId, questionStatusResource);
@@ -192,93 +199,6 @@ public class QuestionModelPopulator {
         List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
         return new QuestionAssignableViewModel(questionAssignee, processRoleService.findAssignableProcessRoles(application.getId()), pendingAssignableUsers, questionAssignees, notifications);
-    }
-
-    private Boolean isApplicationInView(ApplicationResource application, OrganisationResource userOrganisation) {
-        if(!application.isOpen() || userOrganisation == null){
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
-
-    private OrganisationResource getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
-
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getUser().equals(userId))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
-                .findFirst().get();
-    }
-
-    private  void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
-        Map<String, String> formInputs = form.getFormInput();
-        formInputs.put("application_details-title", application.getName());
-        formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() == null){
-            formInputs.put("application_details-startdate_day", "");
-            formInputs.put("application_details-startdate_month", "");
-            formInputs.put("application_details-startdate_year", "");
-        }else{
-            formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
-            formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
-            formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
-        }
-        form.setFormInput(formInputs);
-    }
-
-    private QuestionNavigationViewModel addNavigation(QuestionResource question, Long applicationId) {
-        if (question == null) {
-            return null;
-        }
-
-        QuestionNavigationViewModel questionNavigationViewModel = new QuestionNavigationViewModel();
-
-        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, questionNavigationViewModel);
-        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, questionNavigationViewModel);
-
-        return questionNavigationViewModel;
-    }
-
-    private void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, QuestionNavigationViewModel questionNavigationViewModel) {
-        if (previousQuestionOptional.isPresent()) {
-            String previousUrl;
-            String previousText;
-
-            QuestionResource previousQuestion = previousQuestionOptional.get();
-            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
-            if (previousSection.isQuestionGroup()) {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
-                previousText = previousSection.getName();
-            } else {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
-                previousText = previousQuestion.getShortName();
-            }
-
-            questionNavigationViewModel.setPreviousUrl(previousUrl);
-            questionNavigationViewModel.setPreviousText(previousText);
-        }
-    }
-
-    private void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, QuestionNavigationViewModel questionNavigationViewModel) {
-        if (nextQuestionOptional.isPresent()) {
-            String nextUrl;
-            String nextText;
-
-            QuestionResource nextQuestion = nextQuestionOptional.get();
-            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
-
-            if (nextSection.isQuestionGroup()) {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
-                nextText = nextSection.getName();
-            } else {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
-                nextText = nextQuestion.getShortName();
-            }
-
-            questionNavigationViewModel.setNextUrl(nextUrl);
-            questionNavigationViewModel.setNextText(nextText);
-        }
     }
 
     private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {

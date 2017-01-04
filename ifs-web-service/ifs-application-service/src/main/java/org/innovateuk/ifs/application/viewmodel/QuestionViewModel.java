@@ -23,18 +23,18 @@ public class QuestionViewModel {
     private UserResource leadApplicant;
 
     private QuestionApplicationViewModel questionApplicationViewModel;
-    private QuestionNavigationViewModel questionNavigationViewModel;
+    private NavigationViewModel navigationViewModel;
     private QuestionAssignableViewModel questionAssignableViewModel;
 
     public QuestionViewModel(UserResource currentUser, Map<Long, List<FormInputResource>> questionFormInputs, String title, QuestionResource currentQuestion,
-                             QuestionApplicationViewModel questionApplicationViewModel, QuestionNavigationViewModel questionNavigationViewModel,
+                             QuestionApplicationViewModel questionApplicationViewModel, NavigationViewModel navigationViewModel,
                              QuestionAssignableViewModel questionAssignableViewModel) {
         this.currentUser = currentUser;
         this.questionFormInputs = questionFormInputs;
         this.title = title;
         this.currentQuestion = currentQuestion;
         this.questionApplicationViewModel = questionApplicationViewModel;
-        this.questionNavigationViewModel = questionNavigationViewModel;
+        this.navigationViewModel = navigationViewModel;
         this.questionAssignableViewModel = questionAssignableViewModel;
     }
 
@@ -93,12 +93,12 @@ public class QuestionViewModel {
         return questionApplicationViewModel;
     }
 
-    public QuestionNavigationViewModel getNavigation() {
-        return getQuestionNavigationViewModel();
+    public NavigationViewModel getNavigation() {
+        return getNavigationViewModel();
     }
 
-    public QuestionNavigationViewModel getQuestionNavigationViewModel() {
-        return questionNavigationViewModel;
+    public NavigationViewModel getNavigationViewModel() {
+        return navigationViewModel;
     }
 
     public QuestionAssignableViewModel getAssignable() {

@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
@@ -15,13 +11,17 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
+//TODO - convert usage of model.addAttribute
 @Component
 public class FinanceOverviewModelManager {
     private ApplicationFinanceRestService applicationFinanceRestService;
