@@ -159,7 +159,7 @@ the academic partner fills the finances
     The user enters text to a text field    id=exceptions-other-direct    999.999
     The user enters text to a text field    id=tsb-ref    123123
     Mouse Out    css=input
-    Sleep    300ms
+    wait for autosave
 
 the calculations should be correct and the totals rounded to the second decimal
     Textfield Value Should Be    id=subtotal-directly-allocated    £ 3,000
@@ -169,7 +169,7 @@ the calculations should be correct and the totals rounded to the second decimal
 the academic partner uploads a file
     [Arguments]    ${file_name}
     Choose File    name=jes-upload    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
+
 
 the finance table should be correct
     Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000

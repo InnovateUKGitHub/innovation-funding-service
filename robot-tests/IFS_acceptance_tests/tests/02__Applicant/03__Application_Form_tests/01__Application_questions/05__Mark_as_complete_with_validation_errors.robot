@@ -31,14 +31,14 @@ Error should not be visible when the text area is not empty
 the "Project Summary" question is empty
     the user enters text to a text field    css=#form-input-12 .editor    ${empty}
     mouse out    css=#form-input-12 .editor
-    sleep    300ms
+    wait for autosave
     the user moves focus to the element    link=Contact us
     the user reloads the page
 
 the applicant inserts some text again in the "Project Summary" question
     The user enters text to a text field    css=#form-input-12 .editor    test if the applicant can mark the question as complete
     mouse out    css=#form-input-12 .editor
-    Sleep    300ms
+    wait for autosave
 
 applicant should be able to mark the question as complete
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
