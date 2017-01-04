@@ -250,9 +250,9 @@ Eligibility: Mark as Done then Edit again
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    Given the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    Given the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
@@ -484,7 +484,7 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641
      [Tags]    HappyPath
-    When the user selects the checkbox    id=assessors-62
+    When the user selects the checkbox    assessors-62
     And the user enters text to a text field    id=assessorPay    100
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    3
