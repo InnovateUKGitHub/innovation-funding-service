@@ -225,7 +225,8 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        if(SectionType.GENERAL.equals(section.getType())) {
+        if(SectionType.GENERAL.equals(section.getType())
+                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         } else {
             openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);

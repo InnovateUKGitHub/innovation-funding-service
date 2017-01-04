@@ -23,6 +23,14 @@ SET @sector_funding_fin_id=LAST_INSERT_ID();
 UPDATE `section` SET `section_type`='GENERAL' WHERE `name`='Finances' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
 UPDATE `section` SET `section_type`='OVERVIEW_FINANCES' WHERE `name`='Finances overview' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
 
+-- Update the priorities types for the new sections.
+UPDATE `section` SET `priority`=3 WHERE `name`='Finances' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
+UPDATE `section` SET `priority`=4 WHERE `name`='Your finances' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
+UPDATE `section` SET `priority`=5 WHERE `name`='Your project costs' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
+UPDATE `section` SET `priority`=6 WHERE `name`='Your organisation' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
+UPDATE `section` SET `priority`=7 WHERE `name`='Your funding' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
+UPDATE `section` SET `priority`=8 WHERE `name`='Finances overview' AND (competition_id=@programme_competition_template_id OR competition_id=@sector_competition_template_id);
+
 -- Update existing sections to belong to new finance subsections.
 UPDATE `section` SET `parent_section_id`=@programme_projectcost_fin_id WHERE `name`='Labour' and `competition_id`=@programme_competition_template_id;
 UPDATE `section` SET `parent_section_id`=@programme_projectcost_fin_id WHERE `name`='Overhead costs' and `competition_id`=@programme_competition_template_id;

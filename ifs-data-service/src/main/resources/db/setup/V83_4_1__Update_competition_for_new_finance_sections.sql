@@ -10,6 +10,14 @@ SET @funding_fin_id=LAST_INSERT_ID();
 UPDATE `section` SET `section_type`='GENERAL' WHERE `id`='6';
 UPDATE `section` SET `section_type`='OVERVIEW_FINANCES' WHERE `id`='8';
 
+-- Update the priorities types for the new sections.
+UPDATE `section` SET `priority`=3 WHERE `id`='6';
+UPDATE `section` SET `priority`=4 WHERE `id`='7';
+UPDATE `section` SET `priority`=5 WHERE `id`=@projectcost_fin_id;
+UPDATE `section` SET `priority`=6 WHERE `id`=@organisation_fin_id;
+UPDATE `section` SET `priority`=7 WHERE `id`=@funding_fin_id;
+UPDATE `section` SET `priority`=8 WHERE `id`='8';
+
 -- Update existing sections to belong to new finance subsections.
 UPDATE `section` SET `parent_section_id`=@projectcost_fin_id WHERE `id`='9';
 UPDATE `section` SET `parent_section_id`=@projectcost_fin_id WHERE `id`='10';
@@ -25,3 +33,5 @@ UPDATE `question` SET `section_id`=@organisation_fin_id WHERE `id`='40';
 UPDATE `question` SET `section_id`=@funding_fin_id WHERE `id`='35';
 UPDATE `question` SET `section_id`=@funding_fin_id WHERE `id`='38';
 UPDATE `question` SET `section_id`=@funding_fin_id WHERE `id`='42';
+
+
