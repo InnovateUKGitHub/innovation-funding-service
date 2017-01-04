@@ -89,7 +89,7 @@ Application details server side
     [Tags]  HappyPath
 
     Given the user should see the text in the page    Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user enters text to a text field    id=application_details-title    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}

@@ -30,7 +30,7 @@
 
                 <div ifs:utext="${model.text}" />
 
-                <ul class="list-bullet extra-margin">
+                <ul class="list list-bullet extra-margin">
                     <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter).values()}">
                         <a th:href="@{/profile/contract/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
                     </li>
@@ -47,7 +47,7 @@
                                     <span class="error-message"  th:each="err : ${#fields.errors('agreesToTerms')}" th:text="${err}" />
                                 </span>
                             </legend>
-                            <label class="block-label">
+                            <label class="block-label selection-button-checkbox">
                                 <input th:attr="data-required-errormessage=#{validation.assessorprofilecontractform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
                                 I agree to and sign the terms of contract for becoming an assessor
                             </label>
