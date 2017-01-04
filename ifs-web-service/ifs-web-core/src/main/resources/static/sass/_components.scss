@@ -19,7 +19,7 @@ $is-ie: false !default;
 }
 
 @import "compass/css3/transition";
-
+@import "layout/gdsUpgrade";
 @import "layout/layout";
 @import "layout/grid";
 
@@ -64,4 +64,3 @@ $is-ie: false !default;
 @import "components/wysiwyg";
 @import "components/user-feedback";
 @import "components/invites";
-@import "layout/gdsUpgrade";
