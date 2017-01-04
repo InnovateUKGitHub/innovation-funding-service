@@ -28,6 +28,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6046 Spend Profile should have a link when Done
 ...
 ...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
+...
+...               INFUND-6146 Saving blank fields on the spend profile results in an internal server error (null pointer exception)
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -143,6 +145,14 @@ Lead partner can edit his spend profile with invalid values
     Then the user should not see the element           jQuery=.error-summary-list li:contains("This field should be 0 or higher")
     And the user should not see the element            jQuery=.cell-error #row-total-24
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
+
+
+Lead partner can submit empty cells and this is handled gracefully
+    [Documentation]    INFUND-6146
+    When the user enters text to a text field    css=#row-24-0    ${empty}
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see an error in the page
+    [Teardown]    the user enters text to a text field    css=#row-24-0    2899
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
