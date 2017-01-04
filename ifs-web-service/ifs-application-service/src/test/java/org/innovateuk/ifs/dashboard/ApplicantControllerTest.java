@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.dashboard.controller;
+package org.innovateuk.ifs.dashboard;
 
-import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationStatusResource;
 import org.innovateuk.ifs.dashboard.ApplicantController;
@@ -9,40 +9,32 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-//@RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-//@ContextConfiguration
-public class ApplicantControllerTest extends BaseUnitTest {
+public class ApplicantControllerTest extends BaseControllerMockMVCTest<ApplicantController> {
 
-    @InjectMocks
-    private ApplicantController applicantController;
+    @Override
+    protected ApplicantController supplyControllerUnderTest() {
+        return new ApplicantController();
+    }
 
     @Before
     public void setUp() {
 
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = setupMockMvc(applicantController, () -> loggedInUser, env, messageSource);
-
-        super.setup();
+        super.setUp();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
