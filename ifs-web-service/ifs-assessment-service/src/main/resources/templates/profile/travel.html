@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Travel and subsistence rates'" th:remove="tag"/>
-        <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css"/>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Travel and subsistence rates'" th:remove="tag" />
     </head>
-    <body class="app-overview">
 
-        <div th:include="fragments/layout :: body-start" th:remove="tag"/>
-        <div th:include="fragments/layout :: global-header" th:remove="tag"/>
+    <body class="app-overview">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
             <div th:include="fragments/layout :: header-sub"
                  th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}"
-                 th:remove="tag"/>
+                 th:remove="tag" />
 
             <div class="hgroup no-margin-top">
                 <h1 class="heading-xlarge no-margin">Travel and subsistence rates</h1>
@@ -45,29 +44,27 @@
                     </tbody>
                 </table>
 
-                <h2 class="heading-medium">
-                    24 hour / overnight subsistence
-                </h2>
+                <h2 class="heading-medium">24 hour / overnight subsistence</h2>
 
                 <p>If you need to book overnight accommodation for assessor events, hotel receipts can be claimed up to the
                     following values:</p>
 
                 <table>
                     <thead>
-                    <tr>
-                        <th scope="col">24 hour / overnight subsistence</th>
-                        <th scope="col" class="numeric">Rate</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">24 hour / overnight subsistence</th>
+                            <th scope="col" class="numeric">Rate</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>London (Bed and Breakfast)</td>
-                        <td class="numeric">&pound;170</td>
-                    </tr>
-                    <tr>
-                        <td>Elsewhere in the UK (Bed and Breakfast)</td>
-                        <td class="numeric">&pound;125</td>
-                    </tr>
+                        <tr>
+                            <td>London (Bed and Breakfast)</td>
+                            <td class="numeric">&pound;170</td>
+                        </tr>
+                        <tr>
+                            <td>Elsewhere in the UK (Bed and Breakfast)</td>
+                            <td class="numeric">&pound;125</td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -76,44 +73,38 @@
 
                 <table>
                     <thead>
-                    <tr>
-                        <th scope="col">Meals and refreshments</th>
-                        <th scope="col" class="numeric">Rate</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">Meals and refreshments</th>
+                            <th scope="col" class="numeric">Rate</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Breakfast (if it is not included in the hotel rate)</td>
-                        <td class="numeric">&pound;10</td>
-                    </tr>
-                    <tr>
-                        <td>Lunch (only if lunch is not already provided)</td>
-                        <td class="numeric">&pound;8</td>
-                    </tr>
-                    <tr>
-                        <td>Dinner (only if returning home after 8pm)</td>
-                        <td class="numeric">&pound;30</td>
-                    </tr>
-                    <tr>
-                        <td>Drinks. Maximum 3 drinks per day</td>
-                        <td class="numeric">&pound;2 per drink</td>
-                    </tr>
+                        <tr>
+                            <td>Breakfast (if it is not included in the hotel rate)</td>
+                            <td class="numeric">&pound;10</td>
+                        </tr>
+                        <tr>
+                            <td>Lunch (only if lunch is not already provided)</td>
+                            <td class="numeric">&pound;8</td>
+                        </tr>
+                        <tr>
+                            <td>Dinner (only if returning home after 8pm)</td>
+                            <td class="numeric">&pound;30</td>
+                        </tr>
+                        <tr>
+                            <td>Drinks. Maximum 3 drinks per day</td>
+                            <td class="numeric">&pound;2 per drink</td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <h2 class="heading-medium">
-                    Public transport
-                </h2>
+                <h2 class="heading-medium">Public transport</h2>
 
-                <p>Standard class train travel should be used where appropriate. Air travel should be agreed with your Innovate
-                    UK Delivery Manager in advance.</p>
+                <p>Standard class train travel should be used where appropriate. Air travel should be agreed with your Innovate UK Delivery Manager in advance.</p>
 
-                <p>Please confirm any significant travel costs with Innovate UK before you book. We may be able to pre-book
-                    travel on your behalf.</p>
+                <p>Please confirm any significant travel costs with Innovate UK before you book. We may be able to pre-book travel on your behalf.</p>
 
-                <h2 class="heading-medium">
-                    Mileage rates
-                </h2>
+                <h2 class="heading-medium">Mileage rates</h2>
 
                 <p>(These rates eliminate any individual tax/NIC liability)</p>
 
@@ -127,10 +118,11 @@
                 </p>
 
             </div>
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag"/>
-        <div th:include="fragments/layout :: body-end" th:remove="tag"/>
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
     </body>
 </html>
