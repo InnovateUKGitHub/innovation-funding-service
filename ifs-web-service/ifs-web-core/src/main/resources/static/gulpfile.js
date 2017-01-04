@@ -81,7 +81,7 @@ gulp.task('css', ['copy-govuk'], function () {
       files: {
         ignore: [
           '**/prototype.scss',
-          '**/prototype/**/*.scss'
+          '**/{prototype,vendor}/**/*.scss'
         ]
       },
       config: '.sass-lint.yml'

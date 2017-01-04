@@ -1,11 +1,3 @@
-$browser-minimum-versions : (
-	"chrome": null,
-	"firefox": null,
-	"ie": "9",
-	"safari": null,
-	"opera": null
-);
-
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial
 $path: "/images/";
@@ -17,7 +9,6 @@ $path: "/images/";
 
 // Import all IFS files
 // ===========================================
-@import "compass/css3";
 @import "components";
 @import "pages";
 @import "print";
