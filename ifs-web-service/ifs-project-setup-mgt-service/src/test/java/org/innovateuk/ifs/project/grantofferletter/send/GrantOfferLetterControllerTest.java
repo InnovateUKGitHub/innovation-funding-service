@@ -22,8 +22,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static org.innovateuk.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -34,6 +37,8 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.MediaType.APPLICATION_ATOM_XML;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -279,6 +284,48 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
 
         ProjectGrantOfferLetterSendForm form = (ProjectGrantOfferLetterSendForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getGrantOfferLetter());
+    }
+
+    @Test
+    public void uploadGrantOfferLetterFileFails() throws Exception {
+
+        Long projectId = 123L;
+        Long competitionId = 1L;
+        Long applicationId = 789L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+
+        // when the model is re-loaded after uploading
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummaryResource);
+
+        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.txt", "text/plain", "My content!".getBytes());
+
+        when(projectService.addGrantOfferLetter(123L, "text/plain", 11, "grantOfferLetter.txt", "My content!".getBytes())).
+                thenReturn(serviceFailure(asList(
+                        unsupportedMediaTypeError(singletonList(APPLICATION_ATOM_XML)),
+                        unsupportedMediaTypeError(singletonList(APPLICATION_JSON)))));
+
+        MvcResult result = mockMvc.perform(
+                fileUpload("/project/" + projectId + "/grant-offer-letter/grant-offer-letter").
+                        file(uploadedFile).
+                        param("uploadGrantOfferLetterClicked", "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-send")).
+                andReturn();
+
+        ProjectGrantOfferLetterSendForm form = (ProjectGrantOfferLetterSendForm) result.getModelAndView().getModel().get("form");
+        assertEquals(2, form.getObjectErrors().size());
+        assertEquals(form.getObjectErrors(), form.getBindingResult().getFieldErrors("grantOfferLetter"));
     }
 
     @Test

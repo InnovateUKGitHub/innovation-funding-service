@@ -155,11 +155,11 @@
         </th:block>
     </th:block>
 
-    <div th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}" th:remove="tag">
+    <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
         <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
             Send to project team
         </button>
-    </div>
+    </th:block>
 
     <th:block th:if="${model.isSentToProjectTeam()}">
         <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
