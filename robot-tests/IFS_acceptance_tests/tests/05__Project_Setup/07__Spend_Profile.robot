@@ -34,6 +34,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6225 External user status indicator for spend profile should show as 'waiting' once submitted
 ...
 ...               INFUND-6226 Comp admin user (non project finance) not able to view the spend profile page
+...
+...               INFUND-6881 Non-lead External User should see Green Check once he submits SP
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -238,6 +240,14 @@ Non-lead partner marks Spend Profile as complete
     Then the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element          css=table a[type="number"]    # checking here that the table has become read-only
 
+Status updates for industrial user after spend profile submission
+    [Documentation]    INFUND-6881
+    When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+
 Project Manager doesn't have the option to submit spend profiles until all partners have marked as complete
     [Documentation]    INFUND-3767
     [Tags]
@@ -317,6 +327,15 @@ Academic partner marks Spend Profile as complete
     When the user clicks the button/link           jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
+
+Status updates for academic user after spend profile submission
+    [Documentation]    INFUND-6881
+    When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+
 
 Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
