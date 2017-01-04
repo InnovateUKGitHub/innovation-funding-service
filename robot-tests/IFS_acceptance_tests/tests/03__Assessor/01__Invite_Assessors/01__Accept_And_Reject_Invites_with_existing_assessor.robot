@@ -43,8 +43,8 @@ Assessor dashboard should be empty
 
 Calculation of the Upcoming competitions to assess should be correct
     [Documentation]    INFUND-7107
-    [Tags]    MySQL    HappyPath
-    Then the total calculation in dashboard should be correct    Upcoming competitions to assess   //*[@class="invite-to-assess"]/ul/li
+    [Tags]    HappyPath
+    Then the total calculation in dashboard should be correct    Upcoming competitions to assess    //*[@class="invite-to-assess"]/ul/li
 
 Existing assessor: Reject invitation
     [Documentation]    INFUND-4631
