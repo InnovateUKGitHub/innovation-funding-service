@@ -261,7 +261,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 }
             }
         } else {
-            roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
+            roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
         }
         return roleSpecificGolStates;
     }
