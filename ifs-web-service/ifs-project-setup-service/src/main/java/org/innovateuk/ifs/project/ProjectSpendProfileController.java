@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
-import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
+import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -267,7 +267,7 @@ public class ProjectSpendProfileController {
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
     }
 
-    private ProjectSpendProfileProjectManagerViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
+    private ProjectSpendProfileProjectSummaryViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
                                                                                                    final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
@@ -277,7 +277,7 @@ public class ProjectSpendProfileController {
 
         Map<String, Boolean> editablePartners = determineEditablePartners(projectId, partnerOrganisations, loggedInUser);
 
-        return new ProjectSpendProfileProjectManagerViewModel(projectId,
+        return new ProjectSpendProfileProjectSummaryViewModel(projectId,
                 projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
                 partnerOrganisations,
