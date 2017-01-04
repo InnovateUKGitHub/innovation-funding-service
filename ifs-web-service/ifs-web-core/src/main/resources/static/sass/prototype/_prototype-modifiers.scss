@@ -321,6 +321,44 @@ table{
 .grid-row{
   &.sorting{
     border-bottom: 1px solid $secondary-text-colour;
+
+    &.sorting-controls{
+
+      //text-align: right;
+      fieldset{
+        &.select-all-applications{
+          display: block;
+          width: auto;
+          float: left;
+          margin-right: 18px;
+        }
+
+        &.mark-applications{
+          margin-top: 10px;
+        }
+
+        label{
+         margin-top: 18px;
+         display: block;
+        }
+
+        button{
+         margin: 0 0 10px 0;
+        }
+      }
+
+      h3{
+       display: inline-block;
+       padding-right: 10px;
+       font-weight: bold;
+       margin-top: 8px;
+      }
+
+      .form-hint{
+       float: left;
+       margin: 18px 0 18px 0;
+      }
+    }
   }
 }
 
