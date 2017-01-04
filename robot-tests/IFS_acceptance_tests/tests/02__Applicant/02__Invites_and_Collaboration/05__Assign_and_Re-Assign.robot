@@ -18,6 +18,10 @@ Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
+*** Variables ***
+${applicationId}    56
+${sectionId}    7
+
 *** Test Cases ***
 Lead applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
@@ -189,11 +193,11 @@ Lead marks finances as complete and collaborator should be able to edit them
     And the user should see the element    link=Your funding
     When the user clicks the button/link   link=Your project costs
     Then the user fills in the project costs
-    When the user enters the funding level
-    And the user selects the checkbox    id=agree-terms-page
-    And the user selects the checkbox    id=agree-state-aid-page
-    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
-    And the user should see the text in the page    Project details
+    When the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    Then the user fills in the organisation information
+    And the user fills in the funding information
+    When the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    Then the user should see all sections complete
     Then Collaborator should be able to edit finances again
     [Teardown]    the user closes the browser
 
@@ -249,7 +253,7 @@ the question should contain the correct status/name
 Collaborator should be able to edit finances again
     close browser
     Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
-    And the user clicks the button/link    link= Assign test
+    And the user clicks the button/link    link=Assign test
     And the user clicks the button/link    link=Your finances
     the user should see the element    jQuery=.button:contains("Mark all as complete")
 
@@ -349,3 +353,21 @@ the user fills in Other Costs
     focus                                 css=#section-total-15
     textfield should contain              css=#section-total-15  £ 50
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
+
+the user fills in the organisation information
+    the user clicks the button/link    link=Your organisation
+    the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
+
+the user fills in the funding information
+    the user navigates to the page        ${server}/application/${applicationId}/form/section/${sectionId}
+    the user clicks the button/link       link=Your funding
+    the user enters text to a text field  css=#cost-financegrantclaim  60
+    click element                         jQuery=label:contains("No")
+    the user selects the checkbox         css=#agree-terms-page
+    the user clicks the button/link       jQuery=button:contains("Mark as complete")
+
+the user should see all sections complete
+    the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.complete
+    the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.complete
+    the user should see the element  jQuery=li.grid-row.section:nth-of-type(3) img.section-status.complete
