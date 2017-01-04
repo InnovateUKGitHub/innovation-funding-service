@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
@@ -52,7 +51,6 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.REJECTED;
@@ -347,7 +345,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_REQUIRED);
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
