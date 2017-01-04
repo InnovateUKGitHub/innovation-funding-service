@@ -36,21 +36,22 @@
             <div class="question" th:each="formInput, status : ${model.currentQuestionFormInputs}" th:id="'form-input-'+${formInput.id}"
                  th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
-                 currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser})">
+                 currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
+                 pendingAssignableUsers=(${model.assignable.pendingAssignableUsers})">
                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
 
-            <div th:if="${currentSection}" th:remove="tag">
-                <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
+            <div th:if="${model.currentSection != null}" th:remove="tag">
+                <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
                 <th:block th:unless="${financeView != null}">
                     <div class="warning-alert">
                         This competition has already closed, you are no longer able to submit your application.
                     </div>
                 </th:block>
-                <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
+                <div th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}" th:remove="tag">
                     <th:block th:if="${financeView != null}">
-                        <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
-                             th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                        <div class="question" th:each="formInput, status : ${model.questionFormInputs?.get(model.question?.id)}" th:id="'form-input-'+${formInput.getId()}"
+                             th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.questionAssignees.get(question.getId())})">
                             <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                             <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
                             <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />

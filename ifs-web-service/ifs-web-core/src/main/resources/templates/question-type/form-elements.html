@@ -290,6 +290,8 @@
         </div>
         <div class="assign-team">
             <!--/* Reassign question */-->
+              <div th:text="${assignableUsers.toString()}"></div>
+              <div th:text="${pendingAssignableUsers.toString()}"></div>
               <select name="assign_question" class="prog-menu">
                   <div th:remove="tag" th:each="assignableUser : ${assignableUsers}">
                       <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -9,12 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
  * TODO - comments that make sense
  */
 public class QuestionAssignableViewModel {
+    private static final Log LOG = LogFactory.getLog(QuestionAssignableViewModel.class);
+
     //Assignable details
     private QuestionStatusResource questionAssignee;
     private Future<List<ProcessRoleResource>> assignableUsers;
@@ -43,10 +48,14 @@ public class QuestionAssignableViewModel {
         return questionAssignee;
     }
 
-    public Future<List<ProcessRoleResource>> getAssignableUsers() {
-        return assignableUsers;
+    public List<ProcessRoleResource> getAssignableUsers() {
+        try {
+            return assignableUsers.get();
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.error("Exception while retrieving Assignable users");
+            return null;
+        }
     }
-
 
     public List<ApplicationInviteResource> getPendingAssignableUsers() {
         return pendingAssignableUsers;

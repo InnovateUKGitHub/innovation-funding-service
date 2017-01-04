@@ -53,6 +53,10 @@ public class QuestionViewModel {
         return Collections.emptyList();
     }
 
+    public Object getCurrentSection() {
+        return null;
+    }
+
     public String getTitle() {
         return title;
     }
