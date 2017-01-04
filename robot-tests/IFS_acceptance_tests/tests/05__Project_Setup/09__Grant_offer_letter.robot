@@ -70,7 +70,7 @@ Non lead should not be able to see GOL until it is sent by IUK
     [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should not see the element         jQuery=li.complete:nth-child(8)
-    And the user should not see the element          jQuery=li.action:nth-child(8)
+    And the user should not see the element          jQuery=li.require-action:nth-child(8)
     When the user clicks the button/link             link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)

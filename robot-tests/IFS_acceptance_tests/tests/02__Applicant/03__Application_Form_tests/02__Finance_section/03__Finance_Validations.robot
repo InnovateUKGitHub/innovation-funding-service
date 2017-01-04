@@ -289,12 +289,11 @@ the field with the wrong input should be saved
 
 the user reloads the page with validation errors
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    sleep    300ms
+    wait for autosave
     the user reloads the page
-    sleep    300ms
+    wait for autosave
     run keyword and ignore error    confirm action
-    run keyword and ignore error    confirm action
-    run keyword and ignore error    confirm action
+
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
@@ -307,14 +306,14 @@ the user enters invalid inputs in the other funding fields
 Remove row
     [Arguments]    ${section}    ${close button}
     the user moves focus to the element    ${close button}
-    sleep    300ms
+    wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
 
 The user gets the expected validation errors
     [Arguments]    ${ERROR1}    ${ERROR2}
     the user moves focus to the element    jQuery=button:contains("Save and return to application overview")
-    sleep    300ms
+    wait for autosave
     Then the user should see an error    ${ERROR1}
     And the user should see an error    ${ERROR2}
 

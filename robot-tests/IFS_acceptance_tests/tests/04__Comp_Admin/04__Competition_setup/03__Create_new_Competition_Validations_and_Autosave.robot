@@ -223,14 +223,13 @@ Assessor: Client-side validation
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    200ms
+    wait for autosave
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
@@ -349,7 +348,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
-    sleep    500ms
+    wait for autosave
 
 the user should see the correct values in the initial details form
     ${input_value} =    Get Value    id=title
@@ -395,7 +394,6 @@ The user should not see the error text in the page
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
-    sleep    1s
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
@@ -446,4 +444,4 @@ the user should not see the error any more
     Focus    jQuery=.button:contains("Done")
     Wait for autosave
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
-    sleep    500ms
+

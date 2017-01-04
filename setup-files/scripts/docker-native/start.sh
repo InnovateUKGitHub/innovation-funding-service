@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker-compose -p ifs start -d
+docker-compose -p ifs start
 
