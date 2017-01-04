@@ -70,7 +70,7 @@ User can create a new competition
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user should not see the element    jQuery('.button:contains("Save as Ready To Open")
+    And The user should not see the element    jQuery('.button:contains("Save")
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
@@ -154,7 +154,7 @@ Initial details: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(0)
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 User should have access to all the sections
     [Documentation]    INFUND-4725
@@ -221,7 +221,7 @@ Funding information: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(1)
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 Eligibility: Contain the correct options
     [Documentation]    INFUND-2989
@@ -277,7 +277,7 @@ Eligibility: Should have a Green Check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(2)
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -311,7 +311,7 @@ Milestones: Green check should show
     [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 Application: Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
@@ -443,17 +443,17 @@ Application: should have a green check
     When The user clicks the button/link    jQuery=.button:contains("Done")
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
-    And The user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    And The user should see the element    jQuery=.button:contains("Save")
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]
     [Setup]
-    Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    Given The user should see the element    jQuery=.button:contains("Save")
     When The user clicks the button/link    link=Initial details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user clicks the button/link    link=Competition setup
-    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    Then the user should not see the element    jQuery=.button:contains("Save")
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial details
     ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
     ...    AND    And The user clicks the button/link    link=Competition setup
@@ -463,7 +463,7 @@ User should be able to Save the Competition as Open
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
@@ -497,7 +497,7 @@ Assessor: Should have a Green Check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(6) .section-status
-    And the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
     And the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
