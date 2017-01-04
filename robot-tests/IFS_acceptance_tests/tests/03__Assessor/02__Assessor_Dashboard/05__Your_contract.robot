@@ -6,7 +6,7 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-5645 As an assessor I want to be able to review annexes to the contract from the same screen so that I have all the information I need about assessing competitions
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    worth.email.test+assessor1@gmail.com    Passw0rd
+Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -20,7 +20,7 @@ Server-side validations
     Given The user should see the element    link=your contract    #his checks the alert message on the top of the page
     And the user clicks the button/link    jQuery=a:contains("your contract")
     When the user clicks the button/link    jQuery=button:contains("Save and continue")
-    Then the user should see an error    Please agree to the terms and conditions
+    Then the user should see an error    Please agree to the terms and conditions.
 
 Terms and Conditions
     [Documentation]    INFUND-1481
@@ -28,7 +28,7 @@ Terms and Conditions
     When the user clicks the button/link    link=Download terms of contract
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf
     And The user goes back to the previous page
-    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/terms
+    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/contract
 
 Review Annexes
     [Documentation]    INFUND-5645
@@ -48,7 +48,7 @@ Client-side validations and Submit
     ...
     ...    INFUND-5432
     [Tags]    HappyPath
-    When the user selects the checkbox    id=agreesToTerms1
+    When the user selects the checkbox    agreesToTerms1
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}

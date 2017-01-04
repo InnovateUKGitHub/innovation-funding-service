@@ -7,7 +7,8 @@
 
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Question heading</dt>
-                <dd class="column-two-thirds" th:text="${question.shortTitle}"></dd>
+                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
+                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}" th:text="${question.shortTitle}"></dd>
                 <dt class="column-third">Question title</dt>
                 <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
                 <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.title)}" th:text="${question.title}"></dd>
@@ -192,11 +193,11 @@
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Appendix</legend>
-                    <label class="block-label">
+                    <label class="block-label selection-button-radio">
                         <input th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio" />
                         Yes
                     </label>
-                    <label class="block-label">
+                    <label class="block-label selection-button-radio">
                         <input th:name="question.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                         No
                     </label>
@@ -214,11 +215,11 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Research category question</legend>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == true}" value="1" type="radio" />
                                 Yes
                             </label>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
                                 No
                             </label>
@@ -232,11 +233,11 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Scored</legend>
-                            <label class="block-label" data-target="score-total">
+                            <label class="block-label selection-button-radio" data-target="score-total">
                                 <input th:name="question.scored" th:checked="${question.scored == true}" value="1" type="radio" />
                                 Yes
                             </label>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input th:name="question.scored" th:checked="${question.scored == false}" value="0" type="radio" />
                                 No
                             </label>
@@ -267,11 +268,11 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Scope 'Y/N' question</legend>
-                                <label class="block-label">
+                                <label class="block-label selection-button-radio">
                                     <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio"/>
                                     Yes
                                 </label>
-                                <label class="block-label">
+                                <label class="block-label selection-button-radio">
                                     <input th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
                                     No
                                 </label>
@@ -285,11 +286,11 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Written feedback</legend>
-                                <label class="block-label" data-target="scored-options">
+                                <label class="block-label selection-button-radio" data-target="scored-options">
                                     <input th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio"  />
                                     Yes
                                 </label>
-                                <label class="block-label">
+                                <label class="block-label selection-button-radio">
                                     <input th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
                                     No
                                 </label>
@@ -359,8 +360,8 @@
                                                        th:errorclass="field-error"
                                                        th:id="${'guidanceRow-'+iteration.index+'-scorefrom'}"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}"
-                                                       data-required-errormessage="Please enter a from score"
-                                                       data-min-errormessage="Please enter a valid number"/>
+                                                       th:attr="data-required-errormessage=#{validation.applicationquestionform.scorefrom.required},
+                                                                data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}" />
                                             </td>
                                             <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scoreto'}">
@@ -374,8 +375,8 @@
                                                        th:errorclass="field-error"
                                                        th:id="${'guidanceRow-'+iteration.index+'-scoreto'}"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}" value=""
-                                                       data-required-errormessage="Please enter a to score"
-                                                       data-min-errormessage="Please enter a valid number"/>
+                                                       th:attr="data-required-errormessage=#{validation.applicationquestionform.scoreto.required},
+                                                                data-min-errormessage=#{validation.applicationquestionform.scoreto.min}" />
                                             </td>
                                             <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
@@ -390,8 +391,8 @@
                                                        th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                        maxlength="255"
-                                                       data-required-errormessage="Please enter a justification"
-                                                       data-maxlength-errormessage="Justification has a maximum length of 255 characters"
+                                                       th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
+                                                                data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"
                                                        rows="3" />
                                             </td>
                                             <td>
@@ -426,8 +427,8 @@
                                                        th:id="${'guidanceRow-'+iteration.index+'-subject'}"
                                                        th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
                                                        maxlength="255"
-                                                       data-required-errormessage="Please enter a subject"
-                                                       data-maxlength-errormessage="Subject has a maximum length of 255 characters"/>
+                                                       th:attr="data-required-errormessage=#{validation.applicationquestionform.subject.required},
+                                                                data-maxlength-errormessage=#{validation.applicationquestionform.subject.maxlength}" />
                                             </td>
                                             <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
@@ -443,8 +444,8 @@
                                                        th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                        th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
                                                        maxlength="255"
-                                                       data-required-errormessage="Please enter a justification"
-                                                       data-maxlength-errormessage="Justification has a maximum length of 255 characters"/>
+                                                       th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
+                                                                data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"/>
                                             </td>
                                             <td>
                                                 <button class="buttonlink alignright" data-remove-row="guidance" type="button" name="remove-guidance-row" th:value="${iteration.index}" th:id="'remove-guidance-row-' + ${iteration.index}">Remove</button>

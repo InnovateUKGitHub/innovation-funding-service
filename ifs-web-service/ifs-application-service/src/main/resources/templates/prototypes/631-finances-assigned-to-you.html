@@ -15,7 +15,7 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-	
+
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
@@ -33,14 +33,14 @@
 		We recommend assigning completion of your finances to one member of your team</p>
 
 	<div class="collapsible section-overview">
-        
+
        	<h2>Labour
 	        <span data-mirror="#section-total-1">&pound; 126,207</span>
        	</h2>
 
-		
+
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
-		
+
 
 
     	<h2>Administration support costs
@@ -55,24 +55,24 @@
        	</h2>
 
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:remove="tag" />
-    	
+
     	<h2>Capital usage
 	        <span data-mirror="#section-total-4">&pound; 0</span>
        	</h2>
 
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
-    	
+
 
     	<h2>Subcontracting costs
 	        <span data-mirror="#section-total-5">&pound; 150,000</span>
        	</h2>
 
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
-    
+
     	<h2>Travel &amp; subsistence
 	        <span data-mirror="#section-total-6">&pound; 0</span>
        	</h2>
-		
+
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
 
 
@@ -101,15 +101,15 @@
 		<legend class="visuallyhidden">Organisation size and funding level</legend>
 		<p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
 		<div class="form-block">
-			<label class="block-label" for="radio-1">
+			<label class="block-label selection-button-radio" for="radio-1">
 				<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
 				Micro / small - claim up to 70%
 			</label>
-			<label class="block-label" for="radio-2">
+			<label class="block-label selection-button-radio" for="radio-2">
 				<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
 				Medium - claim up to 60%
 			</label>
-			<label class="block-label" for="radio-3">
+			<label class="block-label selection-button-radio" for="radio-3">
 				<input id="radio-3" type="radio" name="radio-group" value="Large"/>
 				Large - claim up to 50%
 			</label>
@@ -122,16 +122,16 @@
 			</label>
 			<details>
 			    <summary><span class="summary">What funding level should I enter?</span></summary>
-			    <div class="panel-indent">
+			    <div class="panel">
 			    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
 			    </div>
 			</details>
 			<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="" /> %
 		</div>
 	</fieldset>
-		
+
 	<div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
-	
+
 	<div class="alignright-button extra-margin">
 		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
 		</button>
@@ -157,8 +157,8 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
-	
-	jQuery('input#funding-yes').on('click',function(e){ 
+
+	jQuery('input#funding-yes').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#finance-other-funding").show();
@@ -167,7 +167,7 @@
 		}
 	});
 
-	jQuery('input#funding-no').on('click',function(e){ 
+	jQuery('input#funding-no').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#finance-other-funding").hide();
@@ -176,7 +176,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-1').on('click',function(e){ 
+	jQuery('input#admin-support-radio-1').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").show();
 			jQuery("#admin-support-2").hide();
@@ -185,7 +185,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-2').on('click',function(e){ 
+	jQuery('input#admin-support-radio-2').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").show();
@@ -194,7 +194,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-3').on('click',function(e){ 
+	jQuery('input#admin-support-radio-3').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").hide();
@@ -203,7 +203,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-4').on('click',function(e){ 
+	jQuery('input#admin-support-radio-4').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").hide();

@@ -120,7 +120,7 @@
                              type="text"
                              id="application_details-title"
                              th:field="*{__application.name__}"
-                             th:attr="data-required-errormessage='Please enter the full title of the project'"
+                             th:attr="data-required-errormessage=#{validation.project.name.must.not.be.empty}"
                              required="required"
                              th:errorclass="field-error"
                               />
@@ -134,7 +134,7 @@
                                     <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" th:remove="tag" />
                                 </legend>
 
-                                <label th:class="${'block-label'  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
+                                <label th:class="${'block-label selection-button-radio '  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
                                        th:for="resubmission-yes"
                                        data-target="resubmission-details">
                                     <input type="radio"
@@ -147,7 +147,7 @@
                                     />
                                     Yes
                                 </label>
-                                <label th:class="${'block-label'  + (currentApplication.resubmission != null and !currentApplication.resubmission ? ' selected focused' : '')}"
+                                <label th:class="${'block-label selection-button-radio '  + (currentApplication.resubmission != null and !currentApplication.resubmission ? ' selected focused' : '')}"
                                        th:for="resubmission-no">
                                     <input type="radio"
                                            th:id="resubmission-no"
@@ -218,7 +218,7 @@
                                          type="text"
                                          pattern="^[1-9]|0[1-9]|[1-2][0-9]|3[0-6]$"
                                          required="required"
-                                         data-pattern-errormessage="Your project should last between 1 and 36 months." />
+                                         th:attr="data-pattern-errormessage=#{validation.project.duration.range.invalid}" />
                                         <!--/* this is solved with a pattern because setting a number and min="" and max="" doesn't support one message (your project should last between 1 and 36 months).
                                         This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                               </div>
@@ -227,7 +227,7 @@
                         <h2 class="heading-medium no-margin">Lead organisation</h2>
                         <div th:text="${leadOrganisation.name}" />
                         <h2 class="heading-medium no-margin-bottom extra-margin">Partners</h2>
-                        <ul class="list-bullet">
+                        <ul class="list list-bullet">
                             <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                                 <span th:text="${organisation.getName()}"></span>
                             </li>
@@ -251,7 +251,7 @@
                             <h3 class="heading-small">Lead organisation</h3>
                             <p th:text="${leadOrganisation.name}" />
                             <h3 class="heading-small">Partners</h3>
-                            <ul class="list-bullet">
+                            <ul class="list list-bullet">
                                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                                     <span th:text="${organisation.getName()}"></span>
                                 </li>
