@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * Form field model for the Assessor Profile Terms of Contract page
+ * Form field model for the Assessor Profile Contract page
  */
 public class AssessorProfileContractForm implements BindingResultTarget {
 

@@ -31,7 +31,7 @@
                 <div ifs:utext="${model.text}" />
 
                 <ul class="list list-bullet extra-margin">
-                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter).values()}">
+                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter).values()}">
                         <a th:href="@{/profile/contract/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
                     </li>
                 </ul>

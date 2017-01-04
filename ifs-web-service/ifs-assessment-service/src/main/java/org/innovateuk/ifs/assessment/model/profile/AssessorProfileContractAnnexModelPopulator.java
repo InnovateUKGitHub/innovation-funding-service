@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Build the model for the Assessor Profile Terms of Contract Annex view.
+ * Build the model for the Assessor Profile Contract Annex view.
  */
 @Component
 public class AssessorProfileContractAnnexModelPopulator {
