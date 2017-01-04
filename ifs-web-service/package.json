@@ -7,7 +7,6 @@
     "gulp": "^3.9.0",
     "gulp-chug": "^0.5.1",
     "gulp-concat": "^2.6.0",
-    "gulp-css-url-adjuster": "^0.2.3",
     "gulp-replace": "^0.5.4",
     "gulp-sass": "^2.3.2",
     "gulp-sass-lint": "^1.2.0",

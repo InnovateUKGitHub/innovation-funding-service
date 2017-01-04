@@ -1,6 +1,5 @@
 var gulp = require( 'gulp' );
 var chug = require( 'gulp-chug' );
-var urlAdjuster = require('gulp-css-url-adjuster');
 var gulpfiles = './**/src/main/resources/static/gulpfile.js';
 
 gulp.task('default',['js','css']);
