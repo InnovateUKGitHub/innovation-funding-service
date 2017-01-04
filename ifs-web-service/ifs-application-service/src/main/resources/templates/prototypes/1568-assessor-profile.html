@@ -16,7 +16,7 @@
 	    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application allocation'}, ${'/prototypes/1381-application-allocation'})" th:remove="tag" />
 
 		<!-- HARDCODED PROTOTYPE HTML -->
-		
+
 		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Assessor profile'})" th:remove="tag" />
 
 		<div id="sticky-zone">
@@ -36,7 +36,7 @@
 					<div class="grid-row">
 						<div class="column-half">
 							<h2 class="heading-small">Assessor details</h2>
-							<ul class="list-bullet">
+							<ul class="list list-bullet">
 								<li>Male</li>
 								<li>CEO</li>
 								<li>ASDF Solutions</li>
@@ -44,7 +44,7 @@
 
 						</div>
 						<div class="column-half">
-							 <ul class="list-bullet">
+							 <ul class="list list-bullet">
 							 	<h2 class="heading-small">Innovation areas</h2>
 								<li>Advanced materials</li>
 								<li>Biosciences</li>
@@ -56,16 +56,16 @@
 			        <h2 class="heading-small no-margin">Area</h2>
 			        <p>Industry</p>
 
-			       
+
 			        <h2 class="heading-small no-margin">Skills</h2>
 			        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
-	
+
 				</div>
 			</section>
-			
+
 		    <section class="data-area">
 		    	<h2 class="heading-large">Documents &#38; training</h2>
-		    	
+
 		    	<div class="grid-row">
 		    		<div class="column-half">
 		    			<table>
@@ -104,10 +104,10 @@
 		    		</div>
 
 		    	</div>
-		    
+
 		    	<hr />
 
-		    	
+
 				<div class="grid-row">
 			    	<div class="column-half">
 			    		<h2 class="heading-large">Training <small><a href="#" id="update-details-button">Update training details</a></small></h2>
@@ -120,7 +120,7 @@
 
 				    		<dt>Last workshop</dt>
 				    		<dd>20/09/2016</dd>
-				    	</dl>	    		
+				    	</dl>
 			    	</div>
 
 
@@ -132,26 +132,26 @@
 
 								<fieldset class="inline">
 									<h3 class="heading-small">Is the assessor panel approved?</h3>
-									
+
 									<legend class="visuallyhidden">Is the assessor panel approved?</legend>
-									<label class="block-label" for="approved-yes">
+									<label class="block-label selection-button-radio" for="approved-yes">
 										<input id="approved-yes" name="approved-group" value="Yes" type="radio" />
 										Yes
 									</label>
-									<label class="block-label" for="approved-no">
+									<label class="block-label selection-button-radio" for="approved-no">
 										<input id="approved-no" name="approved-group" value="No" type="radio" />
 										No
 									</label>
 								</fieldset>
 								<fieldset class="inline">
 									<h3 class="heading-small">Does the assessor require training?</h3>
-									
+
 									<legend class="visuallyhidden">Does the assessor require training?</legend>
-									<label class="block-label" for="training-yes">
+									<label class="block-label selection-button-radio" for="training-yes">
 										<input id="training-yes" name="training-group" value="Yes" type="radio" />
 										Yes
 									</label>
-									<label class="block-label" for="training-no">
+									<label class="block-label selection-button-radio" for="training-no">
 										<input id="training-no" name="training-group" value="No" type="radio" />
 										No
 									</label>
@@ -227,7 +227,7 @@
 					</tbody>
 				</table>
 
-	    	
+
 		    </section>
 		</div>
 
@@ -243,12 +243,12 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('#update-details-button').on('click',function(e){ 
+	jQuery('#update-details-button').on('click',function(e){
         e.preventDefault();
         jQuery('#update-details').show();
     });
 
-    jQuery('#update-details-cancel').on('click',function(e){ 
+    jQuery('#update-details-cancel').on('click',function(e){
         e.preventDefault();
         jQuery('#update-details').hide();
     });
