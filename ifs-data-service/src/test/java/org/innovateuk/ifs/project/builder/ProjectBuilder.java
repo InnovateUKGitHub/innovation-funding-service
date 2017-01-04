@@ -108,6 +108,10 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return with (project -> project.setDocumentsSubmittedDate(date));
     }
 
+    public ProjectBuilder withSpendProfileSubmittedDate(LocalDateTime date) {
+        return with (project -> project.setSpendProfileSubmittedDate(date));
+    }
+
     @Override
     protected void postProcess(int index, Project project) {
 

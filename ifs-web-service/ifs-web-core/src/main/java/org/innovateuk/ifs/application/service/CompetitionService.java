@@ -21,8 +21,6 @@ public interface CompetitionService {
 
     List<CompetitionResource> getAllCompetitionsNotInSetup();
 
-    List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId);
-
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getLiveCompetitions();
