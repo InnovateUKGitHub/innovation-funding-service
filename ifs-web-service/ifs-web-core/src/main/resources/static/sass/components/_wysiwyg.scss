@@ -12,7 +12,10 @@ button.ui-state-active .fa-list-unordered {
   background-image: url('/images/wysiwyg/editorControls.png');
   background-repeat: no-repeat;
 }
-
+.hallotoolbar .list {
+  margin:0;
+  padding:0;
+}
 .fa {
   height: 12px;
   width: 12px;
@@ -51,6 +54,7 @@ button.ui-state-active .fa-list-unordered {
     background-size: 12px 96px;
   }
 }
+
 [contenteditable="true"],
 .textarea-wrapped .readonly {
 
