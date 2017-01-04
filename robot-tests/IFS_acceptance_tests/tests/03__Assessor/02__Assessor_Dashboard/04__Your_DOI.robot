@@ -21,7 +21,8 @@ Server-side validations when No selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    When the user clicks the button/link    jQuery=button:contains("Save")
+    When the user clicks the button/link    jQuery=a:contains("Edit your declaration of interest")
+    Then the user clicks the button/link    jQuery=button:contains("Save")
     Then The user should see a summary error    Please correct the errors in the form below.
     And the user should see a field error    Please enter a principal employer.
     And the user should see a field error    Please enter your role with your principal employer.
@@ -67,9 +68,20 @@ Successful save for the DOI form
     ...    INFUND-5432
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Save")
+    Then the user should be redirected to the correct page    ${assessment_declaration_url}
+    And the user should see the text in the page    University
+    And the user should see the text in the page    Professor
+    And the user should see the text in the page    Role x at Company y
+    And the user should see the text in the page    finance int
+    And the user should see the text in the page    Relation
+    And the user should see the text in the page    Innovate
+    And the user should see the text in the page    Director
+    And the user should see the text in the page    My interests
+    When the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
+    And the user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
     And the user clicks the button/link    jQuery=a:contains("your declaration of interest")
+    And the user clicks the button/link    jQuery=a:contains("Edit your declaration of interest")
     And the user should see the correct inputs in the declaration form
 
 *** Keywords ***
@@ -84,6 +96,7 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=familyFinancialInterests    My interests
     the user moves focus to the element    css=.selection-button-checkbox
     the user selects the checkbox    accurateAccount1
+    focus    jQuery=button:contains("Save and continue")
     Wait For Autosave
 
 the user should see the correct inputs in the declaration form
