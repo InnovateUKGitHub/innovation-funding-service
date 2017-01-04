@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter;
-import org.innovateuk.ifs.assessment.form.profile.AssessorProfileTermsForm;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileTermsAnnexModelPopulator;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileTermsModelPopulator;
-import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileTermsAnnexViewModel;
-import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileTermsViewModel;
+import org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter;
+import org.innovateuk.ifs.assessment.form.profile.AssessorProfileContractForm;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileContractAnnexModelPopulator;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileContractModelPopulator;
+import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileContractAnnexViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileContractViewModel;
 import org.innovateuk.ifs.user.resource.ContractResource;
 import org.innovateuk.ifs.user.resource.ProfileContractResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
@@ -20,14 +20,14 @@ import org.springframework.validation.BindingResult;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ContractResourceBuilder.newContractResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asListOfPairs;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -36,23 +36,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTest<AssessorProfileTermsController> {
+public class AssessorProfileContractControllerTest extends BaseControllerMockMVCTest<AssessorProfileContractController> {
 
     @Spy
     @InjectMocks
-    private AssessorProfileTermsModelPopulator assessorProfileTermsModelPopulator;
+    private AssessorProfileContractModelPopulator assessorProfileContractModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessorProfileTermsAnnexModelPopulator assessorProfileTermsAnnexModelPopulator;
+    private AssessorProfileContractAnnexModelPopulator assessorProfileContractAnnexModelPopulator;
 
     @Override
-    protected AssessorProfileTermsController supplyControllerUnderTest() {
-        return new AssessorProfileTermsController();
+    protected AssessorProfileContractController supplyControllerUnderTest() {
+        return new AssessorProfileContractController();
     }
 
     @Test
-    public void getTerms() throws Exception {
+    public void getContract() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -69,20 +69,20 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
 
         when(userService.getProfileContract(user.getId())).thenReturn(profileContract);
 
-        AssessorProfileTermsViewModel expectedViewModel = new AssessorProfileTermsViewModel();
+        AssessorProfileContractViewModel expectedViewModel = new AssessorProfileContractViewModel();
         expectedViewModel.setCurrentAgreement(true);
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
 
-        AssessorProfileTermsForm expectedForm = new AssessorProfileTermsForm();
+        AssessorProfileContractForm expectedForm = new AssessorProfileContractForm();
         expectedForm.setAgreesToTerms(TRUE);
 
-        mockMvc.perform(get("/profile/terms"))
+        mockMvc.perform(get("/profile/contract"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/terms"));
+                .andExpect(view().name("profile/contract"));
 
         verify(userService, only()).getProfileContract(user.getId());
     }
@@ -108,7 +108,7 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         List<Pair<ContractAnnexParameter, String>> params = asListOfPairs(A, expectedAnnexA, B, expectedAnnexB, C, expectedAnnexC);
         params.stream().forEach(paramAndExpected -> {
             try {
-                assertProfileTermsAnnexView(paramAndExpected.getLeft(), paramAndExpected.getRight());
+                assertProfileContractAnnexView(paramAndExpected.getLeft(), paramAndExpected.getRight());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -118,13 +118,13 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void submitTerms() throws Exception {
+    public void submitContract() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
         when(userService.updateProfileContract(user.getId())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/terms")
+        mockMvc.perform(post("/profile/contract")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("agreesToTerms", "true"))
                 .andExpect(status().is3xxRedirection())
@@ -134,7 +134,7 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void submitTerms_invalidForm() throws Exception {
+    public void submitContract_invalidForm() throws Exception {
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
@@ -151,12 +151,12 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
 
         when(userService.getProfileContract(user.getId())).thenReturn(profileContract);
 
-        AssessorProfileTermsViewModel expectedViewModel = new AssessorProfileTermsViewModel();
+        AssessorProfileContractViewModel expectedViewModel = new AssessorProfileContractViewModel();
         expectedViewModel.setCurrentAgreement(true);
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
 
-        MvcResult result = mockMvc.perform(post("/profile/terms")
+        MvcResult result = mockMvc.perform(post("/profile/contract")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("agreesToTerms", "false"))
                 .andExpect(status().isOk())
@@ -165,10 +165,10 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeHasFieldErrors("form", "agreesToTerms"))
-                .andExpect(view().name("profile/terms"))
+                .andExpect(view().name("profile/contract"))
                 .andReturn();
 
-        AssessorProfileTermsForm form = (AssessorProfileTermsForm) result.getModelAndView().getModel().get("form");
+        AssessorProfileContractForm form = (AssessorProfileContractForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(FALSE, form.getAgreesToTerms());
 
@@ -183,9 +183,9 @@ public class AssessorProfileTermsControllerTest extends BaseControllerMockMVCTes
         verify(userService, only()).getProfileContract(user.getId());
     }
 
-    private void assertProfileTermsAnnexView(ContractAnnexParameter annexParameter, String expectedText) throws Exception {
-        AssessorProfileTermsAnnexViewModel expectedViewModel = new AssessorProfileTermsAnnexViewModel(annexParameter, expectedText);
-        mockMvc.perform(get("/profile/terms/annex/{annex}", annexParameter))
+    private void assertProfileContractAnnexView(ContractAnnexParameter annexParameter, String expectedText) throws Exception {
+        AssessorProfileContractAnnexViewModel expectedViewModel = new AssessorProfileContractAnnexViewModel(annexParameter, expectedText);
+        mockMvc.perform(get("/profile/contract/annex/{annex}", annexParameter))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attribute("model", expectedViewModel))
