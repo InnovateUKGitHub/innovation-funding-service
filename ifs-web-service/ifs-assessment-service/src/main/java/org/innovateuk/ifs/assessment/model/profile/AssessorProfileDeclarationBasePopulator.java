@@ -6,8 +6,8 @@ import org.innovateuk.ifs.user.resource.AffiliationType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-import static java.lang.Boolean.FALSE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Optional.ofNullable;
@@ -19,6 +19,9 @@ import static org.innovateuk.ifs.user.resource.AffiliationType.*;
  * {@link AffiliationResource} lists grouped by {@link AffiliationType}.
  */
 public abstract class AssessorProfileDeclarationBasePopulator {
+
+    private final Predicate<List<AffiliationResource>> filterByExisting =
+            affiliationsByType -> affiliationsByType.size() >= 1 && affiliationsByType.get(0).getExists();
 
     protected Map<AffiliationType, List<AffiliationResource>> getAffiliationsMap(List<AffiliationResource> affiliations) {
         if (affiliations == null) {
@@ -37,7 +40,9 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     // Professional Affiliations
 
     protected String getProfessionalAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(PROFESSIONAL, affiliations).map(AffiliationResource::getDescription).orElse(null);
+        return getAffiliationByType(PROFESSIONAL, affiliations)
+                .map(AffiliationResource::getDescription)
+                .orElse(null);
     }
 
     // Appointments
@@ -47,11 +52,9 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     }
 
     protected List<AffiliationResource> getAppointments(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        if (!hasAppointments(affiliations)) {
-            return emptyList();
-        }
-
-        return getAffiliationsByType(PERSONAL, affiliations).orElse(emptyList());
+        return getAffiliationsByType(PERSONAL, affiliations)
+                .filter(filterByExisting)
+                .orElse(emptyList());
     }
 
     // Financial Interests
@@ -61,7 +64,9 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     }
 
     protected String getFinancialInterests(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(PERSONAL_FINANCIAL, affiliations).map(AffiliationResource::getDescription).orElse(null);
+        return getAffiliationByType(PERSONAL_FINANCIAL, affiliations)
+                .map(AffiliationResource::getDescription)
+                .orElse(null);
     }
 
     // Family Affiliations
@@ -71,11 +76,9 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     }
 
     protected List<AffiliationResource> getFamilyAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        if (!hasFamilyAffiliations(affiliations)) {
-            return emptyList();
-        }
-
-        return getAffiliationsByType(FAMILY, affiliations).orElse(emptyList());
+        return getAffiliationsByType(FAMILY, affiliations)
+                .filter(filterByExisting)
+                .orElse(emptyList());
     }
 
     // Family Financial Interests
@@ -85,7 +88,9 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     }
 
     protected String getFamilyFinancialInterests(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(FAMILY_FINANCIAL, affiliations).map(AffiliationResource::getDescription).orElse(null);
+        return getAffiliationByType(FAMILY_FINANCIAL, affiliations)
+                .map(AffiliationResource::getDescription)
+                .orElse(null);
     }
 
     protected Optional<AffiliationResource> getAffiliationByType(AffiliationType affiliationType,
@@ -102,7 +107,7 @@ public abstract class AssessorProfileDeclarationBasePopulator {
     protected Boolean hasAffiliationsByType(AffiliationType affiliationType,
                                             Map<AffiliationType, List<AffiliationResource>> affiliations) {
         return ofNullable(affiliations.get(affiliationType))
-                .map(affiliationsByType -> !(affiliationsByType.size() == 1 && FALSE == affiliationsByType.get(0).getExists()))
-                .orElse(FALSE);
+                .map(affiliationsByType -> affiliationsByType.size() >= 1 && affiliationsByType.get(0).getExists())
+                .orElse(null);
     }
 }

@@ -27,19 +27,20 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.AffiliationType.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.Month.JANUARY;
 import static java.time.Month.MARCH;
 import static java.time.ZoneId.systemDefault;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.AffiliationType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -124,6 +125,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .build();
 
         AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(
+                true,
                 expectedPrincipalEmployer,
                 expectedRole,
                 expectedProfessionalAffiliations,
@@ -144,6 +146,32 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 familyFinancialInterests
                 )
         );
+
+        mockMvc.perform(get("/profile/declaration"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("profile/declaration-of-interest"));
+
+        verify(userService).getUserAffiliations(user.getId());
+    }
+
+    @Test
+    public void getDeclaration_notCompleted() throws Exception {
+        UserResource user = newUserResource().build();
+        setLoggedInUser(user);
+
+        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(
+                false,
+                null,
+                null,
+                null,
+                emptyList(),
+                null,
+                emptyList(),
+                null
+        );
+
+        when(userService.getUserAffiliations(user.getId())).thenReturn(null);
 
         mockMvc.perform(get("/profile/declaration"))
                 .andExpect(status().isOk())

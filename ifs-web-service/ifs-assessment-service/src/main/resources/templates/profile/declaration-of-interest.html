@@ -14,17 +14,6 @@
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
 
             <h1 class="heading-xlarge">Declaration of interest</h1>
-        <!--
-            TODO: Implement view template.
-
-            model.principalEmployer;
-            model.role;
-            model.professionalAffiliations;
-            model.appointments = new ArrayList<>();
-            model.financialInterests;
-            model.familyAffiliations = new ArrayList<>();
-            model.familyFinancialInterests;
-        -->
 
             <p><a th:href="@{/profile/declaration/edit}">Edit your declaration of interest</a></p>
 
@@ -33,11 +22,14 @@
                 <span th:text="${model.principalEmployer}" th:remove="tag">ASDF solutions</span><br />
                 <span th:text="${model.role}" th:remove="tag">CEO</span>
             </p>
-            <p th:unless="${model.principalEmployer}">None declared</p>
+            <p th:unless="${model.principalEmployer}">Not answered</p>
 
             <h2 class="heading-medium no-margin-bottom">Professional affiliations</h2>
             <p th:text="${model.professionalAffiliations}" th:if="${model.professionalAffiliations}">Professional affiliation</p>
-            <p th:unless="${model.professionalAffiliations}">None declared</p>
+            <p th:unless="${model.professionalAffiliations}"
+               th:text="${model.completed} ? 'None declared' : 'Not answered'">
+                None declared
+            </p>
 
             <h2 class="heading-medium no-margin-bottom">Appointments, directorships and consultancies</h2>
             <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
@@ -54,11 +46,18 @@
                     </tr>
                 </tbody>
             </table>
-            <p th:if="${#lists.isEmpty(model.appointments)}">None declared</p>
+            <p th:if="${#lists.isEmpty(model.appointments)}"
+               th:text="${model.completed} ? 'None declared' : 'Not answered' ">
+                None declared
+            </p>
 
             <h2 class="heading-medium no-margin-bottom">Other financial interests</h2>
+
             <p th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
-            <p th:unless="${model.financialInterests}">None declared</p>
+            <p th:unless="${model.financialInterests}"
+               th:text="${model.completed} ? 'None declared' : 'Not answered'">
+                None declared
+            </p>
 
             <h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
             <table class="extra-margin" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
@@ -77,11 +76,17 @@
                     </tr>
                 </tbody>
             </table>
-            <p th:if="${#lists.isEmpty(model.familyAffiliations)}">None declared</p>
+            <p th:if="${#lists.isEmpty(model.familyAffiliations)}"
+               th:text="${model.completed} ? 'None declared' : 'Not answered' ">
+                None declared
+            </p>
 
             <h2 class="heading-medium no-margin-bottom">Close family members' other financial interests</h2>
             <p th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
-            <p th:unless="${model.familyFinancialInterests}">None declared</p>
+            <p th:unless="${model.familyFinancialInterests}"
+               th:text="${model.completed} ? 'None declared' : 'Not answered'">
+                None declared
+            </p>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>

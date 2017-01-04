@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class AssessorProfileDeclarationViewModel {
 
+    private final boolean completed;
     private final String principalEmployer;
     private final String role;
     private final String professionalAffiliations;
@@ -20,13 +21,17 @@ public class AssessorProfileDeclarationViewModel {
     private final List<AffiliationResource> familyAffiliations = new ArrayList<>();
     private final String familyFinancialInterests;
 
-    public AssessorProfileDeclarationViewModel(String principalEmployer,
-                                               String role,
-                                               String professionalAffiliations,
-                                               List<AffiliationResource> appointments,
-                                               String financialInterests,
-                                               List<AffiliationResource> familyAffiliations,
-                                               String familyFinancialInterests) {
+    public AssessorProfileDeclarationViewModel(
+            boolean completed,
+            String principalEmployer,
+            String role,
+            String professionalAffiliations,
+            List<AffiliationResource> appointments,
+            String financialInterests,
+            List<AffiliationResource> familyAffiliations,
+            String familyFinancialInterests
+    ) {
+        this.completed = completed;
         this.principalEmployer = principalEmployer;
         this.role = role;
         this.professionalAffiliations = professionalAffiliations;
@@ -40,6 +45,10 @@ public class AssessorProfileDeclarationViewModel {
         if (familyAffiliations != null) {
             this.familyAffiliations.addAll(familyAffiliations);
         }
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 
     public String getPrincipalEmployer() {
@@ -79,6 +88,7 @@ public class AssessorProfileDeclarationViewModel {
         AssessorProfileDeclarationViewModel viewModel = (AssessorProfileDeclarationViewModel) o;
 
         return new EqualsBuilder()
+                .append(completed, viewModel.completed)
                 .append(principalEmployer, viewModel.principalEmployer)
                 .append(role, viewModel.role)
                 .append(professionalAffiliations, viewModel.professionalAffiliations)
@@ -92,6 +102,7 @@ public class AssessorProfileDeclarationViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(completed)
                 .append(principalEmployer)
                 .append(role)
                 .append(professionalAffiliations)

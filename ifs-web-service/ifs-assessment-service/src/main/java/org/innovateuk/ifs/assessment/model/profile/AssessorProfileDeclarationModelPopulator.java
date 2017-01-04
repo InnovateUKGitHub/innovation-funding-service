@@ -27,6 +27,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
         Optional<AffiliationResource> principalEmployer = getPrincipalEmployer(affiliations);
 
         return new AssessorProfileDeclarationViewModel(
+                affiliations.size() > 0,
                 principalEmployer.map(AffiliationResource::getOrganisation).orElse(null),
                 principalEmployer.map(AffiliationResource::getPosition).orElse(null),
                 getProfessionalAffiliations(affiliations),
