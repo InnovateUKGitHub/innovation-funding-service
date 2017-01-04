@@ -7,11 +7,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.resource.SpendProfileResource;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectManagerViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
@@ -40,7 +36,6 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -85,7 +80,7 @@ public class ProjectSpendProfileController {
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         if (userHasProjectManagerRole(loggedInUser, projectId)
-            || (isUserPartOfThisOrganisation(projectId, organisationId, loggedInUser) && isLeadPartner(partnerOrganisationService, projectId, organisationId))) {
+            || isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
@@ -257,7 +252,7 @@ public class ProjectSpendProfileController {
 
         boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectResource.getId(), organisationId, loggedInUser);
 
-        boolean leadPartner = isLeadPartner(partnerOrganisationService, projectResource.getId(), organisationId);
+        boolean leadPartner = isUserPartOfLeadOrganisation(projectResource.getId(), loggedInUser);
 
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
@@ -324,6 +319,24 @@ public class ProjectSpendProfileController {
         );
 
         return returnedProjectUser.isPresent();
+    }
+
+    private boolean isUserPartOfLeadOrganisation(final Long projectId, final UserResource loggedInUser) {
+
+        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
+        if(null != result && result.isSuccess()) {
+            Optional<PartnerOrganisationResource> leadOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
+            if(leadOrganisationResource.isPresent()) {
+                List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+                Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
+                        && projectUserResource.getOrganisation().equals(leadOrganisationResource.get().getOrganisation())
+                        && PARTNER.getName().equals(projectUserResource.getRoleName())
+                );
+                return returnedProjectUser.isPresent();
+            }
+        }
+        return false;
+
     }
 
 }
