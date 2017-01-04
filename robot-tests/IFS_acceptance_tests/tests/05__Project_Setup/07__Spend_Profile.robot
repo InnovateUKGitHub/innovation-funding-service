@@ -36,6 +36,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6226 Comp admin user (non project finance) not able to view the spend profile page
 ...
 ...               INFUND-6881 Non-lead External User should see Green Check once he submits SP
+...
+...               INFUND-7119 GOL status for Internal user
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -516,7 +518,7 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049 ,INFUND-5543
+    [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -527,6 +529,7 @@ Status updates correctly for internal user's table
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
