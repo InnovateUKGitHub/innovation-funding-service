@@ -183,7 +183,7 @@ the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
-    sleep    1s
+    wait for autosave
 
 the applicant adds some content and marks this section as complete
     Focus    css=#form-input-4 .editor

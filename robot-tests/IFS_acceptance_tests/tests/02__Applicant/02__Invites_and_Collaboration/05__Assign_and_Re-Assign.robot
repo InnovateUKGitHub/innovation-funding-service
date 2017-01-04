@@ -232,8 +232,7 @@ the collaborator edits the 'public description' question
     Focus    css=#form-input-12 .editor
     The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
-    sleep    1s
-    sleep    1s
+    wait for autosave
     the user reloads the page
 
 the question should contain the correct status/name

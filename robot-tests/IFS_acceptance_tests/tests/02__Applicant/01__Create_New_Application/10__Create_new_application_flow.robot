@@ -152,7 +152,6 @@ Special Project Finance role (email step)
 *** Keywords ***
 the new application should be visible in the dashboard page
     the user clicks the button/link    link= My dashboard
-    sleep    500ms
     the user should see the text in the page    ${test_title}
     the user should see the text in the page    Application number: 0000
 
