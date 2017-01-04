@@ -4,11 +4,13 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,8 +20,8 @@ import java.util.List;
  * of the form of either integration tests with a running server ({BaseWebIntegrationTest}) or without
  * (e.g. {BaseRepositoryIntegrationTest}).
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = IntegrationTestConfiguration.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = IntegrationTestConfiguration.class)
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest extends BaseTest {
 
