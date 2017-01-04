@@ -30,6 +30,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
 ...
 ...               INFUND-6146 Saving blank fields on the spend profile results in an internal server error (null pointer exception)
+...
+...               INFUND-6225 External user status indicator for spend profile should show as 'waiting' once submitted
+...
+...               INFUND-6226 Comp admin user (non project finance) not able to view the spend profile page
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -414,6 +418,13 @@ PM's Spend profile Summary page gets updated after submit
     And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
 
+Status updates after spend profile submitted
+    [Documentation]    INFUND-6225
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
+
+
 Partners can see the Spend Profile section completed
     [Documentation]    INFUND-3767,INFUND-3766
     [Tags]
@@ -452,7 +463,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
 
 Comp Admin is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
