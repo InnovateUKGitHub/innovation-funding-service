@@ -89,7 +89,7 @@ Application details server side
     [Tags]  HappyPath
 
     Given the user should see the text in the page    Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user enters text to a text field    id=application_details-title    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
@@ -118,7 +118,7 @@ Empty text area
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error    Mouse Out    css=input
     Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    sleep    300ms
+    wait for autosave
     the user should not see the element    css=.error-message
 
 the applicant inserts a valid date
@@ -141,7 +141,7 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Sleep    300ms
+    wait for autosave
 
 Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -153,5 +153,5 @@ the applicant should not see the validation error of the duration any more
     run keyword and ignore error    mouse out    css=input
     Run Keyword And Ignore Error    mouse out    css=.editor
     Focus    css=.app-submit-btn
-    sleep    300ms
+    wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months

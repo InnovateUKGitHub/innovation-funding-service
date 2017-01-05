@@ -112,6 +112,8 @@ classes/
 ifs-web-service.iws
 /out
 
+#GDS sass files copied over from nodeJS Dependencies
+/ifs-web-service/ifs-web-core/src/main/resources/static/sass/vendor/govuk*
 
 # python bytecode nonsense
 *.pyc

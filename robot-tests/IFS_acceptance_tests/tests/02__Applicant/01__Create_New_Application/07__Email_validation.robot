@@ -123,11 +123,6 @@ Email duplication check
 
 
 *** Keywords ***
-the user submits their information
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Select Checkbox    termsAndConditions
-    Submit Form
-
 the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}
     go to    ${LOGIN_URL}

@@ -28,7 +28,7 @@ Terms and Conditions
     When the user clicks the button/link    link=Download terms of contract
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf
     And The user goes back to the previous page
-    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/terms
+    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/contract
 
 Review Annexes
     [Documentation]    INFUND-5645
@@ -48,7 +48,7 @@ Client-side validations and Submit
     ...
     ...    INFUND-5432
     [Tags]    HappyPath
-    When the user selects the checkbox    id=agreesToTerms1
+    When the user selects the checkbox    agreesToTerms1
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and continue")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
