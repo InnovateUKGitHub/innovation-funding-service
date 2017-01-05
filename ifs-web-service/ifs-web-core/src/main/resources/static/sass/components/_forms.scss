@@ -13,14 +13,18 @@
 ```
 
 */
+
+
+
 textarea[readonly],
 textarea[disabled],
 input[readonly],
 input[disabled],
-div.readonly{
+div.readonly,
+.textarea-wrapped div.readonly{
     color: $black;
     background: $grey-4;
-    border: 1px solid $border-colour;
+    border-color: $border-colour;
 }
 
 .form-group{
@@ -113,9 +117,15 @@ select.form-control.width-x-large,
 }
 input.form-control + button.button,
 select.form-control + button.button {
-    line-height:1;
+    line-height:1.15;
+    @include media (mobile) {
+      margin-top:15px;
+    }
 }
-
+input.form-control.field-error + button.button,
+select.form-control.field-error + button.button {
+    line-height:1.35;
+}
 
 table td{
 
@@ -179,7 +189,7 @@ tr.form-group-row.error {
 
     .textarea-header {
         font-size:14px;
-        border:  1px solid $border-colour;
+        border:  2px solid $border-colour;
         border-bottom:none;
         background: $grey-4 0 0 no-repeat;
         min-height:60px;
@@ -205,7 +215,7 @@ tr.form-group-row.error {
     textarea,
     [contenteditable="true"],
     .readonly {
-        border:  1px solid $border-colour;
+        border:  2px solid;
         min-height: 250px;
         margin: 0;
         padding: 5px 10px;

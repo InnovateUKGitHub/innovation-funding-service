@@ -29,8 +29,8 @@ Academic finance validations
     When The user navigates to the academic application finances
     And the applicant enters invalid inputs
     And Mark academic finances as complete
-    Then the user should see an error    This field should be 0 or higher
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    This field should be 0 or higher.
+    Then the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary-list
     And the field should not contain the currency symbol
 
@@ -159,7 +159,7 @@ the academic partner fills the finances
     The user enters text to a text field    id=exceptions-other-direct    999.999
     The user enters text to a text field    id=tsb-ref    123123
     Mouse Out    css=input
-    Sleep    300ms
+    wait for autosave
 
 the calculations should be correct and the totals rounded to the second decimal
     Textfield Value Should Be    id=subtotal-directly-allocated    £ 3,000
@@ -169,7 +169,7 @@ the calculations should be correct and the totals rounded to the second decimal
 the academic partner uploads a file
     [Arguments]    ${file_name}
     Choose File    name=jes-upload    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
+
 
 the finance table should be correct
     Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
@@ -185,7 +185,7 @@ Lead applicant marks the finances as complete
     The user navigates to the academic application finances
     the user selects the radio button    financePosition-organisationSize    SMALL
     The user enters text to a text field    id=cost-financegrantclaim    20
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     the user closes the browser
@@ -198,7 +198,7 @@ Lead applicant marks the finances as incomplete
 
 the user can see the link for more JeS details
     the user should see the element    link=Je-S website
-    the user should see the element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+    the user should see the element    css=a[href="https://je-s.rcuk.ac.uk"]
 
 the applicant enters invalid inputs
     The user enters text to a text field    id=incurred-staff    100£

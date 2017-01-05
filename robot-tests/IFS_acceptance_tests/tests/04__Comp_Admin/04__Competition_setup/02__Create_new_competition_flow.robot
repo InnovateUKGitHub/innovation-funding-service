@@ -188,7 +188,7 @@ Funding information: calculations
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     And the user should see the element    jQuery=Button:contains("Remove")
-    And the user enters text to a text field    id=1-funder    FunderName2
+    And the user enters text to a text field    id=funders1.funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
     When the user clicks the button/link    jQuery=Button:contains("Remove")
@@ -250,9 +250,9 @@ Eligibility: Mark as Done then Edit again
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    Given the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    Given the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
@@ -484,7 +484,7 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641
      [Tags]    HappyPath
-    When the user selects the checkbox    id=assessors-62
+    When the user selects the checkbox    assessors-62
     And the user enters text to a text field    id=assessorPay    100
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    3
@@ -505,7 +505,6 @@ Assessor: Should have a Green Check
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the total should be correct
@@ -555,7 +554,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
-    sleep    500ms
+    wait for autosave
 
 the weekdays should be correct
     element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
@@ -588,7 +587,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Competition title
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

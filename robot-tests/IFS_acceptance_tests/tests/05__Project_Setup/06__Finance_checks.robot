@@ -66,7 +66,7 @@ Finance checks client-side validations
     When the user enters text to a text field    name=costs[6].value    ${Empty}
     Then the user should see an error    Please enter any other cost
     When the user enters text to a text field    name=costs[0].value    -1
-    And the user moves focus to the element    id=costs-reviewed
+    And the user moves focus to the element    css=[for="costs-reviewed"]
     Then the user should see an error    This field should be 0 or higher
     And The user should not see the text in the page    Please enter a labour cost
 
@@ -76,7 +76,7 @@ Approve Eligibility: Lead partner organisation
     [Tags]    HappyPath
     Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -89,7 +89,7 @@ Approve Eligibility: Collaborator partner organisation
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-1
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -101,7 +101,7 @@ Approve Eligibility: Academic partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     Then the user should see the text in the page    The partner finance eligibility has been approved
@@ -119,13 +119,6 @@ Project Finance user can view academic Jes form
     When the user clicks the button/link    link=jes-form53.pdf
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
-
-Project Finance user can export bank details
-    [Documentation]    INFUND-5852
-    [Tags]    Download
-    When the project finance user downloads the bank details
-    Then the user opens the excel and checks the content
-    [Teardown]    remove the file from the operating system    bank_details.csv
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -160,13 +153,6 @@ Other internal users do not have access to Finance checks
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-
-Other internal users do not have access to bank details export
-    [Documentation]    INFUND-5852
-    [Tags]
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
-    Then the user should not see the element    link=Export all bank details
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    You do not have the necessary permissions for your request
 
 
 *** Keywords ***
@@ -205,7 +191,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+
 
 the users fill out project details
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
@@ -241,7 +227,6 @@ the users fill out project details
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
-
 the user fills in project costs
     Input Text    name=costs[0].value    £ 8,000
     Input Text    name=costs[1].value    £ 2,000
@@ -250,36 +235,9 @@ the user fills in project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    id=costs-reviewed
+    the user moves focus to the element    css=[for="costs-reviewed"]
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
-
-
-the project finance user downloads the bank details
-    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
-
-
-the user opens the excel and checks the content
-    ${contents}=    read csv file    ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${empire_details}=    get from list    ${contents}    1
-    ${empire_name}=    get from list    ${empire_details}    0
-    should be equal    ${empire_name}    ${empire_ltd_name}
-    ${eggs_details}=    get from list    ${contents}    2
-    ${eggs_name}=    get from list    ${eggs_details}    0
-    should be equal    ${eggs_name}    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    ${ludlow_details}=    get from list    ${contents}    3
-    ${ludlow_name}=    get from list    ${ludlow_details}    0
-    should be equal    ${ludlow_name}    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    ${application_number}=    get from list    ${empire_details}    1
-    should be equal    ${application_number}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}
-    ${postcode}=    get from list    ${empire_details}    8
-    should be equal    ${postcode}    CH64 3RU
-    ${bank_account_name}=    get from list    ${empire_details}    9
-    should be equal    ${bank_account_name}    ${empire_ltd_name}
-    ${bank_account_number}=    get from list    ${empire_details}    10
-    should be equal    ${bank_account_number}    51406795
-    ${bank_account_sort_code}=    get from list    ${empire_details}    11
-    should be equal    ${bank_account_sort_code}    404745
 
 project finance approves Viability for
     [Arguments]  ${partner}
@@ -287,32 +245,10 @@ project finance approves Viability for
     And the user should see the element     jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     Then the user should see the element    jQuery=h2:contains("Credit report")
-    And the user selects the checkbox       id=costs-reviewed
+    And the user selects the checkbox       costs-reviewed
     When the user should see the element    jQuery=h2:contains("Approve viability")
-    Then the user selects the checkbox      id=project-viable
+    Then the user selects the checkbox      project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
-    And the user clicks the button/link    jQuery=.button:contains("Confirm viability")
-    When the user clicks the button/link    xpath=//*[@id="content"]/form/div[4]/div[2]/button  # Couldn't catch it othewise. TODO INFUND-4820
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    Then the user clicks the button/link    css=#confirm-button
+    And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
