@@ -128,7 +128,7 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
      */
     private static boolean enableDevTools;
 
-    @Value("${ifsEnableDevTools}")
+    @Value("${ifsEnableDevTools ?: false}")
     public void setEnableDevTools(boolean enableDevTools) {
         CsrfStatelessFilter.enableDevTools = enableDevTools;
     }
