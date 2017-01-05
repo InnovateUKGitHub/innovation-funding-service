@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -44,11 +45,9 @@ public class SectionAssignableViewModel {
         this.notifications = notifications;
     }
 
-    public Future<List<ProcessRoleResource>> getAssignableUsers() {
-        return assignableUsers;
+    public List<ProcessRoleResource> getAssignableUsers() throws ExecutionException, InterruptedException {
+        return assignableUsers.get();
     }
-
-
     public List<ApplicationInviteResource> getPendingAssignableUsers() {
         return pendingAssignableUsers;
     }

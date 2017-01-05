@@ -48,13 +48,8 @@ public class QuestionAssignableViewModel {
         return questionAssignee;
     }
 
-    public List<ProcessRoleResource> getAssignableUsers() {
-        try {
-            return assignableUsers.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Exception while retrieving Assignable users");
-            return null;
-        }
+    public List<ProcessRoleResource> getAssignableUsers() throws ExecutionException, InterruptedException {
+        return assignableUsers.get();
     }
 
     public List<ApplicationInviteResource> getPendingAssignableUsers() {

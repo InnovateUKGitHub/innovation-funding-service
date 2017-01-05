@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -77,19 +78,26 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
         OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(section, application.getId()),
-                calculateAllReadOnly(competition), application, competition, section, true, section.getId(), user);
+                section, true, section.getId(), user);
+        SectionApplicationViewModel applicationViewModel = new SectionApplicationViewModel();
 
-        addApplicationAndSections(openFinanceSectionViewModel, application, competition, user.getId(), section, form, allSections);
+        applicationViewModel.setAllReadOnly(calculateAllReadOnly(competition));
+        applicationViewModel.setCurrentApplication(application);
+        applicationViewModel.setCurrentCompetition(competition);
+
+        addApplicationAndSections(openFinanceSectionViewModel, applicationViewModel, application, competition, user.getId(), section, form, allSections);
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
+        openFinanceSectionViewModel.setSectionApplicationViewModel(applicationViewModel);
+
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, openFinanceSectionViewModel);
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
     }
 
-    private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application,
+    private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel applicationViewModel, ApplicationResource application,
                                        CompetitionResource competition, Long userId, SectionResource section,
                                        ApplicationForm form, List<ProcessRoleResource> userApplicationRoles,
                                        List<SectionResource> allSections, List<FormInputResource> inputs) {
@@ -102,10 +110,10 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         addUserDetails(viewModel, application, userId);
         addMappedSectionsDetails(viewModel, application, competition, section, userOrganisation, allSections, inputs, singletonList(section));
 
-        addAssignableDetails(application, userOrganisation, userId, section);
-        addCompletedDetails(viewModel, application, userOrganisation);
+        viewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
+        addCompletedDetails(applicationViewModel, application, userOrganisation);
 
-        viewModel.setUserOrganisation(userOrganisation.orElse(null));
+        applicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
     }
 
     private void addQuestionsDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Form form) {
@@ -141,20 +149,21 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         return new SectionAssignableViewModel(questionAssignees, notifications);
     }
 
-    private void addCompletedDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    private void addCompletedDetails(SectionApplicationViewModel applicationViewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        viewModel.setMarkedAsComplete(markedAsComplete);
+        applicationViewModel.setMarkedAsComplete(markedAsComplete);
     }
 
-    private void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, ApplicationResource application,
-        CompetitionResource competition,
-        Long userId,
-        SectionResource section,
-        ApplicationForm form,
-        List<SectionResource> allSections) {
+    private void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel applicationViewModel,
+                                           ApplicationResource application,
+                                            CompetitionResource competition,
+                                            Long userId,
+                                            SectionResource section,
+                                            ApplicationForm form,
+                                            List<SectionResource> allSections) {
         List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addApplicationDetails(viewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
+        addApplicationDetails(viewModel, applicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
 
         addSectionDetails(viewModel, section, inputs);
     }

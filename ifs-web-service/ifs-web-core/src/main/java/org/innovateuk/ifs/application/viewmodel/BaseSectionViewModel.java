@@ -1,18 +1,13 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * TODO - create some comments
@@ -20,22 +15,14 @@ import java.util.concurrent.Future;
 public abstract class BaseSectionViewModel {
     protected String title;
 
-    protected ApplicationResource currentApplication;
-    protected CompetitionResource currentCompetition;
-
     protected SectionResource currentSection;
     protected Boolean hasFinanceSection;
-
-    protected OrganisationResource userOrganisation;
     protected Long financeSectionId;
 
-    protected Boolean allReadOnly;
     protected Map<Long, FormInputResponseResource> responses;
 
     protected Boolean userIsLeadApplicant;
     protected UserResource leadApplicant;
-
-    protected Future<Set<Long>> markedAsComplete;
 
     protected List<Long> completedSections;
     protected Map<Long, SectionResource> sections;
@@ -47,6 +34,7 @@ public abstract class BaseSectionViewModel {
 
     protected SectionAssignableViewModel sectionAssignableViewModel;
     protected NavigationViewModel navigationViewModel;
+    protected SectionApplicationViewModel sectionApplicationViewModel;
 
     protected UserResource currentUser;
 
@@ -56,22 +44,6 @@ public abstract class BaseSectionViewModel {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public ApplicationResource getCurrentApplication() {
-        return currentApplication;
-    }
-
-    public void setCurrentApplication(ApplicationResource currentApplication) {
-        this.currentApplication = currentApplication;
-    }
-
-    public CompetitionResource getCurrentCompetition() {
-        return currentCompetition;
-    }
-
-    public void setCurrentCompetition(CompetitionResource currentCompetition) {
-        this.currentCompetition = currentCompetition;
     }
 
     public Long getCurrentSectionId() {
@@ -97,28 +69,12 @@ public abstract class BaseSectionViewModel {
         this.hasFinanceSection = hasFinanceSection;
     }
 
-    public OrganisationResource getUserOrganisation() {
-        return userOrganisation;
-    }
-
-    public void setUserOrganisation(OrganisationResource userOrganisation) {
-        this.userOrganisation = userOrganisation;
-    }
-
     public Long getFinanceSectionId() {
         return financeSectionId;
     }
 
     public void setFinanceSectionId(Long financeSectionId) {
         this.financeSectionId = financeSectionId;
-    }
-
-    public Boolean getAllReadOnly() {
-        return allReadOnly;
-    }
-
-    public void setAllReadOnly(Boolean allReadOnly) {
-        this.allReadOnly = allReadOnly;
     }
 
     public Map<Long, FormInputResponseResource> getResponses() {
@@ -143,14 +99,6 @@ public abstract class BaseSectionViewModel {
 
     public void setLeadApplicant(UserResource leadApplicant) {
         this.leadApplicant = leadApplicant;
-    }
-
-    public Future<Set<Long>> getMarkedAsComplete() {
-        return markedAsComplete;
-    }
-
-    public void setMarkedAsComplete(Future<Set<Long>> markedAsComplete) {
-        this.markedAsComplete = markedAsComplete;
     }
 
     public List<Long> getCompletedSections() {
@@ -209,12 +157,20 @@ public abstract class BaseSectionViewModel {
         this.subSectionQuestionFormInputs = subSectionQuestionFormInputs;
     }
 
+    public SectionAssignableViewModel getAssignable() {
+        return getSectionAssignableViewModel();
+    }
+
     public SectionAssignableViewModel getSectionAssignableViewModel() {
         return sectionAssignableViewModel;
     }
 
     public void setSectionAssignableViewModel(SectionAssignableViewModel sectionAssignableViewModel) {
         this.sectionAssignableViewModel = sectionAssignableViewModel;
+    }
+
+    public NavigationViewModel getNavigation() {
+        return getNavigationViewModel();
     }
 
     public NavigationViewModel getNavigationViewModel() {
@@ -231,5 +187,21 @@ public abstract class BaseSectionViewModel {
 
     public void setCurrentUser(UserResource currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public SectionApplicationViewModel getApplication() {
+        return getSectionApplicationViewModel();
+    }
+
+    public SectionApplicationViewModel getSectionApplicationViewModel() {
+        return sectionApplicationViewModel;
+    }
+
+    public void setSectionApplicationViewModel(SectionApplicationViewModel sectionApplicationViewModel) {
+        this.sectionApplicationViewModel = sectionApplicationViewModel;
+    }
+
+    public Object getCurrentQuestionFormInputs() {
+        return null;
     }
 }
