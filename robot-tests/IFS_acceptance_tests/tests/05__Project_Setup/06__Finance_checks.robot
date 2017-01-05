@@ -10,7 +10,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-6149 mailto link is broken on the internal finance eligibility page
 ...
 ...               INFUND-7016 Finance checks page is missing Project title
-
+...
+...               INFUND-7026 For internal user, in finance checks RAG is not N/A in case of academic
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -101,8 +102,8 @@ Approve Eligibility: Collaborator partner organisation
     Then the user sees the text in the element    css=a.eligibility-1    Approved
 
 
-Approve Eligibility: Academic partner organisation
-    [Documentation]    INFUND-5193
+Approve Eligibility and verify Viability and RAG: Academic partner organisation
+    [Documentation]    INFUND-5193, INFUND-7026
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
     And the user selects the checkbox    costs-reviewed
@@ -112,6 +113,8 @@ Approve Eligibility: Academic partner organisation
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-2    Approved
     And The user should see the element    jQuery=.generate-spend-profile-main-button
+    And the user should see the text in the element  css=span.viability-rag-2    N/A
+    And the user should see the text in the element  css=span.viability-2    N/A
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
