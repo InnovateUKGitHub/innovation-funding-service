@@ -78,6 +78,10 @@ public class CompetitionManagementInviteAssessorsController {
                          @PathVariable("competitionId") Long competitionId,
                          @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                          @SuppressWarnings("unused") BindingResult bindingResult) {
+        if (form.getInvites().size() == 0) {
+            form.getInvites().add(new InviteNewAssessorsRowForm());
+        }
+
         return doViewInvite(model, competitionId);
     }
 
