@@ -5,7 +5,8 @@ package org.innovateuk.ifs.project.finance.resource;
  */
 public enum Viability {
     PENDING,
-    APPROVED
+    APPROVED,
+    NOT_APPLICABLE
 }
 
 

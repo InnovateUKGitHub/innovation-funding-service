@@ -407,7 +407,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(project.getId());
 
         Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
-                Viability.PENDING.equals(finance.getViability()) && !isUsingJesFinances(finance));
+                Viability.PENDING.equals(finance.getViability()));
 
         if (!existingReviewableFinance.isPresent()) {
             return serviceSuccess();
@@ -416,9 +416,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private boolean isUsingJesFinances(ProjectFinance finance) {
+/*    private boolean isUsingJesFinances(ProjectFinance finance) {
         return organisationFinanceDelegate.isUsingJesFinances(finance.getOrganisation().getOrganisationType().getName());
-    }
+    }*/
 
     private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
 
