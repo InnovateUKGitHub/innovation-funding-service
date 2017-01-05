@@ -28,7 +28,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
 ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
-${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:david.peters@innovateuk.test
+${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:worth.email.test+david.peters@gmail.com
 ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
 
