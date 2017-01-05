@@ -53,8 +53,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given the user reloads the page
-    When log in as a different user    ${submit_test_email}    Passw0rd123
+    Given log in as a different user    ${submit_test_email}    Passw0rd123
     And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
