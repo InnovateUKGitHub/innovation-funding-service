@@ -31,14 +31,14 @@
                 <div ifs:utext="${model.text}" />
 
                 <ul class="list list-bullet extra-margin">
-                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileTermsController.ContractAnnexParameter).values()}">
-                        <a th:href="@{/profile/terms/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
+                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter).values()}">
+                        <a th:href="@{/profile/contract/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
                     </li>
                 </ul>
 
                 <p class="form-hint">You can access these terms of contract at any time from your profile. <a href="/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf">Download terms of contract</a>.</p>
 
-                <form class="extra-margin" th:action="@{/profile/terms}" method="post" th:unless="${model.currentAgreement}">
+                <form class="extra-margin" th:action="@{/profile/contract}" method="post" th:unless="${model.currentAgreement}">
                     <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
                         <fieldset>
                             <legend>
@@ -48,7 +48,7 @@
                                 </span>
                             </legend>
                             <label class="block-label selection-button-checkbox">
-                                <input th:attr="data-required-errormessage=#{validation.assessorprofiletermsform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
+                                <input th:attr="data-required-errormessage=#{validation.assessorprofilecontractform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
                                 I agree to and sign the terms of contract for becoming an assessor
                             </label>
                         </fieldset>
