@@ -6,9 +6,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.LocalDateTime;
 
 /**
- * Holder of model attributes for the Contract Terms view.
+ * Holder of model attributes for the Assessor Profile Contract view.
  */
-public class AssessorProfileTermsViewModel {
+public class AssessorProfileContractViewModel {
 
     private boolean currentAgreement;
     private LocalDateTime contractSignedDate;
@@ -48,7 +48,7 @@ public class AssessorProfileTermsViewModel {
             return false;
         }
 
-        AssessorProfileTermsViewModel that = (AssessorProfileTermsViewModel) o;
+        AssessorProfileContractViewModel that = (AssessorProfileContractViewModel) o;
 
         return new EqualsBuilder()
                 .append(currentAgreement, that.currentAgreement)
