@@ -142,7 +142,7 @@
 
 		<th:block th:if="${model.partnerOrganisationNames}">
 			<h3 class="heading-medium no-margin">Project partners</h3>
-			<ul class="list-bullet">
+			<ul class="list list-bullet">
 				<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
 			</ul>
 		</th:block>

@@ -96,4 +96,4 @@ The option to publish feedback is disabled
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+

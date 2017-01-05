@@ -97,7 +97,7 @@ the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    200ms
+    wait for autosave
     The user enters text to a text field    id=question.shortTitle    ${EMPTY}
     the user moves focus and waits for autosave
     The user enters text to a text field    id=question.title    ${EMPTY}

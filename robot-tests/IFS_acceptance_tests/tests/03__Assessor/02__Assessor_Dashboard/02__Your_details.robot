@@ -40,7 +40,7 @@ the assessor updates profile details
     Select From List By Index    id=title    4
     The user enters text to a text field    id=firstName    Joy
     The user enters text to a text field    id=lastName    Archer
-    the user moves focus to the element    id=gender2
+    the user moves focus to the element    id=firstName
     the user selects the radio button    gender    gender2
     the user selects the radio button    ethnicity    ethnicity1
     the user selects the radio button    disability    disability3

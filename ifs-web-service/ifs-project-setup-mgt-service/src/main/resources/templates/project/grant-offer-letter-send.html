@@ -50,8 +50,11 @@
 
     <h2 class="heading-medium">Grant offer letter</h2>
 
+    <div class="upload-section unstyled-view">
     <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
           th:object="${form}" method="post" enctype="multipart/form-data">
+
+        <p th:unless="${model.grantOfferLetterFile}">The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
 
         <!-- /* file is not uploaded */-->
         <div th:classappend="${#fields.hasErrors('grantOfferLetter') ? 'error' : ''}"
@@ -60,12 +63,21 @@
                     <span class="error-message" th:each="err : ${#fields.errors('grantOfferLetter')}"
                           th:text="${err}"/>
             </th:block>
-            <p>The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
             <input th:field="*{grantOfferLetter}" type="file" id="grantOfferLetter" class="inputfile"/>
             <label for="grantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
             <button name="uploadGrantOfferLetterClicked" class="button-secondary" type="submit"
                     data-for-file-upload="grantOfferLetter">Save
             </button>
+            <details>
+                <summary><span class="summary">What are the requirements for upload?</span></summary>
+                <div class="panel-indent">
+                    <p>The grant offer letter should:</p>
+                    <ul class="list-bullet">
+                        <li>be in a portable document format (.pdf)</li>
+                        <li>be less than 1mb in size</li>
+                    </ul>
+                </div>
+            </details>
         </div>
 
         <!--/* file is uploaded */-->
@@ -78,6 +90,7 @@
         </th:block>
 
     </form>
+    </div>
 
     <h2 class="heading-medium">Annex</h2>
     <th:block th:if="${!model.isSentToProjectTeam()}">
@@ -117,9 +130,9 @@
                                 </button>
                                 <details>
                                     <summary><span class="summary">What are the requirements for upload?</span></summary>
-                                    <div class="panel-indent">
+                                    <div class="panel">
                                         <p>The Annex should:</p>
-                                        <ul class="list-bullet">
+                                        <ul class="list list-bullet">
                                             <li>be in a portable document format (.pdf)</li>
                                             <li>be less than 1mb in size</li>
                                         </ul>
@@ -142,11 +155,11 @@
         </th:block>
     </th:block>
 
-    <div th:if="${!model.isSentToProjectTeam()}" th:remove="tag">
+    <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
         <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
             Send to project team
         </button>
-    </div>
+    </th:block>
 
     <th:block th:if="${model.isSentToProjectTeam()}">
         <h2 class="heading-medium no-margin">Signed grant offer letter</h2>

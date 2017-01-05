@@ -127,28 +127,26 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project){
-        // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
+        // Show flag when there is any organisation awaiting approval.
+        boolean incomplete = false;
         for(Organisation organisation : project.getOrganisations()){
             if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-                if (!bankDetails.isPresent()) {
-                    return PENDING;
+                ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+                ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
+                if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
+                    incomplete = true;
+                }
+                if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
+                    return ACTION_REQUIRED;
                 }
             }
         }
-
-        // Show action required by internal user (pending flag) when all bank details submitted but at least one requires manual approval.
-        for(Organisation organisation : project.getOrganisations()){
-            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
-            if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
-                return ACTION_REQUIRED;
-            }
+        if(incomplete) {
+            return PENDING;
+        } else {
+            return COMPLETE;
         }
-
-        // otherwise show a tick
-        return COMPLETE;
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
@@ -165,21 +163,22 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
 
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
-        if(ApprovalType.APPROVED.equals(approvalType)) {
-            return COMPLETE;
-        } else if(ApprovalType.REJECTED.equals(approvalType)) {
-            return PENDING;
-        }
+        switch (approvalType) {
+            case APPROVED:
+                return COMPLETE;
+            case REJECTED:
+                return REJECTED;
+            default:
+                if (project.getSpendProfileSubmittedDate() != null) {
+                    return ACTION_REQUIRED;
+                }
 
-        if (project.getSpendProfileSubmittedDate() != null) {
-            return ACTION_REQUIRED;
-        }
+                if (financeCheckStatus.equals(COMPLETE)) {
+                    return PENDING;
+                }
 
-        if (financeCheckStatus.equals(COMPLETE)) {
-            return PENDING;
+                return NOT_STARTED;
         }
-
-        return NOT_STARTED;
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
@@ -260,7 +259,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 }
             }
         } else {
-            roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
+            roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
         }
         return roleSpecificGolStates;
     }

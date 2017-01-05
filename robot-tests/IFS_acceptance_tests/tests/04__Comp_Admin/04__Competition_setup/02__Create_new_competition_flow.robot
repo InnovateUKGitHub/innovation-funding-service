@@ -250,9 +250,9 @@ Eligibility: Mark as Done then Edit again
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    Given the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    Given the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
@@ -484,7 +484,7 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641
      [Tags]    HappyPath
-    When the user selects the checkbox    id=assessors-62
+    When the user selects the checkbox    assessors-62
     And the user enters text to a text field    id=assessorPay    100
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    3
@@ -505,7 +505,6 @@ Assessor: Should have a Green Check
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the total should be correct
@@ -555,7 +554,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
-    sleep    500ms
+    wait for autosave
 
 the weekdays should be correct
     element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
