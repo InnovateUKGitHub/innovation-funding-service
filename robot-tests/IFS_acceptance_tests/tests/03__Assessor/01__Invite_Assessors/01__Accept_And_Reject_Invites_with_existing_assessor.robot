@@ -20,6 +20,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5509 As an Assessor I can see details relating to work and payment...
 ...
 ...               INFUND-943 As an assessor I have to accept invitations to assess a competition within a timeframe...
+...
+...               INFUND-6500 Speedbump when not logged in and attempting to accept invite where a user already exists
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -87,15 +89,20 @@ Existing assessor: Accept invitation
     ...    INFUND-3716
     ...
     ...    INFUND-5509
+    ...
+    ...    INFUND-6500
     [Tags]    HappyPath
-    [Setup]
+    [Setup]    Logout as user
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
     And the user should see the text in the page    taking place at 15 January 2016.
     And the user should see the text in the page    100 per application.
-    When the user clicks the button/link    jQuery=.button:contains("Yes")
+    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    Then the user should see the text in the page  Your email address is linked to an existing account.
+    And the user clicks the button/link  jQuery=a:contains("Click here to sign in")
+    And Invited guest user log in    &{existing_assessor1_credentials}
     Then The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
 
