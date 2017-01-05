@@ -37,6 +37,7 @@ read DUMMYVAR
 oc create -f os-files/
 
 
+# cat ~/.docker/config.json | base64
 oc secrets add serviceaccount/default secrets/aws-secret-2 --for=pull
 
 
