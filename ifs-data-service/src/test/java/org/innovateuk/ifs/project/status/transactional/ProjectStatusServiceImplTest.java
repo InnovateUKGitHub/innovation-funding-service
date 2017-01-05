@@ -20,7 +20,11 @@ import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResou
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusServiceImpl;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
@@ -45,13 +49,20 @@ import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.REJECTED;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -225,7 +236,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_REQUIRED);
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -264,7 +275,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_REQUIRED);
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -303,7 +314,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_REQUIRED);
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -311,6 +322,39 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
     }
+
+    @Test
+    public void getProjectStatusResourceByProjectSpendProfileRejected() {
+        Long projectId = 2345L;
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.REJECTED, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+
+        when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(REJECTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
+    }
+
+
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
@@ -468,7 +512,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(REJECTED, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_REQUIRED);
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 

@@ -109,7 +109,6 @@ the user fills the name and email field and reloads the page
     The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+8@hiveit.co.uk
-    sleep    2s
     wait for autosave
     the user reloads the page
 
@@ -135,7 +134,7 @@ the applicant fills the lead organisation fields
     Focus    jquery=button:contains("Save Changes")
     browser validations have been disabled
     The user clicks the button/link    jquery=button:contains("Save Changes")
-    sleep    500ms
+
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
@@ -146,8 +145,7 @@ the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     Focus    jquery=button:contains("Save Changes")
-    Sleep    2s
-    Capture Page Screenshot
+    wait for autosave
     the user reloads the page
 
 the applicant's inputs should be visible
@@ -176,7 +174,7 @@ the applicant fills the Partner organisation fields
     # the following keyword disables the browser's validation
     Focus    jquery=button:contains("Save Changes")
     The user clicks the button/link    jquery=button:contains("Save Changes")
-    sleep    500ms
+
 
 a validation error is shown on organisation name
     [Arguments]    ${group_number}

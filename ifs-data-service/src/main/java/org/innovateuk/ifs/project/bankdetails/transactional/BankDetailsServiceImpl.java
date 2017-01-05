@@ -213,6 +213,9 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails existingBankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
         if(existingBankDetails != null){
+            if(existingBankDetails.isManualApproval()){
+                return serviceFailure(CommonFailureKeys.BANK_DETAILS_HAVE_ALREADY_BEEN_APPROVED_AND_CANNOT_BE_UPDATED);
+            }
             bankDetailsResource.setId(existingBankDetails.getId());
         } else {
             return serviceFailure(CommonFailureKeys.BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED);

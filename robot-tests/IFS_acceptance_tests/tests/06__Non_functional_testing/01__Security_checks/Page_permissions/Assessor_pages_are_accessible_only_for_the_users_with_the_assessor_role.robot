@@ -16,7 +16,7 @@ ${ASSESSOR_ASSESSMENT_QUESTIONS}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICA
 ${ASSESSOR_ASSESSMENT_QUESTIONS_11}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/question/43
 ${ASSESSOR_REVIEW_SUMMARY}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
 ${ASSESSOR_ASSESSMENT_QUESTIONS_48}    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/48
-${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:thomas.fister@innovateuk.test
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:worth.email.test+thomas.fister@gmail.com
 
 *** Test Cases ***
 Guest user can't access the assessor dashboard

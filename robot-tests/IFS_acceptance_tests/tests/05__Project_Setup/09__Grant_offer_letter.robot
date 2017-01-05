@@ -12,6 +12,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-5998 As the contracts team I need to view, remove and/or re-upload the Grant Offer Letter
 ...
 ...               INFUND-6829 GOL uploaded but not submitted by PM shows wrong status
+...
+...               INFUND-7027 Partners can access the GOL before the internal user hits Send to proj team
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -50,9 +52,35 @@ Project Finance can download GOL
     Then the user downloads the file        ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
     [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
+Lead should not be able to see GOL until it is sent by IUK
+    [Documentation]  INFUND-7027
+    [Tags]
+    [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    And the user should see the element              jQuery=li.waiting:nth-child(8)
+    When the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should not see the element         link=Grant offer letter
+
+Non lead should not be able to see GOL until it is sent by IUK
+    [Documentation]  INFUND-7027
+    [Tags]
+    [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should not see the element         jQuery=li.complete:nth-child(8)
+    And the user should not see the element          jQuery=li.require-action:nth-child(8)
+    When the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should not see the element         link=Grant offer letter
+
 Project finance user removes the grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
     [Tags]    HappyPath
+    [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user can remove the uploaded file  removeGrantOfferLetterClicked  grant_offer_letter.pdf
     And the user should see the element         css=label[for="grantOfferLetter"]
@@ -360,8 +388,8 @@ project finance generates the Spend Profile
 project finance approves Viability for
     [Arguments]  ${partner}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
-    the user selects the checkbox      id=costs-reviewed
-    the user selects the checkbox      id=project-viable
+    the user selects the checkbox      costs-reviewed
+    the user selects the checkbox      project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
     the user clicks the button/link    css=#confirm-button
@@ -386,6 +414,6 @@ all partners submit their Spend Profile
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_Competition_Id}/spend-profile/approval
-    the user selects the checkbox      id=approvedByLeadTechnologist
+    the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
     the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")

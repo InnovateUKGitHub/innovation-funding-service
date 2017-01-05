@@ -14,7 +14,6 @@ Password from the blacklist
     [Tags]
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user selects the radio button    gender    gender2
@@ -32,7 +31,6 @@ Password all lower case
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
@@ -50,7 +48,6 @@ Password all upper case
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
@@ -68,7 +65,6 @@ Password without numbers
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
@@ -85,7 +81,6 @@ Password with personal information
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
@@ -105,7 +100,6 @@ Password is too long
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${long_password}
     And the user enters text to a text field    id=retypedPassword    ${long_password}
@@ -121,7 +115,6 @@ Password is too short
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    0114123456778
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${short_password}
     And the user enters text to a text field    id=retypedPassword    ${short_password}
@@ -135,7 +128,6 @@ Password and re-typed password do not match
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${incorrect_password}
@@ -149,7 +141,6 @@ Re-type password left blank
     When the user enters text to a text field    id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${EMPTY}
@@ -164,7 +155,6 @@ Password left blank
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user accepts the terms and conditions
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${EMPTY}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
@@ -188,6 +178,3 @@ the user cannot login with the invalid password
     The user should see the text in the page    css=button[name="_eventId_proceed"]
     The user should see the text in the page    ${unsuccessful_login_message}
     The user should see the text in the page    Your username/password combination doesn't seem to work
-
-the user accepts the terms and conditions
-    Run Keyword And Ignore Error    Select Checkbox    termsAndConditions

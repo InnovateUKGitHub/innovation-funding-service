@@ -76,7 +76,7 @@
 	</div>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'grantChanged' or param.action != null and param.action[0] == 'grantChanged'}">
-		<div class="panel-indent">
+		<div class="panel">
 			<h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
 			<dl class="standard-definition-list">
 				<dt>Funding sought</dt>
@@ -180,7 +180,7 @@
 
 			<form>
 
-				<fieldset class="panel-indent" id="change-grant">
+				<fieldset class="panel" id="change-grant">
 					<legend class="visuallyhidden">Change % grant</legend>
 					<div class="cf">
 						<div class="form-group">
@@ -272,7 +272,7 @@
 		    <p>If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
 
 		    <div class="form-group">
-		    	<label class="block-label" for="costs-reviewed">
+		    	<label class="block-label selection-button-checkbox" for="costs-reviewed">
 			      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
 			     	These funding costs have been reviewed and are acceptable
 			    </label>

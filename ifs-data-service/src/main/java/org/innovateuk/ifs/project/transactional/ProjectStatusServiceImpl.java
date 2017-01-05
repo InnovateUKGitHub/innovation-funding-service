@@ -165,21 +165,22 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
 
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
-        if(ApprovalType.APPROVED.equals(approvalType)) {
-            return COMPLETE;
-        } else if(ApprovalType.REJECTED.equals(approvalType)) {
-            return PENDING;
-        }
+        switch (approvalType) {
+            case APPROVED:
+                return COMPLETE;
+            case REJECTED:
+                return REJECTED;
+            default:
+                if (project.getSpendProfileSubmittedDate() != null) {
+                    return ACTION_REQUIRED;
+                }
 
-        if (project.getSpendProfileSubmittedDate() != null) {
-            return ACTION_REQUIRED;
-        }
+                if (financeCheckStatus.equals(COMPLETE)) {
+                    return PENDING;
+                }
 
-        if (financeCheckStatus.equals(COMPLETE)) {
-            return PENDING;
+                return NOT_STARTED;
         }
-
-        return NOT_STARTED;
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
@@ -260,7 +261,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 }
             }
         } else {
-            roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
+            roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
         }
         return roleSpecificGolStates;
     }
