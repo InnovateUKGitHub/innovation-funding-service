@@ -24,6 +24,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.category.resource.CategoryType.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -67,7 +68,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 Long innovationSector = getCategoryIdOrNull(INNOVATION_SECTOR, innovationSectorName);
                 Long researchCategory = getCategoryIdOrNull(RESEARCH_CATEGORY, researchCategoryName);
 
-                CollaborationLevel collaborationLevel =  CollaborationLevel.fromCode(collaborationLevelCode);
+                CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
                 LeadApplicantType leadApplicantType = LeadApplicantType.BUSINESS.fromCode(leadApplicantTypeCode);
 
                 competition.setName(name);
@@ -197,9 +198,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
             Stream.of(MilestoneType.presetValues()).forEach(type -> {
-                if(milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId()).getSuccessObjectOrThrowException().getId() == null) {
-                    milestoneService.create(type, data.getCompetition().getId());
-                }
+                milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId()).
+                        andOnSuccess((milestoneResource) -> {
+                            if (milestoneResource.getId() == null) {
+                                milestoneService.create(type, data.getCompetition().getId());
+                            }
+                            return serviceSuccess();
+                        });
             });
         });
     }
