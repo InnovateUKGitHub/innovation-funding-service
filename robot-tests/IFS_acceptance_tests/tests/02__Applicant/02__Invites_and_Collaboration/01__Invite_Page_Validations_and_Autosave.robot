@@ -36,7 +36,7 @@ Validations for the Email field
     [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
-    Then the user should see an error    Please enter a valid email address
+    Then the user should see an error    Please enter a valid email address.
 
 Validations for the name field
     [Documentation]    INFUND-901
@@ -66,20 +66,20 @@ Blank Partner organisation fields are not allowed
     [Tags]
     Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    ${EMPTY}    ${EMPTY}
-    Then the user should see an error    An organisation name is required
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    Please enter an email address
+    Then the user should see an error    An organisation name is required.
+    And the user should see an error    This field cannot be left blank.
+    And the user should see an error    Please enter an email address.
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    collaborator10_invalid_email
-    Then the user should see an error    Please enter a valid email address
+    Then the user should see an error    Please enter a valid email address.
 
 Already invite email should is not allowed
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
-    Then the user should see an error    You have already added this email address
+    Then the user should see an error    You have already added this email address.
 
 Link to add multiple partner organisation
     [Tags]    HappyPath
@@ -109,7 +109,6 @@ the user fills the name and email field and reloads the page
     The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+8@hiveit.co.uk
-    sleep    2s
     wait for autosave
     the user reloads the page
 
@@ -135,7 +134,7 @@ the applicant fills the lead organisation fields
     Focus    jquery=button:contains("Save Changes")
     browser validations have been disabled
     The user clicks the button/link    jquery=button:contains("Save Changes")
-    sleep    500ms
+
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
@@ -146,8 +145,7 @@ the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     Focus    jquery=button:contains("Save Changes")
-    Sleep    2s
-    Capture Page Screenshot
+    wait for autosave
     the user reloads the page
 
 the applicant's inputs should be visible
@@ -176,7 +174,7 @@ the applicant fills the Partner organisation fields
     # the following keyword disables the browser's validation
     Focus    jquery=button:contains("Save Changes")
     The user clicks the button/link    jquery=button:contains("Save Changes")
-    sleep    500ms
+
 
 a validation error is shown on organisation name
     [Arguments]    ${group_number}

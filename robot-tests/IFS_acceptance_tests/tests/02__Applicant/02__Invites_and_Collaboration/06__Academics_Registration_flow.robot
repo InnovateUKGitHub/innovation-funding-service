@@ -19,7 +19,7 @@ Academic organisations search
     When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see an error    Please enter an organisation name to search
+    Then the user should see an error    Please enter an organisation name to search.
     When the user enters text to a text field    id=organisationSearchName    abcd
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    No results found.

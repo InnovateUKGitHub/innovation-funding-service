@@ -323,10 +323,32 @@ span.no{
 	@extend %icon-cross;
 	padding-left: 28px;
 }
-.error-summary-list {
-  @extend .list-bullet;
+// .error-summary-list {
+//   @extend .list list-bullet;
+//
+//   li:first-letter {
+//     text-transform:lowercase;
+//   }
+// }
 
-  li:first-letter {
-    text-transform:lowercase;
+[data-selector-highlighter] {
+  background-color: #ccc;
+  bottom:0;
+  left:0;
+  position: fixed;
+  width:100%;
+  z-index:99;
+
+  code {
+    background:black;
+    color:#fff;
+    line-height:1.5;
+    box-sizing:content-box;
+    white-space: nowrap;
+    padding:5px;
+    font-size:1.5em;
+    width:100%;
+    display: block;
+    min-height:1.5em;
   }
 }

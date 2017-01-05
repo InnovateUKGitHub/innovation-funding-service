@@ -39,11 +39,9 @@
                     <div class="textarea-wrapped word-count">
                         <textarea
                             class="form-control width-full"
-                            maxlength="5000"
                             data-max_words="100"
                             data-maxwordslength="100"
                             data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                            data-maxlength-errormessage="This field cannot contain more than 5,000 characters"
                             th:errorclass="field-error"
                             rows="4"
                             th:field="*{skillAreas}"></textarea>
@@ -62,7 +60,7 @@
                             </span>
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
-                        <label class="block-label" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
+                        <label class="block-label selection-button-radio" th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">
                             <input th:field="*{assessorType}" th:value="${type}" type="radio" required="required" data-required-errormessage="Please select an assessor type"/>
                             <span th:text="${type.displayName}" th:remove="tag"/>
                         </label>

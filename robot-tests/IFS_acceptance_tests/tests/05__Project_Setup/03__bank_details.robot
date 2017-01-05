@@ -8,23 +8,43 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-4903 As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
 ...
 ...               INFUND-6018 Partner should see a flag in Bank Details, when he needs to take an action
+Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 
+# Alternative Bank account pair:12345677 - 000004 #
+# Another valid B account pair: 51406795 - 404745 #
+
+# Note that the Bank details scenario where the Partner is not eligible for funding
+# and thus doesn't need to fill in his Bank details, will be tested in the File 01__project_details.robot
+# whith use of project id = 3 TODO
+
 *** Variables ***
-# Alternative Bank account pair:12345677 - 000004
+
 *** Test Cases ***
+Links to other sections in Project setup dependent on project details for partners
+    [Documentation]    INFUND-4428
+    [Tags]
+    [Setup]   guest user log-in                   ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
+    And the user should see the element           jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page  Successful application
+    Then the user should see the element          link = Monitoring Officer
+    And the user should not see the element       link = Finance checks
+    And the user should not see the element       link= Spend profile
+    And the user should not see the element       link = Grant offer letter
+    [Teardown]  close any open browsers
 
 Bank details page
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
-    Given guest user log-in  steve.smith@empire.com    Passw0rd
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    Given guest user log-in                 ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    When the user clicks the button/link    link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
     When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user navigates to the page     ${project_in_setup_page}/team-status
+    Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
     And the user clicks the button/link     link=Project setup status
@@ -36,30 +56,30 @@ Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    Then the user should see an error    Please enter an account number
-    And the user should see an error    Please enter a sort code
-    And the user should see an error    You need to select a billing address before you can continue
+    Then the user should see an error    Please enter an account number.
+    And the user should see an error    Please enter a sort code.
+    And the user should see an error    You need to select a billing address before you can continue.
 
 Bank details client side validations
     [Documentation]    INFUND-3010
     [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
-    Then the user should not see the text in the page    Please enter an account number
+    Then the user should not see the text in the page    Please enter an account number.
     And the user should see an error    Please enter a valid account number
     When the user enters text to a text field    name=accountNumber    12345679
     And the user moves focus away from the element    name=accountNumber
-    Then the user should not see the text in the page    Please enter an account number
-    And the user should not see the text in the page    Please enter a valid account number
+    Then the user should not see the text in the page    Please enter an account number.
+    And the user should not see the text in the page    Please enter a valid account number.
     When the user enters text to a text field    name=sortCode    12345
     And the user moves focus away from the element    name=sortCode
-    Then the user should see an error    Please enter a valid sort code
+    Then the user should see an error    Please enter a valid sort code.
     When the user enters text to a text field    name=sortCode    123456
     And the user moves focus away from the element    name=sortCode
-    Then the user should not see the text in the page    Please enter a sort code
-    And the user should not see the text in the page    Please enter a valid sort code
+    Then the user should not see the text in the page    Please enter a sort code.
+    And the user should not see the text in the page    Please enter a valid sort code.
     When the user selects the radio button    addressType    REGISTERED
-    Then the user should not see the text in the page    You need to select a billing address before you can continue
+    Then the user should not see the text in the page    You need to select a billing address before you can continue.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
@@ -89,148 +109,164 @@ Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
-    When the user enters text to a text field    name=accountNumber    51406795
-    And the user enters text to a text field    name=sortCode    404745
-    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    The bank account details below are being reviewed
-    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    The bank account details below are being reviewed
-    Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.waiting:nth-child(4)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user navigates to the page             ${project_in_setup_page}/team-status
-    And the user should see the text in the page    Project team status
-    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
-
+    When the user enters text to a text field         name=accountNumber    12345677
+    And the user enters text to a text field          name=sortCode    000004
+    When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link               jquery=button:contains("Cancel")
+    And the user should not see the text in the page  The bank account details below are being reviewed
+    When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link               jquery=button:contains("Submit")
+    And the user should see the text in the page      The bank account details below are being reviewed
+    Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
+    And the user should see the element               jQuery=ul li.waiting:nth-child(4)
+    When the user clicks the button/link              link=What's the status of each of my partners?
+    Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
+    And the user should see the text in the page      Project team status
+    And the user should see the element               jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
 
 Bank details for Academic
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
-    Given log in as a different user    pete.tom@egg.com    Passw0rd
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user navigates to the page     ${project_in_setup_page}/team-status
-    And the user should see the text in the page    Project team status
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
-    And the user clicks the button/link     link=Project setup status
-    And the user clicks the button/link    link=Bank details
-    When the user enters text to a text field    name=accountNumber    51406795
-    And the user enters text to a text field    name=sortCode    404745
-    When the user selects the radio button    addressType    ADD_NEW
-    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link    id=postcode-lookup
-    Then the user should see the element    css=#select-address-block
-    And the user clicks the button/link    css=#select-address-block > button
+    Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
+    When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
+    Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
+    When the user clicks the button/link           link=What's the status of each of my partners?
+    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
+    And the user should see the text in the page   Project team status
+    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
+    And the user clicks the button/link            link=Project setup status
+    And the user clicks the button/link            link=Bank details
+    When the user enters text to a text field      name=accountNumber  51406795
+    And the user enters text to a text field       name=sortCode  404745
+    When the user selects the radio button         addressType  ADD_NEW
+    And the user enters text to a text field       id=addressForm.postcodeInput  BS14NT
+    And the user clicks the button/link            id=postcode-lookup
+    Then the user should see the element           css=#select-address-block
+    And the user clicks the button/link            css=#select-address-block > button
     And the address fields should be filled
-    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link    jquery=button:contains("Cancel")
-    And the user should not see the text in the page    The bank account details below are being reviewed
-    When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link    jquery=button:contains("Submit")
-    And the user should see the text in the page    The bank account details below are being reviewed
-    Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user navigates to the page     ${project_in_setup_page}/team-status
-    And the user should see the text in the page    Project team status
-    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
+    When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link            jquery=button:contains("Cancel")
+    And the user should not see the text in the page  The bank account details below are being reviewed
+    When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link            jquery=button:contains("Submit")
+    And the user should see the text in the page   The bank account details below are being reviewed
+    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
+    And the user should see the element            jQuery=ul li.complete:nth-child(2)
+    When the user clicks the button/link           link=What's the status of each of my partners?
+    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
+    And the user should see the text in the page   Project team status
+    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5543
     [Tags]      HappyPath
-    [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance Checks
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
-
-
-Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428
-    [Tags]      HappyPath
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    Then the user should see the element    link = Monitoring Officer
-    And the user should see the element    link = Bank details
-    And the user should not see the element    link = Finance checks
-    And the user should not see the element    link= Spend profile
-    And the user should not see the element    link = Grant offer letter
+    [Setup]    log in as a different user  &{Comp_admin1_credentials}
+    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.action   # Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action   # Finance checks
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(5).status          # Spend Profile
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
 
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
-    Given log in as a different user  jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link           link=${PROJECT_SETUP_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
-    And the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user navigates to the page     ${project_in_setup_page}/team-status
-    And the user should see the text in the page    Project team status
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
-    And the user clicks the button/link     link=Project setup status
+    #TODO pending due to INFUND-6090  Update with new Bank account pair
+    Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
+    When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
+    Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
+    And the user clicks the button/link            link=What's the status of each of my partners?
+    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
+    And the user should see the text in the page   Project team status
+    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
+    And the user clicks the button/link            link=Project setup status
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
-    When the user enters text to a text field       name=accountNumber    51406795
-    Then the user enters text to a text field       name=sortCode    404745
-    When the user selects the radio button          addressType    ADD_NEW
-    Then the user enters text to a text field       id=addressForm.postcodeInput    BS14NT
-    And the user clicks the button/link             id=postcode-lookup
-    And the user clicks the button/link             jQuery=button:contains("Use selected address")
+    When the user enters text to a text field      name=accountNumber  51406795
+    Then the user enters text to a text field      name=sortCode  404745
+    When the user selects the radio button         addressType  ADD_NEW
+    Then the user enters text to a text field      id=addressForm.postcodeInput  BS14NT
+    And the user clicks the button/link            id=postcode-lookup
+    And the user clicks the button/link            jQuery=.button:contains("Use selected address")
     And the address fields should be filled
-    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link             jquery=button:contains("Cancel")
+    When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link            jquery=.button:contains("Cancel")
     Then the user should not see an error in the page
-    And the user should not see the text in the page    The bank account details below are being reviewed
-    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link             jQuery=button:contains("Submit")
-    And the user should see the element             jQuery=p:contains("The bank account details below are being reviewed")
-    Then the user navigates to the page             ${project_in_setup_page}
-    And the user should see the element             jQuery=ul li.complete:nth-child(2)
-    When the user clicks the button/link            link=What's the status of each of my partners?
-    Then the user navigates to the page             ${project_in_setup_page}/team-status
-    And the user should see the text in the page    Project team status
-    And the user should see the element             jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
+    And the user should not see the text in the page  The bank account details below are being reviewed
+    When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link            jQuery=.button:contains("Submit")
+    And the user should see the element            jQuery=p:contains("The bank account details below are being reviewed")
+    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
+    And the user should see the element            jQuery=ul li.complete:nth-child(2)
+    When the user clicks the button/link           link=What's the status of each of my partners?
+    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
+    And the user should see the text in the page   Project team status
+    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
     [Tags]    HappyPath
-    [Setup]  log in as a different user             lee.bowman@innovateuk.test    Passw0rd
-    Given the user navigates to the page            ${internal_project_summary}
+    [Setup]  log in as a different user             &{internal_finance_credentials}
+    Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
-    Then the user navigates to the page             ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
+    Then the user navigates to the page             ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
     And the user should see the element             jQuery=tr:nth-child(2) td:nth-child(2):contains("Review required")
     And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(2):contains("Review required")
-    When the user clicks the button/link            link=Empire Ltd
-    Then the user should see the text in the page   Empire Ltd - Account details
-    And the user should see the text in the page    Elmo Chenault
-    And the user should see the element             jQuery=a:contains("${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}")
-    And the user should see the text in the page    7789123456
+    When the user clicks the button/link            link=${Eadel_Name}
+    Then the user should see the text in the page   ${Eadel_Name} - Account details
+    And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_FINANCE}
+    And the user should see the element             jQuery=a:contains("${PS_BD_APPLICATION_PM_EMAIL}")
+    And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_TELEPHONE}
     And the user goes back to the previous page
-    When the user clicks the button/link    link=Ludlow
-    Then the user should see the text in the page    Ludlow - Account details
-    And the user should see the text in the page    Jessica Doe
-    And the user should see the text in the page    jessica.doe@ludlow.co.uk
+    When the user clicks the button/link            link=${Bluezoom_Name}
+    Then the user should see the text in the page   ${Bluezoom_Name} - Account details
+    And the user should see the text in the page    Ryan Welch
+    And the user should see the text in the page    ${PS_BD_APPLICATION_PARTNER_EMAIL}
     And the user goes back to the previous page
-    When the user clicks the button/link    link=EGGS
-    Then the user should see the text in the page    EGGS - Account details
-    And the user should see the text in the page    Pete Tom
-    And the user should see the text in the page    pete.tom@egg.com
+    When the user clicks the button/link            link=${Npath_Name}
+    Then the user should see the text in the page   ${Npath_Name} - Account details
+    And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
+    And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
     Then the user clicks the button/link            link=Bank details
     [Teardown]  the user clicks the button/link     link=Competition Dashboard
 
+Project Finance can see Bank Details
+    [Documentation]    INFUND-4903, INFUND-4903
+    [Tags]  HappyPath
+    Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link           link=${PS_BD_Competition_Name}
+    Then the user should see the element          jQuery=h2:contains("Projects in setup")
+    And the user should see the element           jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
+    When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3) a
+    Then the user navigates to the page           ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
+    And the user should see the text in the page  each partner has submitted their bank details
+    Then the user should see the element          jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
+    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(1) a:contains("${Eadel_Name}")
+    And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Review required")
+    And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Review required")
+    When the user clicks the button/link          link=${Eadel_Name}
+    Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
+Other internal users do not have access to bank details export
+    [Documentation]  INFUND-5852
+    [Tags]
+    [Setup]  log in as a different user       &{Comp_admin1_credentials}
+    When the user navigates to the page       ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    Then the user should not see the element  link=Export all bank details
+    And the user navigates to the page and gets a custom error message  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  You do not have the necessary permissions for your request
+
+Project Finance user can export bank details
+    [Documentation]  INFUND-5852
+    [Tags]  Download
+    When the project finance user downloads the bank details
+    Then the user opens the excel and checks the content
+    [Teardown]  remove the file from the operating system  bank_details.csv
 
 *** Keywords ***
 the user moves focus away from the element
@@ -244,3 +280,39 @@ the user submits the bank account details
     the user enters text to a text field    name=sortCode    ${sort_code}
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
+
+finance contacts are submitted by all users
+    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${Bluezoom_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Eadel_Id}
+    logout as user
+    close any open browsers
+
+user submits his finance contacts
+    [Arguments]  ${user}  ${id}
+    guest user log-in  ${user}  ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
+    the user selects the radio button  financeContact  financeContact1
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+the project finance user downloads the bank details
+    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
+
+the user opens the excel and checks the content
+    ${contents}=                read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
+    ${eadel_details}=           get from list  ${contents}  7
+    ${eadel}=                   get from list  ${eadel_details}  0
+    should be equal             ${eadel}  ${Eadel_Name}
+    ${Npath_details}=           get from list  ${contents}  8
+    ${Npath}=                   get from list  ${Npath_details}  0
+    should be equal             ${Npath}  ${Npath_Name}
+    ${application_number}=      get from list  ${eadel_details}  1
+    should be equal             ${application_number}  ${PS_BD_APPLICATION_NUMBER}
+    ${postcode}=                get from list  ${eadel_details}  8
+    should be equal             ${postcode}  CH64 3RU
+    ${bank_account_name}=       get from list  ${eadel_details}  9
+    should be equal             ${bank_account_name}  ${Eadel_Name}
+    ${bank_account_number}=     get from list  ${eadel_details}  10
+    should be equal             ${bank_account_number}  12345677
+    ${bank_account_sort_code}=  get from list  ${eadel_details}  11
+    should be equal             ${bank_account_sort_code}  000004

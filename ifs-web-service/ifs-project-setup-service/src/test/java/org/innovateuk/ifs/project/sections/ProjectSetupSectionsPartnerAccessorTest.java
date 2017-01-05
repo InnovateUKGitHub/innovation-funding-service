@@ -117,6 +117,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)
         );
@@ -134,8 +135,26 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)
+        );
+    }
+
+    @Test
+    public void testCheckAccessToBankDetailsSectionWhenNotRequired() {
+
+        when(projectSetupProgressCheckerMock.isOrganisationRequiringFunding(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation)
         );
     }
 
@@ -294,13 +313,15 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
         when(projectSetupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isOtherDocumentsApproved(),
-                mock -> mock.isGrantOfferLetterAvailable()
+                mock -> mock.isGrantOfferLetterAvailable(),
+                mock -> mock.isGrantOfferLetterSent()
         );
     }
 
@@ -344,6 +365,24 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
                 mock -> mock.isOtherDocumentsApproved()
+        );
+    }
+
+    @Test
+    public void testCheckAccessToGrantOfferLetterSectionGrantOfferNotSent() {
+
+        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessGrantOfferLetterSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isSpendProfileApproved(),
+                mock -> mock.isOtherDocumentsApproved(),
+                mock -> mock.isGrantOfferLetterAvailable(),
+                mock -> mock.isGrantOfferLetterSent()
         );
     }
 

@@ -75,4 +75,10 @@ public enum CompetitionSetupSection {
 
 		return false;
 	}
+
+	public boolean isComplete(CompetitionResource competitionResource) {
+		return competitionResource.getSectionSetupStatus().containsKey(this)
+				&& competitionResource.getSectionSetupStatus().get(this);
+	}
+
 }

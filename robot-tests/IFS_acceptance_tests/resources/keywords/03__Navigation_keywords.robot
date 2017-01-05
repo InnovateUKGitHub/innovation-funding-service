@@ -5,7 +5,7 @@ Resource          ../defaultResources.robot
 The user navigates to the page
     [Arguments]    ${TARGET_URL}
     Wait for autosave
-    wait until keyword succeeds    30s    30s    Go To    ${TARGET_URL}
+    wait until keyword succeeds    30    200ms    Go To    ${TARGET_URL}
     Run Keyword And Ignore Error    Confirm Action
     # Error checking
     Page Should Not Contain    Error
@@ -68,7 +68,7 @@ the user is on the page or will navigate there
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
-    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    30    200ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
@@ -78,15 +78,14 @@ The user should be redirected to the correct page
 
 the user should be redirected to the correct page without the usual headers
     [Arguments]    ${URL}
-    Sleep    500ms
-    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    30    200ms    Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
 
 the user should be redirected to the correct page without error checking
     [Arguments]    ${URL}
-    Wait Until Keyword Succeeds    10    500ms    Location Should Contain    ${URL}
+    Wait Until Keyword Succeeds    30    200ms    Location Should Contain    ${URL}
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
@@ -114,10 +113,9 @@ The user goes back to the previous page
     Go Back
 
 the user reloads the page
-    sleep    1s
     Wait for autosave
-    Run Keyword And Ignore Error    Confirm Action
     Reload Page
+    run keyword and ignore error    confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong

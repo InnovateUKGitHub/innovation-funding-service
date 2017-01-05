@@ -17,12 +17,11 @@ The user clicks the button/link
     wait until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     wait for autosave
-    wait until keyword succeeds    30s    30s    click element    ${BUTTON}
+    wait until keyword succeeds    30    200ms    click element    ${BUTTON}
 
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
-    sleep    100ms
     Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
 
 
@@ -32,8 +31,8 @@ The user should see the element
 
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    sleep    500ms
-    Element Should Not Be Visible    ${NOT_VISIBLE_ELEMENT}
+    wait until element is not visible    ${NOT_VISIBLE_ELEMENT}
+
 
 
 The user should see the browser notification
@@ -91,8 +90,7 @@ the address fields should be filled with dummy data
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    name=termsAndConditions
-    Select Checkbox    termsAndConditions
+    the user selects the checkbox    termsAndConditions
     Submit Form
 
 the user cannot login with either password

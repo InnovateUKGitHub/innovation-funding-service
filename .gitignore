@@ -43,6 +43,11 @@ gradle-app.setting
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 
+
+### Gulp ###
+gulpfile.tmp.*
+
+
 ### Sass ###
 .sass-cache
 *.css.map
@@ -100,13 +105,15 @@ jmeter/jmeter.log
 
 classes/
 
-#Node modules, except styledocco as we've made changes in that one. 
+#Node modules, except styledocco as we've made changes in that one.
 **/node_modules
 !**/node_modules/styledocco
 
 ifs-web-service.iws
 /out
 
+#GDS sass files copied over from nodeJS Dependencies
+/ifs-web-service/ifs-web-core/src/main/resources/static/sass/vendor/govuk*
 
 # python bytecode nonsense
 *.pyc

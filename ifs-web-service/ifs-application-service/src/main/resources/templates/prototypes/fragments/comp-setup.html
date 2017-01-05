@@ -469,7 +469,7 @@
         <h1 class="heading-xlarge no-margin">Initial details</h1>
     </div>
 
-    <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="panel-indent">
+    <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="panel">
         This will create a new competition. You can add more details as you progress.
     </div>
 
@@ -902,11 +902,11 @@
             <div class="form-group">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Does the competition have multiple streams?</legend>
-                    <label class="block-label" for="comp-stream-yes">
+                    <label class="block-label selection-button-radio" for="comp-stream-yes">
                         <input id="comp-stream-yes" name="comp-streams-group" value="Yes" type="radio" />
                     Yes
                     </label>
-                    <label class="block-label" for="comp-stream-no">
+                    <label class="block-label selection-button-radio" for="comp-stream-no">
                         <input id="comp-stream-no" name="comp-streams-group" value="No" type="radio" checked="checked" />
                     No
                     </label>
@@ -1031,15 +1031,15 @@
     <div class="form-group">
         <fieldset class="inline">
             <legend class="form-label-bold">Should applications be from single partner or collaborative projects?</legend>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-type-single'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-type-single'}">
                 <input th:id="${'stream-'+streamNo+'-comp-type-single'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Single" type="radio" />
                 Single
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-type-collaborative'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-type-collaborative'}">
                 <input th:id="${'stream-'+streamNo+'-comp-type-collaborative'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Collaborative" type="radio" />
                 Collaborative
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-type-single-collaborative'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-type-single-collaborative'}">
                 <input th:id="${'stream-'+streamNo+'-comp-type-single-collaborative'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Single or collaborative" type="radio" />
                 Single or collaborative
             </label>
@@ -1049,15 +1049,15 @@
     <div class="form-group">
         <fieldset class="inline">
             <legend class="form-label-bold">What research categories are in scope for this competition?</legend>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}">
+            <label class="block-label selection-button-checkbox" th:for="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}">
                 <input th:id="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}" value="comp-research-tech-feasibilty" type="checkbox" />
                 Technical feasibility
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-research-tech-industrial'}">
+            <label class="block-label selection-button-checkbox" th:for="${'stream-'+streamNo+'-comp-research-tech-industrial'}">
                 <input th:id="${'stream-'+streamNo+'-comp-research-tech-industrial'}" value="comp-research-industrial" type="checkbox" />
                 Industrial research
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-research-tech-experimental'}">
+            <label class="block-label selection-button-checkbox" th:for="${'stream-'+streamNo+'-comp-research-tech-experimental'}">
                 <input th:id="${'stream-'+streamNo+'-comp-research-tech-experimental'}" value="comp-research-exoerimental" type="checkbox" />
                 Experimental development
             </label>
@@ -1068,15 +1068,15 @@
         <fieldset class="inline">
             <legend class="form-label-bold">Lead applicant</legend>
             <p>Select the lead applicant type required</p>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-business'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Business" type="radio" checked="checked" />
                 Business
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-research'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-lead-research'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-research'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Research" type="radio" />
                 Research
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-lead-either'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-lead-either'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-either'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Either" type="radio" />
                 Either
             </label>
@@ -1100,11 +1100,11 @@
         <fieldset class="inline">
             <legend class="form-label-bold">Are resubmissions allowed?</legend>
             <p>Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
                 <input th:id="${'stream-'+streamNo+'-comp-resubmission-yes'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="Yes" type="radio" />
             Yes
             </label>
-            <label class="block-label" th:for="${'stream-'+streamNo+'-comp-resubmission-no'}">
+            <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-resubmission-no'}">
                 <input th:id="${'stream-'+streamNo+'-comp-resubmission-no'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="No" type="radio" />
             No
             </label>
@@ -1126,8 +1126,8 @@
         <h1 class="heading-xlarge no-margin">Milestones</h1>
     </div>
 
-    <div class="panel-indent">
-        Define the competition milestones. Once you enter a date into the 'submission date' field, this will automatically generate the other dates. You are able to edit these dates, but this will affect the overall calculation.
+    <div class="panel">
+        Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
     </div>
 
     <form>
@@ -1288,7 +1288,7 @@
         <h1 class="heading-xlarge no-margin">Application questions</h1>
     </div>
 
-    <div class="panel-indent">
+    <div class="panel">
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
@@ -1359,7 +1359,7 @@
         <h1 class="heading-xlarge no-margin">Application finances</h1>
     </div>
 
-    <div class="panel-indent">
+    <div class="panel">
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
@@ -1469,7 +1469,7 @@
                     </div>
                     <div class="column-three-quarters">
                         <p>You should describe:</p>
-                        <ul class="list-bullet">
+                        <ul class="list list-bullet">
                             <li>the business opportunity you have identified and how you plan to take advantage of it</li>
                             <li>the customer needs you have identified and how your project will meet them</li>
                             <li>the challenges you expect to face and how you will overcome them</li>
@@ -1543,11 +1543,11 @@
                      <div class="column-half">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Is the answer scored?</legend>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-yes'}">
+                            <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-scored-yes'}">
                                 <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
                             Yes
                             </label>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-scored-no'}">
+                            <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-scored-no'}">
                                  <input th:id="${'question-'+ questionNo +'-scored-no'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
                             No
                             </label>
@@ -1558,11 +1558,11 @@
                     <div class="column-half">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Allow appendix?</legend>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-yes'}">
+                            <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-appendix-yes'}">
                                 <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
                             Yes
                             </label>
-                            <label class="block-label" th:for="${'question-'+ questionNo +'-appendix-no'}">
+                            <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-appendix-no'}">
                                  <input th:id="${'question-'+ questionNo +'-appendix-no'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
                             No
                             </label>

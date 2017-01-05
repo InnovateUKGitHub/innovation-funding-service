@@ -6,7 +6,9 @@ Resource          ../defaultResources.robot
 
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    Select Checkbox    ${checkbox}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
+    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -18,7 +20,9 @@ the user selects the checkbox
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
-    Unselect Checkbox    ${checkbox}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -28,10 +32,11 @@ the user unselects the checkbox
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
+
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
-    the user should see the element    ${RADIO_BUTTON}
-    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should see the element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
+    Click Element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -56,8 +61,8 @@ the user moves focus to the element
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    wait until element is visible    ${RADIO_BUTTON}
-    Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
+    #[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -69,8 +74,7 @@ the user sees that the radio button is selected
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
-    wait until element is visible    ${RADIO_BUTTON}
-    Radio Button Should Not Be Selected    ${RADIO_BUTTON}
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -108,13 +112,13 @@ Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
     ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    ${Mark_question_as_incomplete}
     Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_question_as_incomplete}
-    sleep    2s
+    wait for autosave
 
 The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    wait until keyword succeeds    30s    30s    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    wait until keyword succeeds    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Wait for autosave
 
@@ -138,7 +142,7 @@ the user clears the text from the element
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
     wait until element is visible    ${textfield}
-    wait until keyword succeeds    10    500ms    textfield should contain    ${textfield}    ${text}
+    wait until keyword succeeds    10    200ms    textfield should contain    ${textfield}    ${text}
 
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -183,10 +187,9 @@ the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
-    sleep    1s
+    wait for autosave
 
 the applicant adds some content and marks this section as complete
-    sleep    300ms
     Focus    css=#form-input-4 .editor
     Input Text    css=#form-input-4 .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
@@ -201,4 +204,4 @@ The user enters multiple strings into a text field
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible    ${field}
-    wait until keyword succeeds    30s    30s    Input Text    ${field}    ${concatenated_string}
+    wait until keyword succeeds    30s    200ms    Input Text    ${field}    ${concatenated_string}

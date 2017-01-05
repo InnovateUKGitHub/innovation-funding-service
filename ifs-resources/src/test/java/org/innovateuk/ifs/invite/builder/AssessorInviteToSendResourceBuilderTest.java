@@ -40,10 +40,10 @@ public class AssessorInviteToSendResourceBuilderTest {
         String[] expectedRecipients = {"recipient", "other"};
         Long[] expectedCompetitionIds = {1L, 2L};
         String[] expectedCompetitionNames = {"comp-name", "name-comp"};
-        EmailContent[] expectedEmailContents = (EmailContent[]) newEmailContentResource()
+        EmailContent[] expectedEmailContents = newEmailContentResource()
                 .withSubject("subject")
                 .withPlainText("plain text")
-                .build(2).toArray();
+                .buildArray(2, EmailContent.class);
 
         List<AssessorInviteToSendResource> resources = newAssessorInviteToSendResource()
                 .withRecipient(expectedRecipients)

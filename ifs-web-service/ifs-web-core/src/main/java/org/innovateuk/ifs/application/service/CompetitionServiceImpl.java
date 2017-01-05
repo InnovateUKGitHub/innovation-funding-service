@@ -53,17 +53,6 @@ public class CompetitionServiceImpl implements CompetitionService {
                 .collect(Collectors.toList());
     }
 
-    public List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId) {
-
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
-        
-        return competition.getSectionSetupStatus().entrySet().stream()
-        				.filter(entry -> Boolean.TRUE.equals(entry.getValue()))
-        				.map(entry -> entry.getKey())
-        				.sorted()
-        				.collect(Collectors.toList());
-    }
-
     @Override
     public List<CompetitionTypeResource> getAllCompetitionTypes() {
         return competitionsRestService.getCompetitionTypes().getSuccessObjectOrThrowException();

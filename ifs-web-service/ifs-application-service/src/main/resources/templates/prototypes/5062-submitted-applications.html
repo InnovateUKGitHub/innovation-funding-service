@@ -3,23 +3,6 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-
-
-
-	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
-		<style>
-			#application-list tbody tr{
-				display: none;
-			}
-			.pagination{
-				display: none;
-			}
-			#application-list tbody tr.filtered-result{
-				display: table-row;
-			}
-		</style>
-	</div>
-
 </head>
 
 <body class="dashboard-internal full-width show-applications">
@@ -68,29 +51,29 @@
         <div class="grid-row extra-margin-bottom">
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">3</span><br />
-              <small>applications being funded</small>
+              <span class="heading-large">287</span><br />
+              <small>applications</small>
             </div>
   				</div>
 
   				<div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">6</span><br />
-              <small>applications</small>
+              <span class="heading-large">2</span><br />
+              <small>applications being funded</small>
             </div>
   				</div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">4</span><br />
-              <small>applications not submitted</small>
+              <span class="heading-large">281</span><br />
+              <small>applications not being funded</small>
             </div>
           </div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">4</span><br />
-              <small>applications removed</small>
+              <span class="heading-large">3</span><br />
+              <small>applications on hold</small>
             </div>
           </div>
 
@@ -131,114 +114,162 @@
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
+		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
+
+      <div class="grid-row sorting">
+          <p><span class="heading-xlarge extra-margin-left" id="applications-selected">287</span> applications</p>
+      </div>
+
+      <div class="grid-row sorting sorting-controls">
+        <div class="column-half">
+          <div class="form-group no-margin">
+            <fieldset class="alignleft select-all-applications">
+              <legend class="visuallyhidden">Select applications</legend>
+              <label for="select-all">
+                <input class="select-all" value="select-all" type="checkbox" />
+                Select all applications
+              </label>
+            </fieldset>
+            <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+          </div>
+        </div>
+
+        <div class="column-half">
+          <fieldset class="mark-applications alignright">
+            <legend class="visuallyhidden">Mark selected applications</legend>
+            <h3>Mark applicaton as:</h3>
+            <button class="button button-secondary select-app" disabled="disabled">Successful</button>
+            <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
+            <button class="button button-secondary select-app" disabled="disabled">On hold</button>
+          </fieldset>
+        </div>
+      </div>
+
 
 			<div class="table-overflow">
-				<table id="application-list">
-					<thead>
-						<tr>
-							<th scope="col">Application number</th>
-							<th scope="col">Project title</th>
-							<th scope="col">Lead</th>
-							<th scope="col">Area</th>
-							<th scope="col" class="alignright">No. of partners</th>
-							<th scope="col" class="alignright">Grant requested (&#163;)</th>
-							<th scope="col" class="alignright">Total project cost (&#163;)</th>
-							<th scope="col" class="alignright">Duration (months)</th>
-							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'decision'}" style="width: 120px">Fund project?</th>
+        <fieldset>
+          <legend class="visuallyhidden">Applications</legend>
+  				<table id="application-list">
+  					<thead>
+  						<tr>
+                <th scope="col" id="select-applications-label">Select application(s)</th>
+  							<th scope="col">Application number</th>
+  							<th scope="col">Project title</th>
+  							<th scope="col">Lead</th>
+  							<th scope="col">Area</th>
+  							<th scope="col" class="alignright">No. of partners</th>
+  							<th scope="col" class="alignright">Grant requested (&#163;)</th>
+  							<th scope="col" class="alignright">Total project cost (&#163;)</th>
+  							<th scope="col" class="alignright">Duration (months)</th>
+  							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'decision'}" style="width: 120px">Funding decision</th>
 
-              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
-                <th scope="col" class="alignright">Funded</th>
-              </th:block>
+                <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                  <th scope="col" class="alignright">Funded</th>
+                </th:block>
 
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="filtered-result">
-							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>HVM</td>
-							<td class="alignright">5</td>
-							<td class="alignright">203,000</td>
-							<td class="alignright">324,000</td>
-							<td class="alignright">12</td>
-							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="alignright">
-								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
-									<option value="-">-</option>
-									<option value="Yes">Yes</option>
-									<option value="No">No</option>
-								</select>
-							</td>
-              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
-                <td class="alignright">Yes</td>
-              </th:block>
-						</tr>
-						<tr class="filtered-result">
-							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
-							<td>Robots that learn</td>
-							<td>Max Digital</td>
-							<td>HVM</td>
-							<td class="alignright">5</td>
-							<td class="alignright">203,000</td>
-							<td class="alignright">300,000</td>
-							<td class="alignright">12</td>
-							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="alignright">
-								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
-									<option value="-">-</option>
-									<option value="Yes">Yes</option>
-									<option value="No">No</option>
-								</select>
-							</td>
-              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
-                <td class="alignright">Yes</td>
-              </th:block>
-						</tr>
-						<tr class="filtered-result">
-							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
-							<td>AI in learning</td>
-							<td>BBC</td>
-							<td>HVM</td>
-							<td class="alignright">3</td>
-							<td class="alignright">67,000</td>
-							<td class="alignright">97,500</td>
-							<td class="alignright">13</td>
-							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="alignright">
-								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
-									<option value="-">-</option>
-									<option value="Yes">Yes</option>
-									<option value="No">No</option>
-								</select>
-							</td>
-              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
-                <td class="alignright">Yes</td>
-              </th:block>
-						</tr>
-						<tr class="filtered-result">
-							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
-							<td>Progressive machines</td>
-							<td>Kingfisher</td>
-							<td>HVM</td>
-							<td class="alignright">7</td>
-							<td class="alignright">100,000</td>
-							<td class="alignright">125,000</td>
-							<td class="alignright">14</td>
-							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="alignright">
-								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
-									<option value="-">-</option>
-									<option value="Yes">Yes</option>
-									<option value="No">No</option>
-								</select>
-							</td>
-              <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
-                <td class="alignright">No</td>
-              </th:block>
-						</tr>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<tr class="filtered-result">
+                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-1" aria-labelledby="select-applications-label" /></td>
+  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
+  							<td>Machine learning in robots</td>
+  							<td>PWC</td>
+  							<td>HVM</td>
+  							<td class="alignright">5</td>
+  							<td class="alignright">203,000</td>
+  							<td class="alignright">324,000</td>
+  							<td class="alignright">12</td>
+  							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
+  								-
+  							</td>
+                <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                  <td class="feedback  alignright">-</td>
+                </th:block>
+  						</tr>
+  						<tr class="filtered-result">
+                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-2" aria-labelledby="select-applications-label" /></td>
+  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
+  							<td>Robots that learn</td>
+  							<td>Max Digital</td>
+  							<td>HVM</td>
+  							<td class="alignright">5</td>
+  							<td class="alignright">203,000</td>
+  							<td class="alignright">300,000</td>
+  							<td class="alignright">12</td>
+  							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
+  								Oh hold
+  							</td>
+                <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                  <td class="feedback alignright">On hold</td>
+                </th:block>
+  						</tr>
+  						<tr class="filtered-result">
+                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-3" aria-labelledby="select-applications-label" /></td>
+  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
+  							<td>AI in learning</td>
+  							<td>BBC</td>
+  							<td>HVM</td>
+  							<td class="alignright">3</td>
+  							<td class="alignright">67,000</td>
+  							<td class="alignright">97,500</td>
+  							<td class="alignright">13</td>
+  							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
+  								Successful
+  							</td>
+                <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                  <td class="feedback alignright">Successful</td>
+                </th:block>
+  						</tr>
+  						<tr class="filtered-result">
+                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-4" aria-labelledby="select-applications-label" /></td>
+  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
+  							<td>Progressive machines</td>
+  							<td>Kingfisher</td>
+  							<td>HVM</td>
+  							<td class="alignright">7</td>
+  							<td class="alignright">100,000</td>
+  							<td class="alignright">125,000</td>
+  							<td class="alignright">14</td>
+  							<td th:unless="${param.status == null} or ${param.status[0] != 'decision'}" class="feedback alignright">
+  								On hold
+  							</td>
+                <th:block th:if="${param.status != null and param.status[0] == 'feedback'}">
+                  <td class="feedback alignright">On hold</td>
+                </th:block>
+  						</tr>
 
 
-					</tbody>
-				</table>
-			</div>
+  					</tbody>
+  				</table>
+			  </fieldset>
+      </div>
+
+      <div class="grid-row sorting sorting-controls extra-margin-top">
+        <div class="column-half">
+          <div class="form-group no-margin">
+            <fieldset class="alignleft select-all-applications">
+              <legend class="visuallyhidden">Select applications</legend>
+              <label for="select-all">
+                <input class="select-all" value="select-all" type="checkbox" />
+                Select all applications
+              </label>
+            </fieldset>
+            <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+          </div>
+        </div>
+
+        <div class="column-half">
+          <fieldset class="mark-applications alignright">
+            <legend class="visuallyhidden">Mark selected applications</legend>
+            <h3>Mark applicaton as:</h3>
+            <button class="button button-secondary select-app" disabled="disabled">Successful</button>
+            <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
+            <button class="button button-secondary select-app" disabled="disabled">On hold</button>
+          </fieldset>
+        </div>
+      </div>
+
 
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
 
@@ -264,5 +295,62 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+
+  function rowsSelected(){
+    var count = jQuery('input[name="app-row"]:checked').length;
+    jQuery('.applications-selected').html(count);
+    return count;
+  }
+
+  jQuery('input.select-all').on('click',function(e){
+    if (jQuery(this).is(':checked') ) {
+      jQuery('.button-secondary').prop('disabled', false);
+      jQuery('.app-row-select').prop('checked', true);
+      jQuery("input.select-all").prop('checked', true);
+      rowsSelected();
+    }else{
+      jQuery('.button-secondary').prop('disabled', true);
+      jQuery('.app-row-select').prop('checked', false);
+      jQuery("input.select-all").prop('checked', false);
+      rowsSelected();
+    }
+  });
+
+  jQuery('input.app-row-select').on('click',function(e){
+
+    if (jQuery(this).is(':checked') ) { // if checked ensure buttons become active
+      jQuery('.button-secondary').prop('disabled', false);
+      rowsSelected();
+    }else{
+      // if no checkboxes are checked ensure buttons are disabled
+      //var total = jQuery('input[name="app-row"]:checked').length;
+      //alert(rowsSelected());
+
+      jQuery("input.select-all").prop('checked', false);
+
+      if( rowsSelected() < 1){
+        jQuery(".button-secondary").prop('disabled', true);
+      }
+    }
+  });
+
+  jQuery('.select-app').on('click',function(e){
+    // update selected rows
+
+    var btnOption = jQuery(this).text();
+
+    jQuery('input[name="app-row"]:checked').each(function(){
+      //alert('test'+ jQuery(this).attr('value') + ' ' + btnOption);
+
+      jQuery(this).parent().parent().find('.feedback').html(btnOption);
+
+    });
+
+  });
+
+	// ]]>
+</script>
 </body>
 </html>

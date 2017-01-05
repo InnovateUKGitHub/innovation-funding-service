@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Declaration of interest</h1>
@@ -40,7 +40,7 @@
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{principalEmployer}"
                            th:errorclass="field-error" required="required"
-                           data-required-errormessage="Please enter a principal employer." />
+                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
@@ -52,7 +52,7 @@
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{role}"
                            th:errorclass="field-error" required="required"
-                           data-required-errormessage="Please enter your role with your principal employer." />
+                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
@@ -74,24 +74,24 @@
                             </span>
                         </legend>
 
-                        <label class="block-label" data-target="toggle-appointments">
+                        <label class="block-label selection-button-radio" data-target="toggle-appointments">
                             <input value="yes" type="radio" th:field="*{hasAppointments}"
                                    data-repeatable-rowcontainer="#position-table tbody"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-add-required="input.appointment-field" />
                             Yes
                         </label>
-                        <label class="block-label">
+                        <label class="block-label selection-button-radio">
                             <input value="no" type="radio" th:field="*{hasAppointments}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any appointments, directorships or consultancies."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-remove-required="input.appointment-field" />
                             No
                         </label>
                     </fieldset>
 
-                    <div class="panel-indent js-hidden" id="toggle-appointments">
+                    <div class="panel js-hidden" id="toggle-appointments">
                         <span th:if="${#fields.hasErrors('appointments')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('appointments')}" th:text="${err}" />
                         </span>
@@ -117,7 +117,8 @@
                                                th:errorclass="field-error"
                                                th:field="*{appointments[__${appointmentStat.index}__].organisation}"
                                                required="required"
-                                               data-required-errormessage="Please enter an organisation." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.organisation.required}" />
+
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
                                         <label>
@@ -131,7 +132,7 @@
                                                th:errorclass="field-error"
                                                th:field="*{appointments[__${appointmentStat.index}__].position}"
                                                required="required"
-                                               data-required-errormessage="Please enter a position." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.position.required}"  />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
@@ -158,17 +159,17 @@
                         </legend>
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
-                        <label class="block-label" data-target="toggle-interest">
+                        <label class="block-label selection-button-radio" data-target="toggle-interest">
                             <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any other financial interests."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-add-required="#financialInterests" />
                             Yes
                         </label>
-                        <label class="block-label">
+                        <label class="block-label selection-button-radio">
                             <input value="No" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if you have any other financial interests."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-remove-required="#financialInterests" />
                             No
                         </label>
@@ -186,7 +187,7 @@
                         <textarea class="form-control width-full" cols="30" rows="3"
                                   th:field="*{financialInterests}" th:errorclass="field-error"
                                   th:required="*{hasFinancialInterests}"
-                                  data-required-errormessage="Please enter your financial interests."></textarea>
+                                  th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"></textarea>
                     </fieldset>
                 </div>
 
@@ -203,24 +204,24 @@
                             </span>
                         </legend>
 
-                        <label class="block-label" data-target="toggle-familyAffiliations">
+                        <label class="block-label selection-button-radio" data-target="toggle-familyAffiliations">
                             <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
                                    data-repeatable-rowcontainer="#family-table tbody"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
                                    data-conditionally-add-required="input.family-affiliation-field" />
                             Yes
                         </label>
-                        <label class="block-label">
+                        <label class="block-label selection-button-radio">
                             <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any appointments, directorships or consultancies."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
                                    data-conditionally-remove-required="input.family-affiliation-field" />
                             No
                         </label>
                     </fieldset>
 
-                    <div class="panel-indent js-hidden" id="toggle-familyAffiliations">
+                    <div class="panel js-hidden" id="toggle-familyAffiliations">
                         <span th:if="${#fields.hasErrors('familyAffiliations')}" th:remove="tag">
                             <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}" />
                         </span>
@@ -247,7 +248,7 @@
                                                th:errorclass="field-error" type="text"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
                                                required="required"
-                                               data-required-errormessage="Please enter a relation." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
                                         <label>
@@ -261,7 +262,7 @@
                                                th:errorclass="field-error" type="text"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
                                                required="required"
-                                               data-required-errormessage="Please enter an organisation." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
                                     </td>
                                     <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
                                         <label>
@@ -276,7 +277,7 @@
                                                th:errorclass="field-error" type="text"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
                                                required="required"
-                                               data-required-errormessage="Please enter a position." />
+                                               th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.position.required}" />
                                     </td>
                                     <td>
                                         <button class="remove-another-row buttonlink" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button>
@@ -301,17 +302,17 @@
                         </legend>
                         <p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
-                        <label class="block-label" data-target="toggle-family-interest">
+                        <label class="block-label selection-button-radio" data-target="toggle-family-interest">
                             <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-add-required="#familyFinancialInterests" />
                             Yes
                         </label>
-                        <label class="block-label">
+                        <label class="block-label selection-button-radio">
                             <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
-                                   data-required-errormessage="Please tell us if any of your close family members have any other financial interests."
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-remove-required="#familyFinancialInterests" />
                             No
                         </label>
@@ -328,7 +329,7 @@
                         <textarea class="form-control width-full" cols="30" rows="3"
                                   th:field="*{familyFinancialInterests}" th:errorclass="field-error"
                                   th:required="*{hasFamilyFinancialInterests}"
-                                  data-required-errormessage="Please enter your family's financial interests."></textarea>
+                                  th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required}"></textarea>
                     </fieldset>
                 </div>
 
@@ -340,9 +341,9 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}" />
                           </span>
                       </legend>
-                      <label class="block-label">
+                      <label class="block-label selection-button-checkbox">
                           <input type="checkbox" th:field="*{accurateAccount}" required="required"
-                                 data-required-errormessage="You must agree that your account is accurate." />
+                                 th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
                           <span th:text="|I confirm that for the financial year ending ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
                       </label>
                   </fieldset>

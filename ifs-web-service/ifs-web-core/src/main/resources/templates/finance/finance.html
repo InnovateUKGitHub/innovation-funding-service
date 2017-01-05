@@ -24,8 +24,8 @@
                    th:name="${'finance-grantclaimpercentage-' + question.id + '-' + organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}"
                    placeholder="0"
-                   data-min-errormessage="This field should be %min%% or higher"
-                   data-max-errormessage="This field should be %max%% or lower"
+                   th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
+                            data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
                     />
             <span>%</span>
         </div>
@@ -42,7 +42,7 @@
                 </legend>
                 <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
-                <label class="block-label" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
+                <label class="block-label selection-button-radio" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
                     <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
@@ -186,7 +186,7 @@
 	                       required="required"
 	                       min="1"
 	                       max="9999999999999999999"
-	                       data-max-errormessage="You must enter a value less than 20 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                        />
 	            </td>
 	            <td class="numeric">
@@ -219,7 +219,7 @@
 	                       required="required"
 	                       min="1"
 	                       max="999999999"
-	                       data-max-errormessage="You must enter a value less than 10 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
 	                        />
 	            </td>
 	            <td rowspan="2" class="rowspan buttoncolumn" th:unless="${complete == 'complete'}">
@@ -258,7 +258,7 @@
                 <fieldset>
                     <legend class="visuallyhidden">Overhead costs</legend>
                     <div class="form-group">
-                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}"
                                    type="radio"
                                    required="required"
@@ -268,7 +268,7 @@
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                             No overhead costs
                         </label>
-                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"
                                    type="radio"
                                    required="required"
@@ -278,7 +278,7 @@
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                             20% of labour costs
                         </label>
-                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
                                    required="required"
@@ -433,7 +433,7 @@
 	                       min="1"
 	                       max="999999999"
 	                       required="required"
-	                       data-max-errormessage="You must enter a value less than 10 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
 	                       />
 	            </td>
 	            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
@@ -452,7 +452,7 @@
 	                       min="1"
 	                       max="9999999999999999999"
 	                       required="required"
-	                       data-max-errormessage="You must enter a value less than 20 digits" />
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
 	            </td>
 	            <td>
 	              <label th:for="${'cost-materials-'+costIdentifier+'-materialTotal'}">
@@ -522,7 +522,7 @@
 	                <fieldset class="inline">
 	                    <legend>New or existing item</legend>
 	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" th:remove="tag" />
-	                    <label class="block-label">
+	                    <label class="block-label selection-button-radio selection-button-radio">
 	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_0'}"
 	                               type="radio"
 	                               th:name="${type +'-existing-' + question.id + '-' + costIdentifier}"
@@ -533,7 +533,7 @@
 	                        New
 	                        </input>
 	                    </label>
-	                    <label class="block-label">
+	                    <label class="block-label selection-button-radio selection-button-radio">
 	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_1'}"
 	                               type="radio"
 	                               th:name="${type +'-existing-' + question.id + '-' + costIdentifier}"
@@ -562,7 +562,7 @@
 	                        min="1"
 	                        max="999999999"
 	                        required="required"
-	                        data-max-errormessage="You must enter a value less than 10 digits"
+                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
 	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'field-error' : ''"
 	                         />
 	            </div>
@@ -583,7 +583,7 @@
 	                        min="1"
 	                        max="9999999999999999999"
 	                        required="required"
-	                        data-max-errormessage="You must enter a value less than 20 digits"
+                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'field-error' : ''" />
 
 	            </div>
@@ -604,7 +604,7 @@
 	                        min="0"
 	                        max="9999999999999999999"
 	                        required="required"
-	                        data-max-errormessage="You must enter a value less than 20 digits"
+                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'field-error' : ''"/>
 	            </div>
 
@@ -743,7 +743,7 @@
 	                       min="1"
 	                       max="9999999999999999999"
 	                       required="required"
-	                       data-max-errormessage="You must enter a value less than 20 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
 	                       />
 	            </div>
@@ -835,7 +835,7 @@
 	                       min="1"
 	                       max="999999999"
 	                       required="required"
-	                       data-max-errormessage="You must enter a value less than 10 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"  />
 	            </td>
 	            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
@@ -853,7 +853,7 @@
 	                       min="1"
 	                       max="9999999999999999999"
 	                       required="required"
-	                       data-max-errormessage="You must enter a value less than 20 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''" />
 	            </td>
 	            <td class="numeric">
@@ -946,7 +946,7 @@
 	                       min="1"
 	                       max="9999999999999999999"
 	                       required="required"
-	                       data-max-errormessage="You must enter a value less than 20 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"  />
 	            </td>
 	            <td th:unless="${complete == 'complete'}">
@@ -983,7 +983,7 @@
                 <legend class="visuallyhidden" th:text="${question.getName()}" />
                 <div class="form-block inline">
 
-                    <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                    <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
                            th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                            data-target="other-funding-table">
                         <input type="radio"
@@ -996,7 +996,7 @@
                                 />
                         Yes
                     </label>
-                    <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                    <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
                            th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                         <input type="radio"
                                th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
@@ -1058,7 +1058,7 @@
 	                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" th:remove="tag" />
 	                </label>
 	                <input type="text"
-	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
 	                       th:name="${type +'-fundingSource-' + question.id + '-' + costIdentifier}"
 	                       class="form-control width-full"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-source'}"
@@ -1066,7 +1066,7 @@
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'field-error' : ''"
 	                       required="required"
 	                       maxlength="255"
-	                       data-required-errormessage="Funding source cannot be blank" />
+                           th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
 	            </td>
 	            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'error' : ''">
 	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-date'}">
@@ -1074,13 +1074,13 @@
 	                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" th:remove="tag" />
 	                </label>
 	                <input type="text"
-	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
 	                       th:name="${type +'-securedDate-' + question.id + '-' + costIdentifier}"
 	                       class="form-control width-medium"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-date'}"
 	                       placeholder="MM-YYYY"
                          pattern="(0[1-9]|1[012])-[0-9]{4}"
-                         data-pattern-errormessage="Invalid secured date.  Please use MM-YYYY format."
+                           th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
 	                       maxlength="7"
 	                       th:value="${cost.securedDate}"
 	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'field-error' : ''"
@@ -1094,7 +1094,7 @@
 	              </label>
 	                <input class="form-control width-medium"
 	                       type="number"
-	                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+	                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
 	                       th:name="${type +'-fundingAmount-' + question.id + '-' + costIdentifier}"
 	                       th:id="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}"
 	                       ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
@@ -1103,10 +1103,10 @@
 	                       placeholder="0"
 	                       min="1"
 	                       max="9999999999999999999"
-	                       data-max-errormessage="You must enter a value less than 20 digits"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
 	                       />
 	            </td>
-	            <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+	            <td th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
 	                <button th:unless="${cost.id == null}"
 	                        type="submit"
 	                        name="remove_cost"
