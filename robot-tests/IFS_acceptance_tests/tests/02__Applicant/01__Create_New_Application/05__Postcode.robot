@@ -52,9 +52,9 @@ Same Operating address
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     Then the user should not see the element    id=manual-company-input
-    And the user unselects the checkbox    id=address-same
+    And the user unselects the checkbox    address-same
     And the user should see the element    id=manual-company-input
 
 *** Keywords ***

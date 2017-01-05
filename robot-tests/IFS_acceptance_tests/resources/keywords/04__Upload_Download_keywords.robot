@@ -28,11 +28,8 @@ remove the file from the operating system
    [Arguments]    ${filename}
     remove file    ${download_folder}/${filename}
 
-
-
-
 the file has been scanned for viruses
-    Sleep    5s
+    Sleep    5s    # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
 
 the user cannot see the option to upload a file on the page
     [Arguments]    ${url}
@@ -45,9 +42,9 @@ the user can see the option to upload a file on the page
     Page Should Contain    Upload
 
 the user can remove the uploaded file
-    [Arguments]    ${file_name}
+    [Arguments]  ${name}  ${file_name}
     Reload Page
-    Click Button    name=remove_uploaded_file
+    Click Button    name=${name}
     Wait Until Page Does Not Contain    Remove
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
