@@ -188,7 +188,7 @@ Funding information: calculations
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     And the user should see the element    jQuery=Button:contains("Remove")
-    And the user enters text to a text field    id=1-funder    FunderName2
+    And the user enters text to a text field    id=funders1.funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
     When the user clicks the button/link    jQuery=Button:contains("Remove")
@@ -587,7 +587,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Competition title
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
