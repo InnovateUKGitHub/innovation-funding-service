@@ -13,8 +13,8 @@ Resource          ../../../../resources/defaultResources.robot
 Mark as complete with empty other funding row should be impossible
     [Documentation]    INFUND-2214
     [Tags]
-    [Setup]    Run keywords    the user clicks the button/link    jQuery=label:contains(Yes) input
-    ...    AND    the user clicks the button/link    jQuery=label:contains(Yes) input
+    [Setup]    Run keywords    the user clicks the button/link    jQuery=label:contains(Yes)
+    ...    AND    the user clicks the button/link    jQuery=label:contains(Yes)
     ...    AND    the user moves focus to the element    jQuery=button:contains('Add another source of funding')
     ...    AND    the user clicks the button/link    jQuery=button:contains('Add another source of funding')
     When the user marks the finances as complete
@@ -25,7 +25,7 @@ Other funding client side
     [Setup]    the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    132020    -6565
     Then the user gets the expected validation errors    Invalid secured date.    Funding source cannot be blank.
-    And the user moves focus to the element    jQuery=label:contains(Yes) input
+    And the user moves focus to the element    jQuery=label:contains(Yes)
     And the user should see an error    This field should be 1 or higher.
 
 Other funding server side
@@ -47,7 +47,9 @@ Other funding server side
 Select NO and mark as complete should be possible
     [Documentation]    INFUND-2214    #need to investigate the mark as complete and remove the "Run keyword and ignore error" from the test teardown
     [Tags]
-    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
+    # for some reason it needs to be clicked twice in the robot tests (also with the Yes selection, it might be nice to do more investigation here)
+    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains("No")
+    and the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains("No")
     When the user marks the finances as complete
     Then the user should see the text in the page    Application overview
     And the user should see the text in the page    These are the 10 questions which will be marked by assessors
@@ -287,12 +289,11 @@ the field with the wrong input should be saved
 
 the user reloads the page with validation errors
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    sleep    300ms
+    wait for autosave
     the user reloads the page
-    sleep    300ms
+    wait for autosave
     run keyword and ignore error    confirm action
-    run keyword and ignore error    confirm action
-    run keyword and ignore error    confirm action
+
 
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
@@ -305,14 +306,14 @@ the user enters invalid inputs in the other funding fields
 Remove row
     [Arguments]    ${section}    ${close button}
     the user moves focus to the element    ${close button}
-    sleep    300ms
+    wait for autosave
     the user clicks the button/link    ${close button}
     the user clicks the button/link    ${section}
 
 The user gets the expected validation errors
     [Arguments]    ${ERROR1}    ${ERROR2}
     the user moves focus to the element    jQuery=button:contains("Save and return to application overview")
-    sleep    300ms
+    wait for autosave
     Then the user should see an error    ${ERROR1}
     And the user should see an error    ${ERROR2}
 

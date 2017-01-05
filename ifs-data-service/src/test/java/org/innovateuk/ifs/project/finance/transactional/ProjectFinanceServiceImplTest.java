@@ -418,8 +418,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     public void rejectSpendProfile() {
         Long projectId = 4234L;
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(LocalDateTime.now()).build();
+
 
         when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
 
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
@@ -427,6 +430,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         spendProfileList.forEach(spendProfile ->
                 assertEquals(ApprovalType.REJECTED, spendProfile.getApproval())
         );
+        assertTrue(project.getSpendProfileSubmittedDate() == null);
+
         verify(spendProfileRepositoryMock).save(spendProfileList);
     }
 

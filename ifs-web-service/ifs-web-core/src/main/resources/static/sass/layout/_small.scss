@@ -323,13 +323,13 @@ span.no{
 	@extend %icon-cross;
 	padding-left: 28px;
 }
-.error-summary-list {
-  @extend .list-bullet;
-
-  li:first-letter {
-    text-transform:lowercase;
-  }
-}
+// .error-summary-list {
+//   @extend .list list-bullet;
+//
+//   li:first-letter {
+//     text-transform:lowercase;
+//   }
+// }
 
 [data-selector-highlighter] {
   background-color: #ccc;

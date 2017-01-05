@@ -32,7 +32,7 @@
             <summary>
                 <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
-            <div class="panel-indent">
+            <div class="panel">
                 <p th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
                 <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
                     <tr th:each="guidance : ${field.guidanceRows}">
@@ -75,7 +75,7 @@
     <fieldset class="inline">
         <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
-            <label class="block-label" th:each="option : ${ { true, false } }">
+            <label class="block-label selection-button-radio" th:each="option : ${ { true, false } }">
                 <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
             </label>

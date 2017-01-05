@@ -18,11 +18,11 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Project details'})" th:remove="tag" />
-	
+
 	<form action="#">
 
 		<fieldset>
-			
+
 			<h2 class="heading-large no-margin-top">Finance contact</h2>
 
 			<legend class="visuallyhidden">Finance contact</legend>
@@ -31,23 +31,23 @@
 
 			<details>
 			    <summary><span class="summary">What should I include in the finance contact section?</span></summary>
-			    <div class="panel-indent">
+			    <div class="panel">
 			        <p>This is the person in your organisation responsible for the project’s finances. They will also claim funding once your project is live. We will ask them to provide bank details for your organisation before the project can begin.</p>
 			    </div>
 			</details>
 
 			<div class="form-group extra-margin">
-				<label for="finances-name-1" class="block-label">
+				<label for="finances-name-1" class="block-label selection-button-radio">
 					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
 					John Smith
 				</label>
-				
-				<label for="finances-name-2" class="block-label">
+
+				<label for="finances-name-2" class="block-label selection-button-radio">
 					<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
 					Ann Jones
 				</label>
 
-				<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+				<label for="finances-name-invite" class="block-label selection-button-radio" id="invited-finance-contact" style="display: none">
 					<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
 					<span id="finance-name">Ann Jones (pending)</span>
 				</label>
@@ -56,7 +56,7 @@
 		</fieldset>
 
 		<div class="extra-margin">
-			<button class="buttonlink" id="add-finance-contact">Add new team member</button>	
+			<button class="buttonlink" id="add-finance-contact">Add new team member</button>
 		</div>
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
@@ -78,20 +78,20 @@
 			BS2 1RF</p>
 
 		<div class="extra-margin">
-			
+
 			<a href="#" class="button-secondary">Save and return to project setup</a>
 
 		</div>
 
 		<div class="extra-margin">
-			
+
 			<a href="#" class="button">Mark as complete</a>
 
 		</div>
 
 	</form>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -104,12 +104,12 @@
 	// <![CDATA[
 	jQuery(document).ready(function(){
 
-		jQuery('#add-finance-contact').on('click',function(e){ 
+		jQuery('#add-finance-contact').on('click',function(e){
 			e.preventDefault();
 			jQuery('#finance-contact-table').show();
 		});
 
-		jQuery('#invite-finance-contact').on('click',function(e){ 
+		jQuery('#invite-finance-contact').on('click',function(e){
 			e.preventDefault();
 
 			var financeContact = jQuery('#name-finance-contact1').val();
