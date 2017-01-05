@@ -11,6 +11,7 @@ IFS.core.collapsible = (function () {
     },
     init: function () {
       s = this.settings
+      console.log('collapsible')
         // if this has to be more dynamicly updated in the future we can add a custom event
       jQuery(s.collapsibleEl).each(function () {
         IFS.core.collapsible.initCollapsibleHTML(this)
@@ -76,6 +77,9 @@ IFS.core.collapsible = (function () {
         }
       }
       Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
+    },
+    destroy: function () {
+      console.log('collapsible destroy')
     }
   }
 })()

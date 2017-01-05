@@ -36,5 +36,19 @@ IFS.core.loadOrder = {
       IFS.core.pieChart.init()
       IFS.core.unsavedChanges.init()
     }
+  },
+  stateManaged: {
+    mobile: function () {
+      IFS.core.collapsible.init()
+    },
+    desktop: function () {
+      IFS.core.tabs.init()
+    },
+    mobileLeave: function () {
+      IFS.core.collapsible.destroy()
+    },
+    desktopLeave: function () {
+      IFS.core.tabs.destroy()
+    }
   }
 }

@@ -55,6 +55,26 @@ var UTIL = (function () {
         UTIL.fire(classnm, bodyId)
       })
       UTIL.fire('common', 'finalize')
+      ssm.addState({
+        id: 'mobile',
+        query: '(max-width: 639px)',
+        onEnter: function(){
+          UTIL.fire('stateManaged', 'mobile')
+        },
+        onLeave: function(){
+          UTIL.fire('stateManaged', 'mobileLeave')
+        }
+      });
+      ssm.addState({
+        id: 'desktop',
+        query: '(min-width: 640px)',
+        onEnter: function(){
+          UTIL.fire('stateManaged', 'desktop')
+        },
+        onLeave: function(){
+          UTIL.fire('stateManaged', 'desktopLeave')
+        }
+      });
     }
   }
 })()
