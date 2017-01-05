@@ -18,30 +18,6 @@ import static org.junit.Assert.assertTrue;
 public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<ProjectFinancePermissionRules> {
 
     @Test
-    public void testProjectManagerCanViewAnySpendProfileData() throws Exception {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-        ProjectOrganisationCompositeId projectOrganisationCompositeId =
-                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
-
-        setUpUserAsProjectManager(project, user);
-
-        assertTrue(rules.projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
-    }
-    @Test
-    public void testUserNotProjectManagerCannotViewSpendProfile() throws Exception {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-        ProjectOrganisationCompositeId projectOrganisationCompositeId =
-                new ProjectOrganisationCompositeId(project.getId(), newOrganisation().build().getId());
-
-        setUpUserNotAsProjectManager(user);
-
-        assertFalse(rules.projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
-    }
-
-    @Test
     public void testProjectManagerCanCompleteSpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();

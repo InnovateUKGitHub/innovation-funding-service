@@ -304,7 +304,7 @@
 
         <div class="grid-container" th:if="${readonly and !model.submitted}">
 
-            <th:block th:if="${!model.markedAsComplete and !model.projectManager and model.userPartOfThisOrganisation}">
+            <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
@@ -314,8 +314,8 @@
                     <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Submit to lead partner</button>
                 </form>
             </th:block>
-
-            <th:block th:if="${model.projectManager and model.userPartOfThisOrganisation}">
+            
+            <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 

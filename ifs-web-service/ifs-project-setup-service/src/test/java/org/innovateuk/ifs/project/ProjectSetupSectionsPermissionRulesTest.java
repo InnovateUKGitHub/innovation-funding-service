@@ -19,7 +19,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -88,14 +87,11 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void testMarkSpendProfileIncompleteAccess() {
-        OrganisationResource leadOrg = newOrganisationResource().build();
-        ProjectUserResource leadPartnerProjectUserResource = newProjectUserResource().withUser(user.getId()).withOrganisation(leadOrg.getId()).withRoleName(UserRoleType.PARTNER).build();
+        ProjectUserResource leadPartnerProjectUserResource = newProjectUserResource().withUser(user.getId()).build();
 
-        when(projectServiceMock.getLeadOrganisation(123L)).thenReturn(leadOrg);
-        when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(asList(leadPartnerProjectUserResource));
+        when(projectServiceMock.getLeadPartners(123L)).thenReturn(asList(leadPartnerProjectUserResource));
         assertTrue(rules.userCanMarkSpendProfileIncomplete(123L, user));
-        verify(projectServiceMock).getLeadOrganisation(123L);
-        verify(projectServiceMock).getProjectUsersForProject(123L);
+        verify(projectServiceMock).getLeadPartners(123L);
     }
 
     private void assertLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> accessorCheck,

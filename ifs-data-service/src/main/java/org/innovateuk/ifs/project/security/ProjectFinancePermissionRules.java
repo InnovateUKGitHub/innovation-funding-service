@@ -22,18 +22,10 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE",
-            description = "Partners can view their own Spend Profile data")
+            description = "Project Finance Users can view their own Spend Profile data")
     public boolean projectFinanceUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
         return isProjectFinanceUser(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_SPEND_PROFILE",
-            description = "Project manager view Spend Profile data")
-    public boolean projectManagerCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
-        return isProjectManager(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
     @PermissionRule(
@@ -43,7 +35,6 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
         return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
-
 
     @PermissionRule(
             value = "EDIT_SPEND_PROFILE",

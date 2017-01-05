@@ -79,8 +79,7 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        if (userHasProjectManagerRole(loggedInUser, projectId)
-            || isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
+        if (isUserPartOfLeadOrganisation(projectId, loggedInUser)) {
             return viewProjectManagerSpendProfile(model, projectId, loggedInUser);
         }
         return reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);

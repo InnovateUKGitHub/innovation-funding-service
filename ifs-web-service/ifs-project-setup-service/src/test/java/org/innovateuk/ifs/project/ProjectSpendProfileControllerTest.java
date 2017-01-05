@@ -142,42 +142,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
-    public void testProjectManagerViewSpendProfile() throws Exception {
-        long organisationId = 1L;
-
-        ProjectResource projectResource = newProjectResource().withId(123L).withApplication(456L).build();
-        List<ProjectUserResource> projectUserResources = newProjectUserResource()
-                .withUser(1L)
-                .withRoleName(UserRoleType.PROJECT_MANAGER)
-                .withOrganisation(organisationId)
-                .build(1);
-        List<OrganisationResource> partnerOrganisations = newOrganisationResource()
-                .withId(1L)
-                .withName("abc")
-                .build(1);
-        SpendProfileResource spendProfileResource = newSpendProfileResource().build();
-        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_MANAGER).build(1);
-        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
-
-        loggedInUser.setRoles(roleResources);
-        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
-        when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
-
-
-        when(projectFinanceService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
-
-        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), false);
-
-        mockMvc.perform(get("/project/{id}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/spend-profile-review"))
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andReturn();
-    }
-
-    @Test
     public void saveSpendProfileWhenErrorWhilstSaving() throws Exception {
 
         Long projectId = 1L;
