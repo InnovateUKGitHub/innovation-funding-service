@@ -6,12 +6,27 @@ Documentation     INFUND-1481 As an assessor I need to review and accept the Inn
 ...               INFUND-5645 As an assessor I want to be able to review annexes to the contract from the same screen so that I have all the information I need about assessing competitions
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
+...
+...               INFUND-7061 As an assessor I can view the travel and subsistence rates so that I know how much I can claim
 Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
+Travel and Subsisdence
+    [Documentation]    INFUND-7061
+    [Tags]
+    Given The user should see the element    link=travel and subsistence rates
+    When the user clicks the button/link    jQuery=a:contains("travel and subsistence rates")
+    Then the user should see the text in the page    Day subsistence
+    And the user should see the text in the page    24 hour / overnight subsistence
+    And the user should see the text in the page    Meals and refreshments
+    And the user should see the text in the page    Public transport
+    And the user should see the text in the page    Mileage rates
+    And the user should see the text in the page    Please make sure your travel claims, receipts and tickets are all submitted.
+    [Teardown]    And the user clicks the button/link    link=Back to assessor dashboard
+
 Server-side validations
     [Documentation]    INFUND-1481
     ...
@@ -58,3 +73,4 @@ Agreement Confirmation
     [Documentation]    INFUND-5628
     Then the user clicks the button/link    jQuery=a:contains("your contract")
     And the user should see the text in the page    You signed the contract on
+
