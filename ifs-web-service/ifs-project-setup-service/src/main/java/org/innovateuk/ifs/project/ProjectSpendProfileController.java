@@ -143,10 +143,11 @@ public class ProjectSpendProfileController {
                                    @PathVariable("organisationId") final Long organisationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        SpendProfileTableResource originalTableWithUpdatedCosts = projectFinanceService.getSpendProfileTable(projectId, organisationId);
+
         Supplier<String> failureView = () -> {
 
             SpendProfileTableResource updatedTable = form.getTable();
-            SpendProfileTableResource originalTableWithUpdatedCosts = projectFinanceService.getSpendProfileTable(projectId, organisationId);
             originalTableWithUpdatedCosts.setMonthlyCostsPerCategoryMap(updatedTable.getMonthlyCostsPerCategoryMap());
 
             ProjectResource project = projectService.getById(projectId);
@@ -156,7 +157,9 @@ public class ProjectSpendProfileController {
 
         String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
 
-        spendProfileCostValidator.validate(form.getTable(), bindingResult);
+        SpendProfileTableResource tableValues = form.getTable();
+        tableValues.setCostCategoryResourceMap(originalTableWithUpdatedCosts.getCostCategoryResourceMap());
+        spendProfileCostValidator.validate(tableValues, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);

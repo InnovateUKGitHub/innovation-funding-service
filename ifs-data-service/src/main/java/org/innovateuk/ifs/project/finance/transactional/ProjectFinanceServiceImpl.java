@@ -530,6 +530,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+        Map<Long, CostCategoryResource> categories = table.getCostCategoryResourceMap();
 
         List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
 
@@ -541,7 +542,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
-                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
+                String categoryName = categories.get(category).getName();
+                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));
             }
         }
 
