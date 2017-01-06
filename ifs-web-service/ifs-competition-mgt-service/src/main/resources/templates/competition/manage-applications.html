@@ -9,7 +9,7 @@
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
         <main id="content">
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/dashboard}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
 
             <h1 class="heading-xlarge">
                 <span class="heading-secondary">0102468: Technology inspired, in assessment</span>
@@ -82,13 +82,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="#">10001000000</a></td>
-                            <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                            <td>Wessex University</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
+                        <tr th:each="application : ${model.applications}">
+                            <td><a th:href="${'/management/competition/' + model.competitionId + '/application/' + application.id}"  th:text="${#numbers.formatInteger(application.id,8)}"/></td>
+                            <td th:text="${application.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                            <td th:tet="${application.leadOrganisation}">Wessex University</td>
+                            <td class="aligncentre" th:text="${application.assessors}">4</td>
+                            <td class="aligncentre" th:text="${application.accepted}">2</td>
+                            <td class="aligncentre" th:text="${application.completed}">1</td>
                             <td class="alignright">
                                 <a class="button-secondary no-margin" href="#">View progress</a>
                             </td>
