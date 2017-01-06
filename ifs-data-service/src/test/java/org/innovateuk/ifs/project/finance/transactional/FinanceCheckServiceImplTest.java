@@ -259,7 +259,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         UserResource user = newUserResource().build();
         ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityStatus.AMBER);
         ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
-        ViabilityResource viability3 = new ViabilityResource(Viability.PENDING, ViabilityStatus.UNSET);
+        ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);

@@ -249,7 +249,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 newProjectFinance().
-                        withViability(Viability.APPROVED, Viability.PENDING).
+                        withViability(Viability.APPROVED, Viability.REVIEW).
                         withOrganisation(organisation1, organisation2).
                         build(2));
 
@@ -766,11 +766,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.PENDING, ViabilityStatus.UNSET, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityStatus.UNSET, null, null);
     }
 
     @Test
@@ -782,11 +782,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.PENDING, ViabilityStatus.AMBER, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityStatus.AMBER, null, null);
     }
 
     @Test
