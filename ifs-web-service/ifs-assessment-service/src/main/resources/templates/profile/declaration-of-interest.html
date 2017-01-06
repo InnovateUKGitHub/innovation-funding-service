@@ -25,7 +25,10 @@
             <p th:unless="${model.principalEmployer}">Not answered</p>
 
             <h2 class="heading-medium no-margin-bottom">Professional affiliations</h2>
-            <p th:text="${model.professionalAffiliations}" th:if="${model.professionalAffiliations}">Professional affiliation</p>
+            <p th:text="${model.professionalAffiliations}"
+               th:unless="${#strings.isEmpty(model.professionalAffiliations)}">
+                Professional affiliation
+            </p>
             <p th:if="${#strings.isEmpty(model.professionalAffiliations)}"
                th:text="${model.completed} ? 'None declared' : 'Not answered'">
                 None declared
