@@ -322,20 +322,10 @@ public class ProjectSpendProfileController {
 
     private boolean isUserPartOfLeadOrganisation(final Long projectId, final UserResource loggedInUser) {
 
-        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
-        if(null != result && result.isSuccess()) {
-            Optional<PartnerOrganisationResource> leadOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
-            if(leadOrganisationResource.isPresent()) {
-                List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-                Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
-                        && projectUserResource.getOrganisation().equals(leadOrganisationResource.get().getOrganisation())
-                        && PARTNER.getName().equals(projectUserResource.getRoleName())
-                );
-                return returnedProjectUser.isPresent();
-            }
-        }
-        return false;
+        List<ProjectUserResource> leadPartners = projectService.getLeadPartners(projectId);
+        Optional<ProjectUserResource> leadPartner = simpleFindFirst(leadPartners, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId()));
 
+        return leadPartner.isPresent();
     }
 
 }
