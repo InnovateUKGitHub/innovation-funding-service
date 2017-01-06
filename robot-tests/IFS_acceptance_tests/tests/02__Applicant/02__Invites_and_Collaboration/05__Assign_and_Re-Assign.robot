@@ -281,7 +281,7 @@ the user fills in the project costs
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other Costs
-    the user selects the checkbox    css=#agree-state-aid-page
+    the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
 
 the user fills in Labour
@@ -363,7 +363,7 @@ the user fills in the funding information
     the user clicks the button/link       link=Your funding
     the user enters text to a text field  css=#cost-financegrantclaim  60
     click element                         jQuery=label:contains("No")
-    the user selects the checkbox         css=#agree-terms-page
+    the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
 
 the user should see all sections complete
