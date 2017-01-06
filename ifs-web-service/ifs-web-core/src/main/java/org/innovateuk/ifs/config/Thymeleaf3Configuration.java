@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -24,9 +25,9 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
  */
 @Configuration
 @ConditionalOnClass({SpringTemplateEngine.class})
-@EnableConfigurationProperties({ThymeleafProperties.class})  //no sense rolling our own.
+@EnableConfigurationProperties({ThymeleafProperties.class})
 @AutoConfigureAfter({WebMvcAutoConfiguration.class})
-public class ThymeleafConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
     @Autowired
     private ThymeleafProperties properties;
@@ -53,6 +54,7 @@ public class ThymeleafConfiguration extends WebMvcConfigurerAdapter implements A
         engine.setTemplateResolver(templateResolver());
         engine.addDialect(new Java8TimeDialect());
         engine.addDialect(new IfSThymeleafDialect());
+        engine.addDialect(new SpringSecurityDialect());
         return engine;
     }
 

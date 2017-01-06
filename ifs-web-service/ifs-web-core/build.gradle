@@ -7,8 +7,7 @@ configurations {
 }
 
 dependencies {
-//    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-//    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE"
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
     compile "org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}"
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-security"
