@@ -22,19 +22,19 @@ IFS.competitionManagement.repeatableRows = (function () {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       var newRow = jQuery('<tr>' +
-        '<td class="width-40-percent">' +
+        '<td class="width-40-percent form-group">' +
         '<label></label>' +
         '<input aria-labelledby="invite-label-assessor-name" class="form-control width-full" type="text" ' +
         'id="invites' + uniqueRowId + '.name" ' +
         'name="invites[' + uniqueRowId + '].name" value="" ' +
-        'data-required-errormessage="Please enter a name" required="required" />' +
+        'data-required-errormessage="Please enter a name." required="required" />' +
         '</td>' +
-        '<td class="width-40-percent">' +
+        '<td class="width-40-percent form-group">' +
         '<label></label>' +
         '<input aria-labelledby="invite-label-assessor-email" class="form-control width-full" type="email" ' +
         'id="invites' + uniqueRowId + '.email" ' +
         'name="invites[' + uniqueRowId + '].email" value="" ' +
-        'data-required-errormessage="Please enter your email address" required="required" />' +
+        'data-required-errormessage="Please enter an email address." required="required" />' +
         '</td>' +
         '<td class="alignright width-20-percent">' +
         '<button class="remove-another-row buttonlink" name="removeNewUser" type="button" value="0">Remove</button>' +
