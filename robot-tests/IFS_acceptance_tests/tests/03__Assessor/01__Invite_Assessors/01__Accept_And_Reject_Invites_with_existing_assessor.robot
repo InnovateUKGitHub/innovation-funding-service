@@ -35,10 +35,12 @@ ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
 
 *** Test Cases ***
-Assessor dashboard should be empty
+Assessor dashboard contains one upcoming competition
     [Documentation]    INFUND-3716
     ...
     ...    INFUND-4950
+    ...
+    ...    INFUND-6899
     [Tags]    HappyPath
     [Setup]
     Given the user should see the text in the page    Assessor dashboard
