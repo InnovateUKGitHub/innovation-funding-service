@@ -39,7 +39,7 @@
                     <th:block th:each="user : ${model.organisationUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
-                            <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                            <input type="radio" th:field="*{financeContact}"  data-hide-errors-on-select="#finance-contact-table input" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
                     </th:block>
@@ -47,7 +47,7 @@
                     <th:block th:each="user : ${model.invitedUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
                         <label th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
-                            <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                            <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}"  data-hide-errors-on-select="#finance-contact-table input" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
                     </th:block>

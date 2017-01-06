@@ -31,7 +31,7 @@
               <div class="extra-margin">
 
                 <label th:each="user : ${model.organisationUsers}"  th:for="${#ids.next('projectManager')}" class="block-label selection-button-radio">
-                    <input type="radio" th:field="*{projectManager}" th:value="${user.id}" required="required"  th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
+                    <input type="radio" th:field="*{projectManager}" th:value="${user.id}" required="required" data-hide-errors-on-select="#project-manager-table input" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
                     <span th:text="${user.name}" th:remove="tag"></span>
                 </label>
 
@@ -40,7 +40,7 @@
                 </label>
 
                 <label for="new" class="block-label selection-button-radio" data-target="project-manager-table">
-                    <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required" type="radio" value="-1"  th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}"  />
+                    <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1"  th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}"  />
                     Add new team member
                     <span class="form-hint">A new team member will be invited to join the project</span>
                 </label>
