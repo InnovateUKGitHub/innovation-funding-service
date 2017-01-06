@@ -19,12 +19,14 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
@@ -339,6 +341,79 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).inviteNewUsers(expectedInviteListResource, competition.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_noInnovationArea() throws Exception {
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(emptyList());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("invites[0].email", "test@test.com")
+                .param("invites[0].name", "Tester"))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please select an innovation area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_noRows() throws Exception {
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(emptyList());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1"))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please add at least one person to invite.", bindingResult.getFieldError("invites").getDefaultMessage());
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_invalidRow() throws Exception {
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(emptyList());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1")
+                .param("invites[0].email", "")
+                .param("invites[0].name", ""))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please enter a name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
+        assertEquals("Please enter an email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
         inOrder.verifyNoMoreInteractions();
     }
 
