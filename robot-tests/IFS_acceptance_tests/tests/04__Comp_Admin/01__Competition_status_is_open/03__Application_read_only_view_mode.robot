@@ -2,6 +2,11 @@
 Documentation     INFUND-2443 Acceptance test: Check that the comp manager cannot edit an application's finances
 ...
 ...               INFUND-2304 Read only view mode of applications from the application list page
+...               INFUND-6937  As a Competitions team member I want to be able to view Application details throughout the life of the competition
+...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
+...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
+...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
+
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
@@ -52,6 +57,29 @@ Comp admin should be able to view but not edit the finances for every partner
     When Log in as a different user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
+
+Comp admin has read only view of Appplciation details past Open date
+    [Documentation] INFUND-6937
+    [Tags]
+    [Setup] log in as a different user    &{Comp_admin1_credentials}
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
+    And The user clicks the button/link     Application
+    Then The user should see the text in the page   Application details
+    And The user clicks the button/link     Application details
+    And The element should be disabled      css = #content > dl > dd
+    And The user clicks the button/link     link = Return to application questions
+    And The user clicks the button/link     Project summary
+    And The element should be disabled
+
+
+
+Comp admin has read only view of Project Summary past Open date
+
+
+Comp admin has read only view of Public description details past Open date
+
+Comp admin has read only view of Scope past Open date
+
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
