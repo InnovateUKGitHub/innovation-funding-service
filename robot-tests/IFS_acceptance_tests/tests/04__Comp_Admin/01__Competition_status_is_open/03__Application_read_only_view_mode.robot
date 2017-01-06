@@ -58,17 +58,17 @@ Comp admin should be able to view but not edit the finances for every partner
     Then the user should see the correct finances change
 
 Comp admin has read only view of Appplciation details past Open date
-    [Documentation] INFUND-6937
+    [Documentation] INFUND-6937 
     [Tags]
     [Setup] log in as a different user    &{Comp_admin1_credentials}
     Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
     And The user clicks the button/link     Application
     Then The user should see the text in the page   Application details
-    And The user clicks the button/link     Application details
-    And The element should be disabled      css = #content > dl > dd
+    And The user clicks the button/link     link = Application details
+    And The user should not see the element     css = input
     And The user clicks the button/link     link = Return to application questions
     And The user clicks the button/link     Project summary
-    And The element should be disabled
+    And The user should not see the element     css = input
 
 
 
