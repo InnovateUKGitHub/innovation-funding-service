@@ -51,7 +51,7 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker cp upload_files/testing.pdf innovationfundingservice_data_1:/tmp/testing.pdf
+    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data_1:/tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
     docker exec innovationfundingservice_data_1 mkdir -p ${virusScanQuarantinedFolder}
@@ -126,7 +126,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${scriptDir}
-    docker-compose down -v --remove-orphans
+    docker-compose -f docker-compose-services.yml down -v --remove-orphans
 }
 
 function startPybot() {
@@ -178,6 +178,19 @@ function runTests() {
       done
     else
       startPybot ${testDirectory}
+    fi
+
+    if [[ $vnc -eq 1 ]]
+    then
+      local vncport="$(docker-compose -f docker-compose-services.yml port chrome 5900)"
+      vncport=${vncport:8:5}
+
+      if [ "$(uname)" == "Darwin" ];
+      then
+        open "vnc://root:secret@ifs-local-dev:"${vncport}
+      fi
+      echo "**********For remote desktop please use this url in your vnc client**********"
+        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
     fi
 
     for job in `jobs -p`
@@ -262,7 +275,7 @@ stopGrid=0
 noDeploy=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :e :r :c :n :d:" opt ; do
+while getopts ":p :q :h :t :e :r :c :n :w :d:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -291,6 +304,9 @@ while getopts ":p :q :h :t :e :r :c :n :d:" opt ; do
         ;;
         n)
             noDeploy=1
+        ;;
+        w)
+          vnc=1
         ;;
         \?)
             coloredEcho "=> Invalid option: -$OPTARG" red >&2
