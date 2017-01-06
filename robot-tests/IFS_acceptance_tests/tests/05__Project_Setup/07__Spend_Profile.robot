@@ -28,6 +28,16 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6046 Spend Profile should have a link when Done
 ...
 ...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
+...
+...               INFUND-6146 Saving blank fields on the spend profile results in an internal server error (null pointer exception)
+...
+...               INFUND-6225 External user status indicator for spend profile should show as 'waiting' once submitted
+...
+...               INFUND-6226 Comp admin user (non project finance) not able to view the spend profile page
+...
+...               INFUND-6881 Non-lead External User should see Green Check once he submits SP
+...
+...               INFUND-7119 GOL status for Internal user
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -144,6 +154,14 @@ Lead partner can edit his spend profile with invalid values
     And the user should not see the element            jQuery=.cell-error #row-total-24
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
+
+Lead partner can submit empty cells and this is handled gracefully
+    [Documentation]    INFUND-6146
+    When the user enters text to a text field    css=#row-24-0    ${empty}
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see an error in the page
+    [Teardown]    the user enters text to a text field    css=#row-24-0    2899
+
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]    HappyPath
@@ -224,6 +242,14 @@ Non-lead partner marks Spend Profile as complete
     Then the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element          css=table a[type="number"]    # checking here that the table has become read-only
 
+Status updates for industrial user after spend profile submission
+    [Documentation]    INFUND-6881
+    When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+
 Project Manager doesn't have the option to submit spend profiles until all partners have marked as complete
     [Documentation]    INFUND-3767
     [Tags]
@@ -303,6 +329,15 @@ Academic partner marks Spend Profile as complete
     When the user clicks the button/link           jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
+
+Status updates for academic user after spend profile submission
+    [Documentation]    INFUND-6881
+    When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+
 
 Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
@@ -404,6 +439,13 @@ PM's Spend profile Summary page gets updated after submit
     And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
 
+Status updates after spend profile submitted
+    [Documentation]    INFUND-6225
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
+
+
 Partners can see the Spend Profile section completed
     [Documentation]    INFUND-3767,INFUND-3766
     [Tags]
@@ -442,7 +484,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
 
 Comp Admin is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
@@ -476,7 +518,7 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049 ,INFUND-5543
+    [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -487,6 +529,7 @@ Status updates correctly for internal user's table
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617

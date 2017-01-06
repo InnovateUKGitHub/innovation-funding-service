@@ -14,6 +14,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-6829 GOL uploaded but not submitted by PM shows wrong status
 ...
 ...               INFUND-7027 Partners can access the GOL before the internal user hits Send to proj team
+...
+...               INFUND-7049 Validation missing for PDF file upload in GOL upload page for internal user
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -84,6 +86,18 @@ Project finance user removes the grant offer letter
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user can remove the uploaded file  removeGrantOfferLetterClicked  grant_offer_letter.pdf
     And the user should see the element         css=label[for="grantOfferLetter"]
+
+Comp Admin cannot upload big or non-pdf grant offer letter
+    [Documentation]  INFUND-7049
+    [Tags]
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    When the user uploads a file           grantOfferLetter  ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    When the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    And the user uploads a file           grantOfferLetter  ${text_file}
+    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
