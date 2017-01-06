@@ -139,6 +139,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
+        return getWithRestResult(processRoleRestURL + "/userHasApplicationForCompetition/" + userId + "/" + competitionId, Boolean.class);
+    }
+
+    @Override
     public RestResult<Void> verifyEmail(String hash){
         return getWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, URL_VERIFY_EMAIL, hash), Void.class);
     }

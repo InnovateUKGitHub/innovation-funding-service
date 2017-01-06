@@ -28,6 +28,16 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6046 Spend Profile should have a link when Done
 ...
 ...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
+...
+...               INFUND-6146 Saving blank fields on the spend profile results in an internal server error (null pointer exception)
+...
+...               INFUND-6225 External user status indicator for spend profile should show as 'waiting' once submitted
+...
+...               INFUND-6226 Comp admin user (non project finance) not able to view the spend profile page
+...
+...               INFUND-6881 Non-lead External User should see Green Check once he submits SP
+...
+...               INFUND-7119 GOL status for Internal user
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -144,6 +154,14 @@ Lead partner can edit his spend profile with invalid values
     And the user should not see the element            jQuery=.cell-error #row-total-24
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
+
+Lead partner can submit empty cells and this is handled gracefully
+    [Documentation]    INFUND-6146
+    When the user enters text to a text field    css=#row-24-0    ${empty}
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see an error in the page
+    [Teardown]    the user enters text to a text field    css=#row-24-0    2899
+
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]    HappyPath
@@ -224,6 +242,14 @@ Non-lead partner marks Spend Profile as complete
     Then the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element          css=table a[type="number"]    # checking here that the table has become read-only
 
+Status updates for industrial user after spend profile submission
+    [Documentation]    INFUND-6881
+    When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+
 Project Manager doesn't have the option to submit spend profiles until all partners have marked as complete
     [Documentation]    INFUND-3767
     [Tags]
@@ -303,6 +329,15 @@ Academic partner marks Spend Profile as complete
     When the user clicks the button/link           jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
+
+Status updates for academic user after spend profile submission
+    [Documentation]    INFUND-6881
+    When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    Then the user should see the element    jQuery=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+
 
 Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
@@ -404,6 +439,13 @@ PM's Spend profile Summary page gets updated after submit
     And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
 
+Status updates after spend profile submitted
+    [Documentation]    INFUND-6225
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
+
+
 Partners can see the Spend Profile section completed
     [Documentation]    INFUND-3767,INFUND-3766
     [Tags]
@@ -437,12 +479,12 @@ Project Finance is able to see Spend Profile approval page
     And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovation Lead
     Then the element should be disabled    jQuery=#accept-profile
-    When the user selects the checkbox    jQuery=#approvedByLeadTechnologist
+    When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
 
 Comp Admin is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
@@ -453,7 +495,7 @@ Comp Admin is able to see Spend Profile approval page
     Then the user should see the text in the page    Before taking this action please contact the project manager
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user selects the checkbox    jQuery=#approvedByLeadTechnologist
+    When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
     When the user clicks the button/link    jQuery=button:contains("Approved")
     Then the user should see the text in the page    Approved by Innovation Lead
@@ -476,7 +518,7 @@ Comp Admin can download the Spend Profile csv
     Then the user should not see an error in the page
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049 ,INFUND-5543
+    [Documentation]    INFUND-4049 ,INFUND-5543, INFUND-7119
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -487,6 +529,7 @@ Status updates correctly for internal user's table
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
     And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
@@ -507,7 +550,7 @@ Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    When the user selects the checkbox      jQuery=#approvedByLeadTechnologist
+    When the user selects the checkbox      approvedByLeadTechnologist
     Then the user should see the element    jQuery=button:contains("Approved")
     When the user clicks the button/link    jQuery=button:contains("Approved")
     Then the user should see the text in the page  Approved by Innovation Lead
@@ -543,7 +586,7 @@ Project finance user cannot access external users' spend profile page
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+
 
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
@@ -652,8 +695,8 @@ project finance reviews Finance checks
 project finance approves Viability for
     [Arguments]  ${partner}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
-    the user selects the checkbox      id=costs-reviewed
-    the user selects the checkbox      id=project-viable
+    the user selects the checkbox      costs-reviewed
+    the user selects the checkbox      project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
     the user clicks the button/link    css=#confirm-button
@@ -665,7 +708,7 @@ project finance approves Eligibility
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}
     the user fills in and approves project costs
     the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}
-    the user selects the checkbox      id=costs-reviewed
+    the user selects the checkbox      costs-reviewed
     the user clicks the button/link    jQuery=.button:contains("Approve finances")
     the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
 
@@ -677,8 +720,8 @@ the user fills in and approves project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    id=costs-reviewed
+    the user moves focus to the element    css=[for="costs-reviewed"]
     the user sees the text in the element    css=#content tfoot td    £ 60,000
-    the user selects the checkbox    id=costs-reviewed
+    the user selects the checkbox    costs-reviewed
     the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")

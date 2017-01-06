@@ -145,9 +145,6 @@ Catapult search (accept invitation flow with email step)
     And the user should see the element    jQuery=h1:contains("Your finances")
 
 *** Keywords ***
-the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
 
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}

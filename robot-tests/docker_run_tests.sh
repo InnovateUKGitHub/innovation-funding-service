@@ -276,9 +276,9 @@ while getopts ":p :h :q :t :e :r :c :w :d:" opt ; do
           emails=1
         ;;
         r)
-		      rerunFailed=1
-    		;;
-    		d)
+          rerunFailed=1
+        ;;
+        d)
            testDirectory="$OPTARG"
            parallel=0
         ;;
@@ -294,7 +294,7 @@ while getopts ":p :h :q :t :e :r :c :w :d:" opt ; do
         ;;
         :)
           case $OPTARG in
-         	  d)
+         	d)
              coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
             ;;
             *)

@@ -24,47 +24,47 @@
 	<p>If your business type is not listed you must either <a href="#">register with Companies House</a> or <a href="#">contact Innovate UK</a>.</p>
 
 	<form action="">
-		
+
 		<fieldset>
-			
+
 			<legend class="heading-medium">Select business type</legend>
 
 			<div class="form-group">
-				
-				<label for="bus-type-1" class="block-label">
-					
+
+				<label for="bus-type-1" class="block-label selection-button-radio">
+
 					<input id="bus-type-1" name="bus-group" type="radio" value="Limited Liability Partnership" />
 
 					Limited Liability Partnership
 
 				</label>
 
-				<label for="bus-type-2" class="block-label">
-					
+				<label for="bus-type-2" class="block-label selection-button-radio">
+
 					<input id="bus-type-2" name="bus-group" type="radio" value="Partnership and Limited Partnership" />
 
 					Partnership and Limited Partnership
 
 				</label>
 
-				<label for="bus-type-3" class="block-label">
-					
+				<label for="bus-type-3" class="block-label selection-button-radio">
+
 					<input id="bus-type-3" name="bus-group" type="radio" value="Unlimited Company" />
 
 					Unlimited Company
 
 				</label>
 
-				<label for="bus-type-4" class="block-label">
-					
+				<label for="bus-type-4" class="block-label selection-button-radio">
+
 					<input id="bus-type-4" name="bus-group" type="radio" value="Unincorporated (including Trusts)" />
 
 					Unincorporated (including Trusts)
 
 				</label>
 
-				<label for="bus-type-5" class="block-label">
-					
+				<label for="bus-type-5" class="block-label selection-button-radio">
+
 					<input id="bus-type-5" name="bus-group" type="radio" value="Sole Trader" />
 
 					Sole Trader
@@ -80,16 +80,16 @@
 			<div class="modal-bus-type" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
-					
+
 					<h2 class="heading-medium no-margin">Update business type</h2>
 
 					<p>Making this change will inform Innovate UK of your selection as <span id="bus-type-article">[article]</span> <strong><span id="bus-type">[business type]</span></strong></p>
 
 					<hr />
-		            
+
 	            	<div class="alignright-button">
-						
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 	            		<a href="/prototypes/1588-project-status" class="button">Submit</a>
 
 	            	</div>
@@ -97,12 +97,12 @@
 		        </div>
 		    </div>
 
-		</fieldset>	
+		</fieldset>
 
 	</form>
 
-	
-	
+
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -114,7 +114,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery("input[name='bus-group']").on('click',function(e){ 
+	jQuery("input[name='bus-group']").on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 
 			jQuery('#bus-type').text(jQuery(this).val());

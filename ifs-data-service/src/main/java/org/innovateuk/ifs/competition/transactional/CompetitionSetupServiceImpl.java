@@ -120,7 +120,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void saveCategories(CompetitionResource competitionResource) {
-        saveInnovationArea(competitionResource);
+        saveInnovationAreas(competitionResource);
         saveInnovationSector(competitionResource);
         saveResearchCategories(competitionResource);
     }
@@ -134,9 +134,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         saveCategoryLink(competitionResource, sectorId, CategoryType.INNOVATION_SECTOR);
     }
 
-    private void saveInnovationArea(CompetitionResource competitionResource) {
-        Long areaId = competitionResource.getInnovationArea();
-        saveCategoryLink(competitionResource, areaId, CategoryType.INNOVATION_AREA);
+    private void saveInnovationAreas(CompetitionResource competitionResource) {
+        Set<Long> areaIds = competitionResource.getInnovationAreas();
+        saveCategoryLinks(competitionResource, areaIds, CategoryType.INNOVATION_AREA);
     }
 
     private void saveResearchCategories(CompetitionResource competitionResource) {
