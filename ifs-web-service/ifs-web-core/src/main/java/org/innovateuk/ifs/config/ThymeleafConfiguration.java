@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -50,6 +51,8 @@ public class ThymeleafConfiguration extends WebMvcConfigurerAdapter implements A
     public TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());
+        engine.addDialect(new Java8TimeDialect());
+        engine.addDialect(new IfSThymeleafDialect());
         return engine;
     }
 

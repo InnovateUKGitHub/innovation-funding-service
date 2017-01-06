@@ -3,21 +3,18 @@ package org.innovateuk.ifs;
 import org.apache.catalina.connector.Connector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.config.Thymeleaf3Application;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
-@SpringBootApplication
 @PropertySource(value = { "classpath:/application.properties", "classpath:/assessmentapplication.properties" })
-@EnableAspectJAutoProxy(proxyTargetClass=true)
-public class Application extends SpringBootServletInitializer {
+public class Application extends Thymeleaf3Application {
+
     private static final Log LOG = LogFactory.getLog(Application.class);
 
     @Value("${tomcat.ajp.port}")

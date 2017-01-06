@@ -79,8 +79,8 @@
 </div>
 
 <!-- =========================== Element: Application Title =========================== -->
-<div th:fragment="application-title (application) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(application.id,8)} + ': ' + ${application.getApplicationDisplayName()} "/>
+<div th:fragment="application-title (app) ">
+    <p class="subtitle" th:text="${#numbers.formatInteger(app.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
 </div>
 
 <!-- =========================== Element: Project Title =========================== -->
@@ -208,12 +208,12 @@
 </div>
 
 <!-- =========================== Element: Competition status warning ================ -->
-<div th:fragment="competition-status-message (application, competition)">
-		<div class="warning-alert"  th:if="${(application.applicationStatusName == 'created' or application.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}">
+<div th:fragment="competition-status-message (app, competition)">
+		<div class="warning-alert"  th:if="${(app.applicationStatusName == 'created' or app.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="heading-small no-margin">Application not submitted</h2>
         <p>This application has not been entered into the competition <span th:text="${competition.name}" th:remove="tag"/> as it was not submitted before the competition deadline.</p>
     </div>
-		<div class="success-alert" th:if="${(application.applicationStatusName == 'approved')}">
+		<div class="success-alert" th:if="${(app.applicationStatusName == 'approved')}">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
             You have been successful in this round of funding.
@@ -223,7 +223,7 @@
             <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
           </p>
     </div>
-	  <div class="warning-alert" th:if="${(application.applicationStatusName == 'rejected')}">
+	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
         <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
         <p th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}">
           <span th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />.
