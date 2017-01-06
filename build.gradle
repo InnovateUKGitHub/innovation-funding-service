@@ -117,7 +117,7 @@ dockerCompose {
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
-    commandLine './micro_run_tests.sh', '-hn'
+    commandLine './micro_run_tests.sh', '-hnw'
 }
 
 task wrapper(type: Wrapper) {
