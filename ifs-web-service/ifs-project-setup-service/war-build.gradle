@@ -1,0 +1,21 @@
+apply plugin: 'war'
+
+war {
+    baseName = 'project-setup'
+}
+
+
+task deployToTomcat(type: Copy) {
+    from war
+    into "$tomcatWebAppsDir"
+    rename '(.*).war', 'project-setup.war'
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    deployToTomcat.mustRunAfter build
+    dependsOn clean
+    dependsOn build
+    dependsOn deployToTomcat
+}
+

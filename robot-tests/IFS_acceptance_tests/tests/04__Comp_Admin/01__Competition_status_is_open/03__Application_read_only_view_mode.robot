@@ -26,8 +26,7 @@ Comp admin can open the view mode of the application
     [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
     ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
-    Given the user reloads the page
-    And log in as a different user    &{Comp_admin1_credentials}
+    Given log in as a different user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     Then the user should see the element    id=sort-by
     And the user selects the option from the drop-down menu    id    id=sort-by
