@@ -193,11 +193,11 @@
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Appendix</legend>
-                    <label class="block-label">
+                    <label class="block-label selection-button-radio">
                         <input th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio" />
                         Yes
                     </label>
-                    <label class="block-label">
+                    <label class="block-label selection-button-radio">
                         <input th:name="question.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                         No
                     </label>
@@ -215,11 +215,11 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Research category question</legend>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == true}" value="1" type="radio" />
                                 Yes
                             </label>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
                                 No
                             </label>
@@ -233,11 +233,11 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Scored</legend>
-                            <label class="block-label" data-target="score-total">
+                            <label class="block-label selection-button-radio" data-target="score-total">
                                 <input th:name="question.scored" th:checked="${question.scored == true}" value="1" type="radio" />
                                 Yes
                             </label>
-                            <label class="block-label">
+                            <label class="block-label selection-button-radio">
                                 <input th:name="question.scored" th:checked="${question.scored == false}" value="0" type="radio" />
                                 No
                             </label>
@@ -268,11 +268,11 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Scope 'Y/N' question</legend>
-                                <label class="block-label">
+                                <label class="block-label selection-button-radio">
                                     <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio"/>
                                     Yes
                                 </label>
-                                <label class="block-label">
+                                <label class="block-label selection-button-radio">
                                     <input th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
                                     No
                                 </label>
@@ -286,11 +286,11 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Written feedback</legend>
-                                <label class="block-label" data-target="scored-options">
+                                <label class="block-label selection-button-radio" data-target="scored-options">
                                     <input th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio"  />
                                     Yes
                                 </label>
-                                <label class="block-label">
+                                <label class="block-label selection-button-radio">
                                     <input th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
                                     No
                                 </label>

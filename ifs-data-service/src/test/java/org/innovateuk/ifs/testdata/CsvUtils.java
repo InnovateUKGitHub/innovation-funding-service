@@ -14,6 +14,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,6 +56,10 @@ class CsvUtils {
 
     static List<CompetitionLine> readCompetitions() {
         return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+    }
+
+    static List<CompetitionFunderLine> readCompetitionFunders() {
+        return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }
 
     static List<ApplicationLine> readApplications() {
@@ -339,6 +344,11 @@ class CsvUtils {
         String innovationArea;
         String innovationSector;
         String researchCategory;
+        String collaborationLevel;
+        String leadApplicantType;
+        Integer researchRatio;
+        Boolean resubmission;
+        Boolean multiStream;
         LocalDateTime openDate;
         LocalDateTime submissionDate;
         LocalDateTime fundersPanelDate;
@@ -351,6 +361,12 @@ class CsvUtils {
         String leadTechnologist;
         String compExecutive;
         boolean setupComplete;
+        String budgetCode;
+        String code;
+        String pafCode;
+        String activityCode;
+        Integer assessorCount;
+        BigDecimal assessorPay;
 
         private CompetitionLine(List<String> line) {
 
@@ -361,6 +377,11 @@ class CsvUtils {
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
+            collaborationLevel = nullable(line.get(i++));
+            leadApplicantType = nullable(line.get(i++));
+            researchRatio = nullableInteger(line.get(i++));
+            resubmission = nullableBoolean(line.get(i++));
+            multiStream = nullableBoolean(line.get(i++));
             openDate = nullableDateTime(line.get(i++));
             submissionDate = nullableDateTime(line.get(i++));
             fundersPanelDate = nullableDateTime(line.get(i++));
@@ -373,6 +394,27 @@ class CsvUtils {
             leadTechnologist = nullable((line.get(i++)));
             compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
+            pafCode = nullable(line.get(i++));
+            budgetCode = nullable(line.get(i++));
+            activityCode = nullable(line.get(i++));
+            code = nullable(line.get(i++));
+            assessorCount = nullableInteger(line.get(i++));
+            assessorPay = nullableBigDecimal(line.get(i++));
+        }
+    }
+
+    static class CompetitionFunderLine {
+        String competitionName;
+        String funder;
+        BigDecimal funder_budget;
+        boolean co_funder;
+
+        private CompetitionFunderLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            funder = nullable(line.get(i++));
+            funder_budget = nullableBigDecimal(line.get(i++));
+            co_funder = nullableBoolean(line.get(i++));
         }
     }
 
@@ -512,6 +554,16 @@ class CsvUtils {
         }
 
         return Integer.valueOf(s);
+    }
+
+    private static BigDecimal nullableBigDecimal(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return new BigDecimal(s);
     }
 
     private static boolean nullableBoolean(String s) {

@@ -29,7 +29,7 @@
                 </legend>
                 <p class="form-hint">Who will be responsible for project finances in your organisation?</p>
                 <p>We will ask this person to</p>
-                <ul class="list-bullet">
+                <ul class="list list-bullet">
                     <li>provide bank details for your organisation</li>
                     <li>confirm any queries we have with your project costs</li>
                     <li>review the spend profile of your project costs</li>
@@ -38,7 +38,7 @@
 
                     <th:block th:each="user : ${model.organisationUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
-                        <label th:for="${#ids.next('financeContact')}" class="block-label">
+                        <label th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
                             <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
@@ -46,13 +46,13 @@
 
                     <th:block th:each="user : ${model.invitedUsers}">
                         <input type="hidden" th:field="*{organisation}"></input>
-                        <label th:for="${#ids.next('financeContact')}" class="block-label">
+                        <label th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
                             <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
                     </th:block>
 
-                    <label for="new" class="block-label" data-target="finance-contact-table">
+                    <label for="new" class="block-label selection-button-radio" data-target="finance-contact-table">
                         <input id="new" name="financeContact" th:checked="${model.inviteAction} or *{financeContact == -1}" type="radio" value="-1" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                         Add new team member
                         <span class="form-hint">A new team member will be invited to join the project</span>

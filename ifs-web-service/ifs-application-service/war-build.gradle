@@ -1,0 +1,23 @@
+apply plugin: 'war'
+
+war {
+    baseName = 'application'
+}
+
+
+task deployToTomcat(type: Copy) {
+    from war
+    into "$tomcatWebAppsDir"
+    rename '(.*).war', 'ROOT.war'
+}
+
+task cleanDeploy() {
+    inputs.dir 'src/main/java'
+    outputs.dir 'build/classes/main'
+    build.mustRunAfter clean
+    deployToTomcat.mustRunAfter build
+    dependsOn clean
+    dependsOn build
+    dependsOn deployToTomcat
+}
+

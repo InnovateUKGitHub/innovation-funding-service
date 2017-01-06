@@ -12,7 +12,7 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-	
+
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" th:remove="tag" />
 
@@ -32,11 +32,11 @@
 			<div class="form-group">
 				<fieldset class="inline">
 					<h3 class="heading-small">Project title</h3>
-					<label class="block-label" for="project-title-yes">
+					<label class="block-label selection-button-radio" for="project-title-yes">
 						<input id="project-title-yes" name="project-title-group" value="yes" type="radio" checked="checked" />
 						Yes
 					</label>
-					<label class="block-label" for="project-title-no">
+					<label class="block-label selection-button-radio" for="project-title-no">
 						<input id="project-title-no" name="project-title-group" value="no" type="radio" />
 						No
 					</label>
@@ -45,11 +45,11 @@
 			<div class="form-group">
 				<fieldset class="inline">
 					<h3 class="heading-small">Resubmission question</h3>
-					<label class="block-label" for="resubmission-title-yes">
+					<label class="block-label selection-button-radio" for="resubmission-title-yes">
 						<input id="resubmission-title-yes" name="resubmission-title-group" value="yes" type="radio" checked="checked" />
 						Yes
 					</label>
-					<label class="block-label" for="project-title-no">
+					<label class="block-label selection-button-radio" for="project-title-no">
 						<input id="resubmission-title-no" name="resubmission-title-group" value="no" type="radio" />
 						No
 					</label>
@@ -58,11 +58,11 @@
 			<div class="form-group">
 				<fieldset class="inline">
 					<h3 class="heading-small">Estimated start date</h3>
-					<label class="block-label" for="estimated-start-date-yes">
+					<label class="block-label selection-button-radio" for="estimated-start-date-yes">
 						<input id="estimated-start-date-yes" name="estimated-start-date-group" value="yes" type="radio" checked="checked" />
 						Yes
 					</label>
-					<label class="block-label" for="estimated-start-date-no">
+					<label class="block-label selection-button-radio" for="estimated-start-date-no">
 						<input id="estimated-start-date-no" name="estimated-start-date-group" value="no" type="radio" />
 						No
 					</label>
@@ -71,11 +71,11 @@
 			<div class="form-group">
 				<fieldset class="inline">
 					<h3 class="heading-small">Duration</h3>
-					<label class="block-label" for="duration-yes">
+					<label class="block-label selection-button-radio" for="duration-yes">
 						<input id="duration-yes" name="duration-group" value="yes" type="radio" checked="checked" />
 						Yes
 					</label>
-					<label class="block-label" for="duration-no">
+					<label class="block-label selection-button-radio" for="duration-no">
 						<input id="duration-no" name="duration-group" value="no" type="radio" />
 						No
 					</label>

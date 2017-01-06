@@ -90,8 +90,7 @@ the address fields should be filled with dummy data
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    name=termsAndConditions
-    Select Checkbox    termsAndConditions
+    the user selects the checkbox    termsAndConditions
     Submit Form
 
 the user cannot login with either password
