@@ -115,7 +115,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
 
-        boolean organisationSizeComplete = sectionsMarkedAsComplete.contains(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(null));
+        boolean organisationSizeComplete = sectionsMarkedAsComplete.contains(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
         boolean applicationDetailsComplete = applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
 
         model.addAttribute("isFundingSectionLocked", !(organisationSizeComplete && applicationDetailsComplete));
