@@ -28,30 +28,30 @@
             <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
         </div>
     </div>
-	
+
 	<h2 class="heading-medium">Assign a member of your team responsible for submitting for your organisation</h2>
 
 	<form action="/prototypes/631-finances-assigned-to-you">
 		<fieldset>
 			<legend class="visuallyhidden">Assign a member of your team responsible for submitting for your organisation</legend>
-			
+
 			<div class="form-block">
-				<label class="block-label" for="radio-1">
+				<label class="block-label selection-button-radio" for="radio-1">
 					<input id="radio-1" type="radio" name="radio-group" value="Charles Barron" />
 					Charles Barron
 				</label>
-				<label class="block-label" for="radio-2">
+				<label class="block-label selection-button-radio" for="radio-2">
 					<input id="radio-2" type="radio" name="radio-group" value="Mark Malone" />
 					Mark Malone
 				</label>
-				<label class="block-label" for="radio-3">
+				<label class="block-label selection-button-radio" for="radio-3">
 					<input id="radio-3" type="radio" name="radio-group" value="Ryann Blessed" />
 					Ryan Blessed
 				</label>
 			</div>
 
 		</fieldset>
-			
+
 		<button class="button button-large extra-margin" name="create-account" type="submit">Assign</button>
 	</form>
 

@@ -1,13 +1,17 @@
 *** Settings ***
-Documentation     INFUND-5190: As a member of Project Finance I want to view an amended Finance Checks summary page so that I can see the projects and organisations requiring Finance Checks for the Private Beta competition
+Documentation     INFUND-5190 As a member of Project Finance I want to view an amended Finance Checks summary page so that I can see the projects and organisations requiring Finance Checks for the Private Beta competition
 ...
-...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
+...               INFUND-5193 As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
 ...
-...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
+...               INFUND-5220 As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
 ...
-...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
+...               INFUND-5852 As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
 ...
-...               INFUND-6149: mailto link is broken on the internal finance eligibility page
+...               INFUND-6149 mailto link is broken on the internal finance eligibility page
+...
+...               INFUND-7016 Finance checks page is missing Project title
+...
+...               INFUND-7026 For internal user, in finance checks RAG is not N/A in case of academic
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -19,13 +23,14 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507
+    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016
     [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=table.table-progress
     And the user should see the element          jQuery=h2:contains("Finance checks")
     And the user should see the text in the page  Overview
+    And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
     [Teardown]  the user clicks the button/link  link=Competition Dashboard
 
@@ -66,7 +71,7 @@ Finance checks client-side validations
     When the user enters text to a text field    name=costs[6].value    ${Empty}
     Then the user should see an error    Please enter any other cost
     When the user enters text to a text field    name=costs[0].value    -1
-    And the user moves focus to the element    id=costs-reviewed
+    And the user moves focus to the element    css=[for="costs-reviewed"]
     Then the user should see an error    This field should be 0 or higher
     And The user should not see the text in the page    Please enter a labour cost
 
@@ -76,7 +81,7 @@ Approve Eligibility: Lead partner organisation
     [Tags]    HappyPath
     Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -89,7 +94,7 @@ Approve Eligibility: Collaborator partner organisation
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-1
     When the user fills in project costs
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     And the user should see the text in the page    The partner finance eligibility has been approved
@@ -97,17 +102,19 @@ Approve Eligibility: Collaborator partner organisation
     Then the user sees the text in the element    css=a.eligibility-1    Approved
 
 
-Approve Eligibility: Academic partner organisation
-    [Documentation]    INFUND-5193
+Approve Eligibility and verify Viability and RAG: Academic partner organisation
+    [Documentation]    INFUND-5193, INFUND-7026
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
-    And the user selects the checkbox    id=costs-reviewed
+    And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
     And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
     Then the user should see the text in the page    The partner finance eligibility has been approved
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-2    Approved
     And The user should see the element    jQuery=.generate-spend-profile-main-button
+    And the user should see the text in the element  css=span.viability-rag-2    N/A
+    And the user should see the text in the element  css=span.viability-2    N/A
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
@@ -191,7 +198,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+
 
 the users fill out project details
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
@@ -235,7 +242,7 @@ the user fills in project costs
     Input Text    name=costs[4].value    £ 10,000
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    id=costs-reviewed
+    the user moves focus to the element    css=[for="costs-reviewed"]
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
@@ -245,32 +252,10 @@ project finance approves Viability for
     And the user should see the element     jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
     Then the user should see the element    jQuery=h2:contains("Credit report")
-    And the user selects the checkbox       id=costs-reviewed
+    And the user selects the checkbox       costs-reviewed
     When the user should see the element    jQuery=h2:contains("Approve viability")
-    Then the user selects the checkbox      id=project-viable
+    Then the user selects the checkbox      project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
     Then the user clicks the button/link    css=#confirm-button
     And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

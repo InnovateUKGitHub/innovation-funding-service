@@ -34,7 +34,7 @@
         </div>
 
         <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.applicationId,8)} + ': ' + ${model.projectName} "/>
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
             <li th:text="${model.leadPartnerOrganisationName}" />
             <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
               <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>

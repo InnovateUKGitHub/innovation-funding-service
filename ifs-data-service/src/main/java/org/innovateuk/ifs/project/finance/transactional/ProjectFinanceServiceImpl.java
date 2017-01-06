@@ -307,8 +307,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             }
 
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
             return serviceSuccess();
         });
+    }
+
+    private ServiceResult<Void> rejectSpendProfileSubmission(Long projectId) {
+        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setSpendProfileSubmittedDate(null));
     }
 
     @Override
@@ -514,6 +519,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
         spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
+        if(ApprovalType.REJECTED.equals(approvalType)) {
+            rejectSpendProfileSubmission(projectId);
+        }
 
         spendProfileRepository.save(spendProfiles);
     }
