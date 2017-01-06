@@ -78,7 +78,7 @@ public class CompetitionManagementInviteAssessorsController {
                          @PathVariable("competitionId") Long competitionId,
                          @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                          @SuppressWarnings("unused") BindingResult bindingResult) {
-        if (form.getInvites().size() == 0) {
+        if (form.getInvites().isEmpty()) {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
 
