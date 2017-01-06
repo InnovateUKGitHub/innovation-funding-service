@@ -54,7 +54,7 @@ Submit flow (complete application)
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given log in as a different user    ${submit_test_email}    Passw0rd123
-    Given the user navigates to the page    ${SERVER}
+    And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
     And the user should be redirected to the correct page    summary

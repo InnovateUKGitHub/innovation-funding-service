@@ -1,26 +1,43 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
+import org.innovateuk.ifs.application.service.CategoryService;
+import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class InitialDetailsFormPopulatorTest {
 
+	@InjectMocks
 	private InitialDetailsFormPopulator service;
-	
-	@Before
-	public void setUp() {
-		service = new InitialDetailsFormPopulator();
-	}
+
+	@Mock
+	private CategoryService categoryService;
+
+	@Mock
+	private CategoryFormatter categoryFormatter;
 	
 	@Test
 	public void testSectionToFill() {
@@ -30,10 +47,13 @@ public class InitialDetailsFormPopulatorTest {
 				
 	@Test
 	public void testGetSectionFormDataInitialDetails() {
+
+		Set<Long> innovationAreas = Stream.of(6L, 66L).collect(Collectors.toSet());
+
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionType(4L)
 				.withExecutive(5L)
-				.withInnovationArea(6L)
+				.withInnovationAreas(innovationAreas)
 				.withLeadTechnologist(7L)
 				.withStartDate(LocalDateTime.of(2000, 1, 2, 3, 4))
 				.withCompetitionCode("code")
@@ -42,13 +62,20 @@ public class InitialDetailsFormPopulatorTest {
 				.withBudgetCode("budgetcode")
 				.withId(8L).build();
 
+		List<CategoryResource> innovationAreaCategories = new ArrayList<>();
+		when(categoryService.getCategoryByType(CategoryType.INNOVATION_AREA)).thenReturn(innovationAreaCategories);
+		when(categoryFormatter.format(innovationAreas, innovationAreaCategories)).thenReturn("formattedcategories");
+
+
 		CompetitionSetupForm result = service.populateForm(competition);
 		
 		assertTrue(result instanceof InitialDetailsForm);
 		InitialDetailsForm form = (InitialDetailsForm) result;
 		assertEquals(Long.valueOf(4L), form.getCompetitionTypeId());
 		assertEquals(Long.valueOf(5L), form.getExecutiveUserId());
-		assertEquals(Long.valueOf(6L), form.getInnovationAreaCategoryId());
+		assertThat(form.getInnovationAreaCategoryIds(), hasItems(6L, 66L));
+		assertThat(form.getInnovationAreaCategoryIds(), hasSize(2));
+		assertEquals("formattedcategories", form.getInnovationAreaNamesFormatted());
 		assertEquals(Long.valueOf(7L), form.getLeadTechnologistUserId());
 		assertEquals(Integer.valueOf(2), form.getOpeningDateDay());
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
