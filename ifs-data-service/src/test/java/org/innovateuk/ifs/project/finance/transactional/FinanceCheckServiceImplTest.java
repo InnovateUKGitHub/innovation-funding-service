@@ -258,6 +258,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectUserResource projectUser = newProjectUserResource().build();
         UserResource user = newUserResource().build();
         ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityStatus.AMBER);
+        ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
         ViabilityResource viability3 = new ViabilityResource(Viability.PENDING, ViabilityStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -271,10 +272,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectUserMapperMock.mapToResource(process.getParticipant())).thenReturn(projectUser);
         when(userMapperMock.mapToResource(process.getInternalParticipant())).thenReturn(user);
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisations[0].getOrganisationType().getName())).thenReturn(false);
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisations[1].getOrganisationType().getName())).thenReturn(true);
-
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
 
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
