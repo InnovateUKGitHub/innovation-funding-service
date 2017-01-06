@@ -5,7 +5,7 @@ Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
-*** Testcases ***
+*** Test Cases ***
 Terms and Conditions
     [Documentation]    INFUND-7058
     [Tags]
