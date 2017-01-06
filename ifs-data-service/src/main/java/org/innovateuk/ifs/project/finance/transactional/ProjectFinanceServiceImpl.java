@@ -416,10 +416,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-/*    private boolean isUsingJesFinances(ProjectFinance finance) {
-        return organisationFinanceDelegate.isUsingJesFinances(finance.getOrganisation().getOrganisationType().getName());
-    }*/
-
     private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {

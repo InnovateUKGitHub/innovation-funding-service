@@ -179,28 +179,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-/*    private Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
-
-        if (organisationFinanceDelegate.isUsingJesFinances(org.getOrganisation().getOrganisationType().getName())) {
-
-            return Pair.of(FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
-
-        } else {
-
-            ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
-                    org.getProject().getId(), org.getOrganisation().getId());
-
-            ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
-
-            FinanceCheckPartnerStatusResource.Viability viability = viabilityDetails.getViability() == Viability.APPROVED ?
-                    FinanceCheckPartnerStatusResource.Viability.APPROVED :
-                    FinanceCheckPartnerStatusResource.Viability.REVIEW;
-
-
-            return Pair.of(viability, viabilityDetails.getViabilityStatus());
-        }
-    }*/
-
     private Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
 
         ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
