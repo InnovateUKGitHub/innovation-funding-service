@@ -60,14 +60,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Set<Category> researchCategories = newCategory().withType(RESEARCH_CATEGORY, RESEARCH_CATEGORY).withName("foo", "bar").buildSet(2);
         Set<Category> innovationAreas = newCategory().withType(INNOVATION_AREA, INNOVATION_AREA).withName("foo", "bar").buildSet(2);
 
-        when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategory_Type(competitionId, INNOVATION_SECTOR))
+        when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategoryType(competitionId, INNOVATION_SECTOR))
                 .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationSector).build());
-        when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategory_Type(competitionId, INNOVATION_AREA))
+        when(competitionCategoryLinkRepositoryMock.findAllByCompetitionIdAndCategoryType(competitionId, INNOVATION_AREA))
                 .thenReturn(Arrays.asList(
                         newCompetitionCategoryLink()
                                 .withCompetition(competition, competition)
                                 .withCategory(innovationAreas.toArray(new Category[2]))
-                                .buildArray(2, CompetitionCategoryLink.class));
+                                .buildArray(2, CompetitionCategoryLink.class)));
         when(competitionCategoryLinkRepositoryMock.findAllByCompetitionIdAndCategoryType(competitionId, RESEARCH_CATEGORY))
                 .thenReturn(Arrays.asList(
                         newCompetitionCategoryLink()

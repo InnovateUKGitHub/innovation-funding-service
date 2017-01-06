@@ -78,7 +78,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private void addInnovationSector(Competition competition) {
         Category category =
                 Optional.ofNullable(
-                        competitionCategoryLinkRepository.findByCompetitionIdAndCategory_Type(competition.getId(), INNOVATION_SECTOR)
+                        competitionCategoryLinkRepository.findByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_SECTOR)
                 ).map(CompetitionCategoryLink::getCategory).orElse(null);
         competition.setInnovationSector(category);
     }
