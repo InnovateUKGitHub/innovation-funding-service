@@ -25,6 +25,7 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
@@ -120,9 +121,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
+        InviteNewAssessorsForm expectedForm = new InviteNewAssessorsForm();
+        expectedForm.setInvites(singletonList(new InviteNewAssessorsRowForm()));
+
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/invite", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("assessors/invite"))
                 .andReturn();
 
