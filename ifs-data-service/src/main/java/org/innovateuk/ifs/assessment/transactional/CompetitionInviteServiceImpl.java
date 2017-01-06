@@ -14,6 +14,7 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
@@ -27,7 +28,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -42,8 +42,11 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -51,6 +54,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
@@ -91,6 +95,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private AssessorInviteToSendMapper toSendMapper;
+
+    @Autowired
+    private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -196,8 +203,23 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        // TODO INFUND-6450
-        return serviceSuccess(emptyList());
+        List<CompetitionParticipant> participants = getParticipantsByCompetition(competitionId).getSuccessObject();
+
+        return serviceSuccess(participants.stream()
+                .map(participant -> {
+                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
+                    assessorInviteOverview.setName(participant.getInvite().getName());
+                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
+                    assessorInviteOverview.setDetails(getDetails(participant));
+
+                    if (participant.getUser() != null) {
+                        assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
+                        assessorInviteOverview.setCompliant(participant.getUser().isProfileCompliant());
+                        // TODO INFUND-6865 Users should have innovation areas
+                        assessorInviteOverview.setInnovationArea(null);
+                    }
+                    return assessorInviteOverview;
+                }).collect(toList()));
     }
 
     @Override
@@ -246,6 +268,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 ))
                 .andOnSuccess(list -> aggregate(list))
                 .andOnSuccessReturnVoid();
+    }
+
+    private String getDetails(CompetitionParticipant participant) {
+        String details = EMPTY;
+
+        if (participant.getStatus() == REJECTED) {
+            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
+        }
+
+        return details;
     }
 
     private BusinessType getBusinessType(User assessor) {
@@ -357,6 +389,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
+    }
+
+    private ServiceResult<List<CompetitionParticipant>> getParticipantsByCompetition(long competitionId) {
+        return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR), notFoundError(CompetitionParticipant.class, competitionId));
     }
 
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {

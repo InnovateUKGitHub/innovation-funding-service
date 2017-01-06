@@ -148,7 +148,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
-    public void getByUserRoleStatus() {
+    public void getByUserAndRole() {
         User user = newUser()
                 .withFirstName("Professor")
                 .build();
@@ -160,6 +160,34 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         flushAndClearSession();
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), ASSESSOR);
+
+        assertNotNull(retrievedParticipants);
+        assertEquals(1, retrievedParticipants.size());
+        assertEquals(savedParticipant, retrievedParticipants.get(0));
+
+        assertEquals(ASSESSOR, retrievedParticipants.get(0).getRole());
+        assertEquals(ParticipantStatus.PENDING, retrievedParticipants.get(0).getStatus());
+
+        Competition retrievedCompetition = retrievedParticipants.get(0).getProcess();
+        assertEquals(competition.getName(), retrievedCompetition.getName());
+
+        User retrievedUser = retrievedParticipants.get(0).getUser();
+        assertEquals(user.getFirstName(), retrievedUser.getFirstName());
+    }
+
+    @Test
+    public void getByCompetitionAndRole() {
+        User user = newUser()
+                .withFirstName("Professor")
+                .build();
+
+        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", OPENED);
+        invite.setUser(user);
+
+        CompetitionParticipant savedParticipant = repository.save(new CompetitionParticipant(invite));
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRole(invite.getTarget().getId(), ASSESSOR);
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.size());

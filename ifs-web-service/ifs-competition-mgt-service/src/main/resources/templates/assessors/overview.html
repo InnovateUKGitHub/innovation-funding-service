@@ -170,7 +170,7 @@
                             <span class="no" th:unless="${assessor.compliant}">No</span>
                         </td>
                         <td>
-                            <b th:text="${assessor.status}">Invite accepted</b>
+                            <b th:text="${assessor.status.displayName}">Invite accepted</b>
                         </td>
                         <td th:text="${assessor.details}">Invite declined as person is too busy</td>
                     </tr>
