@@ -602,19 +602,28 @@ IFS.core.formValidation = (function () {
       jQuery(window).trigger('updateWysiwygPosition')
     },
     setAllValid: function (fields) {
-      var elements = ['required', 'min', 'max', 'minlength', 'maxlength', 'pattern', 'type="number"', 'type="email"', 'type="tel"']
+      var validations = IFS.core.formValidation.getAllValidations()
       jQuery(fields).each(function () {
         var field = jQuery(this)
-        jQuery.each(elements, function () {
-          var el = this
-          if (field.is('[' + el + ']')) {
-            el = el.replace('type="', '')
-            el = el.replace('"', '')
+        jQuery.each(validations, function (el, selector) {
+          if (field.is(selector)) {
             var errorMessage = IFS.core.formValidation.getErrorMessage(field, el)
             IFS.core.formValidation.setValid(field, errorMessage)
           }
         })
       })
+    },
+    getAllValidations: function () {
+      // helper for gettings all validations with the selectors and the keys in a object
+      // s is the generic settings element, this generates an object with all the validation rules in this file and the selector going with it
+      var validations = {}
+      for (var key in s) {
+        var isField = typeof (s[key]['fields']) === 'string'
+        if (isField && s.hasOwnProperty(key)) {
+          validations[key] = s[key]['fields']
+        }
+      }
+      return validations
     },
     getIdentifier: function (el) {
       if (el.is('[data-date]')) {
