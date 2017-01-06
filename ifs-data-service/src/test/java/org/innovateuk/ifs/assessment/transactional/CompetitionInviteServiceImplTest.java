@@ -334,8 +334,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verifyNoMoreInteractions();
     }
 
-    // accept
-
     @Test
     public void acceptInvite() {
         service.openInvite("inviteHash");
@@ -352,8 +350,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, userRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(7L);
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
-
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -379,7 +375,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, "my competition")));
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(userRepositoryMock).findOne(userResource.getId());
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
@@ -401,10 +398,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, "my competition")));
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
-        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
-        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
+        inOrder.verify(userRepositoryMock).findOne(userResource.getId());
+        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
+        inOrder.verify(userRepositoryMock).findOne(userResource.getId());
+        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -430,10 +429,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, "my competition")));
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, rejectionReasonRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
+        inOrder.verify(rejectionReasonRepositoryMock).findOne(1L);
+        inOrder.verify(competitionParticipantRepositoryMock, times(2)).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -454,10 +453,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
         assertEquals("too busy", competitionParticipant.getRejectionReasonComment());
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
         inOrder.verify(rejectionReasonRepositoryMock).findOne(1L);
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -477,7 +476,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "inviteHashNotExists")));
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock);
+        InOrder inOrder = inOrder(rejectionReasonRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(rejectionReasonRepositoryMock).findOne(1L);
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHashNotExists");
         inOrder.verifyNoMoreInteractions();
     }
@@ -525,11 +525,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "my competition")));
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
-        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
+        inOrder.verify(userRepositoryMock).findOne(7L);
+        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
         inOrder.verify(rejectionReasonRepositoryMock).findOne(1L);
-        inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByInviteHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -555,12 +556,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, "my competition")));
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
-
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
         inOrder.verify(rejectionReasonRepositoryMock).findOne(1L);
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
+        inOrder.verify(competitionParticipantRepositoryMock, times(2)).getByInviteHash("inviteHash");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -583,7 +582,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         assertEquals(ParticipantStatus.PENDING, competitionParticipant.getStatus());
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
         inOrder.verify(rejectionReasonRepositoryMock).findOne(2L);
 
         inOrder.verifyNoMoreInteractions();
@@ -609,10 +609,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
         assertEquals("", competitionParticipant.getRejectionReasonComment());
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, rejectionReasonRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).getByHash("inviteHash");
         inOrder.verify(rejectionReasonRepositoryMock).findOne(1L);
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteHash("inviteHash");
-        inOrder.verify(competitionParticipantRepositoryMock).save(competitionParticipant);
 
         inOrder.verifyNoMoreInteractions();
     }

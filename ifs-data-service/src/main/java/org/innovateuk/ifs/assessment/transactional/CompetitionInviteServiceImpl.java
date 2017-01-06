@@ -367,7 +367,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return serviceSuccess(competitionParticipantRepository.save(participant.acceptAndAssignUser(user)));
+            return serviceSuccess(participant.acceptAndAssignUser(user));
         }
     }
 
@@ -379,7 +379,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return serviceSuccess(competitionParticipantRepository.save(participant.reject(rejectionReason, rejectionComment)));
+            return serviceSuccess(participant.reject(rejectionReason, rejectionComment));
         }
     }
 
