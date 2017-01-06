@@ -1,48 +1,36 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
-import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
+import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
+import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Tests the CompetitionServiceImpl with mocked repositories/mappers.
- */
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
-    @Mock
-    private CompetitionRepository competitionRepository;
-
-    @Mock
-    private CategoryRepository categoryRepository;
-
-    @Mock
-    private CompetitionMapper competitionMapper;
-
 
     @Override
     protected CompetitionServiceImpl supplyServiceUnderTest() {
@@ -54,8 +42,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long competitionId = 1L;
         Competition competition = new Competition();
         CompetitionResource resource = new CompetitionResource();
-        when(competitionRepository.findById(competitionId)).thenReturn(competition);
-        when(competitionMapper.mapToResource(competition)).thenReturn(resource);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionMapperMock.mapToResource(competition)).thenReturn(resource);
 
         CompetitionResource response = service.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
 
@@ -65,14 +53,22 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_addCategories() throws Exception {
         Long competitionId = 1L;
-        Competition competition = new Competition();
-        competition.setId(competitionId);
-        Category innovationSector = new Category();
-        Set<Category> researchCategories = Sets.newHashSet(new Category());
-        Category innovationArea = new Category();
-        when(categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_SECTOR, COMPETITION_CLASS_NAME, competition.getId())).thenReturn(innovationSector);
-        when(categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId())).thenReturn(innovationArea);
-        when(categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.RESEARCH_CATEGORY, COMPETITION_CLASS_NAME, competition.getId())).thenReturn(researchCategories);
+        Competition competition = newCompetition().withId(competitionId).build();
+
+        Category innovationSector = newCategory().withType(INNOVATION_SECTOR).build();
+        Set<Category> researchCategories = newCategory().withType(RESEARCH_CATEGORY, RESEARCH_CATEGORY).withName("foo", "bar").buildSet(2);
+        Category innovationArea = newCategory().withType(INNOVATION_AREA).build();
+
+        when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategory_Type(competitionId, INNOVATION_SECTOR))
+                .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationSector).build());
+        when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategory_Type(competitionId, INNOVATION_AREA))
+                .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationArea).build());
+        when(competitionCategoryLinkRepositoryMock.findAllByCompetitionIdAndCategoryType(competitionId, RESEARCH_CATEGORY))
+                .thenReturn(Arrays.asList(
+                        newCompetitionCategoryLink()
+                                .withCompetition(competition, competition)
+                                .withCategory(researchCategories.toArray(new Category[2]))
+                                .buildArray(2, CompetitionCategoryLink.class)));
 
         Competition compResp = service.addCategories(competition);
 
@@ -86,8 +82,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void test_findAll() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
         List<CompetitionResource> resources = Lists.newArrayList(new CompetitionResource());
-        when(competitionRepository.findAll()).thenReturn(competitions);
-        when(competitionMapper.mapToResource(competitions)).thenReturn(resources);
+        when(competitionRepositoryMock.findAll()).thenReturn(competitions);
+        when(competitionMapperMock.mapToResource(competitions)).thenReturn(resources);
 
         List<CompetitionResource> response = service.findAll().getSuccessObjectOrThrowException();
 
@@ -97,7 +93,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findLiveCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
-        when(competitionRepository.findLive()).thenReturn(competitions);
+        when(competitionRepositoryMock.findLive()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
 
@@ -107,7 +103,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findProjectSetupCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
-        when(competitionRepository.findProjectSetup()).thenReturn(competitions);
+        when(competitionRepositoryMock.findProjectSetup()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
 
@@ -117,7 +113,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findUpcomingCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
-        when(competitionRepository.findUpcoming()).thenReturn(competitions);
+        when(competitionRepositoryMock.findUpcoming()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findUpcomingCompetitions().getSuccessObjectOrThrowException();
 
@@ -129,9 +125,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long countLive = 1L;
         Long countProjectSetup = 2L;
         Long countUpcoming = 3L;
-        when(competitionRepository.countLive()).thenReturn(countLive);
-        when(competitionRepository.countProjectSetup()).thenReturn(countProjectSetup);
-        when(competitionRepository.countUpcoming()).thenReturn(countUpcoming);
+        when(competitionRepositoryMock.countLive()).thenReturn(countLive);
+        when(competitionRepositoryMock.countProjectSetup()).thenReturn(countProjectSetup);
+        when(competitionRepositoryMock.countUpcoming()).thenReturn(countUpcoming);
 
         CompetitionCountResource response = service.countCompetitions().getSuccessObjectOrThrowException();
 
@@ -156,7 +152,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(queryResponse.getNumber()).thenReturn(page);
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
-        when(competitionRepository.search(searchLike, pageRequest)).thenReturn(queryResponse);
+        when(competitionRepositoryMock.search(searchLike, pageRequest)).thenReturn(queryResponse);
 
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();
 
@@ -196,7 +192,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .build();
-        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
 
         service.closeAssessment(competitionId);
 
@@ -218,7 +214,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .build();
-        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
 
         service.notifyAssessors(competitionId);
 

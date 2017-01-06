@@ -8,38 +8,34 @@ import java.util.function.BiConsumer;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.domain.CategoryLink;
+import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.competition.domain.Competition;
 
-public class CategoryLinkBuilder extends BaseBuilder<CategoryLink, CategoryLinkBuilder> {
+public class CategoryLinkBuilder extends BaseBuilder<CompetitionCategoryLink, CategoryLinkBuilder> {
 
     public static CategoryLinkBuilder newCategoryLink() {
         return new CategoryLinkBuilder(emptyList()).with(uniqueIds());
     }
 
-    private CategoryLinkBuilder(List<BiConsumer<Integer, CategoryLink>> multiActions) {
+    private CategoryLinkBuilder(List<BiConsumer<Integer, CompetitionCategoryLink>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected CategoryLinkBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CategoryLink>> actions) {
+    protected CategoryLinkBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionCategoryLink>> actions) {
         return new CategoryLinkBuilder(actions);
     }
 
     @Override
-    protected CategoryLink createInitial() {
-        return new CategoryLink();
+    protected CompetitionCategoryLink createInitial() {
+        return new CompetitionCategoryLink();
     }
     
     public CategoryLinkBuilder withCategory(Category... categories) {
-        return withArray((category, categoryLink) -> categoryLink.setCategory(category), categories);
-    }
-    
-    public CategoryLinkBuilder withClassName(String... classNames) {
-        return withArray((className, categoryLink) -> categoryLink.setClassName(className), classNames);
-    }
-    
-    public CategoryLinkBuilder withClassPk(Long... classPks) {
-        return withArray((classPk, categoryLink) -> categoryLink.setClassPk(classPk), classPks);
+        return withArraySetFieldByReflection("category", categories);
     }
 
+    public CategoryLinkBuilder withCompetition(Competition... competitions) {
+        return withArraySetFieldByReflection("competition", competitions);
+    }
 }

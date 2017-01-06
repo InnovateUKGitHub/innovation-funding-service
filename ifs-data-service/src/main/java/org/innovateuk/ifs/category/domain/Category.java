@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.category.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.*;
@@ -75,5 +77,27 @@ public class Category {
 
     public void setCategoryLinks(List<CategoryLink> categoryLinks) {
         this.categoryLinks = categoryLinks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        return new EqualsBuilder()
+                .append(name, category.name)
+                .append(type, category.type)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(type)
+                .toHashCode();
     }
 }

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.category.resource.CategoryType;
-import org.innovateuk.ifs.category.transactional.CategoryLinkService;
+import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.AssessorCountOption;
@@ -45,7 +45,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 
@@ -56,7 +55,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
     @Autowired
-    private CategoryLinkService categoryLinkService;
+    private CompetitionCategoryLinkService competitionCategoryLinkService;
     @Autowired
     private CompetitionService competitionService;
     @Autowired
@@ -145,11 +144,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
-        categoryLinkService.updateCategoryLink(categoryId, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
+        competitionCategoryLinkService.updateCategoryLink(categoryId, categoryType, competitionMapper.mapToDomain(competitionResource));
     }
 
     private void saveCategoryLinks(CompetitionResource competitionResource, Set<Long> categoryIds, CategoryType categoryType) {
-        categoryLinkService.updateCategoryLinks(categoryIds, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
+        competitionCategoryLinkService.updateCategoryLinks(categoryIds, categoryType, competitionMapper.mapToDomain(competitionResource));
     }
 
     @Override

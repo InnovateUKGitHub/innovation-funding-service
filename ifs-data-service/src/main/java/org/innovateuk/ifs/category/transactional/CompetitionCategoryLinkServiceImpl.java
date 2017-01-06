@@ -6,12 +6,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.domain.CategoryLink;
-import org.innovateuk.ifs.category.repository.CategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -23,68 +24,66 @@ import org.innovateuk.ifs.util.CollectionFunctions;
  * Service to link categories to every possible class
  */
 @Service
-public class CategoryLinkServiceImpl extends BaseTransactionalService implements CategoryLinkService {
+public class CompetitionCategoryLinkServiceImpl extends BaseTransactionalService implements CompetitionCategoryLinkService {
     @Autowired
-    private CategoryLinkRepository categoryLinkRepository;
+    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Override
-    public ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, String className, Long classPk){
+    public ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, Competition competition){
     	Set<Long> categoryIds;
     	if(categoryId == null){
     		categoryIds = new HashSet<>();
     	} else {
     		categoryIds = CollectionFunctions.asLinkedSet(categoryId);
     	}
-    	return updateCategoryLinks(categoryIds, categoryType, className, classPk);
+    	return updateCategoryLinks(categoryIds, categoryType, competition);
     }
     
     @Override
-    public ServiceResult<Void> updateCategoryLinks(Set<Long> categoryIds, CategoryType categoryType, String className, Long classPk){
-        List<CategoryLink> existingCategoryLinks = categoryLinkRepository.findByClassNameAndClassPkAndCategory_Type(className, classPk, categoryType);
+    public ServiceResult<Void> updateCategoryLinks(Set<Long> categoryIds, CategoryType categoryType, Competition competition){
+        List<CompetitionCategoryLink> existingCategoryLinks = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), categoryType);
 
         if (categoryIds.isEmpty()) {
             // Not category ids provided, so remove existing categoryLinks
             if(!existingCategoryLinks.isEmpty()){
-                categoryLinkRepository.delete(existingCategoryLinks);
+                competitionCategoryLinkRepository.delete(existingCategoryLinks);
             }
         } else {
-            // Got a Category id, so either add or update the CategoryLink
+            // Got a Category id, so either add or update the CompetitionCategoryLink
             Iterable<Category> categories = categoryRepository.findAll(categoryIds);
             
             // determine what to leave, add or remove.
-            List<CategoryLink> toAdd = toAdd(categories, existingCategoryLinks, className, classPk);
-            List<CategoryLink> toRemove = toRemove(categories, existingCategoryLinks, className, classPk);
+            List<CompetitionCategoryLink> toAdd = toAdd(categories, existingCategoryLinks, competition);
+            List<CompetitionCategoryLink> toRemove = toRemove(categories, existingCategoryLinks, competition);
             
             if(!toRemove.isEmpty()) {
-            	categoryLinkRepository.delete(toRemove);
+                competitionCategoryLinkRepository.delete(toRemove);
             }
             
             if(!toAdd.isEmpty()) {
-            	categoryLinkRepository.save(toAdd);
+                competitionCategoryLinkRepository.save(toAdd);
             }
         }
         return ServiceResult.serviceSuccess();
     }
 
-	private List<CategoryLink> toAdd(Iterable<Category> categoriesWanted, List<CategoryLink> alreadyInDb, String className, Long classPk) {
+	private List<CompetitionCategoryLink> toAdd(Iterable<Category> categoriesWanted, List<CompetitionCategoryLink> alreadyInDb, Competition competition) {
 		return StreamSupport.stream(categoriesWanted.spliterator(), false)
-				.filter(cat ->
-					!alreadyInDb.stream().anyMatch(link -> link.getCategory().getId().equals(cat.getId()))
+				.filter(category ->
+					!alreadyInDb.stream().anyMatch(link -> link.getCategory().getId().equals(category.getId()))
                 )
-				.map(cat -> new CategoryLink(cat, className, classPk))
+				.map(category -> new CompetitionCategoryLink(competition, category))
 				.collect(Collectors.toList());
 	}
 	
-	private List<CategoryLink> toRemove(Iterable<Category> categoriesWanted, List<CategoryLink> alreadyInDb, String className, Long classPk) {
+	private List<CompetitionCategoryLink> toRemove(Iterable<Category> categoriesWanted, List<CompetitionCategoryLink> alreadyInDb, Competition competition) {
 		return alreadyInDb.stream()
 				.filter(link ->
 					!StreamSupport.stream(categoriesWanted.spliterator(), false).anyMatch(cat -> link.getCategory().getId().equals(cat.getId()))
 				)
 				.collect(Collectors.toList());
 	}
-
-
 }

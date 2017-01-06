@@ -29,8 +29,5 @@ public class CategoryLinkResourceTest {
     public void categoryShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(categoryLink.getId(), id);
         Assert.assertEquals(categoryLink.getCategory(), category);
-        Assert.assertEquals(categoryLink.getClassName(), className);
-        Assert.assertEquals(categoryLink.getClassPk(), classPk);
     }
-
 }

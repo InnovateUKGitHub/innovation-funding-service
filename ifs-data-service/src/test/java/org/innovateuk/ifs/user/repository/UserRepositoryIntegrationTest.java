@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
@@ -27,6 +30,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected void setRepository(UserRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -116,5 +122,20 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
+    }
+
+    @Test
+    public void saveWithInnovationArea() {
+        Category innovationArea = categoryRepository.findByNameAndType("Earth Observation", CategoryType.INNOVATION_AREA);
+
+        User user = newUser().withId(null).withUid("my-uid").withInnovationArea(innovationArea).build();
+
+        User savedUser = repository.save(user);
+
+        flushAndClearSession();
+
+        User retrievedUser = repository.findOne(savedUser.getId());
+
+        assertEquals(innovationArea, retrievedUser.getInnovationAreas().iterator().next());
     }
 }

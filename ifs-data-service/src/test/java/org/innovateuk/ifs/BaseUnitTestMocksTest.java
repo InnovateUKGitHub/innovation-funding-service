@@ -27,13 +27,14 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.category.mapper.CategoryLinkMapper;
 import org.innovateuk.ifs.category.mapper.CategoryMapper;
-import org.innovateuk.ifs.category.repository.CategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.transactional.CategoryLinkService;
+import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -238,6 +239,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
+    protected CompetitionMapper competitionMapperMock;
+
+    @Mock
     protected AssessorInviteToSendMapper assessorInviteToSendMapperMock;
 
     @Mock
@@ -373,10 +377,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CategoryMapper categoryMapperMock;
 
     @Mock
-    protected CategoryLinkService categoryLinkServiceMock;
+    protected CompetitionCategoryLinkService competitionCategoryLinkServiceMock;
 
     @Mock
-    protected CategoryLinkRepository categoryLinkRepositoryMock;
+    protected CompetitionCategoryLinkRepository competitionCategoryLinkRepositoryMock;
 
     @Mock
     protected CategoryLinkMapper categoryLinkMapperMock;

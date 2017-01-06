@@ -21,14 +21,14 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
     }
 
 
-    @Test
-    public void findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk() throws Exception {
-        Category found = repository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(INNOVATION_SECTOR, "org.innovateuk.ifs.competition.domain.Competition", 7L);
-
-        assertEquals(Long.valueOf(1L), found.getId());
-        assertEquals(INNOVATION_SECTOR, found.getType());
-        assertEquals("Health and life sciences", found.getName());
-    }
+//    @Test
+//    public void findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk() throws Exception {
+//        Category found = repository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(INNOVATION_SECTOR, "org.innovateuk.ifs.competition.domain.Competition", 7L);
+//
+//        assertEquals(Long.valueOf(1L), found.getId());
+//        assertEquals(INNOVATION_SECTOR, found.getType());
+//        assertEquals("Health and life sciences", found.getName());
+//    }
 
     @Test
     public void findByType() throws Exception {
