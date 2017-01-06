@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
@@ -14,14 +16,13 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,12 +31,11 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Optional.ofNullable;
-
 /**
  * Service for operations around the usage and processing of Competitions
  */
@@ -70,7 +70,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public Competition addCategories(Competition competition) {
         addInnovationSector(competition);
-        addInnovationArea(competition);
+        addInnovationAreas(competition);
         addResearchCategories(competition);
         return competition;
     }
@@ -83,12 +83,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         competition.setInnovationSector(category);
     }
 
-    private void addInnovationArea(Competition competition) {
-        Category category =
-                Optional.ofNullable(
-                        competitionCategoryLinkRepository.findByCompetitionIdAndCategory_Type(competition.getId(), INNOVATION_AREA)
-                ).map(CompetitionCategoryLink::getCategory).orElse(null);
-        competition.setInnovationArea(category);
+    private void addInnovationAreas(Competition competition) {
+        Set<Category> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_AREA)
+                .stream()
+                .map(CompetitionCategoryLink::getCategory)
+                .collect(Collectors.toSet());
+
+        competition.setInnovationAreas(categories);
     }
 
     private void addResearchCategories(Competition competition) {
@@ -108,17 +109,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
-        return serviceSuccess(simpleMap(competitionRepository.findLive(), this::searchResultFromCompetition));
+        List<Competition> competitions = competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return serviceSuccess(simpleMap(competitionRepository.findProjectSetup(), this::searchResultFromCompetition));
+        List<Competition> competitions = competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
-        return serviceSuccess(simpleMap(competitionRepository.findUpcoming(), this::searchResultFromCompetition));
+        List<Competition> competitions = competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
@@ -128,7 +132,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
 
         CompetitionSearchResult result = new CompetitionSearchResult();
-        List<Competition> competitions = pageResult.getContent();
+        List<Competition> competitions = pageResult.getContent().stream().map(this::addCategories).collect(Collectors.toList());
         result.setContent(simpleMap(competitions, this::searchResultFromCompetition));
         result.setNumber(pageRequest.getPageNumber());
         result.setSize(size);
@@ -141,7 +145,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionSearchResultItem searchResultFromCompetition(Competition c) {
         return new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
-                ofNullable(c.getInnovationArea()).map(Category::getName).orElse(null),
+                ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
+                        .stream().map(Category::getName).collect(Collectors.toSet()),
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),

@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Collections;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -57,12 +58,16 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         Category innovationSector = newCategory().withType(INNOVATION_SECTOR).build();
         Set<Category> researchCategories = newCategory().withType(RESEARCH_CATEGORY, RESEARCH_CATEGORY).withName("foo", "bar").buildSet(2);
-        Category innovationArea = newCategory().withType(INNOVATION_AREA).build();
+        Set<Category> innovationAreas = newCategory().withType(INNOVATION_AREA, INNOVATION_AREA).withName("foo", "bar").buildSet(2);
 
         when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategory_Type(competitionId, INNOVATION_SECTOR))
                 .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationSector).build());
         when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategory_Type(competitionId, INNOVATION_AREA))
-                .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationArea).build());
+                .thenReturn(Arrays.asList(
+                        newCompetitionCategoryLink()
+                                .withCompetition(competition, competition)
+                                .withCategory(innovationAreas.toArray(new Category[2]))
+                                .buildArray(2, CompetitionCategoryLink.class));
         when(competitionCategoryLinkRepositoryMock.findAllByCompetitionIdAndCategoryType(competitionId, RESEARCH_CATEGORY))
                 .thenReturn(Arrays.asList(
                         newCompetitionCategoryLink()
@@ -73,7 +78,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition compResp = service.addCategories(competition);
 
         assertEquals(competition, compResp);
-        assertEquals(competition.getInnovationArea(), innovationArea);
+        assertEquals(competition.getInnovationAreas(), innovationAreas);
         assertEquals(competition.getInnovationSector(), innovationSector);
         assertEquals(competition.getResearchCategories(), researchCategories);
     }
@@ -162,7 +167,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), null, 0, "", CompetitionStatus.COMPETITION_SETUP, "Comp Type",0);
+                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, "Comp Type",0);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 

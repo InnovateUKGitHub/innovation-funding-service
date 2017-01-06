@@ -2,7 +2,7 @@
 Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts of interest so that Innovate UK does not assign me assessments that are inappropriate for me.
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
+Suite Setup       guest user log-in    worth.email.test+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot

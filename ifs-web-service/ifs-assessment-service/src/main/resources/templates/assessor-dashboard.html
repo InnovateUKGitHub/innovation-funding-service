@@ -27,7 +27,7 @@
                         <a th:href="@{/profile/declaration}">your declaration of interest</a>
                     </li>
                     <li th:unless="${model.profileStatus.contractComplete}">
-                        <a th:href="@{/profile/terms}">your contract</a>
+                        <a th:href="@{/profile/contract}">your contract</a>
                     </li>
                 </ul>
             </div>
@@ -117,7 +117,7 @@
                     <a th:href="@{/profile/declaration}">your declaration of interest</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/terms}">your contract</a>
+                    <a th:href="@{/profile/contract}">your contract</a>
                 </li>
                 <li>
                     <a th:href="@{/profile/travel}">travel and subsistence rates</a>
@@ -134,11 +134,9 @@
                     <a th:href="">change your password</a>
                 </li>
                 */-->
-                <!--/* TODO INFUND-7058
                 <li>
-                    <a th:href="">read terms and conditions</a>
+                    <a th:href="@{/assessor/terms-and-conditions}">read terms and conditions</a>
                 </li>
-                */-->
             </ul>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
