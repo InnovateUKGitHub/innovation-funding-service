@@ -6,9 +6,11 @@ import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 import java.io.Serializable;
 import java.util.*;
@@ -211,25 +213,31 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         if (originalArguments == null || originalArguments.length == 0) {
             return emptyList();
         }
-
-        return simpleMap(asList(originalArguments), arg -> validMessageArgument(arg) ? arg : "");
+        List<Object> stuff = simpleMap(asList(originalArguments), arg -> getValidMessageArgument(arg).orElse(""));
+        return stuff;
     }
 
-    private boolean validMessageArgument(Object arg) {
+    private Optional<Object> getValidMessageArgument(Object arg) {
 
         if (arg == null) {
-            return true;
+            return Optional.ofNullable(arg);
+        }
+
+        if(arg instanceof DefaultMessageSourceResolvable) {
+            return Optional.empty();
         }
 
         if (arg instanceof MessageSourceResolvable) {
-            return false;
+
+            //TODO do we really want to do this for all MessageSources or try and get the Resolvable ones?
+            return Optional.of((((MessageSourceResolvable) arg).getDefaultMessage()));
         }
 
         if (arg.getClass().isArray() && ((Object[]) arg).length == 0) {
-            return false;
+            return Optional.empty();
         }
 
-        return true;
+        return Optional.of(arg);
     }
 
     public static void rejectValue(Errors errors, String fieldName, String errorKey, Object... arguments) {
