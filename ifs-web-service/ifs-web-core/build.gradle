@@ -33,6 +33,9 @@ dependencies {
 
 }
 
+// enabling Spring dev tools has security consequences so only do so for local development
+ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "development")
+
 processResources {
     filesMatching("*.properties") {
         expand project.properties

@@ -1,11 +1,14 @@
-apply plugin: 'war'
+if(!project.hasProperty('cloud')) {
+    apply from: "war-build.gradle";
+}
 
-war {
+jar {
     baseName = 'management'
 }
 
 bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 }
 
 configurations {
@@ -39,27 +42,6 @@ processResources {
     }
 }
 
-task copyTemplatesInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/management/WEB-INF/classes/templates"
-    from 'src/main/resources/templates'
-}
-
-task copyCssInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/css"
-    from 'src/main/resources/static/css'
-}
-
-task copyJsInPlace(type: Copy) {
-    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/js/dest"
-    from 'src/main/resources/static/js/dest'
-}
-
-
-task deployToTomcat(type: Copy) {
-    from war
-    into "$tomcatWebAppsDir"
-    rename '(.*).war', 'management.war'
-}
 
 task buildDocker( type:Docker, dependsOn: build) {
     push = false
@@ -67,19 +49,13 @@ task buildDocker( type:Docker, dependsOn: build) {
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy {
-            from war
+            from jar
             into stageDir
         }
     }
 }
 
-task cleanDeploy() {
-    build.mustRunAfter clean
-    deployToTomcat.mustRunAfter build
-    dependsOn clean
-    dependsOn build
-    dependsOn deployToTomcat
-}
+
 
 task cleanDeployServices() {
     build.mustRunAfter clean

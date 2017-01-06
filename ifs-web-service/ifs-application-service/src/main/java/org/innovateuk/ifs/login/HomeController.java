@@ -100,7 +100,7 @@ public class HomeController {
 
     private String doViewRoleSelection(Model model) {
         model.addAttribute("model", roleSelectionModelPopulator.populateModel());
-        return "/login/dual-user-choice";
+        return "login/dual-user-choice";
     }
 
     private String redirectToChosenDashboard(UserResource user, String role) {

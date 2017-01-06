@@ -97,7 +97,7 @@ the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    200ms
+    wait for autosave
     The user enters text to a text field    id=question.shortTitle    ${EMPTY}
     the user moves focus and waits for autosave
     The user enters text to a text field    id=question.title    ${EMPTY}
@@ -158,7 +158,7 @@ User creates a new competition for Application tests
     And the user enters text to a text field    id=title    Test competition
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

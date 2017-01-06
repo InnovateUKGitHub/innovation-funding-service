@@ -1,8 +1,12 @@
 
 package org.innovateuk.ifs.management.controller;
 
+
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +19,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.hamcrest.CoreMatchers.is;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -31,6 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementDashboardControllerTest {
+
+    private static final String INNOVATION_AREA_NAME_ONE = "one";
+    private static final String INNOVATION_AREA_NAME_TWO = "two";
 
     @InjectMocks
 	private CompetitionManagementDashboardController controller;
@@ -56,6 +62,7 @@ public class CompetitionManagementDashboardControllerTest {
     public void liveDashboard() throws Exception {
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
         Mockito.when(competitionService.getLiveCompetitions()).thenReturn(competitions);
@@ -72,6 +79,7 @@ public class CompetitionManagementDashboardControllerTest {
     public void projectSetupDashboard() throws Exception {
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
         Mockito.when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
@@ -81,13 +89,20 @@ public class CompetitionManagementDashboardControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/projectSetup"))
                 .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
-                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)));
+                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)))
+                .andExpect(MockMvcResultMatchers.model().attribute("formattedInnovationAreas", is(Arrays.asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO))));
+    }
+
+    private void addInnovationAreaNamesToCompetitions(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions ) {
+        CompetitionSearchResultItem openItem = newCompetitionSearchResultItem().withInnovationAreaNames(new HashSet<>(Arrays.asList(INNOVATION_AREA_NAME_ONE, INNOVATION_AREA_NAME_TWO))).build();
+        competitions.put(CompetitionStatus.OPEN, Arrays.asList(openItem));
     }
 
     @Test
     public void upcomingDashboard() throws Exception {
 
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions = new HashMap<>();
+        addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
         Mockito.when(competitionService.getUpcomingCompetitions()).thenReturn(competitions);
@@ -97,7 +112,8 @@ public class CompetitionManagementDashboardControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/upcoming"))
                 .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
-                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)));
+                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)))
+                .andExpect(MockMvcResultMatchers.model().attribute("formattedInnovationAreas", is(Arrays.asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO))));
     }
 
     @Test
