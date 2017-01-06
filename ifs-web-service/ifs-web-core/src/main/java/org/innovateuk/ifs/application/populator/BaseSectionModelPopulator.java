@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -48,9 +49,12 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    public abstract void populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections);
+    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections);
 
     protected NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
         return applicationNavigationPopulator.addNavigation(section, applicationId);
@@ -68,7 +72,6 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         viewModel.setUserIsLeadApplicant(userIsLeadApplicant);
         viewModel.setLeadApplicant(leadApplicant);
     }
-
 
     protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
         return formInputResponseService.getByApplication(application.getId());
@@ -90,18 +93,15 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
 
         Map<Long, SectionResource> sections =
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
-                        Function.identity()));
+                    Function.identity()));
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
-                .collect(Collectors.toMap(
-                        SectionResource::getId,
-                        s -> getQuestionsBySection(s.getQuestions(), questions)
-                ));
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
-                .flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), inputs)));
+            .collect(Collectors.toMap(
+                SectionResource::getId,
+                s -> getQuestionsBySection(s.getQuestions(), questions)
+            ));
 
         Map<Long, List<QuestionResource>> subsectionQuestions;
         Map<Long, List<SectionResource>> subSections = new HashMap<>();
@@ -116,7 +116,6 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
 
         userOrganisation.ifPresent(organisationResource -> viewModel.setCompletedSections(sectionService.getCompleted(application.getId(), organisationResource.getId())));
         viewModel.setSections(sections);
-        viewModel.setQuestionFormInputs(questionFormInputs);
         viewModel.setSectionQuestions(sectionQuestions);
         viewModel.setSubSections(subSections);
         viewModel.setSubsectionQuestions(subsectionQuestions);
@@ -132,15 +131,12 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         sectionQuestions.put(currentSection.getId(), questions);
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
 
+        viewModel.setQuestionFormInputs(questionFormInputs);
         viewModel.setCurrentSection(currentSection);
         viewModel.setSectionQuestions(sectionQuestions);
         viewModel.setTitle(currentSection.getName());
-    }
-
-
-    private List<FormInputResource> findByQuestion(List<FormInputResource> inputs, Long questionId){
-        return simpleFilter(inputs, i -> questionId.equals(i.getQuestion()));
     }
 
     private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {

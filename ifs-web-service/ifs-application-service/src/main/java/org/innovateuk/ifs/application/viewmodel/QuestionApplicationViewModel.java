@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import java.util.Set;
 
 /**
- * TODO - comments that make sense
+ * ViewModel for the application part of the question
  */
 public class QuestionApplicationViewModel {
     private Set<Long> markedAsComplete;

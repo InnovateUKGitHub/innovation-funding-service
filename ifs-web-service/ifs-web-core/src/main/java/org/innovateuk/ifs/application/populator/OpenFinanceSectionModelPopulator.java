@@ -9,8 +9,9 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
+import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -73,31 +74,32 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private FinanceHandler financeHandler;
 
     @Override
-    public void populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
+    public BaseSectionViewModel populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
         OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(section, application.getId()),
                 section, true, section.getId(), user);
-        SectionApplicationViewModel applicationViewModel = new SectionApplicationViewModel();
+        SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        applicationViewModel.setAllReadOnly(calculateAllReadOnly(competition));
-        applicationViewModel.setCurrentApplication(application);
-        applicationViewModel.setCurrentCompetition(competition);
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition));
+        sectionApplicationViewModel.setCurrentApplication(application);
+        sectionApplicationViewModel.setCurrentCompetition(competition);
 
-        addApplicationAndSections(openFinanceSectionViewModel, applicationViewModel, application, competition, user.getId(), section, form, allSections);
+        addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
-        openFinanceSectionViewModel.setSectionApplicationViewModel(applicationViewModel);
+        openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
 
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL, openFinanceSectionViewModel);
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
+
+        return openFinanceSectionViewModel;
     }
 
-    private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel applicationViewModel, ApplicationResource application,
+    private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
                                        CompetitionResource competition, Long userId, SectionResource section,
                                        ApplicationForm form, List<ProcessRoleResource> userApplicationRoles,
                                        List<SectionResource> allSections, List<FormInputResource> inputs) {
@@ -111,9 +113,9 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         addMappedSectionsDetails(viewModel, application, competition, section, userOrganisation, allSections, inputs, singletonList(section));
 
         viewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
-        addCompletedDetails(applicationViewModel, application, userOrganisation);
+        addCompletedDetails(sectionApplicationViewModel, application, userOrganisation);
 
-        applicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
+        sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
     }
 
     private void addQuestionsDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Form form) {
@@ -149,12 +151,12 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         return new SectionAssignableViewModel(questionAssignees, notifications);
     }
 
-    private void addCompletedDetails(SectionApplicationViewModel applicationViewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    private void addCompletedDetails(SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        applicationViewModel.setMarkedAsComplete(markedAsComplete);
+        sectionApplicationViewModel.setMarkedAsComplete(markedAsComplete);
     }
 
-    private void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel applicationViewModel,
+    private void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel,
                                            ApplicationResource application,
                                             CompetitionResource competition,
                                             Long userId,
@@ -163,7 +165,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                                             List<SectionResource> allSections) {
         List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addApplicationDetails(viewModel, applicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
+        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
 
         addSectionDetails(viewModel, section, inputs);
     }

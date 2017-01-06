@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.viewmodel;
 import org.springframework.util.StringUtils;
 
 /**
- * TODO - comments that make sense
+ * ViewModel used for showing navigation on questions and sections in applications
  */
 public class NavigationViewModel {
     private String previousUrl;
@@ -44,6 +44,6 @@ public class NavigationViewModel {
     }
 
     public Boolean getHasNavigation(){
-        return !StringUtils.isEmpty(previousUrl) && !StringUtils.isEmpty(nextUrl);
+        return !StringUtils.isEmpty(previousUrl) || !StringUtils.isEmpty(nextUrl);
     }
 }

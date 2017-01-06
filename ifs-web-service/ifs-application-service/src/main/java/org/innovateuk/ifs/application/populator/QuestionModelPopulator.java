@@ -8,10 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionAssignableViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -36,7 +33,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
-import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_MODEL;
 
 /**
  * View model for the single question pages
@@ -78,23 +74,27 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    public void populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model, final ApplicationForm form) {
+    public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
+                                           final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
         QuestionResource question = questionService.getById(questionId);
         List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        addFormAttributes(application, competition, user, model, form,
+        QuestionViewModel viewModel = addFormAttributes(application, competition, user, model, form,
                 question, formInputs, userApplicationRoles);
+        addOrganisationDetailsViewModel(viewModel, organisationDetailsViewModel);
+
+        return viewModel;
     }
 
-    private void addFormAttributes(ApplicationResource application,
-                                   CompetitionResource competition,
-                                   UserResource user, Model model,
-                                   ApplicationForm form, QuestionResource question,
-                                   List<FormInputResource> formInputs,
-                                   List<ProcessRoleResource> userApplicationRoles){
+    private QuestionViewModel addFormAttributes(ApplicationResource application,
+                                                CompetitionResource competition,
+                                                UserResource user, Model model,
+                                                ApplicationForm form, QuestionResource question,
+                                                List<FormInputResource> formInputs,
+                                                List<ProcessRoleResource> userApplicationRoles){
 
         form = initializeApplicationForm(form);
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
@@ -112,8 +112,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         addQuestionsDetails(questionViewModel, application, form);
         addUserDetails(questionViewModel, application, user.getId());
 
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
+
+        return questionViewModel;
     }
 
 
@@ -125,7 +126,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                                                                Optional<OrganisationResource> userOrganisation,
                                                                ApplicationForm form,
                                                                List<ProcessRoleResource> userApplicationRoles) {
-
         form.setApplication(application);
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
@@ -140,9 +140,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 questionApplicationViewModel.setLeadOrganisation(org)
         );
 
-
         addApplicationFormDetailInputs(application, form);
-
 
         return questionApplicationViewModel;
     }
@@ -264,5 +262,12 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
                 .findFirst();
+    }
+
+    private void addOrganisationDetailsViewModel(QuestionViewModel viewModel, QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
+        viewModel.setAcademicOrganisations(organisationDetailsViewModel.getAcademicOrganisations());
+        viewModel.setApplicationOrganisations(organisationDetailsViewModel.getApplicationOrganisations());
+        viewModel.setLeadOrganisation(organisationDetailsViewModel.getLeadOrganisation());
+        viewModel.setPendingOrganisationNames(organisationDetailsViewModel.getPendingOrganisationNames());
     }
 }

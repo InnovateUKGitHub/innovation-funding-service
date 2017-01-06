@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * TODO - create some comments
+ * View model extending the {@link BaseSectionViewModel} for open sections (not finance, but used by finances overview)
  */
 public class OpenSectionViewModel extends BaseSectionViewModel {
     private SortedSet<OrganisationResource> academicOrganisations;

@@ -13,12 +13,12 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * TODO - create some comments
+ * Class for populating the base functions, used by questions and sections
  */
 public abstract class BaseModelPopulator {
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     protected ApplicationForm initializeApplicationForm(ApplicationForm form) {
         if(null == form){

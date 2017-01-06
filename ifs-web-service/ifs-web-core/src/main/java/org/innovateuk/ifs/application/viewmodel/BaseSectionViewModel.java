@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO - create some comments
+ * Generic ViewModel for common fields in SectionViewModels
  */
 public abstract class BaseSectionViewModel {
     protected String title;
@@ -203,5 +203,21 @@ public abstract class BaseSectionViewModel {
 
     public Object getCurrentQuestionFormInputs() {
         return null;
+    }
+
+    public Boolean getIsYourFinancesAndNotCompleted() {
+        return getIsYourFinances() && !completedSections.contains(currentSection.getId());
+    }
+
+    public Boolean getIsYourFinances() {
+        return null != currentSection && "Your finances".equals(currentSection.getName());
+    }
+
+    public Boolean getIsFinanceOverview() {
+        return null != currentSection && "Finances overview".equals(currentSection.getName());
+    }
+
+    public Boolean getIsSection() {
+        return Boolean.TRUE;
     }
 }

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
- * TODO - create some comments
+ * ViewModel for Finance open sections
  */
 public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,

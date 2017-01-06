@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO - comments that make sense
+ * ViewModel for questions in the applications
  */
-public class QuestionViewModel {
+public class QuestionViewModel extends QuestionOrganisationDetailsViewModel {
     private UserResource currentUser;
     private Map<Long, List<FormInputResource>> questionFormInputs;
     private String title;
@@ -111,5 +111,9 @@ public class QuestionViewModel {
 
     public QuestionAssignableViewModel getQuestionAssignableViewModel() {
         return questionAssignableViewModel;
+    }
+
+    public Boolean getIsSection() {
+        return Boolean.FALSE;
     }
 }

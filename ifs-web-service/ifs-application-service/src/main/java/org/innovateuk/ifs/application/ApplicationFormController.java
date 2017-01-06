@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -12,7 +14,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
+import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -30,15 +32,12 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
-import org.innovateuk.ifs.model.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.AjaxResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
@@ -63,6 +62,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
@@ -75,9 +77,6 @@ import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -128,7 +127,7 @@ public class ApplicationFormController {
     private OpenSectionModelPopulator openSectionModel;
 
     @Autowired
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+    private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Autowired
     private OpenFinanceSectionModelPopulator openFinanceSectionModel;
@@ -172,9 +171,6 @@ public class ApplicationFormController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @Autowired
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -190,8 +186,11 @@ public class ApplicationFormController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
-        organisationDetailsModelPopulator.populateModel(model, applicationId);
+
+        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
         return APPLICATION_FORM;
     }
@@ -230,9 +229,11 @@ public class ApplicationFormController {
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
         if (FINANCE.equals(section.getType())) {
-            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
-            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
 
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
@@ -248,7 +249,7 @@ public class ApplicationFormController {
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRoleResource> userApplicationRoles){
         applicationModelPopulator.addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
-        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
+        organisationDetailsViewModelPopulator.populateModel(application.getId(), userApplicationRoles);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
         if(question.isPresent()) {
@@ -652,6 +653,7 @@ public class ApplicationFormController {
         if (section.getType() == SectionType.FINANCE &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
             applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+
             return APPLICATION_FORM;
         }
 
@@ -679,15 +681,16 @@ public class ApplicationFormController {
 
     private void setReturnToApplicationFormData(SectionResource section, ApplicationResource application, CompetitionResource competition,
                                                 UserResource user, Model model, ApplicationForm form, Long applicationId) {
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), model, form);
+
+        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(application.getId());
+        applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
-        NavigationViewModel navigation = applicationNavigationPopulator.addNavigation(section, applicationId);
+        NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(section, applicationId);
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
-        applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
 
-        model.addAttribute(MODEL_ATTRIBUTE_MODEL_NAV, navigation);
+        model.addAttribute(MODEL_ATTRIBUTE_MODEL_NAV, navigationViewModel);
     }
 
     private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
@@ -1046,11 +1049,6 @@ public class ApplicationFormController {
         questionService.assignQuestion(applicationId, request, assignedBy);
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, final Model model, final ApplicationForm form) {
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, Optional.empty(), model, form);
-    }
-    
     private static class StoreFieldResult {
     	private Long fieldId;
     	private List<String> errors = new ArrayList<>();

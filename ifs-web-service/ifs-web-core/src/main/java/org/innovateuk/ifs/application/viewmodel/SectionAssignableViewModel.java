@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * TODO - comments that make sense
+ * Shared assignable viewModel used by {@link BaseSectionViewModel}
  */
 public class SectionAssignableViewModel {
     private Future<List<ProcessRoleResource>> assignableUsers;

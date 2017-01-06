@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -15,12 +13,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * TODO - comments that make sense
+ * ViewModel for the assignable part of the question
  */
 public class QuestionAssignableViewModel {
-    private static final Log LOG = LogFactory.getLog(QuestionAssignableViewModel.class);
-
-    //Assignable details
     private QuestionStatusResource questionAssignee;
     private Future<List<ProcessRoleResource>> assignableUsers;
     private List<ApplicationInviteResource> pendingAssignableUsers;

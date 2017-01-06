@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * TODO - comments that make sense
+ * Shared Application viewModel used by {@link BaseSectionViewModel}
  */
 public class SectionApplicationViewModel {
     private Future<Set<Long>> markedAsComplete;
