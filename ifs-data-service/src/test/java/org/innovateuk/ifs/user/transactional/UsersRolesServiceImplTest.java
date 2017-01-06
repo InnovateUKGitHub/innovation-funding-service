@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 
 import java.util.List;
 
@@ -18,10 +17,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
+public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesService> {
 
-    @InjectMocks
-    private UsersRolesService usersRolesService = new UsersRolesServiceImpl();
+    @Override
+    protected UsersRolesService supplyServiceUnderTest() {
+        return new UsersRolesServiceImpl();
+    }
 
     @Test
     public void getProcessRoleById() {
@@ -32,7 +33,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findOne(1L)).thenReturn(processRole);
         when(processRoleMapperMock.mapToResource(same(processRole))).thenReturn(processRoleResource);
 
-        ServiceResult<ProcessRoleResource> result = usersRolesService.getProcessRoleById(1L);
+        ServiceResult<ProcessRoleResource> result = service.getProcessRoleById(1L);
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResource, result.getSuccessObject());
@@ -51,7 +52,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
 
         zip(processRoles, processRoleResources, (pr, prr) -> when(processRoleMapperMock.mapToResource(same(pr))).thenReturn(prr));
 
-        ServiceResult<List<ProcessRoleResource>> result = usersRolesService.getProcessRolesByIds(new Long[]{1L, 2L});
+        ServiceResult<List<ProcessRoleResource>> result = service.getProcessRolesByIds(new Long[]{1L, 2L});
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResources, result.getSuccessObject());
@@ -69,7 +70,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
 
         zip(processRoles, processRoleResources, (pr, prr) -> when(processRoleMapperMock.mapToResource(same(pr))).thenReturn(prr));
 
-        ServiceResult<List<ProcessRoleResource>> result = usersRolesService.getProcessRolesByApplicationId(1L);
+        ServiceResult<List<ProcessRoleResource>> result = service.getProcessRolesByApplicationId(1L);
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResources, result.getSuccessObject());
@@ -87,7 +88,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
 
         when(processRoleMapperMock.mapToResource(same(processRole))).thenReturn(processRoleResource);
 
-        ServiceResult<ProcessRoleResource> result = usersRolesService.getProcessRoleByUserIdAndApplicationId(1L, 1L);
+        ServiceResult<ProcessRoleResource> result = service.getProcessRoleByUserIdAndApplicationId(1L, 1L);
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResource, result.getSuccessObject());
@@ -105,7 +106,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
 
         zip(processRoles, processRoleResources, (pr, prr) -> when(processRoleMapperMock.mapToResource(same(pr))).thenReturn(prr));
 
-        ServiceResult<List<ProcessRoleResource>> result = usersRolesService.getProcessRolesByUserId(1L);
+        ServiceResult<List<ProcessRoleResource>> result = service.getProcessRolesByUserId(1L);
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResources, result.getSuccessObject());
@@ -123,7 +124,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
 
         zip(processRoles, processRoleResources, (pr, prr) -> when(processRoleMapperMock.mapToResource(same(pr))).thenReturn(prr));
 
-        ServiceResult<List<ProcessRoleResource>> result = usersRolesService.getAssignableProcessRolesByApplicationId(1L);
+        ServiceResult<List<ProcessRoleResource>> result = service.getAssignableProcessRolesByApplicationId(1L);
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResources.size(), result.getSuccessObject().size());
@@ -141,7 +142,7 @@ public class UsersRolesServiceImplTest extends BaseUnitTestMocksTest {
 
         zip(processRoles, processRoleResources, (pr, prr) -> when(processRoleMapperMock.mapToResource(same(pr))).thenReturn(prr));
 
-        ServiceResult<List<ProcessRoleResource>> result = usersRolesService.getAssignableProcessRolesByApplicationId(1L);
+        ServiceResult<List<ProcessRoleResource>> result = service.getAssignableProcessRolesByApplicationId(1L);
 
         assertTrue(result.isSuccess());
         assertEquals(processRoleResources.size(), result.getSuccessObject().size());
