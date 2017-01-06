@@ -310,13 +310,13 @@ the user enters the details and clicks the create account
 
 the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
-    Input Text    id=firstName    ${NAME}
-    Input Text    id=lastName    ${LAST_NAME}
-    Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
+    Input Text    css=#firstName    ${NAME}
+    Input Text    css=#lastName    ${LAST_NAME}
+    Input Text    css=#phoneNumber    0612121212
+    Input Password    css=#password    Passw0rd123
+    Input Password    css=#retypedPassword    Passw0rd123
     And the user selects the radio button    gender    gender2
     And the user selects the radio button    ethnicity    ethnicity2
     And the user selects the radio button    disability    disability2
-    And the user selects the checkbox    termsAndConditions
-    Submit Form
+    And the user selects the checkbox    css=#termsAndConditions
+    the user clicks the button/link  jQuery=.button:contains("Create account")
