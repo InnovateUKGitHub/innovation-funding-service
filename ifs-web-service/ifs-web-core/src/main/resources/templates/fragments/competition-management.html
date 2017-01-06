@@ -11,6 +11,10 @@
     <p class="subtitle"><div th:text="${#numbers.formatInteger(competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
 </div>
 
+<div th:fragment="competition-id-and-name(competitionId, competitionName)" th:remove="tag">
+    <p class="subtitle"><th:block th:text="${#numbers.formatInteger(competitionId,8)}"/> : <th:block th:text="${competitionName}"/></p>
+</div>
+
 <!-- competition status with blue block -->
 <div th:fragment="competition-status(competition)" th:remove="tag">
     <div th:unless="${competition == 'setup'}" th:remove="tag">
@@ -102,8 +106,9 @@
           </span> Application deadline
           </p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-          <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}"/> Applications not submitted</p>
-          <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/applications/download'" class="button-secondary">Export application data (.xls)</a></p>
+
+          <p th:if="${activeTab == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}"/> Applications not submitted</p>
+          <p th:if="${activeTab == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/applications/download'" class="button-secondary">Export application data (.xls)</a></p>
       </div>
 
       <div th:case="'FUNDERS_PANEL'" class="info-area boxed">

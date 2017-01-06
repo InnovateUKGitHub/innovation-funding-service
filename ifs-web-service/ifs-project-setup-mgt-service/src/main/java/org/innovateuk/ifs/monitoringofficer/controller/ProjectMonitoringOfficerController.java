@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -160,10 +161,10 @@ public class ProjectMonitoringOfficerController {
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
         String projectManagerName = getProjectManagerName(projectResource);
         List<String> partnerOrganisationNames = getPartnerOrganisationNames(projectId);
-        String innovationArea = competition.getInnovationAreaName();
+        String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
         return new ProjectMonitoringOfficerViewModel(projectId, projectResource.getName(),
-                innovationArea, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
+                innovationAreas, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
                 partnerOrganisationNames, competitionSummary, existingMonitoringOfficer, editMode);
     }
 

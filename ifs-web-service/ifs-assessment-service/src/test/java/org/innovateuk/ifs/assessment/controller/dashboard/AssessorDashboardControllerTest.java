@@ -369,4 +369,11 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(1, model.getPendingInvites().size());
         assertEquals(expectedPendingInvitesModel, model.getPendingInvites());
     }
+
+    public void getTermsAndConditions() throws Exception {
+        mockMvc.perform(get("/assessor/terms-and-conditions"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("terms-and-conditions"))
+                .andReturn();
+    }
 }

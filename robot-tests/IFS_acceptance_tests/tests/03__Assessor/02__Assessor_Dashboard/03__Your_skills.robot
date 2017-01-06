@@ -2,7 +2,7 @@
 Documentation     INFUND-5182 As an assessor creating an account I need to supply details of my skills and expertise so that InnovateUK can assign me appropriate applications to assess.
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
+Suite Setup       guest user log-in    worth.email.test+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,7 +26,7 @@ Client-side validations
     When the user clicks the button/link    jQuery=a:contains("Edit your skills")
     And the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Save")
-    Then the user should see an error    Please select an assessor type
+    Then the user should see an error    Please select an assessor type.
     And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
 
 Server-side validations
@@ -39,7 +39,7 @@ Server-side validations
     And browser validations have been disabled
     And the user enters multiple strings into a text field    id=skillAreas    e    5001
     And the user clicks the button/link    jQuery=button:contains("Save")
-    Then the user should see an error    This field cannot contain more than 5,000 characters
+    Then the user should see an error    This field cannot contain more than 5,000 characters.
 
 Save Skills should redirect to dashboard
     [Documentation]    INFUND-5182

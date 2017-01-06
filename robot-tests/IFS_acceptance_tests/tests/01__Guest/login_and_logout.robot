@@ -63,7 +63,7 @@ Valid login with double role as Applicant
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then The user should see the text in the page    Please choose the role you are signing in as today
     And The user clicks the button/link    jquery=button:contains("Continue")
-    Then The user should see an error    Please select a role
+    Then The user should see an error    Please select a role.
     And the user selects the radio button    selectedRole    APPLICANT
     And The user clicks the button/link    jquery=button:contains("Continue")
     Then the user should be redirected to the correct page    ${applicant_dashboard_url}
@@ -122,7 +122,7 @@ Reset password validations
     When the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
     And the user clicks the button/link    jQuery=input[value*="Save password"]
-    Then the user should see an error    Passwords must match
+    Then the user should see an error    Passwords must match.
     # TODO INFUND-5582
 
 Reset password user enters new psw
@@ -160,7 +160,7 @@ Clear the login fields
     When the user enters text to a text field    id=id_password    ${EMPTY}
     And the user enters text to a text field    id=id_retypedPassword    ${EMPTY}
     Mouse Out    id=id_retypedPassword
-    sleep    200ms
+    wait for autosave
 
 the user clicks the forgot psw link
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    click element    link=Forgot your password?

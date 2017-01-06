@@ -307,7 +307,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("fundingConfirmation"));
-        assertEquals("Please indicate your decision", bindingResult.getFieldError("fundingConfirmation").getDefaultMessage());
+        assertEquals("Please indicate your decision.", bindingResult.getFieldError("fundingConfirmation").getDefaultMessage());
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);
@@ -359,7 +359,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("feedback"));
-        assertEquals("Please enter your feedback", bindingResult.getFieldError("feedback").getDefaultMessage());
+        assertEquals("Please enter your feedback.", bindingResult.getFieldError("feedback").getDefaultMessage());
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);
@@ -415,9 +415,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("feedback").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("feedback").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("feedback").getArguments()[1]);
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("comment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);

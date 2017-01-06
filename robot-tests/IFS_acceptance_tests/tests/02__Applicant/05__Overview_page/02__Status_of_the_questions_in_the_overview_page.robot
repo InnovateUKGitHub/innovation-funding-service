@@ -34,7 +34,7 @@ the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
 
 the assign status should be correct for the Project Summary
     the user navigates to the page    ${DASHBOARD_URL}

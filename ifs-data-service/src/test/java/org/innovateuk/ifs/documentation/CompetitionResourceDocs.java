@@ -6,6 +6,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import java.time.LocalDateTime;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -33,8 +34,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("leadTechnologistName").description("the name of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
             fieldWithPath("innovationSectorName").description("the Innovation sector name this competition belongs to"),
-            fieldWithPath("innovationArea").description("the Innovation area this competition belongs to"),
-            fieldWithPath("innovationAreaName").description("the Innovation area name this competition belongs to"),
+            fieldWithPath("innovationAreas").description("the Innovation areas this competition belongs to"),
+            fieldWithPath("innovationAreaNames").description("the names of the Innovation areas this competition belongs to"),
             fieldWithPath("pafCode").description("the paf code entered during competition setup"),
             fieldWithPath("budgetCode").description("the budget code entered during competition setup"),
             fieldWithPath("code").description("the unique competition code entered during competition setup"),
@@ -74,8 +75,8 @@ public class CompetitionResourceDocs {
             .withExecutive(1L)
             .withLeadTechnologist(1L)
             .withLeadTechnologistName("Competition Technologist")
-            .withInnovationArea(1L)
-            .withInnovationAreaName("Tech")
+            .withInnovationAreas(singleton(1L))
+            .withInnovationAreaNames(singleton("Tech"))
             .withInnovationSector(2L)
             .withInnovationSectorName("IT")
             .withPafCode("PAF-123")
