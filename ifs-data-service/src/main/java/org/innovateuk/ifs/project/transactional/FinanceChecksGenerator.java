@@ -72,6 +72,8 @@ public class FinanceChecksGenerator {
 
         if (organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())) {
             projectFinance.setViability(Viability.NOT_APPLICABLE);
+        } else {
+            projectFinance.setViability(Viability.REVIEW);
         }
 
         ProjectFinance projectFinanceForOrganisation =

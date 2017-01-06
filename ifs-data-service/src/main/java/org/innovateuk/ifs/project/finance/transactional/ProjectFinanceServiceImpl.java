@@ -407,7 +407,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(project.getId());
 
         Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
-                Viability.PENDING.equals(finance.getViability()));
+                Viability.REVIEW.equals(finance.getViability()));
 
         if (!existingReviewableFinance.isPresent()) {
             return serviceSuccess();

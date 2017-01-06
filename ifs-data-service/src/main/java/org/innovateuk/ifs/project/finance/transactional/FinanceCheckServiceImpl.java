@@ -197,7 +197,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         switch(viability) {
             case APPROVED:
                 return FinanceCheckPartnerStatusResource.Viability.APPROVED;
-            case PENDING:
+            case REVIEW:
                 return FinanceCheckPartnerStatusResource.Viability.REVIEW;
             case NOT_APPLICABLE:
             default:
