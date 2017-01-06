@@ -6,7 +6,11 @@ package org.innovateuk.ifs.project.finance.resource;
 public enum Viability {
     REVIEW,
     APPROVED,
-    NOT_APPLICABLE
+    NOT_APPLICABLE;
+
+    public boolean isNotApplicable() {
+        return this == NOT_APPLICABLE;
+    }
 }
 
 

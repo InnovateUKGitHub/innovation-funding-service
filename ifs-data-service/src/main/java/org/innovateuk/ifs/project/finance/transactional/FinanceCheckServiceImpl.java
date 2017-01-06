@@ -165,7 +165,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> viability = getViability(org);
+            Pair<Viability, ViabilityStatus> viability = getViability(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
@@ -179,30 +179,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
+    private Pair<Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
 
         ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
                 org.getProject().getId(), org.getOrganisation().getId());
 
         ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
 
-        FinanceCheckPartnerStatusResource.Viability viability = getViabilityToDisplay(viabilityDetails.getViability());
+        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityStatus());
 
-        return Pair.of(viability, viabilityDetails.getViabilityStatus());
-
-    }
-
-    private FinanceCheckPartnerStatusResource.Viability getViabilityToDisplay(Viability viability) {
-
-        switch(viability) {
-            case APPROVED:
-                return FinanceCheckPartnerStatusResource.Viability.APPROVED;
-            case REVIEW:
-                return FinanceCheckPartnerStatusResource.Viability.REVIEW;
-            case NOT_APPLICABLE:
-            default:
-                return FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE;
-        }
     }
 
     private FinanceCheck mapToDomain(FinanceCheckResource financeCheckResource) {
