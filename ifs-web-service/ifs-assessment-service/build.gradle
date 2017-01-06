@@ -1,7 +1,4 @@
 apply plugin: 'war'
-configurations {
-    providedRuntime
-}
 
 war {
     baseName = 'assessment'
@@ -15,11 +12,6 @@ bootRepackage {
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
-    compile "org.springframework.plugin:spring-plugin-core"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "com.google.guava:guava:16.0.1"
     compile "commons-io:commons-io:2.4"
 
     testCompile project(':ifs-resources').sourceSets.test.output

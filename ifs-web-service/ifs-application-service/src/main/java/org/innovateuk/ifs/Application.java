@@ -16,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 
 
 
-@SpringBootApplication
+@SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
 @PropertySource(value = { "classpath:/application.properties", "classpath:/applicationservice.properties" })
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class Application extends SpringBootServletInitializer {
