@@ -315,6 +315,36 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     @Test
+    public void removeNewUserFromInviteView_atLeastOneEmptyRow() throws Exception {
+        List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("removeNewUser", "0")
+                .param("invites[0].email", "test1@test.com")
+                .param("invites[0].name", "Tester 1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsRowForm expectedInviteRow = new InviteNewAssessorsRowForm();
+
+        assertEquals(1, form.getInvites().size());
+        assertEquals(expectedInviteRow, form.getInvites().get(0));
+
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void inviteNewUsersFromInviteView() throws Exception {
         List<NewUserStagedInviteResource> expectedInvites = newNewUserStagedInviteResource()
                 .withEmail("test1@test.com", "test2@test.com")
