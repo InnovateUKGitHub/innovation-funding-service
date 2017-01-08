@@ -185,8 +185,8 @@ Lead marks finances as complete and collaborator should be able to edit them
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
     And the user enters the funding level
-    And the user selects the checkbox    id=agree-terms-page
-    And the user selects the checkbox    id=agree-state-aid-page
+    And the user selects the checkbox    agree-terms-page
+    And the user selects the checkbox    agree-state-aid-page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     And the user should see the text in the page    Project details
     Then Collaborator should be able to edit finances again
@@ -232,8 +232,7 @@ the collaborator edits the 'public description' question
     Focus    css=#form-input-12 .editor
     The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
-    sleep    1s
-    sleep    1s
+    wait for autosave
     the user reloads the page
 
 the question should contain the correct status/name

@@ -14,6 +14,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 ...
 ...               INFUND-5806 As a partner (non-lead) I want the status indicator of the Other Documents section to show as pending before the lead has uploaded documents so that I am aware there is no action required by me
+...
+...               INFUND-6139 Other Docs Team Status table should update
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -198,7 +200,7 @@ Status in the dashboard remains action required after uploads
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
-    [Documentation]    INFUND-3011, INFUND-6152
+    [Documentation]    INFUND-3011, INFUND-6152, INFUND-6139
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     # This ticket assumes that Project_details suite has set as PM the 'test twenty'
@@ -215,6 +217,7 @@ Mandatory document submission
     And the user should see the element    jQuery=ul li.waiting:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
@@ -265,7 +268,7 @@ Non-lead partner cannot remove the documents after submission by PM
     And the user should not see the element    name=removeExploitationPlanClicked
 
 Non-lead partner can still view both documents after submitting
-    [Documentation]    INFUND-3012 , INFUND-4428
+    [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -274,6 +277,7 @@ Non-lead partner can still view both documents after submitting
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621
@@ -403,8 +407,7 @@ Status updates correctly for internal user's table
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.action
-    # bank details are ok only when all 3 bank details are approved TODO
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok
 
