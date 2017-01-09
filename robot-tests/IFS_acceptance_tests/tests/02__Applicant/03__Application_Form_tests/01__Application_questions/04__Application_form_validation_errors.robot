@@ -86,8 +86,7 @@ Application details server side
     [Documentation]    INFUND-2843
     ...
     ...    INFUND-4694
-    [Tags]  HappyPath
-
+    [Tags]
     Given the user should see the text in the page    Application details
     When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user enters text to a text field    id=application_details-title    ${EMPTY}

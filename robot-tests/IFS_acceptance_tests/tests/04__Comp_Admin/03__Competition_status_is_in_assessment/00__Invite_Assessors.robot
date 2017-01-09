@@ -8,6 +8,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6412 As a member of the competitions team, I can view the invite list before sending invites...
 ...
 ...               INFUND-6414 As a member of the competitions team, I can select 'Invite individual' to review invitation and then 'Send invite' ...
+...
+...               INFUND-6411 As a member of the competitions team, I can add a non-registered assessor to my invite list so...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -32,6 +34,15 @@ The User can Add and Remove Assessors
     Then The user should not see the text in the page    will.smith@gmail.com
     [Teardown]    The user clicks the button/link    link=Find
 
+Remove users from the list
+    [Documentation]    INFUND-7354
+    When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
+    And The user clicks the button/link    link=Invite
+    And The user should see the text in the page    will.smith@gmail.com
+    And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove from list)
+    Then The user should not see the text in the page    will.smith@gmail.com
+    [Teardown]    The user clicks the button/link    link=Find
+
 Invite Individual Assessors
     [Documentation]    INFUND-6414
     Given The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
@@ -43,3 +54,18 @@ Invite Individual Assessors
     Then The user should not see the text in the page    Will Smith
     And The user clicks the button/link    link=Find
     And the user should not see the text in the page    Will Smith
+
+Invite non-registered users
+    [Documentation]    INFUND-6411
+    [Tags]
+    Given the user clicks the button/link    link=Invite
+    #when the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
+    #And The user clicks the button/link    jQuery=button:contains("Add another assessor of this type")
+    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
+    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
+    And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
+    And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
+    Then the user should not see the element    css=tr:nth-child(1).no
+    And The user should see the text in the page    Olivier Giroud
+    And The user should see the text in the page    worth.email.test+OlivierGiroud@gmail.com
+    And The user should see the text in the page    Data

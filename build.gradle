@@ -11,7 +11,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'spring-boot'
+    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
@@ -35,11 +35,11 @@ subprojects {
     dependencies {
         if(project.hasProperty("cloud") && project.cloud == "development") {
             compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
-            compile "org.springframework.boot:spring-boot-starter-actuator"
             compile "org.springframework.boot:spring-boot-actuator-docs"
             compile "org.springframework.boot:spring-boot-devtools"
         }
 
+        compile "org.springframework.boot:spring-boot-starter-actuator"
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
@@ -49,7 +49,7 @@ subprojects {
         // Test Libraries
         testCompile group: 'org.hamcrest', name: 'hamcrest-core'
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile 'org.springframework:spring-test'
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
         testCompile 'org.mockito:mockito-core'
         testCompile group: 'org.hamcrest', name: 'hamcrest-library'
     }
@@ -67,7 +67,7 @@ subprojects {
 buildscript {
 
     ext {
-        springBootVersion = '1.3.2.RELEASE'
+        springBootVersion = '1.4.3.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -117,7 +117,7 @@ dockerCompose {
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
-    commandLine './micro_run_tests.sh', '-hn'
+    commandLine './micro_run_tests.sh', '-hnw'
 }
 
 task wrapper(type: Wrapper) {
