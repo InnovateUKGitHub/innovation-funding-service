@@ -612,7 +612,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         ServiceResult<Void> result = service.updateProfileContract(existingUser.getId());
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned")));
+        assertTrue(result.getFailure().is(badRequestError("validation.assessorprofilecontractform.terms.alreadysigned")));
 
         InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, userRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());

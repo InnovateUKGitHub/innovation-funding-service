@@ -60,7 +60,7 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
-    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan ${nextyear}
+    And Element Should Contain    jQuery=p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page    Elmo Chenault
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
@@ -78,7 +78,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
-    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan ${nextyear}
+    And Element Should Contain    jQuery=p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page    Elmo Chenault
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
