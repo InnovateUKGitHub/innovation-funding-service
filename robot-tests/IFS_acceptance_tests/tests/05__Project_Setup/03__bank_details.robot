@@ -8,6 +8,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-4903 As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
 ...
 ...               INFUND-6018 Partner should see a flag in Bank Details, when he needs to take an action
+...
+...               INFUND-6887 Duplicate validation error message in bank details section of PS
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -61,17 +63,24 @@ Bank details server side validations
     And the user should see an error    You need to select a billing address before you can continue.
 
 Bank details client side validations
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010, INFUND-6887
     [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
     And the user should see an error    Please enter a valid account number
+    When the user enters text to a text field    name=accountNumber    abcdefgh
+    And the user moves focus away from the element    name=accountNumber
+    Then the user should not see the text in the page    Please enter an account number.
+    And the user should see the text in the page    Please enter a valid account number.
     When the user enters text to a text field    name=accountNumber    12345679
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
     And the user should not see the text in the page    Please enter a valid account number.
     When the user enters text to a text field    name=sortCode    12345
+    And the user moves focus away from the element    name=sortCode
+    Then the user should see an error    Please enter a valid sort code.
+    When the user enters text to a text field    name=sortCode    abcde
     And the user moves focus away from the element    name=sortCode
     Then the user should see an error    Please enter a valid sort code.
     When the user enters text to a text field    name=sortCode    123456
