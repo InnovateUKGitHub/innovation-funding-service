@@ -19,6 +19,8 @@ public class InviteNewAssessorsForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.inviteNewAssessorsForm.selectedInnovationArea.required}")
     private Long selectedInnovationArea;
 
+    private boolean visible = false;
+
     public List<InviteNewAssessorsRowForm> getInvites() {
         return invites;
     }
@@ -33,6 +35,14 @@ public class InviteNewAssessorsForm extends BaseBindingResultTarget {
 
     public void setSelectedInnovationArea(Long selectedInnovationArea) {
         this.selectedInnovationArea = selectedInnovationArea;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     @Override
