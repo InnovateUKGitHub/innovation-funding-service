@@ -305,18 +305,18 @@ the user enters the details and clicks the create account
     And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    the user selects the checkbox    termsAndConditions
+    the user selects the checkbox  termsAndConditions
     Submit Form
 
 the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    Input Text    id=phoneNumber    0612121212
+    the user selects the radio button  gender  gender2
+    the user selects the radio button  ethnicity  ethnicity2
+    the user selects the radio button  disability  disability2
+    Input Text        id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
-    And the user selects the checkbox    termsAndConditions
-    Submit Form
+    the user selects the checkbox  termsAndConditions
+    the user clicks the button/link  jQuery=.button:contains("Create account")

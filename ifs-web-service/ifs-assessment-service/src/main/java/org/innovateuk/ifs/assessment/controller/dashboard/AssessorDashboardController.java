@@ -25,4 +25,9 @@ public class AssessorDashboardController {
         model.addAttribute("model", assessorDashboardModelPopulator.populateModel(loggedInUser.getId()));
         return "assessor-dashboard";
     }
+
+    @RequestMapping(value = "/terms-and-conditions", method = RequestMethod.GET)
+    public String termsAndConditions() {
+        return "terms-and-conditions";
+    }
 }
