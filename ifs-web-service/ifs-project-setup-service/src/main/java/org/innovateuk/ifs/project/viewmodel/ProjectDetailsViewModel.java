@@ -34,7 +34,17 @@ public class ProjectDetailsViewModel {
     private boolean userLeadPartner;
     private boolean isReadOnly;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> usersPartnerOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner, boolean projectDetailsSubmitted, ProjectUserResource projectManager, boolean submissionAllowed, boolean isReadOnly) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
+                                   List<Long> usersPartnerOrganisations,
+                                   List<OrganisationResource> partnerOrganisations,
+                                   ApplicationResource app,
+                                   List<ProjectUserResource> projectUsers,
+                                   CompetitionResource competition,
+                                   boolean userIsLeadPartner,
+                                   boolean projectDetailsSubmitted,
+                                   ProjectUserResource projectManager,
+                                   boolean submissionAllowed,
+                                   boolean isReadOnly) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;

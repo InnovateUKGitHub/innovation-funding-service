@@ -126,7 +126,7 @@ public class ProjectSetupStatusController {
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation.getId(), leadPartner,
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation, leadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
                 projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
     }

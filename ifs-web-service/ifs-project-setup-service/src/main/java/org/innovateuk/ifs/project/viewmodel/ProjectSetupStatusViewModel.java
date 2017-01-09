@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.Optional;
 
@@ -21,9 +22,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private String competitionName;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
+    private boolean hasCompanyHouse;
     private String monitoringOfficerName;
     private Long organisationId;
-    private boolean isProjectComplete;
     private SectionAccess companiesHouseSection;
     private SectionAccess projectDetailsSection;
     private SectionAccess monitoringOfficerSection;
@@ -41,7 +42,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private SectionStatus grantOfferLetterStatus;
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
-                                       Optional<MonitoringOfficerResource> monitoringOfficerResource, Long organisationId, boolean leadPartner,
+                                       Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -55,9 +56,10 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
         this.leadPartner = leadPartner;
+        this.hasCompanyHouse = !organisation.getCompanyHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
-        this.organisationId = organisationId;
+        this.organisationId = organisation.getId();
         this.companiesHouseSection = companiesHouseSection;
         this.projectDetailsSection = projectDetailsSection;
         this.monitoringOfficerSection = monitoringOfficerSection;

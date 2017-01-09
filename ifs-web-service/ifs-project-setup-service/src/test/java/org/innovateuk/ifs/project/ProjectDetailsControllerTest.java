@@ -679,7 +679,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(applicationResource, model.getApp());
         assertEquals(competitionResource, model.getCompetition());
         assertEquals(project, model.getProject());
-//        assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
         assertEquals(projectManagerProjectUsers.get(0), model.getProjectManager());
         assertTrue(model.isProjectDetailsSubmitted());
         assertFalse(model.isSubmissionAllowed());

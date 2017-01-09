@@ -10,7 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/2113-dashboard?status=successful'})" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}"  th:remove="tag"></div>
 
 
     <div class="page-title">
@@ -18,7 +18,7 @@
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
 
-    <th:block th:if="${param.status != null and param.status[0] == 'setup-complete'}">
+    <th:block th:if="${model.isProjectComplete}">
         <div class="success-alert extra-margin-bottom">
             The project is live, you can review progress at <a href="#">_connect</a>
         </div>
@@ -26,24 +26,28 @@
         <p>The following steps have been completed by all partners. The project can now start.</p>
     </th:block>
 
-    <div class="warning-alert extra-margin-bottom" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
+    <div class="warning-alert extra-margin-bottom" th:unless="${model.hasCompanyHouse}">
         <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
         <p>For your project to be funded by Innovate UK [Business Name] must be registered with Companies House. </p>
         <p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>
         <p><a href="/prototypes/4242-register-no-companies-house">Business has no legal repsonsibility to register with Companies House</a></p>
     </div>
 
-    <strong th:unless="${param.status != null and param.status[0] == 'setup-complete'}"><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
+    <strong th:unless="${model.isProjectComplete}"><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
 
-    <ul class="application-progress-list extra-margin"  th:classappend="${(param.status != null and param.status[0] == 'setup-complete' ? 'setup-complete' : '' )}" th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
+    <ul class="ifs-progress-list extra-margin"  th:classappend="${model.isProjectComplete' ? 'setup-complete' : '' )}" th:unless="${model.hasCompanyHouse}}">
         <li class="complete">
-			<span>
-				<h2 class="heading-medium">Successful application</h2>
-				<p>The application <strong>Machine learning in robots</strong> has been successful in the <strong>Technology inspired</strong> competition.</p>
-				<a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback" class="buttonlink">View application and feedback</a>
-				<a href="#" class="buttonlink">View terms and conditions of grant offer</a>
-			</span>
+            <div class="progress-status" />
+            <div class="progress-info">
+                <h2 class="heading-medium">Successful application</h2>
+                <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
+                <p class="linkbar">
+                    <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View application and feedback</a>
+                    <a th:href="${'/info/terms-and-conditions'}" class="buttonlink">View terms and conditions of grant offer</a>
+                </p>
+            </div>
         </li>
+        <!--/* ========================= Project Details ========================= */-->
 
         <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'require-action' : 'complete')}">
 			<span>
