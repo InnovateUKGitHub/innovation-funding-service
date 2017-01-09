@@ -302,6 +302,7 @@ Comp Admin can accept the signed grant offer letter
     When the user clicks the button/link     jQuery=.modal-accept-signed-gol button:contains("Cancel")
     Then the user should not see an error in the page
 
+
 Internal user accepts signed grant offer letter
     [Documentation]    INFUND-5998, INFUND-6377
     [Tags]    HappyPath
@@ -349,6 +350,25 @@ Non lead can download the signed GOL
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system    testing.pdf
+
+PM receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath    Pending
+    # TODO Pending due to INFUND-7413
+    Then the user reads his email    amy.ortiz@gabtype.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
+Industrial finance contact receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath    Pending
+    # TODO Pending due to INFUND-7413
+    Then the user reads his email    karen.ramos@kazio.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
+Academic finance contact receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath    Pending
+    # TODO Pending due to INFUND-7413
+    Then the user reads his email    juan.campbell@cogilith.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
 
 *** Keywords ***
 the user uploads a file
