@@ -203,10 +203,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        List<CompetitionParticipant> participants = getParticipantsByCompetition(competitionId).getSuccessObject();
-
-        return serviceSuccess(participants.stream()
-                .map(participant -> {
+        return serviceSuccess(simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR),
+                participant -> {
                     AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
                     assessorInviteOverview.setName(participant.getInvite().getName());
                     assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
@@ -219,7 +217,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setInnovationArea(null);
                     }
                     return assessorInviteOverview;
-                }).collect(toList()));
+                }));
     }
 
     @Override
@@ -271,7 +269,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private String getDetails(CompetitionParticipant participant) {
-        String details = EMPTY;
+        String details = null;
 
         if (participant.getStatus() == REJECTED) {
             details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));

@@ -931,7 +931,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInnovationArea(null, null, null)
                 .withCompliant(false, false, false)
                 .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-                .withDetails(EMPTY, "Invite declined as not available", EMPTY)
+                .withDetails(null, "Invite declined as not available", null)
                 .build(3);
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
