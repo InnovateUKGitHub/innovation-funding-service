@@ -1,13 +1,17 @@
 *** Settings ***
-Documentation     INFUND-5190: As a member of Project Finance I want to view an amended Finance Checks summary page so that I can see the projects and organisations requiring Finance Checks for the Private Beta competition
+Documentation     INFUND-5190 As a member of Project Finance I want to view an amended Finance Checks summary page so that I can see the projects and organisations requiring Finance Checks for the Private Beta competition
 ...
-...               INFUND-5193: As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
+...               INFUND-5193 As a member of Project Finance I want to be able to approve the finance details that have been updated in the Finance Checks so that these details can be used to generate the default spend profile
 ...
-...               INFUND-5220: As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
+...               INFUND-5220 As a member of Project Finance I want to be able to view project costs for academic organisations so that I can review funding during the Finance Checks for the Private Beta competition
 ...
-...               INFUND-5852:As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
+...               INFUND-5852 As a Project Finance team member I want a link to create the export of bank details for a competition so that this can be delivered to Finance for entry into the Innovate UK Finance SUN system
 ...
-...               INFUND-6149: mailto link is broken on the internal finance eligibility page
+...               INFUND-6149 mailto link is broken on the internal finance eligibility page
+...
+...               INFUND-7016 Finance checks page is missing Project title
+...
+...               INFUND-7026 For internal user, in finance checks RAG is not N/A in case of academic
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -19,13 +23,14 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507
+    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016
     [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=table.table-progress
     And the user should see the element          jQuery=h2:contains("Finance checks")
     And the user should see the text in the page  Overview
+    And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
     [Teardown]  the user clicks the button/link  link=Competition Dashboard
 
@@ -97,8 +102,8 @@ Approve Eligibility: Collaborator partner organisation
     Then the user sees the text in the element    css=a.eligibility-1    Approved
 
 
-Approve Eligibility: Academic partner organisation
-    [Documentation]    INFUND-5193
+Approve Eligibility and verify Viability and RAG: Academic partner organisation
+    [Documentation]    INFUND-5193, INFUND-7026
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
     And the user selects the checkbox    costs-reviewed
@@ -108,6 +113,8 @@ Approve Eligibility: Academic partner organisation
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-2    Approved
     And The user should see the element    jQuery=.generate-spend-profile-main-button
+    And the user should see the text in the element  css=span.viability-rag-2    N/A
+    And the user should see the text in the element  css=span.viability-2    N/A
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220

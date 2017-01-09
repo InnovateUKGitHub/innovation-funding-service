@@ -19,6 +19,13 @@
   &[disabled="disabled"] {
     background: $highlight-colour;
   }
+
+  &.link-style{
+    background: $page-colour;
+    color: $link-colour;
+    border: none;
+  }
+
 }
 
 .button-dashboard{
