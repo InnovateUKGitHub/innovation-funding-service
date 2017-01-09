@@ -35,7 +35,7 @@ public enum FormInputType implements Identifiable {
     ASSESSOR_APPLICATION_IN_SCOPE(22),
     ASSESSOR_SCORE(23),
     STAFF_TURNOVER(24),
-    FULL_TIME_EMPLOYEES(25);
+    STAFF_COUNT(25);
 
     private long id;
 

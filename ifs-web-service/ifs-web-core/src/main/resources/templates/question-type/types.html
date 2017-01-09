@@ -42,6 +42,30 @@
       <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
     </div>
 
+    <!-- =========================== Form: Staff Turnover =========================== -->
+    <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+            <span th:if="${readonly} and ${question.getName()}" th:text="${question.name}" />
+            <span th:unless="${readonly}" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        </label>
+        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
+    </div>
+
+
+    <!-- =========================== Form: Staff Count =========================== -->
+    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+            <span th:if="${readonly} and ${question.getName()}" th:text="${question.name}" />
+            <span th:unless="${readonly}" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        </label>
+        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
+    </div>
 
     <!-- ===========================Form: Date input =========================== -->
 
