@@ -15,7 +15,7 @@
             <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${currentCompetition.id})},daysPercentage=${daysLeftPercentage},daysLeft=${daysLeft}"  th:remove="tag"></div>
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
+                <div th:include="fragments/elements :: application-title (app=${currentApplication})" th:remove="tag" />
                 <h1 class="heading-xlarge">Assessment overview</h1>
             </div>
 
