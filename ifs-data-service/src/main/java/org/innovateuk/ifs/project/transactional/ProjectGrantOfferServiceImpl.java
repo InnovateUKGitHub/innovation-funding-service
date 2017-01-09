@@ -427,7 +427,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         List<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
                 !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
-                        && organisationAndGrantPercentageMap.get(organisation.getName()) == 0
+                        && organisationAndGrantPercentageMap.get(organisation.getName()).equals(Integer.valueOf(0))
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
                 .collect(Collectors.toList());
         organisationsExcludedFromGrantOfferLetter.forEach( excludedOrganisation -> {
