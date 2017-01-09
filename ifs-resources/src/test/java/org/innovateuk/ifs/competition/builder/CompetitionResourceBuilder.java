@@ -119,11 +119,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     public CompetitionResourceBuilder withInnovationSectorName(String... names) {
         return withArray((name, object) -> setField("innovationSectorName", name, object), names);
     }
-    public CompetitionResourceBuilder withInnovationArea(Long... ids) {
-        return withArray((id, object) -> setField("innovationArea", id, object), ids);
+    public CompetitionResourceBuilder withInnovationAreas(Set<Long>... ids) {
+        return withArray((id, object) -> setField("innovationAreas", id, object), ids);
     }
-    public CompetitionResourceBuilder withInnovationAreaName(String... names) {
-        return withArray((name, object) -> setField("innovationAreaName", name, object), names);
+    public CompetitionResourceBuilder withInnovationAreaNames(Set<String>... names) {
+        return withArray((name, object) -> setField("innovationAreaNames", name, object), names);
     }
 
     public CompetitionResourceBuilder withPafCode(String... codes) {

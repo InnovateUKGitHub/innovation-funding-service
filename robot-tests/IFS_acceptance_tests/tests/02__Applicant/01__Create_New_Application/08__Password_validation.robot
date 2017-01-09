@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Password from the blacklist
     [Documentation]    INFUND-1147
-    [Tags]
+    [Tags]    HappyPath
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -44,7 +44,7 @@ Password all lower case
 
 Password all upper case
     [Documentation]    INFUND-1147
-    [Tags]    Pending    # TODO
+    [Tags]
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -164,17 +164,9 @@ Password left blank
     And The user should see the text in the page    Please enter your password.
 
 User cannot login with invalid password
+    [Documentation]    INFUND-885
     [Tags]
     Then the user cannot login with their new details    ${valid_email2}    ${short_password}
 
 *** Keywords ***
-the user cannot login with the invalid password
-    [Arguments]    ${invalid_password}
-    The user navigates to the page    ${LOGIN_URL}
-    Input Text    id=username    ewan+40@hiveit.co.uk
-    Input Password    id=password    ${invalid_password}
-    The user clicks the button/link    css=button[name="_eventId_proceed"]
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    The user should see the text in the page    css=button[name="_eventId_proceed"]
-    The user should see the text in the page    ${unsuccessful_login_message}
-    The user should see the text in the page    Your username/password combination doesn't seem to work
+
