@@ -192,6 +192,29 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
+    public void getByCompetitionAndRole() {
+        List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
+
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2")
+                        .withEmail("test1@test.com", "test2@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(1))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(2)
+        );
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRole(competitions.get(0).getId(), ASSESSOR);
+
+        assertNotNull(retrievedParticipants);
+        assertEquals(1, retrievedParticipants.size());
+        assertEqualParticipants(savedParticipants.get(0), retrievedParticipants.get(0));
+    }
+
+    @Test
     public void getByInviteEmail() {
         List<Competition> competitions = newCompetition()
                 .with(id(null))
