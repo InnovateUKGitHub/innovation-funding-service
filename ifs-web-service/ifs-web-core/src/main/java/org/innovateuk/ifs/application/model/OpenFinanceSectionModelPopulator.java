@@ -121,6 +121,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         model.addAttribute("isFundingSectionLocked", !(organisationSizeComplete && applicationDetailsComplete));
         model.addAttribute("applicationDetailsQuestionId", applicationDetailsQuestion.getId());
         model.addAttribute("yourOrganisationSectionId", allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).findFirst().map(SectionResource::getId).orElse(null));
+
+        model.addAttribute("notRequestingFunding", new Random().nextBoolean());
     }
 
     private Boolean isSubFinanceSection(SectionResource section) {
