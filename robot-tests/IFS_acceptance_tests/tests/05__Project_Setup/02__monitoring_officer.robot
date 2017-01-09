@@ -10,7 +10,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 ...
 ...               INFUND-6706 Mismatch in MO status between dashboard and consortium table
-Suite Setup       Run Keywords    delete the emails from both test mailboxes
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -60,7 +60,7 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
-    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
+    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan ${nextyear}
     And the user should see the text in the page    Elmo Chenault
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
@@ -80,7 +80,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
-    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan 2017
+    And Element Should Contain    jQuery=p:nth-child(11)    1st Jan ${nextyear}
     And the user should see the text in the page    Elmo Chenault
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
@@ -257,3 +257,8 @@ the user can see the changed MO details
     the user should see the text in the page    A Monitoring Officer has been assigned.
     Textfield Should Contain    id=firstName    Grace
     Textfield Should Contain    id=lastName    Harper
+
+Custom suite setup
+    delete the emails from both test mailboxes
+    ${nextyear} =    get next year
+    Set suite variable    ${nextyear}

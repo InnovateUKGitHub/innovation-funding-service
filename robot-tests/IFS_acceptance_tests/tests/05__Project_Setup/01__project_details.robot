@@ -38,7 +38,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5805 As a successful applicant I want to be able to view the grant terms and conditions from my dashboard so that I can confirm what I agreed to in the application
 
 
-Suite Setup       Run Keywords    delete the emails from both test mailboxes
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -216,12 +216,12 @@ Lead partner can change the Start Date
 #    Then the user should see a validation error    Please enter a future date   #TODO pending due to INFUND-6986
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
-    And the user enters text to a text field    id=projectStartDate_year    2018
+    And the user enters text to a text field    id=projectStartDate_year    ${nextyear}
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
-    And the user should see the text in the page    1 Jan 2018
+    And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
 
@@ -566,7 +566,7 @@ Non-lead partner cannot change any project details
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Target start date
-    And the user should see the text in the page    1 Jan 2017
+    And the user should see the text in the page    1 Jan ${nextyear}
     And the user should not see the element    link=Target start date
     And the user should see the text in the page    Project Manager
     And the user should see the text in the page    Elmo Chenault
@@ -644,7 +644,7 @@ all the fields are completed
 
 the user changes the start date back again
     the user clicks the button/link    link=Target start date
-    the user enters text to a text field    id=projectStartDate_year    2017
+    the user enters text to a text field    id=projectStartDate_year    ${nextyear}
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 Mark as complete button should be enabled
@@ -666,7 +666,7 @@ the user creates the account
     the user clicks the button/link    jQuery=.button:contains("Create account")
 
 the user can see all project details completed
-    the user should see the element  jQuery=#start-date:contains("1 Jan 2017")
+    the user should see the element  jQuery=#start-date:contains("1 Jan ${nextyear}")
     the user should see the element  jQuery=#project-address:contains("1, Sheffield, S1 2ED")
     the user should see the element  jQuery=#project-manager:contains("Elmo Chenault")
 
@@ -674,3 +674,8 @@ the user can see all finance contacts completed
     the user should see the element  jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Elmo Chenault")
     the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Jessica Doe")
     the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Pete Tom")
+
+Custom suite setup
+    delete the emails from both test mailboxes
+    ${nextyear} =    get next year
+    Set suite variable    ${nextyear}
