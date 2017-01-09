@@ -109,7 +109,7 @@ Collaborators cannot assign a question
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
-    Then The user should not see the text in the page    Assign to
+    Then The user should see the text in the page  Assign to lead for review
 
 Collaborators can mark as ready for review
     [Documentation]    INFUND-877
