@@ -68,7 +68,7 @@
                th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:min="1"
-               th:max="1000000000"
+               th:max="2147483647"
                th:value="*{formInput[__${formInput.id}__]}"
                th:required="true"
         />
@@ -87,7 +87,7 @@
                th:id="'formInput-'+${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:min="1"
-               th:max="1000000000"
+               th:max="2147483647"
                th:value="*{formInput[__${formInput.id}__]}"
                th:required="true"
         />

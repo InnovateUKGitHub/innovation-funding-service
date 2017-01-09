@@ -6,6 +6,11 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
+import java.math.BigDecimal;
+
+import static java.lang.Integer.MAX_VALUE;
+import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 
 /**
@@ -19,21 +24,34 @@ public class NonNegativeIntegerValidator extends BaseValidator {
     public void validate(Object target, Errors errors) {
         FormInputResponse response = (FormInputResponse) target;
         String responseValue = response.getValue();
-        if (!isNonNegativeInteger(responseValue)) {
+        BigDecimal value = toBigDecimal(responseValue);
+        if (value == null){
             rejectValue(errors, "value", "validation.standard.non.negative.integer.format");
+        }
+        else {
+            if (fractionalPartLength(value) > 0){
+                rejectValue(errors, "value", "validation.standard.non.negative.integer.non.decimal.format");
+            }
+            if (ZERO.compareTo(value) > 0){
+                rejectValue(errors, "value", "validation.standard.non.negative.integer.non.negative.format");
+            }
+            if (value.compareTo(valueOf(MAX_VALUE)) > 0){
+                rejectValue(errors, "value", "validation.standard.non.negative.integer.max.value.format");
+            }
         }
     }
 
-    private boolean isNonNegativeInteger(String value){
-        if (value!= null) {
-            try {
-                Integer intValue = Integer.valueOf(value);
-                if (intValue > 0){
-                    return true;
-                }
-            } catch (NumberFormatException e) {
-            }
+    private BigDecimal toBigDecimal(String value) {
+        try {
+            return new BigDecimal(value);
         }
-        return false;
+        catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private int fractionalPartLength(BigDecimal value){
+        int fractionPartLength = value.scale() < 0 ? 0 : value.scale();
+        return fractionPartLength;
     }
 }

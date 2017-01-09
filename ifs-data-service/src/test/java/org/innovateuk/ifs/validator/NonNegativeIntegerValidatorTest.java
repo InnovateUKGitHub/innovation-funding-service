@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,6 +30,8 @@ public class NonNegativeIntegerValidatorTest {
         formInputResponse.setValue("-1");
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.non.negative.integer.non.negative.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
     }
 
     @Test
@@ -36,14 +39,28 @@ public class NonNegativeIntegerValidatorTest {
         formInputResponse.setValue("1.1");
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.non.negative.integer.non.decimal.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
     }
 
     @Test
     public void testGreaterThanMAX_VALUE() {
-        String greaterThatMaxValue = Integer.MAX_VALUE + "0";
-        formInputResponse.setValue("1.1");
+        String greaterThatMaxValue = Integer.MAX_VALUE + "1";
+        formInputResponse.setValue(greaterThatMaxValue);
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.non.negative.integer.max.value.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
+    public void testMultipleFailures() {
+        String multipleFailures = Integer.MAX_VALUE + ".1";
+        formInputResponse.setValue(multipleFailures);
+        validator.validate(formInputResponse, bindingResult);
+        assertEquals(2, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.non.negative.integer.non.decimal.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
+        assertEquals("validation.standard.non.negative.integer.max.value.format", bindingResult.getAllErrors().get(1).getDefaultMessage());
     }
 
     @Test
