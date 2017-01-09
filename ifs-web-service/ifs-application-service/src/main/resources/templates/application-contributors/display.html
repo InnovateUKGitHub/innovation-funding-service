@@ -24,10 +24,9 @@
 
     <div th:if="${organisationInvites.size() == 0}" th:remove="tag">
       <h2 class="heading-medium">
-        <span th:remove="tag" th:text="${leadOrganisation.name}"/>
-        <small>(Lead organisation)</small>
+          <th:block th:text="${leadOrganisation.name}"/><small>(Lead organisation)</small>
       </h2>
-      <ul class="list-bullet">
+      <ul class="list list-bullet">
         <li>
           <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
           <small>(Lead Applicant)</small>
@@ -49,7 +48,7 @@
             <small>(pending)</small>
           </div>
         </h2>
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
             <li th:if="${organisationInviteResource.id == 0}">
               <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
               <small>(Lead Applicant)</small>

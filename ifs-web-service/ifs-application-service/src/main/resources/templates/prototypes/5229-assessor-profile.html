@@ -26,23 +26,23 @@
 
 	<div id="prototype-innovation-areas">
 		<h3 class="heading-small">Innovation areas <small th:if="${param.user != null and param.user[0] == 'compExec'}"><a href="#" id="prototype-edit-innovation-areas">Edit innovation areas</a></small></h3>
-		<ul class="list-bullet">
+		<ul class="list list-bullet">
 			<li id="prototype-innovation-one">
-				<strong>Materials and manufacturing</strong>
-				<ul class="list-bullet">
-					<li>Digital sciences</li>
+				materials and manufacturing
+				<ul class="list list-bullet">
+					<li>digital sciences</li>
 				</ul>
 			</li>
 			<li>
-				<strong>Health and life sciences</strong>
-				<ul class="list-bullet">
-					<li>Information &amp; communications technology (ICT)</li>
+				health and life sciences
+				<ul class="list list-bullet">
+					<li>information and communications technology (ICT)</li>
 				</ul>
 			</li>
 			<li id="prototype-innovation-three">
-				<strong>Materials and manufacturing</strong>
-				<ul class="list-bullet">
-					<li>Earth observation</li>
+				materials and manufacturing
+				<ul class="list list-bullet">
+					<li>earth observation</li>
 				</ul>
 			</li>
 		</ul>
@@ -112,17 +112,17 @@
 	</div>
 
 	<h3 class="heading-small no-margin">Type</h3>
-	<ul class="list-bullet">
-		<li>Business</li>
+	<ul class="list list-bullet">
+		<li>business</li>
 	</ul>
 
 	<h3 class="heading-small no-margin-bottom">Skills</h3>
 	<p>Human computer interaction, Wearables, IoT</p>
-	
+
 	<h2 class="heading-medium">Assessor details</h2>
-	
+
 	<div class="grid-row">
-		
+
 		<div class="column-half">
 
 			<h3 class="heading-small no-margin-bottom">Email</h3>
@@ -135,7 +135,7 @@
 			<p>ASDF solutions <br /> CEO</p>
 
 		</div>
-		
+
 		<div class="column-half">
 			<h3 class="heading-small no-margin-bottom">Address</h3>
 			<p>
@@ -161,7 +161,7 @@
 		<h2 class="heading-medium">Training <small><a th:href="@{'?status=updateTraining#update-training'}">Update training details</a></small></h2>
 
 		<dl class="standard-definition-list">
-			
+
 			<dt>Panel approved</dt>
 			<dd>Yes</dd>
 
@@ -177,7 +177,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'updateTraining'}">
-	
+
 		<h2 class="heading-medium no-margin-bottom" id="update-training">Update training details</h2>
 
 		<form action="GET">
@@ -185,11 +185,11 @@
 			<div class="form-group">
 				<legend class="heading-small">Is the assessor panel approved?</legend>
 				<fieldset class="inline">
-					<label class="block-label" for="update-training-1">
+					<label class="block-label selection-button-radio" for="update-training-1">
 				    	<input id="update-training-1" name="update-training" value="Yes" type="radio" />
 				      	Yes
 				    </label>
-				    <label class="block-label" for="update-training-2">
+				    <label class="block-label selection-button-radio" for="update-training-2">
 				      	<input id="update-training-2" name="update-training" value="No" type="radio" />
 				      	No
 				    </label>
@@ -199,11 +199,11 @@
 			<div class="form-group">
 				<legend class="heading-small">Does the assessor require training?</legend>
 				<fieldset class="inline">
-					<label class="block-label" for="require-training-1">
+					<label class="block-label selection-button-radio" for="require-training-1">
 				    	<input id="require-training-1" name="require-training" value="Yes" type="radio" />
 				      	Yes
 				    </label>
-				    <label class="block-label" for="require-training-2">
+				    <label class="block-label selection-button-radio" for="require-training-2">
 				      	<input id="require-training-2" name="require-training" value="No" type="radio" />
 				      	No
 				    </label>
@@ -211,7 +211,7 @@
 			</div>
 
 			<div class="form-group">
-				
+
 				<label for="training-comments" class="form-label-bold">Comments</label>
 				<textarea name="training-comments" id="training-comments" cols="30" rows="6" class="width-full"></textarea>
 
@@ -225,7 +225,7 @@
 
 	</th:block>
 
-	
+
 
 	<h2 class="heading-medium">Assessment history</h2>
 

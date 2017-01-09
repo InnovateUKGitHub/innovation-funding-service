@@ -93,10 +93,10 @@
     </div>
 
     <h2 class="heading-medium">Annex</h2>
+    <p th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
     <th:block th:if="${!model.isSentToProjectTeam()}">
 
         <th:block th:if="${model.additionalContractFile}">
-            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
             <th:block th:if="${model.getAdditionalContractFileContentAvailable()}">
                 <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
@@ -130,9 +130,9 @@
                                 </button>
                                 <details>
                                     <summary><span class="summary">What are the requirements for upload?</span></summary>
-                                    <div class="panel-indent">
+                                    <div class="panel">
                                         <p>The Annex should:</p>
-                                        <ul class="list-bullet">
+                                        <ul class="list list-bullet">
                                             <li>be in a portable document format (.pdf)</li>
                                             <li>be less than 1mb in size</li>
                                         </ul>
@@ -147,7 +147,6 @@
     </th:block>
     <th:block th:unless="${!model.isSentToProjectTeam()}">
         <th:block th:if="${model.additionalContractFile != null}">
-            <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
             <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
         </th:block>
         <th:block th:unless="${model.additionalContractFile != null}">

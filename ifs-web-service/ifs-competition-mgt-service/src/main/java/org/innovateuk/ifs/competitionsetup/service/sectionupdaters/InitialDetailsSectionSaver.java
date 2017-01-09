@@ -21,13 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -93,23 +91,23 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
                 competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
-
                 if (competition.getInnovationSector() != null) {
                     List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
-                    List<CategoryResource> matchingChild =
-                            children.stream().filter(child -> child.getId().equals(initialDetailsForm.getInnovationAreaCategoryId())).collect(Collectors.toList());
+                    List<CategoryResource> matchingChildren =
+                            children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());
 
-                    if (matchingChild.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
-                        return serviceFailure(asList(fieldError("innovationAreaCategoryId",
-                                initialDetailsForm.getInnovationAreaCategoryId(),
+                    if (matchingChildren.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
+                        return serviceFailure(asList(fieldError("innovationAreaCategoryIds",
+                                initialDetailsForm.getInnovationAreaCategoryIds(),
                                 "competition.setup.innovation.area.must.be.selected",
                                 singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))))));
                     }
                 }
-                competition.setInnovationArea(initialDetailsForm.getInnovationAreaCategoryId());
+                competition.setInnovationAreas(initialDetailsForm.getInnovationAreaCategoryIds()
+                                                                        .stream()
+                                                                        .filter(Objects::nonNull)
+                                                                        .collect(Collectors.toSet()));
             }
-
-
             return competitionService.update(competition).andOnSuccess(() -> {
                 if (initialDetailsForm.isMarkAsCompleteAction() && Boolean.FALSE.equals(competition.getSetupComplete())) {
                     return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
@@ -187,8 +185,18 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 LOG.error(e.getMessage());
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
+        } else if( fieldName.equals("autosaveInnovationAreaIds")) {
+            processInnovationAreas(value, competitionResource);
+            return competitionService.update(competitionResource);
         }
         return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
+    }
+
+    private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
+        List<String> valueList = Arrays.asList(inputValue.split("\\s*,\\s*"));
+        Set<Long> valueSet = valueList.stream().map( value -> Long.parseLong(value) ).collect(Collectors.toSet());
+        competitionResource.setInnovationAreas(valueSet);
+
     }
 
 	@Override
