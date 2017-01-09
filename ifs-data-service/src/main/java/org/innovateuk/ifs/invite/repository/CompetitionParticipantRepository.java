@@ -13,9 +13,14 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends CrudRepository<CompetitionParticipant, Long> {
 
-    CompetitionParticipant getByInviteHash( String hash);
+    @Override
+    List<CompetitionParticipant> findAll();
+
+    CompetitionParticipant getByInviteHash(String hash);
 
     List<CompetitionParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
 
     List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+
+    List<CompetitionParticipant> getByInviteEmail(String email);
 }
