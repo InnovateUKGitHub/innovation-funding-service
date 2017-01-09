@@ -9,7 +9,7 @@
             <h2 class="heading-medium no-margin-bottom">Finances</h2>
             <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
-            <details class="extra-margin-bottom" th:attr="open=${notRequestingFunding ? 'open' : ''}">
+            <details class="extra-margin-bottom" th:attr="open=${notRequestingFunding ? 'open' : null}">
                 <summary><span class="summary">Not requesting funding</span></summary>
                 <div class="panel-indent">
                     <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${notRequestingFunding}">Please confirm below.</span></p>
