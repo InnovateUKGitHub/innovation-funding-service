@@ -53,7 +53,25 @@
                 </label>
             </fieldset>
         </div>
+    </div>
 
+    <!-- =========================== Form: Staff Turnover =========================== -->
+    <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+            <span th:text="${formInput.description}"/>
+        </label>
+        <div th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-number (id=${formInput.getId()}, response=*{formInput[__${formInput.id}__]})" th:remove="tag" />
+    </div>
+
+
+    <!-- =========================== Form: Staff Count =========================== -->
+    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+            <span th:text="${formInput.description}"/>
+        </label>
+        <div th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-number (id=${formInput.getId()}, response=*{formInput[__${formInput.id}__]})" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
