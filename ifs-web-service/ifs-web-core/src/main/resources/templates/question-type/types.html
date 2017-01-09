@@ -134,7 +134,7 @@
                                     <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" th:remove="tag" />
                                 </legend>
 
-                                <label th:class="${'block-label'  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
+                                <label th:class="${'block-label selection-button-radio '  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
                                        th:for="resubmission-yes"
                                        data-target="resubmission-details">
                                     <input type="radio"
@@ -147,7 +147,7 @@
                                     />
                                     Yes
                                 </label>
-                                <label th:class="${'block-label'  + (currentApplication.resubmission != null and !currentApplication.resubmission ? ' selected focused' : '')}"
+                                <label th:class="${'block-label selection-button-radio '  + (currentApplication.resubmission != null and !currentApplication.resubmission ? ' selected focused' : '')}"
                                        th:for="resubmission-no">
                                     <input type="radio"
                                            th:id="resubmission-no"
@@ -227,7 +227,7 @@
                         <h2 class="heading-medium no-margin">Lead organisation</h2>
                         <div th:text="${leadOrganisation.name}" />
                         <h2 class="heading-medium no-margin-bottom extra-margin">Partners</h2>
-                        <ul class="list-bullet">
+                        <ul class="list list-bullet">
                             <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                                 <span th:text="${organisation.getName()}"></span>
                             </li>
@@ -251,7 +251,7 @@
                             <h3 class="heading-small">Lead organisation</h3>
                             <p th:text="${leadOrganisation.name}" />
                             <h3 class="heading-small">Partners</h3>
-                            <ul class="list-bullet">
+                            <ul class="list list-bullet">
                                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                                     <span th:text="${organisation.getName()}"></span>
                                 </li>

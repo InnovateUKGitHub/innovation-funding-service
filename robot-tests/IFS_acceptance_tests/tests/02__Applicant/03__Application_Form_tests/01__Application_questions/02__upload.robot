@@ -163,12 +163,10 @@ the collaborator logs in
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
 
 the user uploads the file to the 'Innovation' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[17]    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page

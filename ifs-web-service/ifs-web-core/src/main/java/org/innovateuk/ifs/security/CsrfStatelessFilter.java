@@ -1,17 +1,9 @@
 package org.innovateuk.ifs.security;
 
-import java.io.IOException;
-import java.util.regex.Pattern;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.csrf.CsrfException;
@@ -19,6 +11,14 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -121,13 +121,30 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
+    /**
+     * Allow Spring Dev Tools to bypass the need for a CSRF token.  This is based on
+     * partially matching the request URL and is a potential security vulnerability,
+     * so only enable this on a local development environment.
+     */
+    private static boolean enableDevTools;
+
+    @Value("${ifsEnableDevTools ?: false}")
+    public void setEnableDevTools(boolean enableDevTools) {
+        CsrfStatelessFilter.enableDevTools = enableDevTools;
+    }
+
     private static final class DefaultRequiresCsrfMatcher implements RequestMatcher {
+
         private final Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
 
+        /**
+         * @return true if a CSRF token is required for the request method
+         */
         @Override
         public boolean matches(HttpServletRequest request) {
-            return !allowedMethods.matcher(request.getMethod()).matches();
-
+            boolean isAllowedMethod = allowedMethods.matcher(request.getMethod()).matches();
+            boolean isDevToolsEndpoint = request.getRequestURI().contains("/.~~spring-boot!~");
+            return !isAllowedMethod && !(isDevToolsEndpoint && enableDevTools);
         }
     }
 }

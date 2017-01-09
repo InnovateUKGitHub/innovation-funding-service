@@ -16,7 +16,7 @@ User can update initial details of a competition before notify date
     And the user should see that the element is disabled    id=openingDateYear
     And the user should see that the element is disabled    id=competitionTypeId
     And the user should see that the element is disabled    id=innovationSectorCategoryId
-    And the user should see that the element is disabled    id=innovationAreaCategoryId
+    And the user should see that the element is disabled    id=innovationAreaCategoryId-0
     When the user selects the option from the drop-down menu    Peter Freeman    id=leadTechnologistUserId
     And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
     And the user clicks the button/link    jQuery=.button:contains("Done")

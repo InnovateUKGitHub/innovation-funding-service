@@ -42,7 +42,7 @@
                 </legend>
                 <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
-                <label class="block-label" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
+                <label class="block-label selection-button-radio" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
                     <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
@@ -259,7 +259,7 @@
                 <fieldset>
                     <legend class="visuallyhidden">Overhead costs</legend>
                     <div class="form-group">
-                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}"
                                    type="radio"
                                    required="required"
@@ -269,7 +269,7 @@
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                             No overhead costs
                         </label>
-                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"
                                    type="radio"
                                    required="required"
@@ -279,7 +279,7 @@
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                             20% of labour costs
                         </label>
-                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
                                    required="required"
@@ -523,7 +523,7 @@
 	                <fieldset class="inline">
 	                    <legend>New or existing item</legend>
 	                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" th:remove="tag" />
-	                    <label class="block-label">
+	                    <label class="block-label selection-button-radio selection-button-radio">
 	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_0'}"
 	                               type="radio"
 	                               th:name="${type +'-existing-' + question.id + '-' + costIdentifier}"
@@ -534,7 +534,7 @@
 	                        New
 	                        </input>
 	                    </label>
-	                    <label class="block-label">
+	                    <label class="block-label selection-button-radio selection-button-radio">
 	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_1'}"
 	                               type="radio"
 	                               th:name="${type +'-existing-' + question.id + '-' + costIdentifier}"
@@ -985,7 +985,7 @@
                 <legend class="visuallyhidden" th:text="${question.getName()}" />
                 <div class="form-block inline">
 
-                    <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                    <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
                            th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                            data-target="other-funding-table">
                         <input type="radio"
@@ -998,7 +998,7 @@
                                 />
                         Yes
                     </label>
-                    <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                    <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
                            th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                         <input type="radio"
                                th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"

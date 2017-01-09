@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +33,8 @@ public class ApplicationCreationAuthenticatedController {
     public static final String FORM_RADIO_NAME = "create-application";
     @Autowired
     protected ApplicationService applicationService;
+    @Autowired
+    protected UserService userService;
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
@@ -41,9 +43,16 @@ public class ApplicationCreationAuthenticatedController {
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       HttpServletResponse response) {
-        model.addAttribute(COMPETITION_ID, competitionId);
-        return "create-application/confirm-new-application";
+                       HttpServletRequest request) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+
+        Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId).getSuccessObjectOrThrowException();
+        if (Boolean.TRUE.equals(userHasApplication)) {
+            model.addAttribute(COMPETITION_ID, competitionId);
+            return "create-application/confirm-new-application";
+        } else {
+            return createApplicationAndShowInvitees(user, competitionId);
+        }
     }
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
@@ -54,17 +63,7 @@ public class ApplicationCreationAuthenticatedController {
 
         if (RADIO_TRUE.equals(createNewApplication)) {
             UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-            ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
-
-            if (application != null) {
-                return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
-            } else {
-                // Application not created, throw exception
-                List<Object> args = new ArrayList<>();
-                args.add(competitionId);
-                args.add(user.getId());
-                throw new ObjectNotFoundException("Could not create a new application", args);
-            }
+            return createApplicationAndShowInvitees(user, competitionId);
         } else if (RADIO_FALSE.equals(createNewApplication)) {
             // redirect to dashboard
             return "redirect:/";
@@ -72,5 +71,19 @@ public class ApplicationCreationAuthenticatedController {
 
         // user did not check one of the radio elements, show page again.
         return "redirect:/application/create-authenticated/" + competitionId;
+    }
+
+    private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
+        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
+
+        if (application != null) {
+            return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
+        } else {
+            // Application not created, throw exception
+            List<Object> args = new ArrayList<>();
+            args.add(competitionId);
+            args.add(user.getId());
+            throw new ObjectNotFoundException("Could not create a new application", args);
+        }
     }
 }

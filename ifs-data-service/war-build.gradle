@@ -1,0 +1,20 @@
+apply plugin: 'war'
+
+war {
+    baseName = 'ifs-data-service'
+}
+
+task deployToTomcat(type: Copy) {
+    from war
+    into "$tomcatWebAppsDir"
+    rename '(.*).war', 'ROOT.war'
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    deployToTomcat.mustRunAfter build
+
+    dependsOn clean
+    dependsOn build
+    dependsOn deployToTomcat
+}
