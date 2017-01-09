@@ -93,7 +93,6 @@ public class ApplicationFormController {
     public static final String QUESTION_URL = "/question/";
     public static final String QUESTION_ID = "questionId";
     public static final String MODEL_ATTRIBUTE_MODEL = "model";
-    public static final String MODEL_ATTRIBUTE_MODEL_NAV = "model.navigation";
     public static final String MODEL_ATTRIBUTE_FORM = "form";
     public static final String APPLICATION_ID = "applicationId";
     public static final String APPLICATION_FORM = "application-form";

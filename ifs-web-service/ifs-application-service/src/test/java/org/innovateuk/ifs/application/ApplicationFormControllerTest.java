@@ -70,6 +70,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @InjectMocks
     private OpenFinanceSectionModelPopulator openFinanceSectionModel;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
+
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
 
@@ -135,7 +139,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
-        assertEquals(application, viewModel.getCurrentApplication());
+        assertEquals(application, viewModel.getApplication().getCurrentApplication());
         assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
         assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
         assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
@@ -160,7 +164,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
-        assertEquals(application, viewModel.getCurrentApplication());
+        assertEquals(application, viewModel.getApplication().getCurrentApplication());
         assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
         assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
         assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
@@ -184,13 +188,13 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Object viewModelResult = result.getModelAndView().getModelMap().get("model");
         assertEquals(OpenFinanceSectionViewModel.class, viewModelResult.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) viewModelResult;
-        assertEquals(application, viewModel.getCurrentApplication());
+        assertEquals(application, viewModel.getApplication().getCurrentApplication());
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
         assertEquals(Boolean.TRUE, viewModel.getHasFinanceSection());
         assertEquals(currentSectionId, viewModel.getFinanceSectionId());
-        assertEquals(Boolean.FALSE, viewModel.getAllReadOnly());
+        assertEquals(Boolean.FALSE, viewModel.getApplication().getAllReadOnly());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
@@ -335,7 +339,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
+    public void testApplicationFinanceMarkAsCompleteFailWithTermsAndStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your finances")).withType(SectionType.FINANCE).build());
         mockMvc.perform(
@@ -343,8 +347,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.TERMS_AGREED_KEY));
+                .andExpect(model().attributeErrorCount("form", 2))
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.TERMS_AGREED_KEY))
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class));
     }
 
