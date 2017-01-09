@@ -332,7 +332,7 @@
                 <th:block th:if="{model.userPartOfThisOrganisation}">
                     <p class="extra-margin">You can still edit your spend profile. Once this section has been marked as complete you can submit it to Innovate UK.</p>
                 </th:block>
-                <th:block th:unless={model.userPartOfThisOrganisation}">
+                <th:block th:unless="{model.userPartOfThisOrganisation}">
                     <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
                 </th:block>
                 <form method="post"
