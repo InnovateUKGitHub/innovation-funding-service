@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -23,8 +22,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -76,9 +73,6 @@ public class Application implements ProcessActivity {
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
     private Boolean stateAidAgreed;
-
-    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
-    private List<Assessment> assessments;
 
     public Application() {
         /*default constructor*/
@@ -300,27 +294,6 @@ public class Application implements ProcessActivity {
 
     public void setStateAidAgreed(Boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
-    }
-
-    @JsonIgnore
-    public List<Assessment> getAssessments() {
-        return assessments;
-    }
-
-    public void setAssessments(List<Assessment> assessments) {
-        this.assessments = assessments;
-    }
-
-    public long getAssessors() {
-        return assessments.stream().filter(a -> !a.isInState(REJECTED)).count();
-    }
-
-    public long getAccepted() {
-        return assessments.stream().filter(a -> !(a.isInState(PENDING) || a.isInState(REJECTED))).count();
-    }
-
-    public long getSubmitted() {
-        return assessments.stream().filter(a -> a.isInState(SUBMITTED)).count();
     }
 
 }

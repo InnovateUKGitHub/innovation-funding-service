@@ -33,13 +33,6 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
     public void testApplicationCountSummariesByCompetitionId() throws Exception {
         Long competitionId = 1L;
 
-        Assessment assessment1 = newAssessment().withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING)).build();
-        Assessment assessment2 = newAssessment().withActivityState(new ActivityState(APPLICATION_ASSESSMENT, ACCEPTED)).build();
-        Assessment assessment3 = newAssessment().withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN)).build();
-        Assessment assessment4 = newAssessment().withActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED)).build();
-
-        Application application = newApplication().withAssessment(assessment1, assessment2, assessment3, assessment4).build();
-
         ApplicationCountSummaryResource applicationCountSummaryResource = new ApplicationCountSummaryResource();
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId)).thenReturn(serviceSuccess(asList(applicationCountSummaryResource)));
