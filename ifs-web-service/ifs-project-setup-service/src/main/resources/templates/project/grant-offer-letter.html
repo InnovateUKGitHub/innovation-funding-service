@@ -46,9 +46,9 @@
                 <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
 
-            <h2 class="heading-medium">Annex</h2>
-            <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-            <th:block th:if="${model.isGrantOfferLetterSent()}">
+            <th:block th:if="${model.additionalContractFile != null}">
+                <h2 class="heading-medium">Annex</h2>
+                <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
                 <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
 
@@ -106,9 +106,11 @@
             <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
             <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
 
-            <h2 class="heading-medium">Annex</h2>
-            <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-            <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            <th:block th:if="${model.additionalContractFile}">
+                <h2 class="heading-medium">Annex</h2>
+                <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+            </th:block>
         </th:block>
 
 
