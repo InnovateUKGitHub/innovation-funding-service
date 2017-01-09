@@ -227,8 +227,6 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         }
 
         if (arg instanceof MessageSourceResolvable) {
-
-            //TODO do we really want to do this for all MessageSources or try and get the Resolvable ones?
             return Optional.of((((MessageSourceResolvable) arg).getDefaultMessage()));
         }
 
