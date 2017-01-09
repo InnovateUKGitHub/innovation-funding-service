@@ -91,7 +91,36 @@
             <input type="hidden" id="application_id" th:value="${currentApplication.id}"/>
             <input type="hidden" id="competition_id" th:value="${currentCompetition.id}"/>
 
-            <div th:if="${allReadOnly}" th:remove="tag">
+            <h2 class="heading-medium">Finance summary</h2>
+
+            <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+
+            <div class="form-group finance-summary" style="overflow:auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col" class="numeric width-small">Total project costs</th>
+                        <th scope="col" class="numeric width-small">% Grant</th>
+                        <th scope="col" class="numeric width-small">Funding sought</th>
+                        <th scope="col" class="numeric width-small">Other public sector funding</th>
+                        <th scope="col" class="numeric width-small">Contribution to project</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="numeric">
+                            <strong th:text="'£'+${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}" />
+                        </td>
+                        <td class="numeric" th:text="${organisationGrantClaimPercentage}+'%'"/>
+                        <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
+                        <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
+                        <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${allReadOnly}" th:remove="tag" class="extra-margin">
                 <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>
             <div th:unless="${isSubFinanceSection == true or allReadOnly}" th:remove="tag">
