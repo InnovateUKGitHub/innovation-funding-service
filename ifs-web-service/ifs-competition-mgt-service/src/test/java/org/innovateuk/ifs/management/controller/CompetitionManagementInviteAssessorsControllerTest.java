@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -135,6 +136,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
+
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        assertFalse(form.isVisible());
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
@@ -250,10 +254,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
-        InviteNewAssessorsForm form = new InviteNewAssessorsForm();
-
-        assertEquals(0, form.getInvites().size());
-
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("addNewUser", "submit"))
                 .andExpect(status().isOk())
@@ -262,11 +262,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/invite"))
                 .andReturn();
 
-        InviteNewAssessorsForm expectedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         InviteNewAssessorsRowForm expectedNewUserRow = new InviteNewAssessorsRowForm();
 
-        assertEquals(1, expectedForm.getInvites().size());
-        assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
+        assertTrue(form.isVisible());
+        assertEquals(1, form.getInvites().size());
+        assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
@@ -298,14 +299,15 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/invite"))
                 .andReturn();
 
-        InviteNewAssessorsForm expectedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
 
         InviteNewAssessorsRowForm expectedNewUserRow = new InviteNewAssessorsRowForm();
         expectedNewUserRow.setName("Tester 2");
         expectedNewUserRow.setEmail("test2@test.com");
 
-        assertEquals(1, expectedForm.getInvites().size());
-        assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
+        assertTrue(form.isVisible());
+        assertEquals(1, form.getInvites().size());
+        assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
@@ -334,6 +336,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         InviteNewAssessorsRowForm expectedInviteRow = new InviteNewAssessorsRowForm();
 
+        assertTrue(form.isVisible());
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedInviteRow, form.getInvites().get(0));
 
