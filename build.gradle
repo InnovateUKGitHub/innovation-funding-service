@@ -122,6 +122,11 @@ task cleanDeployServices {
     println "Starting clean deploy services"
 }
 
+task osDeployRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy-remote.sh'
+    args = [project.version]
+}
+
 //make sure that top level clean deploy services is run last
 rootProject.subprojects.each { subproject ->
     subproject.tasks.matching { it.name == "cleanDeployServices" }.all { task ->

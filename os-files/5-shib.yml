@@ -48,7 +48,6 @@ items:
   metadata:
     name: shib
   spec:
-    host: ifs-local-dev
     port:
       targetPort: 443-tcp
     tls:
