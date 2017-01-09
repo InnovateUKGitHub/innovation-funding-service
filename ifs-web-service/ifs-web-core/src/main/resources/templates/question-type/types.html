@@ -58,10 +58,10 @@
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
-         noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))},
+         noFileUploaded=${(#strings.isEmpty(response?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))},
          downloadURL='/application/' + ${currentApplication.id} + '/form/question/' + ${question.id} + '/forminput/' + ${formInput.id} + '/download',
          compManagementDownloadURL=${currentApplication.id} + '/forminput/' + ${formInput.id} + '/download',
-         filename=${responses?.get(formInput.getId())?.getFilename()},
+         filename=${response?.getFilename()},
          removeName=${removeName != null}? ${removeName} : 'remove_uploaded_file',
          readonly=${readonly} or
                 ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or

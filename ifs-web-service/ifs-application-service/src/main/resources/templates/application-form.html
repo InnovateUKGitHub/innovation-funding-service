@@ -38,7 +38,8 @@
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                  currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                  pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation})">
-                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+
+                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
 
 
