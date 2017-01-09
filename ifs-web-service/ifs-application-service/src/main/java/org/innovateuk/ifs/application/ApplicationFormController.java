@@ -515,7 +515,8 @@ public class ApplicationFormController {
 
         if (errorsSoFar.hasErrors()) {
             messages.addError(fieldError("formInput[cost]", "", "application.validation.MarkAsCompleteFailed"));
-        } else if(validFinanceTerms) {
+        } else if(isMarkSectionAsIncompleteRequest(request.getParameterMap()) ||
+                    (isMarkSectionAsCompleteRequest(request.getParameterMap()) && validFinanceTerms)) {
             SectionResource selectedSection = sectionService.getById(sectionId);
             List<ValidationMessages> financeErrorsMark = markAllQuestionsInSection(application, selectedSection, processRole.getId(), request);
 
