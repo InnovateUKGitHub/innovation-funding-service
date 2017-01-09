@@ -59,13 +59,12 @@ Invite non-registered users
     [Documentation]    INFUND-6411
     [Tags]
     Given the user clicks the button/link    link=Invite
-    #when the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
-    #And The user clicks the button/link    jQuery=button:contains("Add another assessor of this type")
+    When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
     And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
     And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
-    Then the user should not see the element    css=tr:nth-child(1).no
+    Then the user should see the element    css=.no
     And The user should see the text in the page    Olivier Giroud
     And The user should see the text in the page    worth.email.test+OlivierGiroud@gmail.com
     And The user should see the text in the page    Data
