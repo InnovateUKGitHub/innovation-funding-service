@@ -58,27 +58,28 @@ Comp admin should be able to view but not edit the finances for every partner
     Then the user should see the correct finances change
 
 Comp admin has read only view of Appplciation details past Open date
-    [Documentation] INFUND-6937 
-    [Tags]
-    [Setup] log in as a different user    &{Comp_admin1_credentials}
+    [Documentation]     INFUND-6937, INFUND-6938, INFUND-6939, INFUND-6940
+    [Tags]        Pending
+    [Setup]     log in as a different user    &{Comp_admin1_credentials}
     Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
-    And The user clicks the button/link     Application
+    And The user clicks the button/link    link=Application
     Then The user should see the text in the page   Application details
-    And The user clicks the button/link     link = Application details
+    And The user clicks the button/link     link=Application details
+    And the user should see the element    jquery=h1:contains('Application details')
     And The user should not see the element     css = input
     And The user clicks the button/link     link = Return to application questions
-    And The user clicks the button/link     Project summary
+    And The user clicks the button/link     link=Project summary
+    And the user should see the element    jquery=h1:contains('Project summary')
     And The user should not see the element     css = input
-
-
-
-Comp admin has read only view of Project Summary past Open date
-
-
-Comp admin has read only view of Public description details past Open date
-
-Comp admin has read only view of Scope past Open date
-
+    And The user clicks the button/link     link = Return to application questions
+    And The user clicks the button/link     link=Public description
+    And the user should see the element    jquery=h1:contains('Public description')
+    And The user should not see the element     css = input
+    And The user clicks the button/link     link = Return to application questions
+    And The user clicks the button/link     link=Scope
+    And the user should see the element    jquery=h1:contains('Scope')
+    And The user should not see the element     css = input
+    And The user clicks the button/link     link = Return to application questions
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
