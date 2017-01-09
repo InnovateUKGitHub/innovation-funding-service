@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Application progress'" th:remove="tag" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management competition-setup">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/competition}" th:remove="tag" />
+
+            <h1 class="heading-xlarge">
+                <span class="heading-secondary">0102468: Technology inspired, in assessment</span>
+                Application progress
+            </h1>
+
+            <h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+
+            <div class="grid-row extra-margin">
+                <div class="column-quarter">
+                    <h3 class="heading-small">Partners</h3>
+                    <ul>
+                        <li>Aptrans Ltd (Lead)</li>
+                        <li>Biotech Corp</li>
+                        <li>Unversity of Cardiff</li>
+                    </ul>
+                </div>
+                <div class="column-quarter">
+                    <h3 class="heading-small">Innovation area</h3>
+                    <p>Advanced materials</p>
+                </div>
+            </div>
+            <div class="extra-margin">
+                <a href="#">Review application</a>
+            </div>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>
