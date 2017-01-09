@@ -49,7 +49,7 @@
             <div>
                 <button id="mark-all-as-complete" th:unless="${sectionsMarkedAsComplete.contains(currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
                 <button th:if="${sectionsMarkedAsComplete.contains(currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="button"
-                        th:text="${'Edit ' + currentSection.name}">Edit</button>
+                        th:text="${'Edit ' + #strings.toLowerCase(currentSection.name)}">Edit</button>
             </div>
             <div>
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${currentApplication.id}, sectionId=${currentSection.getParentSection()})}" class="button-secondary extra-margin">

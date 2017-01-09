@@ -72,7 +72,6 @@
                 <button th:unless="${isSubFinanceSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
 
-
             <ul class="pagination" th:if="${previousUrl != '' and nextUrl !=''}">
                 <li class="prev" th:if="${previousUrl}">
                     <a th:href="@{${previousUrl}}" rel="prev" title="Navigate to previous part">
