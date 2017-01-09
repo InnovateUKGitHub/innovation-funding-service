@@ -213,8 +213,7 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         if (originalArguments == null || originalArguments.length == 0) {
             return emptyList();
         }
-        List<Object> stuff = simpleMap(asList(originalArguments), arg -> getValidMessageArgument(arg).orElse(""));
-        return stuff;
+        return simpleMap(asList(originalArguments), arg -> getValidMessageArgument(arg).orElse(""));
     }
 
     private Optional<Object> getValidMessageArgument(Object arg) {
