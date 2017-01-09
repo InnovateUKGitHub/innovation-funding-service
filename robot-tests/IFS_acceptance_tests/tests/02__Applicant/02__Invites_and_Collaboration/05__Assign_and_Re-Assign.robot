@@ -91,7 +91,7 @@ Collaborator should be able to edit the assigned question
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
     When the user clicks the button/link    jQuery=button:contains("Public description")
-    And the user should see the element    jQuery=button:contains("Ready for review")
+    And the user should see the element    jQuery=button:contains("Assign to lead for review")
 
 Last update message is correctly updating
     [Documentation]    INFUND-280
@@ -112,14 +112,14 @@ Collaborators cannot assign a question
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
-    Then The user should not see the text in the page    Assign to
+    Then The user should see the text in the page  Assign to lead for review
 
 Collaborators can mark as ready for review
     [Documentation]    INFUND-877
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    HappyPath    Email
-    When the user clicks the button/link    jQuery=button:contains("Ready for review")
+    When the user clicks the button/link    jQuery=button:contains("Assign to lead for review")
     Then the user should see the notification    Question assigned successfully
     And the user should see the text in the page    You have reassigned this question to
 
@@ -172,7 +172,7 @@ Appendices are assigned along with the question
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=6. Innovation
     And the user should see the text in the page    Upload
-    And the user clicks the button/link    jQuery=button:contains("Ready for review")
+    And the user clicks the button/link    jQuery=button:contains("Assign to lead for review")
     And the user should not see the text in the page    Upload
 
 Lead marks finances as complete
@@ -223,7 +223,7 @@ The question is disabled on the summary page for other collaborators
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    jQuery=button:contains("Public description")
     Then the user should see the element    css=#form-input-12 .readonly
-    And the user should not see the element    jQuery=button:contains("Ready for review")
+    And the user should not see the element    jQuery=button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the registered partner
     [Documentation]    INFUND-4806
@@ -235,7 +235,7 @@ Lead applicant should be able to remove the registered partner
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
     #The following steps check if the collaborator should not see the application in the dashboard page
-    And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test
 
 *** Keywords ***

@@ -112,16 +112,6 @@ the user fills the name and email field and reloads the page
     wait for autosave
     the user reloads the page
 
-the user's inputs should still be visible
-    [Arguments]    ${group_number}
-    Textfield Value Should Be    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
-    ${input_value} =    Get Value    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value}    ewan+8@hiveit.co.uk
-    Textfield Value Should Be    name=organisations[${group_number}].organisationName    Test name
-    Textfield Value Should Be    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator test
-    ${input_value} =    Get Value    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value} =    ${input_value} =
-
 the lead applicant cannot be removed
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    Lead applicant
 
@@ -134,7 +124,6 @@ the applicant fills the lead organisation fields
     Focus    jquery=button:contains("Save Changes")
     browser validations have been disabled
     The user clicks the button/link    jquery=button:contains("Save Changes")
-
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May

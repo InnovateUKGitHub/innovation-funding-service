@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -82,6 +83,15 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     @Test
     public void testGrantOfferLetterSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(123L, user));
+    }
+
+    @Test
+    public void testMarkSpendProfileIncompleteAccess() {
+        ProjectUserResource leadPartnerProjectUserResource = newProjectUserResource().withUser(user.getId()).build();
+
+        when(projectServiceMock.getLeadPartners(123L)).thenReturn(asList(leadPartnerProjectUserResource));
+        assertTrue(rules.userCanMarkSpendProfileIncomplete(123L, user));
+        verify(projectServiceMock).getLeadPartners(123L);
     }
 
     private void assertLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> accessorCheck,
