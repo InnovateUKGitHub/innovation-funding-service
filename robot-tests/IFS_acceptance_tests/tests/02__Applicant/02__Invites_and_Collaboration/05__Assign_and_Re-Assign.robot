@@ -28,7 +28,7 @@ Lead applicant can assign a question
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     #This test depends on the previous test suite to run first
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
@@ -47,16 +47,15 @@ Lead applicant can assign question multiple times
     And the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
     Then the user should see the element    css=#form-input-12 .readonly
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Dennis Bergkamp
-    [Teardown]    the user closes the browser
 
 The question is enabled for the assignee
     [Documentation]    INFUND-275
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    HappyPath    Email
-    [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
+    [Setup]  log in as a different user    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link= Assign test
+    And the user clicks the button/link    link= Assign test  #Application Title
     Then the user should see the browser notification    Stuart ANDERSON has assigned a question to you
     And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
     And the user clicks the button/link    link= Public description
@@ -143,14 +142,13 @@ Collaborators should not be able to edit application details
     Then the user should see the element    css=#application_details-title[readonly]
     And the user should see the element    css=#application_details-startdate_day[readonly]
     And the user should not see the element    jQuery=button:contains("Mark as complete")
-    [Teardown]    the user closes the browser
 
 The question should be reassigned to the lead applicant
     [Documentation]    INFUND-275
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    [Setup]  log in as a different user     ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Dennis Bergkamp has assigned a question to you
@@ -169,22 +167,20 @@ Appendices are assigned along with the question
     And the user clicks the button/link    link=6. Innovation
     And the user should see the text in the page    Upload
     When the applicant assigns the question to the collaborator    css=#form-input-6 .editor    test1233    Dennis Bergkamp
-    the user closes the browser
-    And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
+    Then log in as a different user          ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=6. Innovation
     And the user should see the text in the page    Upload
     And the user clicks the button/link    jQuery=button:contains("Ready for review")
     And the user should not see the text in the page    Upload
-    [Teardown]    the user closes the browser
 
-Lead marks finances as complete and collaborator should be able to edit them
+Lead marks finances as complete
     [Documentation]    INFUND-3016
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
@@ -198,17 +194,24 @@ Lead marks finances as complete and collaborator should be able to edit them
     And the user fills in the funding information
     When the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
     Then the user should see all sections complete
-    Then Collaborator should be able to edit finances again
-    [Teardown]    the user closes the browser
 
+Collaborator from another organisation should be able to mark Finances as complete
+    [Documentation]  INFUND-3016
+    ...              This test depends on the previous test suite to run first
+    [Tags]
+    [Setup]  log in as a different user     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
+    Given the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    Then the user should see all sections incomplete
+    And the collaborator is able to edit the finances
 
 The question is disabled for other collaborators
     [Documentation]    INFUND-275
     ...
     ...    This test case is still using the old application
     [Tags]
-    [Setup]    Steve smith assigns a questions to the collaborator
-    Guest user log-in    &{collaborator2_credentials}
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    Given Steve smith assigns a question to the collaborator
+    Given log in as a different user       &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should see the element    css=#form-input-12 .readonly
 
@@ -221,19 +224,18 @@ The question is disabled on the summary page for other collaborators
     When the user clicks the button/link    jQuery=button:contains("Public description")
     Then the user should see the element    css=#form-input-12 .readonly
     And the user should not see the element    jQuery=button:contains("Ready for review")
-    [Teardown]    the user closes the browser
 
 Lead applicant should be able to remove the registered partner
     [Documentation]    INFUND-4806
     [Tags]
-    [Setup]    Guest user log-in    ${test_mailbox_one}+invite2@gmail.com    Passw0rd123
+    [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
     #The following steps check if the collaborator should not see the application in the dashboard page
-    And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
+    And guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
@@ -249,12 +251,12 @@ the question should contain the correct status/name
     [Arguments]    ${ELEMENT}    ${STATUS}
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
-Collaborator should be able to edit finances again
-    close browser
-    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com    Passw0rd123
-    And the user clicks the button/link    link=Assign test
-    And the user clicks the button/link    link=Your finances
-    the user should see the element    jQuery=.button:contains("Mark all as complete")
+the collaborator is able to edit the finances
+    the user navigates to the page  ${server}/application/${applicationId}/form/section/333
+    the user fills in the project costs
+    the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    the user fills in the organisation information
+    the user fills in the funding information
 
 the user enters the funding level
     the user selects the radio button    financePosition-organisationSize    MEDIUM
@@ -267,11 +269,9 @@ the applicant changes the name of the application
     And the user enters text to a text field    id=application_details-title    Assign test
     And The user clicks the button/link    jQuery=button:contains("Save and return")
 
-Steve smith assigns a questions to the collaborator
-    Guest user log-in    &{lead_applicant_credentials}
+Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
-    the user closes the browser
 
 the user fills in the project costs
     the user fills in Labour
@@ -302,7 +302,7 @@ the user fills in Labour
 
 the user fills in Overhead costs
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
-    the user selects the radio button  overheads-type-29-1456  cost-overheads-1456-rateType_1
+    the user clicks the button/link    css=label[data-target="overhead-default-percentage"]
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
 
 the user fills in Material
@@ -370,3 +370,8 @@ the user should see all sections complete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.complete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.complete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(3) img.section-status.complete
+
+the user should see all sections incomplete
+    the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.assigned
+    the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
+    the user should see the element  jQuery=li.grid-row.section:nth-of-type(3) img.section-status.assigned
