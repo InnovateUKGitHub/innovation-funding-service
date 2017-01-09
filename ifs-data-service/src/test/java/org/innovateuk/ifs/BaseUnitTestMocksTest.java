@@ -12,10 +12,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.*;
-import org.innovateuk.ifs.application.transactional.ApplicationFundingService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.AssessorFeedbackService;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
@@ -194,6 +191,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationService applicationServiceMock;
+
+    @Mock
+    protected ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Mock
     protected QuestionService questionServiceMock;

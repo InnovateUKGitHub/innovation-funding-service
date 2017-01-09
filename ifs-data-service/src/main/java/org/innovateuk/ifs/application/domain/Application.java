@@ -233,6 +233,7 @@ public class Application implements ProcessActivity {
         return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }
 
+
     public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
     }
@@ -299,6 +300,15 @@ public class Application implements ProcessActivity {
 
     public void setStateAidAgreed(Boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
+    }
+
+    @JsonIgnore
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
     }
 
     public long getAssessors() {

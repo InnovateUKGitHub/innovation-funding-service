@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class ApplicationCountSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationCountSummaryController> {
 
     @Autowired
@@ -20,5 +22,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         Long competitionId = 1L;
         loginCompAdmin();
         List<ApplicationCountSummaryResource> counts = controller.getApplicationCountSummariesByCompetitionId(competitionId).getSuccessObject();
+
+        assertEquals(6, counts.size());
     }
 }

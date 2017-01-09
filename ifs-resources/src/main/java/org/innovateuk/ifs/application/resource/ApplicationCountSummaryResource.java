@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Represents a application for management
  */
@@ -57,5 +60,35 @@ public class ApplicationCountSummaryResource {
 
     public void setSubmitted(long submitted) {
         this.submitted = submitted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationCountSummaryResource that = (ApplicationCountSummaryResource) o;
+
+        return new EqualsBuilder()
+                .append(assessors, that.assessors)
+                .append(accepted, that.accepted)
+                .append(submitted, that.submitted)
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(leadOrganisation, that.leadOrganisation)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(leadOrganisation)
+                .append(assessors)
+                .append(accepted)
+                .append(submitted)
+                .toHashCode();
     }
 }

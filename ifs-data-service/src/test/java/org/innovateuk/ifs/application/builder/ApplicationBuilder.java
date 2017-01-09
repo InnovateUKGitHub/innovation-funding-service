@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -83,6 +84,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     
     public ApplicationBuilder withDurationInMonths(Long... durationInMonths) {
         return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
+    }
+
+    public ApplicationBuilder withAssessment(Assessment... assessments) {
+        return with(application -> application.setAssessments(asList(assessments)));
     }
 
     @Override
