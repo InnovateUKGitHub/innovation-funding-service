@@ -796,5 +796,5 @@ the user fills in and approves project costs
 the user returns edit rights for the organisation
     [Arguments]    ${org_name}
     the user clicks the button/link    link=${org_name}
-    the user clicks the button/link    jQuery=.button:contains("Allow partner to edit")
+    the user clicks the button/link    jQuery=.button:contains("Allow edits")
     the user should see the text in the page    In progress
