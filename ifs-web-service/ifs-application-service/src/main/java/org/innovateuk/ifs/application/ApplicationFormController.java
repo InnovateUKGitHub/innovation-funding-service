@@ -188,7 +188,7 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
         return APPLICATION_FORM;
     }
 
@@ -238,7 +238,7 @@ public class ApplicationFormController {
             openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         }
 
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
     }
 
 
@@ -329,7 +329,7 @@ public class ApplicationFormController {
                 model.addAttribute("currentUser", user);
                 applicationModelPopulator.addUserDetails(model, application, user.getId());
                 applicationNavigationPopulator.addNavigation(question, applicationId, model);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -1091,5 +1091,18 @@ public class ApplicationFormController {
     	public Long getFieldId() {
 			return fieldId;
 		}
+    }
+
+
+    @ProfileExecution
+    @RequestMapping(value = "/{sectionType}", method = RequestMethod.GET)
+    public String redirectToSection(@PathVariable("sectionType") SectionType type,
+                                    @PathVariable(APPLICATION_ID) Long applicationId) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), type);
+        if (sections.size() == 1) {
+            return "redirect:/application/" + applicationId + "/form/section/" + sections.get(0).getId();
+        }
+        return "redirect:/application/" + applicationId;
     }
 }
