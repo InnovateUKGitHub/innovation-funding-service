@@ -107,31 +107,34 @@
 
 		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='manageNotifications'" th:remove="tag" />
 
-    <div class="grid-row sorting sorting-controls">
-      <div class="column-half">
-        <div class="form-group inline">
-          <fieldset class="alignleft select-all-applications">
-            <label class="form-label" for="select-box">Select application type</label>
-            <select class="form-control select-applications" id="select-box">
-              <option>-- Select applications --</option>
-              <option value="successful">Successful</option>
-              <option value="unsuccessful">Unsuccessful</option>
-              <option value="onhold">On hold</option>
-              <option value="deselect">Deselect</option>
-            </select>
-          </fieldset>
-          <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+    <form>
+
+      <div class="grid-row sorting sorting-controls">
+        <div class="column-half">
+          <div class="form-group inline no-margin">
+            <fieldset class="alignleft select-all-applications">
+              <legend class="visuallyhidden">Select application by type</legend>
+              <label class="form-label">Select application type
+                <select class="form-control select-applications" id="select-box">
+                  <option>-- Select applications --</option>
+                  <option value="successful">Successful</option>
+                  <option value="unsuccessful">Unsuccessful</option>
+                  <option value="onhold">On hold</option>
+                  <option value="deselect">Deselect</option>
+                </select>
+              </label>
+            </fieldset>
+            <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+          </div>
+        </div>
+
+        <div class="column-half alignright">
+          <input type="hidden" name="comp" value="panel" />
+          <button class="button button-notification" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write notification and send</button>
         </div>
       </div>
 
-      <div class="column-half alignright">
-        <button class="button button-notification" disabled="disabled">Write notification and send</button>
-      </div>
-    </div>
-
-			<div class="table-overflow">
-        <fieldset>
-          <legend class="visuallyhidden">Applications</legend>
+  			<div class="table-overflow">
   				<table id="application-list">
   					<thead>
   						<tr>
@@ -218,15 +221,16 @@
                 <td>Sent</td>
                 <td class="alignright">30 December 2016</td>
   						</tr>
-
   					</tbody>
   				</table>
+        </div>
 
-          <div class="grid-row sorting sorting-controls extra-margin-top">
-            <div class="column-half">
-              <div class="form-group inline">
-                <fieldset class="alignleft select-all-applications">
-                  <label class="form-label" for="select-box">Select application type</label>
+        <div class="grid-row sorting sorting-controls extra-margin-top">
+          <div class="column-half">
+            <div class="form-group inline no-margin">
+              <fieldset class="alignleft select-all-applications">
+                <legend class="visuallyhidden">Select application by type</legend>
+                <label class="form-label">Select application type
                   <select class="form-control select-applications" id="select-box">
                     <option>-- Select applications --</option>
                     <option value="successful">Successful</option>
@@ -234,17 +238,19 @@
                     <option value="onhold">On hold</option>
                     <option value="deselect">Deselect</option>
                   </select>
-                </fieldset>
-                <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
-              </div>
-            </div>
-
-            <div class="column-half alignright">
-              <button class="button button-notification" disabled="disabled">Write notification and send</button>
+                </label>
+              </fieldset>
+              <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
             </div>
           </div>
-			  </fieldset>
-      </div>
+
+          <div class="column-half alignright">
+            <button class="button button-notification" disabled="disabled">Write notification and send</button>
+          </div>
+        </div>
+
+      </form>
+
 
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
 
