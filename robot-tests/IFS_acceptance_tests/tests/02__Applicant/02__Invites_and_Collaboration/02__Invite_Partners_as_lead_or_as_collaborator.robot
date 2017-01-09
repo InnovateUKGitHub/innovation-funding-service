@@ -72,7 +72,7 @@ Pending partners visible in Application team page
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     Then the status of the invited people should be correct in the application team page
-    The Lead organisation should show only one time
+    And The Lead organisation should be shown only one time
 
 Pending partners visible in the Manage contributors page
     [Documentation]    INFUND-928
@@ -267,5 +267,5 @@ log into smoke test application
     the user clicks the button/link    link=IFS smoke test
     the user clicks the button/link    link=view team members and add collaborators
 
-The Lead organisation should show only one time
+The Lead organisation should be shown only one time
     Element Should not Contain    css=div:nth-child(7)    Steve Smith

@@ -98,7 +98,7 @@ The Lead's inputs should not be visible in other application invites
 Lead applicant can remove the Pending partners
     [Documentation]    INFUND-4807
     Given The user navigates to the invitation page of the test application
-    And the applicant fills the lead organisation fields    Test user 001    test@emai.com
+    And the applicant fills the lead organisation fields    Test user 001    test@email.com
     When the user clicks the button/link    jQuery=li:nth-child(2) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    Link=Test user 001
