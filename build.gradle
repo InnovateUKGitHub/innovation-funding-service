@@ -12,7 +12,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'org.springframework.boot'
-    apply plugin: 'com.bluepapa32.watch'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
