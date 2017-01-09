@@ -18,6 +18,7 @@ import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
@@ -34,6 +35,7 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
 
     private ApplicationContext applicationContext;
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
@@ -48,10 +50,10 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
     }
 
     @Bean
-    //made this @Bean (vs private in Thymeleaf migration docs ), otherwise MessageSource wasn't autowired.
     public TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());
+        engine.setEnableSpringELCompiler(true);
         engine.addDialect(new Java8TimeDialect());
         engine.addDialect(new IfSThymeleafDialect());
         engine.addDialect(new SpringSecurityDialect());
@@ -65,6 +67,7 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
         resolver.setSuffix(this.properties.getSuffix());
         resolver.setTemplateMode(this.properties.getMode());
         resolver.setCacheable(this.properties.isCache());
+        resolver.setTemplateMode(TemplateMode.HTML);
         return resolver;
     }
 }
