@@ -36,11 +36,11 @@ subprojects {
     dependencies {
         if(project.hasProperty("cloud") && project.cloud == "development") {
             compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
-            compile "org.springframework.boot:spring-boot-starter-actuator"
             compile "org.springframework.boot:spring-boot-actuator-docs"
             compile "org.springframework.boot:spring-boot-devtools"
         }
 
+        compile "org.springframework.boot:spring-boot-starter-actuator"
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
