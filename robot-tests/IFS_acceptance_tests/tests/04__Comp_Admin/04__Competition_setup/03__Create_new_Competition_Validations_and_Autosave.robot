@@ -57,7 +57,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -155,9 +155,9 @@ Eligibility client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    When the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    When the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user moves focus and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
@@ -214,10 +214,10 @@ Assessor: Server-side validation
 Assessor: Client-side validation
     [Documentation]    INFUND-5641
     When The user enters text to a text field    id=assessorPay    1.1
-    And the user selects the checkbox    id=assessors-62
+    And the user selects the checkbox    assessors-62
     Then the user should see an error    This field can only accept whole numbers
     When The user enters text to a text field    id=assessorPay    120
-    And the user selects the checkbox    id=assessors-62
+    And the user selects the checkbox    assessors-62
     Then The user should not see the text in the page    This field can only accept whole numbers
 
 *** Keywords ***
@@ -427,7 +427,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

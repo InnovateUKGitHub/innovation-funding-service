@@ -105,9 +105,3 @@ Phone number too short
     And the user selects the radio button    disability    disability2
     And the user submits their information
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters.
-
-*** Keywords ***
-the user submits their information
-    the user selects the checkbox    termsAndConditions
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Submit Form

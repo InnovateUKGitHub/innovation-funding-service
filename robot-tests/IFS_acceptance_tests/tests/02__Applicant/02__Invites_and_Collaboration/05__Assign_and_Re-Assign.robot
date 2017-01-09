@@ -88,7 +88,7 @@ Collaborator should be able to edit the assigned question
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
     When the user clicks the button/link    jQuery=button:contains("Public description")
-    And the user should see the element    jQuery=button:contains("Ready for review")
+    And the user should see the element    jQuery=button:contains("Assign to lead for review")
 
 Last update message is correctly updating
     [Documentation]    INFUND-280
@@ -109,14 +109,14 @@ Collaborators cannot assign a question
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
-    Then The user should not see the text in the page    Assign to
+    Then The user should see the text in the page  Assign to lead for review
 
 Collaborators can mark as ready for review
     [Documentation]    INFUND-877
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    HappyPath    Email
-    When the user clicks the button/link    jQuery=button:contains("Ready for review")
+    When the user clicks the button/link    jQuery=button:contains("Assign to lead for review")
     Then the user should see the notification    Question assigned successfully
     And the user should see the text in the page    You have reassigned this question to
 
@@ -171,7 +171,7 @@ Appendices are assigned along with the question
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=6. Innovation
     And the user should see the text in the page    Upload
-    And the user clicks the button/link    jQuery=button:contains("Ready for review")
+    And the user clicks the button/link    jQuery=button:contains("Assign to lead for review")
     And the user should not see the text in the page    Upload
     [Teardown]    the user closes the browser
 
@@ -185,8 +185,8 @@ Lead marks finances as complete and collaborator should be able to edit them
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Your finances
     And the user enters the funding level
-    And the user selects the checkbox    id=agree-terms-page
-    And the user selects the checkbox    id=agree-state-aid-page
+    And the user selects the checkbox    agree-terms-page
+    And the user selects the checkbox    agree-state-aid-page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     And the user should see the text in the page    Project details
     Then Collaborator should be able to edit finances again
@@ -210,7 +210,7 @@ The question is disabled on the summary page for other collaborators
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    jQuery=button:contains("Public description")
     Then the user should see the element    css=#form-input-12 .readonly
-    And the user should not see the element    jQuery=button:contains("Ready for review")
+    And the user should not see the element    jQuery=button:contains("Assign to lead for review")
     [Teardown]    the user closes the browser
 
 Lead applicant should be able to remove the registered partner

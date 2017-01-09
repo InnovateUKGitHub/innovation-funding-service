@@ -239,6 +239,97 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
+    public void submitSectionInitialDetailsInvalidWithRequiredFieldsEmpty() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        String invalidDateDay = "32";
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
+                .param("budgetCode", "Bcode1")
+                .param("pafNumber", "1123")
+                .param("competitionCode", "12312-1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "title"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "competitionTypeId"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "innovationSectorCategoryId"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "innovationAreaCategoryIds"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateDay"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateMonth"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateYear"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "leadTechnologistUserId"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "executiveUserId"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void submitSectionInitialDetailsWithInvalidFieldsExceedRangeMax() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        String invalidDateDay = "32";
+        String invalidDateMonth = "13";
+        String invalidDateYear = "10000";
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
+                .param("executiveUserId", "1")
+                .param("openingDateDay", invalidDateDay)
+                .param("openingDateMonth", invalidDateMonth)
+                .param("openingDateYear", invalidDateYear)
+                .param("innovationSectorCategoryId", "1")
+                .param("innovationAreaCategoryIds", "1", "2", "3")
+                .param("competitionTypeId", "1")
+                .param("leadTechnologistUserId", "1")
+                .param("title", "My competition")
+                .param("budgetCode", "Bcode1")
+                .param("pafNumber", "1123")
+                .param("competitionCode", "12312-1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateDay"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateMonth"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateYear"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void submitSectionInitialDetailsWithInvalidFieldsExceedRangeMin() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        String invalidDateDay = "0";
+        String invalidDateMonth = "0";
+        String invalidDateYear = "1899";
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
+                .param("executiveUserId", "1")
+                .param("openingDateDay", invalidDateDay)
+                .param("openingDateMonth", invalidDateMonth)
+                .param("openingDateYear", invalidDateYear)
+                .param("innovationSectorCategoryId", "1")
+                .param("innovationAreaCategoryIds", "1", "2", "3")
+                .param("competitionTypeId", "1")
+                .param("leadTechnologistUserId", "1")
+                .param("title", "My competition")
+                .param("budgetCode", "Bcode1")
+                .param("pafNumber", "1123")
+                .param("competitionCode", "12312-1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateDay"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateMonth"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "openingDateYear"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
     public void submitSectionInitialDetailsWithoutErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
@@ -251,7 +342,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         				.param("openingDateMonth", "1")
         				.param("openingDateYear", "2016")
         				.param("innovationSectorCategoryId", "1")
-        				.param("innovationAreaCategoryId", "1")
+        				.param("innovationAreaCategoryIds", "1", "2", "3")
         				.param("competitionTypeId", "1")
         				.param("leadTechnologistUserId", "1")
                         .param("title", "My competition")

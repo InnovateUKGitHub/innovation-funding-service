@@ -2,7 +2,7 @@
 Documentation     INFUND-5182 As an assessor creating an account I need to supply details of my skills and expertise so that InnovateUK can assign me appropriate applications to assess.
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
-Suite Setup       guest user log-in    jeremy.alufson@innovateuk.test    Passw0rd
+Suite Setup       guest user log-in    worth.email.test+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot

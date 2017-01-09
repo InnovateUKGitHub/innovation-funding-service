@@ -14,6 +14,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-6829 GOL uploaded but not submitted by PM shows wrong status
 ...
 ...               INFUND-7027 Partners can access the GOL before the internal user hits Send to proj team
+...
+...               INFUND-7049 Validation missing for PDF file upload in GOL upload page for internal user
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -84,6 +86,18 @@ Project finance user removes the grant offer letter
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user can remove the uploaded file  removeGrantOfferLetterClicked  grant_offer_letter.pdf
     And the user should see the element         css=label[for="grantOfferLetter"]
+
+Comp Admin cannot upload big or non-pdf grant offer letter
+    [Documentation]  INFUND-7049
+    [Tags]
+    [Setup]  log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    When the user uploads a file           grantOfferLetter  ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    When the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    And the user uploads a file           grantOfferLetter  ${text_file}
+    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
@@ -272,7 +286,7 @@ Internal user can download the signed GOL
     [Documentation]    INFUND-6377
     [Tags]  Download
     Given the user navigates to the page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    Then the user should see the element  jQuery=#content > p:nth-child(12) > a
+    Then the user should see the element  jQuery=#content > p:nth-child(11) > a
     And the user downloads the file  ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system  testing.pdf
 
@@ -388,8 +402,8 @@ project finance generates the Spend Profile
 project finance approves Viability for
     [Arguments]  ${partner}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${partner}/viability
-    the user selects the checkbox      id=costs-reviewed
-    the user selects the checkbox      id=project-viable
+    the user selects the checkbox      costs-reviewed
+    the user selects the checkbox      project-viable
     the user moves focus to the element  link=Contact us
     the user selects the option from the drop-down menu  Green  id=rag-rating
     the user clicks the button/link    css=#confirm-button
@@ -414,6 +428,6 @@ all partners submit their Spend Profile
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_Competition_Id}/spend-profile/approval
-    the user selects the checkbox      id=approvedByLeadTechnologist
+    the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
     the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")
