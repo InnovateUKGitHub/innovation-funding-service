@@ -56,22 +56,41 @@
     </div>
 
     <!-- =========================== Form: Staff Turnover =========================== -->
-    <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
-        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+    <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
         </label>
         <div th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-number (id=${formInput.getId()}, response=*{formInput[__${formInput.id}__]})" th:remove="tag" />
+        <input class="form-control width-extra-small"
+               th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
+               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               type="number"
+               th:id="${formInput.id}"
+               th:name="'formInput['+${formInput.id}+']'"
+               th:min="1"
+               th:max="1000000000"
+               th:value="*{formInput[__${formInput.id}__]}"
+               th:required="true"
+        />
     </div>
 
-
     <!-- =========================== Form: Staff Count =========================== -->
-    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
-        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
         </label>
         <div th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-number (id=${formInput.getId()}, response=*{formInput[__${formInput.id}__]})" th:remove="tag" />
+        <input class="form-control width-extra-small"
+               th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
+               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               type="number"
+               th:id="'formInput-'+${formInput.id}"
+               th:name="'formInput['+${formInput.id}+']'"
+               th:min="1"
+               th:max="1000000000"
+               th:value="*{formInput[__${formInput.id}__]}"
+               th:required="true"
+        />
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
