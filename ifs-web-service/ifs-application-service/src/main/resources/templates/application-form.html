@@ -37,7 +37,7 @@
                  th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                  currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
-                 pendingAssignableUsers=(${model.assignable.pendingAssignableUsers})">
+                 pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation})">
                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
 
