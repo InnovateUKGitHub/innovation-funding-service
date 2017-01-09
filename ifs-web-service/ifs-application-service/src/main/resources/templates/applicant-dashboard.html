@@ -48,7 +48,7 @@
                     <div class="grid-row" th:unless="${applicationStatuses.get(app.getId()).getName() == 'submitted'}" >
                         <div class="column-half">
                             <h3 class="heading-medium">
-                                <a th:unless="${T(org.innovateuk.ifs.application.constant.ApplicationStatusConstants).CREATED.name == application.applicationStatusName}"
+                                <a th:unless="${T(org.innovateuk.ifs.application.constant.ApplicationStatusConstants).CREATED.name == app.applicationStatusName}"
                                         th:href="@{/application/{id}(id=${app.getId()})}" th:text="((${app.name} == '') ? ${competitions.get(app.getId()).getName()}: ${app.name})"/>
                                 <a th:if="${T(org.innovateuk.ifs.application.constant.ApplicationStatusConstants).CREATED.name == app.applicationStatusName}"
                                         th:href="@{/application/{id}/contributors/invite?newApplication(id=${app.getId()})}" th:text="((${app.name} == '') ? ${competitions.get(app.getId()).getName()}: ${app.name})"/>
