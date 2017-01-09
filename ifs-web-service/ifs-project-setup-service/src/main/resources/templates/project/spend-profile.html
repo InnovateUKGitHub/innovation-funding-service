@@ -314,7 +314,7 @@
                     <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Submit to lead partner</button>
                 </form>
             </th:block>
-            
+
             <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
@@ -329,10 +329,15 @@
             </th:block>
 
             <th:block th:if="${model.leadPartner and model.markedAsComplete}">
-                <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
+                <th:block th:if="{model.userPartOfThisOrganisation}">
+                    <p class="extra-margin">You can still edit your spend profile. Once this section has been marked as complete you can submit it to Innovate UK.</p>
+                </th:block>
+                <th:block th:unless={model.userPartOfThisOrganisation}">
+                    <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
+                </th:block>
                 <form method="post"
                       th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                    <button class="button button-secondary extra-margin" name="allow-edit">Allow partner to edit</button>
+                    <button class="button button-secondary extra-margin" name="allow-edit">Allow edits</button>
                 </form>
             </th:block>
 
