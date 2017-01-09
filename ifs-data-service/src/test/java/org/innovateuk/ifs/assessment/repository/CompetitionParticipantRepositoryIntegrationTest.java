@@ -199,7 +199,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.size());
-        assertEquals(savedParticipants.get(0), retrievedParticipants.get(0));
+        assertEqualParticipants(savedParticipants.get(0), retrievedParticipants.get(0));
     }
 
     private CompetitionInvite buildNewCompetitionInvite(String name, String email, String hash, InviteStatus status) {
@@ -213,20 +213,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .build();
     }
 
-    private CompetitionParticipant saveNewCompetitionParticipant(CompetitionInvite invite) {
-        CompetitionParticipant saved = repository.save(new CompetitionParticipant(invite));
-        return saved;
-    }
-
     private List<CompetitionParticipant> saveNewCompetitionParticipants(List<CompetitionInvite> invites) {
         List<CompetitionParticipant> saved = invites.stream().map(competitionInvite ->
                 repository.save(new CompetitionParticipant(competitionInvite))).collect(toList());
         return saved;
-    }
-
-    private void assertEqualParticipants(List<CompetitionParticipant> expected, List<CompetitionParticipant> actual) {
-        zip(expected, actual, (expectedCompetitionParticipant, actualCompetitionParticipant) ->
-                assertEqualParticipants(expectedCompetitionParticipant, actualCompetitionParticipant));
     }
 
     private void assertEqualParticipants(CompetitionParticipant expected, CompetitionParticipant actual) {
