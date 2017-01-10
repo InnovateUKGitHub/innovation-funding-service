@@ -45,14 +45,12 @@ Valid invitation submit
     And the user should see the text in the page    Invites sent
 
 Pending partners visible in the Application details
-    [Documentation]    INFUND-2966
-    ...
-    ...    INFUND-2738
+    [Documentation]    INFUND-2966, INFUND-2738
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
-    Then the user should see the element   jQuery=h2:contains("Fannie May") > small:contains("pending")
+    Then the user should see the element   jQuery=ul.list-bullet > li > span:contains("Fannie May")
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
