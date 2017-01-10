@@ -29,8 +29,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  */
 public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseWebIntegrationTest {
 
-    @Value("${ifs.data.service.rest.baseURL}")
-    private String dataUrl;
 
     @Test
     public void testIncorrectUrl() throws Exception {
@@ -38,7 +36,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            String url = dataUrl + "/non/existent/url";
+            String url = "http://localhost:"+ port + "/non/existent/url";
             restTemplate.exchange(url, GET, headersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-handled URL was specified");
 
@@ -58,7 +56,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            String url = dataUrl + "/application/2";
+            String url  = "http://localhost:"+port + "/application/2";
             restTemplate.exchange(url, GET, new HttpEntity<>(new HttpHeaders()), String.class);
             fail("Should have had a Forbidden on the server side, as we are not specifying a user authentication to this restricted resource");
 

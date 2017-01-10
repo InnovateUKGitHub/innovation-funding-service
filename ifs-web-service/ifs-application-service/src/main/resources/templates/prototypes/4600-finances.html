@@ -25,17 +25,18 @@
   <details class="extra-margin-bottom">
     <summary><span class="summary">Not requesting funding</span></summary>
     <div class="panel-indent">
-      <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details.</p>
-      <form action="#">
-        <div class="form-group">
-          <fieldset>
-            <label for="no-funding" class="block-label">
-              <input id="no-funding" value="no-funding" type="checkbox" />
-              This organisation does not request funding from Innovate UK for participation in the project.
-            </label>
-          </fieldset>
-        </div>
-      </form>
+      <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span id="prototype-confirmation-text">Please confirm below.</span></p>
+      <!--<form action="#">-->
+        <!--<div class="form-group">-->
+          <!--<fieldset>-->
+            <!--<label for="no-funding" class="block-label">-->
+              <!--<input id="no-funding" value="no-funding" type="checkbox" />-->
+              <!--This organisation does not request funding from Innovate UK for participation in the project.-->
+            <!--</label>-->
+          <!--</fieldset>-->
+        <!--</div>-->
+      <!--</form>-->
+      <button class="button" id="prototype-funding">Not requesting funding</button>
     </div>
   </details>
 
@@ -143,15 +144,15 @@
 
 	<p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
 	<div class="form-block">
-		<label class="block-label" for="radio-1">
+		<label class="block-label selection-button-radio" for="radio-1">
 			<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
 			Micro / small - claim up to 70%
 		</label>
-		<label class="block-label" for="radio-2">
+		<label class="block-label selection-button-radio" for="radio-2">
 			<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
 			Medium - claim up to 60%
 		</label>
-		<label class="block-label" for="radio-3">
+		<label class="block-label selection-button-radio" for="radio-3">
 			<input id="radio-3" type="radio" name="radio-group" value="Large"/>
 			Large - claim up to 50%
 		</label>
@@ -165,7 +166,7 @@
 		</label>
 		<details>
 		    <summary><span class="summary">What funding level should I enter?</span></summary>
-		    <div class="panel-indent">
+		    <div class="panel">
 		    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
 		    </div>
 		</details>
@@ -176,11 +177,11 @@
 
 <div class="form-group">
   <fieldset>
-    <label for="agree-terms" class="block-label">
+    <label for="agree-terms" class="block-label selection-button-checkbox">
       <input id="agree-terms" value="agree-terms" type="checkbox" />
       As a member of this project I agree to the funding <a href="#">terms and conditions</a> set out by Innovate UK.
     </label>
-    <label for="confirm-costs" class="block-label">
+    <label for="confirm-costs" class="block-label selection-button-checkbox">
       <input id="confirm-costs" value="confirm-costs" type="checkbox" />
       I confirm that my costs are eligible for state aid funding.
     </label>
@@ -228,15 +229,31 @@
 
 <script type="text/javascript">
 
-jQuery("input#no-funding").on('click',function(e){
-  if ( jQuery(this).is(':checked') ) {
-    jQuery(".no-funding").removeClass('hidden');
-    jQuery(".funding").addClass('hidden');
-  }else{
-    jQuery(".no-funding").addClass('hidden');
-    jQuery(".funding").removeClass('hidden');
-  }
-});
+//jQuery("input#no-funding").on('click',function(e){
+//  if ( jQuery(this).is(':checked') ) {
+//    jQuery(".no-funding").removeClass('hidden');
+//    jQuery(".funding").addClass('hidden');
+//  }else{
+//    jQuery(".no-funding").addClass('hidden');
+//    jQuery(".funding").removeClass('hidden');
+//  }
+//});
+  var buttonChecked = false;
+  jQuery("#prototype-funding").on('click',function(e){
+    if ( buttonChecked ) {
+      buttonChecked = false;
+      jQuery(this).text("Not requesting funding");
+      jQuery(".no-funding").addClass('hidden');
+      jQuery(".funding").removeClass('hidden');
+      jQuery("#prototype-confirmation-text").removeClass('hidden');
+    }else{
+      buttonChecked = true;
+      jQuery(this).text("Request funding");
+      jQuery(".no-funding").removeClass('hidden');
+      jQuery(".funding").addClass('hidden');
+      jQuery("#prototype-confirmation-text").addClass('hidden');
+    }
+  });
 
 </script>
 

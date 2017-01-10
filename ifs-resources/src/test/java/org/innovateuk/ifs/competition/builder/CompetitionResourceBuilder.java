@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -118,11 +119,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     public CompetitionResourceBuilder withInnovationSectorName(String... names) {
         return withArray((name, object) -> setField("innovationSectorName", name, object), names);
     }
-    public CompetitionResourceBuilder withInnovationArea(Long... ids) {
-        return withArray((id, object) -> setField("innovationArea", id, object), ids);
+    public CompetitionResourceBuilder withInnovationAreas(Set<Long>... ids) {
+        return withArray((id, object) -> setField("innovationAreas", id, object), ids);
     }
-    public CompetitionResourceBuilder withInnovationAreaName(String... names) {
-        return withArray((name, object) -> setField("innovationAreaName", name, object), names);
+    public CompetitionResourceBuilder withInnovationAreaNames(Set<String>... names) {
+        return withArray((name, object) -> setField("innovationAreaNames", name, object), names);
     }
 
     public CompetitionResourceBuilder withPafCode(String... codes) {
@@ -171,6 +172,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
         return withArray((id, object) -> setField("assessorPay", id, object), assessorPay);
+    }
+
+    public CompetitionResourceBuilder withSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
+        return with(competition -> setField("sectionSetupStatus", sectionSetupStatus, competition));
     }
 
     @Override

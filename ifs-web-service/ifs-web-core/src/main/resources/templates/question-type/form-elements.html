@@ -41,7 +41,7 @@
         <summary>
             <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
-        <div class="panel-indent" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+        <div class="panel" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </div>
 <!-- ========================= input field type text =========================== -->
@@ -279,7 +279,7 @@
             type="submit"
             name="assign_question"
             th:value="${question.getId()}+'_'+${questionAssignee?.assignedBy}"
-            th:class="'buttonlink'">Ready for review
+            th:class="'buttonlink'">Assign to lead for review
     </button>
   </div>
 </div>

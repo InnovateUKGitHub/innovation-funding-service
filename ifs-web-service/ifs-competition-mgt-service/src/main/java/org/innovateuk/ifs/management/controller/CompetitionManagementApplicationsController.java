@@ -62,6 +62,8 @@ public class CompetitionManagementApplicationsController {
     			return "comp-mgt-not-started";
 	    	case OPEN:
 	    		return openCompetition(model, competitionSummary, queryForm, bindingResult);
+			case CLOSED:
+				return closedCompetition(model, competitionSummary, queryForm, bindingResult);
 	    	case IN_ASSESSMENT:
 	    		return inAssessmentCompetition(model, competitionSummary, queryForm, bindingResult);
 	    	case FUNDERS_PANEL:
@@ -74,6 +76,17 @@ public class CompetitionManagementApplicationsController {
 				return "redirect:/login";
     	}
     }
+
+	private String closedCompetition(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		String sort = applicationSummarySortFieldService.sortFieldForClosedCompetition(queryForm.getSort());
+
+		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionSummary.getCompetitionId(), sort, queryForm.getPage() - 1, PAGE_SIZE);
+		model.addAttribute("results", applicationSummary);
+		model.addAttribute("activeSortField", sort);
+		model.addAttribute("activeTab", "allApplications");
+
+		return "comp-mgt-closed";
+	}
 
 	private String openCompetition(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 

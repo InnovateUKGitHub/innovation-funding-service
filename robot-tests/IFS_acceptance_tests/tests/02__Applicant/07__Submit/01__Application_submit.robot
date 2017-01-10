@@ -54,7 +54,7 @@ Submit flow (complete application)
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given log in as a different user    ${submit_test_email}    Passw0rd123
-    Given the user navigates to the page    ${SERVER}
+    And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
     And the user should be redirected to the correct page    summary
@@ -119,18 +119,18 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=button:contains("Submit application")
 
 the applicant accepts the terms and conditions
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
+    the user selects the checkbox    agree-terms-page
+    the user selects the checkbox    agree-state-aid-page
 
 The user marks the finances as complete
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Your finances
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
+    the user selects the checkbox    agree-terms-page
+    the user selects the checkbox    agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
+
 
 the applicant marks the first section as complete
     the user clicks the button/link    link=Application Overview
@@ -141,7 +141,7 @@ the applicant marks the first section as complete
     The user enters text to a text field    id=application_details-startdate_year    2018
     Clear Element Text    id=application_details-startdate_month
     The user enters text to a text field    id=application_details-startdate_month    11
-    the user clicks the button/link    jQuery=label:contains(No) input
+    the user selects the radio button    application.resubmission    false
     the user clicks the button/link    name=mark_as_complete
 
 the applicant clicks the submit and then clicks the "close button" in the modal

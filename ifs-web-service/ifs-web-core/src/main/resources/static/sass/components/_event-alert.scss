@@ -72,7 +72,8 @@ Don't use the javascript underneath which is just for demo, just add the html fr
 
     max-height: 120px;
     overflow: hidden;
-    @include animation(slideup .66s ease-in-out 3s forwards);
+    animation: slideup .66s ease-in-out 3s forwards;
+    -webkit-animation: slideup .66s ease-in-out 3s forwards;
 
     p {
         border-top: 10px solid $govuk-blue;

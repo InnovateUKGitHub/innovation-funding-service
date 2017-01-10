@@ -72,4 +72,4 @@ Upload a file to an unsuccessful application
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-    Sleep    500ms
+

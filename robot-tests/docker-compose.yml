@@ -2,7 +2,7 @@ version: '2'
 services:
   hub:
     container_name: hub
-    image: selenium/hub:3.0.0-dubnium
+    image: selenium/hub:3.0.1-dysprosium
     environment:
       - GRID_BROWSER_TIMEOUT=90000
       - GRID_TIMEOUT=100000
@@ -14,7 +14,7 @@ services:
         aliases:
           - hub
   chrome:
-    image: selenium/node-chrome-debug:3.0.0-dubnium
+    image: selenium/node-chrome-debug:3.0.1-dysprosium
     environment:
       - NODE_MAX_SESSION=20
       - NODE_MAX_INSTANCES=20

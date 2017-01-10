@@ -417,7 +417,7 @@ IFS.core.formValidation = (function () {
       var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) && IFS.core.formValidation.checkNumber(y, false)
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid')
 
-      if (validNumbers && filledOut && enabled) {
+      if (validNumbers && filledOut) {
         var month = parseInt(m.val(), 10)
         var day = parseInt(d.val(), 10)
         var year = parseInt(y.val(), 10)
@@ -436,15 +436,19 @@ IFS.core.formValidation = (function () {
             var weekday = days[date.getDay()]
             addWeekDay.text(weekday)
           }
-          field.trigger('ifsAutosave')
+          if (enabled) {
+            field.trigger('ifsAutosave')
 
-          if (dateGroup.is('[data-future-date]')) {
-            valid = IFS.core.formValidation.checkFutureDate(dateGroup, date, showMessage)
+            if (dateGroup.is('[data-future-date]')) {
+              valid = IFS.core.formValidation.checkFutureDate(dateGroup, date, showMessage)
+            }
           }
         } else {
-          if (showMessage) { IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage) }
-          allFields.attr({'data-date': ''})
-          valid = false
+          if (enabled) {
+            if (showMessage) { IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage) }
+            allFields.attr({'data-date': ''})
+            valid = false
+          }
         }
       } else if ((filledOut || fieldsVisited) && enabled) {
         if (showMessage) { IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage) }
