@@ -110,7 +110,9 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
         addQuestionsDetails(viewModel, application, form);
         addUserDetails(viewModel, application, userId);
-        addMappedSectionsDetails(viewModel, application, competition, section, userOrganisation, allSections, inputs, singletonList(section));
+        if(null != competition) {
+            addMappedSectionsDetails(viewModel, application, competition, section, userOrganisation, allSections, inputs, singletonList(section));
+        }
 
         viewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
         addCompletedDetails(sectionApplicationViewModel, application, userOrganisation);
