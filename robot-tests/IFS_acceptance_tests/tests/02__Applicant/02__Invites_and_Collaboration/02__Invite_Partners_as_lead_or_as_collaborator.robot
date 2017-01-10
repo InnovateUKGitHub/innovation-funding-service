@@ -52,7 +52,7 @@ Pending partners visible in the Application details
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
-    Then pending partners should be visible in the page
+    Then the user should see the element   jQuery=h2:contains("Fannie May") > small:contains("pending")
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -250,10 +250,6 @@ the user can invite another person to their own organisation
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-
-pending partners should be visible in the page
-    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
-    Element Should Contain    xpath=//span[contains(text(),"Fannie May")]//following::small    (pending)
 
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label

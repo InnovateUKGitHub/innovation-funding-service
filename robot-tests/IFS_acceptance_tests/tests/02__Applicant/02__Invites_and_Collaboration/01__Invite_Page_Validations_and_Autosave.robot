@@ -121,9 +121,9 @@ the applicant fills the lead organisation fields
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    jquery=button:contains("Save Changes")
+    Focus    jQuery=.button:contains("Save Changes")
     browser validations have been disabled
-    The user clicks the button/link    jquery=button:contains("Save Changes")
+    The user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
