@@ -36,6 +36,12 @@ dependencies {
 // enabling Spring dev tools has security consequences so only do so for local development
 ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "development")
 
+ext.csrfEncryptionPassword=csrfEncryptionPassword
+ext.encryptionSalt=encryptionSalt
+ext.csrfTokenValidityMins=csrfTokenValidityMins
+
+ext.ifsWebSystemUserUid=project.ifsWebSystemUserId
+
 processResources {
     filesMatching("*.properties") {
         expand project.properties
