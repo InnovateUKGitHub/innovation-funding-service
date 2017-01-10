@@ -40,7 +40,7 @@ public class AdditionalInfoSectionSaverTest {
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
-		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "BudgetCode", Collections.emptyList());
+		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("PAF", "Activity", "BudgetCode", Collections.emptyList());
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
@@ -48,8 +48,8 @@ public class AdditionalInfoSectionSaverTest {
 		service.saveSection(competition, competitionSetupForm);
 
 		assertEquals("Activity", competition.getActivityCode());
-		assertEquals("Innovate", competition.getInnovateBudget());
 		assertEquals("BudgetCode", competition.getBudgetCode());
+		assertEquals("PAF", competition.getPafCode());
 
 		verify(competitionService).update(competition);
 	}
@@ -158,9 +158,9 @@ public class AdditionalInfoSectionSaverTest {
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
 		verify(competitionService).update(argumentCaptor.capture());
 
-		assertEquals(oldPafCode, 		argumentCaptor.getValue().getPafCode());
-		assertEquals(oldActivityCode, 	argumentCaptor.getValue().getActivityCode());
-		assertEquals(oldBudgetCode, 	argumentCaptor.getValue().getBudgetCode());
+		assertEquals(newPafNumber, 		argumentCaptor.getValue().getPafCode());
+		assertEquals(newActivityCode, 	argumentCaptor.getValue().getActivityCode());
+		assertEquals(newBudgetCode, 	argumentCaptor.getValue().getBudgetCode());
 
 		CompetitionFunderResource createdFunderResource1 = argumentCaptor.getValue().getFunders().get(0);
 		CompetitionFunderResource createdFunderResource2 = argumentCaptor.getValue().getFunders().get(1);

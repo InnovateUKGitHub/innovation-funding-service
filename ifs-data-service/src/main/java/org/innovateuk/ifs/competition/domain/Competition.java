@@ -89,7 +89,6 @@ public class Competition implements ProcessActivity {
     private Set<Category> researchCategories;
 
     private String activityCode;
-    private String innovateBudget;
 
     private boolean multiStream;
     private Boolean resubmission;
@@ -503,14 +502,6 @@ public class Competition implements ProcessActivity {
 
     public void setActivityCode(String activityCode) {
         this.activityCode = activityCode;
-    }
-
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
     }
 
     public List<CompetitionFunder> getFunders() {

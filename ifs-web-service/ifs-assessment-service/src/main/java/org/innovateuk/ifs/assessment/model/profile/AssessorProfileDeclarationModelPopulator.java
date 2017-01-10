@@ -1,33 +1,40 @@
 package org.innovateuk.ifs.assessment.model.profile;
 
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.user.resource.AffiliationResource;
+import org.innovateuk.ifs.user.resource.AffiliationType;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Clock;
-import java.time.LocalDate;
-
-import static java.time.Month.MARCH;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * Build the model for the Assessor Declaration view.
+ * Build the model for the Assessor Declaration of Interest read-only view.
  */
 @Component
-public class AssessorProfileDeclarationModelPopulator {
+public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
 
-    private Clock clock = Clock.systemDefaultZone();
+    @Autowired
+    private UserService userService;
 
-    public AssessorProfileDeclarationViewModel populateModel() {
-        LocalDate declarationDate = calculateDeclarationDate();
-        return new AssessorProfileDeclarationViewModel(declarationDate);
-    }
+    public AssessorProfileDeclarationViewModel populateModel(UserResource user) {
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(userService.getUserAffiliations(user.getId()));
 
-    private LocalDate calculateDeclarationDate() {
-        LocalDate now = LocalDate.now(clock);
-        LocalDate financialYearEndDayInCurrentYear = LocalDate.of(now.getYear(), MARCH, 31);
+        Optional<AffiliationResource> principalEmployer = getPrincipalEmployer(affiliations);
 
-        // Has the financial year end day already been reached during this year?
-        boolean yearEndPassed = now.compareTo(financialYearEndDayInCurrentYear) >= 0;
-
-        return yearEndPassed ? financialYearEndDayInCurrentYear.plusYears(1) : financialYearEndDayInCurrentYear;
+        return new AssessorProfileDeclarationViewModel(
+                affiliations.size() > 0,
+                principalEmployer.map(AffiliationResource::getOrganisation).orElse(null),
+                principalEmployer.map(AffiliationResource::getPosition).orElse(null),
+                getProfessionalAffiliations(affiliations),
+                getAppointments(affiliations),
+                getFinancialInterests(affiliations),
+                getFamilyAffiliations(affiliations),
+                getFamilyFinancialInterests(affiliations)
+        );
     }
 }
