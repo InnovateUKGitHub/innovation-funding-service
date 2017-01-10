@@ -30,3 +30,33 @@ User cannot update initial details of a competition after notify date
     Given the user clicks the button/link    link=Initial details
     Then the user should not see the element    jQuery=.button:contains("Edit")
     And the user should not see the element    jQuery=.button:contains("Done")
+
+Comp admin can edit Application details before Open date
+    [Documentation]     INFUND-6937, INFUND-6938, INFUND-6939, INFUND-6940 ,INFUND-6941
+    [Tags]
+    [Setup]     log in as a different user    &{Comp_admin1_credentials}
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/6/
+    And The user clicks the button/link    link=Application
+    Then The user should see the text in the page   Application details
+    And The user clicks the button/link     link=Application details
+    And the user should see the element    jquery=h1:contains("Application details")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And the user clicks the button/link    jQuery=.button:contains("Save and close")
+    And The user clicks the button/link     link=Project summary
+    And the user should see the element    jquery=h1:contains("Project summary")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+    And The user clicks the button/link     link=Public description
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+    And The user clicks the button/link     link=Scope
+    And the user should see the element    jquery=h1:contains("Scope")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+    And The user clicks the button/link     link=Finances
+    And the user should see the element    jquery=h1:contains("Application finances")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And the user clicks the button/link    jQuery=.button:contains("Save and close")
