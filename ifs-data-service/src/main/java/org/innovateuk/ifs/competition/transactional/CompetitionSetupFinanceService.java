@@ -1,0 +1,19 @@
+package org.innovateuk.ifs.competition.transactional;
+
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+
+/**
+ * Service interface to deal with the finance part of competition setup.
+ */
+public interface CompetitionSetupFinanceService {
+
+    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "SAVE_COMPETITION_SETUP_FINANCE", securedType = CompetitionSetupFinanceResource.class, description = "Comp Admins and project finance users should be able to edit the competition setup details for finance")
+    ServiceResult<Void> save(CompetitionSetupFinanceResource competitionSetupFinanceResource);
+
+}
