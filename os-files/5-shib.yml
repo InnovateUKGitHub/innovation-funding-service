@@ -48,6 +48,7 @@ items:
   metadata:
     name: shib
   spec:
+    host: <<SHIB-ADDRESS>>
     port:
       targetPort: 443-tcp
     tls:

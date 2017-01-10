@@ -47,6 +47,7 @@ items:
   metadata:
     name: admin
   spec:
+    host: <<ADMIN-ADDRESS>>
     port:
       targetPort: 8123-tcp
     to:

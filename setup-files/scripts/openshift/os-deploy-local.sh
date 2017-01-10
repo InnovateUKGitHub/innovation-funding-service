@@ -1,21 +1,26 @@
 #!/bin/sh
 set -e
 
-# oc cluster up --routing-suffix=ifs.local.dev
+# oc cluster up
 
-ENV=lf-project1
+ENV=test
+HOST=ifs-local-dev
 
 # Set up remote registry and project name params
 rm -rf os-files-tmp
 cp -r os-files os-files-tmp
-sed -i "s/<<HOSTNAME>>/ifs.local.dev/g" os-files-tmp/*
-sed -i "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*
+sed -i "s/<<SHIB-ADDRESS>>/$HOST/g" os-files-tmp/*.yml
+sed -i "s/<<ADMIN-ADDRESS>>/admin.$HOST/g" os-files-tmp/*.yml
+
+sed -i "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*.yml
 
 # Build & tag Shib
 rm -rf shibboleth
 cp -r setup-files/scripts/docker/shibboleth shibboleth
-sed -i "s/<<HOSTNAME>>/shib-$ENV.ifs.local.dev/g" shibboleth/*
+sed -i "s/<<HOSTNAME>>/$HOST/g" shibboleth/*
 docker build -t worth/shibboleth:1.0-$ENV shibboleth/
+
+docker build -t worth/shib-init:1.0-$ENV setup-files/scripts/openshift/shib-init
 
 # Re-tag other images
 docker tag worth/data-service:1.0-SNAPSHOT \
@@ -43,6 +48,15 @@ oc create -f os-files-tmp/
 rm -rf os-files-tmp
 rm -rf shibboleth
 
-oc get pods
-oc get routes
 
+SERVICE_STATUS=404
+while [ ${SERVICE_STATUS} -ne "200" ]
+do
+    SERVICE_STATUS=$(curl  --max-time 1 -k -L -s -o /dev/null -w "%{http_code}" https://${HOST}/) || true
+    echo "Service status: HTTP $SERVICE_STATUS"
+    oc get pods
+    sleep 5s
+done
+
+oc create -f os-files/init/6-shib-init.yml
+oc get routes

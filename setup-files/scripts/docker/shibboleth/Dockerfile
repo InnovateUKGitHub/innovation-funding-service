@@ -17,3 +17,6 @@ RUN sed -i 's/ifs-local-dev/<<HOSTNAME>>/g' /etc/shibboleth/shibboleth2.xml && \
     sed -i 's/ifs-local-dev/<<HOSTNAME>>/g' opt/shibboleth-idp/conf/attribute-filter.xml && \
     sed -i 's/ifs-local-dev/<<HOSTNAME>>/g' opt/shibboleth-idp/metadata/idp-metadata.xml && \
     sed -i 's/ifs-local-dev/<<HOSTNAME>>/g' opt/shibboleth-idp/bin/build.xml
+
+COPY startup.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
