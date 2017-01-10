@@ -82,9 +82,9 @@ Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
     [Tags]    Pending
     [Setup]    Close the competition in assessment
-    #TODO Pending INFUND-943 to be ready for test
-    Given The guest user opens the browser
-    When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
+    Given the user navigates to the page    ${ASSESSOR_DASHBOARD}
+    Then The user should not see the element    link=Sustainable living models for the future
+    And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     Then The user should see the text in the page    The invitation is now closed
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
@@ -117,7 +117,8 @@ Existing assessor: Accept invitation from the invite link
 
 Accepted and Rejected invites are not visible
     [Documentation]    INFUND-6455
-    Then the user should not see the element     link=Photonics for health
+    [Tags]
+    Then the user should not see the element    link=Photonics for health
     And The user should not see the text in the page    Invitations to assess
 
 Upcoming competition should be visible
@@ -165,6 +166,7 @@ Registered user should not allowed to accept other assessor invite
 
 The user should not be able to accept or reject the same applications
     [Documentation]    NFUND-5165
+    [Tags]
     Then the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
     Then the assessor shouldn't be able to accept the accepted competition
