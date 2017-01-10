@@ -80,15 +80,14 @@ Existing assessor: Reject invitation from Dashboard
 
 Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
-    [Tags]    Pending
+    [Tags]
     [Setup]    Close the competition in assessment
-    Given the user navigates to the page    ${ASSESSOR_DASHBOARD}
+    Given guest user log-in     &{existing_assessor1_credentials}
     Then The user should not see the element    link=Sustainable living models for the future
     And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    Then The user should see the text in the page    The invitation is now closed
+    Then The user should see the text in the page    This invitation is now closed
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
-    ...    AND    the user closes the browser
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228
