@@ -45,6 +45,8 @@ public enum FormInputType implements Identifiable {
 
     private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE);
 
+    private static List<FormInputType> ACADEMIC_FINANCE_TYPES = asList(YOUR_FINANCE, FINANCE_UPLOAD);
+
     private long id;
 
     FormInputType(long id) {
@@ -64,7 +66,7 @@ public enum FormInputType implements Identifiable {
      * @return whether or not we would expect a displayable question-type fragment for this form input type
      */
     public boolean isDisplayableQuestionType() {
-        return !combineLists(FINANCE_TYPES, FINANCIAL_SUMMARY).contains(this);
+        return !combineLists(FINANCE_TYPES, ACADEMIC_FINANCE_TYPES, asList(FINANCE, FINANCIAL_SUMMARY)).contains(this);
     }
 
     /**

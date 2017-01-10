@@ -37,6 +37,8 @@ public class FormInputResource {
         return type;
     }
 
+    // TODO - templates are currently manually excluding FINANCE FormInputTypes from display as well.  Their
+    // includedInApplicationSummary flags should be set to false ideally
     public Boolean isIncludedInApplicationSummary() {
         return includedInApplicationSummary;
     }
