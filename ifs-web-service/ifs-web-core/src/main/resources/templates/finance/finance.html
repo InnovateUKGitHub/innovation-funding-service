@@ -85,7 +85,7 @@
         <input class="form-control width-medium"
                th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                type="number"
-               th:id="'formInput-'+${formInput.id}"
+               th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:min="0"
                th:max="2147483647"
