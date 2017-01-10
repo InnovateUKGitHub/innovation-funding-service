@@ -152,7 +152,8 @@ public class POJOTest {
             AssessmentSubmissionsResource.class,
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
-            NewUserStagedInviteListResource.class
+            NewUserStagedInviteListResource.class,
+            CompetitionSetupFinanceResource.class
             );
 
     @Before
