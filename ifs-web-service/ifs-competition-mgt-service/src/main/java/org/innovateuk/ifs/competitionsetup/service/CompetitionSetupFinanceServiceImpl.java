@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinanceService {
 
-	private static final Log LOG = LogFactory.getLog(CompetitionSetupFinanceServiceImpl.class);
-
 	@Autowired
 	private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
 

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -45,6 +47,7 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 		// TODO at the moment we save the finance setup information to the competition itself as a flag.
 		// TODO We also change the active status on a relevant form inputs.
 		// TODO Going forward we need to remove the flag and key of the activity of the form inputs only.
+
 		csfr.setFullApplicationFinance(form.isFullApplicationFinance());
 		csfr.setIncludeGrowthTable(form.isIncludeGrowthTable());
 		csfr.setCompetitionId(competition.getId());
