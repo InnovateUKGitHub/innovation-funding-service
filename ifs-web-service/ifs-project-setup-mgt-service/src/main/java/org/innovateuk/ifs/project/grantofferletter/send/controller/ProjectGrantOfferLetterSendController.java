@@ -226,7 +226,7 @@ public class ProjectGrantOfferLetterSendController {
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
                 additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
                 GOLState.APPROVED.equals(golState),
-                GOLState.READY_TO_APPROVE.equals(golState),
+                GOLState.READY_TO_APPROVE.equals(golState) || GOLState.APPROVED.equals(golState),
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
         );
     }
