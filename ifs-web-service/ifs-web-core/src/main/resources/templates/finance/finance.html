@@ -278,6 +278,7 @@
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                             20% of labour costs
                         </label>
+
                         <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
@@ -287,6 +288,16 @@
                                    th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}"
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                             Custom overhead costs
+                        </label>
+                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"  data-target="overhead-total">
+                            <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"
+                                   type="radio"
+                                   required="required"
+                                   th:name="${'overheads-type-' + question.id + '-'+ overheadCosts?.id}"
+                                   th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"
+                                   th:checked="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)}"
+                                   th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
+                            Calculate overheads
                         </label>
                     </div>
                 </fieldset>
@@ -349,6 +360,30 @@
                                th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="/,*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
+                    </div>
+                </div>
+
+                <div id="overhead-total">
+                    <h3 class="heading-medium">Calculate overheads</h3>
+                    <p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'section-total-'+subSection.id+'-total'}">
+                            <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
+                        </label>
+                        <input type="text"
+                               th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                               th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-calculate'}"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.getTotal()} : '0'"/>
+                        <input type="hidden"
+                               th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-calculate'}"
+                               th:attr="data-calculation-fields='#'+${'cost-'+ type + '-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               data-calculation-operations="*"
+                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
                     </div>
                 </div>
             </div>

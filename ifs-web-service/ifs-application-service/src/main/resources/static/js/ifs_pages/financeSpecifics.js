@@ -19,7 +19,8 @@ IFS.application.financeSpecifics = (function () {
         supportCostInTotal: {
           'NONE': '#section-total-10-labour-cost-none',
           'DEFAULT_PERCENTAGE': '#section-total-10-default',
-          'CUSTOM_RATE': '#section-total-10-custom'
+          'CUSTOM_RATE': '#section-total-10-custom',
+          'TOTAL': '#section-total-10-calculate'
         },
         allTotals: '[id*="section-total-10"]',
         totalCostInHeaders: '[data-mirror="#section-total-10"]'

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
  */
 public class Overhead implements FinanceRowItem {
     public interface RateNotZero{}
+    public interface TotalCost{}
     private Long id;
     private OverheadRateType rateType;
 

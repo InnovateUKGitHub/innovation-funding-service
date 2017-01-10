@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
@@ -23,10 +22,14 @@ public class OverheadsHandler extends FinanceRowHandler {
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
 
         Overhead overhead = (Overhead) costItem;
-        if(overhead.getRateType() != null && !OverheadRateType.NONE.equals(overhead.getRateType())){
-            super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
-        }else{
-            super.validate(costItem, bindingResult);
+        switch(overhead.getRateType()) {
+            case DEFAULT_PERCENTAGE:
+            case CUSTOM_RATE:
+                super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
+            case TOTAL:
+                super.validate(costItem, bindingResult, Overhead.TotalCost.class);
+            case NONE:
+                super.validate(costItem, bindingResult);
         }
     }
 
