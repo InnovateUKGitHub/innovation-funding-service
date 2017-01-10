@@ -2,7 +2,12 @@ package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.util.enums.Identifiable;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * FormInputType is used to identify what response a FormInput needs.
@@ -35,6 +40,11 @@ public enum FormInputType implements Identifiable {
     ASSESSOR_APPLICATION_IN_SCOPE(22),
     ASSESSOR_SCORE(23);
 
+    private static List<FormInputType> COST_CATEGORIES =
+            asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);
+
+    private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE);
+
     private long id;
 
     FormInputType(long id) {
@@ -48,6 +58,27 @@ public enum FormInputType implements Identifiable {
 
     public String getNameLower() {
         return this.name().toLowerCase();
+    }
+
+    /**
+     * @return whether or not we would expect a displayable question-type fragment for this form input type
+     */
+    public boolean isDisplayableQuestionType() {
+        return !combineLists(FINANCE_TYPES, FINANCIAL_SUMMARY).contains(this);
+    }
+
+    /**
+     * @return whether or not we would expect a displayable finance fragment for this form input type
+     */
+    public boolean isDisplayableFinanceType() {
+        return FINANCE_TYPES.contains(this);
+    }
+
+    /**
+     * @return whether or not we would expect a displayable financial summary fragment for this form input type
+     */
+    public boolean isDisplayableFinancialSummaryType() {
+        return singletonList(FINANCIAL_SUMMARY).contains(this);
     }
 
     public static FormInputType findByName(String name) {

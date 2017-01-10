@@ -46,7 +46,8 @@
             </ul>
         </div>
 
-        <button class="hidden-save" type="submit" aria-hidden="true" value="save form" tabindex="-1"/>
+        <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
+
         <ul class="boxed-list">
             <li th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
                 <!--/* lead org */-->

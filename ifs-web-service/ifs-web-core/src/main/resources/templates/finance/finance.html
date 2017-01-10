@@ -68,8 +68,15 @@
             </h2>
             <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
                 <div th:remove="tag" th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-                    <div th:replace="finance/finance :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
-                    <div th:replace="question-type/types :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+
+                    <th:block th:if="${formInput.type.displayableFinanceType}">
+                        <div th:replace="finance/finance :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+                    </th:block>
+
+                    <th:block th:if="${formInput.type.displayableQuestionType}">
+                        <div th:replace="question-type/types :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+                    </th:block>
+
                 </div>
             </div>
         </section>

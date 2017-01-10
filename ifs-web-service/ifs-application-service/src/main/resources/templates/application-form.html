@@ -35,7 +35,11 @@
 
             <div class="question" th:each="formInput, status : ${questionFormInputs?.get(currentQuestion?.id)}" th:id="'form-input-'+${formInput.id}"
                  th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
-                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+
+                <th:block th:if="${formInput.type.displayableQuestionType}">
+                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                </th:block>
+
             </div>
 
             <div th:if="${currentSection}" th:remove="tag">
@@ -49,9 +53,18 @@
                     <th:block th:if="${financeView != null}">
                         <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
                              th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                            <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
-                            <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
-                            <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
+
+                            <th:block th:if="${formInput.type.displayableQuestionType}">
+                                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                            </th:block>
+
+                            <th:block th:if="${formInput.type.displayableFinanceType}">
+                                <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
+                            </th:block>
+
+                            <th:block th:if="${formInput.type.displayableFinancialSummaryType}">
+                                <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
+                            </th:block>
                         </div>
                     </th:block>
                 </div>
