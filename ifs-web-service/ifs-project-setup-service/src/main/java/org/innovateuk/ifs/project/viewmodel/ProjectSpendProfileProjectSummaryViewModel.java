@@ -11,7 +11,7 @@ import java.util.Map;
  * Module: innovation-funding-service
  * View model for project manager Spend profile
  **/
-public class ProjectSpendProfileProjectManagerViewModel {
+public class ProjectSpendProfileProjectSummaryViewModel {
     private Long projectId;
     private Long applicationId;
     private String projectName;
@@ -21,7 +21,7 @@ public class ProjectSpendProfileProjectManagerViewModel {
     private boolean submitted;
     private boolean approved;
 
-    public ProjectSpendProfileProjectManagerViewModel(Long projectId, Long applicationId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
+    public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
                                                       List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners,
                                                       boolean approved) {
         this.projectId = projectId;
@@ -92,7 +92,7 @@ public class ProjectSpendProfileProjectManagerViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectSpendProfileProjectManagerViewModel that = (ProjectSpendProfileProjectManagerViewModel) o;
+        ProjectSpendProfileProjectSummaryViewModel that = (ProjectSpendProfileProjectSummaryViewModel) o;
 
         return new EqualsBuilder()
                 .append(submitted, that.submitted)

@@ -106,7 +106,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .param("assessorType", businessType.name())
                 .param("skillAreas", skillsAreas))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard"));
+                .andExpect(redirectedUrl("/profile/skills"));
 
         verify(userService).updateProfileSkills(1L, businessType, skillsAreas);
     }
