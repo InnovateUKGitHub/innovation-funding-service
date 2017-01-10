@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Resource representing the finance part of competition setup
  */
@@ -30,5 +33,29 @@ public class CompetitionSetupFinanceResource {
 
     public void setIncludeGrowthTable(boolean includeGrowthTable) {
         this.includeGrowthTable = includeGrowthTable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionSetupFinanceResource that = (CompetitionSetupFinanceResource) o;
+
+        return new EqualsBuilder()
+                .append(fullApplicationFinance, that.fullApplicationFinance)
+                .append(includeGrowthTable, that.includeGrowthTable)
+                .append(competitionId, that.competitionId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(fullApplicationFinance)
+                .append(includeGrowthTable)
+                .toHashCode();
     }
 }

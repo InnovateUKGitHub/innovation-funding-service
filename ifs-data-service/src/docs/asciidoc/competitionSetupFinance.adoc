@@ -1,0 +1,11 @@
+=== Save competition setup finance
+==== Request
+include::{snippets}/competition-setup-finance/save/http-request.adoc[]
+include::{snippets}/competition-setup-finance/save/path-parameters.adoc[]
+include::{snippets}/competition-setup-finance/save/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competition-setup-finance/save/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-setup-finance/save/curl-request.adoc[]
