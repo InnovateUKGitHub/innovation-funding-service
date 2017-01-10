@@ -57,14 +57,14 @@
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">3</span><br />
-        <small>applications being funded</small>
+        <span class="heading-large" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '284' : '0')}">0</span><br />
+        <small>applications notified of decision</small>
       </div>
   	</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">287</span><br />
+        <span class="heading-large" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '287' : '3')}">287</span><br />
         <small>applications awaiting a decision</small>
       </div>
   	</div>
@@ -111,18 +111,17 @@
 
       <div class="grid-row sorting sorting-controls">
         <div class="column-half">
-          <div class="form-group inline no-margin">
+          <div class="form-group">
             <fieldset class="alignleft select-all-applications">
               <legend class="visuallyhidden">Select application by type</legend>
-              <label class="form-label">Select application type
-                <select class="form-control select-applications" id="select-box">
+              <label class="form-label" for="select-aaplications-1">Select application type</label>
+                <select class="form-control select-applications" id="select-aaplications-1">
                   <option>-- Select applications --</option>
                   <option value="successful">Successful</option>
                   <option value="unsuccessful">Unsuccessful</option>
                   <option value="onhold">On hold</option>
                   <option value="deselect">Deselect</option>
                 </select>
-              </label>
             </fieldset>
             <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
           </div>
@@ -130,7 +129,7 @@
 
         <div class="column-half alignright">
           <input type="hidden" name="comp" value="panel" />
-          <button class="button button-notification" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write notification and send</button>
+          <button class="button button-notification extra-margin-top" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write notification and send</button>
         </div>
       </div>
 
@@ -154,8 +153,8 @@
   							<td>Machine learning in robots</td>
   							<td>PWC</td>
                 <td>Successful</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+                <td th:text="${(param.action != null and param.action[0] == 'emails-sent' ? 'Sent' : '-')}">-</td>
+                <td class="alignright" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '9 January 2017' : '-')}">-</td>
   						</tr>
   						<tr>
                 <td><input type="checkbox" class="app-row-select row-unsuccessful" name="app-row" value="app-row-2" aria-labelledby="select-applications-label" /></td>
@@ -225,27 +224,27 @@
   				</table>
         </div>
 
-        <div class="grid-row sorting sorting-controls extra-margin-top">
+        <div class="grid-row sorting sorting-controls">
           <div class="column-half">
-            <div class="form-group inline no-margin">
+            <div class="form-group">
               <fieldset class="alignleft select-all-applications">
                 <legend class="visuallyhidden">Select application by type</legend>
-                <label class="form-label">Select application type
-                  <select class="form-control select-applications" id="select-box">
+                <label class="form-label" for="select-aaplications-1">Select application type</label>
+                  <select class="form-control select-applications" id="select-aaplications-1">
                     <option>-- Select applications --</option>
                     <option value="successful">Successful</option>
                     <option value="unsuccessful">Unsuccessful</option>
                     <option value="onhold">On hold</option>
                     <option value="deselect">Deselect</option>
                   </select>
-                </label>
               </fieldset>
               <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
             </div>
           </div>
 
           <div class="column-half alignright">
-            <button class="button button-notification" disabled="disabled">Write notification and send</button>
+            <input type="hidden" name="comp" value="panel" />
+            <button class="button button-notification extra-margin-top" disabled="disabled" formaction="/prototypes/1561-inform-create-email">Write notification and send</button>
           </div>
         </div>
 
