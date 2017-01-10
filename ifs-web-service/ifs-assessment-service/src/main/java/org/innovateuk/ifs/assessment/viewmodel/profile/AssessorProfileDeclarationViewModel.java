@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class AssessorProfileDeclarationViewModel {
 
-    private final boolean completed;
-    private final String principalEmployer;
-    private final String role;
-    private final String professionalAffiliations;
-    private final List<AffiliationResource> appointments = new ArrayList<>();
-    private final String financialInterests;
-    private final List<AffiliationResource> familyAffiliations = new ArrayList<>();
-    private final String familyFinancialInterests;
+    private boolean completed;
+    private String principalEmployer;
+    private String role;
+    private String professionalAffiliations;
+    private List<AffiliationResource> appointments = new ArrayList<>();
+    private String financialInterests;
+    private List<AffiliationResource> familyAffiliations = new ArrayList<>();
+    private String familyFinancialInterests;
 
     public AssessorProfileDeclarationViewModel(
             boolean completed,
