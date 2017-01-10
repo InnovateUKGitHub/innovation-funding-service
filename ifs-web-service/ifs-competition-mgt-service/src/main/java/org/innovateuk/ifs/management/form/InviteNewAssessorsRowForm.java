@@ -9,7 +9,7 @@ public class InviteNewAssessorsRowForm {
     @NotEmpty(message = "{validation.standard.name.required}")
     private String name;
 
-    @NotEmpty(message = "{validation.standard.email.required}")
+    @NotEmpty(message = "{validation.inviteNewAssessorsForm.invites.email.required}")
     private String email;
 
     public String getName() {
