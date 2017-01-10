@@ -28,7 +28,7 @@ Status updates correctly for internal user's table
 
 Project finance user uploads the grant offer letter
     [Documentation]    INFUND-6377
-    [Tags]
+    [Tags]    HappyPath
     # note that this step is now required as all the following functionality is only unlocked once the grant offer letter has been sent to the partners
     [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
