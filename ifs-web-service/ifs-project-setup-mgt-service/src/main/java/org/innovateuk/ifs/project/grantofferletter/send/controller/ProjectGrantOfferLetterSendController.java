@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.send.form.ProjectGrantOfferLetterSendForm;
 import org.innovateuk.ifs.project.grantofferletter.send.viewmodel.ProjectGrantOfferLetterSendViewModel;
 import org.innovateuk.ifs.project.ProjectService;
@@ -211,23 +212,21 @@ public class ProjectGrantOfferLetterSendController {
 
         Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
 
-        Boolean grantOfferLetterAlreadySent = projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject();
-
-        Boolean signedGrantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
-
         Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+
+        GOLState golState = projectService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
 
         return new ProjectGrantOfferLetterSendViewModel(competitionSummary,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                grantOfferLetterAlreadySent,
+                !GOLState.PENDING.equals(golState),
                 projectId,
                 project.getName(),
                 application.getId(),
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
                 additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
-                signedGrantOfferLetterApproved,
-                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.isPresent() : Boolean.FALSE,
+                GOLState.APPROVED.equals(golState),
+                GOLState.READY_TO_APPROVE.equals(golState),
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
         );
     }

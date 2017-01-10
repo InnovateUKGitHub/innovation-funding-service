@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.security.access.method.P;
@@ -149,5 +150,8 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_SIGNED_GRANT_OFFER_LETTER') || hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
+    ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
 
 }

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
@@ -660,6 +661,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+            return null;
+        }
 
     }
 }
