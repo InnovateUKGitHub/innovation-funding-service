@@ -178,28 +178,6 @@ The user navigates to the overview page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
 
-the user marks finances as complete
-    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
-    the user selects the radio button    financePosition-organisationSize    LARGE
-    the user enters text to a text field    id=cost-financegrantclaim    20
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    wait for autosave
-
-the user marks the finances as complete
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    wait for autosave
-
-Make the finances ready for mark as complete
-    Applicant navigates to the finances of the Robot application
-    the user selects the radio button    financePosition-organisationSize    SMALL
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
-
 The user navigates to the academic application finances
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -215,14 +193,6 @@ The user marks the academic application finances as incomplete
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
     wait for autosave
-
-Create new application
-    Wait for autosave
-    go to    ${CREATE_APPLICATION_PAGE}
-    Input Text    id=application_name    Form test application
-    Click Element    css=#content > form > input
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
