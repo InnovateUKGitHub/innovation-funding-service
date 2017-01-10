@@ -29,7 +29,6 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...
 ...               INFUND-6350 As a lead partner I want to be able to return edit rights to a non-lead partner so that they can further amend their Spend Profile if requested by the lead
 ...
-<<<<<<< Updated upstream
 ...               INFUND-6146 Saving blank fields on the spend profile results in an internal server error (null pointer exception)
 ...
 ...               INFUND-6225 External user status indicator for spend profile should show as 'waiting' once submitted
@@ -39,9 +38,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6881 Non-lead External User should see Green Check once he submits SP
 ...
 ...               INFUND-7119 GOL status for Internal user
-=======
+...
 ...               INFUND-6977 As a lead partner I want to be given back edit rights to the Spend Profile so that I can manage further edits if they have been rejected by Innovate UK
->>>>>>> Stashed changes
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
