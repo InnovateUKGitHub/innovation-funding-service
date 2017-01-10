@@ -25,7 +25,7 @@
             <p>You must complete your profile before we can assign you applications.</p>
             <ul class="list list-bullet extra-margin-top">
                 <li>
-                    <a href="/prototypes/1177-assessor-skills?version=v2">your skill areas</a>
+                    <a href="/prototypes/1177-assessor-skills?version=v2">your skills</a>
                 </li>
                 <li>
                     <a href="/prototypes/1247-assessor-doi?&#38;version=v2">your declaration of interest</a>
@@ -35,6 +35,12 @@
                 </li>
 
             </ul>
+        </div>
+    </th:block>
+
+    <th:block th:unless="${param.user != null and param.user[0] == 'assessor'}">
+        <div class="boxed message-success extra-margin-bottom">
+            <h2 class="heading-small no-margin">Assessor account complete!</h2>
         </div>
     </th:block>
 
