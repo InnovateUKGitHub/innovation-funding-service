@@ -92,8 +92,10 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         OpenSectionViewModel openSectionViewModel = new OpenSectionViewModel();
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), user, model, form, allSections);
+        if(null != competition) {
+            addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
+            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, allSections);
+        }
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
@@ -118,14 +120,17 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         addUserDetails(openSectionViewModel, application, userId);
         addApplicationFormDetailInputs(application, form);
 
-        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(competition.getId());
-        addMappedSectionsDetails(openSectionViewModel, application, competition, section, userOrganisation, allSections, formInputResources, sectionService.filterParentSections(allSections));
+        if(null != competition) {
+            List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(competition.getId());
+            addMappedSectionsDetails(openSectionViewModel, application, competition, section, userOrganisation, allSections, formInputResources, sectionService.filterParentSections(allSections));
+        }
 
         openSectionViewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
         sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition));
         sectionApplicationViewModel.setCurrentApplication(application);
         sectionApplicationViewModel.setCurrentCompetition(competition);
         sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
+
         addCompletedDetails(openSectionViewModel, sectionApplicationViewModel, application, userOrganisation, allSections);
     }
 

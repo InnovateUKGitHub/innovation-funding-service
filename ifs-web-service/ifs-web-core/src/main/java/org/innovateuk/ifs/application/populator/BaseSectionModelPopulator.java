@@ -34,7 +34,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  */
 abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     protected static final String MODEL_ATTRIBUTE_FORM = "form";
-    protected static final String MODEL_ATTRIBUTE_MODEL = "model";
 
     @Autowired
     private QuestionService questionService;
@@ -61,7 +60,7 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     protected Boolean calculateAllReadOnly(CompetitionResource competition) {
-        return !competition.isOpen();
+        return null != competition && !competition.isOpen();
     }
 
     protected void addUserDetails(BaseSectionViewModel viewModel, ApplicationResource application, Long userId) {
