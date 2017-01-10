@@ -47,6 +47,7 @@ Remove users from the list
 
 Invite Individual Assessors
     [Documentation]    INFUND-6414
+    [Tags]
     Given The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
     When the user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Invite individual)
@@ -59,6 +60,7 @@ Invite Individual Assessors
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411
+    [Tags]
     Given the user clicks the button/link    link=Invite
     When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
     And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
@@ -77,9 +79,9 @@ Invite non-registered users
     And The user should not see the text in the page    Please select an innovation area.    #check for the client side validation
     And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
     Then the user should see the element    css=.no
-    And The user should see the text in the page    Olivier Giroud
-    And The user should see the text in the page    worth.email.test+OlivierGiroud@gmail.com
-    And The user should see the text in the page    Data
+    And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
+    And The user should see the element    jQuery=tr:nth-child(1) td:contains(worth.email.test+OlivierGiroud@gmail.com)
+    And The user should see the element    jQuery=tr:nth-child(1) td:contains(Data)
 
 Assessor overview information
     [Documentation]    INFUND-6450
