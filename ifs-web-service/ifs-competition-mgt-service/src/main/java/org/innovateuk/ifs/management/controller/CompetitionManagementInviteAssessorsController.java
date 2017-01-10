@@ -76,17 +76,21 @@ public class CompetitionManagementInviteAssessorsController {
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
     public String invite(Model model,
                          @PathVariable("competitionId") Long competitionId,
-                         @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                         @SuppressWarnings("unused") BindingResult bindingResult) {
+                         @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        if (form.getInvites().isEmpty()) {
+            form.getInvites().add(new InviteNewAssessorsRowForm());
+        }
+
         return doViewInvite(model, competitionId);
     }
 
     @RequestMapping(value = "/invite", params = {"remove"}, method = RequestMethod.POST)
     public String removeInviteFromInviteView(Model model,
                                              @PathVariable("competitionId") Long competitionId,
-                                             @RequestParam(name = "remove") String email) {
+                                             @RequestParam(name = "remove") String email,
+                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         deleteInvite(email, competitionId);
-        return doViewInvite(model, competitionId);
+        return invite(model, competitionId, form);
     }
 
     @RequestMapping(value = "/invite", params = {"addNewUser"}, method = RequestMethod.POST)
@@ -94,7 +98,9 @@ public class CompetitionManagementInviteAssessorsController {
                                          @PathVariable("competitionId") Long competitionId,
                                          @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         form.getInvites().add(new InviteNewAssessorsRowForm());
-        return doViewInvite(model, competitionId);
+        form.setVisible(true);
+
+        return invite(model, competitionId, form);
     }
 
     @RequestMapping(value = "/invite", params = {"removeNewUser"}, method = RequestMethod.POST)
@@ -103,17 +109,21 @@ public class CompetitionManagementInviteAssessorsController {
                                               @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                               @RequestParam(name = "removeNewUser") int position) {
         form.getInvites().remove(position);
-        return doViewInvite(model, competitionId);
+        form.setVisible(true);
+
+        return invite(model, competitionId, form);
     }
 
     @RequestMapping(value = "/invite", params = {"inviteNewUsers"}, method = RequestMethod.POST)
     public String inviteNewsUsersFromInviteView(Model model,
                                                 @PathVariable("competitionId") Long competitionId,
                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                                                BindingResult bindingResult,
+                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                 ValidationHandler validationHandler) {
+        form.setVisible(true);
+
         return validationHandler.failNowOrSucceedWith(
-                () -> invite(model, competitionId, form, bindingResult),
+                () -> invite(model, competitionId, form),
                 () -> {
                     RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
                             newInviteFormToResource(form, competitionId), competitionId
@@ -121,7 +131,7 @@ public class CompetitionManagementInviteAssessorsController {
 
                     return validationHandler.addAnyErrors(restResult)
                             .failNowOrSucceedWith(
-                                    () -> invite(model, competitionId, form, bindingResult),
+                                    () -> invite(model, competitionId, form),
                                     () -> format("redirect:/competition/%s/assessors/invite", competitionId)
                             );
                 }

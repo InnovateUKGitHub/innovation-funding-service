@@ -22,7 +22,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE",
-            description = "Partners can view their own Spend Profile data")
+            description = "Project Finance Users can view their own Spend Profile data")
     public boolean projectFinanceUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
         return isProjectFinanceUser(user);
@@ -30,12 +30,11 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE",
-            description = "Project manager view Spend Profile data")
-    public boolean projectManagerCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+            description = "Lead partner view Spend Profile data")
+    public boolean leadPartnerCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
-        return isProjectManager(projectOrganisationCompositeId.getProjectId(), user.getId());
+        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
-
 
     @PermissionRule(
             value = "EDIT_SPEND_PROFILE",
@@ -50,9 +49,9 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
     }
 
-    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "A project manager can mark partners spend profiles as incomplete")
-    public boolean projectManagerCanMarkSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectManager(projectOrganisationCompositeId.getProjectId(), user.getId());
+    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "Any lead partner can mark partners spend profiles as incomplete")
+    public boolean leadPartnerCanMarkSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
     @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a project manager can complete the projects spend profiles review")

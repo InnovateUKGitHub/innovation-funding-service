@@ -386,28 +386,28 @@ Project Manager can choose cancel on the dialogue
     And the user clicks the button/link     jQuery=.button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Submit project spend profile")
 
-Project Manager can see the button Allow partner to edit
+Project Manager can see the button Allow edits
     [Documentation]    INFUND-6350
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
     Then the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
     And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
     Then the user clicks the button/link    link=${Meembee_Name}
-    And the user should see the element     jQuery=.button:contains("Allow partner to edit")
+    And the user should see the element     jQuery=.button:contains("Allow edits")
 
 Other partners cannot enable edit-ability by themselves
     [Documentation]    INFUND-6350
     [Tags]
     [Setup]  log in as a different user       ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
-    Then the user should not see the element  jQuery=.button:contains("Allow partner to edit")
+    Then the user should not see the element  jQuery=.button:contains("Allow edits")
 
 PM can return edit rights to partners
     [Documentation]    INFUND-6350
     [Tags]    HappyPath
     [Setup]  log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
-    When the user clicks the button/link     jQuery=.button:contains("Allow partner to edit")
+    When the user clicks the button/link     jQuery=.button:contains("Allow edits")
     Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
     And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
 
