@@ -82,7 +82,7 @@ Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
     [Tags]
     [Setup]    Close the competition in assessment
-    Given guest user log-in     &{existing_assessor1_credentials}
+    Given Log in as a different user     &{existing_assessor1_credentials}
     Then The user should not see the element    link=Sustainable living models for the future
     And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     Then The user should see the text in the page    This invitation is now closed
@@ -209,7 +209,7 @@ the assessor should see the correct date
     Should Be Equal    ${Assessment_period}    ${Correct_date}
 
 Close the competition in assessment
-    Guest user log-in    &{Comp_admin1_credentials}
+    Log in as a different user    &{Comp_admin1_credentials}
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
-    Close Browser
+
