@@ -7,6 +7,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               INFUND-6091 As a partner / lead partner / project manager I want to get access to the GOL section in Project Setup when all other sections
 ...
+<<<<<<< Updated upstream
 ...               INFUND-6377 As a member of the Competitions team I want to be able to select when the signed Grant Offer Letter has been approved so that Innovate UK can notify the Project Manager
 ...
 ...               INFUND-5998 As the contracts team I need to view, remove and/or re-upload the Grant Offer Letter
@@ -16,6 +17,9 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-7027 Partners can access the GOL before the internal user hits Send to proj team
 ...
 ...               INFUND-7049 Validation missing for PDF file upload in GOL upload page for internal user
+=======
+...               INFUND-6375 As a partner I want to receive a notification when Project Setup has been successfully completed so that I am clear on what steps to take now the project is live
+>>>>>>> Stashed changes
 Suite Setup       all the other sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
