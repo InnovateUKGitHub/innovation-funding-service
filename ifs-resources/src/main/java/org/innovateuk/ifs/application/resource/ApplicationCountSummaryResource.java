@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents a application for management
+ * Represents an application's statistics
  */
 public class ApplicationCountSummaryResource {
     private Long id;

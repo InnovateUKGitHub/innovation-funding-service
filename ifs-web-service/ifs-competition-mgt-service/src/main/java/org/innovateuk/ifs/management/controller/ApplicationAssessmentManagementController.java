@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
+/**
+ * Controller for the manage application dashboard
+ */
 @Controller
 @RequestMapping("assessment/competition/{competitionId}")
 public class ApplicationAssessmentManagementController {

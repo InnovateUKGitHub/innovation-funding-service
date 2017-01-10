@@ -5,6 +5,9 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 
 import java.util.List;
 
+/**
+ * Interface for the action of retrieving application statistics
+ */
 public interface ApplicationCountSummaryRestService {
     RestResult<List<ApplicationCountSummaryResource>> getApplicationCountSummariesByCompetitionId(Long competitionId);
 }

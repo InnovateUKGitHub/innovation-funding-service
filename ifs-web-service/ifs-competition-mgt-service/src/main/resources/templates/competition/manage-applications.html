@@ -12,7 +12,7 @@
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
 
             <h1 class="heading-xlarge">
-                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/> : <th:block th:text="${model.competitionName}"/></span>
+                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block th:text="${model.competitionName}"/>, in assessment</span>
                 Manage applications
             </h1>
 

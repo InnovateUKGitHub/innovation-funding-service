@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller for exposing statistical data on applications
+ */
 @RestController
 @RequestMapping("/applicationCountSummary")
 public class ApplicationCountSummaryController {

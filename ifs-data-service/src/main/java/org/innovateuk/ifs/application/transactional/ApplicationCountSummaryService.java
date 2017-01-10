@@ -7,6 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+/**
+ * Service for retrieving statistics about applications
+ */
 public interface ApplicationCountSummaryService {
 
     @PreAuthorize("hasAuthority('comp_admin')")

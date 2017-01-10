@@ -10,6 +10,9 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationCountSummaryResourceListType;
 
+/**
+ * Implementing class for {@link ApplicationCountSummaryRestService}, for the action on retrieving application statistics.
+ */
 @Service
 public class ApplicationCountSummaryRestServiceImpl extends BaseRestService implements ApplicationCountSummaryRestService {
 

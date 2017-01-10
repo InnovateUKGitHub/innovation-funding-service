@@ -12,6 +12,9 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 
+/**
+ * ApplicationStatistics defines a view on the application table for statistical information
+ */
 @Entity
 @Table(name = "Application")
 public class ApplicationStatistics {
