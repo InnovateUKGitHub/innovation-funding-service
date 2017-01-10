@@ -33,7 +33,7 @@
             </div>
 
             <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.pendingInvites)}">
-                <h2 class="heading-medium">Invitations to assess (<span th:text="${#lists.size(model.pendingInvites)}" />)</h2>
+                <h2 class="heading-large">Invitations to assess (<span th:text="${#lists.size(model.pendingInvites)}" />)</h2>
                 <ul class="boxed-list">
                     <li th:each="pendingInvite : ${model.pendingInvites}">
                         <div class="grid-row">
@@ -82,7 +82,7 @@
                 </div>
             </div>
 
-            <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
+            <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
                 <h2 class="heading-large">Upcoming competitions to assess (<span th:text="${#lists.size(model.upcomingCompetitions)}" />)</h2>
                 <ul class="boxed-list">
                     <li th:each="upcomingCompetition : ${model.upcomingCompetitions}">

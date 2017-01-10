@@ -52,7 +52,7 @@ Assessor dashboard contains one upcoming competition
 Calculation of the Upcoming competitions to assess should be correct
     [Documentation]    INFUND-7107
     [Tags]    HappyPath
-    Then the total calculation in dashboard should be correct    Upcoming competitions to assess    //*[@class="invite-to-assess"]/ul/li
+    Then the total calculation in dashboard should be correct    Upcoming competitions to assess    //*[@class="upcoming-to-assess"]/ul/li
 
 Existing assessor: Reject invitation
     [Documentation]    INFUND-4631
@@ -192,7 +192,7 @@ The assessor is unable to see the invitation
     The user should see the text in the page    You have already accepted or rejected this invitation.
 
 the assessor should see the correct date
-    ${Assessment_period}=    Get Text    css=.invite-to-assess .column-assessment-status.navigation-right .heading-small.no-margin
+    ${Assessment_period}=    Get Text    css=.upcoming-to-assess .column-assessment-status.navigation-right .heading-small.no-margin
     Should Be Equal    ${Assessment_period}    ${Correct_date}
 
 Close the competition in assessment
