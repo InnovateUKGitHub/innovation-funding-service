@@ -1,4 +1,4 @@
-*** settings ***
+*** Settings ***
 Documentation     INFUND-6604 As a member of the competitions team I can view the Invite assessors dashboard...
 ...
 ...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition...
@@ -10,6 +10,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6414 As a member of the competitions team, I can select 'Invite individual' to review invitation and then 'Send invite' ...
 ...
 ...               INFUND-6411 As a member of the competitions team, I can add a non-registered assessor to my invite list so...
+...
+...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so I know if they have accepted, declined or still awaiting repsonse
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -78,3 +80,17 @@ Invite non-registered users
     And The user should see the text in the page    Olivier Giroud
     And The user should see the text in the page    worth.email.test+OlivierGiroud@gmail.com
     And The user should see the text in the page    Data
+
+Assessor overview information
+    [Documentation]    INFUND-6450
+    [Tags]
+    Given The user clicks the button/link    link=Overview
+    Then the user should see the element    jQuery=tr:nth-child(2) td:contains(Invite accepted)
+    And the user should see the element    jQuery=tr:nth-child(6) td:contains(Awaiting response)
+    #TODO PENDING INFUND-7415
+    #And the user should see the element    jQuery=tr:nth-child(5) td:contains(Inivitation declined)
+    #And the user should see the element    jQuery=tr:nth-child(5) td:contains(Academic)
+    #And the user should see the element    jQuery=tr:nth-child(5) td:contains(Yes)
+
+
+
