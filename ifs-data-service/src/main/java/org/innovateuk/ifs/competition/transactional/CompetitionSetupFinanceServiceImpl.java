@@ -32,7 +32,6 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT, STAFF_TURNOVER)).forEach(
                 formInput -> {
                     formInput.setActive(!competitionSetupFinanceResource.isIncludeGrowthTable());
-                    formInputRepository.save(formInput);
                 }
         );
 
