@@ -24,6 +24,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6500 Speedbump when not logged in and attempting to accept invite where a user already exists
 ...
 ...               INFUND-6455 As an assessor with an account, I can see invitations to assess competitions on my dashboard...
+...
+...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -82,7 +84,7 @@ Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
     [Tags]
     [Setup]    Close the competition in assessment
-    Given Log in as a different user     &{existing_assessor1_credentials}
+    Given Log in as a different user    &{existing_assessor1_credentials}
     Then The user should not see the element    link=Sustainable living models for the future
     And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     Then The user should see the text in the page    This invitation is now closed
@@ -171,6 +173,15 @@ The user should not be able to accept or reject the same applications
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
 
+The Admin's invites overview should be updated for accepted invites
+    [Documentation]    INFUND-6450
+    [Tags]
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    And The user clicks the button/link    link=Overview
+    And the user should see the element    jQuery=tr:nth-child(1) td:contains(Invite accepted)
+
 *** Keywords ***
 the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
@@ -212,4 +223,3 @@ Close the competition in assessment
     Log in as a different user    &{Comp_admin1_credentials}
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
-
