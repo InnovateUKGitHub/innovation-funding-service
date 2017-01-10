@@ -1734,8 +1734,8 @@
             <dd>We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.</dd>
             <dd>There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.</dd>
             <dt>Funding type</dt>
-            <dd>Sector competition</dd>
-            <dt>Total funding</dt>
+            <dd>Procurement</dd>
+            <dt>Project size</dt>
             <dd>£15 million</dd>
         </dl>
     </th:block>
@@ -1747,7 +1747,7 @@
                     <label class="form-label-bold" for="competition-description">
                         Competition description
                     </label>
-                    <textarea name="skills-areas" id="competition-description" cols="30" rows="20" class="width-full">
+                    <textarea name="skills-areas" id="competition-description" cols="30" rows="10" class="width-full">
 Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.
 
 The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).
@@ -1758,19 +1758,31 @@ There are 2 options to apply into this competition, dependent on project size an
                     </textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label-bold" for="funding-type">
-                        Funding type
-                    </label>
-                    <select class="form-control width-medium" id="funding-type" name="funding-type">
-                        <option value="">Sector competition</option>
-                    </select>
+                    <fieldset>
+                        <legend class="form-label-bold">Funding type</legend>
+                        <label class="block-label selection-button-radio" for="grant">
+                            <input id="grant" name="funding-type-radio-group" value="grant" type="radio" />
+                            Grant
+                        </label>
+                        <label class="block-label selection-button-radio" for="procurement">
+                            <input id="procurement" name="funding-type-radio-group" value="procurement" type="radio" checked="checked" />
+                            Procurement
+                        </label>
+                    </fieldset>
                 </div>
+                <!--<div class="form-group">-->
+                    <!--<label class="form-label-bold" for="funding-type">-->
+                        <!--Funding type-->
+                    <!--</label>-->
+                    <!--<select class="form-control width-medium" id="funding-type" name="funding-type">-->
+                        <!--<option value="">Sector competition</option>-->
+                    <!--</select>-->
+                <!--</div>-->
                 <div class="form-group">
-                    <label class="form-label-bold" for="total-funding">
-                        Total funding
-                        <span class="form-hint">This number is generated automatically from the funding information.</span>
+                    <label class="form-label-bold" for="project-size">
+                        Project size
                     </label>
-                    <div id="total-funding">£15,000,000</div>
+                    <input class="form-control" id="project-size" type="text" value="£15,000,000" />
                 </div>
             </fieldset>
             <fieldset>
@@ -1854,7 +1866,7 @@ There are 2 options to apply into this competition, dependent on project size an
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-one" cols="30" rows="5" class="width-full">
+                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">
     To lead a project, you must:
 
     be a UK-based business (of any size)
@@ -1894,7 +1906,7 @@ There are 2 options to apply into this competition, dependent on project size an
                     <label class="form-label-bold" for="content-two">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-two" cols="30" rows="5" class="width-full">
+                    <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">
 All projects must involve at least one SME and a business must lead the project.
 
 If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.
@@ -1930,7 +1942,7 @@ Find out if your business fits the EU definition of an SME
                     <label class="form-label-bold" for="content-three">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-three" cols="30" rows="5" class="width-full">
+                    <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">
 Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.
 
 For technical feasibility studies and industrial research, you could get:
@@ -1973,7 +1985,7 @@ up to 25% if you are a large business
                     <label class="form-label-bold" for="content-four">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-four" cols="30" rows="5" class="width-full">
+                    <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full">
 
 
 In this competition we will not fund applications in the following areas:
