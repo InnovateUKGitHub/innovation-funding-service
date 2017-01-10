@@ -37,11 +37,11 @@
                  th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                  currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
-                 pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation})">
+                 pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
+                 applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant})">
 
-                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
-
 
 
             <div th:if="${model.currentSection != null}" th:remove="tag">
