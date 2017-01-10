@@ -19,8 +19,6 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${applicationId}    56
-${sectionId}    7
 
 *** Test Cases ***
 Lead applicant can assign a question
@@ -182,17 +180,16 @@ Lead marks finances as complete
     [Tags]    Email
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
-    Given the user clicks the button/link    link= Assign test
-    And the user clicks the button/link    link=Your finances
+    Given the user navigates to his finances page
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    link=Your funding
     When the user clicks the button/link   link=Your project costs
     Then the user fills in the project costs
-    When the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    When the user navigates to his finances page
     Then the user fills in the organisation information
     And the user fills in the funding information
-    When the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    When the user navigates to his finances page
     Then the user should see all sections complete
 
 Collaborator from another organisation should be able to mark Finances as complete
@@ -200,7 +197,7 @@ Collaborator from another organisation should be able to mark Finances as comple
     ...              This test depends on the previous test suite to run first
     [Tags]
     [Setup]  log in as a different user     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    Given the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    Given the user navigates to his finances page
     Then the user should see all sections incomplete
     And the collaborator is able to edit the finances
 
@@ -239,6 +236,11 @@ Lead applicant should be able to remove the registered partner
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
+the user navigates to his finances page
+    the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link  link=Assign test
+    the user clicks the button/link  link=Your finances
+
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
@@ -252,9 +254,9 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user navigates to the page  ${server}/application/${applicationId}/form/section/333
+    the user clicks the button/link   link=Your project costs
     the user fills in the project costs
-    the user navigates to the page    ${server}/application/${applicationId}/form/section/${sectionId}
+    the user navigates to his finances page
     the user fills in the organisation information
     the user fills in the funding information
 
@@ -359,7 +361,7 @@ the user fills in the organisation information
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user fills in the funding information
-    the user navigates to the page        ${server}/application/${applicationId}/form/section/${sectionId}
+    the user navigates to his finances page
     the user clicks the button/link       link=Your funding
     the user enters text to a text field  css=#cost-financegrantclaim  60
     click element                         jQuery=label:contains("No")
