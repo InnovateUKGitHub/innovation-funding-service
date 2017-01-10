@@ -95,6 +95,16 @@ Comp admin has read only view of Application details past Open date
     And The user should not see the element    jquery=.button:contains("Done")
     And The user clicks the button/link     link = Return to application questions
 
+Comp admin has read only view of Eligibility past Open date
+    [Documentation]     INFUND-6792
+    [Tags]
+    [Setup]     log in as a different user    &{Comp_admin1_credentials}
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
+    And The user clicks the button/link    link=Eligibility
+    And the user should see the element    jquery=h1:contains("Eligibility")
+    And The user should not see the element     css = input
+    And The user clicks the button/link     link = Return to setup overview
+
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question

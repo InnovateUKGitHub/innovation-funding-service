@@ -60,3 +60,17 @@ Comp admin can edit Application details before Open date
     And the user should see the element    jquery=h1:contains("Application finances")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
+
+Comp admin can edit Eligibility before Open date
+    [Documentation]     INFUND-6792
+    [Tags]
+    [Setup]     log in as a different user    &{Comp_admin1_credentials}
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/6/
+    And The user clicks the button/link    link=Eligibility
+    And the user should see the element    jquery=h1:contains("Eligibility")
+    And The user clicks the button/link     css=button.button
+    And the user selects the radio button     singleOrCollaborative    single
+    And The user clicks the button/link      css=button.button
+
+
+
