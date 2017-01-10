@@ -1,14 +1,14 @@
 #!/bin/sh
 set -e
 
-ENV=new8
+ENV=lf-project1
 
 # Set up remote registry and project name params
-rm -rf os-files-remote
-cp -r os-files os-files-remote
-sed -i "s#worth/#721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/#g" os-files-remote/*
-sed -i "s/<<HOSTNAME>>/dev-projects.ifs-test-clusters.com/g" os-files-remote/*
-sed -i "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-remote/*
+rm -rf os-files-tmp
+cp -r os-files os-files-tmp
+sed -i "s#worth/#721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/#g" os-files-tmp/*
+sed -i "s/<<HOSTNAME>>/dev-projects.ifs-test-clusters.com/g" os-files-tmp/*
+sed -i "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*
 
 # Build & tag Shib
 rm -rf shibboleth
@@ -41,16 +41,16 @@ docker push 721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/shibboleth:1.0-$E
 
 # Deploy
 oc new-project $ENV
-oc create -f os-files-remote/1-aws-registry-secret.yml
+oc create -f os-files-tmp/1-aws-registry-secret.yml
 oc secrets add serviceaccount/default secrets/aws-secret-2 --for=pull
-rm -rf os-files-remote/1-aws-registry-secret.yml
-rm -rf os-files-remote/11-scc.yml
+rm -rf os-files-tmp/1-aws-registry-secret.yml
+rm -rf os-files-tmp/11-scc.yml
 oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=setup-files/scripts/openshift/admin.kubeconfig
 
-oc create -f os-files-remote/
+oc create -f os-files-tmp/
 
 # Cleanup
-rm -rf os-files-remote
+rm -rf os-files-tmp
 rm -rf shibboleth
 
 oc get pods
