@@ -55,14 +55,24 @@ Invite Individual Assessors
     And The user clicks the button/link    link=Find
     And the user should not see the text in the page    Will Smith
 
+Invite non-registered assessors server side validations
+    [Documentation]    INFUND-6411
+    Given the user clicks the button/link    link=Invite
+    When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
+    And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
+    Then the user should see a field error    Please select an innovation area.
+    And the user should see a field error    Please enter a name.
+    And the user should see a field error    Please enter an email address.
+
 Invite non-registered users
     [Documentation]    INFUND-6411
     [Tags]
-    Given the user clicks the button/link    link=Invite
-    When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
-    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
+    When The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
+    And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
+    And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
+    And The user should not see the text in the page    Please select an innovation area.    #check for the client side validation
     And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
     Then the user should see the element    css=.no
     And The user should see the text in the page    Olivier Giroud
