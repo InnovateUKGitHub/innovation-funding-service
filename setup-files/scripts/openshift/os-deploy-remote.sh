@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-ENV=new7
+ENV=new8
 
 # Set up remote registry and project name params
 rm -rf os-files-remote
