@@ -40,6 +40,8 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBu
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -482,7 +484,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                         .buildArray(2, CategoryResource.class))
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
-                .withStatus("Invite accepted", "Invite declined")
+                .withStatus(ACCEPTED, REJECTED)
                 .withDetails("", "Invite declined as person is too busy")
                 .build(2);
     }
