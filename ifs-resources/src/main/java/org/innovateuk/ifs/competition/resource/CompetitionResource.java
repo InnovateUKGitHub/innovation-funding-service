@@ -71,7 +71,6 @@ public class CompetitionResource {
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
-    private String innovateBudget;
 
     private Boolean setupComplete;
 
@@ -450,14 +449,6 @@ public class CompetitionResource {
 
     public void setActivityCode(String activityCode) {
         this.activityCode = activityCode;
-    }
-
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
     }
 
     public List<CompetitionFunderResource> getFunders() {

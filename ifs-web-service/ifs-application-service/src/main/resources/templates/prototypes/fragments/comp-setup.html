@@ -1144,27 +1144,30 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 40%" id="milestone">Milestone</th>
-                        <th scope="col" style="width: 10%" id="weekday">Weekday</th>
-                        <th scope="col" style="width: 10%" id="day">Day</th>
-                        <th scope="col" style="width: 10%" id="month">Month</th>
-                        <th scope="col" style="width: 10%" id="year">Year</th>
+                        <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
+                        <th scope="col" class="width-8-percent" id="hour">Hour</th>
+                        <th scope="col" class="width-8-percent" id="min">Min</th>
+                        <th scope="col" class="width-8-percent" id="am-pm">am/pm</th>
+                        <th scope="col" class="width-8-percent" id="weekday">Weekday</th>
+                        <th scope="col" class="width-8-percent" id="day">Day</th>
+                        <th scope="col" class="width-8-percent" id="month">Month</th>
+                        <th scope="col" class="width-8-percent" id="year">Year</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders panel'}, rowNo=11" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, time='-', rowNo=1, type=readOnly" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, time='-', rowNo=2" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, time='1', rowNo=3" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, time='-', rowNo=4" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, time='-', rowNo=5" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, time='-', rowNo=6" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, time='-', rowNo=7" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, time='-', rowNo=8" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, time='-', rowNo=9" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, time='-', rowNo=10" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders panel'}, time='-', rowNo=11" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, time='-', rowNo=12" th:remove="tag"/>
+                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, time='-', rowNo=13" th:remove="tag"/>
                 </tbody>
             </table>
 
@@ -1175,27 +1178,28 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 40%" id="milestone">Milestone</th>
-                        <th scope="col" style="width: 10%" id="weekday">Weekday</th>
-                        <th scope="col" style="width: 10%" id="day">Day</th>
-                        <th scope="col" style="width: 10%" id="month">Month</th>
-                        <th scope="col" style="width: 10%" id="year">Year</th>
+                        <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
+                        <th scope="col" class="width-10-percent" id="time">Time</th>
+                        <th scope="col" class="width-10-percent" id="weekday">Weekday</th>
+                        <th scope="col" class="width-10-percent" id="day">Day</th>
+                        <th scope="col" class="width-10-percent" id="month">Month</th>
+                        <th scope="col" class="width-10-percent" id="year">Year</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1. Open date</td><td>Weds</td><td>01</td><td>01</td><td>2017</td></tr>
-                    <tr><td>2. Briefing event</td><td>Tue</td><td>15</td><td>01</td><td>2017</td></tr>
-                    <tr><td>3. Submission date</td><td>Tue</td><td>01</td><td>02</td><td>2017</td></tr>
-                    <tr><td>4. Allocate assessors</td><td>Tue</td><td>01</td><td>03</td><td>2017</td></tr>
-                    <tr><td>5. Assessor briefing</td><td>Tue</td><td>01</td><td>04</td><td>2017</td></tr>
-                    <tr><td>6. Assessor accepts</td><td>Tue</td><td>01</td><td>05</td><td>2017</td></tr>
-                    <tr><td>7. Assessor deadline</td><td>Tue</td><td>01</td><td>06</td><td>2017</td></tr>
-                    <tr><td>8. Line draw</td><td>Tue</td><td>01</td><td>07</td><td>2017</td></tr>
-                    <tr><td>9. Assessment panel</td><td>Tue</td><td>01</td><td>08</td><td>2017</td></tr>
-                    <tr><td>10. Panel date</td><td>Tue</td><td>01</td><td>09</td><td>2017</td></tr>
-                    <tr><td>11. Funders panel</td><td>Tue</td><td>01</td><td>10</td><td>2017</td></tr>
-                    <tr><td>12. Notifications</td><td>Tue</td><td>01</td><td>11</td><td>2017</td></tr>
-                    <tr><td>13. Release feedback</td><td>Tue</td><td>01</td><td>12</td><td>2017</td></tr>
+                    <tr><td>1. Open date</td><td>-</td><td>Weds</td><td>01</td><td>01</td><td>2017</td></tr>
+                    <tr><td>2. Briefing event</td><td>-</td><td>Tue</td><td>15</td><td>01</td><td>2017</td></tr>
+                    <tr><td>3. Submission date</td><td>1:00pm</td><td>Tue</td><td>01</td><td>02</td><td>2017</td></tr>
+                    <tr><td>4. Allocate assessors</td><td>-</td><td>Tue</td><td>01</td><td>03</td><td>2017</td></tr>
+                    <tr><td>5. Assessor briefing</td><td>-</td><td>Tue</td><td>01</td><td>04</td><td>2017</td></tr>
+                    <tr><td>6. Assessor accepts</td><td>-</td><td>Tue</td><td>01</td><td>05</td><td>2017</td></tr>
+                    <tr><td>7. Assessor deadline</td><td>-</td><td>Tue</td><td>01</td><td>06</td><td>2017</td></tr>
+                    <tr><td>8. Line draw</td><td>-</td><td>Tue</td><td>01</td><td>07</td><td>2017</td></tr>
+                    <tr><td>9. Assessment panel</td><td>-</td><td>Tue</td><td>01</td><td>08</td><td>2017</td></tr>
+                    <tr><td>10. Panel date</td><td>-</td><td>Tue</td><td>01</td><td>09</td><td>2017</td></tr>
+                    <tr><td>11. Funders panel</td><td>-</td><td>Tue</td><td>01</td><td>10</td><td>2017</td></tr>
+                    <tr><td>12. Notifications</td><td>-</td><td>Tue</td><td>01</td><td>11</td><td>2017</td></tr>
+                    <tr><td>13. Release feedback</td><td>-</td><td>Tue</td><td>01</td><td>12</td><td>2017</td></tr>
                 </tbody>
             </table>
 
@@ -1233,6 +1237,12 @@
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
 
         <th:block th:unless="${type=='readOnly'}">
+            <td th:unless="${time=='-'}"><input type="number" class="form-control width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
+            <td th:unless="${time=='-'}"><input type="number" class="form-control width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="pm" th:id="${'row-'+rowNo + '-am-pm'}"/></td>
+            <td th:if="${time=='-'}">-</td>
+            <td th:if="${time=='-'}">-</td>
+            <td th:if="${time=='-'}">-</td>
             <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
             <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
             <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
@@ -1240,6 +1250,9 @@
         </th:block>
 
         <th:block th:if="${type=='readOnly'}">
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
             <td>Weds</td>
             <td>01</td>
             <td>01</td>
@@ -1666,7 +1679,7 @@
 <th:block th:fragment="prototype-section-public-competition-information">
 
     <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Competition information and search'}, ${null})" th:remove="tag" />
-    <p>This information is used for search and the openning section of the competition page.</p>
+    <p>This information is used for search and the opening section of the competition page.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">
             <dt>Short description</dt>
@@ -1706,7 +1719,7 @@
                 <div class="form-group">
                     <label class="form-label-bold" for="keywords">
                         Keywords
-                        <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Comma separated.</span>
+                        <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
                     </label>
                     <input class="form-control width-full" id="keywords" type="text" value="innovation, drones, drone" />
                 </div>
@@ -1734,8 +1747,8 @@
             <dd>We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.</dd>
             <dd>There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.</dd>
             <dt>Funding type</dt>
-            <dd>Sector competition</dd>
-            <dt>Total funding</dt>
+            <dd>Procurement</dd>
+            <dt>Project size</dt>
             <dd>£15 million</dd>
         </dl>
     </th:block>
@@ -1747,7 +1760,7 @@
                     <label class="form-label-bold" for="competition-description">
                         Competition description
                     </label>
-                    <textarea name="skills-areas" id="competition-description" cols="30" rows="20" class="width-full">
+                    <textarea name="skills-areas" id="competition-description" cols="30" rows="10" class="width-full">
 Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.
 
 The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).
@@ -1758,19 +1771,31 @@ There are 2 options to apply into this competition, dependent on project size an
                     </textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label-bold" for="funding-type">
-                        Funding type
-                    </label>
-                    <select class="form-control width-medium" id="funding-type" name="funding-type">
-                        <option value="">Sector competition</option>
-                    </select>
+                    <fieldset>
+                        <legend class="form-label-bold">Funding type</legend>
+                        <label class="block-label selection-button-radio" for="grant">
+                            <input id="grant" name="funding-type-radio-group" value="grant" type="radio" />
+                            Grant
+                        </label>
+                        <label class="block-label selection-button-radio" for="procurement">
+                            <input id="procurement" name="funding-type-radio-group" value="procurement" type="radio" checked="checked" />
+                            Procurement
+                        </label>
+                    </fieldset>
                 </div>
+                <!--<div class="form-group">-->
+                    <!--<label class="form-label-bold" for="funding-type">-->
+                        <!--Funding type-->
+                    <!--</label>-->
+                    <!--<select class="form-control width-medium" id="funding-type" name="funding-type">-->
+                        <!--<option value="">Sector competition</option>-->
+                    <!--</select>-->
+                <!--</div>-->
                 <div class="form-group">
-                    <label class="form-label-bold" for="total-funding">
-                        Total funding
-                        <span class="form-hint">This number is generated automatically from the funding information.</span>
+                    <label class="form-label-bold" for="project-size">
+                        Project size
                     </label>
-                    <div id="total-funding">£15,000,000</div>
+                    <input class="form-control" id="project-size" type="text" value="£15,000,000" />
                 </div>
             </fieldset>
             <fieldset>
@@ -1854,7 +1879,7 @@ There are 2 options to apply into this competition, dependent on project size an
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-one" cols="30" rows="5" class="width-full">
+                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">
     To lead a project, you must:
 
     be a UK-based business (of any size)
@@ -1878,8 +1903,8 @@ There are 2 options to apply into this competition, dependent on project size an
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <hr />
             </fieldset>
@@ -1894,7 +1919,7 @@ There are 2 options to apply into this competition, dependent on project size an
                     <label class="form-label-bold" for="content-two">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-two" cols="30" rows="5" class="width-full">
+                    <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">
 All projects must involve at least one SME and a business must lead the project.
 
 If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.
@@ -1914,8 +1939,8 @@ Find out if your business fits the EU definition of an SME
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <hr />
             </fieldset>
@@ -1930,7 +1955,7 @@ Find out if your business fits the EU definition of an SME
                     <label class="form-label-bold" for="content-three">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-three" cols="30" rows="5" class="width-full">
+                    <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">
 Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.
 
 For technical feasibility studies and industrial research, you could get:
@@ -1957,8 +1982,8 @@ up to 25% if you are a large business
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <hr />
             </fieldset>
@@ -1973,7 +1998,7 @@ up to 25% if you are a large business
                     <label class="form-label-bold" for="content-four">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-four" cols="30" rows="5" class="width-full">
+                    <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full">
 
 
 In this competition we will not fund applications in the following areas:
@@ -1996,8 +2021,8 @@ Note: machine learning or artificial intelligence (AI) is covered by the Innovat
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <hr />
             </fieldset>
@@ -2140,8 +2165,8 @@ Proposals must show how project success will improve business growth and product
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <fieldset>
                     <hr />
@@ -2196,8 +2221,8 @@ We also encourage proposals to include user/customer perspectives or participati
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <hr />
             </fieldset>
@@ -2378,8 +2403,8 @@ The lead applicant must register for an account using the link on this page. Thi
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
                 <fieldset>
                     <hr />
@@ -2414,8 +2439,8 @@ All applicants will receive feedback from the experts, so they can understand th
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
                 <fieldset>
@@ -2445,8 +2470,8 @@ Application questions are available for reference and to assist with preparation
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
                 <fieldset>
@@ -2476,8 +2501,8 @@ If you need more information, contact the competition helpline on 0300 321 4357 
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
                 <fieldset>
@@ -2509,8 +2534,8 @@ If you need more information, contact the competition helpline on 0300 321 4357 
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
             </fieldset>
             <hr />
@@ -2588,8 +2613,8 @@ If you want help to find a project partner, contact the Knowledge Transfer Netwo
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
-                    <li><a href="#">Move section up</a></li>
-                    <li><a href="#">Move section down</a></li>
+                    <!--<li><a href="#">Move section up</a></li>-->
+                    <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
             </fieldset>
             <hr />
