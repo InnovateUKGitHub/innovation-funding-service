@@ -589,18 +589,33 @@ Industrial partner receives edit rights and can submit their spend profile
     Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
-    And the user clicks the button/link    link=Spend profile
-    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=Spend profile
+    And the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
+    When the user goes back to the previous page
+    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
 
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
+    And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
     When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
+    When the user goes back to the previous page
+    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+
 
 Lead partner can submit the combined spend profile
     [Documentation]    INFUND-6977
