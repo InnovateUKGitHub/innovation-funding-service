@@ -14,24 +14,26 @@
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/competition}" th:remove="tag" />
 
             <h1 class="heading-xlarge">
-                <span class="heading-secondary">0102468: Technology inspired, in assessment</span>
+                <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
                 Application progress
             </h1>
 
-            <h2 class="heading-medium">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+            <h2 class="heading-medium" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.getApplicationName}|">
+                94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
+            </h2>
 
             <div class="grid-row extra-margin">
                 <div class="column-quarter">
                     <h3 class="heading-small">Partners</h3>
                     <ul>
-                        <li>Aptrans Ltd (Lead)</li>
+                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
                         <li>Biotech Corp</li>
                         <li>Unversity of Cardiff</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
                     <h3 class="heading-small">Innovation area</h3>
-                    <p>Advanced materials</p>
+                    <!-- TODO Innovation area will be added to Application by INFUND-7208 -->
                 </div>
             </div>
             <div class="extra-margin">
