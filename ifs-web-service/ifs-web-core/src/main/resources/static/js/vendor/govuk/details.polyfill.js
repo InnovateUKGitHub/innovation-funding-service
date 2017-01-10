@@ -6,7 +6,7 @@
 
 // http://www.sitepoint.com/fixing-the-details-element/
 
-;(function () {
+(function () {
   'use strict'
 
   var NATIVE_DETAILS = typeof document.createElement('details').open === 'boolean'
@@ -187,4 +187,4 @@
   // but if it's not supported then the second one will fire
   addEvent(document, 'DOMContentLoaded', addDetailsPolyfill)
   addEvent(window, 'load', addDetailsPolyfill)
-})()
+})();
