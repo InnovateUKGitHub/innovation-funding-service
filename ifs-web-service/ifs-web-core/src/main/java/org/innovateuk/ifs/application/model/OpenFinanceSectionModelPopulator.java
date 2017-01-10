@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -87,7 +88,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
 
-
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
         addNavigation(section, application.getId(), model);
 
@@ -97,7 +97,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)
                 || SectionType.FINANCE.equals(section.getType());
 
-
+        populateSubSectionMenuOptions(model, competition.getId(), allSections, sectionsMarkedAsComplete, userOrganisation.map(OrganisationResource::getId).orElse(null), application.getId());
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("currentSectionId", section.getId());
@@ -108,6 +108,19 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         model.addAttribute("allReadOnly", allReadOnly);
         model.addAttribute("isSubFinanceSection", isSubFinanceSection(section));
         model.addAttribute("form", form);
+    }
+
+    private void populateSubSectionMenuOptions(Model model, Long competitionId, final List<SectionResource> allSections, Set<Long> sectionsMarkedAsComplete, Long userOrganisationId, Long applicationId) {
+        QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
+        Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisationId);
+        QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
+
+        boolean organisationSizeComplete = sectionsMarkedAsComplete.contains(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
+        boolean applicationDetailsComplete = applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
+
+        model.addAttribute("isFundingSectionLocked", !(organisationSizeComplete && applicationDetailsComplete));
+        model.addAttribute("applicationDetailsQuestionId", applicationDetailsQuestion.getId());
+        model.addAttribute("yourOrganisationSectionId", allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).findFirst().map(SectionResource::getId).orElse(null));
     }
 
     private Boolean isSubFinanceSection(SectionResource section) {
