@@ -640,6 +640,7 @@ Project Finance is able to Approve Spend Profile
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Approved")
     And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
+    And the user should see the text in the page    ${PS_SP_APPLICATION_TITLE}
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
 
 Status updates correctly for internal user's table after approval
