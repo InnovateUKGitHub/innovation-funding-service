@@ -260,11 +260,6 @@ the collaborator is able to edit the finances
     the user fills in the organisation information
     the user fills in the funding information
 
-the user enters the funding level
-    the user selects the radio button    financePosition-organisationSize    MEDIUM
-    When the user enters text to a text field    id=cost-financegrantclaim    20
-    focus    jQuery=.button:contains("Mark all as complete")
-
 the applicant changes the name of the application
     Given the user clicks the button/link    link= ${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    link= Application details
