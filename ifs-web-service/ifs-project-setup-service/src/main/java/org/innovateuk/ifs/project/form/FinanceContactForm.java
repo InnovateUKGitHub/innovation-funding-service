@@ -1,25 +1,15 @@
 package org.innovateuk.ifs.project.form;
 
-import org.innovateuk.ifs.commons.validation.ValidationConstants;
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIfOptionIs;
-import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.hibernate.validator.constraints.Email;
+import org.innovateuk.ifs.project.form.validation.ValidateInviteForm;
 
 import javax.validation.constraints.NotNull;
 
-@FieldRequiredIfOptionIs(required = "name", argument = "financeContact", predicate = -1L, message = "{validation.project.invite.name.required}")
-@FieldRequiredIfOptionIs(required = "email", argument = "financeContact", predicate = -1L, message = "{validation.project.invite.email.required}")
-public class FinanceContactForm extends BaseBindingResultTarget {
+public class FinanceContactForm extends ValidateInviteForm {
 
 	@NotNull(message = "{validation.financecontactform.financecontact.required}")
 	private Long financeContact;
 
 	private Long organisation;
-
-	private String name;
-
-	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message= "{validation.project.invite.email.invalid}")
-	private String email;
 
 	public Long getFinanceContact() {
 		return financeContact;
@@ -27,14 +17,6 @@ public class FinanceContactForm extends BaseBindingResultTarget {
 	
 	public Long getOrganisation() {
 		return organisation;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getEmail() {
-		return email;
 	}
 
 	public void setFinanceContact(Long financeContact) {
@@ -45,11 +27,9 @@ public class FinanceContactForm extends BaseBindingResultTarget {
 		this.organisation = organisation;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	@Override
+	public boolean inviteRequired() {
+		return financeContact == -1L;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
 }
