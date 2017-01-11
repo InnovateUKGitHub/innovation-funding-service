@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.UserInnovationAreaLink;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -303,11 +303,11 @@ public class User implements Serializable {
         return skillsComplete && affiliationsComplete && contractComplete;
     }
 
-    public Set<Category> getInnovationAreas() {
+    public Set<InnovationArea> getInnovationAreas() {
         return innovationAreas.stream().map(UserInnovationAreaLink::getCategory).collect(Collectors.toSet());
     }
 
-    public void addInnovationArea(Category innovationArea) {
+    public void addInnovationArea(InnovationArea innovationArea) {
         innovationAreas.add(new UserInnovationAreaLink(this, innovationArea));
     }
 }

@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("org.innovateuk.ifs.user.domain.User")
-public class UserInnovationAreaLink extends CategoryLink<User> {
+public class UserInnovationAreaLink extends CategoryLink<User, InnovationArea> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
@@ -18,7 +18,7 @@ public class UserInnovationAreaLink extends CategoryLink<User> {
         // default constructor
     }
 
-    public UserInnovationAreaLink(User user, Category innovationArea) {
+    public UserInnovationAreaLink(User user, InnovationArea innovationArea) {
         super(innovationArea);
         if (user == null) {
             throw new NullPointerException("user cannot be null");

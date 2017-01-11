@@ -9,21 +9,21 @@ import javax.persistence.*;
 @Entity
 @DiscriminatorColumn(name = "class_name")
 @DiscriminatorOptions(force = true)
-public abstract class CategoryLink<T> {
+public abstract class CategoryLink<T, C extends Category> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Category.class)
     @JoinColumn(name="categoryId", referencedColumnName="id")
-    private Category category;
+    private C category;
 
     CategoryLink() {
         // default constructor
     }
 
-    protected CategoryLink(Category category) {
+    protected CategoryLink(C category) {
         if (category == null) {
             throw new NullPointerException("category cannot be null");
         }
@@ -34,7 +34,7 @@ public abstract class CategoryLink<T> {
         return id;
     }
 
-    public Category getCategory() {
+    public C getCategory() {
         return category;
     }
 
@@ -46,7 +46,7 @@ public abstract class CategoryLink<T> {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CategoryLink<?> that = (CategoryLink<?>) o;
+        CategoryLink<?,?> that = (CategoryLink<?,?>) o;
 
         return new EqualsBuilder()
                 .append(category, that.category)

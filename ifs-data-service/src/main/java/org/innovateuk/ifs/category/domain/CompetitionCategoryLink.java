@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("org.innovateuk.ifs.competition.domain.Competition")
-public class CompetitionCategoryLink extends CategoryLink<Competition> {
+public class CompetitionCategoryLink<C extends Category> extends CategoryLink<Competition, C> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
@@ -20,7 +20,7 @@ public class CompetitionCategoryLink extends CategoryLink<Competition> {
         // default constructor
     }
 
-    public CompetitionCategoryLink(Competition competition, Category category) {
+    public CompetitionCategoryLink(Competition competition, C category) {
         super(category);
         if (competition == null) {
             throw new NullPointerException("competition cannot be null");
