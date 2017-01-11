@@ -15,7 +15,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
 
-    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -59,7 +59,7 @@
 
   <th:block th:if="${param.status != null and param.status[0] == 'signed'}">
       <p class="extra-margin">You signed the contract on 13 December 2016.</p>
-      <a class="button-secondary app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Back to assessor dashboard</a>
+      <a class="button app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Return to assessor dashboard</a>
   </th:block>
 
 	<hr />
