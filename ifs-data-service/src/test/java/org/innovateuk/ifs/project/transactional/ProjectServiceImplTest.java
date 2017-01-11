@@ -29,6 +29,7 @@ import org.innovateuk.ifs.project.domain.*;
 import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -1880,6 +1881,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).isApproved(p);
 
         assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowStateWhenProjectDoesNotExist() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowState() {
+
+        Project projectInDB = newProject().build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GOLState.APPROVED);
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+
     }
 
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
