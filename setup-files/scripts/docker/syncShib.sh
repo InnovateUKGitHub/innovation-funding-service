@@ -1,7 +1,6 @@
 #!/bin/bash
 function executeMySQLCommand {
-  echo mysql ifs -uroot -ppassword -hifs-database -N -s -e "$1"
-    mysql ifs -uroot -ppassword -hifs-database -N -s -e "$1"
+  mysql ifs -uroot -ppassword -hifs-database -N -s -e "$1"
 }
 export -f executeMySQLCommand
 
