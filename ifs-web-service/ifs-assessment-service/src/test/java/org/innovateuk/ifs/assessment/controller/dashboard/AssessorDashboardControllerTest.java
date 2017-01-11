@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.controller.dashboard;
 
-import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.model.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
@@ -110,6 +111,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
@@ -155,6 +157,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
@@ -198,6 +201,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
@@ -233,6 +237,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        assertTrue(model.getPendingInvites().isEmpty());
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
@@ -276,6 +281,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        assertTrue(model.getPendingInvites().isEmpty());
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertEquals(expectedUpcomingCompetitions, model.getUpcomingCompetitions());
@@ -319,6 +325,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
@@ -326,21 +333,21 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard_pendingInvites() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource()
-                .withHash("inviteHash")
-                .build();
+        List<CompetitionInviteResource> inviteResource = newCompetitionInviteResource()
+                .withHash("inviteHash1", "inviteHash2")
+                .build(2);
 
-        CompetitionParticipantResource participantResource = newCompetitionParticipantResource()
-                .withInvite(inviteResource)
+        List<CompetitionParticipantResource> participantResources = newCompetitionParticipantResource()
+                .withInvite(inviteResource.get(0), inviteResource.get(1))
                 .withCompetitionParticipantRole(ASSESSOR)
                 .withStatus(PENDING)
                 .withUser(3L)
-                .withCompetition(2L)
-                .withCompetitionName("Juggling Craziness")
-                .withAssessorAcceptsDate(now().plusDays(10))
-                .withAssessorDeadlineDate(now().plusDays(20))
-                .withCompetitionStatus(CLOSED)
-                .build();
+                .withCompetition(1L, 2L)
+                .withCompetitionName("Sustainable living models for the future", "Machine learning for transport infrastructure")
+                .withAssessorAcceptsDate(now().plusDays(10), now().plusDays(5))
+                .withAssessorDeadlineDate(now().plusDays(20), now().plusDays(15))
+                .withCompetitionStatus(CLOSED, IN_ASSESSMENT)
+                .build(2);
 
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -348,7 +355,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withContractComplete(true)
                 .build();
 
-        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participantResource)));
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
         when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
@@ -359,15 +366,19 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = singletonList(new AssessorDashboardPendingInviteViewModel(
-                "inviteHash",
-                "Juggling Craziness",
-                now().plusDays(10).toLocalDate(),
-                now().plusDays(20).toLocalDate()
-        ));
+        List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = participantResources.stream().map(competitionParticipantResource ->
+                new AssessorDashboardPendingInviteViewModel(
+                competitionParticipantResource.getInvite().getHash(),
+                competitionParticipantResource.getCompetitionName(),
+                competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
+                competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
 
-        assertEquals(1, model.getPendingInvites().size());
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+
         assertEquals(expectedPendingInvitesModel, model.getPendingInvites());
+        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
+        assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
 
     public void getTermsAndConditions() throws Exception {
