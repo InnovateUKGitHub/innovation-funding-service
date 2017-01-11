@@ -8,12 +8,12 @@ import org.junit.Test;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourceBuilder;
+import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourcesFields;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,12 +34,11 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competition/bank-details/{method-name}",
+                .andDo(document("applicationCountSummary/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of competition")
                         ),
-                        responseHeaders(
-                                headerWithName("Content-Type").description("Type of content in response body (plain text)"))));
+                        responseFields(applicationCountSummaryResourcesFields)));
 
         verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId);
     }

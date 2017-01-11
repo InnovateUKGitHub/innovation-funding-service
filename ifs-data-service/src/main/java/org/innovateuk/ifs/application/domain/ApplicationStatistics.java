@@ -67,6 +67,24 @@ public class ApplicationStatistics {
         return getLeadProcessRole().map(role -> role.getOrganisation().getName()).orElse(null);
     }
 
+    @JsonIgnore
+    public List<ProcessRole> getProcessRoles() {
+        return processRoles;
+    }
+
+    public void setProcessRoles(List<ProcessRole> processRoles) {
+        this.processRoles = processRoles;
+    }
+
+    @JsonIgnore
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
+    }
+
     public long getAssessors() {
         return assessments.stream().filter(a -> !a.isInState(REJECTED)).count();
     }

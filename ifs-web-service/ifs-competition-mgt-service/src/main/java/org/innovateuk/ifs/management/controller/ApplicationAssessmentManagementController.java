@@ -34,7 +34,8 @@ public class ApplicationAssessmentManagementController {
     @RequestMapping(method = RequestMethod.GET)
     public String manageApplications(Model model, @PathVariable("competitionId") long competitionId) {
         CompetitionResource competitionResource = competitionsRestService.getCompetitionById(competitionId).getSuccessObject();
-        List<ApplicationCountSummaryResource> applicationCounts = applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+        List<ApplicationCountSummaryResource> applicationCounts = applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionId)
+                .getSuccessObjectOrThrowException();
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts));
         return "competition/manage-applications";
     }

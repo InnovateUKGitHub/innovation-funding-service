@@ -7,13 +7,13 @@ import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryReso
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationCountDocs {
-    public static final FieldDescriptor[] applicationCountSummaryResourceFields = {
-            fieldWithPath("id").description("Id of the application"),
-            fieldWithPath("name").description("Name of the application"),
-            fieldWithPath("leadOrganisation").description("The lead organisation"),
-            fieldWithPath("assessors").description("Count of assessors"),
-            fieldWithPath("accepted").description("Count of accepted assessments"),
-            fieldWithPath("submitted").description("Count of submitted assessments")
+    public static final FieldDescriptor[] applicationCountSummaryResourcesFields = {
+            fieldWithPath("[].id").description("Id of the application"),
+            fieldWithPath("[].name").description("Name of the application"),
+            fieldWithPath("[].leadOrganisation").description("The lead organisation"),
+            fieldWithPath("[].assessors").description("Count of assessors"),
+            fieldWithPath("[].accepted").description("Count of accepted assessments"),
+            fieldWithPath("[].submitted").description("Count of submitted assessments")
     };
 
     public static final ApplicationCountSummaryResourceBuilder applicationCountSummaryResourceBuilder = newApplicationCountSummaryResource()

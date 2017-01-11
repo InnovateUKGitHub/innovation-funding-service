@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +19,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
     }
 
     @Test
-    public void testGetApplicationCountSummariesByCompetitionId() {
+    public void getApplicationCountSummariesByCompetitionId() {
         String expectedUrl = "/applicationCountSummary/findByCompetitionId/1";
         List<ApplicationCountSummaryResource> summaryResources = Collections.emptyList();
 

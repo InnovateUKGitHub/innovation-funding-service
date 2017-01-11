@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * Build the model for the Manage applications page
  */
@@ -21,12 +23,9 @@ public class ManageApplicationsPopulator {
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
 
     public ManageApplicationsViewModel populateModel(CompetitionResource competition, List<ApplicationCountSummaryResource> applicationCounts) {
-        ManageApplicationsViewModel model = new ManageApplicationsViewModel();
-        model.setCompetitionId(competition.getId());
-        model.setCompetitionName(competition.getName());
-        model.setApplications(applicationCounts.stream()
-                .map(this::getRowViewModel)
-                .collect(Collectors.toList()));
+        ManageApplicationsViewModel model = new ManageApplicationsViewModel(
+                competition.getId(), competition.getName(),
+                simpleMap(applicationCounts, this::getRowViewModel));
         return model;
     }
 

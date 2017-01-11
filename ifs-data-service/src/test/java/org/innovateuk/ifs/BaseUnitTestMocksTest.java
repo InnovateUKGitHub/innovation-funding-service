@@ -8,6 +8,7 @@ import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
+import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
@@ -173,6 +174,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationStatusRepository applicationStatusRepositoryMock;
+
+    @Mock
+    protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+
+    @Mock
+    protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
 
     @Mock
     protected FormInputRepository formInputRepositoryMock;

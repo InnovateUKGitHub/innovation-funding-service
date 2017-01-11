@@ -18,7 +18,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
     }
 
     @Test
-    public void testApplicationCountSummariesByCompetitionId() {
+    public void applicationCountSummariesByCompetitionId() {
         Long competitionId = 1L;
         loginCompAdmin();
         List<ApplicationCountSummaryResource> counts = controller.getApplicationCountSummariesByCompetitionId(competitionId).getSuccessObject();
