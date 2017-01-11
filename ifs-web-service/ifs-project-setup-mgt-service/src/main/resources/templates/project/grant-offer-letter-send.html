@@ -31,10 +31,6 @@
             <h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted.</h2>
         </div>
     </th:block>
-
-    <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
-        <p>A signed copy of the grant offer letter produced by us has been received and approved. Project setup is complete.</p>
-    </th:block>
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
             <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
