@@ -31,38 +31,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 )
 public abstract class InviteProjectMapper extends BaseMapper<ProjectInvite, InviteProjectResource, Long> {
 
-    @Autowired
-    OrganisationRepository organisationRepository;
+    @Mappings({
+            @Mapping(source = "target.application.competition.name", target = "competitionName"),
+            @Mapping(source = "target.application.leadApplicant.name", target = "leadApplicant"),
+            @Mapping(source = "target.application.leadApplicantProcessRole.organisationId", target = "leadOrganisation"),
+            @Mapping(source = "organisation.id", target = "organisation"),
+            @Mapping(source = "organisation.name", target = "organisationName"),
+            @Mapping(source = "target.id", target = "project"),
+            @Mapping(source = "target.name", target = "projectName"),
+            @Mapping(source = "user.name", target = "nameConfirmed"),
+            @Mapping(source = "user.id", target = "user"),
+    })
 
     @Override
-    public InviteProjectResource mapToResource(ProjectInvite domain) {
-        InviteProjectResource resource = new InviteProjectResource();
-
-        Project target = domain.getTarget();
-
-        Application application = target.getApplication();
-
-        resource.setCompetitionName(application.getCompetition().getName());
-        resource.setLeadApplicant(application.getLeadApplicant().getName());
-
-        ProcessRole leadRole = application.getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisation());
-        resource.setLeadOrganisation(leadOrganisation.getName());
-
-        Organisation organisation = domain.getOrganisation();
-        resource.setOrganisation(organisation.getId());
-        resource.setOrganisationName(organisation.getName());
-
-        resource.setProject(target.getId());
-        resource.setProjectName(target.getName());
-
-        User user = domain.getUser();
-        resource.setNameConfirmed(user.getName());
-        resource.setUser(user.getId());
-
-        return resource;
-
-    };
+    public abstract InviteProjectResource mapToResource(ProjectInvite domain);
 
     public Long mapInviteToId(ProjectInvite object) {
         if (object == null) {

@@ -88,7 +88,6 @@ public class Organisation {
         return users;
     }
 
-
     public String getCompanyHouseNumber() {
         return companyHouseNumber;
     }
@@ -120,6 +119,11 @@ public class Organisation {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public void addUser(User user) {
+        if (users == null) users = new ArrayList<>();
+        if (!users.contains(user)) users.add(user);
     }
 
     public OrganisationType getOrganisationType() {

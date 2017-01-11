@@ -27,41 +27,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 )
 public abstract class ApplicationInviteMapper extends BaseMapper<ApplicationInvite, ApplicationInviteResource, Long> {
 
-    @Autowired
-    OrganisationRepository organisationRepository;
-
+    @Mappings({
+            @Mapping(source = "target.competition.name", target = "competitionName"),
+            @Mapping(source = "target.competition.id", target = "competitionId"),
+            @Mapping(source = "target.leadOrganisationId", target = "leadOrganisation"),
+            @Mapping(source = "target.leadApplicant.name", target = "leadApplicant"),
+            @Mapping(source = "target.leadApplicant.email", target = "leadApplicantEmail"),
+            @Mapping(source = "target.name", target = "applicationName"),
+            @Mapping(source = "target.id", target = "application"),
+            @Mapping(source = "inviteOrganisation.id", target = "inviteOrganisation"),
+            @Mapping(source = "inviteOrganisation.organisationName", target = "inviteOrganisationName"),
+            @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
+            @Mapping(source = "user.name", target = "nameConfirmed"),
+            @Mapping(source = "user.id", target = "user"),
+    })
     @Override
-    public ApplicationInviteResource mapToResource(ApplicationInvite domain) {
-        ApplicationInviteResource resource = new ApplicationInviteResource();
-
-        Application application = domain.getTarget();
-
-        Competition competition = application.getCompetition();
-        resource.setCompetitionName(competition.getName());
-        resource.setCompetitionId(competition.getId());
-
-        ProcessRole leadRole = application.getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisation());
-        resource.setLeadOrganisation(leadOrganisation.getName());
-
-        User leadApplicant = application.getLeadApplicant();
-        resource.setLeadApplicant(leadApplicant.getName());
-        resource.setLeadApplicantEmail(leadApplicant.getEmail());
-
-        resource.setApplicationName(application.getName());
-        resource.setApplication(application.getId());
-
-        InviteOrganisation inviteOrganisation = domain.getInviteOrganisation();
-        resource.setInviteOrganisation(inviteOrganisation.getId());
-        resource.setInviteOrganisationName(inviteOrganisation.getOrganisationName());
-        resource.setInviteOrganisationNameConfirmed(inviteOrganisation.getOrganisation().getName());
-
-        User user = domain.getUser();
-        resource.setNameConfirmed(user.getName());
-        resource.setUser(user.getId());
-
-        return resource;
-    };
+    public abstract ApplicationInviteResource mapToResource(ApplicationInvite domain);
 
     public Long mapInviteToId(ApplicationInvite object) {
         if (object == null) {

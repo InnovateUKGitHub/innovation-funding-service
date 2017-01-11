@@ -37,14 +37,11 @@ public class Role {
     	// no-arg constructor
     }
 
-/*
-    // only used in tests
-    public Role(Long id, String name, List<ProcessRole> processRoles) {
+    public Role(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.processRoles = processRoles;
     }
-*/
+
 
     protected Boolean canEqual(Object other) {
         return other instanceof Role;

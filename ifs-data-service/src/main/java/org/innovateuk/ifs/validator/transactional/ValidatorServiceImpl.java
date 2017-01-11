@@ -65,7 +65,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
-                financeRowService.financeDetails(applicationId, role.getOrganisation()).andOnSuccess(financeDetails ->
+                financeRowService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
                         financeRowService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
                                 validationUtil.validateCostItem(costItems, question)
                         )
