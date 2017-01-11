@@ -932,8 +932,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
 
         assertTrue(result.isFailure());
-
-        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.nullValue());
+        
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
     }
 
