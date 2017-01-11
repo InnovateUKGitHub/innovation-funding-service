@@ -14,22 +14,26 @@ Suite Setup       Run keywords    log in and create new application if there is 
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
+Resource          FinanceSection_Commons.robot
 
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
     [Tags]    HappyPath
-    Then the Applicant should see all the "Your Finance" Sections
+    Then the user should see all the Your-Finances Sections
 
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
+    When the user clicks the button/link             link=Your project costs
     Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
     And the user should see the text in the page    'Empire Ltd' Total project costs
 
 Guidance in the Your Finances section
     [Documentation]    INFUND-192
     [Tags]
+    [Setup]  Applicant navigates to the finances of the Robot application
+    Given the user clicks the button/link   link=Your project costs
     When the user clicks the button/link    jQuery=button:contains("Labour")
     And the user clicks the button/link    css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
@@ -41,12 +45,14 @@ Working days per year should be 232
 Finance fields are empty
     [Documentation]    INFUND-2051: Remove the '0' in finance fields
     [Tags]    HappyPath
-    Then the Funding levels value should be empty
+    Then the user should see the element  jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]
-    [Setup]    The user adds three material rows
+    [Setup]  Applicant navigates to the finances of the Robot application
+    And the user clicks the button/link  link=Your project costs
+    Given The user adds three material rows
     When the user navigates to another page
     And the user should see the text in the page    Guide on eligible project costs and completing the finance form
     And the user goes back to the previous page
@@ -54,15 +60,6 @@ User pressing back button should get the correct version of the page
     [Teardown]    the user removes the materials rows
 
 *** Keywords ***
-the Applicant should see all the "Your Finance" Sections
-    the user should see the element    css=.question section:nth-of-type(1) button
-    the user should see the element    css=.question section:nth-of-type(2) button
-    the user should see the element    css=.question section:nth-of-type(3) button
-    the user should see the element    css=.question section:nth-of-type(4) button
-    the user should see the element    css=.question section:nth-of-type(5) button
-    the user should see the element    css=.question section:nth-of-type(6) button
-    the user should see the element    css=.question section:nth-of-type(7) button
-
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
@@ -89,13 +86,6 @@ the user removes the materials rows
     Run Keyword And Ignore Error    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=button:contains("Materials")
-
-the Funding levels value should be empty
-    the user should see the element    id=cost-financegrantclaim
-    ${input_value} =    Get Value    id=cost-financegrantclaim
-    log    ${input_value}
-    Should Not Be Equal As Strings    ${input_value}    0
-    Should Be Equal As Strings    ${input_value}    ${EMPTY}
 
 the working days per year should be 232 by default
     the user should see the element    css=[name^="labour-labourDaysYearly"]
