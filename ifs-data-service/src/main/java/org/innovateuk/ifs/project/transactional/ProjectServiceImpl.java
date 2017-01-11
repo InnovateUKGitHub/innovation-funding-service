@@ -457,6 +457,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
+        //TODO INFUND-7493
         if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }

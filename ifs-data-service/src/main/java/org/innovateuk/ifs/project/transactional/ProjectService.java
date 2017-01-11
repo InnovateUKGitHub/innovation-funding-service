@@ -124,6 +124,7 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_OTHER_DOCUMENTS')")
     ServiceResult<Void> deleteExploitationPlanFile(Long projectId);
 
+    //TODO INFUND-7493 - remove the boolean here and send enum throughout
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ACCEPT_REJECT_OTHER_DOCUMENTS')")
     ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval);
 
