@@ -91,7 +91,8 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]    Email
+    [Tags]  Pending
+    #TODO Pending due to INFUND-6390 will update ticket onces finances update is merged.
     [Setup]    Log in as a different user   &{lead_applicant_credentials}
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
