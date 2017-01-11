@@ -65,7 +65,7 @@
 
             </th:block>
 
-            <div th:if="${allReadOnly}" th:remove="tag"  class="extra-margin">
+            <div th:if="${allReadOnly}" th:remove="tag">
                 <a th:href="@{/application/{id}(id=${currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>
             <div th:unless="${allReadOnly}" th:remove="tag">
