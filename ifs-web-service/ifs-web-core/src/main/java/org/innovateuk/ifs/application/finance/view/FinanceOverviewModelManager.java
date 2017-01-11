@@ -22,7 +22,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-//TODO - convert usage of model.addAttribute
+//TODO - INFUND-7482 - remove usages of Model model
 @Component
 public class FinanceOverviewModelManager {
     private ApplicationFinanceRestService applicationFinanceRestService;

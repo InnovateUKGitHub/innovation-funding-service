@@ -9,10 +9,10 @@ import java.util.SortedSet;
  * ViewModel for question Organisation details
  */
 public class QuestionOrganisationDetailsViewModel {
-    SortedSet<OrganisationResource> academicOrganisations;
-    SortedSet<OrganisationResource> applicationOrganisations;
-    List<String> pendingOrganisationNames;
-    OrganisationResource leadOrganisation;
+    private SortedSet<OrganisationResource> academicOrganisations;
+    private SortedSet<OrganisationResource> applicationOrganisations;
+    private List<String> pendingOrganisationNames;
+    private OrganisationResource leadOrganisation;
 
     public QuestionOrganisationDetailsViewModel() {
     }
