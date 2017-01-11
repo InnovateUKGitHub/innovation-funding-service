@@ -56,12 +56,14 @@ all text entered should be Bold and stay the same after page refresh
 
 the Applicant clicks on the Numbering bullet button in the "business opportunity" field
     The user enters text to a text field    css=#form-input-1 .editor    This is testing for numbering bullets.
+    Press Key    css=#form-input-1 .editor    \\8
     click element    css=.insertOrderedList_button
     Focus    css=.app-submit-btn
     wait for autosave
 
 the Applicant clicks on the Bullet format button in the "business opportunity" field
     The user enters text to a text field    css=#form-input-1 .editor    testing
+    Press Key    css=#form-input-1 .editor    \\8
     click element    css=.insertUnorderedList_button
     Focus    css=.app-submit-btn
     wait for autosave
