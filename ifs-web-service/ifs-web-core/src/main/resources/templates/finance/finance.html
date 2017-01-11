@@ -279,7 +279,7 @@
                             20% of labour costs
                         </label>
 
-                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
+                        <label th:unless="${overheadCosts?.getUseTotalOption()}" class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
                                    required="required"
@@ -289,7 +289,7 @@
                                    th:disabled="${!(overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)) and (readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                             Custom overhead costs
                         </label>
-                        <label class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"  data-target="overhead-total">
+                        <label th:if="${overheadCosts?.getUseTotalOption()}" class="block-label selection-button-radio" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"  data-target="overhead-total">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"
                                    type="radio"
                                    required="required"
@@ -327,7 +327,7 @@
                     </div>
                 </div>
 
-                <div id="overhead-custom-percentage">
+                <div th:unless="${overheadCosts?.getUseTotalOption()}" id="overhead-custom-percentage">
                     <h3 class="heading-medium">Custom overhead costs</h3>
                     <p>If you feel your overhead costs are higher than 20% you may calculate a value using an Innovate UK model. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. They will be happy to provide you with the calculation model sheet (together with guidance documentation). Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.
                     </p>
@@ -363,7 +363,7 @@
                     </div>
                 </div>
 
-                <div id="overhead-total">
+                <div th:if="${overheadCosts?.getUseTotalOption()}" id="overhead-total">
                     <h3 class="heading-medium">Calculate overheads</h3>
                     <p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
                     <div class="form-group alignright inline">
