@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.BuilderAmendFunctions.*;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -127,7 +128,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void saveWithInnovationArea() {
         InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
 
-        User user = newUser().withId(null).withUid("my-uid").withInnovationArea(innovationArea).build();
+        User user = newUser().with(id(null)).withUid("my-uid").withInnovationArea(innovationArea).build();
 
         User savedUser = repository.save(user);
 
