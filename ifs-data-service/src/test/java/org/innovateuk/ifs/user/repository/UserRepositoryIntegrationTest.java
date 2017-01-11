@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
@@ -32,7 +31,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -126,7 +125,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void saveWithInnovationArea() {
-        Category innovationArea = categoryRepository.findByNameAndType("Earth Observation", CategoryType.INNOVATION_AREA);
+        InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
 
         User user = newUser().withId(null).withUid("my-uid").withInnovationArea(innovationArea).build();
 

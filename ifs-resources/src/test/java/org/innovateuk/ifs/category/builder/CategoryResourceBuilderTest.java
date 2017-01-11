@@ -2,16 +2,18 @@ package org.innovateuk.ifs.category.builder;
 
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.junit.Test;
 
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.junit.Assert.*;
 
+// TODO rename to InnovationAreaResource
 public class CategoryResourceBuilderTest {
 
     @Test
@@ -22,10 +24,9 @@ public class CategoryResourceBuilderTest {
         CategoryType type = INNOVATION_AREA;
         List<CategoryResource> children = emptyList();
 
-        CategoryResource category = newCategoryResource()
+        InnovationAreaResource category = newInnovationAreaResource()
                 .withId(id)
                 .withName(name)
-                .withType(INNOVATION_AREA)
                 .withChildren(children)
                 .withParent(parentId)
                 .build();
@@ -33,7 +34,6 @@ public class CategoryResourceBuilderTest {
         assertEquals(id, category.getId().longValue());
         assertEquals(name, category.getName());
         assertEquals(parentId, category.getParent().longValue());
-        assertEquals(children, category.getChildren());
         assertEquals(type, category.getType());
     }
 
@@ -47,10 +47,9 @@ public class CategoryResourceBuilderTest {
         List<CategoryResource> children1 = emptyList();
         List<CategoryResource> children2 = emptyList();
 
-        List<CategoryResource> categoryResources = newCategoryResource()
+        List<InnovationAreaResource> categoryResources = newInnovationAreaResource()
                 .withId(ids)
                 .withName(names)
-                .withType(types)
                 .withParent(parentIds)
                 .withChildren(children1, children2)
                 .build(2);
@@ -59,12 +58,10 @@ public class CategoryResourceBuilderTest {
         assertEquals(parentIds[0], categoryResources.get(0).getParent());
         assertEquals(names[0], categoryResources.get(0).getName());
         assertEquals(types[0], categoryResources.get(0).getType());
-        assertEquals(children1, categoryResources.get(0).getChildren());
 
         assertEquals(ids[1], categoryResources.get(1).getId());
         assertEquals(parentIds[1], categoryResources.get(1).getParent());
         assertEquals(names[1], categoryResources.get(1).getName());
         assertEquals(types[1], categoryResources.get(1).getType());
-        assertEquals(children2, categoryResources.get(1).getChildren());
     }
 }

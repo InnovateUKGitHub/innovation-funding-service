@@ -6,29 +6,38 @@ import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.OrderBy;
 import java.util.List;
 
 @Entity
-public class Category {
+@DiscriminatorColumn(name = "type")
+public abstract class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
+    @Column(name = "type", insertable = false, updatable = false)
     @Enumerated(value = EnumType.STRING)
     private CategoryType type;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name="parent_id")
-    private Category parent;
 
-    @OneToMany(mappedBy = "parent")
-    @OrderBy("name ASC")
-    private List<Category> children;
-
+    // todo can we do without this?
     @OneToMany(mappedBy="category")
     private List<CategoryLink> categoryLinks;
+
+    Category() {
+        // default constructor
+    }
+
+    protected Category(String name) {
+        if (name == null) {
+            throw new NullPointerException("name cannot be null");
+        }
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("name cannot be empty");
+        }
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -49,27 +58,6 @@ public class Category {
     public CategoryType getType() {
         return type;
     }
-
-    public void setType(CategoryType type) {
-        this.type = type;
-    }
-
-    public Category getParent() {
-        return parent;
-    }
-
-    public void setParent(Category parent) {
-        this.parent = parent;
-    }
-
-    public List<Category> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Category> children) {
-        this.children = children;
-    }
-
 
     public List<CategoryLink> getCategoryLinks() {
         return categoryLinks;

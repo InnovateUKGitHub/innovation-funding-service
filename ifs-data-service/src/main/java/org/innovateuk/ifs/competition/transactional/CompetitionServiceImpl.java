@@ -2,8 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -76,26 +75,26 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private void addInnovationSector(Competition competition) {
-        Category category =
-                Optional.ofNullable(
+        InnovationSector category =
+                (InnovationSector) Optional.ofNullable(
                         competitionCategoryLinkRepository.findByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_SECTOR)
                 ).map(CompetitionCategoryLink::getCategory).orElse(null);
         competition.setInnovationSector(category);
     }
 
     private void addInnovationAreas(Competition competition) {
-        Set<Category> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_AREA)
+        Set<InnovationArea> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_AREA)
                 .stream()
-                .map(CompetitionCategoryLink::getCategory)
+                .map(competitionCategoryLink -> (InnovationArea)competitionCategoryLink.getCategory())
                 .collect(Collectors.toSet());
 
         competition.setInnovationAreas(categories);
     }
 
     private void addResearchCategories(Competition competition) {
-        Set<Category> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), RESEARCH_CATEGORY)
+        Set<ResearchCategory> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), RESEARCH_CATEGORY)
                 .stream()
-                .map(CompetitionCategoryLink::getCategory)
+                .map(competitionCategoryLink -> (ResearchCategory)competitionCategoryLink.getCategory())
                 .collect(Collectors.toSet());
         competition.setResearchCategories(categories);
     }

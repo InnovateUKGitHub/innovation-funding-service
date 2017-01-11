@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -28,7 +28,7 @@ public class CompetitionInviteBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         String expectedHash = "68656c6c6f";
         String expectedName = "paul plum";
-        Category expectedInnovationArea = newCategory().withName("Machine Learning").build();
+        InnovationArea expectedInnovationArea = newInnovationArea().withName("Machine Learning").build();
 
         CompetitionInvite invite = newCompetitionInvite()
                 .withId(expectedId)
@@ -61,7 +61,7 @@ public class CompetitionInviteBuilderTest {
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
         String[] expectedHashes = { "68656c6c6f", "776f726c64" };
         String[] expectedNames = { "paul plum", "steve smith" };
-        Category[] expectedInnovationAreas = newCategory().withName("Machine Learning", "Photonics").buildArray(2, Category.class);
+        InnovationArea[] expectedInnovationAreas = newInnovationArea().withName("Machine Learning", "Photonics").buildArray(2, InnovationArea.class);
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withId(expectedIds)

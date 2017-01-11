@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -34,13 +33,13 @@ import static org.junit.Assert.assertNotNull;
 public class CompetitionParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionParticipantRepository> {
 
     private Competition competition;
-    private Category innovationArea;
+    private InnovationArea innovationArea;
 
     @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     private RejectionReasonRepository rejectionReasonRepository;
@@ -54,7 +53,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Before
     public void setup() {
         competition = competitionRepository.save(newCompetition().withName("competition").build());
-        innovationArea = categoryRepository.save(newCategory().withName("innovation area").withType(INNOVATION_AREA).build());
+        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
     }
 
     @Test

@@ -2,8 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
@@ -17,8 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
@@ -56,9 +57,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long competitionId = 1L;
         Competition competition = newCompetition().withId(competitionId).build();
 
-        Category innovationSector = newCategory().withType(INNOVATION_SECTOR).build();
-        Set<Category> researchCategories = newCategory().withType(RESEARCH_CATEGORY, RESEARCH_CATEGORY).withName("foo", "bar").buildSet(2);
-        Set<Category> innovationAreas = newCategory().withType(INNOVATION_AREA, INNOVATION_AREA).withName("foo", "bar").buildSet(2);
+        InnovationSector innovationSector = newInnovationSector().build();
+        Set<ResearchCategory> researchCategories = newResearchCategory().withName("foo", "bar").buildSet(2);
+        Set<InnovationArea> innovationAreas = newInnovationArea().withName("foo", "bar").buildSet(2);
 
         when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategoryType(competitionId, INNOVATION_SECTOR))
                 .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationSector).build());

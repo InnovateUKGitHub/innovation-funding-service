@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.category.transactional;
 
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.category.builder.CategoryLinkBuilder.newCategoryLink;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.times;
@@ -46,13 +46,9 @@ public class CompetitionCategoryLinkServiceImplTest extends BaseUnitTestMocksTes
     
     @Before
     public void setUp() throws Exception {
-    	
-//    	className = Competition.class.getName();
-//    	classPk = 2L;
-    	
-    	category1 = newCategory().build();
-    	category2 = newCategory().build();
-    	category3 = newCategory().build();
+    	category1 = newInnovationArea().build();
+    	category2 = newInnovationArea().build();
+    	category3 = newInnovationArea().build();
 
         competition = newCompetition().build();
     	

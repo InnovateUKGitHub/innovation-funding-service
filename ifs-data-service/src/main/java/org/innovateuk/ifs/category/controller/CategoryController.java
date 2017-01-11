@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.category.controller;
 
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.*;
 import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +20,24 @@ public class CategoryController {
     CategoryService categoryService;
 
 
-    @RequestMapping("/findByType/{type}")
-    public RestResult<List<CategoryResource>> findByType(@PathVariable("type") final String type){
-        return categoryService.getByType(CategoryType.fromString(type)).toGetResponse();
+    @RequestMapping("/findInnovationAreas")
+    public RestResult<List<InnovationAreaResource>> findInnovationAreas() {
+        return categoryService.getInnovationAreas().toGetResponse();
     }
 
-    @RequestMapping("/findByParent/{parentId}")
-    public RestResult<List<CategoryResource>> findByParent(@PathVariable("parentId") final Long parentId){
-        return categoryService.getByParent(parentId).toGetResponse();
+    @RequestMapping("/findInnovationSectors")
+    public RestResult<List<InnovationSectorResource>> findInnovationSectors() {
+        return categoryService.getInnovationSectors().toGetResponse();
     }
 
+    @RequestMapping("/findResearchCategories")
+    public RestResult<List<ResearchCategoryResource>> findResearchCategories() {
+        return categoryService.getResearchCategories().toGetResponse();
+    }
+
+    @RequestMapping("/findByInnovationSector/{sectorId}")
+    public RestResult<List<InnovationAreaResource>> findByParent(@PathVariable("sectorId") final long sectorId){
+        return categoryService.getInnovationAreaBySector(sectorId).toGetResponse();
+
+    }
 }
