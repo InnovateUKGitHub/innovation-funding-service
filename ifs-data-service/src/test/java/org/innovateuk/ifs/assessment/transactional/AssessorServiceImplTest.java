@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
+import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,10 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -173,5 +177,31 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+    }
+
+    @Test
+    public void getAssessorProfile() throws Exception {
+        Optional<User> user = Optional.of(
+                newUser()
+                        .withId(1L)
+                        .withTitle("Mr")
+                        .withFirstName("Joe")
+                        .withLastName("Bloggs")
+                        .build()
+        );
+
+        AssessorProfileResource assessorProfileResource = newAssessorProfileResource().build();
+
+        when(userRepositoryMock.findByIdAndRolesName(1L, ASSESSOR.getName())).thenReturn(user);
+        when(assessorProfileMapperMock.mapToResource(user.get())).thenReturn(assessorProfileResource);
+
+        ServiceResult<AssessorProfileResource> serviceResult = assessorService.getAssessorProfile(1L);
+
+        assertTrue(serviceResult.isSuccess());
+
+        InOrder inOrder = inOrder(userRepositoryMock, assessorProfileMapperMock);
+        inOrder.verify(userRepositoryMock).findByIdAndRolesName(1L, ASSESSOR.getName());
+        inOrder.verify(assessorProfileMapperMock).mapToResource(user.get());
+        inOrder.verifyNoMoreInteractions();
     }
 }

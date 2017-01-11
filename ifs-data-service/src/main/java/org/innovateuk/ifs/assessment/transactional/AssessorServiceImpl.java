@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class AssessorServiceImpl implements AssessorService {
@@ -36,6 +40,9 @@ public class AssessorServiceImpl implements AssessorService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AssessorProfileMapper assessorProfileMapper;
+
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
@@ -49,6 +56,15 @@ public class AssessorServiceImpl implements AssessorService {
                 });
             });
         });
+    }
+
+    @Override
+    public ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId) {
+        return getAssessor(assessorId).andOnSuccessReturn(assessorProfileMapper::mapToResource);
+    }
+
+    private ServiceResult<User> getAssessor(Long assessorId) {
+        return find(userRepository.findByIdAndRolesName(assessorId, ASSESSOR.getName()), notFoundError(User.class, assessorId));
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {

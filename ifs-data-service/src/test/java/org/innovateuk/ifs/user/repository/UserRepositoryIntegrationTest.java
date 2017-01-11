@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -15,6 +16,8 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.stream.Collectors.toList;
@@ -32,7 +35,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     private UserMapper userMapper;
 
     @Test
-    public void test_findAll() {
+    public void findAll() {
         // Fetch the list of users
         List<User> users = repository.findAll();
         assertEquals(USER_COUNT, users.size());
@@ -45,7 +48,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     @Rollback
-    public void test_findByEmailAndStatus() {
+    public void findByEmailAndStatus() {
         final User user = newUser()
                 .withUid("my-uid")
                 .withStatus(INACTIVE)
@@ -63,7 +66,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     @Rollback
-    public void test_createUser() {
+    public void createUser() {
         loginSteveSmith();
 
         // Create a new user
@@ -94,7 +97,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     @Rollback
-    public void test_deleteNewUser() {
+    public void deleteNewUser() {
         // Create a new user
         User newUser = repository.save(new User("New", "User", "new@example.com", "", new ArrayList<>(), "my-uid"));
 
@@ -109,12 +112,26 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void test_findAvailableAssessors() {
+    public void findAvailableAssessors() {
         List<User> users = repository.findAllAvailableAssessorsByCompetition(4L);
         assertEquals(2, users.size());
 
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
+    }
+
+    @Test
+    public void findByIdAndRolesName() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
+
+        assertTrue(user.isPresent());
+    }
+
+    @Test
+    public void findByIdAndRolesName_wrongRole() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
+
+        assertFalse(user.isPresent());
     }
 }
