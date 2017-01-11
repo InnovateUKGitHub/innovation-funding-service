@@ -21,7 +21,7 @@
 	<h1 class="heading-large">Create your account</h1>
 
 	<p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
-	
+
 	<h2 class="heading-medium">Business Organisation</h2>
 
 	<form>
@@ -44,7 +44,7 @@
 		<fieldset>
 			<legend class="visuallyhidden">Operating address</legend>
 			<div class="form-block">
-				<label class="block-label" for="address-same">
+				<label class="block-label selection-button-checkbox" for="address-same">
 					<input id="address-same" type="checkbox" value="address-same"/>
 					The registered address is the same as the operating address
 				</label>
@@ -114,21 +114,21 @@
 				</div>
 			</fieldset>
 		</div>
-		
+
 		<!-- <h2 class="heading-medium">Organisation size</h2>
 		<fieldset>
 			<legend class="visuallyhidden">Organisation size</legend>
 			<p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
 			<div class="form-block">
-				<label class="block-label" for="radio-1">
+				<label class="block-label selection-button-radio" for="radio-1">
 					<input id="radio-1" type="radio" name="radio-group" value="Micro"/>
 					Micro / small
 				</label>
-				<label class="block-label" for="radio-2">
+				<label class="block-label selection-button-radio" for="radio-2">
 					<input id="radio-2" type="radio" name="radio-group" value="Medium"/>
 					Medium
 				</label>
-				<label class="block-label" for="radio-3">
+				<label class="block-label selection-button-radio" for="radio-3">
 					<input id="radio-3" type="radio" name="radio-group" value="Large"/>
 					Large
 				</label>
@@ -148,8 +148,8 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
-	
-	jQuery('input#address-same').on('click',function(e){ 
+
+	jQuery('input#address-same').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#manual-company-input").hide();
@@ -159,20 +159,20 @@
 
 	});
 
-	jQuery('#manual-company-trigger').on('click',function(e){ 
+	jQuery('#manual-company-trigger').on('click',function(e){
 		e.preventDefault();
 		jQuery("#manual-company-input").show();
 		jQuery("#org-results").hide();
 
 	});
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("King William House");
@@ -182,7 +182,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

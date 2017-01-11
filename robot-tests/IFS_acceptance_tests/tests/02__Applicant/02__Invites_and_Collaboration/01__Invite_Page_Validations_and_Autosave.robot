@@ -98,7 +98,7 @@ The Lead's inputs should not be visible in other application invites
 Lead applicant can remove the Pending partners
     [Documentation]    INFUND-4807
     Given The user navigates to the invitation page of the test application
-    And the applicant fills the lead organisation fields    Test user 001    test@emai.com
+    And the applicant fills the lead organisation fields    Test user 001    test@email.com
     When the user clicks the button/link    jQuery=li:nth-child(2) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    Link=Test user 001
@@ -109,19 +109,8 @@ the user fills the name and email field and reloads the page
     The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+8@hiveit.co.uk
-    sleep    2s
     wait for autosave
     the user reloads the page
-
-the user's inputs should still be visible
-    [Arguments]    ${group_number}
-    Textfield Value Should Be    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
-    ${input_value} =    Get Value    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value}    ewan+8@hiveit.co.uk
-    Textfield Value Should Be    name=organisations[${group_number}].organisationName    Test name
-    Textfield Value Should Be    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator test
-    ${input_value} =    Get Value    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value} =    ${input_value} =
 
 the lead applicant cannot be removed
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    Lead applicant
@@ -132,10 +121,9 @@ the applicant fills the lead organisation fields
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    jquery=button:contains("Save Changes")
+    Focus    jQuery=.button:contains("Save Changes")
     browser validations have been disabled
-    The user clicks the button/link    jquery=button:contains("Save Changes")
-    sleep    500ms
+    The user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
@@ -146,8 +134,7 @@ the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     Focus    jquery=button:contains("Save Changes")
-    Sleep    2s
-    Capture Page Screenshot
+    wait for autosave
     the user reloads the page
 
 the applicant's inputs should be visible
@@ -176,7 +163,7 @@ the applicant fills the Partner organisation fields
     # the following keyword disables the browser's validation
     Focus    jquery=button:contains("Save Changes")
     The user clicks the button/link    jquery=button:contains("Save Changes")
-    sleep    500ms
+
 
 a validation error is shown on organisation name
     [Arguments]    ${group_number}

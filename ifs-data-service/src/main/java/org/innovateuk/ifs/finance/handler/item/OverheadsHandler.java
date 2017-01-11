@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Handles the overheads, i.e. converts the costs to be stored into the database
@@ -23,10 +24,17 @@ public class OverheadsHandler extends FinanceRowHandler {
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
 
         Overhead overhead = (Overhead) costItem;
-        if(overhead.getRateType() != null && !OverheadRateType.NONE.equals(overhead.getRateType())){
-            super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
-        }else{
-            super.validate(costItem, bindingResult);
+        switch(overhead.getRateType()) {
+            case DEFAULT_PERCENTAGE:
+            case CUSTOM_RATE:
+                super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
+                break;
+            case TOTAL:
+                super.validate(costItem, bindingResult, Overhead.TotalCost.class);
+                break;
+            case NONE:
+                super.validate(costItem, bindingResult);
+                break;
         }
     }
 
@@ -41,7 +49,6 @@ public class OverheadsHandler extends FinanceRowHandler {
             if (overhead.getRateType() != null) {
                 rateType = overhead.getRateType().toString();
             }
-
             cost = new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
         }
         return cost;
@@ -50,13 +57,27 @@ public class OverheadsHandler extends FinanceRowHandler {
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
-        return new Overhead(cost.getId(), type, cost.getQuantity());
+        Overhead overhead = new Overhead(cost.getId(), type, cost.getQuantity());
+
+        Optional<FinanceRowMetaValue> useTotalOptionMetaValue = cost.getFinanceRowMetadata().stream().
+                filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.USE_TOTAL_META_FIELD)).
+                findFirst();
+
+        if(useTotalOptionMetaValue.isPresent() && useTotalOptionMetaValue.get().getValue().equals("false")) {
+            overhead.setUseTotalOption(false);
+        }
+        else {
+            overhead.setUseTotalOption(true);
+        }
+
+        return overhead;
     }
 
     @Override
     public List<ApplicationFinanceRow> initializeCost() {
         ArrayList<ApplicationFinanceRow> costs = new ArrayList<>();
         costs.add(initializeAcceptRate());
+
         return costs;
     }
 

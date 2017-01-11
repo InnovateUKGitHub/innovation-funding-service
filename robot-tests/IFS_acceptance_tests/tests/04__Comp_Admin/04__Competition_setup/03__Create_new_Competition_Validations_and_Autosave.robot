@@ -57,7 +57,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -155,9 +155,9 @@ Eligibility client-side validations
     ...
     ...    INFUND-3888
     [Tags]    HappyPath
-    When the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    When the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user moves focus and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
@@ -214,23 +214,22 @@ Assessor: Server-side validation
 Assessor: Client-side validation
     [Documentation]    INFUND-5641
     When The user enters text to a text field    id=assessorPay    1.1
-    And the user selects the checkbox    id=assessors-62
+    And the user selects the checkbox    assessors-62
     Then the user should see an error    This field can only accept whole numbers
     When The user enters text to a text field    id=assessorPay    120
-    And the user selects the checkbox    id=assessors-62
+    And the user selects the checkbox    assessors-62
     Then The user should not see the text in the page    This field can only accept whole numbers
 
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
     focus    jQuery=.button[value="Save and close"]
-    sleep    200ms
+    wait for autosave
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
@@ -349,7 +348,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
-    sleep    500ms
+    wait for autosave
 
 the user should see the correct values in the initial details form
     ${input_value} =    Get Value    id=title
@@ -395,7 +394,6 @@ The user should not see the error text in the page
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
-    sleep    1s
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
@@ -429,7 +427,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
@@ -446,4 +444,4 @@ the user should not see the error any more
     Focus    jQuery=.button:contains("Done")
     Wait for autosave
     Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
-    sleep    500ms
+

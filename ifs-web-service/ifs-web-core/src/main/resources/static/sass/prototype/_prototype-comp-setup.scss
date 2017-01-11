@@ -10,3 +10,15 @@
     margin-bottom: 15px;
   }
 }
+
+.comp-setup-section-navigation {
+  overflow: auto;
+  margin-bottom: 30px;
+  li {
+    float: left;
+    margin-right: 20px;
+    &:first-child {
+      margin-right: 50px;
+    }
+  }
+}

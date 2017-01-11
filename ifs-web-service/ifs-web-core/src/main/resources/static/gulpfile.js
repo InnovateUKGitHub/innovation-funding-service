@@ -5,11 +5,18 @@ var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
 var sass = require('gulp-sass')
 var sassLint = require('gulp-sass-lint')
-var compass = require('compass-importer')
+var replace = require('gulp-replace')
 var filesExist = require('files-exist')
+var compass = require('compass-importer')
 
 // Path variables
 var nodeModulesPath = __dirname + '/../../../../../node_modules/'
+var govukNodeModules = [
+  nodeModulesPath + 'govuk_frontend_toolkit/**/*',
+  nodeModulesPath + 'govuk_template_jinja/**/*',
+  nodeModulesPath + 'govuk-elements-sass/**/*'
+]
+
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
@@ -19,6 +26,22 @@ var vendorJsFiles = [
   'js/vendor/wysiwyg-editor/*.js',
   '!js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
+
+gulp.task('copy-govuk',['copy-npm-govuk','copy-fonts-govuk','copy-images-govuk'])
+
+gulp.task('copy-npm-govuk',function(){
+  return gulp.src(filesExist(govukNodeModules, {checkGlobs: true}), {base: nodeModulesPath}).pipe(gulp.dest('sass/vendor/'))
+})
+
+//copy over the font from the template to our sourced controlled folder
+gulp.task('copy-fonts-govuk',function(){
+  return gulp.src(filesExist('sass/vendor/govuk_template_jinja/assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
+})
+//copy over the images from the template  to our sourced controlled folder
+gulp.task('copy-images-govuk',function(){
+  return gulp.src(['sass/vendor/govuk_template_jinja/assets/images/**/**','sass/vendor/govuk_frontend_toolkit/images/**/**']).pipe(gulp.dest('images'))
+})
+
 
 gulp.task('default', ['js', 'css'])
 
@@ -52,7 +75,7 @@ gulp.task('vendor', function () {
   .pipe(gulp.dest('js/dest'))
 })
 
-gulp.task('css', function () {
+gulp.task('css', ['copy-govuk'], function () {
   return gulp.src('./sass/**/*.scss')
     .pipe(sassLint({
       files: {
@@ -64,11 +87,15 @@ gulp.task('css', function () {
       config: '.sass-lint.yml'
     }))
     .pipe(sassLint.format())
-    // .pipe(sassLint.failOnError())
-    .pipe(sass({
+    .pipe(sass({includePaths: [
+      'sass/vendor/govuk_frontend_toolkit/stylesheets',
+      'sass/vendor/govuk_template_jinja/assets/stylesheets',
+      'sass/vendor/govuk-elements-sass/public/sass'
+    ],
       importer: compass,
       outputStyle: 'compressed'
     }).on('error', sass.logError))
+    .pipe(replace('url(images/', 'url(/images/'))
     .pipe(gulp.dest('./css'))
 })
 

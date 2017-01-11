@@ -188,7 +188,7 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
         return APPLICATION_FORM;
     }
 
@@ -225,6 +225,12 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
+        populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+
+        return APPLICATION_FORM;
+    }
+
+    private void populateSection(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long applicationId, HttpServletRequest request) {
         if(SectionType.GENERAL.equals(section.getType())
                 || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
             openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
@@ -232,10 +238,7 @@ public class ApplicationFormController {
             openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
         }
 
-
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
-
-        return APPLICATION_FORM;
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
     }
 
 
@@ -326,7 +329,7 @@ public class ApplicationFormController {
                 model.addAttribute("currentUser", user);
                 applicationModelPopulator.addUserDetails(model, application, user.getId());
                 applicationNavigationPopulator.addNavigation(question, applicationId, model);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -645,15 +648,16 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
 
         if (section.getType() == SectionType.FUNDING_FINANCES &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
-            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         } else if (section.getType() == SectionType.PROJECT_COST_FINANCES &&
                 !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
-            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         }
 
@@ -671,8 +675,7 @@ public class ApplicationFormController {
 
         if(saveApplicationErrors.hasErrors()){
             validationHandler.addAnyErrors(saveApplicationErrors);
-            setReturnToApplicationFormData(section, application, competition, user, model, form, applicationId);
-            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
@@ -1088,5 +1091,18 @@ public class ApplicationFormController {
     	public Long getFieldId() {
 			return fieldId;
 		}
+    }
+
+
+    @ProfileExecution
+    @RequestMapping(value = "/{sectionType}", method = RequestMethod.GET)
+    public String redirectToSection(@PathVariable("sectionType") SectionType type,
+                                    @PathVariable(APPLICATION_ID) Long applicationId) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), type);
+        if (sections.size() == 1) {
+            return "redirect:/application/" + applicationId + "/form/section/" + sections.get(0).getId();
+        }
+        return "redirect:/application/" + applicationId;
     }
 }

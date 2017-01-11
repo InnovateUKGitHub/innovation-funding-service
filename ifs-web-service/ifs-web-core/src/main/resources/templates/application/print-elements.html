@@ -21,7 +21,7 @@
         <div th:text="${leadOrganisation.getName()}"></div>
 
         <h2 class="heading-small">Partners</h2>
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
             <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                 <span th:text="${organisation.getName()}"></span>
             </li>

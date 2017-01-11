@@ -114,8 +114,8 @@ The user goes back to the previous page
 
 the user reloads the page
     Wait for autosave
-    Run Keyword And Ignore Error    Confirm Action
     Reload Page
+    run keyword and ignore error    confirm action
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong

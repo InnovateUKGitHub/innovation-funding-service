@@ -610,6 +610,7 @@ public class BaseUnitTest {
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);

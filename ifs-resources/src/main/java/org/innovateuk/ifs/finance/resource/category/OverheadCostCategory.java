@@ -2,11 +2,11 @@ package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
+import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * {@code DefaultCostCategory} implementation for {@link FinanceRowCostCategory}.
@@ -14,9 +14,12 @@ import java.util.Optional;
  */
 public class OverheadCostCategory implements FinanceRowCostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
+    public static final Boolean USE_TOTAL_BY_DEFAULT = true;
+    public static final String USE_TOTAL_META_FIELD = "use_total";
     private List<FinanceRowItem> costs = new ArrayList<>();
     private BigDecimal total = BigDecimal.ZERO;
     private BigDecimal labourCostTotal = BigDecimal.ZERO;
+
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -30,18 +33,18 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
 
     @Override
     public void calculateTotal() {
-        Optional<FinanceRowItem> cost = costs.stream()
-                .findFirst();
+        costs.stream().findFirst().
+                map(Overhead.class::cast).
+                filter(overhead -> overhead.getRate()!=null).
+                ifPresent(overhead -> setTotalCost(overhead));
+    }
 
-        if(cost.isPresent()) {
-            Overhead overhead = (Overhead)cost.get();
-            if(overhead.getRate()!=null) {
-                total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
-            } else {
-                total = BigDecimal.ZERO;
-            }
-        } else {
-            total = BigDecimal.ZERO;
+    private void setTotalCost(Overhead overhead) {
+        if (overhead.getRateType().equals(OverheadRateType.TOTAL)){
+            total = new BigDecimal(overhead.getRate());
+        }
+        else {
+            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
         }
     }
 

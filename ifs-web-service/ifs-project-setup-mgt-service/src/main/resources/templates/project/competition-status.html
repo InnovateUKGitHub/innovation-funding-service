@@ -83,7 +83,7 @@
                         th:include="project/fragments :: project-status-table(${model.projectStatusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()})"
                         th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
               <th:block th:unless="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
-                        th:include="project/fragments :: project-status-table(${project.grantOfferLetterStatus})" />
+                        th:include="project/fragments :: project-status-table(${model.projectStatusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()})" />
 
           </tr>
         </tbody>

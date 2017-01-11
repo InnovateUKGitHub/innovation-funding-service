@@ -84,12 +84,11 @@ public class Competition implements ProcessActivity {
     @Transient
     private Category innovationSector;
     @Transient
-    private Category innovationArea;
+    private Set<Category> innovationAreas;
     @Transient
     private Set<Category> researchCategories;
 
     private String activityCode;
-    private String innovateBudget;
 
     private boolean multiStream;
     private Boolean resubmission;
@@ -429,12 +428,12 @@ public class Competition implements ProcessActivity {
         this.innovationSector = innovationSector;
     }
 
-    public Category getInnovationArea() {
-        return innovationArea;
+    public Set<Category> getInnovationAreas() {
+        return innovationAreas;
     }
 
-    public void setInnovationArea(Category innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreas(Set<Category> innovationAreas) {
+        this.innovationAreas = innovationAreas;
     }
 
     public Set<Category> getResearchCategories() {
@@ -503,14 +502,6 @@ public class Competition implements ProcessActivity {
 
     public void setActivityCode(String activityCode) {
         this.activityCode = activityCode;
-    }
-
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
     }
 
     public List<CompetitionFunder> getFunders() {

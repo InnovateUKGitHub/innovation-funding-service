@@ -12,8 +12,10 @@ import java.math.BigDecimal;
  */
 public class Overhead implements FinanceRowItem {
     public interface RateNotZero{}
+    public interface TotalCost{}
     private Long id;
     private OverheadRateType rateType;
+    private Boolean useTotalOption;
 
     @Min.List({
         @Min(value = 0, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
@@ -81,6 +83,14 @@ public class Overhead implements FinanceRowItem {
 
     public void setRate(Integer rate) {
         this.rate = rate;
+    }
+
+    public Boolean getUseTotalOption() {
+        return useTotalOption;
+    }
+
+    public void setUseTotalOption(Boolean useTotalOption) {
+        this.useTotalOption = useTotalOption;
     }
 }
 
