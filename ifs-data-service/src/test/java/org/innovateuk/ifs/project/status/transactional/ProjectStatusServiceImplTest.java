@@ -322,8 +322,8 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, LocalDateTime.now());
-
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE,
+                Boolean.FALSE, Boolean.TRUE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -474,22 +474,50 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertTrue(resultFailure.isFailure());
     }
 
-    private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus, Boolean otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved, LocalDateTime otherDocsSubmittedDate) {
+    private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus,
+            Boolean otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
+            LocalDateTime otherDocsSubmittedDate) {
 
-        Role role = newRole().build();
-        ProcessRole processRole = newProcessRole().withRole(role).build();
-        Application application = newApplication().withProcessRoles(processRole).build();
-
-        Organisation organisation = newOrganisation().build();
-        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(organisation).build();
+        Application application = newApplication()
+                .build();
+        Organisation organisation = newOrganisation()
+                .build();
+        Role role = newRole()
+                .withType(UserRoleType.LEADAPPLICANT)
+                .build();
+        ProcessRole processRole = newProcessRole()
+                .withRole(role)
+                .withApplication(application)
+                .withOrganisation(organisation)
+                .build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build();
         Project project;
-        if(otherDocsSubmittedDate != null)
-            project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(otherDocsApproved).withOtherDocumentsSubmittedDate(otherDocsSubmittedDate).build();
-        else
-            project = newProject().withId(projectId).withApplication(application).withPartnerOrganisations(asList(partnerOrganisation)).withOtherDocumentsApproved(otherDocsApproved).build();
-        BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+        if (otherDocsSubmittedDate != null) {
+            project = newProject()
+                    .withId(projectId)
+                    .withApplication(application)
+                    .withPartnerOrganisations(asList(partnerOrganisation))
+                    .withOtherDocumentsApproved(otherDocsApproved)
+                    .withOtherDocumentsSubmittedDate(otherDocsSubmittedDate)
+                    .build();
+        } else {
+            project = newProject()
+                    .withId(projectId)
+                    .withApplication(application)
+                    .withPartnerOrganisations(asList(partnerOrganisation))
+                    .withOtherDocumentsApproved(otherDocsApproved)
+                    .build();
+        }
+        BankDetails bankDetail = newBankDetails()
+                .withProject(project)
+                .build();
+        SpendProfile spendprofile = newSpendProfile()
+                .withOrganisation(organisation)
+                .build();
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer()
+                .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
@@ -497,6 +525,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+        when(organisationRepositoryMock.findOne(processRole.getOrganisationId())).thenReturn(organisation);
 
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(golIsApproved);

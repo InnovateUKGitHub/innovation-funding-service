@@ -45,10 +45,7 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.RoleService;
-import org.innovateuk.ifs.user.transactional.UserService;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
@@ -73,6 +70,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
 
     protected ServiceLocator serviceLocator;
+    protected BaseUserService baseUserService;
     protected UserService userService;
     protected CompetitionService competitionService;
     protected CompetitionTypeRepository competitionTypeRepository;
@@ -187,7 +185,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource retrieveUserById(Long id) {
-        return doAs(systemRegistrar(), () -> userService.getUserById(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException());
     }
 
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {

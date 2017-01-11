@@ -58,7 +58,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -131,6 +130,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(roleRepositoryMock.findOneByName(leadApplicantRole.getName())).thenReturn(leadApplicantRole);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
+        when(organisationRepositoryMock.findByUsers(user)).thenReturn(singletonList(organisation));
+
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
             assertEquals(applicationStatus.getId(), created.getApplicationStatus().getId());
@@ -141,8 +142,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             assertEquals(1, created.getProcessRoles().size());
             ProcessRole createdProcessRole = created.getProcessRoles().get(0);
             assertNull(createdProcessRole.getId());
-            assertNull(createdProcessRole.getApplication().getId());
-            assertEquals(organisation.getId(), createdProcessRole.getOrganisation().getId());
+            assertNull(createdProcessRole.getApplicationId());
+            assertEquals(organisation.getId(), createdProcessRole.getOrganisationId());
             assertEquals(leadApplicantRole.getId(), createdProcessRole.getRole().getId());
             assertEquals(user.getId(), createdProcessRole.getUser().getId());
 
@@ -562,8 +563,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
     @Test
     public void applicationServiceShouldReturnApplicationByUserId() throws Exception {
-        User testUser2 = new User(2L, "test", "User2",  "email2@email.nl", "testToken456def", null, "my-uid");
-        User testUser1 = new User(1L, "test", "User1",  "email1@email.nl", "testToken123abc", null, "my-uid");
+        User testUser1 = new User(1L, "test", "User1",  "email1@email.nl", "testToken123abc", "my-uid");
+        User testUser2 = new User(2L, "test", "User2",  "email2@email.nl", "testToken456def", "my-uid");
 
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
@@ -576,13 +577,17 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation1 = new Organisation(1L, "test organisation 1");
         Organisation organisation2 = new Organisation(2L, "test organisation 2");
 
-        ProcessRole testProcessRole1 = new ProcessRole(0L, testUser1, testApplication1, new Role(), organisation1);
-        ProcessRole testProcessRole2 = new ProcessRole(1L, testUser1, testApplication2, new Role(), organisation1);
-        ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2, new Role(), organisation2);
-        ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3, new Role(), organisation2);
+        ProcessRole testProcessRole1 = new ProcessRole(0L, testUser1, testApplication1.getId(), new Role(), organisation1.getId());
+        ProcessRole testProcessRole2 = new ProcessRole(1L, testUser1, testApplication2.getId(), new Role(), organisation1.getId());
+        ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2.getId(), new Role(), organisation2.getId());
+        ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3.getId(), new Role(), organisation2.getId());
 
         when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
         when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
+
+        when(applicationRepositoryMock.findOne(testApplication1.getId())).thenReturn(testApplication1);
+        when(applicationRepositoryMock.findOne(testApplication2.getId())).thenReturn(testApplication2);
+        when(applicationRepositoryMock.findOne(testApplication3.getId())).thenReturn(testApplication3);
 
         when(processRoleRepositoryMock.findByUser(testUser1)).thenReturn(new ArrayList<ProcessRole>() {{
             add(testProcessRole1);
@@ -618,8 +623,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Competition competition = CompetitionBuilder.newCompetition().with(id(1L)).build();
         Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
-        ProcessRole processRole = newProcessRole().withOrganisation(organisation).build();
-        User user = newUser().with(id(userId)).withOrganisations(asList(organisation)).withProcessRoles(asList(processRole)).build();
+        User user = newUser().with(id(userId)).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(ApplicationStatusConstants.CREATED.getName()).build();
 
         String applicationName = "testApplication";
@@ -630,6 +634,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
+            newProcessRole().withUser(user).withOrganisation(organisation).build()
+        ));
+        when(organisationRepositoryMock.findByUsers(user)).thenReturn(singletonList(organisation));
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());

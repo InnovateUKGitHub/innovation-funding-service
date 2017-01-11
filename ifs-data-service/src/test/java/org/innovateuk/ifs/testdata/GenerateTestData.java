@@ -492,7 +492,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
             UserResource user = retrieveUserByEmail(email);
-            OrganisationResource organisation = retrieveOrganisationById(user.getOrganisations().get(0));
+            OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
             return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
         });
 
@@ -699,6 +699,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     protected OrganisationResource retrieveOrganisationById(Long id) {
         return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccessObjectOrThrowException());
+    }
+
+    protected OrganisationResource retrieveOrganisationByUserId(Long id) {
+        return doAs(systemRegistrar(), () -> organisationService.findByUserId(id).getSuccessObjectOrThrowException());
     }
 
     protected UserResource systemRegistrar() {

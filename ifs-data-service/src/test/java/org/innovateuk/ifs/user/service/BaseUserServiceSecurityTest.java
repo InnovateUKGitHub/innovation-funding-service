@@ -8,6 +8,7 @@ import org.innovateuk.ifs.token.security.TokenPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
+import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.*;
 /**
  * Testing how the secured methods in UserService interact with Spring Security
  */
-public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService> {
+public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUserService> {
 
     private UserPermissionRules userRules;
     private TokenPermissionRules tokenRules;
@@ -39,45 +40,25 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindAssignableUsers() {
-        classUnderTest.findAssignableUsers(123L);
+    public void testFindAll() {
+        classUnderTest.findAll();
         assertViewMultipleUsersExpectations();
     }
 
     @Test
-    public void testFindByEmail() {
-        assertAccessDenied(() -> classUnderTest.findByEmail("asdf@example.com"), () -> {
+    public void testGetUserById() {
+        assertAccessDenied(() -> classUnderTest.getUserById(123L), () -> {
             assertViewSingleUserExpectations();
         });
     }
 
     @Test
-    public void testChangePassword() {
+    public void testGetUserByUid() {
 
-        Token token = new Token();
-        when(tokenLookupStrategies.getTokenByHash("hash")).thenReturn(token);
-
-        assertAccessDenied(() -> classUnderTest.changePassword("hash", "newpassword"), () -> {
-            verify(tokenRules).systemRegistrationUserCanUseTokensToResetPaswords(token, getLoggedInUser());
-            verifyNoMoreInteractionsWithRules();
-        });
-    }
-
-    @Test
-    public void testSendPasswordResetNotification() {
-
-        UserResource user = newUserResource().build();
-        assertAccessDenied(() -> classUnderTest.sendPasswordResetNotification(user), () -> {
-            verify(userRules).usersCanChangeTheirOwnPassword(user, getLoggedInUser());
-            verify(userRules).systemRegistrationUserCanChangePasswordsForUsers(user, getLoggedInUser());
-            verifyNoMoreInteractionsWithRules();
-        });
-    }
-
-    @Test
-    public void testFindRelatedUsers() {
-        classUnderTest.findRelatedUsers(123L);
-        assertViewMultipleUsersExpectations();
+        // this method must remain unsecured because it is the way in which we get a user onto the
+        // SecurityContext in the first place for permission checking
+        classUnderTest.getUserResourceByUid("asdf");
+        verifyNoMoreInteractionsWithRules();
     }
 
     private void assertViewSingleUserExpectations() {
@@ -104,42 +85,34 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Override
-    protected Class<? extends UserService> getClassUnderTest() {
-        return TestUserService.class;
+    protected Class<? extends BaseUserService> getClassUnderTest() {
+        return TestBaseUserService.class;
     }
 
     /**
      * Test class for use in Service Security tests.
      */
-    public static class TestUserService implements UserService {
+    public static class TestBaseUserService implements BaseUserService {
+
         @Override
-        public ServiceResult<UserResource> findByEmail(String email) {
+        public ServiceResult<UserResource> getUserResourceByUid(String uid) {
             return serviceSuccess(newUserResource().build());
         }
 
         @Override
-        public ServiceResult<UserResource> findInactiveByEmail(String email) {
+        public ServiceResult<UserResource> getUserById(Long id) {
             return serviceSuccess(newUserResource().build());
         }
 
         @Override
-        public ServiceResult<Set<UserResource>> findAssignableUsers(Long applicationId) {
-            return serviceSuccess(newUserResource().buildSet(2));
+        public ServiceResult<List<UserResource>> findAll() {
+            return serviceSuccess(newUserResource().build(2));
         }
 
         @Override
-        public ServiceResult<Set<UserResource>> findRelatedUsers(Long applicationId) {
-            return serviceSuccess(newUserResource().buildSet(2));
+        public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
+            return serviceSuccess(newUserResource().build(2));
         }
 
-        @Override
-        public ServiceResult<Void> sendPasswordResetNotification(@P("user") UserResource user) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> changePassword(@P("hash") String hash, String password) {
-            return null;
-        }
     }
 }

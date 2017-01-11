@@ -37,7 +37,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
             doAs(systemRegistrar(), () -> {
                 Long applicationId = applicationRepository.findByName(projectName).get(0).getId();
                 doAs(compAdmin(), () -> data.setApplication(applicationService.getApplicationById(applicationId).getSuccessObjectOrThrowException()));
-                data.setLeadApplicant(userService.getUserById(retrieveLeadApplicant(applicationId).getUser()).getSuccessObjectOrThrowException());
+                data.setLeadApplicant(baseUserService.getUserById(retrieveLeadApplicant(applicationId).getUser()).getSuccessObjectOrThrowException());
             });
 
             doAs(data.getLeadApplicant(), () ->
@@ -56,16 +56,16 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         return with(data -> doAs(data.getLeadApplicant(), () -> {
             User projectManager = userRepository.findByEmail(email).get();
             projectService.setProjectManager(data.getProject().getId(), projectManager.getId()).getSuccessObjectOrThrowException();
-            data.setProjectManager(userService.getUserById(projectManager.getId()).getSuccessObjectOrThrowException());
+            data.setProjectManager(baseUserService.getUserById(projectManager.getId()).getSuccessObjectOrThrowException());
         }));
     }
 
     public ProjectDataBuilder withProjectAddressOrganisationAddress() {
         return with(data -> doAs(data.getLeadApplicant(), () -> {
-            Long leadOrganisationId = data.getLeadApplicant().getOrganisations().get(0);
-            OrganisationResource leadOrganisation = organisationService.findById(leadOrganisationId).getSuccessObjectOrThrowException();
+            Long leadApplicantId = data.getLeadApplicant().getId();
+            OrganisationResource leadOrganisation = organisationService.findByUserId(leadApplicantId).getSuccessObjectOrThrowException();
             AddressResource address = leadOrganisation.getAddresses().get(0).getAddress();
-            projectService.updateProjectAddress(leadOrganisationId, data.getProject().getId(), OrganisationAddressType.PROJECT, address).getSuccessObjectOrThrowException();
+            projectService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), OrganisationAddressType.PROJECT, address).getSuccessObjectOrThrowException();
         }));
     }
 

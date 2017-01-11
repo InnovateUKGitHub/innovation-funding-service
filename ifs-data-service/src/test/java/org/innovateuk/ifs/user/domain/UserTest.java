@@ -17,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 public class UserTest {
     User user;
 
-    List<ProcessRole> processRoles;
     Long id;
     String imageUrl;
     String email;
@@ -35,17 +34,11 @@ public class UserTest {
         imageUrl = "/image/url/test";
         uid = "uid";
 
-        processRoles = new ArrayList<>();
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
-
-        user = new User(id, firstName, lastName, email, imageUrl, processRoles, "uid");
+        user = new User(id, firstName, lastName, email, imageUrl, uid);
     }
 
     @Test
     public void userShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(user.getProcessRoles(), processRoles);
         Assert.assertEquals(user.getFirstName(), firstName);
         Assert.assertEquals(user.getLastName(), lastName);
         Assert.assertEquals(user.getName(), firstName + " " + lastName);
@@ -53,36 +46,4 @@ public class UserTest {
         Assert.assertEquals(user.getImageUrl(),imageUrl);
         Assert.assertEquals(user.getUid(), uid);
     }
-
-
-
-    @Test
-    public void testAddOrganisations() {
-        Organisation org1 = newOrganisation().build();
-        Organisation org2 = newOrganisation().build();
-        User u = UserBuilder.newUser().build();
-        u.setOrganisations(new ArrayList<>(asList(org1, org2))); // Not using the builder as that uses method under test
-        // Check everything is as expected before testing
-        assertNotNull(u.getOrganisations());
-        assertEquals(2, u.getOrganisations().size());
-        assertTrue(u.getOrganisations().contains(org1));
-        assertTrue(u.getOrganisations().contains(org2));
-
-        // Add an org already existing - nothing should change
-        u.addUserOrganisation(org1);
-        assertNotNull(u.getOrganisations());
-        assertEquals(2, u.getOrganisations().size());
-        assertTrue(u.getOrganisations().contains(org1));
-        assertTrue(u.getOrganisations().contains(org2));
-
-        // Add an new org
-        Organisation org3 = newOrganisation().build();
-        u.addUserOrganisation(org3);
-        assertNotNull(u.getOrganisations());
-        assertEquals(3, u.getOrganisations().size());
-        assertTrue(u.getOrganisations().contains(org1));
-        assertTrue(u.getOrganisations().contains(org2));
-        assertTrue(u.getOrganisations().contains(org3));
-    }
-
 }
