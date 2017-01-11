@@ -10,7 +10,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 public class AssessorInviteOverviewResource extends AssessorInviteResource {
 
     private BusinessType businessType;
-    private String status;
+    private ParticipantStatusResource status;
     private String details;
 
     public AssessorInviteOverviewResource() {
@@ -24,11 +24,11 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
         this.businessType = businessType;
     }
 
-    public String getStatus() {
+    public ParticipantStatusResource getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ParticipantStatusResource status) {
         this.status = status;
     }
 
