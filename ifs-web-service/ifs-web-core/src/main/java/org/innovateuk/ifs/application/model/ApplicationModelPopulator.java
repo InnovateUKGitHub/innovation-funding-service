@@ -154,7 +154,7 @@ public class ApplicationModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
     }
 

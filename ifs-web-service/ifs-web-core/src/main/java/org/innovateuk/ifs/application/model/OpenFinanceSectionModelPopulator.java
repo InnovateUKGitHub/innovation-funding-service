@@ -299,7 +299,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .findFirst();
     }
 }

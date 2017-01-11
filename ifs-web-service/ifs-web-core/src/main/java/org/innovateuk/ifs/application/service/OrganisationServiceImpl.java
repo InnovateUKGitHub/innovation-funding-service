@@ -72,8 +72,8 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Override
     public String getOrganisationType(Long userId, Long applicationId) {
         final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
-        if (processRoleResource != null && processRoleResource.getOrganisation() != null) {
-            final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisation()).getSuccessObjectOrThrowException();
+        if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
+            final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccessObjectOrThrowException();
             return organisationResource.getOrganisationTypeName();
         }
         return "";
@@ -83,7 +83,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     public Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .findFirst();
     }
 }

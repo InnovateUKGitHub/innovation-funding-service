@@ -55,6 +55,6 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
     }
 
     public ProcessRoleResourceBuilder withOrganisation(Long... organisations) {
-        return withArray((organisation, processRoleResource) -> setField("organisation", organisation, processRoleResource), organisations);
+        return withArray((organisation, processRoleResource) -> setField("organisationId", organisation, processRoleResource), organisations);
     }
 }

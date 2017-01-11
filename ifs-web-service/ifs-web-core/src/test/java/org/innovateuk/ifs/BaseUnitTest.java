@@ -495,9 +495,9 @@ public class BaseUnitTest {
     }
 
     public void setupUserRoles() {
-        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName(), null);
+        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName());
         assessorRole.setUrl("assessor/dashboard");
-        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName(), null);
+        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName());
         applicantRole.setUrl("applicant/dashboard");
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
@@ -594,7 +594,7 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
 
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication()))));
+        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
