@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -36,8 +38,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.AjaxResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
@@ -62,7 +62,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
@@ -74,9 +76,6 @@ import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -189,7 +188,7 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
         organisationDetailsModelPopulator.populateModel(model, applicationId);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
         return APPLICATION_FORM;
     }
 
@@ -226,16 +225,22 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        if (FINANCE.equals(section.getType())) {
-            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-        } else {
-            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
-        }
-
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+        populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
 
         return APPLICATION_FORM;
     }
+
+    private void populateSection(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long applicationId, HttpServletRequest request) {
+        if(SectionType.GENERAL.equals(section.getType())
+                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
+            openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        } else {
+            openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+        }
+
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
+    }
+
 
     private void addFormAttributes(ApplicationResource application,
                                    CompetitionResource competition,
@@ -324,7 +329,7 @@ public class ApplicationFormController {
                 model.addAttribute("currentUser", user);
                 applicationModelPopulator.addUserDetails(model, application, user.getId());
                 applicationNavigationPopulator.addNavigation(question, applicationId, model);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -643,11 +648,16 @@ public class ApplicationFormController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
 
-        if (section.getType() == SectionType.FINANCE &&
+        if (section.getType() == SectionType.FUNDING_FINANCES &&
                 !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
-            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+            return APPLICATION_FORM;
+        } else if (section.getType() == SectionType.PROJECT_COST_FINANCES &&
+                !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         }
 
@@ -665,8 +675,7 @@ public class ApplicationFormController {
 
         if(saveApplicationErrors.hasErrors()){
             validationHandler.addAnyErrors(saveApplicationErrors);
-            setReturnToApplicationFormData(section, application, competition, user, model, form, applicationId);
-            applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model);
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);
@@ -692,7 +701,17 @@ public class ApplicationFormController {
                 bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
                 return false;
-            } else if (!form.isStateAidAgreed()) {
+            }
+        }
+        return true;
+    }
+
+    private boolean validStateAidForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
+                                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
+                                                       CompetitionResource competition, UserResource user, Model model
+    ) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+            if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 setReturnToApplicationFormData(section, application, competition, user, model, form, application.getId());
                 return false;
@@ -1072,5 +1091,18 @@ public class ApplicationFormController {
     	public Long getFieldId() {
 			return fieldId;
 		}
+    }
+
+
+    @ProfileExecution
+    @RequestMapping(value = "/{sectionType}", method = RequestMethod.GET)
+    public String redirectToSection(@PathVariable("sectionType") SectionType type,
+                                    @PathVariable(APPLICATION_ID) Long applicationId) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), type);
+        if (sections.size() == 1) {
+            return "redirect:/application/" + applicationId + "/form/section/" + sections.get(0).getId();
+        }
+        return "redirect:/application/" + applicationId;
     }
 }
