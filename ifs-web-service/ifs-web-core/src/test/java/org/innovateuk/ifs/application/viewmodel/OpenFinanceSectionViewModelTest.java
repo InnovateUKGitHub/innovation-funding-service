@@ -37,7 +37,7 @@ public class OpenFinanceSectionViewModelTest {
         currentUser = newUserResource().build();
         sectionsMarkedAsComplete = Sets.newSet(1L, 2L);
 
-        viewModel = new OpenFinanceSectionViewModel(navigationViewModel, currentSection, Boolean.TRUE, sectionId, currentUser, true, sectionsMarkedAsComplete);
+        viewModel = new OpenFinanceSectionViewModel(navigationViewModel, currentSection, Boolean.TRUE, sectionId, currentUser, true);
 
         viewModel.setTitle("Title");
         viewModel.setCurrentSection(currentSection);

@@ -197,7 +197,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
         assertEquals(Boolean.TRUE, viewModel.getHasFinanceSection());
         assertEquals(currentSectionId, viewModel.getFinanceSectionId());
-        assertEquals(Boolean.FALSE, viewModel.getApplication().getAllReadOnly());
+        assertEquals(Boolean.TRUE, viewModel.getApplication().getAllReadOnly());
 
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
