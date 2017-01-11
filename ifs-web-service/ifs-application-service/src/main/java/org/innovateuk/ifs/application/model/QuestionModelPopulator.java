@@ -202,7 +202,7 @@ public class QuestionModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst().get();
     }
 
@@ -334,7 +334,7 @@ public class QuestionModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
     }
 }

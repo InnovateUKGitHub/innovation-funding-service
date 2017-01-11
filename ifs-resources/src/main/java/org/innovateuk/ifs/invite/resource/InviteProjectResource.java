@@ -21,7 +21,7 @@ public class InviteProjectResource extends InviteResource {
     private String projectName;
     private String hash;
     private InviteStatus status;
-    private String leadOrganisation;
+    private Long leadOrganisationId;
     private String organisationName;
     private String leadApplicant;
     private String competitionName;
@@ -95,12 +95,12 @@ public class InviteProjectResource extends InviteResource {
 
     public void setStatus(InviteStatus status) { this.status = status; }
 
-    public String getLeadOrganisation() {
-        return leadOrganisation;
+    public Long getLeadOrganisationId() {
+        return leadOrganisationId;
     }
 
-    public void setLeadOrganisation(String leadOrganisation) {
-        this.leadOrganisation = leadOrganisation;
+    public void setLeadOrganisationId(Long leadOrganisationId) {
+        this.leadOrganisationId = leadOrganisationId;
     }
 
     public String getOrganisationName() {
@@ -147,7 +147,7 @@ public class InviteProjectResource extends InviteResource {
                 .append(projectName, that.projectName)
                 .append(hash, that.hash)
                 .append(status, that.status)
-                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadOrganisationId, that.leadOrganisationId)
                 .append(organisationName, that.organisationName)
                 .append(leadApplicant, that.leadApplicant)
                 .append(competitionName, that.competitionName)
@@ -168,7 +168,7 @@ public class InviteProjectResource extends InviteResource {
                 .append(projectName)
                 .append(hash)
                 .append(status)
-                .append(leadOrganisation)
+                .append(leadOrganisationId)
                 .append(organisationName)
                 .append(leadApplicant)
                 .append(competitionName)
@@ -189,7 +189,7 @@ public class InviteProjectResource extends InviteResource {
                 .append("projectName", projectName)
                 .append("hash", hash)
                 .append("status", status)
-                .append("leadOrganisation", leadOrganisation)
+                .append("leadOrganisationId", leadOrganisationId)
                 .append("organisationName", organisationName)
                 .append("leadApplicant", leadApplicant)
                 .append("competitionName", competitionName)

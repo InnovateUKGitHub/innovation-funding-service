@@ -517,7 +517,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -553,7 +553,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -584,7 +584,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -615,7 +615,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();

@@ -30,7 +30,7 @@ public abstract class ApplicationInviteMapper extends BaseMapper<ApplicationInvi
     @Mappings({
             @Mapping(source = "target.competition.name", target = "competitionName"),
             @Mapping(source = "target.competition.id", target = "competitionId"),
-            @Mapping(source = "target.leadOrganisationId", target = "leadOrganisation"),
+            @Mapping(source = "target.leadOrganisationId", target = "leadOrganisationId"),
             @Mapping(source = "target.leadApplicant.name", target = "leadApplicant"),
             @Mapping(source = "target.leadApplicant.email", target = "leadApplicantEmail"),
             @Mapping(source = "target.name", target = "applicationName"),

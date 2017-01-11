@@ -31,7 +31,7 @@ public class UserResource {
     private Gender gender;
     private Disability disability;
     private Long ethnicity;
-    private Long profile;
+    private Long profileId;
 
     public UserResource() {
         // no-arg constructor
@@ -180,12 +180,12 @@ public class UserResource {
         this.ethnicity = ethnicity;
     }
 
-    public Long getProfile() {
-        return profile;
+    public Long getProfileId() {
+        return profileId;
     }
 
-    public void setProfile(Long profile) {
-        this.profile = profile;
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 
     @Override
@@ -216,7 +216,7 @@ public class UserResource {
                 .append(gender, that.gender)
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
-                .append(profile, that.profile)
+                .append(profileId, that.profileId)
                 .isEquals();
     }
 
@@ -238,7 +238,7 @@ public class UserResource {
                 .append(gender)
                 .append(disability)
                 .append(ethnicity)
-                .append(profile)
+                .append(profileId)
                 .toHashCode();
     }
 }

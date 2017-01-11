@@ -96,16 +96,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     public UserResourceBuilder withProfile(Long... profiles) {
-        return withArray((profile, user) -> setField("profile", profile, user), profiles);
-    }
-
-    @SafeVarargs
-    public final UserResourceBuilder withProcessRoles(List<Long>... processRoles) {
-        return withArray((processRoleList, user) -> user.setProcessRoles(processRoleList), processRoles);
-    }
-
-    @SafeVarargs
-    public final UserResourceBuilder withOrganisations(List<Long>... organisationIds) {
-        return withArray((organisationIdList, user) -> user.setOrganisations(organisationIdList), organisationIds);
+        return withArray((profile, user) -> setField("profileId", profile, user), profiles);
     }
 }
