@@ -42,7 +42,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
-import static org.innovateuk.ifs.application.resource.SectionType.ORGANISATION_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -205,8 +204,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
-        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
+        Set<Long> sectionsMarkedAsComplete = convertToCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
         boolean hasFinanceSection = false;
         Long financeSectionId = null;
@@ -215,7 +213,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
             financeSectionId = financeSections.get(0).getId();
         }
 
-        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, ORGANISATION_FINANCES);
+        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, FINANCE);
         Long eachCollaboratorFinanceSectionId;
         if(eachOrganisationFinanceSections.isEmpty()) {
             eachCollaboratorFinanceSectionId = null;
@@ -232,6 +230,15 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         openSectionViewModel.setEachCollaboratorFinanceSectionId(eachCollaboratorFinanceSectionId);
     }
 
+    private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
+        Set<Long> combinedMarkedAsComplete = new HashSet<>();
+
+        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));
+        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
+
+        return combinedMarkedAsComplete;
+    }
+    
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
         return simpleFilter(list, s -> type.equals(s.getType()));
     }

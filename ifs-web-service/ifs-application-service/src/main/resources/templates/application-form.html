@@ -67,7 +67,7 @@
                                     <th:block th:if="${model.isFinanceOverview}">
                                         <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
                                                 currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
-                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations})">
+                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
                                             <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
                                         </th:block>
                                     </th:block>
