@@ -18,7 +18,7 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}" th:remove="tag" />
 
     <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
-      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
+      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard?action=notify'} + ${(param.comp != null ? '&#38;status=' + param.comp[0] : '')})" th:remove="tag" />
     </th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -125,8 +125,8 @@
           <div class="form-group no-margin">
             <fieldset class="alignleft select-all-applications">
               <legend class="visuallyhidden">Select applications</legend>
-              <label for="select-all">
-                <input class="select-all" value="select-all" type="checkbox" />
+              <label for="select-all-1">
+                <input class="select-all" id="select-all-1" value="select-all" type="checkbox" />
                 Select all applications
               </label>
             </fieldset>
@@ -250,8 +250,8 @@
           <div class="form-group no-margin">
             <fieldset class="alignleft select-all-applications">
               <legend class="visuallyhidden">Select applications</legend>
-              <label for="select-all">
-                <input class="select-all" value="select-all" type="checkbox" />
+              <label for="select-all-2">
+                <input class="select-all" id="select-all-2" value="select-all" type="checkbox" />
                 Select all applications
               </label>
             </fieldset>
