@@ -932,10 +932,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, null);
 
         assertTrue(result.isFailure());
-        
+
         assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
     }
+
 
     @Test
     public void testAcceptOrRejectOtherDocumentsAlreadyApprovedError() {
@@ -970,6 +971,26 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(result.isSuccess());
 
         assertEquals(ApprovalType.APPROVED, projectInDB.getOtherDocumentsApproved());
+        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsRejectSuccess() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, false);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(ApprovalType.REJECTED, projectInDB.getOtherDocumentsApproved());
+        assertEquals(null, projectInDB.getDocumentsSubmittedDate());
         verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
 
     }
@@ -1116,7 +1137,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsImcomplete() {
+    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsIncomplete() {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
                 .withUser(newUser().withId(1L).build())

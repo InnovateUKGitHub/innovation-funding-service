@@ -204,7 +204,6 @@ public class ProjectOtherDocumentsController {
         List<String> rejectionReasons = emptyList();
 
         boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
-        boolean approvalDecisionMade =  project.getOtherDocumentsApproved() != null;
         ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
@@ -212,7 +211,7 @@ public class ProjectOtherDocumentsController {
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
                 leadPartner, isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
-                approvalDecisionMade, isSubmitAllowed, project.getDocumentsSubmittedDate());
+                isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

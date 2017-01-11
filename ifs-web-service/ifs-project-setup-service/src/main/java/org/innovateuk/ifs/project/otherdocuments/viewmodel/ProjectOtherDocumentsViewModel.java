@@ -37,7 +37,6 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
                                           boolean projectManager,
                                           boolean otherDocumentsSubmitted,
                                           ApprovalType otherDocumentsApproved,
-                                          boolean approvalDecisionMade,
                                           boolean submitAllowed,
                                           LocalDateTime submitDate) {
         this.projectId = projectId;
@@ -49,7 +48,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.rejectionReasons = rejectionReasons;
         this.approved = otherDocumentsApproved;
-        this.approvalDecisionMade = approvalDecisionMade;
+        this.approvalDecisionMade = !ApprovalType.UNSET.equals(otherDocumentsApproved);
         this.leadPartner = leadPartner;
         this.projectManager = projectManager;
         this.submitAllowed = submitAllowed;
@@ -85,13 +84,15 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return leadPartner && !otherDocumentsSubmitted && !ApprovalType.APPROVED.equals(approved);
     }
 
+    public boolean isApproved() { return leadPartner && ApprovalType.APPROVED.equals(approved); }
+
     public boolean isRejected() { return leadPartner && ApprovalType.REJECTED.equals(approved); }
 
     public boolean isShowSubmitDocumentsButton() {
         return projectManager && !otherDocumentsSubmitted && submitAllowed && !isRejected();
     }
 
-    public boolean isShowDisabledSubmitDocumentsButton() { return projectManager && !otherDocumentsSubmitted && !submitAllowed  || isRejected(); }
+    public boolean isShowDisabledSubmitDocumentsButton() { return (projectManager && !otherDocumentsSubmitted && !submitAllowed)  || isRejected(); }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();
