@@ -8,6 +8,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -204,7 +205,7 @@ public class ProjectOtherDocumentsController {
 
         boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
         boolean approvalDecisionMade =  project.getOtherDocumentsApproved() != null;
-        boolean otherDocumentsApproved = approvalDecisionMade && project.getOtherDocumentsApproved();
+        ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
 
         return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),

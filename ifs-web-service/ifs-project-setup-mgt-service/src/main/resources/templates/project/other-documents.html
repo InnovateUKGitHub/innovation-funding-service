@@ -25,11 +25,11 @@
                 <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
             </ul>
         </div>
-        <div class="success-alert" th:if="${model.approved == true}">
+        <div class="success-alert" th:if="${model.isApproved()}">
             <p class="heading-small no-margin-top">The documents provided have been approved.</p>
         </div>
 
-        <div class="warning-alert" th:if="${model.approved == false}">
+        <div class="warning-alert" th:if="${model.isRejected()}">
             <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
         </div>
 
@@ -63,7 +63,7 @@
              class="uploaded-file"
              th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
 
-            <th:block th:unless="${model.isShowApproveRejectButtons()}">
+            <th:block th:if="${model.isShowApproveRejectButtons()}">
                 <h2 class="heading-medium">Review documents</h2>
                 <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
                 <button data-js-modal="modal-accept-docs" class="button large">Accept documents</button>

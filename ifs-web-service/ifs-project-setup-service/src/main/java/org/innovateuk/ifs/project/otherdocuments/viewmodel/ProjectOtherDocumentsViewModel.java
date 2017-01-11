@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.viewmodel.BasicProjectDetailsViewModel;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private List<String> partnerOrganisationNames;
     private List<String> rejectionReasons;
     private boolean approvalDecisionMade;
-    private boolean approved;
+    private ApprovalType approved;
     private boolean leadPartner;
     private boolean projectManager;
     private boolean submitAllowed;
@@ -35,7 +36,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
                                           boolean leadPartner,
                                           boolean projectManager,
                                           boolean otherDocumentsSubmitted,
-                                          boolean otherDocumentsApproved,
+                                          ApprovalType otherDocumentsApproved,
                                           boolean approvalDecisionMade,
                                           boolean submitAllowed,
                                           LocalDateTime submitDate) {
@@ -81,21 +82,23 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isEditable() {
-        return leadPartner && !otherDocumentsSubmitted && !approvalDecisionMade;
+        return leadPartner && !otherDocumentsSubmitted && !ApprovalType.APPROVED.equals(approved);
     }
+
+    public boolean isRejected() { return leadPartner && ApprovalType.REJECTED.equals(approved); }
 
     public boolean isShowSubmitDocumentsButton() {
-        return projectManager && !otherDocumentsSubmitted && submitAllowed;
+        return projectManager && !otherDocumentsSubmitted && submitAllowed && !isRejected();
     }
 
-    public boolean isShowDisabledSubmitDocumentsButton() { return projectManager && !otherDocumentsSubmitted && !submitAllowed; }
+    public boolean isShowDisabledSubmitDocumentsButton() { return projectManager && !otherDocumentsSubmitted && !submitAllowed  || isRejected(); }
 
     public boolean isShowRejectionMessages() {
         return !rejectionReasons.isEmpty();
     }
 
     public boolean isShowGenericRejectionMessage() {
-        return !isShowRejectionMessages() && approvalDecisionMade && !approved;
+        return !isShowRejectionMessages() && approvalDecisionMade && ApprovalType.REJECTED.equals(approved);
     }
 
     public List<String> getRejectionReasons() {
@@ -103,7 +106,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isShowApprovedMessage() {
-        return approvalDecisionMade && approved;
+        return approvalDecisionMade && ApprovalType.APPROVED.equals(approved);
     }
 
     public boolean isLeadPartner(){

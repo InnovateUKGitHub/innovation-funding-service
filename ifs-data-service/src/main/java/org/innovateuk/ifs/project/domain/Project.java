@@ -7,10 +7,12 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -77,7 +80,9 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    private Boolean otherDocumentsApproved;
+    @NotNull
+    @Enumerated(STRING)
+    private ApprovalType otherDocumentsApproved;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
@@ -85,7 +90,8 @@ public class Project implements ProcessActivity {
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-                   Long durationInMonths, String name, LocalDateTime documentsSubmittedDate) {
+                   Long durationInMonths, String name, LocalDateTime documentsSubmittedDate,
+                   ApprovalType otherDocumentsApproved) {
 
         this.id = id;
         this.application = application;
@@ -94,6 +100,7 @@ public class Project implements ProcessActivity {
         this.durationInMonths = durationInMonths;
         this.name = name;
         this.documentsSubmittedDate = documentsSubmittedDate;
+        this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
     public void addProjectUser(ProjectUser projectUser) {
@@ -260,11 +267,11 @@ public class Project implements ProcessActivity {
         this.grantOfferLetter = grantOfferLetter;
     }
 
-    public Boolean getOtherDocumentsApproved() {
+    public ApprovalType getOtherDocumentsApproved() {
         return otherDocumentsApproved;
     }
 
-    public void setOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+    public void setOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
         this.otherDocumentsApproved = otherDocumentsApproved;
     }
 

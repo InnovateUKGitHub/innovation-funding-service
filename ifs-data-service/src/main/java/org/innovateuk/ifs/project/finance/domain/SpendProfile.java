@@ -51,7 +51,6 @@ public class SpendProfile {
 
     private boolean markedAsComplete;
 
-    @NotNull
     @Enumerated(STRING)
     private ApprovalType approval;
 

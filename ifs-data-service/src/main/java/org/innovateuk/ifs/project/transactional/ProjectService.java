@@ -125,7 +125,7 @@ public interface ProjectService {
     ServiceResult<Void> deleteExploitationPlanFile(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ACCEPT_REJECT_OTHER_DOCUMENTS')")
-    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
+    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ADD_PARTNER",
