@@ -125,7 +125,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
     public ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(Long projectId) {
         Project project = projectRepository.findOne(projectId);
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisation());
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
         List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
         bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
         List<Organisation> organisations = simpleFilter(projectUsersHelper.getPartnerOrganisations(projectId), org -> !org.getId().equals(leadOrganisation.getId()));

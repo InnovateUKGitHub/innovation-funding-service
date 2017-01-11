@@ -52,11 +52,11 @@ public class ProcessRole {
         return user;
     }
     @JsonIgnore
-    public Long getApplication() {
+    public Long getApplicationId() {
         return applicationId;
     }
 
-    public Long getOrganisation() {
+    public Long getOrganisationId() {
         return organisationId;
     }
 
@@ -68,11 +68,11 @@ public class ProcessRole {
         this.role = role;
     }
 
-    public void setApplication(Long applicationId) {
+    public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
     }
 
-    public void setOrganisation(Long organisationId) {
+    public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
     }
 

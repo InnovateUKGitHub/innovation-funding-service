@@ -226,11 +226,11 @@ public class User implements Serializable {
         this.ethnicity = ethnicity;
     }
 
-    public Long getProfile() {
+    public Long getProfileId() {
         return profileId;
     }
 
-    public void setProfile(Long profileId) {
+    public void setProfileId(Long profileId) {
         this.profileId = profileId;
     }
 

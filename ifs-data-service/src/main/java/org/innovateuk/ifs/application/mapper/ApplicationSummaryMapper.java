@@ -54,7 +54,7 @@ public abstract class ApplicationSummaryMapper {
         }
 
 		ProcessRole leadProcessRole = source.getLeadApplicantProcessRole();
-		Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisation());
+		Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
         if(leadOrganisation!=null) {
             result.setLead(leadOrganisation.getName());
         }
@@ -69,7 +69,7 @@ public abstract class ApplicationSummaryMapper {
 		BigDecimal grantRequested = getGrantRequested(source);
 		result.setGrantRequested(grantRequested);
 
-		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size();
+		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisationId)).size();
 		result.setNumberOfPartners(numberOfPartners);
 
 		BigDecimal totalProjectCost = getTotalProjectCost(source);

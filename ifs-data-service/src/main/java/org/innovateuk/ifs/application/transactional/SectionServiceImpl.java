@@ -84,7 +84,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                         p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
                 )
                 .map(processRole -> {
-                    return organisationRepository.findOne(processRole.getOrganisation());
+                    return organisationRepository.findOne(processRole.getOrganisationId());
                 }).collect(toList());
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
         for (Organisation organisation : organisations) {

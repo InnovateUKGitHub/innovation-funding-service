@@ -184,7 +184,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     availableAssessor.setEmail(assessor.getEmail());
                     availableAssessor.setName(assessor.getName());
                     availableAssessor.setBusinessType(getBusinessType(assessor));
-                    Profile profile = profileRepository.findOne(assessor.getProfile());
+                    Profile profile = profileRepository.findOne(assessor.getProfileId());
                     availableAssessor.setCompliant(profile.isCompliant(assessor));
                     availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
                     // TODO INFUND-6865 Users should have innovation areas
@@ -215,7 +215,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private BusinessType getBusinessType(User assessor) {
-        Profile profile = profileRepository.findOne(assessor.getProfile());
+        Profile profile = profileRepository.findOne(assessor.getProfileId());
         return (profile != null) ? profile.getBusinessType() : null;
     }
 
@@ -359,8 +359,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private boolean isUserCompliant(CompetitionInvite competitionInvite) {
-        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfile());
-        return competitionInvite.getUser() != null && profile.isCompliant(competitionInvite.getUser());
+        if (competitionInvite.getUser() == null) {
+            return false;
+        }
+        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
+        return profile.isCompliant(competitionInvite.getUser());
     }
 
     private CategoryResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {

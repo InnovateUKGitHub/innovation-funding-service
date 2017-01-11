@@ -180,7 +180,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         }
         ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
-        Organisation organisation = organisationRepository.findOne(leadRole.getOrganisation());
+        Organisation organisation = organisationRepository.findOne(leadRole.getOrganisationId());
         notificationArguments.put("leadOrganisation", organisation.getName());
         notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
 

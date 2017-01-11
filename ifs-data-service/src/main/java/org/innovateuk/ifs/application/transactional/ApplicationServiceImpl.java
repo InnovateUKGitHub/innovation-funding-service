@@ -122,7 +122,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
 
             Long userOrganisation = usersProcessRoles.size() != 0
-                    ? usersProcessRoles.get(0).getOrganisation()
+                    ? usersProcessRoles.get(0).getOrganisationId()
                     : usersOrganisations.get(0).getId();
 
             ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisation);
@@ -319,7 +319,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
             List<Application> applications = simpleMap(roles, processRole -> {
-                Long appId = processRole.getApplication();
+                Long appId = processRole.getApplicationId();
                 return applicationRepository.findOne(appId);
             });
             return applicationsToResources(applications);
@@ -418,7 +418,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole -> {
-            Long appId = processRole.getApplication();
+            Long appId = processRole.getApplicationId();
             Application application = applicationRepository.findOne(appId);
             return applicationMapper.mapToResource(application);
         });
@@ -478,7 +478,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
 					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
                 .map(processRole -> {
-                    return organisationRepository.findOne(processRole.getOrganisation());
+                    return organisationRepository.findOne(processRole.getOrganisationId());
                 }).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()

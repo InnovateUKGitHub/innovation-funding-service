@@ -157,7 +157,7 @@ public class ApplicationDownloadController {
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 
             ProcessRole leadRole = a.getLeadApplicantProcessRole();
-            Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisation());
+            Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
 
             // ADD APPLICATION ROW
             cellCount = 0;
@@ -169,7 +169,7 @@ public class ApplicationDownloadController {
             row = createCellWithValue(row, a.getLeadApplicant().getLastName());
             row = createCellWithValue(row, a.getLeadApplicant().getEmail());
             row = createCellWithValue(row, a.getDurationInMonths().toString());
-            row = createCellWithValue(row, String.valueOf(a.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size()));
+            row = createCellWithValue(row, String.valueOf(a.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisationId)).size()));
             row = createCellWithValue(row, projectSummaryString);
             row = createCellWithValue(row, totalFormatted);
             row = createCellWithValue(row, fundingSoughtFormatted);

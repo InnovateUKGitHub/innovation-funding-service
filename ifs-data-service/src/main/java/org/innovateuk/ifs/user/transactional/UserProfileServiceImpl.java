@@ -71,7 +71,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
                 .andOnSuccess(user -> {
                     ProfileSkillsResource profileSkills = new ProfileSkillsResource();
                     profileSkills.setUser(user.getId());
-                    Profile profile = profileRepository.findOne(user.getProfile());
+                    Profile profile = profileRepository.findOne(user.getProfileId());
                     if (profile != null) {
                         profileSkills.setBusinessType(profile.getBusinessType());
                         profileSkills.setSkillsAreas(profile.getSkillsAreas());
@@ -88,7 +88,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsResource profileSkills) {
         setUserProfileIfNoneExists(user);
-        Profile profile = profileRepository.findOne(user.getProfile());
+        Profile profile = profileRepository.findOne(user.getProfileId());
 
         profile.setBusinessType(profileSkills.getBusinessType());
         profile.setSkillsAreas(profileSkills.getSkillsAreas());
@@ -103,7 +103,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user ->
                         getCurrentContract().andOnSuccess(currentContract -> {
-                            Profile profile = profileRepository.findOne(user.getProfile());
+                            Profile profile = profileRepository.findOne(user.getProfileId());
                             boolean hasAgreement = profile != null && profile.getContract() != null;
                             boolean hasCurrentAgreement = hasAgreement && currentContract.getId().equals(profile.getContract().getId());
                             ProfileContractResource profileContract = new ProfileContractResource();
@@ -125,7 +125,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
                     setUserProfileIfNoneExists(user);
                     return getCurrentContract().andOnSuccess(currentContract ->
                             validateContract(currentContract, user).andOnSuccess(() -> {
-                                Profile profile = profileRepository.findOne(user.getProfile());
+                                Profile profile = profileRepository.findOne(user.getProfileId());
                                 profile.setContractSignedDate(LocalDateTime.now(clock));
                                 profile.setContract(currentContract);
                                 profileRepository.save(profile);
@@ -172,8 +172,8 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
                 .andOnSuccess(user -> {
                     UserProfileResource profileDetails = assignUserProfileDetails(user);
 
-                    if (user.getProfile() != null) {
-                        Profile profile = profileRepository.findOne(user.getProfile());
+                    if (user.getProfileId() != null) {
+                        Profile profile = profileRepository.findOne(user.getProfileId());
                         profileDetails.setAddress(addressMapper.mapToResource(profile.getAddress()));
                     }
                     return serviceSuccess(profileDetails);
@@ -191,9 +191,9 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
         setUserProfileIfNoneExists(user);
 
-        Profile profile = profileRepository.findOne(user.getProfile());
+        Profile profile = profileRepository.findOne(user.getProfileId());
         profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
-        userRepository.save(user);
+        profileRepository.save(profile);
 
         return serviceSuccess();
     }
@@ -231,7 +231,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<UserProfileStatusResource> getProfileStatusForUser(User user) {
-        Profile profile = profileRepository.findOne(user.getProfile());
+        Profile profile = profileRepository.findOne(user.getProfileId());
         return serviceSuccess(
                 new UserProfileStatusResource(
                         user.getId(),
@@ -255,19 +255,19 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> validateContract(Contract contract, User user) {
-        Profile profile = profileRepository.findOne(user.getProfile());
+        Profile profile = profileRepository.findOne(user.getProfileId());
         if (profile.getContract() != null && contract.getId().equals(profile.getContract().getId())) {
             return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
         }
         return serviceSuccess();
     }
 
-
     private void setUserProfileIfNoneExists(User user) {
-        Profile profile = profileRepository.findOne(user.getProfile());
+        Profile profile = user.getProfileId() != null ? profileRepository.findOne(user.getProfileId()) : null;
         if (profile == null) {
-            profile = new Profile();
-            user.setProfile(profile.getId());
+            profile = profileRepository.save(new Profile());
+            user.setProfileId(profile.getId());
+            userRepository.save(user);
         }
     }
 

@@ -240,7 +240,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisation());
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
 
         Map<String, Object> templateReplacements = new HashMap<>();
         List<String> addresses = getAddresses(project);

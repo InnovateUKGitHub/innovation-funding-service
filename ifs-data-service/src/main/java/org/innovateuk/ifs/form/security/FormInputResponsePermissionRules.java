@@ -120,7 +120,7 @@ public class FormInputResponsePermissionRules {
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
-        final Long organisationId = processRoleRepository.findOne(response.getUpdatedBy()).getOrganisation();
+        final Long organisationId = processRoleRepository.findOne(response.getUpdatedBy()).getOrganisationId();
         final Long applicationId = response.getApplication();
         return checkProcessRole(user, applicationId, organisationId, userRoleType, roleRepository, processRoleRepository);
     }

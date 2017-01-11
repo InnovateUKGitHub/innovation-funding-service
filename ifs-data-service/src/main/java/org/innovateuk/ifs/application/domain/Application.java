@@ -205,12 +205,10 @@ public class Application implements ProcessActivity {
         return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
     }
 
-/*
     @JsonIgnore
-    public Organisation getLeadOrganisation(){
-        return getLeadProcessRole().map(role -> role.getOrganisation()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
-*/
 
     @JsonIgnore
     public List<ApplicationInvite> getInvites() {

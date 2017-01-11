@@ -82,7 +82,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisation());
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
 
         return new ProjectStatusResource(
                 project.getName(),

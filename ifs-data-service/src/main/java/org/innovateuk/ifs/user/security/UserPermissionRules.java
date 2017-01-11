@@ -140,7 +140,7 @@ public class UserPermissionRules {
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
         return simpleMap(applicableProcessRoles, processRole -> {
-            return applicationRepository.findOne(processRole.getApplication());
+            return applicationRepository.findOne(processRole.getApplicationId());
         });
     }
 
