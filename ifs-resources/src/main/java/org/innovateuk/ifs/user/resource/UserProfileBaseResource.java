@@ -131,10 +131,6 @@ public abstract class UserProfileBaseResource {
         this.email = email;
     }
 
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
