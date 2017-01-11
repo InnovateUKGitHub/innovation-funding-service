@@ -82,7 +82,7 @@ public class Project implements ProcessActivity {
 
     @NotNull
     @Enumerated(STRING)
-    private ApprovalType otherDocumentsApproved;
+    private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SpendProfile> spendProfiles;
