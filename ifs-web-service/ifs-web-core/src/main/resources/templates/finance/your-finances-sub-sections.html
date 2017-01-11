@@ -27,13 +27,12 @@
             </details>
 
 
-            <ul class="list-overview extra-margin">
+            <ul class="list-overview extra-margin extra-margin-bottom">
                 <th:block th:each="subSection : ${subSections.get(currentSection.id)}">
-                    <div th:include="fragments/sections :: finance_sub_section_row" th:remove="tag"/>
+                    <div th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
                 </th:block>
             </ul>
 
-            <div class="extra-margin"></div>
         </th:block>
     </div>
 
