@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 /**
@@ -8,10 +9,10 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private BusinessType businessType;
-    private String status;
+    private ParticipantStatusResource status;
     private String details;
 
-    public OverviewAssessorRowViewModel(String name, String innovationArea, boolean compliant, BusinessType businessType, String status, String details) {
+    public OverviewAssessorRowViewModel(String name, String innovationArea, boolean compliant, BusinessType businessType, ParticipantStatusResource status, String details) {
         super(name, innovationArea, compliant);
         this.businessType = businessType;
         this.status = status;
@@ -22,7 +23,7 @@ public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
         return businessType;
     }
 
-    public String getStatus() {
+    public ParticipantStatusResource getStatus() {
         return status;
     }
 

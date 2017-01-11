@@ -12,6 +12,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -58,8 +59,21 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
     @Autowired
     private CsrfTokenService tokenService;
 
-    private AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
-    private final RequestMatcher requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher();
+    private boolean enableDevTools;
+
+    @Value("${ifsEnableDevTools:false}")
+    public void setEnableDevTools(boolean enableDevTools) {
+        this.enableDevTools = enableDevTools;
+    }
+
+    private AccessDeniedHandler accessDeniedHandler;
+    private RequestMatcher requireCsrfProtectionMatcher;
+
+    @PostConstruct
+    protected void init() {
+        accessDeniedHandler = new AccessDeniedHandlerImpl();
+        requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher(enableDevTools);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -117,25 +131,33 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         return cookie;
     }
 
+    /**
+     * Set the AccessDeniedHandler for testing
+     */
     protected void setAccessDeniedHandler(AccessDeniedHandler accessDeniedHandler) {
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
     /**
-     * Allow Spring Dev Tools to bypass the need for a CSRF token.  This is based on
-     * partially matching the request URL and is a potential security vulnerability,
-     * so only enable this on a local development environment.
+     * Initialise the matcher for testing
      */
-    private static boolean enableDevTools;
-
-    @Value("${ifsEnableDevTools ?: false}")
-    public void setEnableDevTools(boolean enableDevTools) {
-        CsrfStatelessFilter.enableDevTools = enableDevTools;
+    protected void initProtectionMatcher() {
+        requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher(enableDevTools);
     }
 
     private static final class DefaultRequiresCsrfMatcher implements RequestMatcher {
 
+        private boolean enableDevTools;
         private final Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
+
+        /**
+         * @param enableDevTools Allow Spring Dev Tools to bypass the need for a CSRF token.  This is based on
+         *                       partially matching the request URL and is a potential security vulnerability,
+         *                       so only enable this on a local development environment.
+         */
+        public DefaultRequiresCsrfMatcher(boolean enableDevTools) {
+            this.enableDevTools = enableDevTools;
+        }
 
         /**
          * @return true if a CSRF token is required for the request method
