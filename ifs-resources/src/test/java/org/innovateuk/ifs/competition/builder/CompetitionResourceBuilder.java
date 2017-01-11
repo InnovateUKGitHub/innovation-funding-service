@@ -146,10 +146,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((activityCode, object) -> setField("activityCode", activityCode, object), activityCodes);
     }
 
-    public CompetitionResourceBuilder withInnovateBudget(String... innovateBudgets) {
-        return withArray((innovateBudget, object) -> setField("innovateBudget", innovateBudget, object), innovateBudgets);
-    }
-
     public CompetitionResourceBuilder withFunders(List<CompetitionFunderResource> fundersList) {
         return withList(fundersList, (funders, section) -> section.setFunders(fundersList));
     }

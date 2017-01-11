@@ -242,8 +242,7 @@ public class OrganisationCreationController {
         if (organisationForm.isOrganisationSearching()) {
             if (StringUtils.hasText(organisationForm.getOrganisationSearchName())) {
                 List<OrganisationSearchResult> searchResults;
-                String encodedSearchString = escapePathVariable(organisationForm.getOrganisationSearchName());
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), encodedSearchString)
+                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getOrganisationSearchName())
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s

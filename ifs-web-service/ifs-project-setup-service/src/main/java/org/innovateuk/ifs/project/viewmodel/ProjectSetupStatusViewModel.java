@@ -20,6 +20,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private String projectName;
     private Long applicationId;
     private String competitionName;
+    private Long competitionId;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
     private boolean hasCompanyHouse;
@@ -55,6 +56,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
+        this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
         this.hasCompanyHouse = !organisation.getCompanyHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
@@ -178,6 +180,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
                         && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
                         && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
                         && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.name());
+    }
 
+    public Long getCompetitionId() {
+        return competitionId;
     }
 }
