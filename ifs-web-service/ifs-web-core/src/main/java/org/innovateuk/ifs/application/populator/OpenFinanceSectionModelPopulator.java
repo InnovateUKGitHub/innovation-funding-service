@@ -172,7 +172,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         addSectionDetails(viewModel, section, inputs);
     }
 
-    //TODO remove usage of Model
+    //TODO - INFUND-7482 - remove usages of Model model
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
         Model model, ApplicationForm form) {
 

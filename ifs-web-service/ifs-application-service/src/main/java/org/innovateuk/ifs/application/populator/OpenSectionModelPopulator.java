@@ -251,7 +251,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         viewModel.setCompletedQuestionsPercentage(application.getCompletion());
     }
 
-    //TODO - remove usages of Model model
+    //TODO - INFUND-7482 - remove usages of Model model
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
                                                       Model model, ApplicationForm form, List<SectionResource> allSections) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
