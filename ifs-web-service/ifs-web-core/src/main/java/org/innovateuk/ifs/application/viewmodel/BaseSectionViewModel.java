@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Generic ViewModel for common fields in SectionViewModels
@@ -31,6 +32,7 @@ public abstract class BaseSectionViewModel {
     protected Map<Long, List<SectionResource>> subSections;
     protected Map<Long, List<QuestionResource>> subsectionQuestions;
     protected Map<Long, List<FormInputResource>> subSectionQuestionFormInputs;
+    protected Set<Long> sectionsMarkedAsComplete;
 
     protected SectionAssignableViewModel sectionAssignableViewModel;
     protected NavigationViewModel navigationViewModel;
@@ -219,5 +221,13 @@ public abstract class BaseSectionViewModel {
 
     public Boolean getIsSection() {
         return Boolean.TRUE;
+    }
+
+    public Set<Long> getSectionsMarkedAsComplete() {
+        return sectionsMarkedAsComplete;
+    }
+
+    public void setSectionsMarkedAsComplete(Set<Long> sectionsMarkedAsComplete) {
+        this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
     }
 }

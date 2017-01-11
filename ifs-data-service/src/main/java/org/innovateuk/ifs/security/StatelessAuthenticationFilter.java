@@ -1,5 +1,15 @@
 package org.innovateuk.ifs.security;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -10,15 +20,6 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.GenericFilterBean;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Configurable
@@ -89,6 +90,8 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         antPathRequestMatchers.add(new AntPathRequestMatcher("/user/passwordReset/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/registration/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/user/createLeadApplicantForOrganisation/**"));
+        /****** For Monitoring *******/
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/monitoring/**"));
         return new OrRequestMatcher(antPathRequestMatchers);
     }
 

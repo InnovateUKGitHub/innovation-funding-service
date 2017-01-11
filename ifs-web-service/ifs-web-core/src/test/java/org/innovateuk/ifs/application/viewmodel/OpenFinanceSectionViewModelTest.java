@@ -5,15 +5,17 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.util.collections.Sets;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.Set;
 
 import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenFinanceSectionViewModelTest {
@@ -26,14 +28,16 @@ public class OpenFinanceSectionViewModelTest {
     private SectionAssignableViewModel sectionAssignableViewModel;
     private NavigationViewModel navigationViewModel;
     private SectionApplicationViewModel applicationViewModel;
+    Set<Long> sectionsMarkedAsComplete;
 
     @Before
     public void setup() {
         currentSection = newSectionResource().withId(sectionId).build();
         navigationViewModel = new NavigationViewModel();
         currentUser = newUserResource().build();
+        sectionsMarkedAsComplete = Sets.newSet(1L, 2L);
 
-        viewModel = new OpenFinanceSectionViewModel(navigationViewModel, currentSection, Boolean.TRUE, sectionId, currentUser);
+        viewModel = new OpenFinanceSectionViewModel(navigationViewModel, currentSection, Boolean.TRUE, sectionId, currentUser, true, sectionsMarkedAsComplete);
 
         viewModel.setTitle("Title");
         viewModel.setCurrentSection(currentSection);
@@ -62,6 +66,8 @@ public class OpenFinanceSectionViewModelTest {
         assertEquals(navigationViewModel, viewModel.getNavigation());
         assertEquals(currentUser, viewModel.getCurrentUser());
         assertEquals(applicationViewModel, viewModel.getApplication());
+        assertEquals(true, viewModel.isSubFinanceSection());
+        assertEquals(sectionsMarkedAsComplete, viewModel.getSectionsMarkedAsComplete());
     }
 
     @Test

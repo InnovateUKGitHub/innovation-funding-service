@@ -10,7 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=${backURL}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" th:remove="tag" />
 
     <div th:include="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" th:remove="tag" />
       	<div class="page-title">
@@ -44,7 +44,7 @@
             </div>
 
 
-            <div th:if="${model.currentSection != null}" th:remove="tag">
+            <th:block th:if="${model.currentSection != null and model.sectionQuestions != null}">
                 <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
                 <th:block th:unless="${financeView != null}">
                     <div class="warning-alert">
@@ -83,25 +83,66 @@
                         </div>
                     </th:block>
                 </div>
-            </div>
+            </th:block>
 
-            <input type="hidden" id="application_id" th:value="${model.application.currentApplication.getId()}"/>
-            <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.getId()}"/>
+            <th:block th:if="${model.currentSection != null and model.currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
+                <ul th:if="${model.subSections != null and model.subSections.size() > 0}"
+                    class="list-overview">
+
+                    <li class="grid-row" th:classappend="section" th:each="subSection : ${model.subSections.get(model.currentSection.id)}">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">
+                                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id},sectionId=${subSection.id})}"
+                                   th:text="${subSection.name}"></a>
+                            </h3>
+                        </div>
+                        <img class="section-status complete"
+                             src="/images/field/field-done-right.png"
+                             th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
+                             width="30"
+                             height="30"
+                             th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
+                             th:title="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
+                             th:if="${model.sectionsMarkedAsComplete.contains(subSection.id)}"/>
+                        <img class="section-status assigned"
+                             src="/images/field/field-assigned-right.png"
+                             th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
+                             width="30"
+                             height="30"
+                             th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
+                             th:title="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
+                             th:unless="${model.sectionsMarkedAsComplete.contains(subSection.id)}"/>
+                    </li>
+                </ul>
+            </th:block>
+
+            <input type="hidden" id="application_id" th:value="${model.application.currentApplication.id}"/>
+            <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.id}"/>
             <div th:if="${model.application.allReadOnly}" th:remove="tag">
                 <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
             </div>
             <div th:unless="${model.application.allReadOnly}" th:remove="tag">
-                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+                <button th:unless="${model.currentSection != null and model.subFinanceSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </div>
             <th:block th:if="${(model.application.currentCompetition.isOpen())} and ${null != model.currentSection}">
                 <th:block th:with="currentSection=(${model.currentSection}), completedSections=(${model.completedSections})">
-                    <div th:if="${model.isYourFinancesAndNotCompleted}" >
+                    <th:block th:if="${#strings.equals(currentSection.getName(), 'Your project costs')}">
                         <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+                    </th:block>
+                    <th:block th:if="${#strings.equals(currentSection.getName(), 'Your funding')}">
                         <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+                    </th:block>
+                </th:block>
+                <th:block th:if="${model.subFinanceSection}">
+                    <div>
+                        <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
+                        <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="button"
+                                th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit</button>
                     </div>
-
-                    <div class="alignright-button" th:if="${model.isYourFinances}" >
-                        <div th:include="question-type/form-elements :: form-mark-all-as-complete-buttons" th:remove="tag"/>
+                    <div>
+                        <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}" class="button-secondary extra-margin">
+                            Return to finances
+                        </a>
                     </div>
                 </th:block>
             </th:block>

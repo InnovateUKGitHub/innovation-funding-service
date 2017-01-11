@@ -79,13 +79,14 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
         OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(section, application.getId()),
-                section, true, section.getId(), user);
+                section, true, section.getId(), user, isSubFinanceSection(section));
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition));
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition) || SectionType.FINANCE.equals(section.getType()));
         sectionApplicationViewModel.setCurrentApplication(application);
         sectionApplicationViewModel.setCurrentCompetition(competition);
 
+        addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
 
@@ -99,6 +100,11 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         return openFinanceSectionViewModel;
     }
 
+
+    private Boolean isSubFinanceSection(SectionResource section) {
+        return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
+    }
+
     private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
                                        CompetitionResource competition, Long userId, SectionResource section,
                                        ApplicationForm form, List<ProcessRoleResource> userApplicationRoles,
@@ -108,13 +114,18 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form = initializeApplicationForm(form);
         form.setApplication(application);
 
-        addQuestionsDetails(viewModel, application, form);
+        //Parent finance section has no assignable or question details.
+        if (!SectionType.FINANCE.equals(section.getType())) {
+            addQuestionsDetails(viewModel, application, form);
+        }
         addUserDetails(viewModel, application, userId);
         if(null != competition) {
             addMappedSectionsDetails(viewModel, application, competition, section, userOrganisation, allSections, inputs, singletonList(section));
         }
 
-        viewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
+        if (!SectionType.FINANCE.equals(section.getType())) {
+            viewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
+        }
         addCompletedDetails(sectionApplicationViewModel, application, userOrganisation);
 
         sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
@@ -167,9 +178,19 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                                             List<SectionResource> allSections) {
         List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
+        addSectionsMarkedAsComplete(viewModel, userApplicationRoles, userId, application);
         addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
 
         addSectionDetails(viewModel, section, inputs);
+    }
+
+    private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application) {
+        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
+
+        viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
     }
 
     //TODO remove usage of Model

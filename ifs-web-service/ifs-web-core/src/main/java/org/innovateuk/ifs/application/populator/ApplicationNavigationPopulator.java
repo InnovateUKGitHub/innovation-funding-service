@@ -98,15 +98,24 @@ public class ApplicationNavigationPopulator {
      * This method creates a URL looking at referer in request.  Because 'back' will be different depending on
      * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892)
      */
-    public void addAppropriateBackURLToModel(Long appId, HttpServletRequest request, Model model){
-        String backURL;
-        String referer = request.getHeader(REFERER);
-
-        if(referer != null && referer.contains("/application/" + appId + "/summary")){
-            backURL = referer;
+    public void addAppropriateBackURLToModel(Long appId, HttpServletRequest request, Model model, SectionResource section){
+        if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
+            model.addAttribute("backTitle", "Your finances");
+            model.addAttribute("backURL", "/application/" + appId + "/form/" + SectionType.FINANCE.name());
         } else {
-            backURL = "/application/" + appId;
+            model.addAttribute("backTitle", "Application Overview");
+            String backURL;
+            String referer = request.getHeader(REFERER);
+
+            if(referer != null && referer.contains("/application/" + appId + "/summary")){
+                backURL = referer;
+            } else {
+                backURL = "/application/" + appId;
+            }
+            model.addAttribute("backURL", backURL);
+
+
         }
-        model.addAttribute("backURL", backURL);
+
     }
 }
