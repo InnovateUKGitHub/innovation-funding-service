@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
@@ -40,11 +41,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -905,6 +909,33 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     }
 
+
+    @Test
+    public void testCannotSubmitDocumentsAlreadySubmitted() {
+
+        Long projectId = 1L;
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withId(1L).build())
+                .withRole(PROJECT_MANAGER)
+                .build();
+
+        List<ProjectUser> pu = Collections.singletonList(projectUserToSet);
+
+        Project projectInDB = newProject().withId(projectId).withProjectUsers(pu)
+                .withOtherDocumentsApproved(ApprovalType.UNSET).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(projectId, 1L);
+
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
+
+    }
+
     @Test
     public void testAcceptOrRejectOtherDocumentsWhenProjectNotInDB() {
 
@@ -1012,6 +1043,29 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertEquals(ApprovalType.APPROVED, projectInDB.getOtherDocumentsApproved());
         verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+
+    }
+
+    @Test
+    public void testUpdateDocumentsResetApproval() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        FileEntry entry = newFileEntry().build();
+        FileEntryResource entryResource = newFileEntryResource().build();
+        Supplier<InputStream> input = () -> null;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        ServiceResult<Pair<File, FileEntry>> successfulFileUpdateResult = serviceSuccess(Pair.of(new File("updatedfile"), entry));
+        when(fileServiceMock.updateFile(any(), any())).thenReturn(successfulFileUpdateResult);
+
+        ServiceResult<Void> result = service.updateCollaborationAgreementFileEntry(projectId, entryResource, input);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(ApprovalType.UNSET, projectInDB.getOtherDocumentsApproved());
+        verify(fileServiceMock).updateFile(entryResource, input);
 
     }
 
