@@ -187,3 +187,7 @@ include::bank-details.adoc[]
 [[processOutcome]]
 == ProcessOutcome
 include::processOutcome.adoc[]
+
+[[applicationCountSummary]]
+== ApplicationCountSummary
+include::applicationCountSummary.adoc[]
