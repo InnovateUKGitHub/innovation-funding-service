@@ -84,15 +84,15 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
 
-        if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+        if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
             return COMPLETE;
         }
 
-        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
+        if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved())) {
             return ACTION_REQUIRED;
         }
 
-        if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
+        if (ApprovalType.UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
             return PENDING;
         }
 

@@ -202,7 +202,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProject() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -233,7 +233,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, LocalDateTime.now());
 
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -266,7 +266,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolSent() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -298,7 +298,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndSignedGolSubmitted() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -330,7 +330,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolReadyToSend() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -362,7 +362,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectOtherDocumentsRejected() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
@@ -390,7 +390,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertTrue(resultFailure.isFailure());
     }
 
-    private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus, Boolean otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved, LocalDateTime otherDocsSubmittedDate) {
+    private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus, ApprovalType otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved, LocalDateTime otherDocsSubmittedDate) {
 
         Role role = newRole().build();
         ProcessRole processRole = newProcessRole().withRole(role).build();

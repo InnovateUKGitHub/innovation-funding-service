@@ -317,7 +317,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
                 failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
+                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
                         serviceSuccess(true) :
                         serviceSuccess(false));
     }
@@ -456,17 +456,20 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-        if (approved == null) {
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
+        //TODO INFUND-7493
+        if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }
         return getProject(projectId)
                 .andOnSuccess(project -> {
-                    if (project.getOtherDocumentsApproved() != null
-                            && project.getOtherDocumentsApproved()) {
+                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
                         return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
                     }
-                    project.setOtherDocumentsApproved(approved);
+                    project.setOtherDocumentsApproved(approval ? ApprovalType.APPROVED : ApprovalType.REJECTED);
+                    if (approval.equals(false)) {
+                        project.setDocumentsSubmittedDate(null);
+                    }
                     return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
                 });
     }
@@ -512,6 +515,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
         project.setCollaborationAgreement(fileEntry);
     }
 
@@ -534,6 +538,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
         project.setExploitationPlan(fileEntry);
     }
 

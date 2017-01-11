@@ -246,7 +246,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/partner/documents/approved/{approved}", method = POST)
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
-
+        //TODO INFUND-7493
         return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
 
     }
