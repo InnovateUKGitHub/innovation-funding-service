@@ -34,8 +34,8 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
 
         List<ApplicationCountSummaryResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId).getSuccessObject();
-        verify(applicationStatisticsRepositoryMock,only()).findByCompetition(competitionId);
-        verify(applicationCountSummaryMapperMock, times(2)).mapToResource(any(ApplicationStatistics.class));
+        verify(applicationStatisticsRepositoryMock, only()).findByCompetition(competitionId);
+        verify(applicationCountSummaryMapperMock, times(2)).mapToResource(isA(ApplicationStatistics.class));
         assertEquals(summaryResources, result);
     }
 }

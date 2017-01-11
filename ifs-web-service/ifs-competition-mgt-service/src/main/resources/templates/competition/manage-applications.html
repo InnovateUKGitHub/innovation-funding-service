@@ -83,7 +83,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="application : ${model.applications}">
-                            <td><a th:href="${'/management/competition/' + model.competitionId + '/application/' + application.id}"  th:text="${#numbers.formatInteger(application.id,8)}"/></td>
+                            <td><a th:href="@{'/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${application.id})}"  th:text="${#numbers.formatInteger(application.id,8)}"/></td>
                             <td th:text="${application.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                             <td th:tet="${application.leadOrganisation}">Wessex University</td>
                             <td class="aligncentre" th:text="${application.assessors}">4</td>
