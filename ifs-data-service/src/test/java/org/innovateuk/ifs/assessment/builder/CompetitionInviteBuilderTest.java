@@ -48,7 +48,6 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetition, invite.getTarget());
         assertEquals(expectedHash, invite.getHash());
         assertEquals(expectedName, invite.getName());
-        assertEquals(expectedName, invite.getName());
         assertEquals(expectedInnovationArea, invite.getInnovationArea());
     }
 

@@ -2,10 +2,7 @@ package org.innovateuk.ifs.commons.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -231,5 +228,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
         return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ApplicationCountSummaryResource>> applicationCountSummaryResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationCountSummaryResource>>() {};
     }
 }

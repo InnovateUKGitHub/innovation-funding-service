@@ -417,7 +417,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void testCoFundersForCompetition() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withActivityCode("Activity Code")
-                .withInnovateBudget("Innovate Budget")
                 .withCompetitionCode("c123")
                 .withPafCode("p123")
                 .withBudgetCode("b123")

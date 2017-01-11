@@ -18,7 +18,7 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}" th:remove="tag" />
 
     <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
-      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" th:remove="tag" />
+      <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard?action=notify'} + ${(param.comp != null ? '&#38;status=' + param.comp[0] : '')})" th:remove="tag" />
     </th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -114,37 +114,44 @@
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 
-		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
+		<th:block th:if="${param.status != null and param.status[0] == 'decision'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='fundingDecision'"  />
+
+    <th:block th:unless="${param.status != null and param.status[0] == 'decision'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type=notSubmittedApplications"  />
+
+      <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
 
       <div class="grid-row sorting">
-          <p><span class="heading-xlarge extra-margin-left" id="applications-selected">287</span> applications</p>
+        <div class="column-one">
+          <h2><span class="heading-xlarge no-margin" id="applications-selected">287</span> applications</h2>
+        </div>
       </div>
 
-      <div class="grid-row sorting sorting-controls">
-        <div class="column-half">
-          <div class="form-group no-margin">
-            <fieldset class="alignleft select-all-applications">
-              <legend class="visuallyhidden">Select applications</legend>
-              <label for="select-all">
-                <input class="select-all" value="select-all" type="checkbox" />
-                Select all applications
-              </label>
+        <div class="grid-row sorting sorting-controls">
+          <div class="column-half">
+            <div class="form-group no-margin">
+              <fieldset class="alignleft select-all-applications">
+                <legend class="visuallyhidden">Select applications</legend>
+                <label for="select-all-1">
+                  <input class="select-all" id="select-all-1" value="select-all" type="checkbox" />
+                  Select all applications
+                </label>
+              </fieldset>
+              <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+            </div>
+          </div>
+
+          <div class="column-half">
+            <fieldset class="mark-applications alignright">
+              <legend class="visuallyhidden">Mark selected applications</legend>
+              <h3>Mark applicaton as:</h3>
+              <button class="button button-secondary select-app" disabled="disabled">Successful</button>
+              <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
+              <button class="button button-secondary select-app" disabled="disabled">On hold</button>
             </fieldset>
-            <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
           </div>
         </div>
 
-        <div class="column-half">
-          <fieldset class="mark-applications alignright">
-            <legend class="visuallyhidden">Mark selected applications</legend>
-            <h3>Mark applicaton as:</h3>
-            <button class="button button-secondary select-app" disabled="disabled">Successful</button>
-            <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
-            <button class="button button-secondary select-app" disabled="disabled">On hold</button>
-          </fieldset>
-        </div>
-      </div>
-
+      </th:block>
 
 			<div class="table-overflow">
         <fieldset>
@@ -152,8 +159,12 @@
   				<table id="application-list">
   					<thead>
   						<tr>
-                <th scope="col" id="select-applications-label">Select application(s)</th>
-  							<th scope="col">Application number</th>
+
+                <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
+                  <th scope="col" id="select-applications-label">Select application(s)</th>
+                </th:block>
+
+                <th scope="col">Application number</th>
   							<th scope="col">Project title</th>
   							<th scope="col">Lead</th>
   							<th scope="col">Area</th>
@@ -171,8 +182,10 @@
   					</thead>
   					<tbody>
   						<tr class="filtered-result">
-                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-1" aria-labelledby="select-applications-label" /></td>
-  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
+                <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
+                  <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-1" aria-labelledby="select-applications-label" /></td>
+                </th:block>
+                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194731</a></td>
   							<td>Machine learning in robots</td>
   							<td>PWC</td>
   							<td>HVM</td>
@@ -188,8 +201,10 @@
                 </th:block>
   						</tr>
   						<tr class="filtered-result">
-                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-2" aria-labelledby="select-applications-label" /></td>
-  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
+                <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
+                  <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-2" aria-labelledby="select-applications-label" /></td>
+                </th:block>
+                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194732</a></td>
   							<td>Robots that learn</td>
   							<td>Max Digital</td>
   							<td>HVM</td>
@@ -205,8 +220,10 @@
                 </th:block>
   						</tr>
   						<tr class="filtered-result">
-                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-3" aria-labelledby="select-applications-label" /></td>
-  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
+                <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
+                  <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-3" aria-labelledby="select-applications-label" /></td>
+                </th:block>
+                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194733</a></td>
   							<td>AI in learning</td>
   							<td>BBC</td>
   							<td>HVM</td>
@@ -222,8 +239,10 @@
                 </th:block>
   						</tr>
   						<tr class="filtered-result">
-                <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-4" aria-labelledby="select-applications-label" /></td>
-  							<td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
+                <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
+                  <td><input type="checkbox" class="app-row-select" name="app-row" value="app-row-4" aria-labelledby="select-applications-label" /></td>
+                </th:block>
+                <td><a th:href="${'/prototypes/1968-admin-readonly-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">194734</a></td>
   							<td>Progressive machines</td>
   							<td>Kingfisher</td>
   							<td>HVM</td>
@@ -245,30 +264,34 @@
 			  </fieldset>
       </div>
 
-      <div class="grid-row sorting sorting-controls extra-margin-top">
-        <div class="column-half">
-          <div class="form-group no-margin">
-            <fieldset class="alignleft select-all-applications">
-              <legend class="visuallyhidden">Select applications</legend>
-              <label for="select-all">
-                <input class="select-all" value="select-all" type="checkbox" />
-                Select all applications
-              </label>
+      <th:block th:if="${param.status != null and param.status[0] == 'decision'}">
+
+        <div class="grid-row sorting sorting-controls extra-margin-top">
+          <div class="column-half">
+            <div class="form-group no-margin">
+              <fieldset class="alignleft select-all-applications">
+                <legend class="visuallyhidden">Select applications</legend>
+                <label for="select-all-2">
+                  <input class="select-all" id="select-all-2" value="select-all" type="checkbox" />
+                  Select all applications
+                </label>
+              </fieldset>
+              <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+            </div>
+          </div>
+
+          <div class="column-half">
+            <fieldset class="mark-applications alignright">
+              <legend class="visuallyhidden">Mark selected applications</legend>
+              <h3>Mark applicaton as:</h3>
+              <button class="button button-secondary select-app" disabled="disabled">Successful</button>
+              <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
+              <button class="button button-secondary select-app" disabled="disabled">On hold</button>
             </fieldset>
-            <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
           </div>
         </div>
 
-        <div class="column-half">
-          <fieldset class="mark-applications alignright">
-            <legend class="visuallyhidden">Mark selected applications</legend>
-            <h3>Mark applicaton as:</h3>
-            <button class="button button-secondary select-app" disabled="disabled">Successful</button>
-            <button class="button button-secondary select-app" disabled="disabled">Unsuccessful</button>
-            <button class="button button-secondary select-app" disabled="disabled">On hold</button>
-          </fieldset>
-        </div>
-      </div>
+      </th:block>
 
 
 			<div th:if="${param.filterStatus == null}" th:remove="tag">

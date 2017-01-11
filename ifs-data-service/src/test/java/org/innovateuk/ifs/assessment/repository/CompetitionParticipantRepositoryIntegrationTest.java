@@ -5,14 +5,14 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +20,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
+import static org.innovateuk.ifs.util.CollectionFunctions.zip;
+import static org.junit.Assert.*;
 
 public class CompetitionParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionParticipantRepository> {
 
     private Competition competition;
     private InnovationArea innovationArea;
+    private User user;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -54,134 +62,220 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void setup() {
         competition = competitionRepository.save(newCompetition().withName("competition").build());
         innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
+        user = userRepository.findByEmail("paul.plum@gmail.com")
+                .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
     }
 
     @Test
     public void findAll() {
-        CompetitionInvite invite1 = buildNewCompetitionInvite("name1", "test1@test.com", "hash", SENT);
-        CompetitionInvite invite2 = buildNewCompetitionInvite("name1", "test2@test.com", "hash2", SENT);
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2")
+                        .withEmail("test1@test.com", "test2@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(2)
+        );
+        flushAndClearSession();
 
-        repository.save(new CompetitionParticipant(invite1));
-        repository.save(new CompetitionParticipant(invite2));
+        List<CompetitionParticipant> retrievedParticipant = repository.findAll();
 
-        Iterable<CompetitionParticipant> invites = repository.findAll();
-
-        assertEquals(2, invites.spliterator().getExactSizeIfKnown());
+        assertEquals(2, retrievedParticipant.size());
+        assertEqualParticipants(savedParticipants, retrievedParticipant);
     }
 
     @Test
     public void getByInviteHash() {
-        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", SENT);
-        CompetitionParticipant savedParticipant = repository.save(new CompetitionParticipant(invite));
+        String hash = generateInviteHash();
 
+        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail("test1@test.com")
+                        .withHash(hash)
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build()
+        );
         flushAndClearSession();
 
-        CompetitionParticipant retrievedParticipant = repository.getByInviteHash("hash");
-        assertNotNull(retrievedParticipant);
-        assertEquals(savedParticipant, retrievedParticipant);
-
-        assertEquals(ASSESSOR, retrievedParticipant.getRole());
-        assertEquals(ParticipantStatus.PENDING, retrievedParticipant.getStatus());
-
-        CompetitionInvite retrievedInvite = retrievedParticipant.getInvite();
-        assertEquals("name1", retrievedInvite.getName());
-        assertEquals("test1@test.com", retrievedInvite.getEmail());
-        assertEquals("hash", retrievedInvite.getHash());
-        assertEquals(savedParticipant.getInvite().getId(), retrievedInvite.getId());
-
-        Competition retrievedCompetition = retrievedParticipant.getProcess();
-        assertEquals(competition.getName(), retrievedCompetition.getName());
-
-        assertEquals(retrievedInvite.getTarget().getId(), retrievedCompetition.getId());
+        CompetitionParticipant retrievedParticipant = repository.getByInviteHash(hash);
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save() {
-        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", SENT);
-        CompetitionParticipant savedParticipant = repository.save(new CompetitionParticipant(invite));
-
+        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail("test1@test.com")
+                        .withHash(generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build()
+        );
         flushAndClearSession();
 
         long id = savedParticipant.getId();
 
         CompetitionParticipant retrievedParticipant = repository.findOne(id);
-
-        assertNotNull(retrievedParticipant);
-        assertEquals(savedParticipant, retrievedParticipant);
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save_accepted() {
-        User user = newUser().build();
-
-        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", OPENED);
-
-        CompetitionParticipant savedParticipant = repository.save(
-                (new CompetitionParticipant(invite)).acceptAndAssignUser(user));
-
-        flushAndClearSession();
-
-        long id = savedParticipant.getId();
-
-        CompetitionParticipant retrievedParticipant = repository.findOne(id); // not setting the state
-
-        assertNotNull(retrievedParticipant);
-        assertEquals(savedParticipant, retrievedParticipant);
-    }
-
-    @Test
-    public void save_rejected() {
-        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", OPENED);
-
-        RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        CompetitionParticipant savedParticipant = repository.save((new CompetitionParticipant(invite)).reject(reason, Optional.of("too busy")));
-
+        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail(user.getEmail())
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build()
+        );
+        savedParticipant.acceptAndAssignUser(user);
         flushAndClearSession();
 
         long id = savedParticipant.getId();
 
         CompetitionParticipant retrievedParticipant = repository.findOne(id);
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
+    }
 
-        assertNotNull(retrievedParticipant);
-        assertEquals(savedParticipant, retrievedParticipant);
+    @Test
+    public void save_rejected() {
+        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail("test1@test.com")
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .build()
+        );
+
+        RejectionReason reason = rejectionReasonRepository.findAll().get(0);
+        savedParticipant.reject(reason, Optional.of("too busy"));
+        flushAndClearSession();
+
+        long id = savedParticipant.getId();
+
+        CompetitionParticipant retrievedParticipant = repository.findOne(id);
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void getByUserRoleStatus() {
-        User user = newUser()
-                .withFirstName("Professor")
-                .build();
-
-        CompetitionInvite invite = buildNewCompetitionInvite("name1", "test1@test.com", "hash", OPENED);
-        invite.setUser(user);
-
-        CompetitionParticipant savedParticipant = repository.save(new CompetitionParticipant(invite));
+        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail(user.getEmail())
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build()
+        );
         flushAndClearSession();
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), ASSESSOR);
+        assertEqualParticipants(savedParticipant, getOnlyElement(retrievedParticipants));
+    }
+
+    @Test
+    public void getByCompetitionAndRole() {
+        List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
+
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2")
+                        .withEmail("test1@test.com", "test2@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(1))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(2)
+        );
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRole(competitions.get(0).getId(), ASSESSOR);
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.size());
-        assertEquals(savedParticipant, retrievedParticipants.get(0));
-
-        assertEquals(ASSESSOR, retrievedParticipants.get(0).getRole());
-        assertEquals(ParticipantStatus.PENDING, retrievedParticipants.get(0).getStatus());
-
-        Competition retrievedCompetition = retrievedParticipants.get(0).getProcess();
-        assertEquals(competition.getName(), retrievedCompetition.getName());
-
-        User retrievedUser = retrievedParticipants.get(0).getUser();
-        assertEquals(user.getFirstName(), retrievedUser.getFirstName());
+        assertEqualParticipants(savedParticipants.get(0), retrievedParticipants.get(0));
     }
 
-    private CompetitionInvite buildNewCompetitionInvite(String name, String email, String hash, InviteStatus status) {
-        return newCompetitionInviteWithoutId() // added this to prevent so we can persist
-                .withName(name)
-                .withEmail(email)
-                .withHash(hash)
-                .withCompetition(competition)
-                .withInnovationArea(innovationArea)
-                .withStatus(status)
-                .build();
+    @Test
+    public void getByInviteEmail() {
+        List<Competition> competitions = newCompetition()
+                .with(id(null))
+                .build(2);
+        competitions.forEach(competition -> competitionRepository.save(competition));
+
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name1", "name2")
+                        .withEmail("test1@test.com", "test1@test.com", "test2@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(1), competitions.get(0))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(3)
+        );
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.getByInviteEmail("test1@test.com");
+        assertEqualParticipants(asList(savedParticipants.get(0), savedParticipants.get(1)), retrievedParticipants);
+    }
+
+    private CompetitionParticipant saveNewCompetitionParticipant(CompetitionInvite invite) {
+        CompetitionParticipant saved = repository.save(new CompetitionParticipant(invite));
+        return saved;
+    }
+
+    private List<CompetitionParticipant> saveNewCompetitionParticipants(List<CompetitionInvite> invites) {
+        List<CompetitionParticipant> saved = invites.stream().map(competitionInvite ->
+                repository.save(new CompetitionParticipant(competitionInvite))).collect(toList());
+        return saved;
+    }
+
+    private void assertEqualParticipants(List<CompetitionParticipant> expected, List<CompetitionParticipant> actual) {
+        zip(expected, actual, (expectedCompetitionParticipant, actualCompetitionParticipant) ->
+                assertEqualParticipants(expectedCompetitionParticipant, actualCompetitionParticipant));
+    }
+
+    private void assertEqualParticipants(CompetitionParticipant expected, CompetitionParticipant actual) {
+        assertNotNull(expected);
+        assertNotNull(actual);
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getRejectionReasonComment(), actual.getRejectionReasonComment());
+        assertEquals(expected.getRole(), actual.getRole());
+        assertEquals(expected.getStatus(), actual.getStatus());
+
+        assertTrue((expected.getProcess() == null && actual.getProcess() == null) ||
+                (expected.getProcess() != null && actual.getProcess() != null &&
+                        expected.getProcess().getId().equals(actual.getProcess().getId()))
+        );
+
+        assertTrue((expected.getUser() == null && actual.getUser() == null) ||
+                (expected.getUser() != null && actual.getUser() != null &&
+                        expected.getUser().getId().equals(actual.getUser().getId())));
+
+        assertTrue((expected.getInvite() == null && actual.getInvite() == null) ||
+                (expected.getInvite() != null && actual.getInvite() != null &&
+                        expected.getInvite().getId().equals(actual.getInvite().getId())));
+
+        assertTrue((expected.getRejectionReason() == null && actual.getRejectionReason() == null) ||
+                (expected.getRejectionReason() != null && actual.getRejectionReason() != null &&
+                        expected.getRejectionReason().getId().equals(actual.getRejectionReason().getId())));
     }
 }

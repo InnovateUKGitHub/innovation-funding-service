@@ -304,7 +304,7 @@
 
         <div class="grid-container" th:if="${readonly and !model.submitted}">
 
-            <th:block th:if="${!model.markedAsComplete and !model.projectManager}">
+            <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
@@ -315,27 +315,25 @@
                 </form>
             </th:block>
 
-            <th:block th:if="${model.projectManager}">
-                <div th:if="${model.userPartOfThisOrganisation}">
-                    <a class="button button-secondary extra-margin"
-                       th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
+            <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
+                <a class="button button-secondary extra-margin"
+                   th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-                    <div th:if="${!model.markedAsComplete}">
-                        <p class="extra-margin">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
-                        <form method="post"
-                              th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                            <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div th:if="${!model.userPartOfThisOrganisation and model.markedAsComplete}">
-                    <p class="extra-margin">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete.</p>
+                <th:block th:if="${!model.markedAsComplete}">
+                    <p class="extra-margin">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
                     <form method="post"
-                          th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                        <button class="button button-secondary extra-margin" name="allow-edit">Allow partner to edit</button>
+                          th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
+                        <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
                     </form>
-                </div>
+                </th:block>
+            </th:block>
+
+            <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
+                <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
+                <form method="post"
+                      th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">
+                    <button class="button button-secondary extra-margin" name="allow-edit">Allow edits</button>
+                </form>
             </th:block>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

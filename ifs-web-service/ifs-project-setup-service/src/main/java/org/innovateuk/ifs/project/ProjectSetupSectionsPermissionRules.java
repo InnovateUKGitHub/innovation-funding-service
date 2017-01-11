@@ -87,10 +87,12 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection);
     }
 
-    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "A project manager can access certain methods which are unavailable to others")
-    public boolean userIsProjectManager(Long projectId, UserResource user) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> user.getId().equals(pu.getUser()) && UserRoleType.PROJECT_MANAGER.getName().equals(pu.getRoleName())) != null;
+    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")
+    public boolean userCanMarkSpendProfileIncomplete(Long projectId, UserResource user) {
+        List<ProjectUserResource> projectLeadPartners = projectService.getLeadPartners(projectId);
+        Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectLeadPartners, projectUserResource -> projectUserResource.getUser().equals(user.getId()));
+
+        return returnedProjectUser.isPresent();
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {
