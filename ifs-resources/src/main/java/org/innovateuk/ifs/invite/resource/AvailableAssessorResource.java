@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
  */
 public class AvailableAssessorResource extends AssessorInviteResource {
 
+    private Long id;
     private String email;
     private BusinessType businessType;
     private boolean added;
@@ -17,11 +18,20 @@ public class AvailableAssessorResource extends AssessorInviteResource {
     public AvailableAssessorResource() {
     }
 
-    public AvailableAssessorResource(String name, CategoryResource innovationArea, boolean compliant, String email, BusinessType businessType, boolean added) {
+    public AvailableAssessorResource(Long id, String name, CategoryResource innovationArea, boolean compliant, String email, BusinessType businessType, boolean added) {
         super(name, innovationArea, compliant);
+        this.id = id;
         this.email = email;
         this.businessType = businessType;
         this.added = added;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -62,6 +72,7 @@ public class AvailableAssessorResource extends AssessorInviteResource {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(id, that.id)
                 .append(added, that.added)
                 .append(email, that.email)
                 .append(businessType, that.businessType)
@@ -72,6 +83,7 @@ public class AvailableAssessorResource extends AssessorInviteResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
+                .append(id)
                 .append(email)
                 .append(businessType)
                 .append(added)
