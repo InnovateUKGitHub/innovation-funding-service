@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.viewmodel.JoinAProjectViewModel;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -104,11 +105,14 @@ public class AcceptProjectInviteController extends BaseController {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
 
+                    OrganisationResource organisation =
+                            organisationRestService.getOrganisationById(invite.getLeadOrganisationId()).getSuccessObjectOrThrowException();
+
                     JoinAProjectViewModel japvm = new JoinAProjectViewModel();
                     japvm.setCompetitionName(invite.getCompetitionName());
                     japvm.setLeadApplicantName(invite.getLeadApplicant());
                     japvm.setOrganisationName(invite.getOrganisationName());
-                    japvm.setLeadOrganisationName(invite.getLeadOrganisation());
+                    japvm.setLeadOrganisationName(organisation.getName());
                     japvm.setProjectName(invite.getProjectName());
                     model.addAttribute("model", japvm);
                     return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);

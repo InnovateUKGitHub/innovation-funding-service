@@ -564,9 +564,6 @@ public class BaseUnitTest {
         applicationResources.get(1).setCompetition(competitionResource.getId());
         applicationResources.get(2).setCompetition(competitionResource.getId());
         applicationResources.get(3).setCompetition(competitionResource.getId());
-
-        loggedInUser.setProcessRoles(asList(processRole1.getId(), processRole2.getId(),processRole3.getId(), processRole4.getId()));
-        users.get(0).setProcessRoles(asList(processRole5.getId()));
         applications = applicationResources;
 
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);

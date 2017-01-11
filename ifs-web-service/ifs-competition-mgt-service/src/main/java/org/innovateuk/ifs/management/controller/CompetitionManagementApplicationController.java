@@ -234,7 +234,7 @@ public class CompetitionManagementApplicationController extends BaseController {
         form.setImpersonateOrganisationId(Long.valueOf(organisationId));
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         Optional<Long> userId = processRoles.stream()
-                .filter(p -> p.getOrganisation().equals(Long.valueOf(organisationId)))
+                .filter(p -> p.getOrganisationId().equals(Long.valueOf(organisationId)))
                 .map(p -> p.getUser())
                 .findAny();
 
