@@ -98,13 +98,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
-                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, false));
+                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed));
 
         return "project/detail";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @RequestMapping(value = "/{projectId}/details-readOnly", method = RequestMethod.GET)
+    @RequestMapping(value = "/{projectId}/readonly", method = RequestMethod.GET)
     public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -122,7 +122,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), false, true));
+                getProjectManager(projectResource.getId()).orElse(null), false));
+
+        model.addAttribute("readOnlyView", true);
 
         return "project/detail";
     }

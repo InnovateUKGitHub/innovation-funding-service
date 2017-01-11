@@ -86,6 +86,19 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @RequestMapping(value="readonly", method = GET)
+    public String viewSpendProfileAsReadOnly(Model model,
+                                   @PathVariable("projectId") final Long projectId,
+                                   @PathVariable("organisationId") final Long organisationId,
+                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        model.addAttribute("model", buildSpendProfileViewModel(projectId, organisationId, loggedInUser));
+        model.addAttribute("readOnlyView", true);
+        return BASE_DIR + "/spend-profile";
+    }
+
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(value = "/review", method = GET)
     public String reviewSpendProfilePage(Model model,
                                          @PathVariable("projectId") final Long projectId,

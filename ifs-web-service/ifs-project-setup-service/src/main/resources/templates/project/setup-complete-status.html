@@ -48,18 +48,31 @@
             </div>
         </li>
         <!--/* ========================= Project Details ========================= */-->
+        <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
+            <div class="progress-status" />
+            <div class="progress-info">
+                <h2 class="heading-medium">
+                    <a th:if="${model.projectDetailsSection.accessible}" th:href="@{/project/{id}/details-readOnly(id=${model.projectId})}">Project details</a>
+                    <th:block th:unless="${model.isProjectComplete}">Project details</th:block>
+                </h2>
+                <p>The contact details, start date and location of the project.</p>
+            </div>
+            <!--/* ========================= Monitoring Officer ========================= */-->
+        <li th:classappend="${model.monitoringOfficerStatus.getSectionStatus()}">
+            <div class="progress-status" />
+            <div class="progress-info">
 
-        <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'require-action' : 'complete')}">
-			<span>
-				<h2 class="heading-medium">
-					<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1575-project-details?user=nonLead' : '/prototypes/1575-project-details')}" th:unless="${param.stage != null and param.stage[0] == 'level2' or param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.status != null and param.status[0] == 'setup-complete'}">Project details</a>
-
-					<a href="/prototypes/1575-project-details-submitted" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Project details</a>
-
-				</h2>
-
-				<p>The contact details, start date and location of the project.</p>
-			</span>
+                <h2 class="heading-medium">
+                    <a th:if="${model.monitoringOfficerSection.accessible}" th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
+                    <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
+                </h2>
+                <p th:if="${model.monitoringOfficerAssigned}">
+                    Your Monitoring Officer for this project is  <th:block th:text="${model.monitoringOfficerName}" />.
+                </p>
+                <p th:unless="${model.monitoringOfficerAssigned}">
+                    We will assign the project a Monitoring Officer.
+                </p>
+            </div>
         </li>
 
         <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'complete')}">

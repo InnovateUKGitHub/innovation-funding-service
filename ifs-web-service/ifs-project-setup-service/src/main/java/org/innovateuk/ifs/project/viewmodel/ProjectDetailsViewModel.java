@@ -32,7 +32,6 @@ public class ProjectDetailsViewModel {
 
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
-    private boolean isReadOnly;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                    List<Long> usersPartnerOrganisations,
@@ -43,8 +42,7 @@ public class ProjectDetailsViewModel {
                                    boolean userIsLeadPartner,
                                    boolean projectDetailsSubmitted,
                                    ProjectUserResource projectManager,
-                                   boolean submissionAllowed,
-                                   boolean isReadOnly) {
+                                   boolean submissionAllowed) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -54,7 +52,6 @@ public class ProjectDetailsViewModel {
         this.projectDetailsSubmitted = projectDetailsSubmitted;
         this.projectManager = projectManager;
         this.submissionAllowed = submissionAllowed;
-        this.isReadOnly = isReadOnly;
 
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
@@ -120,9 +117,5 @@ public class ProjectDetailsViewModel {
 
     public boolean isAnySectionIncomplete() {
         return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
-    }
-
-    public boolean isReadOnly() {
-        return isReadOnly;
     }
 }
