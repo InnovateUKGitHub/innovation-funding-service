@@ -6,6 +6,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.List;
 
+/**
+ * View model for the Assessor Profile view.
+ */
 public class InviteAssessorsProfileViewModel {
 
     private CompetitionResource competition;
