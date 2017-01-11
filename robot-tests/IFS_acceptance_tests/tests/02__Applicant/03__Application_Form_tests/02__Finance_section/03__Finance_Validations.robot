@@ -4,7 +4,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant
+Force Tags        Applicant  Pending
 Resource          ../../../../resources/defaultResources.robot
 Resource          FinanceSection_Commons.robot
 

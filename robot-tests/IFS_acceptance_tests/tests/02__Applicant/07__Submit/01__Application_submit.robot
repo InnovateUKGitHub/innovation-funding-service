@@ -18,7 +18,7 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant
+Force Tags        Applicant  Pending
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
