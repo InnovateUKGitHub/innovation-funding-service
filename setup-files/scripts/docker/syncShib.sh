@@ -44,5 +44,4 @@ for item in $( docker-compose -p ifs ps -q shib ); do
 done
 
 docker-compose -p ifs exec shib /tmp/_delete-shib-users-remote.sh
-echo mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
 mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
