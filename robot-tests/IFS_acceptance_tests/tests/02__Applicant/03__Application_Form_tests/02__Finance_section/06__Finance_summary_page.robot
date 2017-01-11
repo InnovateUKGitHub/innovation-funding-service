@@ -62,12 +62,9 @@ Red warning should show when the finances are incomplete
     And the user should see the text in the page    The following organisations have not marked their finances as complete:
 
 Green check should show when the finances are complete
-    [Documentation]    INFUND-927
-    ...
-    ...    INFUND-894
-    ...
-    ...    INFUND-446
-    [Tags]
+    [Documentation]    INFUND-927, INFUND-894, INFUND-446
+    [Tags]  Pending
+    #TODO Pending due to INFUND-6390 will update ticket onces finances update is merged.
     [Setup]    Make the finances ready for mark as complete
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
