@@ -47,12 +47,10 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 		// TODO at the moment we save the finance setup information to the competition itself as a flag.
 		// TODO We also change the active status on a relevant form inputs.
 		// TODO Going forward we need to remove the flag and key of the activity of the form inputs only.
-
 		csfr.setFullApplicationFinance(form.isFullApplicationFinance());
 		csfr.setIncludeGrowthTable(form.isIncludeGrowthTable());
 		csfr.setCompetitionId(competition.getId());
-		competitionSetupFinanceService.updateFinance(csfr);
-		return competitionService.update(competition);
+		return competitionService.update(competition).andOnSuccess(() -> competitionSetupFinanceService.updateFinance(csfr));
 	}
 
 	@Override
