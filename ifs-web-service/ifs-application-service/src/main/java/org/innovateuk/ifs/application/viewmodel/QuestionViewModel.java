@@ -26,6 +26,8 @@ public class QuestionViewModel extends QuestionOrganisationDetailsViewModel {
     private NavigationViewModel navigationViewModel;
     private QuestionAssignableViewModel questionAssignableViewModel;
 
+    public QuestionViewModel() {}
+
     public QuestionViewModel(UserResource currentUser, Map<Long, List<FormInputResource>> questionFormInputs, String title, QuestionResource currentQuestion,
                              QuestionApplicationViewModel questionApplicationViewModel, NavigationViewModel navigationViewModel,
                              QuestionAssignableViewModel questionAssignableViewModel) {
