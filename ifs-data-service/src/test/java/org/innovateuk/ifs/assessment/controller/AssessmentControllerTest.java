@@ -62,6 +62,20 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
+    public void findAssignableById() throws Exception {
+        AssessmentResource expected = newAssessmentResource().build();
+
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.findAssignableById(assessmentId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+        verify(assessmentServiceMock, only()).findAssignableById(assessmentId);
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource()
                 .build(2);

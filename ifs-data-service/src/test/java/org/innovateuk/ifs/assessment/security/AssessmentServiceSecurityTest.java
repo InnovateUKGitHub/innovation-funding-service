@@ -52,6 +52,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void findAssignableById() {
+        AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
+
+        assertAccessDenied(
+                () -> classUnderTest.findAssignableById(ID_TO_FIND),
+                () -> verify(assessmentPermissionRules).userCanAssignAssessment(eq(assessmentResource), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void findByUserAndCompetition() {
         long userId = 3L;
         long competitionId = 1L;
