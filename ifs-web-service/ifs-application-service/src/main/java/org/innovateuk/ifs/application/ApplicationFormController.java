@@ -61,6 +61,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -105,6 +106,7 @@ public class ApplicationFormController {
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
     public static final String TERMS_AGREED_KEY = "termsAgreed";
     public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
+    public static final String ORGANISATION_SIZE_KEY = "organisationSize";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
 
@@ -332,7 +334,7 @@ public class ApplicationFormController {
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
                 return APPLICATION_FORM;
             } else {
-                return getRedirectUrl(request, applicationId);
+                return getRedirectUrl(request, applicationId, null);
             }
         }
     }
@@ -349,7 +351,7 @@ public class ApplicationFormController {
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
     }
 
-    private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId, SectionType sectionType) {
         if (request.getParameter("submit-section") == null
                 && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
@@ -364,6 +366,9 @@ public class ApplicationFormController {
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
+            if (sectionType != null && sectionType.getParent().isPresent()) {
+                return redirectToSection(sectionType.getParent().get(), applicationId);
+            }
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
             return "redirect:" + APPLICATION_BASE_URL + applicationId;
@@ -659,6 +664,10 @@ public class ApplicationFormController {
                 !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
+        } else if (section.getType() == SectionType.ORGANISATION_FINANCES &&
+                !validOrganisationFinancesForMarkAsComplete(request, bindingResult, user.getId(), applicationId)) {
+            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+            return APPLICATION_FORM;
         }
 
         Map<String, String[]> params = request.getParameterMap();
@@ -678,9 +687,11 @@ public class ApplicationFormController {
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         } else {
-            return getRedirectUrl(request, applicationId);
+            return getRedirectUrl(request, applicationId, section.getType());
         }
     }
+
+
 
     private void setReturnToApplicationFormData(SectionResource section, ApplicationResource application, CompetitionResource competition,
                                                 UserResource user, Model model, ApplicationForm form, Long applicationId) {
@@ -690,6 +701,18 @@ public class ApplicationFormController {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles);
         applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);
+    }
+
+    private boolean validOrganisationFinancesForMarkAsComplete(HttpServletRequest request, BindingResult bindingResult, Long userId, Long applicationId) {
+        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+            List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
+            String organisationType = organisationService.getOrganisationType(userId, applicationId);
+            if (financePositionKeys.isEmpty() && !"University (HEI)".equals(organisationType)) {
+                bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
