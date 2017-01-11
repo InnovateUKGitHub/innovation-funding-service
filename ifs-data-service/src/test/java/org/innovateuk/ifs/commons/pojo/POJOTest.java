@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 38;
+    private static final int EXPECTED_RESOURCES = 37;
 
     // The package to test
     private static final String POJO_PACKAGE = "org.innovateuk.ifs";
@@ -161,7 +161,7 @@ public class POJOTest {
     @Before
     public void setup() {
         classes = PojoClassFactory.getPojoClassesRecursively(POJO_PACKAGE, new FilterPackages(classesToTest));
-
+        classes.forEach(pe -> System.err.println(pe.getName()));
         validator = ValidatorBuilder.create()
             .with(
                 new GetterMustExistRule(),
