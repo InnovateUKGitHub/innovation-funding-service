@@ -1,21 +1,27 @@
 package org.innovateuk.ifs.project.form;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.group.GroupSequenceProvider;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIfOptionIs;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.hibernate.validator.constraints.Email;
+import org.innovateuk.ifs.project.form.validation.ProjectManagerInviteChecks;
+import org.innovateuk.ifs.project.form.validation.ProjectManagerInviteSequenceProvider;
 
 import javax.validation.constraints.NotNull;
 
-@FieldRequiredIfOptionIs(required = "name", argument = "projectManager", predicate = -1L, message = "{validation.project.invite.name.required}")
-@FieldRequiredIfOptionIs(required = "email", argument = "projectManager", predicate = -1L, message = "{validation.project.invite.email.required}")
-public class ProjectManagerForm  extends BaseBindingResultTarget {
+@GroupSequenceProvider(ProjectManagerInviteSequenceProvider.class)
+public class ProjectManagerForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.projectmanagerform.projectmanager.required}")
 	private Long projectManager;
 
+	@NotNull(groups = ProjectManagerInviteChecks.class, message = "{validation.project.invite.name.required}")
+	@NotBlank(groups = ProjectManagerInviteChecks.class, message = "{validation.project.invite.name.required}")
 	private String name;
 
-	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message= "{validation.project.invite.email.invalid}")
+	@NotNull(groups = ProjectManagerInviteChecks.class, message = "{validation.project.invite.email.required}")
+	@NotBlank(groups = ProjectManagerInviteChecks.class, message = "{validation.project.invite.email.required}")
+	@Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message= "{validation.project.invite.email.invalid}", groups = ProjectManagerInviteChecks.class)
 	private String email;
 
 	public Long getProjectManager() {
