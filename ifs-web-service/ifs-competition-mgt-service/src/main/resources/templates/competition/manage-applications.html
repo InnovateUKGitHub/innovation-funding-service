@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Manage applications'"  th:remove="tag" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
+
+            <h1 class="heading-xlarge">
+                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block th:text="${model.competitionName}"/>, in assessment</span>
+                Manage applications
+            </h1>
+
+            <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
+
+            <!--/* INFUND-7055
+            <div class="search-filters extra-margin">
+                <form action="#" method="GET">
+                    <fieldset>
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <div class="form-group">
+                                    <label class="form-label" for="filterInnovationArea">Innovation area</label>
+
+                                    <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+                                        <option selected="selected">---</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="column-half">
+                                <div class="form-group">
+                                    <label class="form-label" for="filterSearch">Skill areas</label>
+                                    <input type="text" class="form-control" id="filterSearch" name="filterSearch">
+                                </div>
+                                <div class="column-half extra-margin">
+                                    <button class="button button-clear">Clear filters</button>
+                                </div>
+                                <div class="column-half">
+                                    <div class="alignright">
+                                        <button type="submit" class="button no-margin">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="grid-row sorting">
+                <div class="column-half">
+                    <span class="heading-large">20</span> applications
+                </div>
+
+                <div class="column-half alignright">
+                    <label for="inviteFilter">Sort by
+                        <select class="form-control" id="inviteFilter" name="inviteFilter">
+                            <option value="">All</option>
+                        </select>
+                    </label>
+                    <button class="button button-secondary button-small" type="submit">Sort</button>
+                </div>
+            </div>
+            */-->
+
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Application number</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Lead organisation</th>
+                            <th class="aligncentre" scope="col">Assessors</th>
+                            <th class="aligncentre" scope="col">Accepted</th>
+                            <th class="aligncentre" scope="col">Completed</th>
+                            <th scope="col"><span class="visuallyhidden">Action</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="application : ${model.applications}">
+                            <td><a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${application.id})}"  th:text="${#numbers.formatInteger(application.id,8)}"/></td>
+                            <td th:text="${application.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                            <td th:tet="${application.leadOrganisation}">Wessex University</td>
+                            <td class="aligncentre" th:text="${application.assessors}">4</td>
+                            <td class="aligncentre" th:text="${application.accepted}">2</td>
+                            <td class="aligncentre" th:text="${application.completed}">1</td>
+                            <td class="alignright">
+                                <a class="button-secondary no-margin" href="#">View progress</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>

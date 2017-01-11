@@ -125,21 +125,19 @@ Catapult search (accept invitation flow)
     And the user should see the text in the page    Operating Address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     When the user navigates to the page  ${server}/registration/register
-    capture page screenshot
     Then the user fills the create account form    Thierry    Henry
-    capture page screenshot
 
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
-    Given the user reads his email from the default mailbox and clicks the link   ${test_mailbox_one}+invite1@gmail.com  Please verify your email address  If you did not request an account with us
+    Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com  Please verify your email address  If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in   ${test_mailbox_one}+invite1@gmail.com  ${correct_password}
+    And guest user log-in                   worth.email.test+invite1@gmail.com  ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
-    And the user should see the text in the page    Digital Catapult
+    And the user should see the element    jQuery=h1:contains("Your finances")
 
 *** Keywords ***
 Custom Suite Setup
