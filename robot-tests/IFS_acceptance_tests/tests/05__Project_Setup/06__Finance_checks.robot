@@ -173,7 +173,7 @@ Other internal users do not have access to bank details export
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 303,006
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 87,546
+    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 87,547
     the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 3,702
     the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
 
