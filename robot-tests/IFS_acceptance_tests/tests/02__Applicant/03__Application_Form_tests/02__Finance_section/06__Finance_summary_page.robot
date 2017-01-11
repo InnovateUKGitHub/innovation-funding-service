@@ -12,7 +12,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
-Force Tags        Applicant
+Force Tags        Applicant  Pending
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 
@@ -153,4 +153,4 @@ Lead enters a valid research participation value
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
     Focus    jQuery= button:contains('Save and return')
-    sleep    500ms
+    wait for autosave

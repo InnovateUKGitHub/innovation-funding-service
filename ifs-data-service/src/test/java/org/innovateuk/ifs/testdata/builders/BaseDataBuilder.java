@@ -15,6 +15,7 @@ import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -102,6 +103,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected RoleService roleService;
     protected CompetitionInviteRepository competitionInviteRepository;
     protected CompetitionRepository competitionRepository;
+    protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
     protected CompetitionParticipantRepository competitionParticipantRepository;
     protected CompetitionInviteService competitionInviteService;
@@ -169,6 +171,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
         this.projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
+        this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
     }
 
     @Override

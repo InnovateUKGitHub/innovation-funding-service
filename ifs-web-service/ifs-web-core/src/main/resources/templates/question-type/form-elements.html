@@ -41,7 +41,7 @@
         <summary>
             <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
-        <div class="panel-indent" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+        <div class="panel" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </div>
 <!-- ========================= input field type text =========================== -->
@@ -230,7 +230,7 @@
                               (questionAssignee?.assignee==null and !userIsLeadApplicant)}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
                   data-editor="md"
-                  data-required-errormessage="Please enter some text"
+                  th:attr="data-required-errormessage=#{validation.field.please.enter.some.text}"
                   required="required"></textarea>
 
         <div class="textarea-footer">
@@ -279,7 +279,7 @@
             type="submit"
             name="assign_question"
             th:value="${question.getId()}+'_'+${questionAssignee?.assignedBy}"
-            th:class="'buttonlink'">Ready for review
+            th:class="'buttonlink'">Assign to lead for review
     </button>
   </div>
 </div>

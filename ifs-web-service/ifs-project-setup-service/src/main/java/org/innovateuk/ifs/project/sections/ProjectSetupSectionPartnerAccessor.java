@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.project.sections;
 
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 
-import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
-import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_REQUIRED;
+import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -60,6 +58,10 @@ public class ProjectSetupSectionPartnerAccessor {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Bank Details section until Companies House information is complete")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if(!projectSetupProgressChecker.isOrganisationRequiringFunding(organisation)){
             return NOT_ACCESSIBLE;
         }
 
@@ -137,7 +139,7 @@ public class ProjectSetupSectionPartnerAccessor {
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
         if (projectSetupProgressChecker.isSpendProfileApproved() && projectSetupProgressChecker.isOtherDocumentsApproved()
-                && projectSetupProgressChecker.isGrantOfferLetterAvailable()) {
+                && projectSetupProgressChecker.isGrantOfferLetterAvailable() && projectSetupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 

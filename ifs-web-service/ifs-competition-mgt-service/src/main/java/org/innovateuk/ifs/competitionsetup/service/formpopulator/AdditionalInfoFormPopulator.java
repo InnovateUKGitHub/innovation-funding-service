@@ -31,8 +31,6 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm();
 
 		competitionSetupForm.setActivityCode(competitionResource.getActivityCode());
-		competitionSetupForm.setInnovateBudget(competitionResource.getInnovateBudget());
-
 		competitionSetupForm.setCompetitionCode(competitionResource.getCode());
 		competitionSetupForm.setPafNumber(competitionResource.getPafCode());
 		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());

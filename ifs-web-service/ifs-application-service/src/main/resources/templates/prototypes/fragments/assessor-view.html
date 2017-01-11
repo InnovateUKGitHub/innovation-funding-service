@@ -6,7 +6,7 @@
 
     <h2 class="heading-medium">Your contract</h2>
 
-    <ul class="list-bullet">
+    <ul class="list list-bullet">
       <li><a href="/prototypes/1178-assessor-profile-skills?version=v2">your skills</a></li>
       <li><a href="/prototypes/5230-assessor-doi?version=v2">your declaration of interest</a></li>
       <li><a href="/prototypes/1176-assessor-contracts?status=signed&#38;version=v2">your contract</a></li>
@@ -14,9 +14,12 @@
     </ul>
 
     <h2 class="heading-medium">Your profile</h2>
-    <ul class="list-bullet">
+    <ul class="list list-bullet">
         <li>
             <a href="/prototypes/1178-assessor-profile-details">your details</a>
+        </li>
+        <li>
+            <a href="/prototypes/7120-assessor-profile-address">your address</a>
         </li>
         <li>
             <a href="/prototypes/675-change-password?assessor">change your password</a>
@@ -97,11 +100,11 @@
         <fieldset class="inline">
             <legend class="visuallyhidden">Is the application in scope?</legend>
             <div class="form-group">
-                <label class="block-label" for="assessor-question-confirmation-yes">
+                <label class="block-label selection-button-radio" for="assessor-question-confirmation-yes">
                 <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
                     Yes
                 </label>
-                <label class="block-label" for="assessor-question-confirmation-no">
+                <label class="block-label selection-button-radio" for="assessor-question-confirmation-no">
                 <input id="assessor-question-confirmation-no" type="radio" name="radio-inline-group" value="No" />
                     No
                 </label>
@@ -143,7 +146,7 @@
 <div th:fragment="prototype-assessor-guidance-scope">
     <details>
         <summary><span class="summary">Guidance for assessing scope</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your answer should be based upon the following:
           </p>
@@ -175,7 +178,7 @@
 <div th:fragment="prototype-assessor-guidance-question1">
     <details>
         <summary><span class="summary">Guidance for assessing business opportunity</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -223,7 +226,7 @@
 <div th:fragment="prototype-assessor-guidance-question2">
     <details>
         <summary><span class="summary">Guidance for assessing market opportunity</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -271,7 +274,7 @@
 <div th:fragment="prototype-assessor-guidance-question3">
     <details>
         <summary><span class="summary">Guidance for assessing project exploitation</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -318,7 +321,7 @@
 <div th:fragment="prototype-assessor-guidance-question4">
     <details>
         <summary><span class="summary">Guidance for assessing project benefits</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -366,7 +369,7 @@
 <div th:fragment="prototype-assessor-guidance-question5">
     <details>
         <summary><span class="summary">Guidance for assessing technical approach</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -414,7 +417,7 @@
 <div th:fragment="prototype-assessor-guidance-question6">
     <details>
         <summary><span class="summary">Guidance for assessing innovation</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -461,7 +464,7 @@
 <div th:fragment="prototype-assessor-guidance-question7">
     <details>
         <summary><span class="summary">Guidance for assessing risks</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -508,7 +511,7 @@
 <div th:fragment="prototype-assessor-guidance-question8">
     <details>
         <summary><span class="summary">Guidance for assessing team skills</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -555,7 +558,7 @@
 <div th:fragment="prototype-assessor-guidance-question9">
     <details>
         <summary><span class="summary">Guidance for assessing financial commitment</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>
@@ -605,7 +608,7 @@
 <div th:fragment="prototype-assessor-guidance-question10">
     <details>
         <summary><span class="summary">Guidance for assessing added value</span></summary>
-        <div class="panel-indent">
+        <div class="panel">
           <p>
             Your score should be based upon the following:
           </p>

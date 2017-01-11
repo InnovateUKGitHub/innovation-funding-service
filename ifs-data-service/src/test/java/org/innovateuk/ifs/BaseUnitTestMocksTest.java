@@ -8,14 +8,12 @@ import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
+import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.*;
-import org.innovateuk.ifs.application.transactional.ApplicationFundingService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.AssessorFeedbackService;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
@@ -181,6 +179,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationStatusRepository applicationStatusRepositoryMock;
 
     @Mock
+    protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+
+    @Mock
+    protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
+
+    @Mock
     protected FormInputRepository formInputRepositoryMock;
 
     @Mock
@@ -197,6 +201,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationService applicationServiceMock;
+
+    @Mock
+    protected ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Mock
     protected QuestionService questionServiceMock;
@@ -496,7 +503,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
-    private SpendProfileTableCalculator spendProfileTableCalculator;
+    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock
     protected NotificationSender notificationSender;

@@ -56,6 +56,33 @@
 		padding-bottom: 20px;
 	}
 }
+
+table {
+
+  .cell-align-top {
+    vertical-align: top;
+  }
+
+  .width-40-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 40%;
+
+    .width-full {
+      width: 100%;
+    }
+  }
+}
+
+.table-overflow {
+  overflow: auto;
+  width: 100%;
+
+  table{
+    max-width: 100%;
+  }
+}
+
 /* SG
 # IFS/warning button
 

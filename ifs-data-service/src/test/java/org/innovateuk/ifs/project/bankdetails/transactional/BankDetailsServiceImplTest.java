@@ -187,6 +187,18 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     }
 
     @Test
+    public void testUpdateOfBankDetailsWileApreadyApprovedNotAllowed(){
+        bankDetailsResource.setManualApproval(true);
+        bankDetails.setManualApproval(true);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(bankDetails);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
+
+        ServiceResult<Void> result = service.updateBankDetails(bankDetailsResource);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(BANK_DETAILS_HAVE_ALREADY_BEEN_APPROVED_AND_CANNOT_BE_UPDATED));
+    }
+
+    @Test
     public void testGetProjectBankDetailsStatusSummary(){
         Long projectId = 123L;
         Competition competition = newCompetition().withName("Greener Jet Engines").build();

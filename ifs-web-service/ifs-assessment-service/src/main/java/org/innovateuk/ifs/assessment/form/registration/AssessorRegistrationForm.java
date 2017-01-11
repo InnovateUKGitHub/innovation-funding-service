@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 /**
  * Form field model for the Assessor Registration
  */
-@FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
+@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.title.selectionrequired}")

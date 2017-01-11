@@ -1,13 +1,3 @@
-if (project.hasProperty("profile")) {
-    apply from: "${project.profile}-build.gradle"
-} else {
-    apply from: "docker-build.gradle"
-}
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild+"-build.gradle";
 
-task cleanDeployServices{
-	println "interface for clean deploy services"
-}
-
-task deployToTomcat() {
-    println "Interface for deployToTomcat task"
-}

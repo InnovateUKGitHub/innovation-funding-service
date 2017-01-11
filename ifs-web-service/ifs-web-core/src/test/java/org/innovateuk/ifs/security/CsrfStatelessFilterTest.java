@@ -50,6 +50,7 @@ public class CsrfStatelessFilterTest {
 
     private void setUpFilter() {
         this.filter.setAccessDeniedHandler(accessDeniedHandler);
+        this.filter.initProtectionMatcher();
     }
 
     @Test

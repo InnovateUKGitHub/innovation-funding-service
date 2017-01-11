@@ -23,7 +23,7 @@
 
 <div th:fragment="prot-test">
   <p>This is just an <strong>example</strong>, real code example is required here</p>
-  <ul class="list-bullet">
+  <ul class="list list-bullet">
     <li>Show example output</li>
     <li>Show example html snippet</li>
   </ul>
@@ -93,7 +93,7 @@
 </th:block>
 
 
-<!-- =========================== Accordians =========================== -->
+<!-- =========================== Read only forms =========================== -->
 
 <th:block th:fragment="prot-read-only-forms">
     <form>
@@ -136,7 +136,7 @@
             <div class="task-full-width">
                 <h4 class="heading-small"><a href="#">Task 8</a></h4>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                <ul class="list-bullet">
+                <ul class="list list-bullet">
                     <li>ipsum dolor sit amet</li>
                     <li>consectetur adipiscing</li>
                 </ul>
@@ -151,5 +151,22 @@
         </li>
     </ul>
 </th:block>
+
+
+<!-- =========================== Warnings and panels =========================== -->
+
+<th:block th:fragment="prot-panels">
+  <div class="message-alert extra-margin-bottom">
+    <h2 class="heading-small no-margin">Message alert</h2>
+    <p>This is a message alerting you of something.</p>
+    <ul class="message-summary-list">
+      <li><strong><a href="#">Respond to request</a></strong></li>
+    </ul>
+  </div>
+  <div class="success-alert extra-margin-bottom">
+    <h2 class="heading-small no-margin">Assessor account complete!</h2>
+  </div>
+</th:block>
+
 
 </html>

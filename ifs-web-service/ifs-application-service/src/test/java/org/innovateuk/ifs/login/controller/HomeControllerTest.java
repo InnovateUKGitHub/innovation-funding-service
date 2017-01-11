@@ -116,7 +116,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         mockMvc.perform(get("/roleSelection"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/login/dual-user-choice"));
+                .andExpect(view().name("login/dual-user-choice"));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "selectedRole"))
-                .andExpect(view().name("/login/dual-user-choice"))
+                .andExpect(view().name("login/dual-user-choice"))
                 .andReturn();
 
         RoleSelectionForm form = (RoleSelectionForm) result.getModelAndView().getModel().get("form");
@@ -185,6 +185,6 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("selectedRole"));
-        assertEquals("Please select a role", bindingResult.getFieldError("selectedRole").getDefaultMessage());
+        assertEquals("Please select a role.", bindingResult.getFieldError("selectedRole").getDefaultMessage());
     }
 }

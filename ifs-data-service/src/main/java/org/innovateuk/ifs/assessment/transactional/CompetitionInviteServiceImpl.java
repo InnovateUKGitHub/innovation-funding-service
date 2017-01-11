@@ -14,6 +14,7 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
@@ -29,32 +30,37 @@ import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -63,6 +69,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
  */
 @Service
+@Transactional
 public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
@@ -92,7 +99,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private AssessorInviteToSendMapper toSendMapper;
 
     @Autowired
-    private UserService userService;
+    private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -170,7 +177,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (invite.getUser() != null) {
                 return TRUE;
             }
-            return userService.findByEmail(invite.getEmail()).getOptionalSuccessObject().isPresent();
+
+            return userRepository.findByEmail(invite.getEmail()).isPresent();
         });
     }
 
@@ -201,17 +209,79 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        // TODO INFUND-6450
-        return serviceSuccess(emptyList());
+        return serviceSuccess(simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR),
+                participant -> {
+                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
+                    assessorInviteOverview.setName(participant.getInvite().getName());
+                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
+                    assessorInviteOverview.setDetails(getDetails(participant));
+
+                    if (participant.getUser() != null) {
+                        assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
+                        assessorInviteOverview.setCompliant(participant.getUser().isProfileCompliant());
+                        // TODO INFUND-6865 Users should have innovation areas
+                        assessorInviteOverview.setInnovationArea(null);
+                    }
+                    return assessorInviteOverview;
+                }));
     }
 
     @Override
     public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
-        return getInnovationArea(stagedInvite.getInnovationCategoryId())
-                .andOnSuccess(innovationArea -> getCompetition(stagedInvite.getCompetitionId())
-                        .andOnSuccess(competition -> inviteUserToCompetition(stagedInvite.getName(), stagedInvite.getEmail(), competition, innovationArea))
-                )
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+        return getByEmailAndCompetition(stagedInvite.getEmail(), stagedInvite.getCompetitionId()).handleSuccessOrFailure(
+                failure -> getCompetition(stagedInvite.getCompetitionId())
+                        .andOnSuccess(competition -> getInnovationArea(stagedInvite.getInnovationCategoryId())
+                                .andOnSuccess(innovationArea ->
+                                        inviteUserToCompetition(
+                                                stagedInvite.getName(),
+                                                stagedInvite.getEmail(),
+                                                competition,
+                                                innovationArea
+                                        )
+                                )
+                        )
+                        .andOnSuccessReturn(competitionInviteMapper::mapToResource),
+                success -> serviceFailure(Error.globalError(
+                        "validation.competitionInvite.create.email.exists",
+                        singletonList(stagedInvite.getEmail())
+                ))
+        );
+    }
+
+    @Override
+    public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
+        return getCompetition(competitionId).andOnSuccessReturn(competition ->
+                mapWithIndex(newUserStagedInvites, (index, invite) ->
+                        getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
+                                failure -> getInnovationArea(invite.getInnovationCategoryId())
+                                        .andOnSuccess(innovationArea ->
+                                                inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
+                                        )
+                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
+                                                "invites[" + index + "].innovationArea",
+                                                invite.getInnovationCategoryId(),
+                                                "validation.competitionInvite.create.innovationArea.required"
+                                                ))
+                                        ),
+                                success -> serviceFailure(Error.fieldError(
+                                        "invites[" + index + "].email",
+                                        invite.getEmail(),
+                                        "validation.competitionInvite.create.email.exists"
+                                ))
+                        )
+                ))
+                .andOnSuccess(list -> aggregate(list))
+                .andOnSuccessReturnVoid();
+    }
+
+    private String getDetails(CompetitionParticipant participant) {
+        String details = null;
+
+        if (participant.getStatus() == REJECTED) {
+            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
+        }
+
+        return details;
     }
 
     private BusinessType getBusinessType(User assessor) {
@@ -326,6 +396,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
     }
 
+    private ServiceResult<List<CompetitionParticipant>> getParticipantsByCompetition(long competitionId) {
+        return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR), notFoundError(CompetitionParticipant.class, competitionId));
+    }
+
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
@@ -334,7 +408,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return serviceSuccess(competitionParticipantRepository.save(participant.acceptAndAssignUser(user)));
+            return serviceSuccess(participant.acceptAndAssignUser(user));
         }
     }
 
@@ -346,7 +420,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return serviceSuccess(competitionParticipantRepository.save(participant.reject(rejectionReason, rejectionComment)));
+            return serviceSuccess(participant.reject(rejectionReason, rejectionComment));
         }
     }
 

@@ -257,7 +257,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<Void> validateContract(Contract contract, User user) {
         Profile profile = profileRepository.findOne(user.getProfileId());
         if (profile.getContract() != null && contract.getId().equals(profile.getContract().getId())) {
-            return serviceFailure(badRequestError("validation.assessorprofiletermsform.terms.alreadysigned"));
+            return serviceFailure(badRequestError("validation.assessorprofilecontractform.terms.alreadysigned"));
         }
         return serviceSuccess();
     }

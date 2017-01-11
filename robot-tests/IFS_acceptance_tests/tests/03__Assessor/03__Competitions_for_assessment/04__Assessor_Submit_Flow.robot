@@ -161,12 +161,12 @@ Summary:Funding Decision Validations
     ...    INFUND-5228
     [Tags]
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    And The user should see an error    Please indicate your decision
+    And The user should see an error    Please indicate your decision.
     And The user enters text to a text field    id=feedback    ${EMPTY}
     And The user enters text to a text field    id=comment    ${EMPTY}
     Then the user selects the radio button    fundingConfirmation    false
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then The user should see an error    Please enter your feedback
+    Then The user should see an error    Please enter your feedback.
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485
@@ -180,7 +180,7 @@ Summary:Word count check(Your feedback)
     [Setup]    browser validations have been disabled
     When the user enters multiple strings into a text field    id=feedback    test    5001
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
-    Then the user should see an error    This field cannot contain more than 5,000 characters
+    Then the user should see an error    This field cannot contain more than 5,000 characters.
     When the user enters text to a text field    id=feedback    a a a a a a a a a a a a a a a a a a \ a a \ a a a \ a a a a a \ a a aa \ a a a a a \ a a a a a a a a \ a a a a a \ a a a \ a a a \ a a a \ a a a a \ a \ a a a a \ a a \ a a aa \ a a a a a a a a a a \ a a a a a \ aa a a a a a a a a a a a a a a
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.

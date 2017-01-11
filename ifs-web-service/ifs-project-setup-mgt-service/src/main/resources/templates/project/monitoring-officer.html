@@ -51,7 +51,7 @@
 										<span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
 								</th:block>
 							</label>
-							<input type="text" th:errorclass="field-error" required="required" data-required-errormessage="Please enter a first name" class="form-control width-full" th:readonly="${readonly}" th:field="*{firstName}" />
+							<input type="text" th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.standard.firstname.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{firstName}" />
 						</div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('lastName') ? 'error' : ''}">
@@ -61,7 +61,7 @@
 													<span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
 											</th:block>
 							  </label>
-							  <input type="text"  th:errorclass="field-error" required="required" data-required-errormessage="Please enter a last name"  class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
+							  <input type="text"  th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.standard.lastname.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
 						  </div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'error' : ''}">
@@ -71,7 +71,7 @@
 													<span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}" />
 											</th:block>
 							  </label>
-							  <input type="email" th:errorclass="field-error" required="required" data-required-errormessage="Please enter an email address" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
+							  <input type="email" th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.invite.email.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
 						  </div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber') ? 'error' : ''}">
@@ -83,7 +83,7 @@
 							  </label>
 							  <input type="tel" th:errorclass="field-error" class="form-control" th:readonly="${readonly}" th:field="*{phoneNumber}"
 									 required="required" minlength="8" maxlength="20"
-									 th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(0,0,8)},
+									 th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
 									  data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
 									  data-tel-errormessage=#{validation.standard.phonenumber.format},
 									  data-required-errormessage=#{validation.standard.phonenumber.required}" />
@@ -142,7 +142,7 @@
 
 		<th:block th:if="${model.partnerOrganisationNames}">
 			<h3 class="heading-medium no-margin">Project partners</h3>
-			<ul class="list-bullet">
+			<ul class="list list-bullet">
 				<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
 			</ul>
 		</th:block>

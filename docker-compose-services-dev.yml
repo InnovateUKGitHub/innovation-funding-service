@@ -1,0 +1,102 @@
+version: '2'
+services:
+
+  application-service:
+    hostname: application-service
+    links:
+      - admin
+    ports:
+      - "8081:8080"
+      - "9001:8000"
+
+  assessment-service:
+    hostname: assessment-service
+    links:
+      - admin
+    ports:
+      - "8082:8080"
+      - "9002:8000"
+
+  competition-mgt-service:
+    hostname: competition-mgt-service
+    links:
+      - admin
+    ports:
+      - "8083:8080"
+      - "9003:8000"
+
+  project-setup-mgt-service:
+    hostname: project-setup-mgt-service
+    links:
+      - admin
+    ports:
+      - "8084:8080"
+      - "9004:8000"
+
+  project-setup-service:
+    hostname: project-setup-service
+    links:
+      - admin
+    ports:
+      - "8085:8080"
+      - "9005:8000"
+
+  data:
+    hostname: data
+    links:
+      - admin
+      - smtp
+      - mysql:ifs-database
+    volumes:
+      - ./robot-tests/upload_files/:/tmp/ifs-local
+    ports:
+      - "8086:8080"
+      - "9006:8000"
+
+  smtp:
+    image: camptocamp/smtp-sink
+    expose:
+      - 25
+    networks:
+      - ifs
+
+  imap:
+    image: camptocamp/courier-imap
+    volumes_from:
+      - smtp:rw
+    expose:
+      - 143
+    ports:
+      - "9876:143"
+    networks:
+      - ifs
+
+  webmail:
+    image: camptocamp/sqwebmail
+    ports:
+      - "1234:80"
+    links:
+      - smtp
+      - imap
+    volumes_from:
+      - smtp:rw
+    networks:
+      - ifs
+
+  admin:
+    hostname: admin
+    image: enmobile/docker-spring-boot-admin
+    ports:
+    - "3001:8123"
+    networks:
+      - ifs
+  mysql:
+    image: mysql:5.5.49
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ifs
+    restart: on-failure
+    networks:
+      - ifs

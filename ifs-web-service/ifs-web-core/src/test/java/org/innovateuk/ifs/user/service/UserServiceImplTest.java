@@ -195,4 +195,19 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         verify(userRestService, only()).updateUserProfile(userId, profileDetails);
     }
+
+    @Test
+    public void userHasApplicationForCompetition() throws Exception {
+        Long userId = 1L;
+        Long competitionId = 2L;
+        Boolean expected = true;
+
+        when(userRestService.userHasApplicationForCompetition(userId, competitionId)).thenReturn(restSuccess(expected));
+
+        ServiceResult<Boolean> response = service.userHasApplicationForCompetition(userId, competitionId);
+        assertTrue(response.isSuccess());
+        assertEquals(expected, response.getSuccessObjectOrThrowException());
+
+        verify(userRestService, only()).userHasApplicationForCompetition(userId, competitionId);
+    }
 }

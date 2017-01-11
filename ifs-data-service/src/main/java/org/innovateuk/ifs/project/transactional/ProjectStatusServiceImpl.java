@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.project.transactional;
 
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
@@ -53,6 +54,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -121,27 +125,32 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
 
+    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId){
+        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        return result.map(Boolean::booleanValue).orElse(false);
+    }
+
     private ProjectActivityStates getBankDetailsStatus(Project project){
-        // Show hourglass when there is at least one org which hasn't submitted bank details but is required to.
+        // Show flag when there is any organisation awaiting approval.
+        boolean incomplete = false;
         for(Organisation organisation : project.getOrganisations()){
-            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            if(!bankDetails.isPresent()){
-                return PENDING;
+            if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
+                Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
+                ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+                ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), organisation.getId(), bankDetails, financeContactStatus);
+                if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
+                    incomplete = true;
+                }
+                if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
+                    return ACTION_REQUIRED;
+                }
             }
         }
-
-        // Show action required by internal user (pending flag) when all bank details submitted but at least one requires manual approval.
-        for(Organisation organisation : project.getOrganisations()){
-            Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
-            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
-            if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
-                return ACTION_REQUIRED;
-            }
+        if(incomplete) {
+            return PENDING;
+        } else {
+            return COMPLETE;
         }
-
-        // otherwise show a tick
-        return COMPLETE;
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project){
@@ -158,21 +167,22 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
 
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
-        if(ApprovalType.APPROVED.equals(approvalType)) {
-            return COMPLETE;
-        } else if(ApprovalType.REJECTED.equals(approvalType)) {
-            return PENDING;
-        }
+        switch (approvalType) {
+            case APPROVED:
+                return COMPLETE;
+            case REJECTED:
+                return REJECTED;
+            default:
+                if (project.getSpendProfileSubmittedDate() != null) {
+                    return ACTION_REQUIRED;
+                }
 
-        if (project.getSpendProfileSubmittedDate() != null) {
-            return ACTION_REQUIRED;
-        }
+                if (financeCheckStatus.equals(COMPLETE)) {
+                    return PENDING;
+                }
 
-        if (financeCheckStatus.equals(COMPLETE)) {
-            return PENDING;
+                return NOT_STARTED;
         }
-
-        return NOT_STARTED;
     }
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus){
@@ -253,7 +263,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 }
             }
         } else {
-            roleSpecificGolStates.put(COMP_ADMIN, NOT_REQUIRED);
+            roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
         }
         return roleSpecificGolStates;
     }

@@ -205,6 +205,8 @@ public class BaseUnitTest {
     public PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
     public CookieUtil cookieUtil;
+    @Mock
+    public CategoryService categoryServiceMock;
 
     @Spy
     @InjectMocks
@@ -381,6 +383,7 @@ public class BaseUnitTest {
                 with(id(1L)).
                 with(name("Application details")).
                 withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
         QuestionResource q10Resource = setupQuestionResource(10L, "How does your project align with the scope of this competition?", questionResourceBuilder);
@@ -389,6 +392,7 @@ public class BaseUnitTest {
                 with(id(2L)).
                 with(name("Scope (Gateway question)")).
                 withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
         QuestionResource q20Resource = setupQuestionResource(20L, "1. What is the business opportunity that this project addresses?", questionResourceBuilder);
@@ -403,6 +407,7 @@ public class BaseUnitTest {
                 with(id(3L)).
                 with(name("Business proposition (Q1 - Q4)")).
                 withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
 
@@ -418,10 +423,11 @@ public class BaseUnitTest {
                 with(id(4L)).
                 with(name("Project approach (Q5 - Q8)")).
                 withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
-        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
-        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
+        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).withType(SectionType.GENERAL).build();
+        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withType(SectionType.GENERAL).build();
         SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withType(SectionType.FINANCE).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
@@ -601,6 +607,7 @@ public class BaseUnitTest {
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);

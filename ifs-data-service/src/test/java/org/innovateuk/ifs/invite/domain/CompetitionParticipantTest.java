@@ -12,11 +12,14 @@ import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.new
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class CompetitionParticipantTest {
 
@@ -30,6 +33,37 @@ public class CompetitionParticipantTest {
                 .withStatus(SENT)
                 .build();
         rejectionReason = RejectionReasonBuilder.newRejectionReason().build();
+    }
+
+    @Test
+    public void constructor() throws Exception {
+        User user = newUser().build();
+        CompetitionInvite createdInvite = newCompetitionInvite()
+                .withCompetition(newCompetition().withName("my competition"))
+                .withStatus(SENT)
+                .withUser(user)
+                .build();
+
+        CompetitionParticipant competitionParticipant = new CompetitionParticipant(createdInvite);
+        assertSame(createdInvite.getUser(), competitionParticipant.getUser());
+        assertSame(createdInvite.getTarget(), competitionParticipant.getProcess());
+        assertSame(createdInvite, competitionParticipant.getInvite());
+        assertSame(ASSESSOR, competitionParticipant.getRole());
+        assertSame(PENDING, competitionParticipant.getStatus());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void constructor_inviteNull() throws Exception {
+        CompetitionInvite competitionInvite = null;
+        new CompetitionParticipant(competitionInvite);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void constructor_inviteWithoutCompetition() throws Exception {
+        CompetitionInvite competitionInvite = newCompetitionInvite()
+                .withStatus(SENT)
+                .build();
+        new CompetitionParticipant(competitionInvite);
     }
 
     @Test(expected = IllegalArgumentException.class)

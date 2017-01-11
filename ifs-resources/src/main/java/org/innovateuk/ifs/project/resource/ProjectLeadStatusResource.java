@@ -22,7 +22,8 @@ public class ProjectLeadStatusResource extends ProjectPartnerStatusResource {
             ProjectActivityStates spendProfileStatus,
             ProjectActivityStates otherDocumentsStatus,
             ProjectActivityStates grantOfferLetterStatus,
-            ProjectActivityStates financeContactStatus) {
-        super(organisationId, name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus, financeContactStatus);
+            ProjectActivityStates financeContactStatus,
+            boolean isGrantOfferLetterSent) {
+        super(organisationId, name, organisationType, projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferLetterStatus, financeContactStatus, isGrantOfferLetterSent);
     }
 }

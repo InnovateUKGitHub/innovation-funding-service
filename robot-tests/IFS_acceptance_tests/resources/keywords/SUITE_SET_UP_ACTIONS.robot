@@ -36,7 +36,7 @@ create new account for submitting
     And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    jQuery=.button:contains("Search")
     And the user clicks the button/link    link=HIVE IT LIMITED
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
@@ -45,7 +45,7 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
-    Guest user log-in    ${submit_test_email}    Passw0rd123
+    Guest user log-in    ${submit_test_email}    ${correct_password}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
@@ -156,12 +156,7 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    If you did not request an account with us
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-
-Applicant navigates to the finances of the Robot application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Your finances
+    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
 
 The user redirects to the page
     [Arguments]    ${TEXT1}    ${TEXT2}
@@ -183,28 +178,6 @@ The user navigates to the overview page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
 
-the user marks finances as complete
-    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-    the user selects the radio button    financePosition-organisationSize    LARGE
-    the user enters text to a text field    id=cost-financegrantclaim    20
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    wait for autosave
-
-the user marks the finances as complete
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    wait for autosave
-
-Make the finances ready for mark as complete
-    Applicant navigates to the finances of the Robot application
-    the user selects the radio button    financePosition-organisationSize    SMALL
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-
 The user navigates to the academic application finances
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
@@ -220,14 +193,6 @@ The user marks the academic application finances as incomplete
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
     wait for autosave
-
-Create new application
-    Wait for autosave
-    go to    ${CREATE_APPLICATION_PAGE}
-    Input Text    id=application_name    Form test application
-    Click Element    css=#content > form > input
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -268,7 +233,7 @@ we create a new user
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    address-same
+    The user selects the checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
@@ -305,18 +270,18 @@ the user enters the details and clicks the create account
     And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    Select Checkbox    termsAndConditions
+    the user selects the checkbox  termsAndConditions
     Submit Form
 
 the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    Input Text    id=phoneNumber    0612121212
+    the user selects the radio button  gender  gender2
+    the user selects the radio button  ethnicity  ethnicity2
+    the user selects the radio button  disability  disability2
+    Input Text        id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
-    Select Checkbox    termsAndConditions
-    Submit Form
+    the user selects the checkbox  termsAndConditions
+    the user clicks the button/link  jQuery=.button:contains("Create account")

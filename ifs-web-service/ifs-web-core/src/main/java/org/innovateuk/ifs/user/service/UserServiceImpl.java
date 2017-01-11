@@ -179,6 +179,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
+        return userRestService.userHasApplicationForCompetition(userId, competitionId).toServiceResult();
+    }
+
+    @Override
     public RestResult<UserResource> retrieveUserById(Long id) {
         return userRestService.retrieveUserById(id);
     }

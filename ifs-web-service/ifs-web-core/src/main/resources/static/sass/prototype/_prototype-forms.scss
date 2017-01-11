@@ -1,3 +1,7 @@
+textarea {
+  border: 2px solid;
+}
+
 /*----- Search ----*/
 .form-search{
   position: relative;
@@ -221,11 +225,12 @@ select.form-control{
   margin-bottom: 40px;
 
   .form-control{
+    background: #fff;
     width: 100%;
   }
 
   button{
-    margin: 20px 0 0 0;
+    margin: 25px 0 0 0;
   }
 }
 

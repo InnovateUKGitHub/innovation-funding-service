@@ -70,7 +70,7 @@ User can create a new competition
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user should not see the element    jQuery('.button:contains("Save as Ready To Open")
+    And The user should not see the element    jQuery('.button:contains("Save")
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
@@ -154,7 +154,7 @@ Initial details: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(0)
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 User should have access to all the sections
     [Documentation]    INFUND-4725
@@ -188,7 +188,7 @@ Funding information: calculations
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
     and the user should see the element    jQuery=Button:contains("+Add co-funder")
     And the user should see the element    jQuery=Button:contains("Remove")
-    And the user enters text to a text field    id=1-funder    FunderName2
+    And the user enters text to a text field    id=funders1.funder    FunderName2
     And the user enters text to a text field    id=1-funderBudget    1000
     Then the total should be correct    £ 21,000
     When the user clicks the button/link    jQuery=Button:contains("Remove")
@@ -221,7 +221,7 @@ Funding information: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(1)
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 Eligibility: Contain the correct options
     [Documentation]    INFUND-2989
@@ -250,9 +250,9 @@ Eligibility: Mark as Done then Edit again
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    Given the user selects the checkbox    id=research-categories-33
-    And the user selects the checkbox    id=research-categories-34
-    And the user selects the checkbox    id=research-categories-35
+    Given the user selects the checkbox    research-categories-33
+    And the user selects the checkbox    research-categories-34
+    And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
     And the user selects the radio button    leadApplicantType    business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
@@ -263,7 +263,9 @@ Eligibility: Mark as Done then Edit again
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
     And the user should see the text in the page    50%
-    And the user should see the text in the page    Technical feasibility, Industrial research, Experimental development
+    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Industrial research
+    And the user should see the text in the page    Experimental development
     And The user should not see the element    id=streamName
     When the user clicks the button/link    link=Competition setup
     When the user clicks the button/link    link=Eligibility
@@ -275,7 +277,7 @@ Eligibility: Should have a Green Check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=img.section-status:eq(2)
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -309,7 +311,7 @@ Milestones: Green check should show
     [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .section-status
-    And the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    And the user should not see the element    jQuery=.button:contains("Save")
 
 Application: Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
@@ -441,17 +443,17 @@ Application: should have a green check
     When The user clicks the button/link    jQuery=.button:contains("Done")
     And The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=ul > li:nth-child(5) > img
-    And The user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    And The user should see the element    jQuery=.button:contains("Save")
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]
     [Setup]
-    Given The user should see the element    jQuery=.button:contains("Save as Ready To Open")
+    Given The user should see the element    jQuery=.button:contains("Save")
     When The user clicks the button/link    link=Initial details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user clicks the button/link    link=Competition setup
-    Then the user should not see the element    jQuery=.button:contains("Save as Ready To Open")
+    Then the user should not see the element    jQuery=.button:contains("Save")
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial details
     ...    AND    The user clicks the button/link    jQuery=.button:contains("Done")
     ...    AND    And The user clicks the button/link    link=Competition setup
@@ -461,7 +463,7 @@ User should be able to Save the Competition as Open
     ...
     ...    INFUND-3002
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    When the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
@@ -482,7 +484,7 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641
      [Tags]    HappyPath
-    When the user selects the checkbox    id=assessors-62
+    When the user selects the checkbox    assessors-62
     And the user enters text to a text field    id=assessorPay    100
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the text in the page    3
@@ -495,7 +497,7 @@ Assessor: Should have a Green Check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(6) .section-status
-    And the user clicks the button/link    jQuery=.button:contains("Save as Ready To Open")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
     And the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
@@ -503,7 +505,6 @@ Assessor: Should have a Green Check
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
-    sleep    500ms
     Wait For Autosave
 
 the total should be correct
@@ -553,7 +554,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
     Focus    jQuery=button:contains(Done)
-    sleep    500ms
+    wait for autosave
 
 the weekdays should be correct
     element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
@@ -586,7 +587,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Competition title
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId
+    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

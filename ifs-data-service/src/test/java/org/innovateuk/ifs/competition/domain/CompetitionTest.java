@@ -37,7 +37,6 @@ public class CompetitionTest {
     private String budgetCode;
 
     private String activityCode;
-    private String innovateBudget;
     private String funder;
     private BigDecimal funderBudget;
 
@@ -55,7 +54,6 @@ public class CompetitionTest {
 
         budgetCode = "BudgetCode";
         activityCode = "ActivityCode";
-        innovateBudget = "Innovate Budget";
         funder = "Funder";
         funderBudget = new BigDecimal(0);
 
@@ -71,7 +69,6 @@ public class CompetitionTest {
 
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);
-        competition.setInnovateBudget(innovateBudget);
         competition.setFunders(getTestFunders(competition));
     }
 
@@ -117,7 +114,6 @@ public class CompetitionTest {
 
         assertEquals(competition.getBudgetCode(), budgetCode);
         assertEquals(competition.getActivityCode(), activityCode);
-        assertEquals(competition.getInnovateBudget(), innovateBudget);
         assertEquals(competition.getFunders().size(), getTestFunders(competition).size());
     }
 

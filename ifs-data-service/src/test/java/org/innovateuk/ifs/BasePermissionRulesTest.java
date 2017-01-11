@@ -143,8 +143,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = emptyList();
-        user.setRoles(projectFinanaceUser);
+        List<RoleResource> projectFinanceUser = emptyList();
+        user.setRoles(projectFinanceUser);
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {

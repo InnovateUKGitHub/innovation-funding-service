@@ -19,7 +19,7 @@
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
 
                 <p>You must complete your profile before we can assign you applications.</p>
-                <ul class="list-bullet extra-margin-top">
+                <ul class="list list-bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
                         <a th:href="@{/profile/skills}">your skills</a>
                     </li>
@@ -27,13 +27,13 @@
                         <a th:href="@{/profile/declaration}">your declaration of interest</a>
                     </li>
                     <li th:unless="${model.profileStatus.contractComplete}">
-                        <a th:href="@{/profile/terms}">your contract</a>
+                        <a th:href="@{/profile/contract}">your contract</a>
                     </li>
                 </ul>
             </div>
 
             <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.pendingInvites)}">
-                <h2 class="heading-medium">Invitations to assess (<span th:text="${#lists.size(model.pendingInvites)}" />)</h2>
+                <h2 class="heading-large">Invitations to assess (<span th:text="${#lists.size(model.pendingInvites)}" />)</h2>
                 <ul class="boxed-list">
                     <li th:each="pendingInvite : ${model.pendingInvites}">
                         <div class="grid-row">
@@ -82,8 +82,8 @@
                 </div>
             </div>
 
-            <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
-                <h2 class="heading-large">Upcoming competitions to assess</h2>
+            <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
+                <h2 class="heading-large">Upcoming competitions to assess (<span th:text="${#lists.size(model.upcomingCompetitions)}" />)</h2>
                 <ul class="boxed-list">
                     <li th:each="upcomingCompetition : ${model.upcomingCompetitions}">
                         <div class="grid-row">
@@ -109,7 +109,7 @@
             </div>
 
             <h2 class="heading-medium">Your contract</h2>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>
                 </li>
@@ -117,17 +117,15 @@
                     <a th:href="@{/profile/declaration}">your declaration of interest</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/terms}">your contract</a>
+                    <a th:href="@{/profile/contract}">your contract</a>
                 </li>
-                <!--/* TODO INFUND-7061
                 <li>
-                    <a th:href="">travel and subsistence rates</a>
+                    <a th:href="@{/profile/travel}">travel and subsistence rates</a>
                 </li>
-                */-->
             </ul>
 
             <h2 class="heading-medium">Your profile</h2>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/details}">your details</a>
                 </li>
@@ -136,11 +134,9 @@
                     <a th:href="">change your password</a>
                 </li>
                 */-->
-                <!--/* TODO INFUND-7058
                 <li>
-                    <a th:href="">read terms and conditions</a>
+                    <a th:href="@{/assessor/terms-and-conditions}">read terms and conditions</a>
                 </li>
-                */-->
             </ul>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

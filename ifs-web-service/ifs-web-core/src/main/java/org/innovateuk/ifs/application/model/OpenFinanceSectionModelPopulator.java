@@ -31,8 +31,8 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Class for populating the model for the "Your Finances" section
@@ -82,25 +82,37 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
+
+
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
         addNavigation(section, application.getId(), model);
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
-        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionStatus.OPEN);
+        boolean allReadOnly = !competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)
+                || SectionType.FINANCE.equals(section.getType());
+
 
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("currentSectionId", section.getId());
         model.addAttribute("currentSection", section);
+        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("hasFinanceSection", true);
         model.addAttribute("financeSectionId", section.getId());
         model.addAttribute("allReadOnly", allReadOnly);
+        model.addAttribute("isSubFinanceSection", isSubFinanceSection(section));
         model.addAttribute("form", form);
     }
 
-
+    private Boolean isSubFinanceSection(SectionResource section) {
+        return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
+    }
 
     private void addApplicationDetails(ApplicationResource application,
         CompetitionResource competition,
@@ -119,11 +131,15 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         }
         form.setApplication(application);
 
-        addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation, allSections, inputs);
 
-        addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
+        //Parent finance section has no assignable or question details.
+        if (!SectionType.FINANCE.equals(section.getType())) {
+            addQuestionsDetails(model, application, form);
+            addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section);
+        }
+
         addCompletedDetails(model, application, userOrganisation);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -136,9 +152,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
 
-        if(form == null){
-            form = new Form();
-        }
         Map<String, String> values = form.getFormInput();
         mappedResponses.forEach((k, v) ->
             values.put(k.toString(), v.getValue())

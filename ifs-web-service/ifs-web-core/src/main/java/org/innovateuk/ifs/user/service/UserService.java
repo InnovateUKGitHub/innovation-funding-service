@@ -19,6 +19,8 @@ public interface UserService {
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
     RestResult<Void> verifyEmail(String hash);
     void resendEmailVerificationNotification(String email);
+    ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId);
+
 
     RestResult<UserResource> retrieveUserById(Long id);
 
