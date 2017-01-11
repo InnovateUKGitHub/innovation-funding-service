@@ -56,7 +56,8 @@ Link to remove partner organisation
 
 Autosaved works (in cookie)
     [Documentation]    INFUND-1039
-    [Tags]    HappyPath
+    [Tags]    HappyPath  Pending
+    # TODO 6390
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
