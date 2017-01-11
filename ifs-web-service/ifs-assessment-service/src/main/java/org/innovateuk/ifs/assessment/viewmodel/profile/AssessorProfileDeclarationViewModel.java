@@ -2,26 +2,81 @@ package org.innovateuk.ifs.assessment.viewmodel.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.user.resource.AffiliationResource;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Holder of model attributes for the Declaration of Interests view.
+ * Holder of model attributes for the Declaration of Interest view.
  */
 public class AssessorProfileDeclarationViewModel {
 
-    private LocalDate declarationDate;
+    private boolean completed;
+    private String principalEmployer;
+    private String role;
+    private String professionalAffiliations;
+    private List<AffiliationResource> appointments = new ArrayList<>();
+    private String financialInterests;
+    private List<AffiliationResource> familyAffiliations = new ArrayList<>();
+    private String familyFinancialInterests;
 
-    public AssessorProfileDeclarationViewModel(LocalDate declarationDate) {
-        this.declarationDate = declarationDate;
+    public AssessorProfileDeclarationViewModel(
+            boolean completed,
+            String principalEmployer,
+            String role,
+            String professionalAffiliations,
+            List<AffiliationResource> appointments,
+            String financialInterests,
+            List<AffiliationResource> familyAffiliations,
+            String familyFinancialInterests
+    ) {
+        this.completed = completed;
+        this.principalEmployer = principalEmployer;
+        this.role = role;
+        this.professionalAffiliations = professionalAffiliations;
+        this.financialInterests = financialInterests;
+        this.familyFinancialInterests = familyFinancialInterests;
+
+        if (appointments != null) {
+            this.appointments.addAll(appointments);
+        }
+
+        if (familyAffiliations != null) {
+            this.familyAffiliations.addAll(familyAffiliations);
+        }
     }
 
-    public LocalDate getDeclarationDate() {
-        return declarationDate;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public void setDeclarationDate(LocalDate declarationDate) {
-        this.declarationDate = declarationDate;
+    public String getPrincipalEmployer() {
+        return principalEmployer;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getProfessionalAffiliations() {
+        return professionalAffiliations;
+    }
+
+    public List<AffiliationResource> getAppointments() {
+        return appointments;
+    }
+
+    public String getFinancialInterests() {
+        return financialInterests;
+    }
+
+    public List<AffiliationResource> getFamilyAffiliations() {
+        return familyAffiliations;
+    }
+
+    public String getFamilyFinancialInterests() {
+        return familyFinancialInterests;
     }
 
     @Override
@@ -30,17 +85,31 @@ public class AssessorProfileDeclarationViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorProfileDeclarationViewModel that = (AssessorProfileDeclarationViewModel) o;
+        AssessorProfileDeclarationViewModel viewModel = (AssessorProfileDeclarationViewModel) o;
 
         return new EqualsBuilder()
-                .append(declarationDate, that.declarationDate)
+                .append(completed, viewModel.completed)
+                .append(principalEmployer, viewModel.principalEmployer)
+                .append(role, viewModel.role)
+                .append(professionalAffiliations, viewModel.professionalAffiliations)
+                .append(appointments, viewModel.appointments)
+                .append(financialInterests, viewModel.financialInterests)
+                .append(familyAffiliations, viewModel.familyAffiliations)
+                .append(familyFinancialInterests, viewModel.familyFinancialInterests)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(declarationDate)
+                .append(completed)
+                .append(principalEmployer)
+                .append(role)
+                .append(professionalAffiliations)
+                .append(appointments)
+                .append(financialInterests)
+                .append(familyAffiliations)
+                .append(familyFinancialInterests)
                 .toHashCode();
     }
 }

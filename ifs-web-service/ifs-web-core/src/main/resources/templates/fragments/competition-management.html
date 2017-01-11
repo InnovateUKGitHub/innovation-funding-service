@@ -75,7 +75,7 @@
 
 <div th:fragment="competition-mgt-menu-open(id)" th:remove="tag">
   <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'allApplications' ? 'selected':''}"><a th:href="@{/management/competition/{competitionId}/applications(competitionId=${id})}">All applications</a></li>
+    <li th:class="${activeTab == 'allApplications' ? 'selected':''}"><a th:href="@{/competition/{competitionId}/applications(competitionId=${id})}">All applications</a></li>
   </ul>
 </div>
 

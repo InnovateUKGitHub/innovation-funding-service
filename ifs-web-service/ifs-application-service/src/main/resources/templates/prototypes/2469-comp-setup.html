@@ -13,9 +13,9 @@
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     
-    <div th:if="${(param.compStatus == null)}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
+	<div th:if="${(param.compStatus == null)}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:remove="tag" />
 	<div th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : '/prototypes/2469-comp-setup?compStatus=ready')})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -101,7 +101,8 @@
 		//Of the available tabs check which section has been 'done'
 
 		var sectionCount = 0;
-		var sectionNumber = jQuery(".list-overview li").length+1; // count number of sections based on tab;e
+		var sectionNumber = jQuery(".task-list li").length+1; // count number of sections based on tab;e
+		jQuery(".task-list li .task-status-complete").hide();
 
 		for(var i = 1; i < sectionNumber; i++) {
 			
@@ -128,7 +129,8 @@
 
 
 			if(localStorage.getItem('section'+i) == 'section-'+i+'-complete'){
-				jQuery('#section-'+i).addClass('marked-as-complete');
+//				jQuery('#section-'+i).addClass('marked-as-complete');
+				jQuery('#section-'+i).find('.task-status-complete').show();
 
 				jQuery('#section-'+i+'-done').show();
 				jQuery('#section-'+i+'-edit').hide();
@@ -136,7 +138,8 @@
 				sectionCount ++;
 
 			}else{
-				jQuery('#section-'+i).removeClass('marked-as-complete');
+//				jQuery('#section-'+i).removeClass('marked-as-complete');
+				jQuery('#section-'+i).find('.task-status-complete').hide();
 
 				jQuery('#section-'+i+'-done').hide();
 				jQuery('#section-'+i+'-edit').show();
