@@ -503,9 +503,10 @@ Project Finance is able to Reject Spend Profile
     #    Then the user should see the element    jQuery=h3:contains("The spend profile has been rejected")
     # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
 
-Project Finance is able to Approve Spend Profile\
+Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
     [Tags]    HappyPath
+    [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     When the user selects the checkbox      jQuery=#approvedByLeadTechnologist
     Then the user should see the element    jQuery=button:contains("Approved")
@@ -515,6 +516,7 @@ Project Finance is able to Approve Spend Profile\
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Approved")
     And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
+    And the user should see the text in the page    ${PS_SP_APPLICATION_TITLE}
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
