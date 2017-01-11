@@ -377,10 +377,8 @@
                                th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-calculate'}"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? ${costCategory?.getTotal()} : '0'"/>
                         <input type="hidden"
-                               th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
-                               class="form-control form-control-1-4 alignright"
                                readonly="readonly"
-                               th:id="${'section-total-'+subSection.id+'-calculate'}"
+                               th:id="${'section-total-'+subSection.id+'-calculate-formatted'}"
                                th:attr="data-calculation-fields='#'+${'cost-'+ type + '-'+overheadCosts?.id+'-calculate'}+',1',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
