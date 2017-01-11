@@ -13,7 +13,7 @@ import static java.lang.String.format;
 @Service
 public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService implements ApplicationAssessmentSummaryRestService {
 
-    private String applicationAssessmentSummaryRestURL = "applicationAssessmentSummary";
+    private String applicationAssessmentSummaryRestURL = "/applicationAssessmentSummary";
 
     @Override
     public RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId) {

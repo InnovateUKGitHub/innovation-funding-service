@@ -10,7 +10,7 @@ import static org.junit.Assert.assertSame;
 
 public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestServiceUnitTest<ApplicationAssessmentSummaryRestServiceImpl> {
 
-    private static String applicationAssessmentSummaryRestUrl = "applicationAssessmentSummary";
+    private static String applicationAssessmentSummaryRestUrl = "/applicationAssessmentSummary";
 
     @Override
     protected ApplicationAssessmentSummaryRestServiceImpl registerRestServiceUnderTest() {
