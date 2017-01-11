@@ -161,7 +161,7 @@ public class POJOTest {
     @Before
     public void setup() {
         classes = PojoClassFactory.getPojoClassesRecursively(POJO_PACKAGE, new FilterPackages(classesToTest));
-        classes.forEach(pe -> System.err.println(pe.getName()));
+
         validator = ValidatorBuilder.create()
             .with(
                 new GetterMustExistRule(),
