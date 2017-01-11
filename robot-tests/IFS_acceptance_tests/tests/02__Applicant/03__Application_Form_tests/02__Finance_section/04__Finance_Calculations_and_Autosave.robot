@@ -7,7 +7,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant navigates to the finances of the Robot application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath    Applicant
+Force Tags        HappyPath    Applicant  Pending
 Resource          ../../../../resources/defaultResources.robot
 
 *** Variables ***

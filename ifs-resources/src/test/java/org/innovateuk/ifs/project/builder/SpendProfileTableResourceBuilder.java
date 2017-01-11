@@ -1,4 +1,4 @@
-package com.worth.ifs.project.resource;
+package org.innovateuk.ifs.project.builder;
 
 
 import org.innovateuk.ifs.BaseBuilder;
