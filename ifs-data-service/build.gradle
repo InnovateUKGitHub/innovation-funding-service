@@ -36,6 +36,9 @@ ext {
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
 
+ext.idpRestKey=ext.get('idp.rest.key')
+
+
 sourceSets {
     client {
         java {

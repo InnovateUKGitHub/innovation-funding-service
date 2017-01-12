@@ -1,24 +1,24 @@
-ext.ifsDatasourceHost = "ifs-database"
-ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
-ext.ifsDatasourceUsername="root"
-ext.ifsDatasourcePassword="password"
+ext.ifsDatasourceHost = ext.get('ifs.datasource.host')
+ext.ifsDatasourceUrl=ext.get('ifs.datasource.url')
+ext.ifsDatasourceUsername=ext.get('ifs.datasource.username')
+ext.ifsDatasourcePassword=ext.get('ifs.datasource.password')
 
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8'
-project.ext['flyway.schemas']='ifs,ifs_test'
-project.ext['flyway.user']='root'
-project.ext['flyway.password']="password"
-project.ext['flyway.placeholderPrefix']='_${'
-project.ext['flyway.placeholderSuffix']='}'
+project.ext['flyway.url']=ext.get('ifs.flyway.url')
+project.ext['flyway.schemas']=ext.get('ifs.flyway.schemas')
+project.ext['flyway.user']=ext.get('ifs.flyway.username')
+project.ext['flyway.password']=ext.get('ifs.flyway.password')
+project.ext['flyway.placeholderPrefix']=ext.get('ifs.flyway.placeholder.prefix')
+project.ext['flyway.placeholderSuffix']=ext.get('ifs.flyway.placeholder.suffix')
 
 project.ext['flyway.locations']="db/migration,db/setup,db/webtest"
 ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
 
-ext.silRestBaseURL="http://ifs-data-service:8080/silstub"
 
+ext.silRestBaseURL=ext.get('ifs.sil.rest.baseurl')
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application
 // can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
@@ -38,19 +38,19 @@ ext.idpRestBaseURL="https://iuk-auth-localdev/regapi"
 
 ext.ifsDataServiceRestBaseURL="http://ifs-data-service:8080"
 
-ext.companyHouseKey=project.companyHouseKey
-ext.companyHouseUrl=project.companyHouseUrl
-
-ext.flywayLocations=project.flywayLocations
+ext.companyHouseKey=ext.get('ifs.company-house.key')
+ext.companyHouseUrl=project.properties['ifs.company-house.url'] ?: "https://api.companieshouse.gov.uk/"
+ext.flywayLocations=flywayLocations
 
 ext.postcodeLookupKey=""
-ext.postcodeLookupUrl=project.postcodeLookupUrl
+ext.postcodeLookupUrl=project.properties['ifs.postcode.lookup.url'] ?: "http://ws.postcoder.com/pcw"
 
 ext.ifsFileStorageLocation="/tmp/uploads"
 
 ext.ifsWebBaseURL="https://ifs-local-dev"
 
-ext.ifsWebSystemUserId=project.ifsWebSystemUserId
+
+ext.ifsWebSystemUserId=ext.get('ifs.web.system.user.id')
 
 ext.serverPort=8080
 ext.activeProfile="local"
