@@ -1,10 +1,11 @@
 *** Settings ***
 Documentation     INFUND-1110: As an applicant/partner applicant I want to add my required Funding Level so that innovate uk know my grant request
-Suite Setup       log in and create new application if there is not one already
-Suite Teardown    the user closes the browser
+Suite Setup       log in and create new application if there is not one already with complete application details
+Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          FinanceSection_Commons.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Variables ***
 ${no_org_selected_message}    Funding level allowed depends on organisation size. Please select your organisation size.
@@ -14,7 +15,7 @@ ${incorrect_funding_level_message}    This field should be
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
-    [Setup]  Applicant navigates to the finances of the Robot application
+    [Setup]    When Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link        link=Your organisation
     Then the user selects the radio button       financePosition-organisationSize  financePosition-organisationSize-SMALL
     And the user clicks the button/link          jQuery=button:contains("Mark as complete")

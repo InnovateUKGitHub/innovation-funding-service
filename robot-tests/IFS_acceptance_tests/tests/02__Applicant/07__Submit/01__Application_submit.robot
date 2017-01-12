@@ -20,6 +20,7 @@ Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant  Pending
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../Applicant_Commons.robot
 
 *** Variables ***
 
@@ -131,18 +132,10 @@ The user marks the finances as complete
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
 
-
-the applicant marks the first section as complete
-    the user clicks the button/link    link=Application Overview
-    the user clicks the button/link    link=Application details
-    Clear Element Text    id=application_details-startdate_day
-    The user enters text to a text field    id=application_details-startdate_day    18
-    Clear Element Text    id=application_details-startdate_year
-    The user enters text to a text field    id=application_details-startdate_year    2018
-    Clear Element Text    id=application_details-startdate_month
-    The user enters text to a text field    id=application_details-startdate_month    11
-    the user selects the radio button    application.resubmission    false
-    the user clicks the button/link    name=mark_as_complete
+the applicant marks the first section as
+    Given the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link    link=${application_name}
+    the applicant completes the application details
 
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
