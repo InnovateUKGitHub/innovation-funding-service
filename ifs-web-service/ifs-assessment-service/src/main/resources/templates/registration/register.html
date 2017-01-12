@@ -57,10 +57,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           data-minlength-errormessage="Your first name should have at least 2 characters"
-                           data-maxlength-errormessage="Your first name cannot have more than 70 characters"
-                           data-required-errormessage="Please enter a first name"
-                    />
+                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
@@ -77,9 +76,9 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
-                           data-minlength-errormessage="Your last name should have at least 2 characters"
-                           data-maxlength-errormessage="Your last name cannot have more than 70 characters"
-                           data-required-errormessage="Please enter a last name"/>
+                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
@@ -90,8 +89,12 @@
                               <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
-                            <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a gender"/>
+                        <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
+                            <input th:field="*{gender}"
+                                   th:value="${gen}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
                             <span th:text="${gen.displayName}" th:remove="tag"/>
                         </label>
                     </fieldset>
@@ -105,8 +108,12 @@
                               <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label" th:each="eth : ${ethnicityOptions}">
-                            <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an ethnicity" />
+                        <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
+                            <input th:field="*{ethnicity}"
+                                   th:value="${eth.id}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
                             <span th:text="${eth.description}" th:remove="tag"/>
                         </label>
                     </fieldset>
@@ -120,8 +127,12 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
-                            <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
+                        <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
+                            <input th:field="*{disability}"
+                                   th:value="${dis}"
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
                             <span th:text="${dis.displayName}" th:remove="tag" />
                         </label>
                     </fieldset>
@@ -144,9 +155,9 @@
                            required="required"
                            minlength="8"
                            maxlength="20"
-                           data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
-                           data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
-                           data-required-errormessage="Please enter a phone number"/>
+                           th:attr="data-required-errormessage=#{validation.standard.phonenumber.required},
+                                    data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
+                                    data-maxlength-errormessage=#{validation.standard.phonenumber.length.max}" />
                 </div>
 
                 <div class="form-group">
@@ -162,7 +173,7 @@
                     </label>
                     <div class="form-hint" id="password-hint">
                         <p>Your password is case-sensitive and needs to:</p>
-                        <ul class="list-bullet">
+                        <ul class="list list-bullet">
                             <li>be between 10 and 30 characters long</li>
                             <li>contain at least 1 capital letter</li>
                             <li>contain at least 1 number</li>
@@ -177,10 +188,9 @@
                            required="required"
                            minlength="10"
                            maxlength="30"
-                           data-required-errormessage="Please enter your password"
-                           data-minlength-errormessage="Password must at least be 10 characters"
-                           data-maxlength-errormessage="Password must not be more than 30 characters"
-                    />
+                           th:attr="data-required-errormessage=#{validation.standard.password.required},
+                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,10)},
+                                    data-maxlength-errormessage=#{validation.standard.password.length.max}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('retypedPassword')}? error">
@@ -197,10 +207,9 @@
                            required="required"
                            minlength="10"
                            maxlength="30"
-                           data-required-errormessage="Please re-type your password"
-                           data-minlength-errormessage="Password must at least be 10 characters"
-                           data-maxlength-errormessage="Password must not be more than 30 characters"
-                    />
+                           th:attr="data-required-errormessage=#{validation.standard.retypedpassword.required},
+                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,10)},
+                                    data-maxlength-errormessage=#{validation.standard.password.length.max}" />
                 </div>
 
                 <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>

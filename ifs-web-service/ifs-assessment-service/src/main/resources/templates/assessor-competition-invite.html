@@ -17,28 +17,27 @@
                 <h1 class="heading-xlarge" th:text="|Invitation to assess '${model.competitionName}'|">Invitation to assess 'My Competition'</h1>
             </div>
 
-            <p>You are invited to act as an assessor for the competition <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>.<!--/* Please read the information below and confirm whether you are available to assess applications for this competition./*/--></p>
+            <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
-            <section class="boxed" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'dd MMMM yyyy' : 'dd MMMM'">
+            <section class="boxed">
                 <h2 class="heading-medium no-margin">
-                    <span th:text="|${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate,dateFormat)} - assessment period|" th:remove="tag"/>
+                    <span th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|" th:remove="tag">21 March 2017 to 28 March 2017: Assessment period</span>
                 </h2>
-                <p>This is the allocated timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;
-                    <span th:text="${model.assessorPay}" th:remove="tag">100</span> per application.</p>
+                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<span th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}" th:remove="tag">100</span> per application.</p>
 
-                <p th:if="${model.briefingDate}">The assessor webinar briefing is mandatory and will last one hour,
-                    taking place on <span th:text="${#temporals.format(model.briefingDate,dateFormat)}" th:remove="tag">21 March</span>.
+                <p th:if="${model.briefingDate}">The assessor webinar briefing will last one hour,
+                    taking place at <span th:text="${#temporals.format(model.briefingDate, 'dd MMMM yyyy')}" th:remove="tag">21 March 2017</span>.
                 </p>
             </section>
 
             <section>
-                <!--/*h2 class="heading-medium">Competition details - Technology Inspired</h2>
-                <p>Innovate UK is to invest up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
+                <!--/*h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+                <p th:text="${model.competitionDescription}">Description of the competition.</p>
 
                 <p><a href="#" rel="external">See competition brief</a></p/*/-->
 
-                <h3 class="heading-small">You should reject this competition if:</h3>
-                <ul class="list-bullet">
+                <h3 class="heading-small">You should reject this invitation if:</h3>
+                <ul class="list list-bullet">
                     <li>you are unavailable for the assessment period dates</li>
                     <li>you are unable to meet the assessment deadlines</li>
                     <li>this competition is not in your area of expertise</li>
@@ -50,8 +49,11 @@
                 <fieldset>
                     <legend class="visuallyhidden">Are you available to assess this competition?</legend>
                     <h2 class="heading-medium">Are you available to assess this competition?</h2>
-                    <p>If you are available you will be taken through the account creation process.</p>
-                    <button class="button large extra-margin" type="submit">Yes, create account</button>
+
+                    <p th:if="${!model.userLoggedIn}">If you are available you will be taken through the account creation process. As this is a new service you will need to create an account and sign our terms and conditions even if you are an existing assessor for Innovate UK.</p>
+
+                    <button class="button large extra-margin" type="submit" th:text="${model.userLoggedIn} ? 'Yes' : 'Yes, create account'">Yes, create account</button>
+
                     <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">No</a>
                 </fieldset>
             </form>

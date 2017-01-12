@@ -1,0 +1,11 @@
+=== Find by competition id
+==== Request
+include::{snippets}/applicationCountSummary/findByCompetitionId/http-request.adoc[]
+include::{snippets}/applicationCountSummary/findByCompetitionId/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/applicationCountSummary/findByCompetitionId/http-response.adoc[]
+include::{snippets}/applicationCountSummary/findByCompetitionId/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/applicationCountSummary/findByCompetitionId/curl-request.adoc[]

@@ -185,26 +185,6 @@ table{
   }
 }
 
-
-/*--- Table actions header ---*/
-
-.table-actions-header{
-  border-bottom: 1px solid $grey-2;
-  overflow: auto;
-  div.table-actions-header-content {
-    float: right;
-    div {
-      float: left;
-      padding: 1.75em 1.25em 0.5625em 0;
-    }
-    div:first-child {
-      max-width: 145px;
-      padding-top: 0.75em;
-    }
-  }
-}
-
-
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
@@ -341,6 +321,44 @@ table{
 .grid-row{
   &.sorting{
     border-bottom: 1px solid $secondary-text-colour;
+
+    &.sorting-controls{
+
+      //text-align: right;
+      fieldset{
+        &.select-all-applications{
+          display: block;
+          width: auto;
+          float: left;
+          margin-right: 18px;
+        }
+
+        &.mark-applications{
+          margin-top: 10px; 
+        }
+
+        label{
+         margin-top: 18px;
+         display: block;
+        }
+
+        button{
+         margin: 0 0 10px 0;
+        }
+      }
+
+      h3{
+       display: inline-block;
+       padding-right: 10px;
+       font-weight: bold;
+       margin-top: 8px;
+      }
+
+      .form-hint{
+       float: left;
+       margin: 18px 0 18px 0;
+      }
+    }
   }
 }
 
@@ -365,53 +383,6 @@ ul.underline{
     }
   }
 }
-
-
-/*--- Inline Nav ---*/
-
-ul.inline-nav{
-
-  @include media-down(mobile) {
-    padding: 0;
-
-    li{
-
-      a{
-        padding: 10px;
-      }
-
-      &.selected a{
-        border-bottom: 1px solid $border-colour;
-        padding: 9px 10px;
-        margin-left: 2px;
-        }
-      }
-
-    &:after{
-      content: none;
-    }
-	}
-
-  /*li a{
-  text-decoration: none;
-  color: $black;
-  }*/
-
-  li{
-    &.not-selected{
-      background: $grey-3;
-      //margin-right: 2px;
-      margin-left: 2px;
-
-      @include media-down(mobile) {
-        a{
-          padding: 10px;
-        }
-      }
-    }
-  }
-}
-
 
 
 /*--- Controlling visibility of hidden panels for js and non-js ---*/

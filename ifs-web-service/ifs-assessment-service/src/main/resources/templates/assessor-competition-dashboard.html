@@ -11,7 +11,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge" th:text="${model.competitionTitle}" />
@@ -31,7 +31,7 @@
             <div class="my-applications">
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
                     <h2 class="heading-large">Applications for assessment (<span th:text="${#lists.size(model.outstanding)}" />)</h2>
-                    <form class="bulk-select" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
+                    <form class="bulk-select" method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
                         <div class="error-summary" th:if="${#fields.hasErrors('*')}">
                             <h2 class="heading-medium error-summary-heading">There was a problem submitting some of your assessments.</h2>
 
@@ -65,7 +65,7 @@
 
                                         <div th:if="${application.readyToSubmit}" class="application-status assessed" th:classappend="${application.recommended} ? 'yes' : 'no'">
                                             <p>Assessed</p>
-                                            <h3 class="score"><span th:text="${application.overallScore}">51.0</span> %</h3>
+                                            <h3 class="score"><span th:text="${application.overallScore}">51.0</span>%</h3>
                                             <small>Overall score</small>
 
                                             <div class="recommend-container">
@@ -86,7 +86,9 @@
                         <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
 
                         <div class="alignright">
-                            <button class="button large button-pull-right no-margin extra-margin" data-js-modal="modal-submit-assessments" type="submit">Submit assessments</button>
+                            <button id="submit-assessment-button" class="button large button-pull-right no-margin extra-margin" type="submit"
+                                    th:formaction="@{/assessor/dashboard/confirm-competition/{id}(id=${model.competitionId})}"
+                                    data-js-modal="modal-submit-assessments">Submit assessments</button>
                         </div>
 
                         <div th:include="fragments/assessment :: modal-submit-assessments" th:remove="tag"/>
@@ -105,7 +107,7 @@
                                 <div class="column-assessment-status navigation-right">
                                     <div class="application-status submitted">
                                         <p>Submitted</p>
-                                        <h3 class="score"><span th:text="${application.overallScore}">51.0</span> %</h3>
+                                        <h3 class="score"><span th:text="${application.overallScore}">51.0</span>%</h3>
                                         <small>Overall score</small>
 
                                         <div class="recommend-container">

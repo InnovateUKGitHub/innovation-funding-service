@@ -1,4 +1,5 @@
 *** Variables ***
+${short_password}    Passw0rd
 ${correct_password}    Passw0rd123
 ${incorrect_password}    Wrongpassw0rd
 ${long_password}    P2asswordpasswordpasswordpasswordpasswordpasswordpassword

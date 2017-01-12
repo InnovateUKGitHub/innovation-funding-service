@@ -1,5 +1,9 @@
 Email,First name,Last name,Status,Organisation name,Phone number,Disability,Ethnicity,Gender,Competition name,Hash,Invite Status
-worth.email.test+assessor1@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,No,Black British,Male,Sustainable living models for the future,bcbf56004fddd137ea29d4f8434d33f62e7a7552a3a084197c7dfebce774c136c10bb26e1c6c989e,SENT
+worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,No,Black British,Male,Home and industrial efficiency programme,,OPENED
 paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Yes,Asian/Asian British,Prefer not to say,Sustainable living models for the future,,OPENED
 felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,,,,Sustainable living models for the future,,OPENED
 jo.peters@ntag.example.com,Josephine,Peters,ACTIVE,,,Prefer not to say,White,Female,Sustainable living models for the future,,OPENED
+will.smith@gmail.com,Will,Smith,ACTIVE,,028572565937,No,Black British,Male,Photonics for health,,OPENED
+laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,047682659263,No,White,Female,Photonics for health,,OPENED
+sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,047682659263,No,Asian/Asian British,Female,Photonics for health,,OPENED
+matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,047682659263,No,White,Male,Photonics for health,,OPENED

@@ -38,12 +38,12 @@
 
       <div class="form-group">
 
-        <label class="block-label" for="user-assessor">
+        <label class="block-label selection-button-radio" for="user-assessor">
           <input type="radio" name="userType" id="user-assessor" value="assessor" />
           Assessor
         </label>
 
-        <label class="block-label" for="user-applicant">
+        <label class="block-label selection-button-radio" for="user-applicant">
           <input type="radio" name="userType" id="user-applicant" value="applicant" />
           Applicant
         </label>
@@ -73,15 +73,11 @@
 		}
   });
 
-
 	jQuery("input[name='userType']").on('click',function(e){
-
     if ( jQuery(this).is(':checked') ) {
 			jQuery("#continue").removeAttr('disabled');
 		}
-
 	});
-
 	// ]]>
 </script>
 </body>

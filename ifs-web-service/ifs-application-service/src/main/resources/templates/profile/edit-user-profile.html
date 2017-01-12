@@ -2,7 +2,6 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Your details'" th:remove="tag" />
-    <link href="/css/prototype.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/prototype.css')}" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
 
@@ -56,9 +55,9 @@
                        required="required"
                        minlength="2"
                        maxlength="70"
-                       data-minlength-errormessage="Your first name should have at least 2 characters"
-                       data-maxlength-errormessage="Your first name cannot have more than 70 characters"
-                       data-required-errormessage="Please enter a first name"/>
+                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
                 <label class="form-label" for="lastName">
@@ -73,9 +72,9 @@
                        required="required"
                        minlength="2"
                        maxlength="70"
-                       data-minlength-errormessage="Your last name should have at least 2 characters"
-                       data-maxlength-errormessage="Your last name cannot have more than 70 characters"
-                       data-required-errormessage="Please enter a last name"/>
+                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
                 <fieldset class="inline">
@@ -85,8 +84,12 @@
                                       <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
                                     </span>
                     </legend>
-                    <label class="block-label" th:each="gen : ${T(com.worth.ifs.user.resource.Gender).values()}">
-                        <input th:field="*{gender}" th:value="${gen}" type="radio" required="required" data-required-errormessage="Please select a gender"/>
+                    <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
+                        <input th:field="*{gender}"
+                               th:value="${gen}"
+                               type="radio"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
                         <span th:text="${gen.displayName}" th:remove="tag"/>
                     </label>
                 </fieldset>
@@ -99,8 +102,12 @@
                                   <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
                                 </span>
                     </legend>
-                    <label class="block-label" th:each="eth : ${ethnicityOptions}">
-                        <input th:field="*{ethnicity}" th:value="${eth.id}" type="radio" required="required" data-required-errormessage="Please select an ethnicity" />
+                    <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
+                        <input th:field="*{ethnicity}"
+                               th:value="${eth.id}"
+                               type="radio"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
                         <span th:text="${eth.description}" th:remove="tag"/>
                     </label>
                 </fieldset>
@@ -113,8 +120,12 @@
                                     <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
                                 </span>
                     </legend>
-                    <label class="block-label" th:each="dis : ${T(com.worth.ifs.user.resource.Disability).values()}">
-                        <input th:field="*{disability}" th:value="${dis}" type="radio" required="required" data-required-errormessage="Please select a disability" />
+                    <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
+                        <input th:field="*{disability}"
+                               th:value="${dis}"
+                               type="radio"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
                         <span th:text="${dis.displayName}" th:remove="tag" />
                     </label>
                 </fieldset>
@@ -129,14 +140,14 @@
                 </label>
                 <input class="form-control"
                        type="tel"
-                        th:errorclass="field-error"
+                       th:errorclass="field-error"
                        th:field="*{phoneNumber}"
                        minlength="8"
                        maxlength="20"
                        required="required"
-                       data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
-                       data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
-                       data-required-errormessage="Please enter a phone number"/>
+                       th:attr="data-minlength-errormessage=#{validation.standard.phonenumber.length.min(null,null,8)},
+                                data-maxlength-errormessage=#{validation.standard.phonenumber.length.max(20)},
+                                data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
             <div class="form-group">
                 <h3 class="heading-small">Email</h3>

@@ -18,13 +18,13 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Aptrans Ltd'}, ${'Eligibility'})" th:with="partner=lead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
+
 	<hr />
-	
+
 	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
 		<div class="warning-alert">
 			<h2 class="heading-small no-margin-top">The funding amount is now greater than the amount allowable. This is due to increased project costs.</h2>
@@ -74,9 +74,9 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 	<th:block th:if="${param.status != null and param.status[0] == 'grantChanged' or param.action != null and param.action[0] == 'grantChanged'}">
-		<div class="panel-indent">
+		<div class="panel">
 			<h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
 			<dl class="standard-definition-list">
 				<dt>Funding sought</dt>
@@ -104,7 +104,7 @@
 
 
 		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
-			
+
 			<h3 class="heading-medium">Detailed finances</h3>
 
 			<p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
@@ -114,14 +114,14 @@
 		</th:block>
 
 		<div class="collapsible section-overview extra-margin">
-	        
+
 	       	<h2>Labour
 		       <span data-mirror="#section-total-1">&pound; 126,207</span> <span class="section-percentage">50%</span>
 	       	</h2>
-				
+
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-labour" th:remove="tag" />
 
-	    	<h2>Administration support costs
+	    	<h2>Overheads
 	    		<span data-mirror="#section-total-2">&pound; 0</span> <span class="section-percentage">(40% of labour) 20%</span>
 	       	</h2>
 
@@ -132,23 +132,23 @@
 	       	</h2>
 
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-materials" th:remove="tag" />
-	    	
+
 	    	<h2>Capital usage
 		        <span data-mirror="#section-total-4">&pound; 0</span> <span class="section-percentage">0%</span>
 	       	</h2>
 
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-capital" th:remove="tag" />
-	    	
+
 	    	<h2>Subcontracting costs
 		        <span data-mirror="#section-total-5">&pound; 150,000</span> <span class="section-percentage">20%</span>
 	       	</h2>
 
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:remove="tag" />
-	    
+
 	    	<h2>Travel and subsistence
 		        <span data-mirror="#section-total-6">&pound; 0</span> <span class="section-percentage">0%</span>
 	       	</h2>
-			
+
 			<div th:include="prototypes/fragments/finance-review-questions :: finance-question-travel" th:remove="tag" />
 
 	    	<h2>Other costs
@@ -177,10 +177,10 @@
 		</div>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'changeGrant'}">
-		
+
 			<form>
 
-				<fieldset class="panel-indent" id="change-grant">
+				<fieldset class="panel" id="change-grant">
 					<legend class="visuallyhidden">Change % grant</legend>
 					<div class="cf">
 						<div class="form-group">
@@ -237,7 +237,7 @@
 								<hr />
 
 					        	<div class="alignright-button">
-									
+
 									<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 									<input type="hidden" id="status" name="status" value="grantChanged" />
@@ -263,8 +263,8 @@
 	    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
 	    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
 	    </div>
-		
-		
+
+
 		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
 		    <h3 class="heading-medium">Approve eligible costs</h3>
@@ -272,7 +272,7 @@
 		    <p>If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
 
 		    <div class="form-group">
-		    	<label class="block-label" for="costs-reviewed">
+		    	<label class="block-label selection-button-checkbox" for="costs-reviewed">
 			      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
 			     	These funding costs have been reviewed and are acceptable
 			    </label>
@@ -303,9 +303,9 @@
 						<hr />
 
 			        	<div class="alignright-button">
-							
+
 							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-							
+
 							<input type="hidden" id="action" name="action" th:value="${(param.status != null and param.status[0] == 'grantChanged' ? 'grantChanged' : '')}" />
 							<input type="hidden" id="status" name="status" value="approved" />
 
@@ -318,7 +318,7 @@
 		    </div>
 
 		</th:block>
-	
+
 	</form>
 
 	<hr />
@@ -338,7 +338,7 @@
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('input#admin-support-radio-1').on('click',function(e){ 
+	jQuery('input#admin-support-radio-1').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").show();
 			jQuery("#admin-support-2").hide();
@@ -347,7 +347,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-2').on('click',function(e){ 
+	jQuery('input#admin-support-radio-2').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").show();
@@ -356,7 +356,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-3').on('click',function(e){ 
+	jQuery('input#admin-support-radio-3').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").hide();
@@ -365,7 +365,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-4').on('click',function(e){ 
+	jQuery('input#admin-support-radio-4').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").hide();
@@ -385,7 +385,7 @@
 	});
 
 
-	jQuery('input#costs-reviewed').on('click',function(e){ 
+	jQuery('input#costs-reviewed').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#add-rag-rating").removeClass('hidden');
 		}else{

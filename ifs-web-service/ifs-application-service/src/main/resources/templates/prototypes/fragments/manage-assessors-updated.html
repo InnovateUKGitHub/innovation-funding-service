@@ -238,151 +238,213 @@
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
 
-        <div class="tabular-list" id="assessors-find">
+        <!--<div class="tabular-list" id="assessors-find">-->
 
-            <div class="grid-row">
-                   <div class="column-three-quarters">
-                        <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Find people on the system that you would like to invite to be an assessor.</h2>
-                       <h2 class="heading-small" th:unless="${site == null}">Find people on the system that you would like to invite to the panel.</h2>
+        <div class="grid-row">
+               <div class="column-three-quarters">
+                    <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Find people on the system that you would like to invite to be an assessor.</h2>
+                   <h2 class="heading-small" th:unless="${site == null}">Find people on the system that you would like to invite to the panel.</h2>
 
-                       <p th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
-                       <p th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
-                   </div>
-                   <!--<div class="column-quarter aligncentre">
-                       <h3 class="heading-large no-margin">6</h3>
-                       <p>Assessors on invite list</p>
-                   </div> -->
-            </div>
-
-            <div class="search-filters">
-                <div class="grid-row">
-
-                    <div class="column-half">
-
-                        <div class="form-group">
-                            <label for="filterInnovationType">Type</label>
-
-                            <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-
-                                <option th:if="${param.filterInnovationType != null}" th:remove="tag">
-                                    <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
-                                </option>
-
-                                <option th:if="${param.filterInnovationType == null}" th:remove="tag">
-                                    <option selected="selected">Any</option>
-                                </option>
-
-                                <option value="Business">Business</option>
-                                <option value="Academic">Academic</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="column-half">
-                        <div class="form-group">
-                            <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
-
-                            <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-
-                                <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
-                                    <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
-                                </option>
-
-                                <option th:if="${param.filterInnovationArea == null}" th:remove="tag">
-                                    <option selected="selected">---</option>
-                                </option>
-
-                                <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="grid-row">
-
-                    <div class="column-half">
-                         <div class="form-group">
-                             <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-                         </div>
-                    </div>
-
-                    <div class="column-quarter">
-                         <label class="form-label" for="filterContract">Contract and DOI</label>
-                         <select name="filterContract" id="filterContract" class="form-control width-">
-                             <option value="Show all">Show all</option>
-                             <option value="Yes">Yes</option>
-                             <option value="No">No</option>
-
-                         </select>
-                    </div>
-
-                    <div class="column-quarter">
-
-                        <div class="grid-row">
-                            <div class="column-half">
-                                <div class="extra-margin-top">
-                                    <a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
-                                </div>
-                            </div>
-                            <div class="column-half alignright">
-                                <button class="button">Filter</button>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="grid-row sorting">
-                <div class="column-half">
-                    <span class="heading-large">20</span> assessors
-                </div>
-
-                <div class="column-half alignright">
-                    <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">
-                            <option value="">All</option>
-                            <option value="">To be invited</option>
-                            <option value="">Invite sent</option>
-                            <option value="">Invite accepted</option>
-                            <option value="">Invite declined</option>
-                        </select>
-                    </label>
-                </div>
-
-            </div>
-
-            <!-- <ul class="tabular-list__row-header hide-mobile">
-                <li id="assessor-name" class="width-quarter">Name</li>
-                <li id="assessor-type" class="width-quarter">Type</li>
-                <li id="assessor-area" th:class="${(site == 'rc' ? 'width-quarter' : 'width-half')}" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>
-                <li id="assessor-org" class="width-quarter" th:unless="${site == null}">Organisation</li>
-            </ul> -->
-
-            <ul class="tabular-list__row-header hide-mobile">
-                <li id="assessor-name" class="width-30-percent">Assessor name</li>
-                <li id="assessor-type" class="width-10-percent">Type</li>
-                <li id="assessor-area" class="width-40-percent" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>
-                <li id="assessor-contract" class="width-20-percent">Contract and DOI</li>
-                <!-- <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> -->
-            </ul>
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'},position=${'Test position'}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'},org=${'London School of Economics'}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=4,name=${'Bill Limp'},type=Industry,doi=Yes,area=${'Architectures and operating systems'},org=${'ABC Ltd'}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=5,name=${'Dave Smith'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Flash Ltd'}" th:remove="tag" />
-
+                   <p th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
+                   <p th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
+               </div>
+               <!--<div class="column-quarter aligncentre">
+                   <h3 class="heading-large no-margin">6</h3>
+                   <p>Assessors on invite list</p>
+               </div> -->
         </div>
+
+        <!--<div class="search-filters">-->
+            <!--<div class="grid-row">-->
+
+                <!--<div class="column-half">-->
+
+                    <!--<div class="form-group">-->
+                        <!--<label for="filterInnovationType">Type</label>-->
+
+                        <!--<select name="filterInnovationType" id="filterInnovationType" class="form-control">-->
+
+                            <!--<option th:if="${param.filterInnovationType != null}" th:remove="tag">-->
+                                <!--<option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>-->
+                            <!--</option>-->
+
+                            <!--<option th:if="${param.filterInnovationType == null}" th:remove="tag">-->
+                                <!--<option selected="selected">Any</option>-->
+                            <!--</option>-->
+
+                            <!--<option value="Business">Business</option>-->
+                            <!--<option value="Academic">Academic</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+
+                <!--<div class="column-half">-->
+                    <!--<div class="form-group">-->
+                        <!--<label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>-->
+
+                        <!--<select name="filterInnovationArea" id="filterInnovationArea" class="form-control">-->
+
+                            <!--<option th:if="${param.filterInnovationArea != null}" th:remove="tag">-->
+                                <!--<option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>-->
+                            <!--</option>-->
+
+                            <!--<option th:if="${param.filterInnovationArea == null}" th:remove="tag">-->
+                                <!--<option selected="selected">-&#45;&#45;</option>-->
+                            <!--</option>-->
+
+                            <!--<div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            <!--</div>-->
+
+            <!--<div class="grid-row">-->
+
+                <!--<div class="column-half">-->
+                     <!--<div class="form-group">-->
+                         <!--<label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>-->
+                         <!--<input type="text" class="form-control" id="filterSearch" name="filterSearch" />-->
+                     <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="column-quarter">-->
+                     <!--<label class="form-label" for="filterContract">Contract and DOI</label>-->
+                     <!--<select name="filterContract" id="filterContract" class="form-control width-">-->
+                         <!--<option value="Show all">Show all</option>-->
+                         <!--<option value="Yes">Yes</option>-->
+                         <!--<option value="No">No</option>-->
+
+                     <!--</select>-->
+                <!--</div>-->
+
+                <!--<div class="column-quarter">-->
+
+                    <!--<div class="grid-row">-->
+                        <!--<div class="column-half">-->
+                            <!--<div class="extra-margin-top">-->
+                                <!--<a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="column-half alignright">-->
+                            <!--<button class="button">Filter</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!--<div class="grid-row sorting">-->
+            <!--<div class="column-half">-->
+                <!--<span class="heading-large">20</span> assessors-->
+            <!--</div>-->
+
+            <!--<div class="column-half alignright">-->
+                <!--<label for="inviteFilter">Sort by-->
+                    <!--<select class="form-control" id="inviteFilter" name="inviteFilter">-->
+                        <!--<option value="">All</option>-->
+                        <!--<option value="">To be invited</option>-->
+                        <!--<option value="">Invite sent</option>-->
+                        <!--<option value="">Invite accepted</option>-->
+                        <!--<option value="">Invite declined</option>-->
+                    <!--</select>-->
+                <!--</label>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!-- <ul class="tabular-list__row-header hide-mobile">
+            <li id="assessor-name" class="width-quarter">Name</li>
+            <li id="assessor-type" class="width-quarter">Type</li>
+            <li id="assessor-area" th:class="${(site == 'rc' ? 'width-quarter' : 'width-half')}" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>
+            <li id="assessor-org" class="width-quarter" th:unless="${site == null}">Organisation</li>
+        </ul> -->
+
+        <!--<ul class="tabular-list__row-header hide-mobile">-->
+            <!--<li id="assessor-name" class="width-30-percent">Assessor name</li>-->
+            <!--<li id="assessor-type" class="width-10-percent">Type</li>-->
+            <!--<li id="assessor-area" class="width-40-percent" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>-->
+            <!--<li id="assessor-contract" class="width-20-percent">Contract and DOI</li>-->
+            <!--&lt;!&ndash; <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> &ndash;&gt;-->
+        <!--</ul>-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'},position=${'Test position'}" th:remove="tag" />-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}" th:remove="tag" />-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'},org=${'London School of Economics'}" th:remove="tag" />-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=4,name=${'Bill Limp'},type=Industry,doi=Yes,area=${'Architectures and operating systems'},org=${'ABC Ltd'}" th:remove="tag" />-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=5,name=${'Dave Smith'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Flash Ltd'}" th:remove="tag" />-->
+
+        <div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=false,sortByType=2" th:remove="tag" />
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Assessor name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}"></th>
+                        <th scope="col">Contract and DOI</th>
+                        <th scope="col"><span class="visuallyhidden">Add</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=John%20Barnes&amp;comp=assessment">John Barnes</a></td>
+                        <td>Industry</td>
+                        <td>Electronics, sensors &amp; photonics, Materials</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#" class="button-secondary no-margin">Add</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Oliver%20Romero&amp;comp=assessment">Oliver Romero</a></td>
+                        <td>Academic</td>
+                        <td>Healthcare, Regenerative medicine, Stratified medicine</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#" class="button-secondary no-margin">Add</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Jeffrey%20Carlson&amp;comp=assessment">Jeffrey Carlson</a></td>
+                        <td>Academic</td>
+                        <td>Healthcare, Analytical science</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#" class="button-secondary no-margin">Add</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Bill%20Limp&amp;comp=assessment">Bill Limp</a></td>
+                        <td>Industry</td>
+                        <td>Architectures and operating systems</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#" class="button-secondary no-margin">Add</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                        <td>Industry</td>
+                        <td>Electronics, sensors &#38; photonics, Materials</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#" class="button-secondary no-margin">Add</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--</div>-->
 
         <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />
 
@@ -493,56 +555,141 @@
                 </div>
             </form>
         </details>
-       <div class="alignright">
-            <div class="form-group">
-                <label for="sort-by">Sort by</label>
-                <select name="sort-by" id="sort-by" class="form-control">
-                    <option value="Assessor name">Assessor name</option>
-                    <option value="Innovation area">Innovation area</option>
-                </select>
+        <!--<div class="alignright">-->
+            <!--<div class="form-group">-->
+                <!--<label for="sort-by">Sort by</label>-->
+                <!--<select name="sort-by" id="sort-by" class="form-control">-->
+                    <!--<option value="Assessor name">Assessor name</option>-->
+                    <!--<option value="Innovation area">Innovation area</option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="tabular-list" id="assessors-invite">-->
+            <!--<ul class="tabular-list__row-header">-->
+                <!--<li class="width-15-percent hide-mobile">-->
+                    <!--Assessor name-->
+                <!--</li>-->
+                <!--<li class="width-15-percent hide-mobile">Email address</li>-->
+                <!--<li class="width-15-percent hide-mobile">Innovation area</li>-->
+                <!--<li id="assessor-contract" class="width-15-percent hide-mobile">Contract and DOI</li>-->
+                <!--<li class="width-20-percent">-->
+                    <!--<label for="includeAll">-->
+                        <!--<input id="includeAll" value="Irish" type="checkbox" />-->
+                        <!--Include all for group invite-->
+                    <!--</label>-->
+                <!--</li>-->
+                <!--<li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="button button-secondary disabled" id="invite-group">Invite group</a></li>-->
+            <!--</ul>-->
+
+            <!--<th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">-->
+                <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},email=${param.email[0]},innovationArea=${param.innovationArea[0]},org=null,position=null,status=null" th:remove="tag" />-->
+            <!--</th:block>-->
+
+            <!--<div id="prototype-assessor-addable-rows">-->
+                <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=6,name=${'Hannah Carlisle'},email=${'hannah@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}" th:remove="tag" />-->
+
+                <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=7,name=${'Robin Nash'},email=${'robin@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}" th:remove="tag" />-->
+            <!--</div>-->
+
+            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},email=${'dave@email.com'},innovationArea=${'Earth Observation'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />-->
+
+            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},email=${'chris@email.com'},innovationArea=${'Internet of things'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />-->
+
+            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},email=${'martin@email.com'},innovationArea=${'Internet of things'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${null}" th:remove="tag" />-->
+
+            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},email=${'chantel@email.com'},innovationArea=${'Internet of things'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${null}" th:remove="tag" />-->
+
+            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},email=${'richard@email.com'},innovationArea=${'Internet of things'},org=${'Reading University'},position=${'Lecturer of physics'},status=${null}" th:remove="tag" />-->
+
+            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />-->
+
+        <!--</div>-->
+        <div class="grid-row sorting">
+            <div class="column-two-thirds">
+                <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+            </div>
+
+            <div class="column-third alignright">
+                <div class="form-group">
+                    <label for="sort-by">Sort by</label>
+                    <select name="sort-by" id="sort-by" class="form-control">
+                        <option value="Title">Assessor name</option>
+                        <option value="Employer">Email address</option>
+                        <option value="Innovation Area">Innovation area</option>
+                        <option value="Contract and DOI">Contract and DOI</option>
+                    </select>
+                </div>
+                <div class="alignright-button extra-margin extra-margin-bottom">
+                    <a href="#" class="button">Review and send group invite</a>
+                </div>
             </div>
         </div>
 
-        <div class="tabular-list" id="assessors-invite">
-            <ul class="tabular-list__row-header">
-                <li class="width-15-percent hide-mobile">
-                    Assessor name
-                </li>
-                <li class="width-15-percent hide-mobile">Email address</li>
-                <li class="width-15-percent hide-mobile">Innovation area</li>
-                <li id="assessor-contract" class="width-15-percent hide-mobile">Contract and DOI</li>
-                <li class="width-20-percent">
-                    <label for="includeAll">
-                        <input id="includeAll" value="Irish" type="checkbox" />
-                        Include all for group invite
-                    </label>
-                </li>
-                <li class="width-20-percent alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group&#38;version=v2" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
-            </ul>
-
-            <th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">
-                <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},email=${param.email[0]},innovationArea=${param.innovationArea[0]},org=null,position=null,status=null" th:remove="tag" />
-            </th:block>
-
-            <div id="prototype-assessor-addable-rows">
-                <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=6,name=${'Hannah Carlisle'},email=${'hannah@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}" th:remove="tag" />
-
-                <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=7,name=${'Robin Nash'},email=${'robin@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}" th:remove="tag" />
-            </div>
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},email=${'dave@email.com'},innovationArea=${'Earth Observation'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},email=${'chris@email.com'},innovationArea=${'Internet of things'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},email=${'martin@email.com'},innovationArea=${'Internet of things'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${null}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},email=${'chantel@email.com'},innovationArea=${'Internet of things'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${null}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},email=${'richard@email.com'},innovationArea=${'Internet of things'},org=${'Reading University'},position=${'Lecturer of physics'},status=${null}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />
-
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Assessor name</th>
+                        <th scope="col">Email address</th>
+                        <th scope="col">Innovation area</th>
+                        <th scope="col" class="aligncentre">Contract and DOI</th>
+                        <th scope="col" class="alignright">Remove assessor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                        <td>dave@email.com</td>
+                        <td>Earth Observation</td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#">Remove from list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
+                        <td>chris@email.com</td>
+                        <td>Internet of things</td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#">Remove from list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Martin%20Trollope&amp;comp=assessment">Martin Trollope</a></td>
+                        <td>martin@email.com</td>
+                        <td>Internet of things</td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#">Remove from list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
+                        <td>chantel@email.com</td>
+                        <td>Internet of things</td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#">Remove from list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Richard%20Turner&amp;comp=assessment">Richard Turner</a></td>
+                        <td>richard@email.com</td>
+                        <td>Internet of thingss</td>
+                        <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td class="alignright">
+                            <a href="#">Remove from list</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+        <div class="alignright-button extra-margin extra-margin-bottom">
+            <a href="#" class="button">Review and send group invite</a>
+        </div>
+        <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
@@ -657,14 +804,18 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'overview' and param.view == null or param.view != null and param.view[0] == 'application'}">
-        <div class="tabular-list" id="assessors-assign-application">
+        <!--<div class="tabular-list" id="assessors-assign-application">-->
 
-            <div class="grid-row sorting">
-                <div class="column-half">
-                    <span class="heading-large">20</span> assessors
-                </div>
+        <div class="grid-row sorting">
+            <!--<div class="column-half">-->
+                <!--<span class="heading-large">20</span> assessors-->
+            <!--</div>-->
+            <div class="column-two-thirds">
+                <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+            </div>
 
-                <div class="column-half alignright">
+            <div class="column-third alignright">
+                <div class="form-group">
                     <label for="inviteFilter">Sort by
                         <select class="form-control" id="inviteFilter" name="inviteFilter">
                             <option value="">All</option>
@@ -675,42 +826,81 @@
                         </select>
                     </label>
                 </div>
-
             </div>
 
-            <ul class="tabular-list__row-header">
-                <li id="overview-assessor-name" class="width-20-percent hide-mobile">
-                    Assessor name
-                </li>
-                <li id="overview-assessor-type" class="width-10-percent hide-mobile">
-                    Type
-                </li>
-                <li id="overview-assessor-area" class="width-20-percent hide-mobile">
-                    Innovation area
-                </li>
-                <li id="overview-contract" class="width-15-percent hide-mobile">
-                    Contract and DOI
-                </li>
-                <li id="overview-status" class="width-15-percent hide-mobile">
-                    Status
-                </li>
-                <li id="overview-details" class="width-20-percent hide-mobile">
-                    Details
-                </li>
-
-            </ul>
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Invite accepted'},details=null" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Martin Trollope'},busType=${'Academic'},area=${'Information and commincations technology (ICT)'},contract=no,status=${'Invite declined'},details=${'Invite declined as person is too busy'}" th:remove="tag" />
-
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}" th:remove="tag" />
-
-
-
-
-
         </div>
+
+        <!--<ul class="tabular-list__row-header">-->
+            <!--<li id="overview-assessor-name" class="width-20-percent hide-mobile">-->
+                <!--Assessor name-->
+            <!--</li>-->
+            <!--<li id="overview-assessor-type" class="width-10-percent hide-mobile">-->
+                <!--Type-->
+            <!--</li>-->
+            <!--<li id="overview-assessor-area" class="width-20-percent hide-mobile">-->
+                <!--Innovation area-->
+            <!--</li>-->
+            <!--<li id="overview-contract" class="width-15-percent hide-mobile">-->
+                <!--Contract and DOI-->
+            <!--</li>-->
+            <!--<li id="overview-status" class="width-15-percent hide-mobile">-->
+                <!--Status-->
+            <!--</li>-->
+            <!--<li id="overview-details" class="width-20-percent hide-mobile">-->
+                <!--Details-->
+            <!--</li>-->
+
+        <!--</ul>-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Invite accepted'},details=null" th:remove="tag" />-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Martin Trollope'},busType=${'Academic'},area=${'Information and commincations technology (ICT)'},contract=no,status=${'Invite declined'},details=${'Invite declined as person is too busy'}" th:remove="tag" />-->
+
+        <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}" th:remove="tag" />-->
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Assessor name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Innovation area</th>
+                        <th scope="col">Contract and DOI</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                        <td>Business</td>
+                        <td>Information and commincations technology (ICT)</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td>Invite accepted</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
+                        <td>Academic</td>
+                        <td>Information and commincations technology (ICT)</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="no">No</span></span></td>
+                        <td>Invite declined</td>
+                        <td>Invite declined as person is too busy</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
+                        <td>Business</td>
+                        <td>Information and commincations technology (ICT)</td>
+                        <td><strong class="show-mobile">Contract and DOI:</strong>  <span><span class="yes">Yes</span></span></td>
+                        <td>Awaiting response</td>
+                        <td>Invite sent: 22 June 2016</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />
+
+        <!--</div>-->
 
     </th:block>
 
@@ -743,13 +933,13 @@
                     <div class="grid-row extra-margin-bottom">
                         <div class="column-half">
                             <h3 class="heading-small">Innovation area</h3>
-                            <ul class="list-bullet">
+                            <ul class="list list-bullet">
                                 <li>Advanced materials</li>
                             </ul>
                         </div>
                         <div class="column-half">
                             <h3 class="heading-small">Partners</h3>
-                            <ul class="list-bullet">
+                            <ul class="list list-bullet">
                                 <li>Aptrans Ltd (Lead)</li>
                                 <li>Biotech Corp</li>
                                 <li>University of Cardiff</li>

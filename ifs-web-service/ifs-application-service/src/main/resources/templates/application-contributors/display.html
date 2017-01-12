@@ -24,10 +24,9 @@
 
     <div th:if="${organisationInvites.size() == 0}" th:remove="tag">
       <h2 class="heading-medium">
-        <span th:remove="tag" th:text="${leadOrganisation.name}"/>
-        <small>(Lead organisation)</small>
+          <th:block th:text="${leadOrganisation.name}"/><small>(Lead organisation)</small>
       </h2>
-      <ul class="list-bullet">
+      <ul class="list list-bullet">
         <li>
           <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
           <small>(Lead Applicant)</small>
@@ -49,7 +48,7 @@
             <small>(pending)</small>
           </div>
         </h2>
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
             <li th:if="${organisationInviteResource.id == 0}">
               <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
               <small>(Lead Applicant)</small>
@@ -63,7 +62,7 @@
                                    th:attr="data-invite-id=${invite.id}"
                                    data-js-modal="modal-submit-remove-collaborator" class="buttonlink no-margin font-xsmall">Remove</a><br/>
                 </th:block>
-                <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
+                <small th:if="${invite.status.name() ==  T(org.innovateuk.ifs.invite.constant.InviteStatus).CREATED.name() || invite.status.name() == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT.name()}">(pending)</small>
 
             </li>
         </ul>

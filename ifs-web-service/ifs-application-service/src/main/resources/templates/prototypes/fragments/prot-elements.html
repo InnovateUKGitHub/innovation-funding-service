@@ -23,7 +23,7 @@
 
 <div th:fragment="prot-test">
   <p>This is just an <strong>example</strong>, real code example is required here</p>
-  <ul class="list-bullet">
+  <ul class="list list-bullet">
     <li>Show example output</li>
     <li>Show example html snippet</li>
   </ul>
@@ -31,14 +31,142 @@
 
 <!-- =========================== Tabs =========================== -->
 
-<div th:fragment="prot-tabs">
-  <ul class="inline-nav extra-margin">
-    <li class="selected"><a href="#">Page 1</a></li>
-    <li><a href="#">Page 2</a></li>
-    <li><a href="#">Page 3</a></li>
-    <li><a href="#">Page 4</a></li>
-  </ul>
-</div>
+<th:block th:fragment="prot-tabs">
+  <div class="tab-interface">
+    <ul>
+      <li>
+        <a href="#section1">Tab 1</a>
+      </li>
+      <li>
+        <a href="#section2">Tab 2</a>
+      </li>
+      <li>
+        <a href="#section3">Tab 3</a>
+      </li>
+      <li>
+        <a href="#section4">Tab 4</a>
+      </li>
+    </ul>
+    <section id="section1">
+      <h2 class="heading-medium">Title for Tab 1</h2>
+      <div>
+        <p>Content for Tab 1</p>
+      </div>
+    </section>
+    <section id="section2">
+      <h2 class="heading-medium">Title for Tab 2</h2>
+      <div>
+        <p>Content for Tab 2</p>
+      </div>
+    </section>
+    <section id="section3">
+      <h2 class="heading-medium">Title for Tab 3</h2>
+      <div>
+        <p>Content for Tab 3</p>
+      </div>
+    </section>
+    <section id="section4">
+      <h2 class="heading-medium">Title for Tab 4</h2>
+      <div>
+        <p>Content for Tab 4</p>
+      </div>
+    </section>
+  </div>
+</th:block>
+
+
+<!-- =========================== Accordians =========================== -->
+
+<th:block th:fragment="prot-accordians">
+    <div class="collapsible">
+        <h2>Collapsible header</h2>
+        <p>Content goes here</p>
+        <h2>Collapsible header 2</h2>
+        <p>Content goes here 2</p>
+        <h2>Collapsible header 3</h2>
+        <p>Content goes here 3</p>
+        <h2>Collapsible header 4</h2>
+        <p>Content goes here 4</p>
+        <h2>Collapsible header 5</h2>
+        <p>Content goes here 5</p>
+    </div>
+</th:block>
+
+
+<!-- =========================== Read only forms =========================== -->
+
+<th:block th:fragment="prot-read-only-forms">
+    <form>
+        <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset>
+                <legend class="heading-medium">Application details</legend>
+                <div class="form-group">
+                    <label class="form-label" for="application-name">Application name</label>
+                    <input class="form-control" id="application-name" type="text" />
+                </div>
+            </fieldset>
+        </th:block>
+        <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+            <h2 class="heading-medium">Application details</h2>
+            <dl class="readonly-data">
+                <dt>Application name</dt>
+                <dd>[application name]</dd>
+            </dl>
+        </th:block>
+        <div class="extra-margin">
+            <a th:href="${(param.status != null and param.status[0] == 'readOnly' ? '/prototypes/prot-styles-read-only-forms' : '/prototypes/prot-styles-read-only-forms?status=readOnly')}" type="submit" th:text="${param.status != null and param.status[0] == 'readOnly' ? 'Edit application details' : 'Mark application details as complete'}"></a>
+        </div>
+    </form>
+</th:block>
+
+
+<!-- =========================== Task list =========================== -->
+
+<th:block th:fragment="prot-task-list">
+    <h3 class="heading-small">Task list</h3>
+    <ul class="task-list">
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 1</a></h4></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required">Assigned to <strong>you</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small">Task 5</h4></div></li>
+        <li><div class="task"><h4 class="heading-small">Task 6</h4></div><span class="notification">Jessica Doe</span></li>
+        <li class="read-only"><div class="task"><h4 class="heading-small">Task 7</h4></div><span class="notification">-</span></li>
+        <li>
+            <div class="task-full-width">
+                <h4 class="heading-small"><a href="#">Task 8</a></h4>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                <ul class="list list-bullet">
+                    <li>ipsum dolor sit amet</li>
+                    <li>consectetur adipiscing</li>
+                </ul>
+            </div>
+        </li>
+        <li class="read-only">
+            <div class="task-full-width">
+                <h4 class="heading-small">Task 9</h4>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In erat urna, porttitor in mi sit amet, facilisis vulputate lectus. Integer cursus porta augue id pellentesque.
+            </div>
+            <div class="task-status"><span>No action required</span></div>
+        </li>
+    </ul>
+</th:block>
+
+
+<!-- =========================== Warnings and panels =========================== -->
+
+<th:block th:fragment="prot-panels">
+  <div class="message-alert extra-margin-bottom">
+    <h2 class="heading-small no-margin">Message alert</h2>
+    <p>This is a message alerting you of something.</p>
+    <ul class="message-summary-list">
+      <li><strong><a href="#">Respond to request</a></strong></li>
+    </ul>
+  </div>
+  <div class="success-alert extra-margin-bottom">
+    <h2 class="heading-small no-margin">Assessor account complete!</h2>
+  </div>
+</th:block>
 
 
 </html>

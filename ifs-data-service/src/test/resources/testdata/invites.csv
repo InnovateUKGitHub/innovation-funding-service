@@ -1,6 +1,7 @@
-Email,Hash,Name,Status,Type,Target,Owner
-worth.email.test+invite2@gmail.com,1d92a6ace9030f2d992f47ea60529028fd49542dffd6b179f68fae072b4f1cc61f12a419b79a5267,John,SENT,APPLICATION,A novel solution to an old problem,Nomensa
-worth.email.test+invite1@gmail.com,4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a,Rogier,SENT,APPLICATION,A novel solution to an old problem,Worth Internet Systems
-worth.email.test+assessor2@gmail.com,2abe401d357fc486da56d2d34dc48d81948521b372baff98876665f442ee50a1474a41f5a0964720,David Peters,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd
-worth.email.test+assessor3@gmail.com,1e05f43963cef21ec6bd5ccd6240100d35fb69fa16feacb9d4b77952bf42193842c8e73e6b07f932,David Peters,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd
-worth.email.test+assessor1@gmail.com,469ffd4952ce0a4c310ec09a1175fb5abea5bc530c2af487f32484e17a4a3776c2ec430f3d957471,Jeremy Alufson,SENT,COMPETITION,Photonics for health,Mo Juggling Mo Problems Ltd
+Email,Hash,Name,Status,Type,Target,Owner,Innovation Area
+worth.email.test+invite2@gmail.com,6f315d6e-fb2a-4c9e-94e0-7054b4b8f6c8,John,SENT,APPLICATION,A novel solution to an old problem,Nomensa,
+worth.email.test+invite1@gmail.com,78aa4567-0b70-41da-8310-a0940644d0bf,Rogier,SENT,APPLICATION,A novel solution to an old problem,Worth Internet Systems,
+worth.email.test+david.peters@gmail.com,396d0782-01d9-48d0-97ce-ff729eb555b0,David Peters,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Earth Observation
+worth.email.test+thomas.fister@gmail.com,9c2cc102-b934-4f54-9be8-6b864cdfc6e2,Thomas Fister,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Earth Observation
+worth.email.test+jeremy.alufson@gmail.com,dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7,Jeremy Alufson,SENT,COMPETITION,Photonics for health,Mo Juggling Mo Problems Ltd,
+worth.email.test+jeremy.alufson@gmail.com,1ec7d388-3639-44a9-ae62-16ad991dc92c,Jeremy Alufson,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,

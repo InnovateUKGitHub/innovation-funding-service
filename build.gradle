@@ -11,8 +11,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'spring-boot'
-    apply plugin: 'com.bluepapa32.watch'
+    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
@@ -32,14 +31,16 @@ subprojects {
         dependsOn jacocoTestReport
     }
 
+
     dependencies {
-        compile "org.springframework.boot:spring-boot-starter-web"
-        if (project.hasProperty("platform") && project.platform == "cloud") {
+        if(project.hasProperty("cloud") && project.cloud == "development") {
             compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
-            compile "org.springframework.boot:spring-boot-starter-actuator"
             compile "org.springframework.boot:spring-boot-actuator-docs"
             compile "org.springframework.boot:spring-boot-devtools"
         }
+
+        compile "org.springframework.boot:spring-boot-starter-actuator"
+        compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
@@ -48,7 +49,7 @@ subprojects {
         // Test Libraries
         testCompile group: 'org.hamcrest', name: 'hamcrest-core'
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile 'org.springframework:spring-test'
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
         testCompile 'org.mockito:mockito-core'
         testCompile group: 'org.hamcrest', name: 'hamcrest-library'
     }
@@ -66,7 +67,7 @@ subprojects {
 buildscript {
 
     ext {
-        springBootVersion = '1.3.0.RELEASE'
+        springBootVersion = '1.4.3.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -88,18 +89,18 @@ buildscript {
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.13"
         classpath "se.transmode.gradle:gradle-docker:1.2"
     }
+
 }
 
 
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
 
-
 sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.projectKey", "com.worth:ifs"
+        property "sonar.projectKey", "org.innovateuk:ifs"
         property "sonar.branch", "ifs"
         // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"
@@ -107,19 +108,11 @@ sonarqube {
 }
 
 dockerCompose {
-    useComposeFiles = ['docker-compose-services.yml']
-    stopContainers = false
+    useComposeFiles = ['docker-compose-services.yml' ,'docker-compose-services-dev.yml']
     removeContainers = false
-    removeImages = "None" // Other accepted values are: "All" and "Local"
+    removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
-}
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
-}
-
-task cleanDeployServices {
-    println "Starting clean deploy services"
 }
 
 task osDeployRemote(type:Exec) {
@@ -132,10 +125,11 @@ task osDeployLocal(type:Exec) {
     args = [project.version]
 }
 
-//make sure that top level clean deploy services is run last
-rootProject.subprojects.each { subproject ->
-    subproject.tasks.matching { it.name == "cleanDeployServices" }.all { task ->
-        rootProject.tasks.findByName("cleanDeployServices").mustRunAfter task
-    }
+task happyRobotTests(type:Exec) {
+    workingDir 'robot-tests'
+    commandLine './micro_run_tests.sh', '-hnw'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}

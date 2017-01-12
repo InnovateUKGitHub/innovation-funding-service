@@ -3,13 +3,12 @@ dbip=$(oc get svc | grep ifs-database | awk '{print $2}')
 export dbip
 
 function executeMySQLCommand {
-    mysql ifs -uroot -ppassword -h${dbip} -N -s -e "$1"
+    mysql ifs -uroot -ppassword -h${dbip} -N -s -e "$1" 2>/dev/null
 }
 
 export -f executeMySQLCommand
 
 function addUserToShibboleth {
-
     emailAddress=$1
 
     system_user=$(executeMySQLCommand "select system_user from user where email='${emailAddress}';")
@@ -17,6 +16,7 @@ function addUserToShibboleth {
     if [ "${system_user}" == "1" ]; then
 
       echo "Skipping adding user ${emailAddress} to Shibboleth as they are a System User and as such have no login"
+
 
     else
 
@@ -38,6 +38,15 @@ function addUserToShibboleth {
 
 export -f addUserToShibboleth
 
+cat <<'END'
+              SINKING THE SHIB!!!
+                   ,:',:`,:' 
+                __||_||_||_||___
+           ____[""""""""""""""""]___
+           \ " '''''''''''''''''''' \ 
+    ~~^~^~^~^~^^~^~^~^~^~^~^~^~~^~^~^~^~~^~^
+END
+
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
@@ -47,4 +56,16 @@ done
 
 docker exec $( docker ps -q --filter=ancestor=worth/shibboleth:1.0-SNAPSHOT ) /tmp/_delete-shib-users-remote.sh
 
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
+mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}" 
+
+cat <<'END'
+
+          ____
+     ,' ._|    \
+     :__: :    |
+      --: :    |\o
+~~^~^~~~^~^~^^~~~~^~^~^~~
+
+       SHIB SUNK! 
+
+END

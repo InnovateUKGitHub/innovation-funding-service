@@ -18,26 +18,24 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="hgroup" style="padding-top: 20px">
-		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
-		<h1 class="heading-xlarge no-margin-top">Assessment</h1>
-	</div>
-	<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Assessment'}, ${null})" th:remove="tag" />
+
+    <th:block th:if="${param.status != null and param.status[0] == 'edit'}">
 		<form>
 			<fieldset>
 				<legend class="visuallyhidden">Assessors</legend>
 				<div class="form-group">
 					<fieldset class="inline">
 						<h3 class="heading-small">Assessors required per application</h3>
-						<label class="block-label" for="assessors-one">
+						<label class="block-label selection-button-radio" for="assessors-one">
 							<input id="assessors-one" name="assessors-required" value="1" type="radio" />
 							1
 						</label>
-						<label class="block-label" for="assessors-three">
+						<label class="block-label selection-button-radio" for="assessors-three">
 							<input id="assessors-three" name="assessors-required" value="3" type="radio" />
 							3
 						</label>
-						<label class="block-label" for="assessors-five">
+						<label class="block-label selection-button-radio" for="assessors-five">
 							<input id="assessors-five" name="assessors-required" value="5" type="radio" checked="checked" />
 							5
 						</label>

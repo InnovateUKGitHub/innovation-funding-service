@@ -11,6 +11,35 @@
     </header>
 
     <ul class="inline-nav extra-margin">
+        <li th:class="${(sprint == 'sprint1' ? 'selected' : '')}"><a href="/prototypes/index-sprint1">Sprints 1 to 10</a></li>
+        <li th:class="${(sprint == 'sprint11' ? 'selected' : '')}"><a href="/prototypes/index-sprint11">11</a></li>
+        <li th:class="${(sprint == 'sprint12' ? 'selected' : '')}"><a href="/prototypes/index-sprint12">12</a></li>
+        <li th:class="${(sprint == 'sprint13' ? 'selected' : '')}"><a href="/prototypes/index-sprint13">13</a></li>
+        <li th:class="${(sprint == 'sprint14' ? 'selected' : '')}"><a href="/prototypes/index-sprint14">14</a></li>
+        <li th:class="${(sprint == 'sprint15' ? 'selected' : '')}"><a href="/prototypes/index-sprint15">15</a></li>
+        <li th:class="${(sprint == 'sprint16' ? 'selected' : '')}"><a href="/prototypes/index-sprint16">16</a></li>
+        <li th:class="${(sprint == 'sprint17' ? 'selected' : '')}"><a href="/prototypes/index-sprint17">17</a></li>
+        <li th:class="${(sprint == 'sprint18' ? 'selected' : '')}"><a href="/prototypes/index-sprint18">18</a></li>
+        <li th:class="${(sprint == 'sprint19' ? 'selected' : '')}"><a href="/prototypes/index-sprint19">19</a></li>
+        <li th:class="${(sprint == 'sprint20' ? 'selected' : '')}"><a href="/prototypes/index-sprint20"><strong>20</strong></a></li>
+    </ul>
+
+    <div class="alignright">
+        <a href="/prototypes/index-demo">Demo</a>
+    </div>
+
+</div>
+
+<!-- ===========================Prototype index page  =========================== -->
+
+<div th:fragment="prototype-sprint-nav-archive">
+
+    <header class="no-margin-bottom ">
+        <h1 class="heading-xlarge no-margin-bottom">Prototype index</h1>
+        <h2 class="subtitle">Directory of front end code to show user journeys</h2>
+    </header>
+
+    <ul class="inline-nav extra-margin">
         <li th:class="${(sprint == 'sprint1' ? 'selected' : '')}"><a href="/prototypes/index">1</a></li>
         <li th:class="${(sprint == 'sprint2' ? 'selected' : '')}"><a href="/prototypes/index-sprint2">2</a></li>
         <li th:class="${(sprint == 'sprint3' ? 'selected' : '')}"><a href="/prototypes/index-sprint3">3</a></li>
@@ -21,14 +50,7 @@
         <li th:class="${(sprint == 'sprint8' ? 'selected' : '')}"><a href="/prototypes/index-sprint8">8</a></li>
         <li th:class="${(sprint == 'sprint9' ? 'selected' : '')}"><a href="/prototypes/index-sprint9">9</a></li>
         <li th:class="${(sprint == 'sprint10' ? 'selected' : '')}"><a href="/prototypes/index-sprint10">10</a></li>
-        <li th:class="${(sprint == 'sprint11' ? 'selected' : '')}"><a href="/prototypes/index-sprint11">11</a></li>
-        <li th:class="${(sprint == 'sprint12' ? 'selected' : '')}"><a href="/prototypes/index-sprint12">12</a></li>
-        <li th:class="${(sprint == 'sprint13' ? 'selected' : '')}"><a href="/prototypes/index-sprint13">13</a></li>
-        <li th:class="${(sprint == 'sprint14' ? 'selected' : '')}"><a href="/prototypes/index-sprint14">14</a></li>
-        <li th:class="${(sprint == 'sprint15' ? 'selected' : '')}"><a href="/prototypes/index-sprint15">15</a></li>
-        <li th:class="${(sprint == 'sprint16' ? 'selected' : '')}"><a href="/prototypes/index-sprint16">16</a></li>
-        <li th:class="${(sprint == 'sprint17' ? 'selected' : '')}"><a href="/prototypes/index-sprint17">17</a></li>
-        <li th:class="${(sprint == 'sprint18' ? 'selected' : '')}"><a href="/prototypes/index-sprint18"><strong>18</strong></a></li>
+        <li th:class="${(sprint == 'sprint11' ? 'selected' : '')}"><a href="/prototypes/index-sprint11">Sprint 11 onwards</a></li>
     </ul>
 
     <div class="alignright">
@@ -36,6 +58,7 @@
     </div>
 
 </div>
+
 
 <!-- ===========================Place: main <header>  =========================== -->
 
@@ -145,7 +168,7 @@
 
         <div class="assign-team">
             <h3>Reassign question</h3>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
 
@@ -173,7 +196,7 @@
 
         <div class="assign-team">
             <h3>Reassign question</h3>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
 
@@ -202,7 +225,7 @@
 
         <div class="assign-team">
             <h3>Reassign question</h3>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li>
                     <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
 

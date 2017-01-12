@@ -12,7 +12,7 @@ Resource          User_actions.robot
 the assessment start period changes in the db in the past
     ${today}=    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     And reload page
 
 the calculation of the remaining days should be correct
@@ -60,6 +60,10 @@ get yesterday
     ${today} =    get time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
+
+get next year
+    ${year} =  get time    year    NOW + 365d
+    [Return]  ${year}
 
 Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
     ${yesterday} =    get yesterday

@@ -128,7 +128,7 @@ Collaborator can remove a file when the question is assigned
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     And the user should see the text in the page    ${valid_pdf}
-    When the user can remove the uploaded file    ${valid_pdf}
+    When the user can remove the uploaded file  remove_uploaded_file  ${valid_pdf}
     Then the user can re-assign the question back to the lead applicant
 
 Collaborators can upload a file when the question is assigned
@@ -163,12 +163,10 @@ the collaborator logs in
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
 
 the user uploads the file to the 'Innovation' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[17]    ${UPLOAD_FOLDER}/${file_name}
-    Sleep    500ms
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page

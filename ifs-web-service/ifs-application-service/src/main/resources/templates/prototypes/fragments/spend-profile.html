@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Spend profile intro area  =========================== --> 
+<!-- ===========================Spend profile intro area  =========================== -->
 
 <div th:fragment="prototype-spend-profile-intro">
-     
+
    <div class="centralise">
 
         <div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
@@ -19,7 +19,7 @@
             <div class="warning-alert extra-margin-bottom">
                 <h2 class="heading-small">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
                 <p class="no-margin-bottom">Please review:</p>
-                <ul class="list-bullet">
+                <ul class="list list-bullet">
                     <li>Subcontracting costs</li>
                 </ul>
                 <!-- <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?spend=high&#38;user=nonLead' : '/prototypes/3100-spend?spend=high')}" class="button-secondary" th:unless="${param.status == null}">Save with overspend</a> -->
@@ -111,7 +111,7 @@
                 </tbody>
             </table>
         </div> -->
-        
+
         <th:block th:if="${type == 'business'}">
             <h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
         </th:block>
@@ -141,12 +141,12 @@
             </div>
 
         </div>
-        
+
     </div>
- 
+
 </div>
 
-<!-- ===========================Spend profile main table=========================== --> 
+<!-- ===========================Spend profile main table=========================== -->
 
 <div th:fragment="prototype-spend-profile-table">
 
@@ -271,7 +271,7 @@
                             </th:block>
                         </tbody>
                     </th:block>
-                    
+
                     <th:block th:if="${param.task != null and param.task[0] == 'reviewProject'}">
                         <tbody>
                             <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Aptrans Ltd'}, type=${'Lead Partner'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
@@ -288,7 +288,7 @@
 </div>
 
 
-<!-- ===========================Spend profile main table=========================== --> 
+<!-- ===========================Spend profile main table=========================== -->
 
 <div th:fragment="prototype-spend-profile-academic-table">
 
@@ -433,10 +433,10 @@
 </div>
 
 
-<!-- ===========================Spend profile totals=========================== --> 
+<!-- ===========================Spend profile totals=========================== -->
 
 <div th:fragment="prototype-spend-profile-totals">
-    
+
     <div class="centralise">
         <div th:include="prototypes/fragments/applicant-view :: prototype-spend-year-totals" th:remove="tag" />
     </div>
@@ -444,7 +444,7 @@
 </div>
 
 
-<!-- ===========================Spend profile main table=========================== --> 
+<!-- ===========================Spend profile main table=========================== -->
 
 
 <div th:fragment="prototype-spend-profile-controls">
@@ -468,7 +468,7 @@
             </th:block>
 
             <th:block th:if = "${type == 'academic'}">
-                <a th:href="@{'?status=edit&#38;user=nonLead'}" class="button button-secondary">Edit spend profile</a>        
+                <a th:href="@{'?status=edit&#38;user=nonLead'}" class="button button-secondary">Edit spend profile</a>
             </th:block>
 
             <p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
@@ -497,8 +497,8 @@
                         <hr />
 
                         <div class="alignright-button">
-                            
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
                             <a th:href="@{?status=Submitted&#38;user=nonLead}" class="button">Send</a>
                         </div>
@@ -544,8 +544,8 @@
                         <hr />
 
                         <div class="alignright-button">
-                            
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
                             <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?spend=high&#38;user=nonLead' : '/prototypes/3100-spend?spend=high')}" class="button">Save</a>
                         </div>
@@ -564,7 +564,7 @@
     </div>
 
     <div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-        
+
         <div class="centralise">
 
             <p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
@@ -579,13 +579,18 @@
 
                     <h2 class="heading-medium no-margin">Allow partner to edit</h2>
 
-                    <p><strong>Biotech Corp's</strong> spend profile has been returned to them. They have been informed by email. If you have any specific requirements please contact them directly.</p>
+                    <p><strong>Biotech Corp's</strong> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
 
                     <hr />
 
                     <div class="alignright-button">
-                        <a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
+                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                        <a href="/prototypes/2472-spend-lead-overview" class="button">Allow partner to edit</a>
                     </div>
+
+                    <!--<div class="alignright-button">-->
+                        <!--<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>-->
+                    <!--</div>-->
 
                 </div>
             </div>
@@ -611,7 +616,7 @@
                 <hr />
 
                 <div class="alignright-button">
-                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
                     <a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
                 </div>
 

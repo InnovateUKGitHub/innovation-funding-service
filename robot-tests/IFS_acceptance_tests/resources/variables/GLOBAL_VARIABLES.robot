@@ -1,5 +1,5 @@
 *** Variables ***
-${docker}    0
+${docker}         0
 ${smoke_test}     0
 ${BROWSER}        chrome
 ${SERVER_BASE}    ifs-local-dev
@@ -8,7 +8,6 @@ ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
-
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    100,837
 ${DEFAULT_INDUSTRIAL_OTHER_FUNDING_WITH_COMMAS}    1,234
 ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    70,586
@@ -21,12 +20,10 @@ ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}    0
 ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}    100%
 ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}    ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}    100836.81
-${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}   102,837
+${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    102,837
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
-
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
-
 ${OPEN_COMPETITION}    1
 ${OPEN_COMPETITION_NAME}    Connected digital additive manufacturing
 ${OPEN_COMPETITION_APPLICATION_1}    9
@@ -41,12 +38,9 @@ ${OPEN_COMPETITION_APPLICATION_3_HEADER}    ${OPEN_COMPETITION_APPLICATION_3_NUM
 ${OPEN_COMPETITION_APPLICATION_4}    10
 ${OPEN_COMPETITION_APPLICATION_5}    8
 ${OPEN_COMPETITION_APPLICATION_5_NUMBER}    00000008
-
 ${READY_TO_OPEN_COMPETITION}    6
 ${READY_TO_OPEN_COMPETITION_NAME}    Photonics for health
-
 ${COMP_SETUP_COMPETITION}    9
-
 ${FUNDERS_PANEL_COMPETITION}    5
 ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
 ${FUNDERS_PANEL_APPLICATION_1}    24
@@ -60,23 +54,7 @@ ${FUNDERS_PANEL_APPLICATION_2_HEADER}    ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: 
 ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    11
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION}    ${EMPIRE_LTD_ID}
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
-
 ${NEW_COMP_SETUP_COMPETITION}    10
-
-${PROJECT_SETUP_COMPETITION}    8
-${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
-${PROJECT_SETUP_APPLICATION_1}    32
-${PROJECT_SETUP_APPLICATION_1_NUMBER}    00000032
-${PROJECT_SETUP_APPLICATION_1_TITLE}    Magic material
-${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_NUMBER}: ${PROJECT_SETUP_APPLICATION_1_TITLE}
-${PROJECT_SETUP_APPLICATION_1_PROJECT}    3
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
-${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    steve.smith@empire.com
-${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    worth.email.test+projectsetuppm@gmail.com
-${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    jessica.doe@ludlow.co.uk
-${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}    pete.tom@egg.com
-
 ${IN_ASSESSMENT_COMPETITION}    4
 ${IN_ASSESSMENT_COMPETITION_NAME}    Sustainable living models for the future
 ${IN_ASSESSMENT_APPLICATION_1}    22
@@ -86,16 +64,24 @@ ${IN_ASSESSMENT_APPLICATION_1_HEADER}    ${IN_ASSESSMENT_APPLICATION_1_NUMBER}: 
 ${IN_ASSESSMENT_APPLICATION_2}    16
 ${IN_ASSESSMENT_APPLICATION_3}    20
 ${IN_ASSESSMENT_APPLICATION_3_NUMBER}    00000020
-
+${IN_ASSESSMENT_APPLICATION_3_LEAD_PARTNER_EMAIL}    shawn.ward@example.com
+${IN_ASSESSMENT_APPLICATION_3_TITLE}    Intelligent Building
+${IN_ASSESSMENT_APPLICATION_4_NUMBER}    00000018
+${IN_ASSESSMENT_APPLICATION_4_LEAD_PARTNER_EMAIL}    ernest.austin@example.com
+${IN_ASSESSMENT_APPLICATION_4_TITLE}    Park living
+${IN_ASSESSMENT_APPLICATION_5_NUMBER}    00000019
+${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
+${IN_ASSESSMENT_APPLICATION_5_TITLE}    Products and Services Personalised
+${IN_ASSESSMENT_APPLICATION_6_NUMBER}    00000021
+${IN_ASSESSMENT_APPLICATION_6_LEAD_PARTNER_EMAIL}    lisa.fox@example.com
+${IN_ASSESSMENT_APPLICATION_6_TITLE}    Intelligent water system
 ${INFORM_COMPETITION}    7
 ${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
 ${INFORM_APPLICATION_1_PROJECT}    4
-
 ${STEVE_SMITH_ID}    55
 ${JESSICA_DOE_ID}    56
 ${PETE_TOM_ID}    57
 ${TEST_TWENTY_ID}    44
-
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/${OPEN_COMPETITION_APPLICATION_1}/section/1/#question-11
@@ -143,18 +129,11 @@ ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATI
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
-${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/projectSetup
+${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
+${COMP_MANAGEMENT_OPEN_COMP}    ${SERVER}/management/competition/setup/${FUNDERS_PANEL_COMPETITION}
+${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/${FUNDERS_PANEL_APPLICATION_2}/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
-${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
-${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
-${project_in_setup_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
-${project_in_setup_details_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
-${project_start_date_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/project-address
-${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
-${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${404_error_message}    Page not found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
@@ -175,25 +154,22 @@ ${Providing_Sustainable_Childcare_Application_Overview}    ${server}/management/
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
 ${test_title}     test title
-
 # File related variables
-${UPLOAD_FOLDER}                  uploaded_files
-#${DOWNLOAD_FOLDER}               This variable to be defined TODO INFUND-6187
-${empty_field_warning_message}    This field cannot be left blank
-${valid_pdf}            testing.pdf
-${too_large_pdf}        large.pdf
-${text_file}            testing.txt
+${UPLOAD_FOLDER}    uploaded_files
+${DOWNLOAD_FOLDER}    download_files
+${empty_field_warning_message}    This field cannot be left blank.
+${valid_pdf}      testing.pdf
+${too_large_pdf}    large.pdf
+${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    55
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    60
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    75
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    66
 ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}    56
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    59
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    69
 ${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    225
 ${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    226
 ${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    227
-
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessment_summary_complete_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
 ${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/375
@@ -212,13 +188,19 @@ ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/com
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
 ${Assessment_summary_Pending_12}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/summary
 ${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/summary
-${assessment_skills}    ${server}/assessment/profile/declaration
+${assessment_declaration_url}    ${server}/assessment/profile/declaration
+${assessment_declaration_edit_url}    ${server}/assessment/profile/declaration/edit
+${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_skills_edit_url}   ${server}/assessment/profile/skills/edit
 ${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
-
 # Database variables
 ${database_name}    ifs
 ${database_user}    root
 ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
+${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
+${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
+${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
