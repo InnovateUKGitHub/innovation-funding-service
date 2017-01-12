@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
-import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
@@ -38,14 +37,15 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.equalTo;
+import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
-import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSectionAndQuestionModelPopulatorTest {
@@ -80,8 +80,8 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         Long userId = 1L;
         Long organisationId = 3L;
-        List<SectionResource> allSections = SectionResourceBuilder.newSectionResource().build(3);
-        SectionResource parentSection = SectionResourceBuilder.newSectionResource()
+        List<SectionResource> allSections = newSectionResource().build(3);
+        SectionResource parentSection = newSectionResource()
                 .withChildSections(simpleMap(allSections, SectionResource::getId)).build();
 
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
@@ -112,7 +112,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
                 .withApplicationStatus(ApplicationStatusConstants.OPEN).build();
         Long userId = 1L;
         Long organisationId = 3L;
-        Optional<SectionResource> section = Optional.of(SectionResourceBuilder.newSectionResource().build());
+        Optional<SectionResource> section = Optional.of(newSectionResource().build());
         Long questionId = 2L;
         Optional<Long> currentQuestionId = Optional.of(questionId);
         OrganisationResource userOrganisation = OrganisationResourceBuilder.newOrganisationResource()
@@ -180,8 +180,8 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         Long completedSectionId = 1L;
         completedSectionsByOrganisation.put(organisationId, asLinkedSet(completedSectionId));
         Boolean allQuestionsCompleted = true;
-        SectionResource financeSection = SectionResourceBuilder.newSectionResource().build();
-        List<SectionResource> eachOrganisationFinanceSections = SectionResourceBuilder.newSectionResource().build(1);
+        SectionResource financeSection = newSectionResource().build();
+        List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>();
         sectionsMarkedAsComplete.add(completedSectionId);
 
@@ -189,7 +189,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         when(questionService.getMarkedAsComplete(application.getId(), organisationId)).thenReturn(markedAsComplete);
         when(sectionService.allSectionsMarkedAsComplete(application.getId())).thenReturn(allQuestionsCompleted);
         when(sectionService.getFinanceSection(application.getCompetition())).thenReturn(financeSection);
-        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES)).thenReturn(eachOrganisationFinanceSections);
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
 
         target.addCompletedDetails(model, application, Optional.of(userOrganisation));
 
@@ -208,7 +208,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         Model model = mock(Model.class);
         long competitionId = 1L;
         List<QuestionResource> sectionQuestions = QuestionResourceBuilder.newQuestionResource().build(1);
-        SectionResource currentSection = SectionResourceBuilder.newSectionResource()
+        SectionResource currentSection = newSectionResource()
                 .withCompetition(competitionId)
                 .withQuestions(simpleMap(sectionQuestions, QuestionResource::getId)).build();
         List<FormInputResource> responses = FormInputResourceBuilder.newFormInputResource().build(1);
