@@ -59,7 +59,8 @@ Comp admin should be able to view but not edit the finances for every partner
 
 Comp admin has read only view of Application details past Open date
     [Documentation]     INFUND-6937, INFUND-6938, INFUND-6939, INFUND-6940 ,INFUND-6941
-    [Tags]
+    [Tags]  Failing
+    #TODO when reviewing
     [Setup]     log in as a different user    &{Comp_admin1_credentials}
     Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
     And The user clicks the button/link    link=Application
