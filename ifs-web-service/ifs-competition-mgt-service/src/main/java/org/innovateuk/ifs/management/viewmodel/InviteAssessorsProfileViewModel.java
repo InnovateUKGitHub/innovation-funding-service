@@ -15,7 +15,7 @@ public class InviteAssessorsProfileViewModel {
     private String name;
     private String email;
     private String phone;
-    private AddressResource addressResource;
+    private AddressResource address;
     private List<CategoryResource> innovationAreas;
     private String businessType;
     private String skills;
@@ -34,7 +34,7 @@ public class InviteAssessorsProfileViewModel {
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.addressResource = addressResource;
+        this.address = addressResource;
         this.innovationAreas = innovationAreas;
         this.businessType = businessType;
         this.skills = skills;
@@ -56,8 +56,8 @@ public class InviteAssessorsProfileViewModel {
         return phone;
     }
 
-    public AddressResource getAddressResource() {
-        return addressResource;
+    public AddressResource getAddress() {
+        return address;
     }
 
     public List<CategoryResource> getInnovationAreas() {

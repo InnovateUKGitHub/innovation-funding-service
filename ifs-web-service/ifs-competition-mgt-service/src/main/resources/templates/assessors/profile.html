@@ -16,7 +16,9 @@
 
     <div class="page-title">
         <h1 class="heading-xlarge">
-            <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competition.id,8)}: ${model.competition.name}|">00000001: Technology inspired</span>
+            <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competition.id,8)}: ${model.competition.name}|">
+                00000001: Technology inspired
+            </span>
             Assessor profile
         </h1>
     </div>
@@ -26,24 +28,24 @@
     <h3 class="heading-small">Name</h3>
     <p th:text="${model.name}">John Smith</p>
 
-    <h3 class="heading-small" th:if="${model.addressResource}">Address</h3>
-    <p th:if="${model.addressResource}">
-        <th:block th:if="${model.addressResource.addressLine1}">
-            <th:block th:text="${model.addressResource.addressLine1}">Street address 1</th:block><br />
+    <h3 class="heading-small" th:if="${model.address}">Address</h3>
+    <p th:if="${model.address}">
+        <th:block th:if="${model.address.addressLine1}">
+            <th:block th:text="${model.address.addressLine1}">Street address 1</th:block><br />
         </th:block>
-        <th:block th:if="${model.addressResource.addressLine2}">
-            <th:block th:text="${model.addressResource.addressLine2}">Street address 2</th:block><br />
+        <th:block th:if="${model.address.addressLine2}">
+            <th:block th:text="${model.address.addressLine2}">Street address 2</th:block><br />
         </th:block>
-        <th:block th:if="${model.addressResource.addressLine3}">
-            <th:block th:text="${model.addressResource.addressLine3}">Street address 3</th:block><br />
+        <th:block th:if="${model.address.addressLine3}">
+            <th:block th:text="${model.address.addressLine3}">Street address 3</th:block><br />
         </th:block>
-        <th:block th:if="${model.addressResource.town}">
-            <th:block th:text="${model.addressResource.town}">Town</th:block><br />
+        <th:block th:if="${model.address.town}">
+            <th:block th:text="${model.address.town}">Town</th:block><br />
         </th:block>
-        <th:block th:if="${model.addressResource.county}">
-            <th:block th:text="${model.addressResource.county}">County</th:block><br />
+        <th:block th:if="${model.address.county}">
+            <th:block th:text="${model.address.county}">County</th:block><br />
         </th:block>
-        <th:block th:if="${model.addressResource.postcode}" th:text="${model.addressResource.postcode}">Post code</th:block>
+        <th:block th:if="${model.address.postcode}" th:text="${model.address.postcode}">Post code</th:block>
     </p>
 
     <h3 class="heading-small" th:if="${model.phone}">Phone number</h3>

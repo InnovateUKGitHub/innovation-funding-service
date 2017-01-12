@@ -496,7 +496,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
         assertEquals("test@test.com", model.getEmail());
         assertEquals(emptyList(), model.getInnovationAreas());
-        assertEquals(expectedAddress, model.getAddressResource());
+        assertEquals(expectedAddress, model.getAddress());
 
         verify(assessorRestService, only()).getAssessorProfile(assessorId);
     }
