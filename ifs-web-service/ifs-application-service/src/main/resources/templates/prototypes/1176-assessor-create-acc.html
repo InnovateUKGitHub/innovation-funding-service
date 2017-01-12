@@ -14,22 +14,22 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
-    <th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
-		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
+	<th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
+		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
 	</th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create assessor account':'Edit your profile')}">Create assessor account</h1>
-    </div>
+		<h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create assessor account':'Edit your details')}">Create assessor account</h1>
+	</div>
 
 	<!-- <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p> -->
 
 	<form>
 		<fieldset th:unless="${param.edit != null and param.edit[0] == 'address'}">
-			<legend class="heading-medium">Your details</legend>
+			<legend class="heading-medium visuallyhidden">Your details</legend>
 			<div class="form-group">
 				<label class="form-label" for="title">
 					<span class="form-label-bold">Title</span>
@@ -130,47 +130,47 @@
 
 		</fieldset>
 
-    <th:block th:if="${param.edit != null}">
-      <fieldset id="address-details" class="extra-margin" style="display: block;">
-        <legend class="heading-medium">Your address</legend>
-        <div class="form-group">
-          <label class="form-label" for="street">
-            <span class="form-label-bold">Street</span>
-          </label>
-          <input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label visuallyhidden" for="street-2">
-            <span class="form-label-bold">Street line 2</span>
-          </label>
-          <input class="form-control" id="street-2" name="street-2" type="text" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="street-2">
-            <span class="form-label-bold visuallyhidden">Street line 3</span>
-          </label>
-          <input class="form-control" id="street-3" name="street-2" type="text" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="town">
-            <span class="form-label-bold">Town</span>
-          </label>
-          <input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="county">
-            <span class="form-label-bold">County</span>
-          </label>
-          <input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="postcode">
-            <span class="form-label-bold">Postcode</span>
-          </label>
-          <input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
-        </div>
-      </fieldset>
-    </th:block>
+    <!--<th:block th:if="${param.edit != null}">-->
+      <!--<fieldset id="address-details" class="extra-margin" style="display: block;">-->
+        <!--<legend class="heading-medium">Your address</legend>-->
+        <!--<div class="form-group">-->
+          <!--<label class="form-label" for="street">-->
+            <!--<span class="form-label-bold">Street</span>-->
+          <!--</label>-->
+          <!--<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+          <!--<label class="form-label visuallyhidden" for="street-2">-->
+            <!--<span class="form-label-bold">Street line 2</span>-->
+          <!--</label>-->
+          <!--<input class="form-control" id="street-2" name="street-2" type="text" />-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+          <!--<label class="form-label" for="street-2">-->
+            <!--<span class="form-label-bold visuallyhidden">Street line 3</span>-->
+          <!--</label>-->
+          <!--<input class="form-control" id="street-3" name="street-2" type="text" />-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+          <!--<label class="form-label" for="town">-->
+            <!--<span class="form-label-bold">Town</span>-->
+          <!--</label>-->
+          <!--<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+          <!--<label class="form-label" for="county">-->
+            <!--<span class="form-label-bold">County</span>-->
+          <!--</label>-->
+          <!--<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+          <!--<label class="form-label" for="postcode">-->
+            <!--<span class="form-label-bold">Postcode</span>-->
+          <!--</label>-->
+          <!--<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />-->
+        <!--</div>-->
+      <!--</fieldset>-->
+    <!--</th:block>-->
 
 		<div th:if="${param.edit == null}" th:remove="tag">
 
@@ -180,14 +180,15 @@
 			</th:block>
 
 			<button th:unless="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
-  <button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
+  			<button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
 
 		</div>
 
-		<div th:if="${param.edit != null}" th:remove="tag">
-			<button class="button button-large extra-margin" formaction="/prototypes/1178-assessor-profile-details" type="submit">Save changes</button>
+		<div th:if="${param.edit != null}" class="extra-margin">
+			<button class="button" formaction="/prototypes/1178-assessor-profile-details" type="submit">Save and return to your details</button>
+			<a href="#">Cancel</a>
 		</div>
-
+		<hr />
 
 	</form>
 

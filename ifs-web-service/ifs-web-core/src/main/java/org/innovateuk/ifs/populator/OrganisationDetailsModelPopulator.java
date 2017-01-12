@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.model;
+package org.innovateuk.ifs.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.commons.rest.RestResult;
