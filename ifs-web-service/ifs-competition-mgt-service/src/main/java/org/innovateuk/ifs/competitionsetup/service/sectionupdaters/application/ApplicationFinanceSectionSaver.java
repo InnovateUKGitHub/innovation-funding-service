@@ -42,7 +42,8 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
 		CompetitionSetupFinanceResource csfr = new CompetitionSetupFinanceResource();
-		csfr.setFullApplicationFinance(form.isFullApplicationFinance());
+		// INFUND-6773 - Not allowed to at this moment
+		csfr.setFullApplicationFinance(true);
 		csfr.setIncludeGrowthTable(form.isIncludeGrowthTable());
         csfr.setCompetitionId(competition.getId());
 		return competitionSetupFinanceService.updateFinance(csfr);

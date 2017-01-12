@@ -96,7 +96,8 @@
 
     <!-- ===========================Form: your_finance =========================== -->
     <div th:fragment="your_finance" th:remove="tag">
-        <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
+        <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',
+        userOrganisation.name)}" />
         <p ifs:utext="${question.description}" />
 
         <section class="collapsible" th:each="subSection : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
@@ -1007,8 +1008,9 @@
          th:with="formInputType=${formInput.type},
                    costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},
                    type=${formInput.type.nameLower}">
+
         <div class="form-group"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
+             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
 
 
             <h2 th:text="${question.getName()}" class="heading-medium" />
