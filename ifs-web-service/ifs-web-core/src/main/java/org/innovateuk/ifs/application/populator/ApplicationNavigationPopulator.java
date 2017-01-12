@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.application.model;
+package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -24,32 +25,39 @@ public class ApplicationNavigationPopulator {
     @Autowired
     private SectionService sectionService;
 
-    public void addNavigation(SectionResource section, Long applicationId, Model model) {
+    public NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
+        NavigationViewModel navigationViewModel = new NavigationViewModel();
+
         if (section == null) {
-            return;
+            return navigationViewModel;
         }
         Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
+        addPreviousQuestionToModel(previousQuestion, applicationId, navigationViewModel);
         Optional<QuestionResource> nextQuestion = questionService.getNextQuestionBySection(section.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
+        addNextQuestionToModel(nextQuestion, applicationId, navigationViewModel);
+
+        return navigationViewModel;
     }
 
-    public void addNavigation(QuestionResource question, Long applicationId, Model model) {
+    public NavigationViewModel addNavigation(QuestionResource question, Long applicationId) {
+        NavigationViewModel navigationViewModel = new NavigationViewModel();
         if (question == null) {
-            return;
+            return navigationViewModel;
         }
 
         Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
+        addPreviousQuestionToModel(previousQuestion, applicationId, navigationViewModel);
         Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
+        addNextQuestionToModel(nextQuestion, applicationId, navigationViewModel);
+
+        return navigationViewModel;
     }
 
-    protected void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, Model model) {
-        String previousUrl;
-        String previousText;
-
+    protected void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, NavigationViewModel navigationViewModel) {
         if (previousQuestionOptional.isPresent()) {
+            String previousUrl;
+            String previousText;
+
             QuestionResource previousQuestion = previousQuestionOptional.get();
             SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
@@ -59,16 +67,17 @@ public class ApplicationNavigationPopulator {
                 previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
                 previousText = previousQuestion.getShortName();
             }
-            model.addAttribute("previousUrl", previousUrl);
-            model.addAttribute("previousText", previousText);
+
+            navigationViewModel.setPreviousUrl(previousUrl);
+            navigationViewModel.setPreviousText(previousText);
         }
     }
 
-    protected void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, Model model) {
-        String nextUrl;
-        String nextText;
-
+    protected void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, NavigationViewModel navigationViewModel) {
         if (nextQuestionOptional.isPresent()) {
+            String nextUrl;
+            String nextText;
+
             QuestionResource nextQuestion = nextQuestionOptional.get();
             SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
@@ -80,8 +89,8 @@ public class ApplicationNavigationPopulator {
                 nextText = nextQuestion.getShortName();
             }
 
-            model.addAttribute("nextUrl", nextUrl);
-            model.addAttribute("nextText", nextText);
+            navigationViewModel.setNextUrl(nextUrl);
+            navigationViewModel.setNextText(nextText);
         }
     }
 
