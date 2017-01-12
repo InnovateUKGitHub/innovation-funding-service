@@ -145,7 +145,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(-1L));
-        completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
+        if(null != sectionsMarkedAsComplete) {
+            completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
+        }
 
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
