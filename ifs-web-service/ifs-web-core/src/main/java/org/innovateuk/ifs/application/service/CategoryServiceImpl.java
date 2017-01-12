@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<ResearchCategoryResource> getResearchCategories() {
-        return categoryRestService.getResearchCategoriess().getSuccessObjectOrThrowException();
+        return categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
     }
 
     @Override

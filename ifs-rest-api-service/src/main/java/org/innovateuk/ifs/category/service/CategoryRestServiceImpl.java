@@ -31,7 +31,7 @@ public class CategoryRestServiceImpl extends BaseRestService implements Category
     }
 
     @Override
-    public RestResult<List<ResearchCategoryResource>> getResearchCategoriess() {
+    public RestResult<List<ResearchCategoryResource>> getResearchCategories() {
         return getWithRestResult(categoryRestURL + "/findResearchCategories", researchCategoryResourceListType());
     }
 

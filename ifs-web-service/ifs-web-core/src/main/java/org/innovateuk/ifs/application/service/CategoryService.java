@@ -12,9 +12,9 @@ import java.util.List;
 @Service
 public interface CategoryService {
 
-    List<InnovationAreaResource> getInnovationAreasBySector(long sectorId);
-
     List<InnovationAreaResource> getInnovationAreas();
     List<InnovationSectorResource> getInnovationSectors();
     List<ResearchCategoryResource> getResearchCategories();
+
+    List<InnovationAreaResource> getInnovationAreasBySector(long sectorId);
 }
