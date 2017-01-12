@@ -11,7 +11,7 @@
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/competition}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
 
             <h1 class="heading-xlarge">
                 <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
