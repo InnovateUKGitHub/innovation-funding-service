@@ -16,6 +16,7 @@ Academic organisations search
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And The user should see the text in the page    Your organisation must be UK based to receive funding from Innovate UK
     When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
