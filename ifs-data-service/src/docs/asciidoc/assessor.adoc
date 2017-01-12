@@ -9,3 +9,14 @@ include::{snippets}/assessor/register-assessor-by-hash/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessor/register-assessor-by-hash/curl-request.adoc[]
+
+=== Get assessor profile
+==== Request
+include::{snippets}/assessor/profile/http-request.adoc[]
+include::{snippets}/assessor/profile/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor/profile/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor/profile/curl-request.adoc[]
