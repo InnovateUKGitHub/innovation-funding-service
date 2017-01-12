@@ -3,18 +3,22 @@ package org.innovateuk.ifs.category.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.junit.Before;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -23,53 +27,83 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private final CategoryService categoryService = new CategoryServiceImpl();
 
-    @Before
-    public void setUp() throws Exception {
+    @Test
+    public void getInnovationAreas() {
+        List<InnovationArea> innovationAreas = newInnovationArea().build(2);
+        List<InnovationAreaResource> expectedInnovationAreaResources = newInnovationAreaResource().build(2);
 
+        when(innovationAreaRepositoryMock.findAllByOrderByNameAsc()).thenReturn(innovationAreas);
+        when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(expectedInnovationAreaResources);
+
+        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreas().getSuccessObject();
+
+        assertEquals(expectedInnovationAreaResources, actualInnovationAreaResources);
+
+        InOrder inOrder = inOrder(innovationAreaRepositoryMock, innovationAreaMapperMock, questionMapperMock);
+        inOrder.verify(innovationAreaRepositoryMock).findAllByOrderByNameAsc();
+        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationAreas);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void test_getByType() throws Exception {
-        final InnovationArea cat1 = newInnovationArea().build();
-        final InnovationArea cat2 = newInnovationArea().build();
+    public void getInnovationSectors() {
+        List<InnovationSector> innovationSectors = newInnovationSector().build(2);
+        List<InnovationSectorResource> expectedInnovationSectorResources = newInnovationSectorResource().build(2);
 
-        final List<InnovationArea> categories = new ArrayList<>(asList(cat1, cat2));
+        when(innovationSectorRepositoryMock.findAllByOrderByNameAsc()).thenReturn(innovationSectors);
+        when(innovationSectorMapperMock.mapToResource(refEq(innovationSectors))).thenReturn(expectedInnovationSectorResources);
 
-        final InnovationAreaResource expected1 = newInnovationAreaResource().build();
+        List<InnovationSectorResource> actualInnovationSectorResources = categoryService.getInnovationSectors().getSuccessObject();
 
-        final InnovationAreaResource expected2 = newInnovationAreaResource().build();
+        assertEquals(expectedInnovationSectorResources, actualInnovationSectorResources);
 
-        when(innovationAreaRepositoryMock.findAllByOrderByNameAsc()).thenReturn(categories);
-        when(innovationAreaMapperMock.mapToResource(refEq(categories))).thenReturn(asList(expected1, expected2));
-
-        final List<InnovationAreaResource> found = categoryService.getInnovationAreas().getSuccessObject();
-
-        assertEquals(expected1, found.get(0));
-        assertEquals(expected2, found.get(1));
-        verify(innovationAreaRepositoryMock, times(1)).findAllByOrderByNameAsc();
+        InOrder inOrder = inOrder(innovationSectorRepositoryMock, innovationSectorMapperMock);
+        inOrder.verify(innovationSectorRepositoryMock).findAllByOrderByNameAsc();
+        inOrder.verify(innovationSectorMapperMock).mapToResource(innovationSectors);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void test_getByParent() throws Exception {
-        List<InnovationArea> categories = newInnovationArea().build(2);
+    public void getResearchCategories() {
+        List<ResearchCategory> researchCategories = newResearchCategory().build(2);
+        List<ResearchCategoryResource> expectedResearchCategoryResources = newResearchCategoryResource().build(2);
 
-        InnovationSector parent = newInnovationSector()
-                .withChildren(categories)
+        when(researchCategoryRepositoryMock.findAllByOrderByNameAsc()).thenReturn(researchCategories);
+        when(researchCategoryMapperMock.mapToResource(refEq(researchCategories))).thenReturn(expectedResearchCategoryResources);
+
+        List<ResearchCategoryResource> actualResearchCategoryResources = categoryService.getResearchCategories().getSuccessObject();
+
+        assertEquals(expectedResearchCategoryResources, actualResearchCategoryResources);
+
+        InOrder inOrder = inOrder(researchCategoryRepositoryMock, researchCategoryMapperMock);
+        inOrder.verify(researchCategoryRepositoryMock).findAllByOrderByNameAsc();
+        inOrder.verify(researchCategoryMapperMock).mapToResource(researchCategories);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInnovationAreasBySector() {
+        List<InnovationArea> innovationAreas = newInnovationArea().build(2);
+        InnovationSector innovationSector = newInnovationSector()
+                .withChildren(innovationAreas)
                 .build();
 
-        Long parentId = 1L;
+        long sectorId = 1L;
 
-        final InnovationAreaResource expected1 = newInnovationAreaResource().build();
-        final InnovationAreaResource expected2 = newInnovationAreaResource().build();
+        List<InnovationAreaResource> expectedInnovationAreaResources = newInnovationAreaResource().build(2);
 
-        when(innovationSectorRepositoryMock.exists(parentId)).thenReturn(true);
-        when(innovationSectorRepositoryMock.findOne(parentId)).thenReturn(parent);
-        when(innovationAreaMapperMock.mapToResource(refEq(categories))).thenReturn(asList(expected1, expected2));
+        when(innovationSectorRepositoryMock.findOne(sectorId)).thenReturn(innovationSector);
+        when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(expectedInnovationAreaResources);
 
-        final List<InnovationAreaResource> found = categoryService.getInnovationAreaBySector(parentId).getSuccessObject();
+        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccessObject();
 
-        assertEquals(expected1, found.get(0));
-        assertEquals(expected2, found.get(1));
-        verify(innovationSectorRepositoryMock, times(1)).findOne(parentId);
+        assertEquals(expectedInnovationAreaResources, actualInnovationAreaResources);
+
+        verify(innovationSectorRepositoryMock, times(1)).findOne(sectorId);
+
+        InOrder inOrder = inOrder(innovationSectorRepositoryMock, innovationAreaMapperMock);
+        inOrder.verify(innovationSectorRepositoryMock).findOne(sectorId);
+        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationAreas);
+        inOrder.verifyNoMoreInteractions();
     }
 }

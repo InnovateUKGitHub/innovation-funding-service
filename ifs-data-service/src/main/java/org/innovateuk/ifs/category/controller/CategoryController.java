@@ -37,7 +37,7 @@ public class CategoryController {
 
     @RequestMapping("/findByInnovationSector/{sectorId}")
     public RestResult<List<InnovationAreaResource>> findByParent(@PathVariable("sectorId") final long sectorId){
-        return categoryService.getInnovationAreaBySector(sectorId).toGetResponse();
+        return categoryService.getInnovationAreasBySector(sectorId).toGetResponse();
 
     }
 }

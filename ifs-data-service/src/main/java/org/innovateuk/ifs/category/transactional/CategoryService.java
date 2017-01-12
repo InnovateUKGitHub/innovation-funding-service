@@ -17,5 +17,5 @@ public interface CategoryService {
     ServiceResult<List<ResearchCategoryResource>> getResearchCategories();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<List<InnovationAreaResource>> getInnovationAreaBySector(long sectorId);
+    ServiceResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId);
 }
