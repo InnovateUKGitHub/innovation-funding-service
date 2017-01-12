@@ -1,6 +1,7 @@
 #!/bin/bash
 dbip=$(oc get svc | grep ifs-database | awk '{print $2}')
 export dbip
+echo ifs-database ip:$dbip
 
 function executeMySQLCommand {
     mysql ifs -uroot -ppassword -h${dbip} -N -s -e "$1"
@@ -47,4 +48,4 @@ done
 
 docker exec $( docker ps -q --filter=ancestor=worth/shibboleth:1.0-SNAPSHOT ) /tmp/_delete-shib-users-remote.sh
 
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
+mysql ifs -uroot -ppassword -h$dbip -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"

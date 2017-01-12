@@ -1,6 +1,10 @@
 #!/bin/bash
+
+[ -z "$IFSDB" ] && export ifsdb=ifs-database
+
+
 function executeMySQLCommand {
-    mysql ifs -uroot -ppassword -hifs-database -N -s -e "$1"
+    mysql ifs -uroot -ppassword -h$IFSDB -N -s -e "$1"
 }
 
 export -f executeMySQLCommand
@@ -46,4 +50,4 @@ done
 
 docker-compose -p ifs exec shib /tmp/_delete-shib-users-remote.sh
 
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
+mysql ifs -uroot -ppassword -h$IFSDB -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"

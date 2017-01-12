@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ldap
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ldap
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: ldap
+      spec:
+        containers:
+        - image: g2g3/ifs-local-ldap:1.0-SNAPSHOT
+          name: ldap
+          ports:
+          - containerPort: 389
+          resources: {}
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ldap
+  spec:
+    ports:
+    - name: 389-tcp
+      port: 389
+      targetPort: 389
+    selector:
+      deploymentconfig: ldap
+  status:
+    loadBalancer: {}

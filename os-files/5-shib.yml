@@ -21,7 +21,6 @@ items:
           name: shib
           ports:
           - containerPort: 443
-          - containerPort: 389
           resources: {}
     test: false
     triggers:
@@ -33,9 +32,6 @@ items:
     name: shib
   spec:
     ports:
-    - name: 389-tcp
-      port: 389
-      targetPort: 389
     - name: 443-tcp
       port: 443
       targetPort: 443
