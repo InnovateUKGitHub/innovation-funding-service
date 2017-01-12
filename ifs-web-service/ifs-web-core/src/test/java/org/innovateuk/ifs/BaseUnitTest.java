@@ -35,7 +35,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.model.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
@@ -118,6 +118,8 @@ public class BaseUnitTest {
 
     protected final Log log = LogFactory.getLog(getClass());
 
+    @Mock
+    public ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
