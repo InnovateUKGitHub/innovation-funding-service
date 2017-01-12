@@ -9,9 +9,7 @@ import java.util.Set;
 
 public enum AssessmentStates implements ProcessStates {
     // All types of status
-    CREATED(State.CREATED),
     PENDING(State.PENDING),
-    WITHDRAWN(State.WITHDRAWN),
     REJECTED(State.REJECTED),
     ACCEPTED(State.ACCEPTED),
     OPEN(State.OPEN),
