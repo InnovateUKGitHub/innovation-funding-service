@@ -17,6 +17,7 @@ import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.PageResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -61,6 +62,7 @@ import org.junit.Test;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
@@ -152,7 +154,8 @@ public class POJOTest {
             AssessmentSubmissionsResource.class,
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
-            NewUserStagedInviteListResource.class
+            NewUserStagedInviteListResource.class,
+            ApplicationCountSummaryResource.class
             );
 
     @Before
