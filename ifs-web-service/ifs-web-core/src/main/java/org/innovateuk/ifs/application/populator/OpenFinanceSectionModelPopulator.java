@@ -100,7 +100,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         return openFinanceSectionViewModel;
     }
 
-
     private Boolean isSubFinanceSection(SectionResource section) {
         return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
     }
@@ -188,7 +187,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application) {
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
+        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId)
+                .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
 
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
     }
