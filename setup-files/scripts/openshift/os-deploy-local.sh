@@ -53,8 +53,8 @@ SERVICE_STATUS=404
 while [ ${SERVICE_STATUS} -ne "200" ]
 do
     SERVICE_STATUS=$(curl  --max-time 1 -k -L -s -o /dev/null -w "%{http_code}" https://${HOST}/) || true
-    echo "Service status: HTTP $SERVICE_STATUS"
     oc get pods
+    echo "Service status: HTTP $SERVICE_STATUS"
     sleep 5s
 done
 
