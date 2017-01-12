@@ -49,10 +49,15 @@ public class ApplicationFinanceModelPopulatorTest {
 	
 	@Test
 	public void testPopulateModel() {
-		long competitionId = 1L;
+		long competitionId = 8L;
 		boolean isFullApplication = true;
 		boolean isIncludeGrowthTable = true;
-		CompetitionResource cr = newCompetitionResource().withId(competitionId).build();
+		CompetitionResource cr = newCompetitionResource()
+				.withCompetitionCode("code")
+				.withName("name")
+				.withId(competitionId)
+				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+				.build();
 		CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
 				withIncludeGrowthTable(isIncludeGrowthTable).
 				withFullApplicationFinance(isFullApplication).
@@ -62,6 +67,7 @@ public class ApplicationFinanceModelPopulatorTest {
 		// Method under test
 		populator.populateModel(model, cr, Optional.empty());
 		// Assertions
+		// First check that there is not more than we expect
 		assertEquals(2, model.asMap().size());
 		assertEquals(competitionId, model.asMap().get("competitionId"));
 		assertEquals(isFullApplication, ((ApplicationFinanceForm)model.asMap().get("competitionSetupForm")).isFullApplicationFinance());

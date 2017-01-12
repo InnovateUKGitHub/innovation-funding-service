@@ -36,11 +36,6 @@ public class MilestonesModelPopulatorTest {
 				.withId(8L)
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
-		competitionResource.setFullApplicationFinance(true);
-		ApplicationFinanceForm form = new ApplicationFinanceForm();
-		form.setFullApplicationFinance(competitionResource.isFullApplicationFinance());
-
-
 		populator.populateModel(model, competitionResource);
 		assertEquals(0, model.asMap().size());
 	}
