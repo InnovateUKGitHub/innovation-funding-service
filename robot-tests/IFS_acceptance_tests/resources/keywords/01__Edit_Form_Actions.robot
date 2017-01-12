@@ -183,7 +183,7 @@ the user should see the dropdown option selected
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
-the user edits the 'Project Summary' question
+the user edits the project summary question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
