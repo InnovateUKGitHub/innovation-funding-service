@@ -46,7 +46,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -90,9 +89,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private CompetitionInviteMapper competitionInviteMapper;
-
-//    @Autowired
-//    private CategoryMapper categoryMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
