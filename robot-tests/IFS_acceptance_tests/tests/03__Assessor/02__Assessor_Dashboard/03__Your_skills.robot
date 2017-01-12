@@ -22,7 +22,7 @@ Client-side validations
     ...    INFUND-5432
     [Tags]    HappyPath
     Given The user should see the text in the page    Complete your assessor account
-    And The user should see the element    link=your skills    #his checks the alert message on the top od the page
+    And The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("your skills")
     And The user should see the element    link=Edit your skills
     When the user clicks the button/link    jQuery=a:contains("Edit your skills")
