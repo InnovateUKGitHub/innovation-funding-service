@@ -4,9 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.model.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.model.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.model.OpenFinanceSectionModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.application.populator.OpenFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -27,7 +28,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
-import org.innovateuk.ifs.model.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -222,8 +223,9 @@ public class CompetitionManagementApplicationController extends BaseController {
             model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
             model.addAttribute("applicationReadyForSubmit", false);
 
-
-            openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+            //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
+            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+            model.addAttribute("model", openFinanceSectionViewModel);
 
             return "comp-mgt-application-finances";
         });
