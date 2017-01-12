@@ -35,7 +35,7 @@ Autosave in the form questions
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Project summary
-    When the user edits the 'project summary' question
+    When the user edits the project summary question
     And the user reloads the page
     Then the text should be visible
 
