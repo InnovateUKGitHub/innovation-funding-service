@@ -123,6 +123,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationMapper applicationMapperMock;
 
     @Mock
+    protected ApplicationAssessmentSummaryService applicationAssessmentSummaryServiceMock;
+
+    @Mock
     protected ApplicationFinanceMapper applicationFinanceMapperMock;
 
     @Mock

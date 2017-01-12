@@ -11,9 +11,8 @@
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/competition}" th:remove="tag" />
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
 
-            <!--/* TODO INFUND-7046
             <h1 class="heading-xlarge">
                 <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
                 Application progress
@@ -34,11 +33,12 @@
                 </div>
                 <div class="column-quarter">
                     <h3 class="heading-small">Innovation area</h3>
+                    <!-- TODO Innovation area will be added to Application by INFUND-7208 -->
                 </div>
             </div>
             <div class="extra-margin">
                 <a href="#">Review application</a>
-            </div>*/-->
+            </div>
 
             <!--/* TODO INFUND-7230
             <h2 class="heading-medium">Assigned (4)</h2>
