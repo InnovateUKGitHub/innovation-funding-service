@@ -7,15 +7,15 @@ HOST=dev-projects.ifs-test-clusters.com
 # Set up remote registry and project name params
 rm -rf os-files-tmp
 cp -r os-files os-files-tmp
-sed -i "s#worth/#721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/#g" os-files-tmp/*
-sed -i "s/<<SHIB-ADDRESS>>/$ENV.$HOST/g" os-files-tmp/*
-sed -i "s/<<ADMIN-ADDRESS>>/admin-$ENV.$HOST/g" os-files-tmp/*
-sed -i "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*
+sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/#g" os-files-tmp/*
+sed -i.bak "s/<<SHIB-ADDRESS>>/$ENV.$HOST/g" os-files-tmp/*
+sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$ENV.$HOST/g" os-files-tmp/*
+sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*
 
 # Build & tag Shib
 rm -rf shibboleth
 cp -r setup-files/scripts/docker/shibboleth shibboleth
-sed -i "s/<<HOSTNAME>>/$ENV.$HOST/g" shibboleth/*
+sed -i.bak "s/<<HOSTNAME>>/$ENV.$HOST/g" shibboleth/*
 docker build -t 721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/shibboleth:1.0-$ENV shibboleth/
 
 # Re-tag other images

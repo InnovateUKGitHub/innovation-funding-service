@@ -9,15 +9,15 @@ HOST=ifs-local-dev
 # Set up remote registry and project name params
 rm -rf os-files-tmp
 cp -r os-files os-files-tmp
-sed -i "s/<<SHIB-ADDRESS>>/$HOST/g" os-files-tmp/*.yml
-sed -i "s/<<ADMIN-ADDRESS>>/admin.$HOST/g" os-files-tmp/*.yml
+sed -i.bak "s/<<SHIB-ADDRESS>>/$HOST/g" os-files-tmp/*.yml
+sed -i.bak "s/<<ADMIN-ADDRESS>>/admin.$HOST/g" os-files-tmp/*.yml
 
-sed -i "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*.yml
+sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*.yml
 
 # Build & tag Shib
 rm -rf shibboleth
 cp -r setup-files/scripts/docker/shibboleth shibboleth
-sed -i "s/<<HOSTNAME>>/$HOST/g" shibboleth/*
+sed -i.bak "s/<<HOSTNAME>>/$HOST/g" shibboleth/*
 docker build -t worth/shibboleth:1.0-$ENV shibboleth/
 
 docker build -t worth/shib-init:1.0-$ENV setup-files/scripts/openshift/shib-init
