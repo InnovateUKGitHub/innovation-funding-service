@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -46,34 +49,30 @@ public class ApplicationAssessmentProgressViewModel {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         ApplicationAssessmentProgressViewModel that = (ApplicationAssessmentProgressViewModel) o;
 
-        if (applicationId != null ? !applicationId.equals(that.applicationId) : that.applicationId != null) {
-            return false;
-        }
-        if (applicationName != null ? !applicationName.equals(that.applicationName) : that.applicationName != null) {
-            return false;
-        }
-        if (competitionId != null ? !competitionId.equals(that.competitionId) : that.competitionId != null) {
-            return false;
-        }
-        if (competitionName != null ? !competitionName.equals(that.competitionName) : that.competitionName != null) {
-            return false;
-        }
-        return partnerOrganisations != null ? partnerOrganisations.equals(that.partnerOrganisations) : that.partnerOrganisations == null;
+        return new EqualsBuilder()
+                .append(applicationId, that.applicationId)
+                .append(applicationName, that.applicationName)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(partnerOrganisations, that.partnerOrganisations)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = applicationId != null ? applicationId.hashCode() : 0;
-        result = 31 * result + (applicationName != null ? applicationName.hashCode() : 0);
-        result = 31 * result + (competitionId != null ? competitionId.hashCode() : 0);
-        result = 31 * result + (competitionName != null ? competitionName.hashCode() : 0);
-        result = 31 * result + (partnerOrganisations != null ? partnerOrganisations.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(applicationId)
+                .append(applicationName)
+                .append(competitionId)
+                .append(competitionName)
+                .append(partnerOrganisations)
+                .toHashCode();
     }
 }
