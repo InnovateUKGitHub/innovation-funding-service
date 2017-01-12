@@ -18,6 +18,11 @@ public class InnovationSectorResource extends CategoryResource {
     }
 
     @Override
+    public CategoryType getType() {
+        return CategoryType.INNOVATION_SECTOR;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 

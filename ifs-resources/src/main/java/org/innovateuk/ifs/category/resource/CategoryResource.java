@@ -11,16 +11,13 @@ public abstract class CategoryResource {
     private String name;
     private CategoryType type;
 
-    private Long parent;
-
     public CategoryResource() {
     }
 
-    protected CategoryResource(Long id, String name, CategoryType type, Long parent) {
+    protected CategoryResource(Long id, String name, CategoryType type) {
         this.id = id;
         this.name= name;
         this.type = type;
-        this.parent = parent;
     }
 
     public Long getId() {
@@ -39,21 +36,7 @@ public abstract class CategoryResource {
         this.name = name;
     }
 
-    public CategoryType getType() {
-        return type;
-    }
-
-    public void setType(CategoryType type) {
-        this.type = type;
-    }
-
-    public Long getParent() {
-        return parent;
-    }
-
-    public void setParent(Long parent) {
-        this.parent = parent;
-    }
+    public abstract CategoryType getType();
 
     @Override
     public boolean equals(Object o) {
@@ -71,7 +54,6 @@ public abstract class CategoryResource {
                 .append(id, that.id)
                 .append(name, that.name)
                 .append(type, that.type)
-                .append(parent, that.parent)
                 .isEquals();
     }
 
@@ -81,7 +63,6 @@ public abstract class CategoryResource {
                 .append(id)
                 .append(name)
                 .append(type)
-                .append(parent)
                 .toHashCode();
     }
 }

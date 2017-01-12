@@ -136,6 +136,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         User retrievedUser = repository.findOne(savedUser.getId());
 
-        assertEquals(innovationArea, retrievedUser.getInnovationAreas().iterator().next());
+        assertTrue(retrievedUser.getInnovationAreas().contains(innovationArea));
     }
 }

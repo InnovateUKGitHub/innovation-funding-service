@@ -101,10 +101,6 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionSearchResultItem>>() {};
     }
 
-//    public static ParameterizedTypeReference<List<? extends CategoryResource>> categoryResourceListType() {
-//        return new ParameterizedTypeReference<List<? extends CategoryResource>>() {};
-//    }
-
     public static ParameterizedTypeReference<List<InnovationAreaResource>> innovationAreaResourceListType() {
         return new ParameterizedTypeReference<List<InnovationAreaResource>>() {};
     }
@@ -116,7 +112,6 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<ResearchCategoryResource>> researchCategoryResourceListType() {
         return new ParameterizedTypeReference<List<ResearchCategoryResource>>() {};
     }
-
 
     public static ParameterizedTypeReference<List<CompetitionTypeResource>> competitionTypeResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionTypeResource>>() {};

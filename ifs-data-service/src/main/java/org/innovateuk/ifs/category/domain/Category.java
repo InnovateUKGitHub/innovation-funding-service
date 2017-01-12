@@ -62,14 +62,6 @@ public abstract class Category {
         return type;
     }
 
-    public List<CategoryLink> getCategoryLinks() {
-        return categoryLinks;
-    }
-
-    public void setCategoryLinks(List<CategoryLink> categoryLinks) {
-        this.categoryLinks = categoryLinks;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

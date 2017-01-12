@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -36,6 +35,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -79,25 +79,26 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Technologist").build()));
 
-        InnovationSectorResource c1 = newInnovationSectorResource()
+        List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
                 .withName("A Innovation Sector")
                 .withId(1L)
-                .build();
-        when(categoryService.getInnovationSectors()).thenReturn(asList(c1));
+                .build(1);
+        when(categoryService.getInnovationSectors()).thenReturn(innovationSectorResources);
 
-        CategoryResource c2 = newInnovationAreaResource()
+        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
                 .withName("A Innovation Area")
                 .withId(2L)
                 .withParent(1L)
-                .build();
-        when(categoryService.getInnovationAreas()).thenReturn(asList(c2));
+                .build(1);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
-        CompetitionTypeResource ct1 = new CompetitionTypeResource();
-        ct1.setId(1L);
-        ct1.setName("Comptype with stateAid");
-        ct1.setStateAid(true);
-        ct1.setCompetitions(asList(COMPETITION_ID));
-        when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
+        List<CompetitionTypeResource> competitionTypeResources = newCompetitionTypeResource()
+                .withId(1L)
+                .withName("Comptype with stateAid")
+                .withStateAid(true)
+                .withCompetitions(asList(COMPETITION_ID))
+                .build(1);
+        when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypeResources);
     }
 
     @Test

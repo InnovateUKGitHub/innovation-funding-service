@@ -94,10 +94,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-//    private Long getCategoryIdOrNull(CategoryType type, String name) {
-//        return !isBlank(name) ? simpleFindFirst(categoryRepository.findByType(type), c -> name.equals(c.getName())).get().getId() : null;
-//    }
-
     private Long getInnovationAreaIdOrNull(String name) {
         return !isBlank(name) ? simpleFindFirst(innovationAreaRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
     }

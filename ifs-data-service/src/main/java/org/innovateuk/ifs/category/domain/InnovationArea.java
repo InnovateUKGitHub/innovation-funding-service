@@ -18,7 +18,7 @@ public class InnovationArea extends Category {
 
     @ManyToOne(optional = true)
     @JoinColumn(name="parent_id")
-    private Category parent;
+    private InnovationSector parent;
 
     // todo this is public just to support the mapper -- can be instantited with reflection
     public InnovationArea() {
@@ -36,11 +36,11 @@ public class InnovationArea extends Category {
             throw new NullPointerException("sector cannot be null");
         }
     }
-    public Category getParent() {
+    public InnovationSector getParent() {
         return parent;
     }
 
-    public void setParent(Category parent) {
+    public void setParent(InnovationSector parent) {
         this.parent = parent;
     }
 }

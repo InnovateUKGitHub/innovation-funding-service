@@ -21,18 +21,10 @@ public abstract class CategoryResourceBuilder<T extends CategoryResource, B exte
     }
 
     public B withName(String... names) {
-        return withArray((name, category) -> setField("name", name, category), names);
+        return withArraySetFieldByReflection("name", names);
     }
 
     public B withType(CategoryType... types) {
-        return withArray((type, category) -> setField("type", type, category), types);
-    }
-
-    public B withParent(Long... parents) {
-        return withArray((parent, category) -> setField("parent", parent, category), parents);
-    }
-
-    public B withChildren(Collection<CategoryResource>... childrens) {
-        return withArray((children, category) -> setField("children", new ArrayList<>(children), category), childrens);
+        return withArraySetFieldByReflection("type", types);
     }
 }

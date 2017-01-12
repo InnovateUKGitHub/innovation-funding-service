@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.category.builder;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.InnovationSector;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -26,5 +27,9 @@ public class InnovationAreaBuilder extends CategoryBuilder<InnovationArea, Innov
     @Override
     protected InnovationArea createInitial() {
         return new InnovationArea();
+    }
+
+    public InnovationAreaBuilder withParent(InnovationSector... innovationSectors) {
+        return withArraySetFieldByReflection("parent", innovationSectors);
     }
 }
