@@ -127,7 +127,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                         rules.userCanAssignAssessment(assessments.get(state), assessorUser)));
 
         EnumSet.complementOf(allowedStates).forEach(state ->
-                assertFalse("the owner of an assessment should not be able to assign the assessment",
+                assertFalse("the owner of an assessment should not be able to re-assign the assessment",
                         rules.userCanAssignAssessment(assessments.get(state), assessorUser)));
     }
 

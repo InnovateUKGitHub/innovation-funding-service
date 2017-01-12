@@ -36,17 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest<AssessmentController> {
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected AssessmentController supplyControllerUnderTest() {
         return new AssessmentController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("assessment/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -58,7 +50,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}", assessmentId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
@@ -75,7 +67,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
@@ -93,7 +85,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Id of the user whose assessments are being requested"),
                                 parameterWithName("competitionId").description("Id of the competition associated with the user's assessments")
@@ -113,7 +105,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(get("/assessment/{id}/score", assessmentId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the assessment that is being requested")
                         ),
@@ -132,7 +124,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(assessmentFundingDecision)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to recommend")
                         ),
@@ -151,7 +143,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(applicationRejection)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to reject")
                         ),
@@ -167,7 +159,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/acceptInvitation", assessmentId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to accept")
                         )
@@ -183,6 +175,6 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(assessmentSubmissions)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(requestFields(assessmentSubmissionsFields)));
+                .andDo(document("assessment/{method-name}",requestFields(assessmentSubmissionsFields)));
     }
 }

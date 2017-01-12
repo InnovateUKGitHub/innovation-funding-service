@@ -71,7 +71,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+                .andExpect(content().string(toJson(expected)));
         verify(assessmentServiceMock, only()).findAssignableById(assessmentId);
     }
 
