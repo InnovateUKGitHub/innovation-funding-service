@@ -111,10 +111,10 @@ Comp admin has read only view of Eligibility past Open date
 Comp admin actions in Funding Information section past Open date
     [Documentation]     INFUND-7083
     [Tags]
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
-    And The user clicks the button/link    link=Funding information
-    And the user should see the element    jquery=h1:contains("Funding information")
-    ANf the user clicks the button/link     jQuery=.button:contains("Edit")
+    [Setup] the user navigates to the page    ${SERVER}/management/competition/setup/11/
+    Given the user clicks the button/link    link=Funding information
+    Then the user should see the element    jquery=h1:contains("Funding information")
+    And the user clicks the button/link     jQuery=.button:contains("Edit")
     And The user enters text to a text field    id=funders0.funder    Best Works Test
     And The user clicks the button/link      link=+Add co-funder
     And The user enters text to a text field    id=funders2.funder    InnovateUK
@@ -128,9 +128,9 @@ Comp admin actions in Funding Information section past Open date
 comp admin actions in Funding Information section past notifications date
     [Documentation]     INFUND-7083
     [Tags]
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/7/
-    And The user clicks the button/link    link=Funding information
-    And the user should see the element    jquery=h1:contains("Funding information")
+    [Setup]  the user navigates to the page    ${SERVER}/management/competition/setup/7/
+    Given The user clicks the button/link    link=Funding information
+    Then the user should see the element    jquery=h1:contains("Funding information")
     And The user should not see the element     css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
