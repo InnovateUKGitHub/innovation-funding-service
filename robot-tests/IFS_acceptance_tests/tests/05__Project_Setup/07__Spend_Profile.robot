@@ -137,7 +137,7 @@ Lead partner can edit his spend profile with invalid values
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     When the user clicks the button/link               link=${Katz_Name}
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
-    And the user should see the element                jQuery=.error-summary-list li:contains("24")  #TODO this will change due to INFUND-6801
+    And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field          css=#row-24-0    222
     And the user should not see the element            jQuery=.cell-error #row-total-24

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -38,6 +39,7 @@ import org.springframework.validation.BindingResult;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -45,10 +47,13 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -122,7 +127,11 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
 
         List<Long> questionResourceList = asList(34L, 35L);
-        SectionResource section = newSectionResource().withChildSections(Collections.emptyList()).withQuestions(questionResourceList).withCompetition(competitionId).build();
+        SectionResource section = newSectionResource().withChildSections(Collections.emptyList())
+                .withQuestions(questionResourceList)
+                .withType(SectionType.FINANCE)
+                .withCompetition(competitionId)
+                .build();
         UserResource user = newUserResource().build();
         CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(competitionId).build(5);
@@ -157,7 +166,11 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
 
         List<Long> questionResourceList = asList();
-        SectionResource section = newSectionResource().withChildSections(Collections.emptyList()).withQuestions(questionResourceList).withCompetition(231L).build();
+        SectionResource section = newSectionResource().withChildSections(Collections.emptyList())
+                .withType(SectionType.FINANCE)
+                .withQuestions(questionResourceList)
+                .withCompetition(231L)
+                .build();
         UserResource user = newUserResource().build();
         CompetitionResource competition = newCompetitionResource().withId(321L).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(132L).build(1);
@@ -202,6 +215,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         when(formInputService.findApplicationInputsByCompetition(competitionResource.getId())).thenReturn(formInputs);
 
         when(organisationService.getOrganisationType(userResource.getId(), applicationResource.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.name());
+        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.of(newOrganisationResource().build()));
 
         DefaultFinanceModelManager financeManager = mock(DefaultFinanceModelManager.class);
         when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.name())).thenReturn(financeManager);
