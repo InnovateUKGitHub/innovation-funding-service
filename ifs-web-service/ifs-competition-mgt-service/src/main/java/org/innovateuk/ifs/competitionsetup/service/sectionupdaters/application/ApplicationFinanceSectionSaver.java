@@ -41,12 +41,12 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
-		CompetitionSetupFinanceResource csfr = new CompetitionSetupFinanceResource();
+		CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
 		// INFUND-6773 - Not allowed to at this moment
-		csfr.setFullApplicationFinance(true);
-		csfr.setIncludeGrowthTable(form.isIncludeGrowthTable());
-        csfr.setCompetitionId(competition.getId());
-		return competitionSetupFinanceService.updateFinance(csfr);
+		compSetupFinanceRes.setFullApplicationFinance(true);
+		compSetupFinanceRes.setIncludeGrowthTable(form.isIncludeGrowthTable());
+		compSetupFinanceRes.setCompetitionId(competition.getId());
+		return competitionSetupFinanceService.updateFinance(compSetupFinanceRes);
 	}
 
 	@Override

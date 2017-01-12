@@ -33,10 +33,10 @@ public class ApplicationFinancesModelPopulator implements CompetitionSetupSubsec
 
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
-		CompetitionSetupFinanceResource byCompetitionId = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
+		CompetitionSetupFinanceResource compSetupFinanceRes = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
 		ApplicationFinanceForm form = new ApplicationFinanceForm();
-		form.setFullApplicationFinance(byCompetitionId.isFullApplicationFinance());
-		form.setIncludeGrowthTable(byCompetitionId.isIncludeGrowthTable());
+		form.setFullApplicationFinance(compSetupFinanceRes.isFullApplicationFinance());
+		form.setIncludeGrowthTable(compSetupFinanceRes.isIncludeGrowthTable());
 		model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
 		model.addAttribute(COMPETITION_ID_KEY, competitionResource.getId());
 	}
