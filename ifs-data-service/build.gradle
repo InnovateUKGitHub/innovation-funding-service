@@ -215,3 +215,7 @@ task cleanDeployServices() {
     dependsOn flywayMigrate
 
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}
