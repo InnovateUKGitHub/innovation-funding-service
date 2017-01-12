@@ -352,6 +352,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -366,6 +370,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
