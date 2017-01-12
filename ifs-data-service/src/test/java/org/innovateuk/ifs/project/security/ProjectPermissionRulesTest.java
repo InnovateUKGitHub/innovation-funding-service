@@ -503,16 +503,22 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testExternalUserCanViewSendGrantOfferLetterStatus() {
+    public void testPartnersCanViewSendGrantOfferLetterStatus() {
 
         ProjectResource project = newProjectResource().build();
 
-        // Ensure partners can access...
+        // Ensure partners can access
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
         assertTrue(rules.externalUserCanViewSendGrantOfferLetterStatus(project, user));
+    }
 
-        // ...and no one else
+    @Test
+    public void testNonPartnersCannotViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        // Ensure non-partners cannot access
         allGlobalRoleUsers.forEach(user2 -> assertFalse(rules.externalUserCanViewSendGrantOfferLetterStatus(project, user2)));
     }
 }
