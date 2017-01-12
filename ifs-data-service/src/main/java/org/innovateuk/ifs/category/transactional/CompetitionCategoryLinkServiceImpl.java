@@ -53,11 +53,11 @@ public class CompetitionCategoryLinkServiceImpl extends BaseTransactionalService
             }
         } else {
             // Got a Category id, so either add or update the CompetitionCategoryLink
-            Iterable<Category> categories = categoryRepository.findAll(categoryIds);
+            List<Category> categories = categoryRepository.findAll(categoryIds);
             
             // determine what to leave, add or remove.
             List<CompetitionCategoryLink> toAdd = toAdd(categories, existingCategoryLinks, competition);
-            List<CompetitionCategoryLink> toRemove = toRemove(categories, existingCategoryLinks, competition);
+            List<CompetitionCategoryLink> toRemove = toRemove(categories, existingCategoryLinks);
             
             if(!toRemove.isEmpty()) {
                 competitionCategoryLinkRepository.delete(toRemove);
@@ -70,8 +70,8 @@ public class CompetitionCategoryLinkServiceImpl extends BaseTransactionalService
         return ServiceResult.serviceSuccess();
     }
 
-	private List<CompetitionCategoryLink> toAdd(Iterable<Category> categoriesWanted, List<CompetitionCategoryLink> alreadyInDb, Competition competition) {
-		return StreamSupport.stream(categoriesWanted.spliterator(), false)
+	private List<CompetitionCategoryLink> toAdd(List<Category> categoriesWanted, List<CompetitionCategoryLink> alreadyInDb, Competition competition) {
+		return categoriesWanted.stream()
 				.filter(category ->
 					!alreadyInDb.stream().anyMatch(link -> link.getCategory().getId().equals(category.getId()))
                 )
@@ -79,7 +79,7 @@ public class CompetitionCategoryLinkServiceImpl extends BaseTransactionalService
 				.collect(Collectors.toList());
 	}
 	
-	private List<CompetitionCategoryLink> toRemove(Iterable<Category> categoriesWanted, List<CompetitionCategoryLink> alreadyInDb, Competition competition) {
+	private List<CompetitionCategoryLink> toRemove(List<Category> categoriesWanted, List<CompetitionCategoryLink> alreadyInDb) {
 		return alreadyInDb.stream()
 				.filter(link ->
 					!StreamSupport.stream(categoriesWanted.spliterator(), false).anyMatch(cat -> link.getCategory().getId().equals(cat.getId()))

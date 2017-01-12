@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.category.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.DiscriminatorValue;
@@ -42,5 +44,27 @@ public class InnovationArea extends Category {
 
     public void setParent(InnovationSector parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InnovationArea that = (InnovationArea) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(parent, that.parent)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(parent)
+                .toHashCode();
     }
 }

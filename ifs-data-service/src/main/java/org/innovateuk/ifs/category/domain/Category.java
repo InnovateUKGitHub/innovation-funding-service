@@ -72,7 +72,6 @@ public abstract class Category {
 
         return new EqualsBuilder()
                 .append(name, category.name)
-                .append(type, category.type)
                 .isEquals();
     }
 
@@ -80,7 +79,6 @@ public abstract class Category {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(name)
-                .append(type)
                 .toHashCode();
     }
 }

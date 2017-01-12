@@ -30,6 +30,6 @@ public class InnovationSectorBuilder extends CategoryBuilder<InnovationSector, I
     }
 
     public InnovationSectorBuilder withChildren(List<InnovationArea>... innovationAreaLists) {
-        return withArraySetFieldByReflection("children", innovationAreaLists);
+        return withArray((innovationAreaList, innovationSector) ->  innovationSector.setChildren(innovationAreaList), innovationAreaLists);
     }
 }
