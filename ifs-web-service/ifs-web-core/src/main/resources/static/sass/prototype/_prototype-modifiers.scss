@@ -51,6 +51,12 @@
   }
 }
 
+/*-- Hiding text - used for labels in tables where input uses aria-labelledby --*/
+
+.visibility-hidden{
+  visibility: hidden;
+}
+
 /*-- Setting percentage widths --*/
 
 $columns: 20;
@@ -183,6 +189,12 @@ table{
     left: 5px;
     background: red;
   }
+}
+
+/*--- Table cell containg form element ---*/
+
+.form-group-cell{
+  padding-left: 5px;
 }
 
 /*--- Full width pages for comp administrators ---*/
@@ -322,6 +334,10 @@ table{
   &.sorting{
     border-bottom: 1px solid $secondary-text-colour;
 
+    &.no-border{
+     border: none;
+    }
+
     &.sorting-controls{
 
       //text-align: right;
@@ -334,11 +350,12 @@ table{
         }
 
         &.mark-applications{
-          margin-top: 10px; 
+          margin-top: 10px;
         }
 
         label{
-         margin-top: 18px;
+         margin-top: 12px;
+         margin-left: 5px;
          display: block;
         }
 
@@ -356,7 +373,7 @@ table{
 
       .form-hint{
        float: left;
-       margin: 18px 0 18px 0;
+       margin: 19px 0 19px 0;
       }
     }
   }
