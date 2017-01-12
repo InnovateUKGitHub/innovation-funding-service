@@ -52,7 +52,7 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     public void getAssignableById() throws Exception {
         AssessmentResource expected = newAssessmentResource().build();
         Long assessmentId = 1L;
-        when(assessmentRestService.getById(assessmentId)).thenReturn(restSuccess(expected));
+        when(assessmentRestService.getAssignableById(assessmentId)).thenReturn(restSuccess(expected));
 
         assertSame(expected, service.getAssignableById(assessmentId));
         verify(assessmentRestService, only()).getAssignableById(assessmentId);
