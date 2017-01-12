@@ -1,36 +1,5 @@
 package org.innovateuk.ifs.finance.view;
 
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Map;
-
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
-
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
@@ -46,12 +15,41 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.MapFunctions;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultFinanceModelManagerTest {
@@ -106,7 +104,7 @@ public class DefaultFinanceModelManagerTest {
 		setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
 				financeFormHandler);
 		
-		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form);
+		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
 		assertEquals(6, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
@@ -123,7 +121,7 @@ public class DefaultFinanceModelManagerTest {
 		setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
 				financeFormHandler);
 		
-		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form);
+		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
 		assertEquals(6, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
@@ -140,7 +138,7 @@ public class DefaultFinanceModelManagerTest {
 		setupStubs(applicationId, costsQuestions, userId, competitionId, organisationId, application, competition,
 				financeFormHandler);
 		
-		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form);
+		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
 		assertEquals(6, model.asMap().size());
 		verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
@@ -156,11 +154,15 @@ public class DefaultFinanceModelManagerTest {
 		Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = MapFunctions.asMap(FinanceRowType.LABOUR, new LabourCostCategory());
 		applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
 		when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
-		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().build();
 		when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
 		
 		String organisationType = "orgtype";
-		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
+
+		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationType).build();
+
+		when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
+
+		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationTypeResource.getName());
 		
 		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
@@ -168,5 +170,8 @@ public class DefaultFinanceModelManagerTest {
 
 		FinanceRowItem costItem = new LabourCost();
 		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);
+
+		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationType).withOrganisationType().build();
+		when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
 	}
 }

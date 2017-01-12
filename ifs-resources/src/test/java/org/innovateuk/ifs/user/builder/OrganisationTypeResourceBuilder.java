@@ -24,6 +24,10 @@ public class OrganisationTypeResourceBuilder extends BaseBuilder<OrganisationTyp
                 with(idBasedNames("OrganisationTypeResource "));
     }
 
+    public OrganisationTypeResourceBuilder withName(String... names) {
+        return withArray((name, organisationTypeResource) -> organisationTypeResource.setName(name), names);
+    }
+
     @Override
     protected OrganisationTypeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, OrganisationTypeResource>> actions) {
         return new OrganisationTypeResourceBuilder(actions);

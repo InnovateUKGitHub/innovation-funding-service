@@ -9,9 +9,9 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -73,8 +74,30 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     @Autowired
     private FinanceHandler financeHandler;
 
+    @Autowired
+    private UserRestService userRestService;
+
     @Override
-    public BaseSectionViewModel populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
+    public BaseSectionViewModel populateModel(final ApplicationForm form,
+                              final Model model,
+                              final ApplicationResource application,
+                              final SectionResource section,
+                              final UserResource user,
+                              final BindingResult bindingResult,
+                              final List<SectionResource> allSections){
+        populateModel(form, model, application, section, user, bindingResult, allSections, null, false);
+    }
+
+    @Override
+    public BaseSectionViewModel populateModel(ApplicationForm form,
+                                              Model model,
+                                              ApplicationResource application,
+                                              SectionResource section,
+                                              UserResource user,
+                                              BindingResult bindingResult,
+                                              List<SectionResource> allSections,
+                                              final Long organisationId,
+                                              final boolean isInternalUser){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
@@ -88,7 +111,16 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
+
+
+        if(isInternalUser && organisationId != null){
+            OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+            String organisationType = organisationResource.getOrganisationTypeName();
+            addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form, organisationType, organisationId);
+        } else {
+            ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), application.getId()).getSuccessObjectOrThrowException();
+            addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form, userApplicationRole.getOrganisation());
+        }
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
@@ -195,10 +227,15 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
     //TODO - INFUND-7482 - remove usages of Model model
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
-        Model model, ApplicationForm form) {
-
-        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+        Model model, ApplicationForm form, Long organisationId) {
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
+        addOrganisationAndUserFinanceDetails(competitionId, applicationId, costsQuestions, user, model, form, organisationType, organisationId);
+    }
+
+    private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
+                                                      Model model, ApplicationForm form, String organisationType, Long organisationId) {
+        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

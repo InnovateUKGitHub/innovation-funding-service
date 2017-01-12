@@ -85,7 +85,12 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private FinanceHandler financeHandler;
 
     @Override
-    public BaseSectionViewModel populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections) {
+        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false);
+    }
+
+    @Override
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId, boolean isInternalUser){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         OpenSectionViewModel openSectionViewModel = new OpenSectionViewModel();
@@ -93,7 +98,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         if(null != competition) {
             addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, allSections);
+            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, allSections, organisationId);
         }
 
         form.setBindingResult(bindingResult);
@@ -260,7 +265,8 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     //TODO - INFUND-7482 - remove usages of Model model
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
-                                                      Model model, ApplicationForm form, List<SectionResource> allSections) {
+                                                      Model model, ApplicationForm form, List<SectionResource> allSections,
+                                                      Long organisationId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
@@ -274,7 +280,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
             if(!form.isAdminMode()){
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 if(competitionResource.isOpen()) {
-                    financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
+                    financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
                 }
             }
         }

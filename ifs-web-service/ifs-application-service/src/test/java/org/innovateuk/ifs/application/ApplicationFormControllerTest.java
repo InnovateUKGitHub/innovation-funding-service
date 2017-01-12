@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +42,10 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -184,6 +187,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Long currentSectionId = sectionResources.get(6).getId();
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId))
                 .andExpect(view().name("application-form"))
                 .andReturn();

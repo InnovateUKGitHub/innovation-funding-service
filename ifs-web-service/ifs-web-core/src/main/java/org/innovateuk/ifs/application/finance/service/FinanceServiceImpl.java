@@ -71,7 +71,12 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
+        return getApplicationFinanceDetails(userId, applicationId, userApplicationRole.getOrganisation());
+    }
+
+    @Override
+    public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId) {
+        return applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

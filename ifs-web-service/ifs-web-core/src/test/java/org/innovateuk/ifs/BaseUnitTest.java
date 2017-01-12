@@ -34,8 +34,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -44,10 +44,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
@@ -207,6 +204,8 @@ public class BaseUnitTest {
     public CookieUtil cookieUtil;
     @Mock
     public CategoryService categoryServiceMock;
+    @Mock
+    public UserRestService userRestServiceMock;
 
     @Spy
     @InjectMocks

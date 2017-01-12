@@ -200,7 +200,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
                                                                 @PathVariable("competitionId") final Long competitionId,
-                                                                @PathVariable("organisationId") final String organisationId,
+                                                                @PathVariable("organisationId") final Long organisationId,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
                                                                 BindingResult bindingResult
@@ -224,14 +224,14 @@ public class CompetitionManagementApplicationController extends BaseController {
             model.addAttribute("applicationReadyForSubmit", false);
 
             //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
-            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId, false);
             model.addAttribute("model", openFinanceSectionViewModel);
 
             return "comp-mgt-application-finances";
         });
     }
 
-    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
+    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") Long organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
         UserResource user;
         form.setImpersonateOrganisationId(Long.valueOf(organisationId));
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
@@ -276,9 +276,7 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              @PathVariable("competitionId") Long competitionId,
                                              Model model, HttpServletRequest request) {
 
-        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
-            return applicationPrintPopulator.print(applicationId, model, request);
-        });
+        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, request));
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {

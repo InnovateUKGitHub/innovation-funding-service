@@ -4,7 +4,10 @@ import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -13,12 +16,15 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ApplicationModelPopulator {
@@ -47,6 +53,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Autowired
+    protected UserRestService userRestService;
 
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
@@ -139,14 +148,11 @@ public class ApplicationModelPopulator {
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
 
-            if(!form.isAdminMode()){
-                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
-            } else if(form.getImpersonateOrganisationId() != null){
-                // find user in the organisation we want to impersonate.
-                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
-            }
+            ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
+
+            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+
+            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, userApplicationRole.getOrganisation());
         }
     }
 
