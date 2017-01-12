@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.List;
 
+/**
+ * Abstract Category.
+ */
 @Entity
 @DiscriminatorColumn(name = "type")
 public abstract class Category {

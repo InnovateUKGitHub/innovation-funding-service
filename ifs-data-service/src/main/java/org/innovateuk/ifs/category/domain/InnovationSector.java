@@ -12,6 +12,9 @@ import java.util.List;
 
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 
+/**
+ * An Innovation Sector. {@link InnovationSector}s contain a Set of {@link InnovationArea}s.
+ */
 @Entity
 @DiscriminatorValue("INNOVATION_SECTOR")
 public class InnovationSector extends ContainerCategory<InnovationArea> {

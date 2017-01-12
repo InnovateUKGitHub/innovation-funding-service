@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 
+/**
+ * Represents an Innovation Area. {@link InnovationArea}s have a parent {@link InnovationSector}
+ */
 @Entity
 @DiscriminatorValue("INNOVATION_AREA")
 public class InnovationArea extends Category {

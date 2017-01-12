@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 
 import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
 
+/**
+ * Represents a Research Category. {@link ResearchCategory}s don't have parents of children.
+ */
 @Entity
 @DiscriminatorValue("RESEARCH_CATEGORY")
 public class ResearchCategory extends Category {
