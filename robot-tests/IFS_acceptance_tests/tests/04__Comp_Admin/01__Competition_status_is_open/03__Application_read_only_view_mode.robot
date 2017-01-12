@@ -6,6 +6,9 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
 ...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
 ...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
+...               INFUND-6941  As a Competitions team member I want to be able to view Finances throughout the life of the competition
+...               INFUND-6792  As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
+...               INFUND-7083  As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -98,12 +101,39 @@ Comp admin has read only view of Application details past Open date
 Comp admin has read only view of Eligibility past Open date
     [Documentation]     INFUND-6792
     [Tags]
-    [Setup]     log in as a different user    &{Comp_admin1_credentials}
     Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element     css = input
     And The user clicks the button/link     link = Return to setup overview
+
+Comp admin actions in Funding Information section past Open date
+    [Documentation]     INFUND-7083
+    [Tags]
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
+    And The user clicks the button/link    link=Funding information
+    And the user should see the element    jquery=h1:contains("Funding information")
+    ANf the user clicks the button/link     jQuery=.button:contains("Edit")
+    And The user enters text to a text field    id=funders0.funder    Best Works Test
+    And The user clicks the button/link      link=+Add co-funder
+    And The user enters text to a text field    id=funders2.funder    InnovateUK
+    And The user enters text to a text field    id=2-funderBudget     20000
+    And The user enters text to a text field    id= pafNumber    34FAP
+    And The user enters text to a text field    id= budgetCode   45BC
+    And The user enters text to a text field    id= activityCode  56AC
+    And the user should see that the element is disabled   css = input.form-control width-large
+    And The user clicks the button/link     jQuery=.button:contains("Done")
+
+comp admin actions in Funding Information section past notifications date
+    [Documentation]     INFUND-7083
+    [Tags]
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/7/
+    And The user clicks the button/link    link=Funding information
+    And the user should see the element    jquery=h1:contains("Funding information")
+    And The user should not see the element     css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    And The user clicks the button/link     link = Return to application questions
 
 
 *** Keywords ***
