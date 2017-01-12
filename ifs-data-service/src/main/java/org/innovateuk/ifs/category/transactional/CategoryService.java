@@ -7,15 +7,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 public interface CategoryService {
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance') || hasAuthority('assessor')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor')")
     ServiceResult<List<InnovationAreaResource>> getInnovationAreas();
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance') || hasAuthority('assessor')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor')")
     ServiceResult<List<InnovationSectorResource>> getInnovationSectors();
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance') || hasAuthority('assessor')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor')")
     ServiceResult<List<ResearchCategoryResource>> getResearchCategories();
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<List<InnovationAreaResource>> getInnovationAreaBySector(long sectorId);
 }
