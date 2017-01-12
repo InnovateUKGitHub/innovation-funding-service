@@ -8,24 +8,14 @@ import org.innovateuk.ifs.user.resource.UserResource;
  */
 public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
-    private boolean subFinanceSection;
-
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
                                        Boolean hasFinanceSection, Long financeSectionId, UserResource currentUser,
-                                       boolean subFinanceSection) {
-        setNavigationViewModel(navigationViewModel);
-        setCurrentSection(currentSection);
-        setHasFinanceSection(hasFinanceSection);
-        setFinanceSectionId(financeSectionId);
-        setCurrentUser(currentUser);
-        this.subFinanceSection = subFinanceSection;
-    }
-
-    public boolean isSubFinanceSection() {
-        return subFinanceSection;
-    }
-
-    public void setSubFinanceSection(boolean subFinanceSection) {
+                                       Boolean subFinanceSection) {
+        this.navigationViewModel = navigationViewModel;
+        this.currentSection = currentSection;
+        this.hasFinanceSection = hasFinanceSection;
+        this.financeSectionId = financeSectionId;
+        this.currentUser = currentUser;
         this.subFinanceSection = subFinanceSection;
     }
 }

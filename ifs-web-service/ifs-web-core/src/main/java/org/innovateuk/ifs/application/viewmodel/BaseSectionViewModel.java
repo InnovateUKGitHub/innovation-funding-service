@@ -18,6 +18,7 @@ public abstract class BaseSectionViewModel {
 
     protected SectionResource currentSection;
     protected Boolean hasFinanceSection;
+    protected Boolean subFinanceSection;
     protected Long financeSectionId;
 
     protected Map<Long, FormInputResponseResource> responses;
@@ -207,7 +208,7 @@ public abstract class BaseSectionViewModel {
         return null;
     }
 
-    public Boolean getIsYourFinancesAndNotCompleted() {
+    public Boolean getIsYourFinancesAndIsNotCompleted() {
         return getIsYourFinances() && !completedSections.contains(currentSection.getId());
     }
 
@@ -229,5 +230,13 @@ public abstract class BaseSectionViewModel {
 
     public void setSectionsMarkedAsComplete(Set<Long> sectionsMarkedAsComplete) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
+    }
+
+    public Boolean isSubFinanceSection() {
+        return subFinanceSection;
+    }
+
+    public void setSubFinanceSection(Boolean subFinanceSection) {
+        this.subFinanceSection = subFinanceSection;
     }
 }

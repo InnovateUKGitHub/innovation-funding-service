@@ -24,7 +24,9 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
 
     private BigDecimal completedQuestionsPercentage;
 
-    private boolean subFinanceSection = false;
+    public OpenSectionViewModel() {
+        subFinanceSection = Boolean.FALSE;
+    }
 
     public SortedSet<OrganisationResource> getAcademicOrganisations() {
         return academicOrganisations;
@@ -96,9 +98,5 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
 
     public void setCompletedQuestionsPercentage(BigDecimal completedQuestionsPercentage) {
         this.completedQuestionsPercentage = completedQuestionsPercentage;
-    }
-
-    public boolean isSubFinanceSection() {
-        return subFinanceSection;
     }
 }
