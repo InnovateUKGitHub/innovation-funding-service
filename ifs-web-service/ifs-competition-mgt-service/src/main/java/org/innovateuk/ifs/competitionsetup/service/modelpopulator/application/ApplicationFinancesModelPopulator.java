@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
 @Service
 public class ApplicationFinancesModelPopulator implements CompetitionSetupSubsectionModelPopulator {
 
+	@Autowired
+	public CompetitionSetupFinanceService competitionSetupFinanceService;
+
 	@Override
 	public CompetitionSetupSubsection sectionToPopulateModel() {
 		return CompetitionSetupSubsection.FINANCES;
@@ -27,9 +33,10 @@ public class ApplicationFinancesModelPopulator implements CompetitionSetupSubsec
 
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
+		CompetitionSetupFinanceResource byCompetitionId = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
 		ApplicationFinanceForm form = new ApplicationFinanceForm();
-		form.setFullApplicationFinance(competitionResource.isFullApplicationFinance());
-		form.setIncludeGrowthTable(competitionResource.isIncludeGrowthTable());
+		form.setFullApplicationFinance(byCompetitionId.isFullApplicationFinance());
+		form.setIncludeGrowthTable(byCompetitionId.isIncludeGrowthTable());
 		model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
 		model.addAttribute(COMPETITION_ID_KEY, competitionResource.getId());
 	}

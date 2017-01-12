@@ -62,7 +62,6 @@ public class CompetitionResource {
     private Set<Long> researchCategories;
 
     private boolean fullApplicationFinance;
-    private boolean includeGrowthTable;
 
     private Integer assessorCount;
     private BigDecimal assessorPay;
@@ -465,14 +464,6 @@ public class CompetitionResource {
 
     public void setFullApplicationFinance(boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
-        this.includeGrowthTable = includeGrowthTable;
     }
 
     public boolean isUseResubmissionQuestion() {

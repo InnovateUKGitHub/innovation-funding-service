@@ -26,4 +26,11 @@ public class CompetitionSetupFinanceRestServiceImpl extends BaseRestService impl
     }
 
 
+    @Override
+    public RestResult<CompetitionSetupFinanceResource> getByCompetitionId(Long competitionId) {
+        return getWithRestResult(competitionsSetupFinanceRestURL + "/" + competitionId,
+                CompetitionSetupFinanceResource.class);
+    }
+
+
 }

@@ -45,7 +45,23 @@ public class CompetitionSetupFinanceServiceSecurityTest extends BaseServiceSecur
     public void testSaveAllowedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.save(newCompetitionSetupFinanceResource().build());
-            fail("Should not have been able to save question without a global role");
+            fail("Should not have been able to save finance section without a global role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
+
+
+    @Test
+    public void testGetForCompetitionAllowedIfGlobalCompAdminOrProjectFinanceRole() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getForCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void testGetForCompetitionAllowedIfNoGlobalRolesAtAll() {
+        try {
+            classUnderTest.getForCompetition(1L);
+            fail("Should not have been able to get finance section without a global role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -59,6 +75,11 @@ public class CompetitionSetupFinanceServiceSecurityTest extends BaseServiceSecur
 
         @Override
         public ServiceResult<Void> save(CompetitionSetupFinanceResource competitionSetupFinanceResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(Long competitionId) {
             return null;
         }
     }

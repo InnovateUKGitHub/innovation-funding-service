@@ -39,6 +39,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -76,10 +77,27 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
                 )));
     }
 
+    @Test
+    public void getByCompetition() throws Exception {
+        final Long competitionId = 1L;
+        CompetitionSetupFinanceResource resource = newCompetitionSetupFinanceResource().
+                withCompetitionId(competitionId).
+                withFullApplicationFinance(false).
+                withIncludeGrowthTable(false).
+                build();
+        when(competitionSetupFinanceService.getForCompetition(competitionId)).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(
+                get(baseUrl + "/{competitionId}", competitionId).
+                        contentType(APPLICATION_JSON).
+                        content(toJson(resource))).
+                andDo(document("competition-setup-finance/{method-name}",
+                        pathParameters(parameterWithName("competitionId").description("The competition id")),
+                        responseFields(COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS)));
+    }
+
     public static final FieldDescriptor[] COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS = {
             fieldWithPath("competitionId").description("The id of the competition"),
             fieldWithPath("fullApplicationFinance").description("Full application finance"),
             fieldWithPath("includeGrowthTable").description("The active status of staff count and staff turnover form inputs are false when this is true"),
-
     };
 }

@@ -30,9 +30,6 @@ public class ApplicationFinanceSectionSaverTest {
     private ApplicationFinanceSectionSaver service;
 
     @Mock
-    private CompetitionService competitionService;
-
-    @Mock
     private CompetitionSetupFinanceService competitionSetupFinanceService;
 
     @Test
@@ -49,7 +46,7 @@ public class ApplicationFinanceSectionSaverTest {
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setFullApplicationFinance(isFullApplicationFinance);
-        CompetitionResource competition = newCompetitionResource().with(id(competitionId)) .build();
+        CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
         // Expectation
         CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
                 withCompetitionId(competitionId).
@@ -59,11 +56,6 @@ public class ApplicationFinanceSectionSaverTest {
         service.saveSection(competition, competitionSetupForm);
         // Verify Expectations.
         verify(competitionSetupFinanceService).updateFinance(csfr);
-        // TODO This expectation will eventually be obsoleted - see ApplicationFinanceSectionSaver.
-        verify(competitionService).update(match(arg -> {
-            return arg.isFullApplicationFinance() == isFullApplicationFinance &&
-                    arg.isIncludeGrowthTable() == isIncludeGrowthTable;
-        }));
     }
 
     @Test

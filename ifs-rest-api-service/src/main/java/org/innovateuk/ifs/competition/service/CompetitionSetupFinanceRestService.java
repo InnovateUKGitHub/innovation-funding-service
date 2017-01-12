@@ -10,4 +10,5 @@ public interface CompetitionSetupFinanceRestService {
 
     RestResult<Void> save(CompetitionSetupFinanceResource competitionSetupFinanceResource);
 
+    RestResult<CompetitionSetupFinanceResource> getByCompetitionId(Long competitionId);
 }

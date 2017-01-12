@@ -23,4 +23,10 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
         return competitionSetupFinanceRestService.save(competitionSetupFinanceResource).toServiceResult();
     }
 
+    @Override
+    public ServiceResult<CompetitionSetupFinanceResource> getByCompetitionId(Long competitionId) {
+        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).toServiceResult();
+    }
+
+
 }

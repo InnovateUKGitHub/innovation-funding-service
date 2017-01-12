@@ -58,4 +58,14 @@ public class CompetitionSetupFinanceResource {
                 .append(includeGrowthTable)
                 .toHashCode();
     }
+
+
+    @Override
+    public String toString() {
+        return "CompetitionSetupFinanceResource{" +
+                "competitionId=" + competitionId +
+                ", fullApplicationFinance=" + fullApplicationFinance +
+                ", includeGrowthTable=" + includeGrowthTable +
+                '}';
+    }
 }

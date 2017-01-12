@@ -20,6 +20,12 @@ public class CompetitionSetupFinanceController {
     public RestResult<Void> save(@PathVariable("id") final Long competitionId,
                                  @RequestBody final CompetitionSetupFinanceResource competitionSetupFinanceResource) {
         return competitionSetupFinanceService.save(competitionSetupFinanceResource).toPutResponse();
+
     }
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public RestResult<CompetitionSetupFinanceResource> getForCompetition(@PathVariable("id") final Long competitionId){
+        return competitionSetupFinanceService.getForCompetition(competitionId).toGetResponse();
+    }
+
 
 }

@@ -37,10 +37,8 @@ public class MilestonesModelPopulatorTest {
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
 		competitionResource.setFullApplicationFinance(true);
-		competitionResource.setIncludeGrowthTable(false);
 		ApplicationFinanceForm form = new ApplicationFinanceForm();
 		form.setFullApplicationFinance(competitionResource.isFullApplicationFinance());
-		form.setIncludeGrowthTable(competitionResource.isIncludeGrowthTable());
 
 
 		populator.populateModel(model, competitionResource);

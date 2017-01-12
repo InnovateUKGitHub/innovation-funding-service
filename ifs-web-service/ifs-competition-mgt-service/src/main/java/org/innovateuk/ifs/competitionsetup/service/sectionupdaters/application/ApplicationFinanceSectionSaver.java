@@ -41,16 +41,11 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
-		competition.setIncludeGrowthTable(form.isIncludeGrowthTable());
-		competition.setFullApplicationFinance(form.isFullApplicationFinance());
 		CompetitionSetupFinanceResource csfr = new CompetitionSetupFinanceResource();
-		// TODO at the moment we save the finance setup information to the competition itself as a flag.
-		// TODO We also change the active status on a relevant form inputs.
-		// TODO Going forward we need to remove the flag and key of the activity of the form inputs only.
 		csfr.setFullApplicationFinance(form.isFullApplicationFinance());
 		csfr.setIncludeGrowthTable(form.isIncludeGrowthTable());
-		csfr.setCompetitionId(competition.getId());
-		return competitionService.update(competition).andOnSuccess(() -> competitionSetupFinanceService.updateFinance(csfr));
+        csfr.setCompetitionId(competition.getId());
+		return competitionSetupFinanceService.updateFinance(csfr);
 	}
 
 	@Override
