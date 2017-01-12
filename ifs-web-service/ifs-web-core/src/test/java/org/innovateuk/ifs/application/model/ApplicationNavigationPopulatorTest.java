@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,17 +59,44 @@ public class ApplicationNavigationPopulatorTest {
     }
 
     @Test
-    public void testAddAppropraiteBackURLToModel(){
+    public void testAddAppropriateBackURLToModelWithoutSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("referer")).thenReturn("/application/1");
-        target.addAppropriateBackURLToModel(applicationId, request, model);
+        target.addAppropriateBackURLToModel(applicationId, request, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
 
         when(request.getHeader("referer")).thenReturn("/application/1/summary");
-        target.addAppropriateBackURLToModel(applicationId, request, model);
+        target.addAppropriateBackURLToModel(applicationId, request, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
+
+        verify(model, times(2)).addAttribute(eq("backTitle"), contains("Application Overview"));
+    }
+
+    @Test
+    public void testAddAppropriateBackURLToModelWithFinanceSubSection(){
+        Long applicationId = 1L;
+        Model model = mock(Model.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
+        target.addAppropriateBackURLToModel(applicationId, request, model, section);
+
+        verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
+        verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
+    }
+
+    @Test
+    public void testAddAppropriateBackURLToModelWithGeneralSection(){
+        Long applicationId = 1L;
+        Model model = mock(Model.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("referer")).thenReturn("/application/1");
+        SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
+        target.addAppropriateBackURLToModel(applicationId, request, model, section);
+
+        verify(model).addAttribute(eq("backURL"), contains("/application/1"));
+        verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
     }
 
 }
