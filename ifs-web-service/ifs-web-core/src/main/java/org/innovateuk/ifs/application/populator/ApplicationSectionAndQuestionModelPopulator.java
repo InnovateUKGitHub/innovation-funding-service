@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.model;
+package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
@@ -144,7 +144,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("markedAsComplete", markedAsComplete);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
+        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(-1L));
         completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
 
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
@@ -153,7 +153,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
 
         addFinanceDetails(model, application);
 
-        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES);
+        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId;
         if (eachOrganisationFinanceSections.isEmpty()) {
             eachCollaboratorFinanceSectionId = null;
