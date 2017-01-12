@@ -51,6 +51,7 @@ public class OpenFinanceSectionViewModelTest {
         viewModel.setSubSectionQuestionFormInputs(asMap());
         viewModel.setSectionAssignableViewModel(sectionAssignableViewModel);
         viewModel.setSectionApplicationViewModel(applicationViewModel);
+        viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
     }
 
     @Test
