@@ -5,33 +5,25 @@
     <!-- ===========================Your finances section view =========================== -->
     <div th:fragment="your_finances">
         <th:block th:if="${currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
+            <div class="your-finances">
+                <h2 class="heading-medium no-margin-bottom">Finances</h2>
+                <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
-            <h2 class="heading-medium no-margin-bottom">Finances</h2>
-            <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
-
-            <details class="extra-margin-bottom">
-                <summary><span class="summary">Not requesting funding</span></summary>
-                <div class="panel-indent">
-                    <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details.</p>
-                    <form action="#">
-                        <div class="form-group">
-                            <fieldset>
-                                <label for="no-funding" class="block-label">
-                                    <input id="no-funding" value="no-funding" type="checkbox" />
-                                    This organisation does not request funding from Innovate UK for participation in the project.
-                                </label>
-                            </fieldset>
-                        </div>
-                    </form>
-                </div>
-            </details>
+                <details class="extra-margin-bottom">
+                    <summary><span class="summary">Not requesting funding</span></summary>
+                    <div class="panel-indent">
+                        <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span id="prototype-confirmation-text">Please confirm below.</span></p>
+                        <button class="button" id="prototype-funding">Not requesting funding</button>
+                    </div>
+                </details>
 
 
-            <ul class="list-overview extra-margin extra-margin-bottom">
-                <th:block th:each="subSection : ${subSections.get(currentSection.id)}">
-                    <div th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
-                </th:block>
-            </ul>
+                <ul class="list-overview extra-margin">
+                    <th:block th:each="subSection : ${subSections.get(currentSection.id)}">
+                        <div th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
+                    </th:block>
+                </ul>
+            </div>
 
             <h2 class="heading-medium">Finance summary</h2>
             <p>This is a breakdown of your project costs and sources of funding for this project.</p>

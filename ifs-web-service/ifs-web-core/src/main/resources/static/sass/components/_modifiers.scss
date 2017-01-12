@@ -47,10 +47,6 @@
 	margin-top: 30px;
 }
 
-.extra-margin-bottom{
-	margin-bottom: 30px;
-}
-
 .width-150{
 	width: 150px;
 }
@@ -73,8 +69,17 @@ table {
     width: 40%;
 
     .width-full {
-        width: 100%;
+      width: 100%;
     }
+  }
+}
+
+.table-overflow {
+  overflow: auto;
+  width: 100%;
+
+  table{
+    max-width: 100%;
   }
 }
 

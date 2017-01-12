@@ -14,7 +14,7 @@
 <main id="content">
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1176-assessor-create-acc' : '/prototypes/1178-assessor-profile-skills')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2'}" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Your skills'}, ${(param.edit == null ? '/prototypes/1176-assessor-create-acc' : '/prototypes/1178-assessor-profile-skills')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2'}" />
 
 	<th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
@@ -211,7 +211,7 @@
 
 
 		<div th:if="${param.edit != null}" class="extra-margin-top">
-			<button class="button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to assessor dashboard</button>
+			<button class="button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to your skills</button>
 			<a href="#">Cancel</a>
 		</div>
 
