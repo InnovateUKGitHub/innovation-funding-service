@@ -154,7 +154,6 @@ public class DefaultFinanceModelManagerTest {
 		Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = MapFunctions.asMap(FinanceRowType.LABOUR, new LabourCostCategory());
 		applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
 		when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
-		when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
 		
 		String organisationType = "orgtype";
 

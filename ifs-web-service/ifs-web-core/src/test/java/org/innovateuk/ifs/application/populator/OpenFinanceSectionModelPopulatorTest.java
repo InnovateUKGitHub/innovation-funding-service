@@ -3,29 +3,26 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +41,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -64,22 +62,10 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private OpenFinanceSectionModelPopulator populator;
 
     @Mock
-    private FormInputResponseService formInputResponseService;
-
-    @Mock
-    private QuestionService questionService;
-
-    @Mock
     private SectionService sectionService;
 
     @Mock
-    private ProcessRoleService processRoleService;
-
-    @Mock
     private OrganisationService organisationService;
-
-    @Mock
-    private OrganisationRestService organisationRestService;
 
     @Mock
     private FormInputService formInputService;
@@ -89,9 +75,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
     @Mock
     private InviteRestService inviteRestService;
-
-    @Mock
-    private FinanceOverviewModelManager financeOverviewModelManager;
 
     @Mock
     private FinanceHandler financeHandler;
@@ -106,7 +89,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private Model model;
 
     @Mock
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
+    private UserRestService userRestService;
 
     @Before
     public void setUp() {
@@ -137,6 +120,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<SectionResource> allSections = newSectionResource().withCompetition(competitionId).build(5);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
+
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
 
@@ -177,6 +163,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);
 
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
+
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
@@ -202,7 +191,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         inviteOrg1.setOrganisationNameConfirmed("New name");
         inviteOrg1.setInviteResources(newApplicationInviteResource().build(2));
 
-        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(RestResult.restSuccess(asList(inviteOrg1)));
+        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(RestResult.restSuccess(Collections.singletonList(inviteOrg1)));
         when(userService.isLeadApplicant(userResource.getId(), applicationResource)).thenReturn(Boolean.TRUE);
 
         when(sectionService.getCompletedSectionsByOrganisation(applicationResource.getId())).thenReturn(asMap(1L, new HashSet<>()));

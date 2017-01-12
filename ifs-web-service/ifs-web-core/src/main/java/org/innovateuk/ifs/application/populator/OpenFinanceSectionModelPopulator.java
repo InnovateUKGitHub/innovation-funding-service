@@ -85,7 +85,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                               final UserResource user,
                               final BindingResult bindingResult,
                               final List<SectionResource> allSections){
-        populateModel(form, model, application, section, user, bindingResult, allSections, null, false);
+        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false);
     }
 
     @Override
@@ -229,7 +229,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
         Model model, ApplicationForm form, Long organisationId) {
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
+        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
         addOrganisationAndUserFinanceDetails(competitionId, applicationId, costsQuestions, user, model, form, organisationType, organisationId);
     }
 
