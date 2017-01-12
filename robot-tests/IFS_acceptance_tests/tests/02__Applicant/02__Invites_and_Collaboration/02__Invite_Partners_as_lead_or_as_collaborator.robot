@@ -234,7 +234,7 @@ the user can see the updated company name throughout the application
     And the user clicks the button/link    link=Your finances
     And the user should see the element    link=Your project costs
     And the user should see the element    link=Your organisation
-    And the user should see the element    link=Your funding
+    And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view team members and add collaborators

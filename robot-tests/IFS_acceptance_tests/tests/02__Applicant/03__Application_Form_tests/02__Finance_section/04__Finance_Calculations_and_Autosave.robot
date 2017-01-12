@@ -4,9 +4,9 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 ...
 ...               INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes
-Suite Setup       Run keywords    log in and create new application if there is not one already
+Suite Setup       Run keywords    log in and create new application if there is not one already with complete application details
 ...               AND    Applicant navigates to the finances of the Robot application
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        HappyPath    Applicant  Pending
 Resource          ../../../../resources/defaultResources.robot
 
