@@ -543,6 +543,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
                 String categoryName = categories.get(category).getName();
+                //TODO INFUND-7502 could come up with a better way to send the name to the frontend
                 categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));
             }
         }
