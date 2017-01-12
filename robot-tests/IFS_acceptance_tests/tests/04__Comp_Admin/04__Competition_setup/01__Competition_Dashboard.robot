@@ -16,7 +16,7 @@ Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Live Competitions
+Sections of Live Competitions
     [Documentation]    INFUND-3830
     ...
     ...    INFUND-3003
