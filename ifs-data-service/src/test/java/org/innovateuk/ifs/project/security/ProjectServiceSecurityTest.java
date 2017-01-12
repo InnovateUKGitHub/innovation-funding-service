@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
@@ -468,6 +469,18 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testGetGrantOfferLetterWorkflowState() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterWorkflowState(123L), () -> {
+            verify(projectPermissionRules).internalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -660,6 +673,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+            return null;
+        }
 
     }
 }
