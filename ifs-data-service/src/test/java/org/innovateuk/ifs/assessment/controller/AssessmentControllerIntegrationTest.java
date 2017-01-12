@@ -12,8 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
@@ -157,4 +156,36 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(ACCEPTED, assessmentResult.getAssessmentState());
     }
+
+    @Test
+    public void withdrawAssessment() throws Exception {
+        Long assessmentId = 4L;
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(PENDING, assessmentResource.getAssessmentState());
+
+        RestResult<Void> result = controller.withdrawAssessment(assessmentResource.getId());
+        assertTrue(result.isSuccess());
+
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(WITHDRAWN, assessmentResult.getAssessmentState());
+    }
+
+    @Test
+    public void notifyAssessor() throws Exception {
+        Long assessmentId = 99L;
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(CREATED, assessmentResource.getAssessmentState());
+
+        RestResult<Void> result = controller.notify(assessmentResource.getId());
+        assertTrue(result.isSuccess());
+
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        assertEquals(PENDING, assessmentResult.getAssessmentState());
+    }
+
+
 }

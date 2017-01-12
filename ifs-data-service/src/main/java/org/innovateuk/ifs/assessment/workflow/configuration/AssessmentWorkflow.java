@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.actions.FundingDecisionAction;
 import org.innovateuk.ifs.assessment.workflow.actions.RejectAction;
+import org.innovateuk.ifs.assessment.workflow.actions.WithdrawAction;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.CompetitionInAssessmentGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
@@ -34,6 +35,9 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     private RejectAction rejectAction;
 
     @Autowired
+    private WithdrawAction withdrawAction;
+
+    @Autowired
     private FundingDecisionAction fundingDecisionAction;
 
     @Autowired
@@ -62,9 +66,19 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
         transitions
                 .withExternal()
+                    .source(CREATED).target(PENDING)
+                    .event(NOTIFY)
+                    .and()
+                .withExternal()
                     .source(PENDING).target(REJECTED)
                     .event(REJECT)
                     .action(rejectAction)
+                    .guard(processOutcomeExistsGuard)
+                    .and()
+                .withExternal()
+                    .source(PENDING).target(WITHDRAWN)
+                    .event(WITHDRAW)
+                    .action(withdrawAction)
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
@@ -75,6 +89,12 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .source(ACCEPTED).target(REJECTED)
                     .event(REJECT)
                     .action(rejectAction)
+                    .guard(processOutcomeExistsGuard)
+                    .and()
+                .withExternal()
+                    .source(ACCEPTED).target(WITHDRAWN)
+                    .event(WITHDRAW)
+                    .action(withdrawAction)
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
@@ -94,6 +114,12 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()
+                    .source(OPEN).target(WITHDRAWN)
+                    .event(WITHDRAW)
+                    .action(withdrawAction)
+                    .guard(processOutcomeExistsGuard)
+                    .and()
+                .withExternal()
                     .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
                     .event(FEEDBACK)
                     .and()
@@ -107,6 +133,12 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                     .source(READY_TO_SUBMIT).target(REJECTED)
                     .event(REJECT)
                     .action(rejectAction)
+                    .guard(processOutcomeExistsGuard)
+                    .and()
+                .withExternal()
+                    .source(READY_TO_SUBMIT).target(WITHDRAWN)
+                    .event(WITHDRAW)
+                    .action(withdrawAction)
                     .guard(processOutcomeExistsGuard)
                     .and()
                 .withExternal()

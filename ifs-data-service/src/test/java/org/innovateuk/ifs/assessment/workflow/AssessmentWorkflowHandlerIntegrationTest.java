@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionRes
 import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.FUNDING_DECISION;
 import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.WITHDRAW;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
@@ -57,6 +58,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
+    public void notify_createdToPending() throws Exception {
+        assertWorkflowStateChange((assessment -> assessmentWorkflowHandler.notify(assessment)), setupIncompleteAssessment(CREATED), PENDING);
+    }
+
+    @Test
     public void rejectInvitation_pendingToRejected() throws Exception {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupIncompleteAssessment(PENDING));
     }
@@ -67,8 +73,18 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
+    public void withdrawAssessment_pendingToWithdrawn() throws Exception {
+        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(PENDING));
+    }
+
+    @Test
     public void rejectInvitation_acceptedToRejected() throws Exception {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupIncompleteAssessment(ACCEPTED));
+    }
+
+    @Test
+    public void withdrawAssessment_acceptedToWithdrawn() throws Exception {
+        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(ACCEPTED));
     }
 
     @Test
@@ -97,6 +113,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
+    public void withdrawAssessment_openToWithdrawn() throws Exception {
+        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(OPEN));
+    }
+
+    @Test
     public void feedback_openToOpen() throws Exception {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupIncompleteAssessment(OPEN), OPEN);
     }
@@ -119,6 +140,12 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     @Test
     public void rejectInvitation_readyToSubmitToRejected() throws Exception {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupCompleteAssessment(READY_TO_SUBMIT));
+    }
+
+    @Test
+    public void withdrawAssessment_readyToSubmitToWithdrawn() throws Exception {
+        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupCompleteAssessment(READY_TO_SUBMIT));
+
     }
 
     @Test
@@ -223,6 +250,13 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
             assertTrue(rejection.isPresent());
             assertEquals("comment", rejection.get().getComment());
             assertEquals("reason", rejection.get().getDescription());
+        });
+    }
+
+    private void assertWorkflowStateChangeForWithdrawn(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
+        assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment)  -> {
+            Optional<ProcessOutcome> withdrawn = assessment.getLastOutcome(WITHDRAW);
+            assertTrue(withdrawn.isPresent());
         });
     }
 

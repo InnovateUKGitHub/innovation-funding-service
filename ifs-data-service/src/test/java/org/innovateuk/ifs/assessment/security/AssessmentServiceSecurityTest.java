@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
+import javax.persistence.Temporal;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
@@ -71,6 +72,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void notifyAssessor() {
+        Long assessmentId = 1L;
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> classUnderTest.notify(assessmentId),
+                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void recommend() {
         Long assessmentId = 1L;
         AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
@@ -88,6 +99,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
                 () -> classUnderTest.rejectInvitation(assessmentId, applicationRejection),
+                () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void withdrawAssessment() {
+        Long assessmentId = 1L;
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        assertAccessDenied(
+                () -> classUnderTest.withdrawAssessment(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -139,7 +160,17 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
+        public ServiceResult<Void> withdrawAssessment(@P("assessmentId") Long assessmentId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> notify(@P("assessmentId") Long assessmentId) {
             return null;
         }
 

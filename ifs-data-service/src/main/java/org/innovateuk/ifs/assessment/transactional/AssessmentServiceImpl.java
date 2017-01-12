@@ -65,10 +65,30 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<Void> notify(Long assessmentId) {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.notify(found)) {
+                return serviceFailure(new Error(ASSESSMENT_NOTIFY_FAILED));
+            }
+            return serviceSuccess();
+        });
+    }
+
+    @Override
     public ServiceResult<Void> rejectInvitation(Long assessmentId, ApplicationRejectionResource applicationRejection) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.rejectInvitation(found, applicationRejection)) {
                 return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
+            }
+            return serviceSuccess();
+        });
+    }
+
+    @Override
+    public ServiceResult<Void> withdrawAssessment(Long assessmentId) {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.withdrawAssessment(found)) {
+                return serviceFailure(new Error(ASSESSMENT_WITHDRAWN_FAILED));
             }
             return serviceSuccess();
         });
