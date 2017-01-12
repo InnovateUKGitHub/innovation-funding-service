@@ -6,10 +6,12 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
 ...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
 ...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
-
+...
+...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -58,43 +60,47 @@ Comp admin should be able to view but not edit the finances for every partner
     Then the user should see the correct finances change
 
 Comp admin has read only view of Application details past Open date
-    [Documentation]     INFUND-6937, INFUND-6938, INFUND-6939, INFUND-6940 ,INFUND-6941
-    [Tags]  Failing
-    #TODO when reviewing
+    [Documentation]  INFUND-6937
+    ...  Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
+    [Tags]
     [Setup]     log in as a different user    &{Comp_admin1_credentials}
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
-    And The user clicks the button/link    link=Application
-    Then The user should see the text in the page   Application details
-    And The user clicks the button/link     link=Application details
-    And the user should see the element    jquery=h1:contains("Application details")
-    And The user should not see the element     css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link     link = Return to application questions
-    And The user clicks the button/link     link=Project summary
-    And the user should see the element    jquery=h1:contains("Project summary")
-    And The user should not see the element     css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link     link = Return to application questions
-    And The user clicks the button/link     link=Public description
-    And the user should see the element    jquery=h1:contains("Public description")
-    And The user should not see the element     css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link     link = Return to application questions
-    And The user clicks the button/link     link=Scope
-    And the user should see the element    jquery=h1:contains("Scope")
-    And The user should not see the element     css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link     link = Return to application questions
-    And The user clicks the button/link     link=Finances
-    And the user should see the element    jquery=h1:contains("Application finances")
-    And The user should not see the element     css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link     link = Return to application questions
+    Given the user navigates to the page      ${CA_Live}
+    Then the user should see the element      jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
+    When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail
+    Then the user should not see the element  jQuery=.button:contains("Edit this question")
+    When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail/edit
+    And the user clicks the button/link       jQuery=.button:contains("Save and close")
+    Then the user should see the element      jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
+
+#The following code is part of another story
+#    And The user should not see the element     css = input
+#    And The user should not see the element    jquery=.button:contains("Edit")
+#    And The user should not see the element    jquery=.button:contains("Done")
+#    And The user clicks the button/link     link = Return to application questions
+#    And The user clicks the button/link     link=Project summary
+#    And the user should see the element    jquery=h1:contains("Project summary")
+#    And The user should not see the element     css = input
+#    And The user should not see the element    jquery=.button:contains("Edit")
+#    And The user should not see the element    jquery=.button:contains("Done")
+#    And The user clicks the button/link     link = Return to application questions
+#    And The user clicks the button/link     link=Public description
+#    And the user should see the element    jquery=h1:contains("Public description")
+#    And The user should not see the element     css = input
+#    And The user should not see the element    jquery=.button:contains("Edit")
+#    And The user should not see the element    jquery=.button:contains("Done")
+#    And The user clicks the button/link     link = Return to application questions
+#    And The user clicks the button/link     link=Scope
+#    And the user should see the element    jquery=h1:contains("Scope")
+#    And The user should not see the element     css = input
+#    And The user should not see the element    jquery=.button:contains("Edit")
+#    And The user should not see the element    jquery=.button:contains("Done")
+#    And The user clicks the button/link     link = Return to application questions
+#    And The user clicks the button/link     link=Finances
+#    And the user should see the element    jquery=h1:contains("Application finances")
+#    And The user should not see the element     css = input
+#    And The user should not see the element    jquery=.button:contains("Edit")
+#    And The user should not see the element    jquery=.button:contains("Done")
+#    And The user clicks the button/link     link = Return to application questions
 
 Comp admin has read only view of Eligibility past Open date
     [Documentation]     INFUND-6792
