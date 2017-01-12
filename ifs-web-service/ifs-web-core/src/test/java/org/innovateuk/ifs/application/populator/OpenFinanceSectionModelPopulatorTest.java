@@ -3,18 +3,21 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -22,6 +25,8 @@ import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
@@ -62,10 +67,22 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private OpenFinanceSectionModelPopulator populator;
 
     @Mock
+    private FormInputResponseService formInputResponseService;
+
+    @Mock
+    private QuestionService questionService;
+
+    @Mock
     private SectionService sectionService;
 
     @Mock
+    private ProcessRoleService processRoleService;
+
+    @Mock
     private OrganisationService organisationService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private FormInputService formInputService;
@@ -75,6 +92,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
     @Mock
     private InviteRestService inviteRestService;
+
+    @Mock
+    private FinanceOverviewModelManager financeOverviewModelManager;
 
     @Mock
     private FinanceHandler financeHandler;
@@ -87,6 +107,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
     @Mock
     private Model model;
+
+    @Mock
+    private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Mock
     private UserRestService userRestService;
@@ -191,7 +214,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         inviteOrg1.setOrganisationNameConfirmed("New name");
         inviteOrg1.setInviteResources(newApplicationInviteResource().build(2));
 
-        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(RestResult.restSuccess(Collections.singletonList(inviteOrg1)));
+        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(RestResult.restSuccess(asList(inviteOrg1)));
         when(userService.isLeadApplicant(userResource.getId(), applicationResource)).thenReturn(Boolean.TRUE);
 
         when(sectionService.getCompletedSectionsByOrganisation(applicationResource.getId())).thenReturn(asMap(1L, new HashSet<>()));
