@@ -17,8 +17,7 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired
-    CategoryService categoryService;
-
+    private CategoryService categoryService;
 
     @RequestMapping("/findInnovationAreas")
     public RestResult<List<InnovationAreaResource>> findInnovationAreas() {
