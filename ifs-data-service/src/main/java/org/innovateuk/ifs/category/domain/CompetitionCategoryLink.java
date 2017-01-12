@@ -6,6 +6,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 
+/**
+ * Links a {@link Competition} to a {@link Category}.
+ * @param <C> the type of {@link Category} to link to
+ */
 @Entity
 @DiscriminatorValue("org.innovateuk.ifs.competition.domain.Competition")
 public class CompetitionCategoryLink<C extends Category> extends CategoryLink<Competition, C> {

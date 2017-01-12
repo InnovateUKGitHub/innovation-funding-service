@@ -6,6 +6,11 @@ import org.hibernate.annotations.DiscriminatorOptions;
 
 import javax.persistence.*;
 
+/**
+ * Links an entity to a Category.
+ * @param <T> the type of entity
+ * @param <C> the type of Category to link to
+ */
 @Entity
 @DiscriminatorColumn(name = "class_name")
 @DiscriminatorOptions(force = true)

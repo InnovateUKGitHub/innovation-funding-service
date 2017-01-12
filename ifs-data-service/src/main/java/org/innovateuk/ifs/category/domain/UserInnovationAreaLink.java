@@ -6,6 +6,9 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
+/**
+ * Links a {@link User} to an {@link InnovationArea}.
+ */
 @Entity
 @DiscriminatorValue("org.innovateuk.ifs.user.domain.User")
 public class UserInnovationAreaLink extends CategoryLink<User, InnovationArea> {
