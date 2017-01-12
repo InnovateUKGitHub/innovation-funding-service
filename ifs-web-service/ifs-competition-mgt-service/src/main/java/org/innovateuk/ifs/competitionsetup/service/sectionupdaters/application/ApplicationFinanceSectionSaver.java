@@ -35,7 +35,7 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
 		competition.setIncludeGrowthTable(form.isIncludeGrowthTable());
 
-		//Not allowed to
+		//INFUND-6773 - Not allowed to at this moment
 		competition.setFullApplicationFinance(Boolean.TRUE);
 		return competitionService.update(competition);
 	}
