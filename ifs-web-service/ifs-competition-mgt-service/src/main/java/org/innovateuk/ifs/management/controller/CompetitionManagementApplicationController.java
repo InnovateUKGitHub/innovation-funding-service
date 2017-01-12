@@ -223,7 +223,7 @@ public class CompetitionManagementApplicationController extends BaseController {
             model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
             model.addAttribute("applicationReadyForSubmit", false);
 
-            //TODO ViewModel is changed so template should be changed as well
+            //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
             OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
             model.addAttribute("model", openFinanceSectionViewModel);
 
