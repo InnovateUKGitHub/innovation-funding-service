@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.category.transactional;
 
-import static org.innovateuk.ifs.category.builder.CategoryLinkBuilder.newCategoryLink;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.mockito.Matchers.argThat;
@@ -31,9 +31,6 @@ public class CompetitionCategoryLinkServiceImplTest extends BaseUnitTestMocksTes
     @InjectMocks
     private CompetitionCategoryLinkServiceImpl categoryLinkService;
     
-//    private String className;
-//    private Long classPk;
-    
     private Category category1;
     private Category category2;
     private Category category3;
@@ -52,17 +49,17 @@ public class CompetitionCategoryLinkServiceImplTest extends BaseUnitTestMocksTes
 
         competition = newCompetition().build();
     	
-        categoryLink1 = newCategoryLink()
+        categoryLink1 = newCompetitionCategoryLink()
         		.withCategory(category1)
         		.withCompetition(competition)
         		.build();
         
-        categoryLink2 = newCategoryLink()
+        categoryLink2 = newCompetitionCategoryLink()
         		.withCategory(category2)
                 .withCompetition(competition)
         		.build();
         
-        categoryLink3 = newCategoryLink()
+        categoryLink3 = newCompetitionCategoryLink()
         		.withCategory(category3)
                 .withCompetition(competition)
         		.build();
