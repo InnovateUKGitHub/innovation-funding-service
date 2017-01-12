@@ -115,6 +115,8 @@ public class BaseUnitTest {
     protected final Log log = LogFactory.getLog(getClass());
 
     @Mock
+    public ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
+    @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
     public InviteOrganisationRestService inviteOrganisationRestService;
