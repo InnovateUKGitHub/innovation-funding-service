@@ -33,7 +33,7 @@ public class FinancesFormPopulator implements CompetitionSetupSubsectionFormPopu
 		CompetitionSetupFinanceResource csfr = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
 		ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
 		competitionSetupForm.setFullApplicationFinance(csfr.isFullApplicationFinance());
-		competitionSetupForm.setIncludeGrowthTable(csfr.isFullApplicationFinance());
+		competitionSetupForm.setIncludeGrowthTable(csfr.isIncludeGrowthTable());
 		return competitionSetupForm;
 	}
 
