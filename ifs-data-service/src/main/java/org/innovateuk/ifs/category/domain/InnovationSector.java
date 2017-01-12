@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTO
  */
 @Entity
 @DiscriminatorValue("INNOVATION_SECTOR")
-public class InnovationSector extends ContainerCategory<InnovationArea> {
+public class InnovationSector extends ParentCategory<InnovationArea> {
 
     @OneToMany(mappedBy = "parent")
     @OrderBy("name ASC")

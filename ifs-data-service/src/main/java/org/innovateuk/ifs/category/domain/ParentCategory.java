@@ -6,13 +6,13 @@ import java.util.List;
  * A abstract {@link Category} with child {@link Category}s
  * @param <T> the type of the child Categories
  */
-public abstract class ContainerCategory<T extends Category> extends Category {
+public abstract class ParentCategory<T extends Category> extends Category {
 
-    ContainerCategory() {
+    ParentCategory() {
         // default constructor
     }
 
-    protected ContainerCategory(String name) {
+    protected ParentCategory(String name) {
         super(name);
     }
 
