@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 
+/**
+ * DTO for <code>InnovationArea</code>s.
+ */
 public class InnovationAreaResource extends CategoryResource {
 
     private Long parent;

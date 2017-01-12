@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
+/**
+ * DTO for <code>InnovationSector</code>s.
+ */
 public class InnovationSectorResource extends CategoryResource {
 
     private List<InnovationAreaResource> children;
