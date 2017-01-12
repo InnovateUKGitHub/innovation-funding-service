@@ -14,15 +14,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(
-    config = GlobalMapperConfig.class,
-    uses = {
-        ProcessRoleMapper.class,
-        ApplicationFinanceMapper.class,
-        ApplicationStatusMapper.class,
-        CompetitionMapper.class,
-        ApplicationInviteMapper.class,
-        FileEntryMapper.class
-    }
+        config = GlobalMapperConfig.class,
+        uses = {
+                ProcessRoleMapper.class,
+                ApplicationFinanceMapper.class,
+                ApplicationStatusMapper.class,
+                CompetitionMapper.class,
+                ApplicationInviteMapper.class,
+                FileEntryMapper.class
+        }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
 
@@ -34,21 +34,21 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
     }
 
     @Mappings({
-        @Mapping(source = "competition.name", target = "competitionName"),
-        @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
-        @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
-        @Mapping(target = "applicationStatusConstant", ignore = true)
-		})
-		@Override
-		public abstract ApplicationResource mapToResource(Application domain);
-		
-		@Mappings({
-			@Mapping(target = "fundingDecision", ignore = true),
-			@Mapping(target = "formInputResponses", ignore = true),
-			@Mapping(target = "invites", ignore = true),
-			@Mapping(target = "applicationFinances", ignore = true),
-			@Mapping(target = "processRoles", ignore = true),
-		})
-		@Override
-		public abstract Application mapToDomain(ApplicationResource resource);
-		}
+            @Mapping(source = "competition.name", target = "competitionName"),
+            @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
+            @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
+            @Mapping(target = "applicationStatusConstant", ignore = true)
+    })
+    @Override
+    public abstract ApplicationResource mapToResource(Application domain);
+
+    @Mappings({
+            @Mapping(target = "fundingDecision", ignore = true),
+            @Mapping(target = "formInputResponses", ignore = true),
+            @Mapping(target = "invites", ignore = true),
+            @Mapping(target = "applicationFinances", ignore = true),
+            @Mapping(target = "processRoles", ignore = true)
+    })
+    @Override
+    public abstract Application mapToDomain(ApplicationResource resource);
+}

@@ -30,6 +30,7 @@
                       method="post">
                     <button type="submit" class="button button-large">Close assessment</button>
                 </form>
+                <a class="button" th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage applications</a>
             </div>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

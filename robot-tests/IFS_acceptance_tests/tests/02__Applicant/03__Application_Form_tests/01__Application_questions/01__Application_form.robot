@@ -35,7 +35,7 @@ Autosave in the form questions
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Project summary
-    When the user edits the 'project summary' question
+    When the user edits the project summary question
     And the user reloads the page
     Then the text should be visible
 
@@ -106,7 +106,11 @@ Navigation of the form sections
     When the applicant navigates to the next section
     Then the user should see the text in the page    Only your organisation can see this level of detail.
     When the applicant navigates to the next section
-    Then the user should see the text in the page    This is the financial overview
+    Then the user should see the text in the page    To determine the level of funding you are eligible
+    When the applicant navigates to the next section
+    Then the user should see the text in the page    Please enter the funding level
+    When the applicant navigates to the next section
+    Then the user should see the text in the page    This is the financial overview of all partners
 
 Review and submit button
     [Tags]
