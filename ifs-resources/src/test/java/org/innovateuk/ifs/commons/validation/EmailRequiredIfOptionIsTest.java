@@ -14,12 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Created by danielsmith on 12/01/2017.
@@ -109,6 +114,20 @@ public class EmailRequiredIfOptionIsTest {
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
                 .andExpect(model().attributeHasFieldErrors("form", "email"))
+                .andExpect(view().name("failure"));
+    }
+
+    @Test
+    public void isValid_EmailNeedsValidatingNotSet() throws Exception {
+        List<String> errors = Arrays.asList("EmailRequiredIfOptionIs.form", "EmailRequiredIfOptionIs");
+
+        mockMvc.perform(post("/")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("emailRegexp", "test@test.com")
+                .param("user", "-1"))
+                .andExpect(status().isOk())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasErrors("form"))
                 .andExpect(view().name("failure"));
     }
 
