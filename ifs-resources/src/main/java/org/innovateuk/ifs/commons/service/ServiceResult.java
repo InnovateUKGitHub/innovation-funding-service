@@ -38,7 +38,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
-    public <R> ServiceResult<R> andOnSuccess(Supplier<FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
+    public <R> ServiceResult<R> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
         return (ServiceResult<R>) super.andOnSuccess(successHandler);
     }
 
