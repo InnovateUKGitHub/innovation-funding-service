@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Application progress'" th:remove="tag" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management competition-setup">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/competition}" th:remove="tag" />
+
+            <!--/* TODO INFUND-7046
+            <h1 class="heading-xlarge">
+                <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
+                Application progress
+            </h1>
+
+            <h2 class="heading-medium" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.applicationName}|">
+                94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
+            </h2>
+
+            <div class="grid-row extra-margin">
+                <div class="column-quarter">
+                    <h3 class="heading-small">Partners</h3>
+                    <ul th:ignore="all-but-first">
+                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
+                        <li>Biotech Corp</li>
+                        <li>Unversity of Cardiff</li>
+                    </ul>
+                </div>
+                <div class="column-quarter">
+                    <h3 class="heading-small">Innovation area</h3>
+                </div>
+            </div>
+            <div class="extra-margin">
+                <a href="#">Review application</a>
+            </div>*/-->
+
+            <!--/* TODO INFUND-7230
+            <h2 class="heading-medium">Assigned (4)</h2>
+
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Assessor</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Innovation area</th>
+                            <th class="aligncentre" scope="col">Total applications</th>
+                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th class="aligncentre" scope="col">Notified</th>
+                            <th class="aligncentre" scope="col">Accepted</th>
+                            <th class="aligncentre" scope="col">Started</th>
+                            <th class="aligncentre" scope="col">Submitted</th>
+                            <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                            <td>Academic</td>
+                            <td>Healthcare, Regenerative medicine</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="alignright"></td>
+                        </tr>
+                        <tr id="prototype-started-removable">
+                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                            <td>Business</td>
+                            <td>Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre">-</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor">Remove</a>
+                            </td>
+                        </tr>
+                        <tr id="prototype-assigned-row-three">
+                            <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
+                            <td>Business</td>
+                            <td>Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre">-</td>
+                            <td class="aligncentre">-</td>
+                            <td class="aligncentre">-</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin" id="prototype-remove-row-three">Remove</a>
+                            </td>
+                        </tr>
+                        <tr id="prototype-assigned-row-four">
+                            <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
+                            <td>Business</td>
+                            <td>Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre">-</td>
+                            <td class="aligncentre">-</td>
+                            <td class="aligncentre">-</td>
+                            <td class="aligncentre">-</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin" id="prototype-remove-row-four">Remove</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="remove-assigned-assessor" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+                <button class="js-close close" aria-label="Close Popup">X</button>
+                <div>
+
+                    <h2 class="heading-medium no-margin">Are you sure you want to remove this Assessor from the application?</h2>
+
+                    <p>When you click <strong>Remove and notify</strong> the application will be removed from the assessor and they will be notified of the removal straight away.</p>
+                    <p>If they have started the assessment of this application, their assessment will be <strong>permanently deleted</strong> when you click <strong>Remove and notify</strong>.</p>
+                    <hr />
+
+                    <div class="alignright-button">
+                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+                        <a class="button js-close" href="#" id="prototype-remove-started">Remove and notify</a>
+                    </div>
+                </div>
+            </div>
+            */-->
+
+            <!--/* TODO INFUND-7047
+            <h2 class="heading-medium">Rejected (1)</h2>
+
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Assessor</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Innovation Area</th>
+                            <th class="aligncentre" scope="col">Total applications</th>
+                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th scope="col">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                            <td>Business</td>
+                            <td>Biophysics and soft matter physics</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">4</td>
+                            <td><strong>Too many assignments</strong><br />You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            */-->
+
+            <!--/* TODO INFUND-7048
+            <h2 class="heading-medium">Previously assigned (0)</h2>
+
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Assessor</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Innovation area</th>
+                            <th class="aligncentre" scope="col">Total applications</th>
+                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th class="aligncentre" scope="col">Notified</th>
+                            <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="prototype-previous-row-zero">
+                            <td colspan="6">There are no assessors previously assigned to this application.</td>
+                        </tr>
+                        <tr id="prototype-previous-row-one">
+                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                            <td>Business</td>
+                            <td>Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin" id="prototype-row-one-reassign">Re-assign</a>
+                            </td>
+                        </tr>
+                        <tr id="prototype-previous-row-two">
+                            <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
+                            <td>Business</td>
+                            <td>Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin" id="prototype-row-two-reassign">Re-assign</a>
+                            </td>
+                        </tr>
+                        <tr id="prototype-previous-row-three">
+                            <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
+                            <td>Business</td>
+                            <td>Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">3</td>
+                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin" id="prototype-row-three-reassign">Re-assign</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="heading-medium">Available assessors</h2>
+
+            <!--/* TODO INFUND-7055
+            <div class="search-filters extra-margin">
+                <form action="#" method="GET">
+                    <fieldset>
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <div class="form-group">
+                                    <label class="form-label" for="filterInnovationArea">Innovation area</label>
+                                    <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+                                        <option selected="selected">---</option>
+                                        <option value="Advanced Materials">Advanced Materials</option>
+                                        <option value="Assisted Living Technologies">Assisted Living Technologies</option>
+                                        <option value="Biosciences">Biosciences</option>
+                                        <option value="Built environment">Built environment</option>
+                                        <option value="Creative industries">Creative industries</option>
+                                        <option value="Detection &#38; identification of infectious agents">Detection &#38; identification of infectious agents</option>
+                                        <option value="Digital sciences">Digital sciences</option>
+                                        <option value="Electronics, sensors &#38; photonics">Electronics, sensors &#38; photonics</option>
+                                        <option value="Emerging technologies">Emerging technologies</option>
+                                        <option value="Food supply">Food supply</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="High value manufacturing">High value manufacturing</option>
+                                        <option value="High value services">High value services</option>
+                                        <option value="Information &#38; communications technology (ICT)">Information &#38; communications technology (ICT)</option>
+                                        <option value="Intelligent transport systems">Intelligent transport systems</option>
+                                        <option value="Low carbon vehicles">Low carbon vehicles</option>
+                                        <option value="Materials">Materials</option>
+                                        <option value="Nanotechnology">Nanotechnology</option>
+                                        <option value="Regenerative medicine">Regenerative medicine</option>
+                                        <option value="Resource efficiency">Resource efficiency</option>
+                                        <option value="Satellite comms &#38; navigation">Satellite comms &#38; navigation</option>
+                                        <option value="Space">Space</option>
+                                        <option value="Stratified medicine">Stratified medicine</option>
+                                        <option value="Sustainable agrifood">Sustainable agrifood</option>
+                                        <option value="Transport">Transport</option>
+                                        <option value="Urban living">Urban living</option>
+                                    </select>
+                                </div>
+                            <div class="form-group">
+                                <label class="form-label" for="filterType">Type</label>
+                                <select class="form-control" id="filterType" name="filterType">
+                                    <option selected="selected">---</option>
+                                    <option value="Industry">Industry</option>
+                                    <option value="Academic">Academic</option>
+                                    <option value="International">International</option>
+                                </select>
+                            </div>
+
+                            </div>
+                            <div class="column-half">
+                                <div class="form-group">
+                                    <label class="form-label" for="filterSearch">Skill areas</label>
+                                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                                </div>
+                                <div class="column-half extra-margin">
+                                    <a href="#">Clear all filters</a>
+                                </div>
+                                <div class="column-half">
+                                    <div class="alignright">
+                                        <button class="button no-margin">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            */-->
+
+            <!--/* TODO INFUND-7233
+            <div class="grid-row sorting">
+                <div class="column-two-thirds">
+                    <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+                </div>
+
+                <div class="column-third alignright">
+                    <div class="form-group">
+                        <form>
+                            <label for="sort-by">Sort by</label>
+                            <select name="sort-by" id="sort-by" class="form-control">
+                                <option value="Title">Assessor Name</option>
+                                <option value="Skill">Skill areas</option>
+                                <option value="Total applications">Total applications</option>
+                                <option value="Assigned applications">Assigned applications</option>
+                                <option value="Accepted applications">Submitted applications</option>
+                            </select>
+                            <button class="button button-secondary button-small" type="submit">Sort</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Assessor</th>
+                            <th scope="col">Skill areas</th>
+                            <th class="aligncentre" scope="col">Total applications</th>
+                            <th class="aligncentre" scope="col">Assigned</th>
+                            <th class="aligncentre" scope="col">Submitted</th>
+                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
+                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre">2</td>
+                            <td class="aligncentre">1</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin">Assign</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                            <td class="aligncentre">6</td>
+                            <td class="aligncentre">2</td>
+                            <td class="aligncentre">1</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin">Assign</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                            <td class="aligncentre">5</td>
+                            <td class="aligncentre">2</td>
+                            <td class="aligncentre">0</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin">Assign</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                            <td class="aligncentre">9</td>
+                            <td class="aligncentre">5</td>
+                            <td class="aligncentre">2</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin">Assign</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                            <td class="aligncentre">4</td>
+                            <td class="aligncentre">1</td>
+                            <td class="aligncentre">1</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin">Assign</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                            <td class="aligncentre">9</td>
+                            <td class="aligncentre">5</td>
+                            <td class="aligncentre">2</td>
+                            <td class="alignright">
+                                <a href="#" class="button-secondary no-margin">Assign</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            */-->
+
+            <!--/* TODO ??
+            <ul class="pagination">
+                <li class="prev">
+                    <a href="#" rel="prev" title="Navigate to previous part">
+                        <span class="pagination-label">Previous</span>
+                    </a>
+                </li>
+                <li class="next">
+                    <a href="#" rel="next" title="Navigate to next part">
+                        <span class="pagination-label">Next</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="aligncentre">
+                <a href="#" class="extra-margin-right">0 to 20</a>
+                <a href="#" class="extra-margin-right">21 to 40</a>
+                <a href="#" class="extra-margin-right">41 to 60</a>
+                <a href="#" class="extra-margin-right">61 to 80</a>
+                <a href="#" class="extra-margin-right">81 to 100</a>
+            </div>
+            */-->
+
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
+
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
+</html>
