@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Invite assessors'" th:remove="tag"/>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor profile'" th:remove="tag"/>
 </head>
 
 <body th:with="context='comp-management'" class="competition-management competition-overview">
@@ -16,7 +16,7 @@
 
     <div class="page-title">
         <h1 class="heading-xlarge">
-            <span class="heading-secondary" th:text="${model.competition.name}">Technology inspired</span>
+            <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competition.id,8)}: ${model.competition.name}|">00000001: Technology inspired</span>
             Assessor profile
         </h1>
     </div>
@@ -31,6 +31,58 @@
         model.businessType
         model.skills
     -->
+
+    <h2 class="heading-medium">Assessor details</h2>
+
+    <h3 class="heading-small">Name</h3>
+    <p th:text="${model.name}">John Smith</p>
+
+    <h3 class="heading-small" th:if="${model.addressResource}">Address</h3>
+    <p th:if="${model.addressResource}">
+        <th:block th:if="${model.addressResource.addressLine1}">
+            <th:block th:text="${model.addressResource.addressLine1}">Street address 1</th:block><br />
+        </th:block>
+        <th:block th:if="${model.addressResource.addressLine2}">
+            <th:block th:text="${model.addressResource.addressLine2}">Street address 2</th:block><br />
+        </th:block>
+        <th:block th:if="${model.addressResource.addressLine3}">
+            <th:block th:text="${model.addressResource.addressLine3}">Street address 3</th:block><br />
+        </th:block>
+        <th:block th:if="${model.addressResource.town}">
+            <th:block th:text="${model.addressResource.town}">Town</th:block><br />
+        </th:block>
+        <th:block th:if="${model.addressResource.county}">
+            <th:block th:text="${model.addressResource.county}">County</th:block><br />
+        </th:block>
+        <th:block th:if="${model.addressResource.postcode}" th:text="${model.addressResource.postcode}">Post code</th:block>
+    </p>
+
+    <h3 class="heading-small" th:if="${model.phone}">Phone number</h3>
+    <p th:if="${model.phone}" th:text="${model.phone}">01234 567891</p>
+
+    <h3 class="heading-small">Email address</h3>
+    <p><a th:href="|mailto:${model.email}|" th:text="${model.email}">j.s@assessor.com</a></p>
+
+
+    <h2 class="heading-medium">Skills</h2>
+
+    <h3 class="heading-small">Innovation areas</h3>
+    <!--*/ ul class="list list-bullet">
+        <li th:each="innovationSector : ${model.innovationSectors}">
+            materials and manufacturing
+            <ul class="list list-bullet">
+                <li th:each="innovationArea : ${innovationSector.children}">
+                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                </li>
+            </ul>
+        </li>
+    </ul /*-->
+
+    <h3 class="heading-small" th:if="${model.skills}">Skill areas</h3>
+    <p th:if="${model.skills}" th:text="${model.skills}">Human computer interaction, Wearables, IoT</p>
+
+    <h3 class="heading-small" th:if="${model.businessType}">Assessor type</h3>
+    <p th:if="${model.businessType}" th:text="${model.businessType}">business</p>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
