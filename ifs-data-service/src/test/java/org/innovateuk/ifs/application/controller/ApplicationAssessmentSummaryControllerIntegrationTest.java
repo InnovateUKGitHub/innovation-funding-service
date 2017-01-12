@@ -45,6 +45,8 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
         flushAndClearSession();
 
+        loginCompAdmin();
+
         RestResult<ApplicationAssessmentSummaryResource> serviceResult = controller.getApplicationAssessmentSummary(application.getId());
         assertTrue(serviceResult.isSuccess());
 
