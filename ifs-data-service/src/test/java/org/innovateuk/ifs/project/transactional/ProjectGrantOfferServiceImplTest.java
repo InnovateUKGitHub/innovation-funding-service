@@ -482,7 +482,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
         Address address = AddressBuilder.newAddress().withAddressLine1("InnovateUK").withAddressLine2("Northstar House").withTown("Swindon").withPostcode("SN1 1AA").build();
-        Project project = newProject().withOtherDocumentsApproved(Boolean.TRUE).withName("project 1").withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).withAddress(address).build();
+        Project project = newProject().withOtherDocumentsApproved(ApprovalType.APPROVED).withName("project 1").withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).withAddress(address).build();
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30).withApplication(456L).withOrganisation(3L)
                 .build();
@@ -593,7 +593,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
-        Project project = newProject().withOtherDocumentsApproved(Boolean.FALSE).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+        Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
 
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);

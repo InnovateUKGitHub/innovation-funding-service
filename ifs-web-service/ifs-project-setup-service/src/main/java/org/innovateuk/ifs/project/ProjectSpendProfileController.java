@@ -193,6 +193,24 @@ public class ProjectSpendProfileController {
     private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
                                       ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
 
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().keySet().forEach(key -> {
+            List<BigDecimal> monthlyCostNullsReplacedWithZeros = new ArrayList();
+            boolean monthlyCostNullsReplaced = false;
+            for (BigDecimal mon : spendProfileTableResource.getMonthlyCostsPerCategoryMap().get(key) ) {
+                if(null == mon) {
+                    monthlyCostNullsReplaced = true;
+                    monthlyCostNullsReplacedWithZeros.add(BigDecimal.ZERO);
+                } else {
+                    monthlyCostNullsReplacedWithZeros.add(mon);
+                }
+            }
+            if (monthlyCostNullsReplaced) {
+                Map<Long, List<BigDecimal>> updatedCostPerCategoryMap = spendProfileTableResource.getMonthlyCostsPerCategoryMap();
+                updatedCostPerCategoryMap.replace(key, monthlyCostNullsReplacedWithZeros);
+                spendProfileTableResource.setMonthlyCostsPerCategoryMap(updatedCostPerCategoryMap);
+            }
+        });
+
         form.setTable(spendProfileTableResource);
 
         model.addAttribute("model", buildSpendProfileViewModel(project, organisationId, spendProfileTableResource, loggedInUser));
