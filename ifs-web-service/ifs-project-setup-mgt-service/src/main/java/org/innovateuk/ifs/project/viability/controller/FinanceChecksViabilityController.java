@@ -65,7 +65,7 @@ public class FinanceChecksViabilityController {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveViability(projectId, organisationId, Viability.PENDING, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, Viability.REVIEW, form, validationHandler, model, successView);
     }
 
     @RequestMapping(method = POST, params = "confirm-viability")
