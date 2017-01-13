@@ -77,7 +77,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
-    public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "dd MMMM yyyy";
+    public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
     @Autowired
     private ProjectRepository projectRepository;
