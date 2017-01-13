@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.commons.validation;
 
 import org.innovateuk.ifs.commons.validation.constraints.EmailRequiredIfOptionIs;
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.stereotype.Controller;
@@ -14,21 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.hamcrest.Matchers.*;
 
-/**
- * Created by danielsmith on 12/01/2017.
- */
 public class EmailRequiredIfOptionIsTest {
 
     private EmailRequiredIfOptionIsTest.TestController controller = new EmailRequiredIfOptionIsTest.TestController();
@@ -45,7 +36,6 @@ public class EmailRequiredIfOptionIsTest {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("email", "test@test.com")
-                .param("emailRegexp", "test@test.com")
                 .param("user", "-1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
@@ -56,8 +46,7 @@ public class EmailRequiredIfOptionIsTest {
     public void isValid_PredicateNotSet() throws Exception {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("email", "test@test.com")
-                .param("emailRegexp", "test@test.com"))
+                .param("email", "test@test.com"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("success"));
@@ -68,7 +57,6 @@ public class EmailRequiredIfOptionIsTest {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("email", "test@test.com")
-                .param("emailRegexp", "test@test.com")
                 .param("user", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
@@ -80,7 +68,6 @@ public class EmailRequiredIfOptionIsTest {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("email", "test@")
-                .param("emailRegexp", "test@test.com")
                 .param("user", "-1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
@@ -93,13 +80,12 @@ public class EmailRequiredIfOptionIsTest {
     public void isValid_EmailNeedsValidatingFailsRegex() throws Exception {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("email", "test@test.com")
-                .param("emailRegexp", "test@t1ßst.com")
+                .param("email", "test@1test.com")
                 .param("user", "-1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
-                .andExpect(model().attributeHasFieldErrors("form", "emailRegexp"))
+                .andExpect(model().attributeHasFieldErrors("form", "email"))
                 .andExpect(view().name("failure"));
     }
 
@@ -108,7 +94,6 @@ public class EmailRequiredIfOptionIsTest {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("email", " ")
-                .param("emailRegexp", "test@test.com")
                 .param("user", "-1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
@@ -119,28 +104,22 @@ public class EmailRequiredIfOptionIsTest {
 
     @Test
     public void isValid_EmailNeedsValidatingNotSet() throws Exception {
-        List<String> errors = Arrays.asList("EmailRequiredIfOptionIs.form", "EmailRequiredIfOptionIs");
-
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("emailRegexp", "test@test.com")
                 .param("user", "-1"))
                 .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
-                .andExpect(model().attributeHasErrors("form"))
+                .andExpect(model().attributeHasFieldErrors("form", "email"))
                 .andExpect(view().name("failure"));
     }
 
-    @EmailRequiredIfOptionIs(required = "email", argument = "user", predicate = -1L, regexp = ".*", message = "{validation.project.invite.email.required}", invalidMessage= "{validation.project.invite.email.invalid}")
-    @EmailRequiredIfOptionIs(required = "emailRegexp", argument = "user", predicate = -1L, regexp = "^[^1]*$", message = "{validation.project.invite.email.required}", invalidMessage= "{validation.project.invite.email.invalid}")
+    @EmailRequiredIfOptionIs(required = "email", argument = "user", predicate = -1L, regexp = "^[^1]*$", message = "{validation.project.invite.email.required}", invalidMessage= "{validation.project.invite.email.invalid}")
     public static class TestForm {
 
         private String email;
 
-        private String emailRegexp;
-
         private Long user;
-
 
         public TestForm() {
         }
@@ -151,14 +130,6 @@ public class EmailRequiredIfOptionIsTest {
 
         public void setEmail(String email) {
             this.email = email;
-        }
-
-        public String getEmailRegexp() {
-            return emailRegexp;
-        }
-
-        public void setEmailRegexp(String email) {
-            this.emailRegexp = email;
         }
 
         public Long getUser() {

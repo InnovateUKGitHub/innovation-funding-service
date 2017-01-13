@@ -50,11 +50,14 @@ public class EmailRequiredIfOptionIsValidator implements ConstraintValidator<Ema
     }
 
     private boolean isRequiredFieldBlank(Object requiredFieldValue, String requiredFieldName) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        if (null == requiredFieldValue) {
+            return true;
+        }
         if (requiredFieldValue instanceof String) {
             return StringUtils.isBlank((String) requiredFieldValue);
         }
 
-        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String or Collection. Found " + requiredFieldValue.getClass().getName());
+        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String. Found " + requiredFieldValue.getClass().getName());
     }
     private boolean isRequiredFieldValid(Object requiredFieldValue, String requiredFieldName, String regex) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         if (requiredFieldValue instanceof String) {
@@ -66,7 +69,7 @@ public class EmailRequiredIfOptionIsValidator implements ConstraintValidator<Ema
             }
         }
 
-        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String or Collection. Found " + requiredFieldValue.getClass().getName());
+        throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName + "] must be of type String. Found " + requiredFieldValue.getClass().getName());
     }
 
     private void addConstraintViolationMessageToField(ConstraintValidatorContext context, String message, String fieldName) {
