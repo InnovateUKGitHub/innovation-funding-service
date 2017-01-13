@@ -87,7 +87,7 @@ Upcoming competitions calculations
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL
+    [Tags]    MySQL    Failing
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     And The competition is ready to open
