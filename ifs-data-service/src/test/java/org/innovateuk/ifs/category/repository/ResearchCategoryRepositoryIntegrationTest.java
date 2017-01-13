@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +31,10 @@ public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Test
     public void findById() {
-        ResearchCategory researchCategory = repository.save(newResearchCategory().withId(null).withName("Category Name").build());
+        ResearchCategory researchCategory = repository.save(newResearchCategory()
+                .with(id(null))
+                .withName("Category Name")
+                .build());
         flushAndClearSession();
 
         ResearchCategory actual = repository.findById(researchCategory.getId());
@@ -40,6 +44,7 @@ public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryInt
     @Test
     public void findAll() {
         List<ResearchCategory> researchCategories = newResearchCategory()
+                .with(id(null))
                 .withName("bbb", "aaa", "ccc")
                 .build(3);
 
@@ -54,6 +59,7 @@ public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryInt
     @Test
     public void findAllByOrderByNameAsc() {
         List<ResearchCategory> innovationAreas = newResearchCategory()
+                .with(id(null))
                 .withName("bbb", "aaa", "ccc")
                 .build(3);
 
@@ -61,6 +67,7 @@ public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryInt
         flushAndClearSession();
 
         List<ResearchCategory> expectedInnovationAreas = newResearchCategory()
+                .with(id(null))
                 .withName("aaa", "bbb", "ccc")
                 .build(3);
 

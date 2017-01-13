@@ -17,6 +17,7 @@ public static final FieldDescriptor[] categoryResourceFields = {
             fieldWithPath("children").description("child categories if exists")
     };
 
+// TODO https://devops.innovateuk.org/issue-tracking/browse/INFUND-7518
 //    public static final CategoryResourceBuilder categoryResourceBuilder = newCategoryResource()
 //            .withId(2L ,3L)
 //            .withName("Category name")

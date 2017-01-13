@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
@@ -25,9 +26,9 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
     @Test
     public void findAll() {
         List<Category> categories = asList(
-                repository.save( newInnovationArea().withId(null).build() ),
-                repository.save( newInnovationSector().withId(null).build() ),
-                repository.save( newResearchCategory().withId(null).build() )
+                repository.save(newInnovationArea().with(id(null)).build()),
+                repository.save(newInnovationSector().with(id(null)).build()),
+                repository.save(newResearchCategory().with(id(null)).build())
         );
 
         flushAndClearSession();

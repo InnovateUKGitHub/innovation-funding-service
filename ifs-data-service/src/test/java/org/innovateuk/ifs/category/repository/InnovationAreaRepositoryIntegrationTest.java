@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +29,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
     public void findByName() {
         String innovationAreaName = "Software Engineering";
         InnovationArea innovationArea = newInnovationArea()
-                .withId(null)
+                .with(id(null))
                 .withName(innovationAreaName)
                 .build();
 
@@ -43,6 +44,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
     @Test
     public void findAllByOrderByNameAsc() {
         List<InnovationArea> innovationAreas = newInnovationArea()
+                .with(id(null))
                 .withName("bbb", "aaa", "ccc")
                 .build(3);
 
@@ -50,6 +52,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
         flushAndClearSession();
 
         List<InnovationArea> expectedInnovationAreas = newInnovationArea()
+                .with(id(null))
                 .withName("aaa", "bbb", "ccc")
                 .build(3);
 
@@ -61,6 +64,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
     @Test
     public void findAll() {
         List<InnovationArea> innovationAreas = newInnovationArea()
+                .with(id(null))
                 .withName("bbb", "aaa", "ccc")
                 .build(3);
 
