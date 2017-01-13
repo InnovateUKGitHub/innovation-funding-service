@@ -127,6 +127,10 @@ select.form-control.field-error + button.button {
     line-height:1.35;
 }
 
+table .cell-border-right {
+    border-right:1px solid $border-colour;
+}
+
 table td{
 
     &.bold {
@@ -143,6 +147,7 @@ table td{
     .control{
         padding-left: 20px
     }
+
 }
 
 .date-group {

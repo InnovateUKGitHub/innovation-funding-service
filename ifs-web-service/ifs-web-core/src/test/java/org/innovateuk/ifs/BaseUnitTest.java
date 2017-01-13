@@ -26,6 +26,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -34,7 +35,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.model.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
@@ -117,6 +118,8 @@ public class BaseUnitTest {
 
     protected final Log log = LogFactory.getLog(getClass());
 
+    @Mock
+    public ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
@@ -429,11 +432,14 @@ public class BaseUnitTest {
         SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).withType(SectionType.GENERAL).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withType(SectionType.GENERAL).build();
         SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withType(SectionType.FINANCE).build();
+        SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource9 = sectionResourceBuilder.with(id(9L)).with(name("Your organisation")).withType(SectionType.ORGANISATION_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource10 = sectionResourceBuilder.with(id(10L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).withParentSection(sectionResource7.getId()).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
+        sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(), sectionResource10.getId()));
 
-
-        sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6, sectionResource7);
+        sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6, sectionResource7, sectionResource8, sectionResource9, sectionResource10);
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
@@ -442,15 +448,14 @@ public class BaseUnitTest {
         );
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FINANCE)).thenReturn(Arrays.asList(sectionResource7));
         when(sectionService.getFinanceSection(1L)).thenReturn(sectionResource7);
-        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource6));
+        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource9));
 
         when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource)) ;
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS)).thenReturn(restSuccess(q01Resource));
 
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {
-            section.setQuestionGroup(false);
             List<Long> sectionQuestions = section.getQuestions();
-            section.setQuestionGroup(false);
             if(sectionQuestions != null){
                 Map<Long, QuestionResource> questionsMap =
                         sectionQuestions.stream().collect(

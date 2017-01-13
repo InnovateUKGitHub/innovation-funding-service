@@ -66,6 +66,48 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
+    public void findAssignableById() throws Exception {
+        Long assessmentId = 4L;
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
+        assertEquals(Long.valueOf(17L), assessmentResource.getProcessRole());
+        assertEquals(Long.valueOf(6L), assessmentResource.getApplication());
+        assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
+        assertEquals(emptyList(), assessmentResource.getProcessOutcomes());
+    }
+
+    @Test
+    public void findAssignableById_notFound() throws Exception {
+        Long assessmentId = 999L;
+
+        loginPaulPlum();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Assessment.class, 999L)));
+    }
+
+    @Test
+    public void findAssignableById_notTheAssessmentOwner() throws Exception {
+        Long assessmentId = 5L;
+
+        loginSteveSmith();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findAssignableById_notAssignable() throws Exception {
+        Long assessmentId = 6L;
+
+        loginFelixWilson();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         Long userId = 3L;
         Long competitionId = 1L;

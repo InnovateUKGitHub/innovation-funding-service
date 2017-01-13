@@ -32,7 +32,7 @@ public class ProjectFinance extends Finance {
     private User viabilityApprovalUser;
 
     @Enumerated(EnumType.STRING)
-    private Viability viability = Viability.PENDING;
+    private Viability viability = Viability.REVIEW;
 
     private boolean creditReportConfirmed = false;
 

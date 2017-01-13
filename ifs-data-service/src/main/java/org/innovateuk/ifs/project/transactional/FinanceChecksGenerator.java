@@ -3,11 +3,13 @@ package org.innovateuk.ifs.project.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class FinanceChecksGenerator {
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
 
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
@@ -63,8 +68,16 @@ public class FinanceChecksGenerator {
         ApplicationFinance applicationFinanceForOrganisation =
                 applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
 
+        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
+
+        if (organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())) {
+            projectFinance.setViability(Viability.NOT_APPLICABLE);
+        } else {
+            projectFinance.setViability(Viability.REVIEW);
+        }
+
         ProjectFinance projectFinanceForOrganisation =
-                projectFinanceRepository.save(new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject));
+                projectFinanceRepository.save(projectFinance);
 
         List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
 

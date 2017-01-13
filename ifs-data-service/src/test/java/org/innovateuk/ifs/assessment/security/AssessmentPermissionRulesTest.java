@@ -120,6 +120,25 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
+    public void ownersCanOnlyAssignPendingAssessments() {
+        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING);
+        allowedStates.forEach(state ->
+                assertTrue("the owner of an assessment should be able to assign the assessment",
+                        rules.userCanAssignAssessment(assessments.get(state), assessorUser)));
+
+        EnumSet.complementOf(allowedStates).forEach(state ->
+                assertFalse("the owner of an assessment should not be able to re-assign the assessment",
+                        rules.userCanAssignAssessment(assessments.get(state), assessorUser)));
+    }
+
+    @Test
+    public void otherUsersCanNotAssignPendingAssessments() {
+        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+            assertFalse("other users should not be able to assign the assessment",
+                    rules.userCanAssignAssessment(assessments.get(state), otherUser)));
+    }
+
+    @Test
     public void ownersCanUpdateAssessments() {
         EnumSet<AssessmentStates> updatableStates = EnumSet.of(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
 
