@@ -18,6 +18,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private String projectName;
     private Long applicationId;
     private String competitionName;
+    private Long competitionId;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
     private String monitoringOfficerName;
@@ -52,6 +53,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.competitionName = competition.getName();
+        this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
@@ -165,5 +167,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public SectionStatus getGrantOfferLetterStatus() {
         return grantOfferLetterStatus;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
     }
 }

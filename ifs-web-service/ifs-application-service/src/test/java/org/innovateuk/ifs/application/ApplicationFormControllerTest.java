@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application;
 
-import org.hamcrest.*;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.model.*;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -72,6 +73,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @InjectMocks
     private OpenFinanceSectionModelPopulator openFinanceSectionModel;
 
+    @Spy
+    @InjectMocks
+    private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
+
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
 
@@ -128,58 +133,72 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         Long currentSectionId = sectionResources.get(2).getId();
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
-        mockMvc.perform(get("/application/1/form/section/"+currentSectionId).header("referer", "/application/1"))
+        MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId).header("referer", "/application/1"))
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attribute("currentApplication", application))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
-                .andExpect(model().attribute("userIsLeadApplicant", true))
-                .andExpect(model().attribute("leadApplicant", users.get(0)))
-                .andExpect(model().attribute("currentSectionId", currentSectionId));
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
+        OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
+        assertEquals(application, viewModel.getApplication().getCurrentApplication());
+        assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
+        assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
+        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
+        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(1)));
+        assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
+        assertEquals(users.get(0), viewModel.getLeadApplicant());
+        assertEquals(currentSectionId, viewModel.getCurrentSectionId());
+
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
-    public void testApplicationFormWithOpenSectionWhenTraveresedFromSummaryPage() throws Exception {
-
+    public void testApplicationFormWithOpenSectionWhenTraversedFromSummaryPage() throws Exception {
         Long currentSectionId = sectionResources.get(2).getId();
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
-        mockMvc.perform(get("/application/1/form/section/"+currentSectionId).header("referer", "/application/1/summary"))
+        MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId).header("referer", "/application/1/summary"))
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attribute("currentApplication", application))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
-                .andExpect(model().attribute("userIsLeadApplicant", true))
-                .andExpect(model().attribute("leadApplicant", users.get(0)))
-                .andExpect(model().attribute("currentSectionId", currentSectionId));
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
+        OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
+        assertEquals(application, viewModel.getApplication().getCurrentApplication());
+        assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
+        assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
+        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
+        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(1)));
+        assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
+        assertEquals(users.get(0), viewModel.getLeadApplicant());
+        assertEquals(currentSectionId, viewModel.getCurrentSectionId());
+
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
     public void testApplicationFormWithOpenFinanceSection() throws Exception {
-
         Long currentSectionId = sectionResources.get(6).getId();
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
-        mockMvc.perform(get("/application/1/form/section/"+currentSectionId))
+        MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId))
                 .andExpect(view().name("application-form"))
-                .andExpect(model().attribute("currentApplication", application))
-                .andExpect(model().attribute("userIsLeadApplicant", true))
-                .andExpect(model().attribute("leadApplicant", users.get(0)))
-                .andExpect(model().attribute("currentSectionId", currentSectionId))
-                .andExpect(model().attribute("hasFinanceSection", true))
-                .andExpect(model().attribute("financeSectionId", currentSectionId))
-                .andExpect(model().attribute("allReadOnly", true));
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(OpenFinanceSectionViewModel.class, viewModelResult.getClass());
+        OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) viewModelResult;
+        assertEquals(application, viewModel.getApplication().getCurrentApplication());
+        assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
+        assertEquals(users.get(0), viewModel.getLeadApplicant());
+        assertEquals(currentSectionId, viewModel.getCurrentSectionId());
+        assertEquals(Boolean.TRUE, viewModel.getHasFinanceSection());
+        assertEquals(currentSectionId, viewModel.getFinanceSectionId());
+        assertEquals(Boolean.TRUE, viewModel.getApplication().getAllReadOnly());
+
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
 
@@ -344,7 +363,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
-                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))

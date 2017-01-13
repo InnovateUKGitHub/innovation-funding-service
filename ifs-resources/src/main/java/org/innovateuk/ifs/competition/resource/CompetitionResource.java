@@ -61,9 +61,6 @@ public class CompetitionResource {
     private LeadApplicantType leadApplicantType;
     private Set<Long> researchCategories;
 
-    private boolean fullApplicationFinance;
-    private boolean includeGrowthTable;
-
     private Integer assessorCount;
     private BigDecimal assessorPay;
 
@@ -71,7 +68,6 @@ public class CompetitionResource {
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
-    private String innovateBudget;
 
     private Boolean setupComplete;
 
@@ -452,14 +448,6 @@ public class CompetitionResource {
         this.activityCode = activityCode;
     }
 
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
-    }
-
     public List<CompetitionFunderResource> getFunders() {
         return funders;
     }
@@ -467,23 +455,7 @@ public class CompetitionResource {
     public void setFunders(List<CompetitionFunderResource> funders) {
         this.funders = funders;
     }
-
-    public boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    public void setFullApplicationFinance(boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
-        this.includeGrowthTable = includeGrowthTable;
-    }
-
+    
     public boolean isUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
