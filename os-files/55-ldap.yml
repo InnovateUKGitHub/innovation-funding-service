@@ -17,7 +17,7 @@ items:
           deploymentconfig: ldap
       spec:
         containers:
-        - image: g2g3/ifs-local-ldap:1.0-SNAPSHOT
+        - image: orangebus/ifs-ldap:1.0-SNAPSHOT
           name: ldap
           ports:
           - containerPort: 389

@@ -9,7 +9,7 @@ oc cluster up && {
 
   echo Waiting for pods to startup...
   c=0
-  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "11" ]
+  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "12" ]
   do
     sleep 2
     ((c++))
@@ -20,6 +20,8 @@ oc cluster up && {
   done
 
   sleep 10 # Need a further sleep...
+  exit 0
+
   ldap=$(docker ps |awk '/ldap:/ {print $1}')
   [ -z "$ldap" ] && {
     echo ldap container not running. Investigate and fix.
@@ -30,11 +32,12 @@ oc cluster up && {
   docker exec -it $ldap /usr/local/bin/_delete-shib-users-remote.sh
 
   echo "Refreshing ldap with users in ifs db"
-#  ifsdb=$(oc get svc ifs-database|awk '/ifs-database/ {print $2}')
-#  [ -z "$ifsdb" ] && {
-#    echo cannot determine IP for ifs-database openshift service. Investigate.
-#    exit 1
-#  }
+  ifsdb=$(oc get svc ifs-database|awk '/ifs-database/ {print $2}')
+  [ -z "$ifsdb" ] && {
+    echo cannot determine IP for ifs-database openshift service. Investigate.
+    exit 1
+  }
 
+#  No longer required since the orangebus/ifs-ldap has up to date users that match the database image.
   ./gradlew syncShib
 }

@@ -4,26 +4,21 @@ items:
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    name: shib
+    name: idp
   spec:
     replicas: 1
     selector:
-      deploymentconfig: shib
+      deploymentconfig: idp
     strategy:
       resources: {}
     template:
       metadata:
         labels:
-          deploymentconfig: shib
+          deploymentconfig: idp
       spec:
         containers:
-        - env:
-          - name: SPHOST
-            value: ifs-local-dev
-          - name: IDPHOST
-            value: idp
-          image: orangebus/ifs-shib-sp:1.0-SNAPSHOT
-          name: shib
+        - image: orangebus/ifs-shib-idp:1.0-SNAPSHOT
+          name: idp
           ports:
           - containerPort: 443
           resources: {}
@@ -34,26 +29,26 @@ items:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: shib
+    name: idp
   spec:
     ports:
     - name: 443-tcp
       port: 443
       targetPort: 443
     selector:
-      deploymentconfig: shib
+      deploymentconfig: idp
   status:
     loadBalancer: {}
 - apiVersion: v1
   kind: Route
   metadata:
-    name: shib
+    name: idp
   spec:
-    host: ifs-local-dev
+    host: idp
     port:
       targetPort: 443-tcp
     tls:
       termination: passthrough
     to:
       kind: Service
-      name: shib
+      name: idp
