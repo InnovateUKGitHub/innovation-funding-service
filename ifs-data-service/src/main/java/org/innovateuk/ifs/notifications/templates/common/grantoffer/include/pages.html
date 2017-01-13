@@ -19,7 +19,7 @@
         Application number: ${ApplicationNumber}<br/>
 
         <#assign sendDate = .now>
-            Date: ${sendDate?string["dd MMMM yyyy"]}
+            Date: ${sendDate?string["dd-MMMM-yyyy"]}
     </p>
     <p class="bold">
         Dear ${LeadContact},
@@ -86,7 +86,7 @@
     <h1>Eligible cost and grant allocations</h1>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
-        Date: ${sendDate?string["dd MMMM yyyy"]}<br/>
+        Date: ${sendDate?string["dd-MMMM-yyyy"]}<br/>
         ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
     </p>
@@ -160,7 +160,7 @@
     <h1>Acceptance of award</h1>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
-        Date: ${sendDate?string["dd MMMM yyyy"]}<br/>
+        Date: ${sendDate?string["dd-MMMM-yyyy"]}<br/>
         Innovate UK: ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
     </p>
