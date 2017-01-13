@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -117,7 +117,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
-        assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
+        assertTrue(assessmentResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
 
     @Test
@@ -134,6 +134,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+
         assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
 
         // Now reject the assessment again
@@ -169,7 +170,23 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
-        assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
+        assertTrue(assessmentResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void withdrawCreatedAssessment() throws Exception {
+        Long assessmentId = 9L;
+
+        loginFelixWilson();
+        RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
+        assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+
+        RestResult<Void> result = controller.withdrawAssessment(assessmentId);
+        assertTrue(result.isSuccess());
+
+        RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+        assertTrue(assessmentResult.getFailure().is(notFoundError(Assessment.class, assessmentId)));
+
     }
 
     @Test
@@ -178,7 +195,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         loginFelixWilson();
         RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
-        assertEquals(assessmentResource.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
+        assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
 
         RestResult<Void> result = controller.notify(assessmentId);
         assertTrue(result.isSuccess());

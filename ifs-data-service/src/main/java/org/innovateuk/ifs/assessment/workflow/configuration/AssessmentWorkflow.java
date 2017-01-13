@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.actions.FundingDecisionAction;
 import org.innovateuk.ifs.assessment.workflow.actions.RejectAction;
 import org.innovateuk.ifs.assessment.workflow.actions.WithdrawAction;
+import org.innovateuk.ifs.assessment.workflow.actions.WithdrawCreatedAction;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.CompetitionInAssessmentGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
@@ -33,6 +34,9 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
 
     @Autowired
     private RejectAction rejectAction;
+
+    @Autowired
+    private WithdrawCreatedAction withdrawCreatedAction;
 
     @Autowired
     private WithdrawAction withdrawAction;
@@ -65,6 +69,11 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     @Override
     public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
         transitions
+                .withExternal()
+                    .source(CREATED).target(WITHDRAWN)
+                    .event(WITHDRAW)
+                    .action(withdrawCreatedAction)
+                    .and()
                 .withExternal()
                     .source(CREATED).target(PENDING)
                     .event(NOTIFY)

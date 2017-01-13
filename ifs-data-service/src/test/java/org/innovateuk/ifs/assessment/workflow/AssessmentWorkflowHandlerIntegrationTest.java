@@ -22,21 +22,19 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.TRUE;
+import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.FUNDING_DECISION;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.WITHDRAW;
+import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.*;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static java.lang.Boolean.TRUE;
-import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -60,6 +58,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     @Test
     public void notify_createdToPending() throws Exception {
         assertWorkflowStateChange((assessment -> assessmentWorkflowHandler.notify(assessment)), setupIncompleteAssessment(CREATED), PENDING);
+    }
+
+    @Test
+    public void withdrawAssessment_createdToDeleted() throws Exception {
+        assertWorkflowStateChangeForWithdrawnFromCreated((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(CREATED));
     }
 
     @Test
@@ -253,8 +256,14 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         });
     }
 
+    private void assertWorkflowStateChangeForWithdrawnFromCreated(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
+        assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment) -> {
+            verify(assessmentRepositoryMock).delete(assessment);
+        });
+    }
+
     private void assertWorkflowStateChangeForWithdrawn(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
-        assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment)  -> {
+        assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment) -> {
             Optional<ProcessOutcome> withdrawn = assessment.getLastOutcome(WITHDRAW);
             assertTrue(withdrawn.isPresent());
         });
