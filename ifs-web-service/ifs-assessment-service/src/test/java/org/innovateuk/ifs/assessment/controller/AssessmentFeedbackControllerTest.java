@@ -16,8 +16,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -45,7 +44,7 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedValues;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -149,7 +148,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals(Integer.valueOf(50), model.getMaximumScore());
-        assertEquals("Value 65", model.getApplicantResponse());
+        assertEquals("Value 68", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertTrue(model.isScoreFormInputExists());
         assertFalse(model.isScopeFormInputExists());
@@ -278,7 +277,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals(Integer.valueOf(50), model.getMaximumScore());
-        assertEquals("Value 65", model.getApplicantResponse());
+        assertEquals("Value 68", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertTrue(model.isScoreFormInputExists());
         assertTrue(model.isScopeFormInputExists());
@@ -298,7 +297,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         inOrder.verify(formInputService).findApplicationInputsByQuestion(QUESTION_ID);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), APPLICATION_ID));
         inOrder.verify(formInputService).findAssessmentInputsByQuestion(QUESTION_ID);
-        inOrder.verify(categoryService).getCategoryByType(CategoryType.RESEARCH_CATEGORY);
+        inOrder.verify(categoryService).getResearchCategories();
         inOrder.verify(questionService).getPreviousQuestion(QUESTION_ID);
         inOrder.verify(questionService).getNextQuestion(QUESTION_ID);
         inOrder.verifyNoMoreInteractions();
@@ -553,13 +552,12 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         return assessment;
     }
 
-    private List<CategoryResource> setupResearchCategories() {
-        List<CategoryResource> categories = newCategoryResource()
+    private List<ResearchCategoryResource> setupResearchCategories() {
+        List<ResearchCategoryResource> categories = newResearchCategoryResource()
                 .withName("Research category")
-                .withType(CategoryType.RESEARCH_CATEGORY)
                 .build(1);
 
-        when(categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(categories);
+        when(categoryService.getResearchCategories()).thenReturn(categories);
 
         return categories;
     }

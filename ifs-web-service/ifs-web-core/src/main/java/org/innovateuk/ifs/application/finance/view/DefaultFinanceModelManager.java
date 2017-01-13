@@ -68,6 +68,9 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
+            model.addAttribute("organisationTotalFundingSought", applicationFinanceResource.getTotalFundingSought());
+            model.addAttribute("organisationTotalContribution", applicationFinanceResource.getTotalContribution());
+            model.addAttribute("organisationTotalOtherFunding", applicationFinanceResource.getTotalOtherFunding());
             model.addAttribute("financeView", "finance");
             addGrantClaim(model, form, applicationFinanceResource);
         }

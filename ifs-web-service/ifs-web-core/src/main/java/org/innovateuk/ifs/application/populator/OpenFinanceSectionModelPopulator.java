@@ -9,13 +9,14 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -94,11 +95,29 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
+        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId());
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         return openFinanceSectionViewModel;
     }
+
+    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId) {
+        QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
+        Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
+        QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
+
+        boolean organisationSizeComplete = false;
+        if (viewModel.getSectionsMarkedAsComplete() != null) {
+            organisationSizeComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
+        }
+        boolean applicationDetailsComplete = applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
+
+        viewModel.setFundingSectionLocked(!(organisationSizeComplete && applicationDetailsComplete));
+        viewModel.setApplicationDetailsQuestionId(applicationDetailsQuestion.getId());
+        viewModel.setYourOrganisationSectionId(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).findFirst().map(SectionResource::getId).orElse(null));
+    }
+
 
     private Boolean isSubFinanceSection(SectionResource section) {
         return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
@@ -107,8 +126,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
                                        CompetitionResource competition, Long userId, SectionResource section,
                                        ApplicationForm form, List<ProcessRoleResource> userApplicationRoles,
-                                       List<SectionResource> allSections, List<FormInputResource> inputs) {
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+                                       List<SectionResource> allSections, List<FormInputResource> inputs,
+                                       Optional<OrganisationResource> userOrganisation) {
 
         form = initializeApplicationForm(form);
         form.setApplication(application);
@@ -177,15 +196,15 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                                             List<SectionResource> allSections) {
         List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
 
-        addSectionsMarkedAsComplete(viewModel, userApplicationRoles, userId, application);
-        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
+        addSectionsMarkedAsComplete(viewModel, userApplicationRoles, userId, application, userOrganisation);
+        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs, userOrganisation);
 
         addSectionDetails(viewModel, section, inputs);
     }
 
-    private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application) {
-        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
+    private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId)
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));

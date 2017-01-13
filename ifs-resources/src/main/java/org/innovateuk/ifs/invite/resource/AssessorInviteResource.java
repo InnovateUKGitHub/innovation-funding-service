@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 /**
  * Abstract DTO for fields common to assessor invite resources.
@@ -10,14 +10,14 @@ import org.innovateuk.ifs.category.resource.CategoryResource;
 abstract class AssessorInviteResource {
 
     private String name;
-    private CategoryResource innovationArea;
+    private InnovationAreaResource innovationArea;
     private boolean compliant;
 
 
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(String name, CategoryResource innovationArea, boolean compliant) {
+    protected AssessorInviteResource(String name, InnovationAreaResource innovationArea, boolean compliant) {
         this.name = name;
         this.innovationArea = innovationArea;
         this.compliant = compliant;
@@ -31,11 +31,11 @@ abstract class AssessorInviteResource {
         this.name = name;
     }
 
-    public CategoryResource getInnovationArea() {
+    public InnovationAreaResource getInnovationArea() {
         return innovationArea;
     }
 
-    public void setInnovationArea(CategoryResource innovationArea) {
+    public void setInnovationArea(InnovationAreaResource innovationArea) {
         this.innovationArea = innovationArea;
     }
 

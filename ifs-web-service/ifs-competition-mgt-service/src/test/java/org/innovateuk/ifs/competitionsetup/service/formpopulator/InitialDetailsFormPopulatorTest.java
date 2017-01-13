@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
@@ -62,8 +61,8 @@ public class InitialDetailsFormPopulatorTest {
 				.withBudgetCode("budgetcode")
 				.withId(8L).build();
 
-		List<CategoryResource> innovationAreaCategories = new ArrayList<>();
-		when(categoryService.getCategoryByType(CategoryType.INNOVATION_AREA)).thenReturn(innovationAreaCategories);
+		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
+		when(categoryService.getInnovationAreas()).thenReturn(innovationAreaCategories);
 		when(categoryFormatter.format(innovationAreas, innovationAreaCategories)).thenReturn("formattedcategories");
 
 
