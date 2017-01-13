@@ -12,8 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Comparator.comparing;
 
 /**
  * Build the model for the available assessors table view.
@@ -26,11 +25,11 @@ public class ApplicationAvailableAssessorsModelPopulator {
 
     private static Map<String, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap() {
         return Collections.unmodifiableMap(Stream.of(
-                new AbstractMap.SimpleEntry<>("title", Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
-                new AbstractMap.SimpleEntry<>("skills", Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
-                new AbstractMap.SimpleEntry<>("totalApplications", Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)),
-                new AbstractMap.SimpleEntry<>("assignedApplications", Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)),
-                new AbstractMap.SimpleEntry<>("acceptedApplications", Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)))
+                new AbstractMap.SimpleEntry<>("title", comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
+                new AbstractMap.SimpleEntry<>("skills", comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
+                new AbstractMap.SimpleEntry<>("totalApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)),
+                new AbstractMap.SimpleEntry<>("assignedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)),
+                new AbstractMap.SimpleEntry<>("acceptedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)))
                 .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
     }
 
@@ -39,10 +38,6 @@ public class ApplicationAvailableAssessorsModelPopulator {
     }
 
     private List<ApplicationAvailableAssessorsRowViewModel> getAvailableAssessors(CompetitionResource competition, String selectedSort) {
-//        return competitionInviteRestService.getAvailableAssessors(competition.getId()).getSuccessObjectOrThrowException()
-//                .stream()
-//                .map(this::getRowViewModel)
-//                .collect(toList());
 
         List<ApplicationAvailableAssessorsRowViewModel> availableAssessors =
                 Arrays.asList(new ApplicationAvailableAssessorsRowViewModel("John Smith", "John's skills", 10, 4, 3),

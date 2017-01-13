@@ -5,7 +5,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.form.AvailableAssessorsForm;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationAvailableAssessorsModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.ApplicationAvailableAssessorsRowViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
@@ -39,7 +36,6 @@ public class CompetitionManagementApplicationAssessmentProgressController {
     public String applicationProgress(Model model,
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
-                                      ValidationHandler validationHandler,
                                       @PathVariable("applicationId") Long applicationId) {
         model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId));
         model.addAttribute("available", applicationAvailableAssessorsModelPopulator.populateModel(new CompetitionResource(), sortFieldForAvailableAssessors(form.getSort())));
@@ -53,7 +49,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
 
     private String activeSortField(String givenField, String defaultField, String... allowedFields) {
         return Arrays.stream(allowedFields)
-                .filter(x -> givenField != null && givenField.equals(x))
+                .filter(field -> givenField != null && givenField.equals(field))
                 .findAny()
                 .orElse(defaultField);
     }
