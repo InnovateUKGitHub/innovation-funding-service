@@ -36,7 +36,7 @@ ext {
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
 
-ext.idpRestKey=ext.get('idp.rest.key')
+ext.idpRestKey=project.properties['idp.rest.key'] ?:"123456789"
 
 
 sourceSets {

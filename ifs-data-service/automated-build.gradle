@@ -14,7 +14,7 @@ project.ext['flyway.password']="ifs"
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
-ext.silRestBaseURL=ext.get('ifs.sil.rest.baseurl')
+ext.silRestBaseURL="http://localhost:8080/silstub"
 
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application

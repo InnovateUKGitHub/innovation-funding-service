@@ -37,7 +37,6 @@ ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "devel
 
 ext.csrfEncryptionPassword=ext.get('ifs.csrf.encryption.password')
 ext.encryptionSalt=ext.get('ifs.crsf.encryption.salt')
-ext.csrfTokenValidityMins=ext.get('ifs.csrf.token.validity.mins')
 
 ext.ifsWebSystemUserUid=ext.get('ifs.web.system.user.id')
 
