@@ -292,7 +292,6 @@
             </div>
             */-->
 
-            <!--/* TODO INFUND-7233
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
                     <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
@@ -300,15 +299,16 @@
 
                 <div class="column-third alignright">
                     <div class="form-group">
-                        <form>
+                        <form method="get" >
                             <label for="sort-by">Sort by</label>
-                            <select name="sort-by" id="sort-by" class="form-control">
-                                <option value="Title">Assessor Name</option>
-                                <option value="Skill">Skill areas</option>
-                                <option value="Total applications">Total applications</option>
-                                <option value="Assigned applications">Assigned applications</option>
-                                <option value="Accepted applications">Submitted applications</option>
+                            <select name="sort" id="sort-by" class="js-auto-submit form-control">
+                                <option value="title" th:selected="${(activeSortField == 'title')}">Assessor Name</option>
+                                <option value="skills" th:selected="${(activeSortField == 'skills')}">Skill areas</option>
+                                <option value="totalApplications" th:selected="${(activeSortField == 'totalApplications')}">Total applications</option>
+                                <option value="assignedApplications" th:selected="${(activeSortField == 'assignedApplications')}">Assigned applications</option>
+                                <option value="acceptedApplications" th:selected="${(activeSortField == 'acceptedApplications')}">Submitted applications</option>
                             </select>
+
                             <button class="button button-secondary button-small" type="submit">Sort</button>
                         </form>
                     </div>
@@ -328,62 +328,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">0</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">9</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">1</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">9</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
+                        <tr th:each="assessor : ${available.availableAssessors}">
+                            <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">John Barnes</a></td>
+                            <td th:text="${assessor.skillAreas}">skills</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplications}">4</td>
+                            <td class="aligncentre" th:text="${assessor.assignedApplications}">2</td>
+                            <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin">Assign</a>
                             </td>
@@ -391,7 +341,6 @@
                     </tbody>
                 </table>
             </div>
-            */-->
 
             <!--/* TODO ??
             <ul class="pagination">
