@@ -141,8 +141,8 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
             return COMPLETE;
         }
 
-        if (asList(COMPLETE, PENDING, NOT_REQUIRED).contains(bankDetailsStatus)) {
-            return ACTION_REQUIRED;
+        if (asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsStatus)) {
+            return PENDING;
         } else {
             return NOT_STARTED;
         }

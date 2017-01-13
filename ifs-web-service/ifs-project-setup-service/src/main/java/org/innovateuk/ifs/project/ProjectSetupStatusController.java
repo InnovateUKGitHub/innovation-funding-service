@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static java.util.Arrays.asList;
 
 /**
  * This controller will handle all requests that are related to a project.
@@ -85,7 +83,6 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionPartnerAccessor statusAccessor = new ProjectSetupSectionPartnerAccessor(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
         boolean allFinanceChecksApproved = checkAllFinanceChecksApproved(teamStatus);
-        boolean allBankDetailsApprovedOrNotRequired = checkAllBankDetailsApprovedOrNotRequired(teamStatus);
 
         ProjectUserResource loggedInUserPartner = simpleFindFirst(projectUsers, pu ->
                 pu.getUser().equals(loggedInUser.getId()) &&
@@ -120,7 +117,7 @@ public class ProjectSetupStatusController {
         SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(projectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, leadPartner);
         SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), projectDetailsSubmitted);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(bankDetailsState);
-        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(allBankDetailsApprovedOrNotRequired, allFinanceChecksApproved);
+        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(bankDetailsState, allFinanceChecksApproved);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(spendProfileState);
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
@@ -132,11 +129,6 @@ public class ProjectSetupStatusController {
 
     private boolean checkAllFinanceChecksApproved(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getFinanceChecksStatus()));
-    }
-
-    private boolean checkAllBankDetailsApprovedOrNotRequired(ProjectTeamStatusResource teamStatus) {
-        return teamStatus.checkForAllPartners(status ->
-                asList(NOT_REQUIRED, COMPLETE).contains(status.getBankDetailsStatus()));
     }
 
     private boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
