@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class AssessmentCreateResource {
 
     @NotNull(message = "{validation.assessmentCreate.applicationId.required")
-    private long applicationId;
+    private Long applicationId;
     @NotNull(message = "{validation.assessmentCreate.assessorId.required")
     private Long assessorId;
 

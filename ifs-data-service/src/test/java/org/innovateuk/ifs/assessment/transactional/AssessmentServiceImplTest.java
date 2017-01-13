@@ -5,26 +5,39 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -267,7 +280,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void submitAssessments_eventNotAccepted() throws Exception {
         AssessmentSubmissionsResource assessmentSubmissions = newAssessmentSubmissionsResource()
-                .withAssessmentIds(asList(1L))
+                .withAssessmentIds(singletonList(1L))
                 .build();
 
         Application application = new Application();
@@ -330,7 +343,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
 
-        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(asList(assessment));
+        when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(singletonList(assessment));
         when(assessmentWorkflowHandler.submit(assessment)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
@@ -340,6 +353,119 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
         inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void createAssessment() throws Exception {
+
+        // TODO: INFUND-7236 Change state to CREATED
+
+        State expectedBackingState = AssessmentStates.PENDING.getBackingState();
+
+        User user = newUser().build();
+        Application application = newApplication().build();
+        Role role = newRole().withType(ASSESSOR).build();
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
+
+        ProcessRole expectedProcessRole = newProcessRole()
+                .with(id(null))
+                .withApplication(application)
+                .withUser(user)
+                .withRole(role)
+                .build();
+        ProcessRole savedProcessRole = newProcessRole()
+                .withId(10L)
+                .withApplication(application)
+                .withUser(user)
+                .withRole(role)
+                .build();
+
+        Assessment expectedAssessment = newAssessment()
+                .with(id(null))
+                .withApplication(application)
+                .withActivityState(activityState)
+                .withParticipant(savedProcessRole)
+                .build();
+        Assessment savedAssessment = newAssessment()
+                .withId(5L)
+                .withApplication(application)
+                .withActivityState(activityState)
+                .withParticipant(savedProcessRole)
+                .build();
+
+        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
+
+        when(userRepositoryMock.findByIdAndRolesName(2L, ASSESSOR.getName())).thenReturn(Optional.of(user));
+        when(applicationRepositoryMock.findOne(1L)).thenReturn(application);
+        when(roleRepositoryMock.findOneByName(ASSESSOR.getName())).thenReturn(role);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState)).thenReturn(activityState);
+        when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
+        when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
+        when(assessmentMapperMock.mapToResource(savedAssessment)).thenReturn(expectedAssessmentResource);
+
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(1L)
+                .withAssessorId(2L)
+                .build();
+
+        ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
+
+        assertTrue(serviceResult.isSuccess());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+
+        InOrder inOrder = inOrder(
+                userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
+                processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
+        );
+
+        inOrder.verify(userRepositoryMock).findByIdAndRolesName(2L, ASSESSOR.getName());
+        inOrder.verify(applicationRepositoryMock).findOne(1L);
+        inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
+        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
+        inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
+        inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
+        inOrder.verify(assessmentMapperMock).mapToResource(expectedAssessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void createAssessment_noAssessor() throws Exception {
+        when(userRepositoryMock.findByIdAndRolesName(100L, ASSESSOR.getName())).thenReturn(Optional.empty());
+
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withAssessorId(100L)
+                .withApplicationId(2L)
+                .build();
+
+        ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
+
+        assertTrue(serviceResult.isFailure());
+
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock);
+        inOrder.verify(userRepositoryMock).findByIdAndRolesName(100L, ASSESSOR.getName());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void createAssessment_noApplication() throws Exception {
+        User user = newUser().build();
+
+        when(userRepositoryMock.findByIdAndRolesName(100L, ASSESSOR.getName())).thenReturn(Optional.of(user));
+        when(applicationRepositoryMock.findOne(2L)).thenReturn(null);
+
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withAssessorId(100L)
+                .withApplicationId(2L)
+                .build();
+
+        ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
+
+        assertTrue(serviceResult.isFailure());
+
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock);
+        inOrder.verify(userRepositoryMock).findByIdAndRolesName(100L, ASSESSOR.getName());
+        inOrder.verify(applicationRepositoryMock).findOne(2L);
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.assessment.resource.ApplicationRejectionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
@@ -62,6 +59,10 @@ public class AssessmentController {
     @RequestMapping(value = "/submitAssessments", method = PUT)
     public RestResult<Void> submitAssessments(@RequestBody @Valid AssessmentSubmissionsResource assessmentSubmissionsResource) {
         return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();
+    }
 
+    @RequestMapping(value = "", method = POST)
+    public RestResult<AssessmentResource> createAssessment(@RequestBody @Valid AssessmentCreateResource assessmentCreateResource) {
+        return assessmentService.createAssessment(assessmentCreateResource).toPostCreateResponse();
     }
 }

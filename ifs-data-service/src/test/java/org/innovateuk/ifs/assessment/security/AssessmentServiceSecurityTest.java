@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
@@ -12,6 +13,7 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -112,6 +114,20 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         );
     }
 
+    @Test
+    public void createAssessment() throws Exception {
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(1L)
+                .withAssessorId(3L)
+                .build();
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.createAssessment(assessmentCreateResource),
+                UserRoleType.COMP_ADMIN,
+                UserRoleType.COMP_EXEC
+        );
+    }
+
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(Long id) {
@@ -145,6 +161,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
             return null;
         }
     }

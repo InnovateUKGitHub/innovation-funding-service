@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -34,4 +35,8 @@ public interface AssessmentService {
 
     @PreAuthorize("hasPermission(#assessmentSubmissions, 'SUBMIT')")
     ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
+
+    @SecuredBySpring(value = "CREATE", description = "Comp Admins/Execs can assign an Assessor to an Application")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.flywaydb.core.Flyway;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 
+@Ignore
 public class DatabasePatchingTest extends BaseIntegrationTest {
 
     @Value("${flyway.url}")
