@@ -115,7 +115,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User loggedInUser = newUser().build();
         UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().withProject(projectId).withOrganisation(organisationId).build();
         FinanceCheck financeCheck = newFinanceCheck().withOrganisation(newOrganisation().withId(organisationId).build()).withProject(newProject().withId(projectId).build()).build();
         when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
@@ -134,6 +135,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long projectId = 1L;
         Long organisationId = 2L;
 
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().
                 withProject(projectId).
                 withOrganisation(organisationId).
@@ -142,6 +146,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withValue(new BigDecimal("1.01"), null, new BigDecimal("-1"), new BigDecimal("1.00")).build(4)).
                         build()).
                 build();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
 
         ServiceResult result = service.validate(financeCheckResource);
 
@@ -158,6 +164,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long projectId = 1L;
         Long organisationId = 2L;
 
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().
                 withProject(projectId).
                 withOrganisation(organisationId).
@@ -166,6 +175,32 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withValue(new BigDecimal("1.00"), BigDecimal.ZERO, BigDecimal.ONE).build(3)).
                         build()).
                 build();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
+
+        ServiceResult result = service.validate(financeCheckResource);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testSaveFinanceCheckValidationPassOnUseOfDecimalsForAcademicPartners(){
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+
+        FinanceCheckResource financeCheckResource = newFinanceCheckResource().
+                withProject(projectId).
+                withOrganisation(organisationId).
+                withCostGroup(newCostGroupResource().
+                        withCosts(newCostResource().
+                                withValue(new BigDecimal("1.10"), BigDecimal.ZERO, BigDecimal.ONE).build(3)).
+                        build()).
+                build();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
 
         ServiceResult result = service.validate(financeCheckResource);
 
@@ -179,7 +214,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User loggedInUser = newUser().build();
         UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().withProject(projectId).withOrganisation(organisationId).build();
         FinanceCheck financeCheck = newFinanceCheck().withOrganisation(newOrganisation().withId(organisationId).build()).withProject(newProject().withId(projectId).build()).build();
         when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);

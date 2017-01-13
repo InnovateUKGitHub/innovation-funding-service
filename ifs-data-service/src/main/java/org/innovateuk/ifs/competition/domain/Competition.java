@@ -89,7 +89,6 @@ public class Competition implements ProcessActivity {
     private Set<Category> researchCategories;
 
     private String activityCode;
-    private String innovateBudget;
 
     private boolean multiStream;
     private Boolean resubmission;
@@ -108,8 +107,6 @@ public class Competition implements ProcessActivity {
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private boolean fullApplicationFinance = true;
-    private boolean includeGrowthTable = true;
-
     private Boolean setupComplete;
 
     private boolean useResubmissionQuestion = true;
@@ -505,14 +502,6 @@ public class Competition implements ProcessActivity {
         this.activityCode = activityCode;
     }
 
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
-    }
-
     public List<CompetitionFunder> getFunders() {
         return funders;
     }
@@ -538,14 +527,6 @@ public class Competition implements ProcessActivity {
 
     public void setFullApplicationFinance(boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
-        this.includeGrowthTable = includeGrowthTable;
     }
 
     public Integer getAssessorCount() {

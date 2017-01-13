@@ -1,7 +1,7 @@
 package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * This is the base class for top-level integration tests.  Subclasses of this class will have access to a running embedded Tomcat
@@ -10,6 +10,6 @@ import org.springframework.boot.test.WebIntegrationTest;
  *
  * Created by dwatson on 02/10/15.
  */
-@WebIntegrationTest(randomPort = true)
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseWebIntegrationTest extends BaseIntegrationTest {
 }

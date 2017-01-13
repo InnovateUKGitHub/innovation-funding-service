@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
-Suite Setup       The guest user opens the browser
+Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -8,15 +8,9 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0bf
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
+# This file uses the Application: A novel solution to an old problem  (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
-
-Start by deleting emails from the test mailboxes
-    [Tags]    Email
-    delete the emails from both default remote test mailboxes
-
-
-
 Lead applicant details should show in the invite page
     [Documentation]    INFUND-1005
     Given the user navigates to the page    ${INVITE_LINK}
@@ -130,7 +124,8 @@ Catapult search (accept invitation flow)
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form    Thierry    Henry
+    When the user navigates to the page  ${server}/registration/register
+    Then the user fills the create account form    Thierry    Henry
 
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
@@ -145,6 +140,9 @@ Catapult search (accept invitation flow with email step)
     And the user should see the element    jQuery=h1:contains("Your finances")
 
 *** Keywords ***
+Custom Suite Setup
+    delete the emails from both test mailboxes
+    The guest user opens the browser
 
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}

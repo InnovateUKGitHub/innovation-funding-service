@@ -11,7 +11,6 @@ import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
@@ -41,8 +40,8 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private AssessmentRepository assessmentRepository;
 
     @Override
-    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(@P("user") Long userId,
-                                                                                          @P("role") CompetitionParticipantRoleResource roleResource) {
+    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionParticipants(Long userId,
+                                                                                          CompetitionParticipantRoleResource roleResource) {
 
         CompetitionParticipantRole role = competitionParticipantRoleMapper.mapToDomain(roleResource);
 

@@ -20,21 +20,21 @@ public class AssessorCreatedInviteResourceBuilderTest {
         CategoryResource expectedInnovationArea = newCategoryResource().build();
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
-        long expecetedInviteId = 2L;
+        long expectedInviteId = 2L;
 
         AssessorCreatedInviteResource assessorCreatedInviteResource = newAssessorCreatedInviteResource()
                 .withName(expectedName)
                 .withInnovationArea(expectedInnovationArea)
                 .withCompliant(expectedCompliant)
                 .withEmail(expectedEmail)
-                .withInviteId(expecetedInviteId)
+                .withInviteId(expectedInviteId)
                 .build();
 
         assertEquals(expectedName, assessorCreatedInviteResource.getName());
         assertEquals(expectedInnovationArea, assessorCreatedInviteResource.getInnovationArea());
         assertEquals(expectedCompliant, assessorCreatedInviteResource.isCompliant());
         assertEquals(expectedEmail, assessorCreatedInviteResource.getEmail());
-        assertEquals(expecetedInviteId, assessorCreatedInviteResource.getInviteId());
+        assertEquals(expectedInviteId, assessorCreatedInviteResource.getInviteId());
     }
 
     @Test

@@ -45,14 +45,12 @@ Valid invitation submit
     And the user should see the text in the page    Invites sent
 
 Pending partners visible in the Application details
-    [Documentation]    INFUND-2966
-    ...
-    ...    INFUND-2738
+    [Documentation]    INFUND-2966, INFUND-2738
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
-    Then pending partners should be visible in the page
+    Then the user should see the element   jQuery=ul.list-bullet > li > span:contains("Fannie May")
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -72,7 +70,7 @@ Pending partners visible in Application team page
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     Then the status of the invited people should be correct in the application team page
-    The Lead organisation should show only one time
+    And The Lead organisation should be shown only one time
 
 Pending partners visible in the Manage contributors page
     [Documentation]    INFUND-928
@@ -236,7 +234,7 @@ the user can see the updated company name throughout the application
     And the user clicks the button/link    link=Your finances
     And the user should see the element    link=Your project costs
     And the user should see the element    link=Your organisation
-    And the user should see the element    link=Your funding
+    And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view team members and add collaborators
@@ -250,10 +248,6 @@ the user can invite another person to their own organisation
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-
-pending partners should be visible in the page
-    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
-    Element Should Contain    xpath=//span[contains(text(),"Fannie May")]//following::small    (pending)
 
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
@@ -269,5 +263,5 @@ log into smoke test application
     the user clicks the button/link    link=IFS smoke test
     the user clicks the button/link    link=view team members and add collaborators
 
-The Lead organisation should show only one time
+The Lead organisation should be shown only one time
     Element Should not Contain    css=div:nth-child(7)    Steve Smith

@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.model.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.model.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.model.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;

@@ -10,7 +10,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration so that I can manage members no longer required to be part of the consortium
 Suite Setup       Login and create a new application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant
+Force Tags        Applicant  Pending
+    #TODO 6390
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
@@ -56,14 +57,16 @@ Link to remove partner organisation
 
 Autosaved works (in cookie)
     [Documentation]    INFUND-1039
-    [Tags]    HappyPath
+    [Tags]    HappyPath  Pending
+    # TODO 6390
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
 
 Blank Partner organisation fields are not allowed
     [Documentation]    INFUND-896
-    [Tags]
+    [Tags]  Pending
+    #TODO 6390
     Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    ${EMPTY}    ${EMPTY}
     Then the user should see an error    An organisation name is required.
@@ -98,7 +101,7 @@ The Lead's inputs should not be visible in other application invites
 Lead applicant can remove the Pending partners
     [Documentation]    INFUND-4807
     Given The user navigates to the invitation page of the test application
-    And the applicant fills the lead organisation fields    Test user 001    test@emai.com
+    And the applicant fills the lead organisation fields    Test user 001    test@email.com
     When the user clicks the button/link    jQuery=li:nth-child(2) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    Link=Test user 001
@@ -112,16 +115,6 @@ the user fills the name and email field and reloads the page
     wait for autosave
     the user reloads the page
 
-the user's inputs should still be visible
-    [Arguments]    ${group_number}
-    Textfield Value Should Be    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
-    ${input_value} =    Get Value    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value}    ewan+8@hiveit.co.uk
-    Textfield Value Should Be    name=organisations[${group_number}].organisationName    Test name
-    Textfield Value Should Be    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator test
-    ${input_value} =    Get Value    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value} =    ${input_value} =
-
 the lead applicant cannot be removed
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    Lead applicant
 
@@ -131,10 +124,9 @@ the applicant fills the lead organisation fields
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    jquery=button:contains("Save Changes")
+    Focus    jQuery=.button:contains("Save Changes")
     browser validations have been disabled
-    The user clicks the button/link    jquery=button:contains("Save Changes")
-
+    The user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
