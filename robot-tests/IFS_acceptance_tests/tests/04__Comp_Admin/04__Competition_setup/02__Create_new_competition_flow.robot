@@ -45,6 +45,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 ...
 ...               INFUND-5633 As a Competitions team member I want to be able to set up questions in the Application Details section of Competition Setup so that I can amend the defaults if necessary for the competitions
+...
+...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is 'Sector competition'
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -113,9 +115,13 @@ Initial details: User enters valid values and marks as done
     ...    INFUND-3888
     ...
     ...    INFUND-2983
+    ...
+    ...    INFUND-6479
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given The user clicks the button/link    link=Initial details
+    And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    And the user should not see the element  jQuery=.buttonlink:contains("+ add another innovation area")
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -123,11 +129,28 @@ Initial details: User enters valid values and marks as done
     And the user should see the text in the page    1/12/2017
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Health and life sciences
-    And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    Programme
-    And the user should see the text in the page    NO
+    And the user should see the text in the page    Emerging and enabling technologies
+    And the user should see the text in the page    Creative economy
+    And the user should see the text in the page    Sector
+    And the user should see the text in the page    Yes
     And the user should see the element    jQuery=.button:contains("Edit")
+
+Initial details: Sector competitions allow multiple innovation areas
+   [Documentation]    INFUND-6479
+   [Tags]    HappyPath
+   Given the user clicks the button/link    jQuery=.button:contains("Edit")
+   And the user enters multiple innovation areas
+   When the user clicks the button/link    jQuery=.button:contains("Done")
+   The user should see the text in the page    Cyber Security
+   The user should see the text in the page    Design
+
+Initial Details: User can remove an innovation area
+   [Documentation]    INFUND-6479
+   [Tags]
+   Given the user clicks the button/link    jQuery=.button:contains("Edit")
+   And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
+   When the user clicks the button/link    jQuery=.button:contains("Done")
+   Then the user should not see the text in the page    Creative economy
 
 Initial details: Comp Type and Date should not be editable
     [Documentation]    INFUND-2985
@@ -144,10 +167,10 @@ Initial details: Comp Type and Date should not be editable
     Then the user should see the text in the page    1/12/2017
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
-    And the user should see the text in the page    Health and life sciences
-    And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    Programme
-    And the user should see the text in the page    NO
+    And the user should see the text in the page    Emerging and enabling technologies
+    And the user should see the text in the page    Design
+    And the user should see the text in the page    Sector
+    And the user should see the text in the page    Yes
 
 Initial details: should have a green check
     [Documentation]    INFUND-3002
@@ -318,7 +341,7 @@ Application: Application process Page
     [Tags]    HappyPath
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application
-    Then The user should see the text in the page    Programme competition questions
+    Then The user should see the text in the page    Sector competition questions
     And the user should see the element    link=Business opportunity
     And the user should see the element    link=Potential market
     And the user should see the element    link=Project exploitation
@@ -584,9 +607,9 @@ the resubmission should not have a default selection
 
 The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Competition title
-    And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Sector    id=competitionTypeId
+    And the user selects the option from the drop-down menu    Emerging and enabling technologies    id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu    Creative economy    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
@@ -665,3 +688,9 @@ the user should not see the assessed question feedback
     the user should not see the text in the page    Guidance for assessing business opportunity
     the user should not see the text in the page    Your score should be based upon the following:
     the user should not see the text in the page    There is little or no business drive to the project.
+
+the user enters multiple innovation areas
+    the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    the user selects the option from the drop-down menu    Cyber Security    id=innovationAreaCategoryId-1
+    the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    the user selects the option from the drop-down menu    Design    id=innovationAreaCategoryId-2
