@@ -51,7 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -77,7 +76,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
-    public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "dd-MMMM-yyyy";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -244,7 +242,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private Map<String, Object> getTemplateData(Project project) {
-
         Map<String, Object> templateReplacements = new HashMap<>();
         List<String> addresses = getAddresses(project);
 
@@ -259,7 +256,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
         templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
-                project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
+                project.getTargetStartDate().toString() : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", getYearlyGOLProfileTable(project));

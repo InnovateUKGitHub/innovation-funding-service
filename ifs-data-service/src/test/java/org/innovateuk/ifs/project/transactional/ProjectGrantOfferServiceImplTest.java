@@ -43,7 +43,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Year;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -66,7 +66,6 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newP
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
-import static org.innovateuk.ifs.project.transactional.ProjectGrantOfferServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -483,15 +482,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
         Address address = AddressBuilder.newAddress().withAddressLine1("InnovateUK").withAddressLine2("Northstar House").withTown("Swindon").withPostcode("SN1 1AA").build();
-        Project project = newProject()
-                .withOtherDocumentsApproved(ApprovalType.APPROVED)
-                .withName("project 1").withApplication(app)
-                .withPartnerOrganisations(asList(po))
-                .withProjectUsers(asList(pm))
-                .withDuration(10L)
-                .withAddress(address)
-                .withTargetStartDate(LocalDate.now())
-                .build();
+        Project project = newProject().withOtherDocumentsApproved(ApprovalType.APPROVED).withName("project 1").withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).withAddress(address).build();
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30).withApplication(456L).withOrganisation(3L)
                 .build();
@@ -511,7 +502,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("Address3", "");
         templateArgs.put("TownCity", "Swindon");
         templateArgs.put("PostCode", "SN1 1AA");
-        templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
+        templateArgs.put("ProjectStartDate","");
         templateArgs.put("Date", LocalDateTime.now().toString()); // will never match generated value
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
