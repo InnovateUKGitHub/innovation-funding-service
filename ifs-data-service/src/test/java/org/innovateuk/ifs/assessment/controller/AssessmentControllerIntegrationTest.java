@@ -168,19 +168,19 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<Void> result = controller.withdrawAssessment(assessmentResource.getId());
         assertTrue(result.isSuccess());
 
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(WITHDRAWN, assessmentResult.getAssessmentState());
+        RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+        assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
     }
 
     @Test
     public void notifyAssessor() throws Exception {
-        Long assessmentId = 99L;
+        Long assessmentId = 9L;
 
-        loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(CREATED, assessmentResource.getAssessmentState());
+        loginFelixWilson();
+        RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
+        assertEquals(assessmentResource.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
 
-        RestResult<Void> result = controller.notify(assessmentResource.getId());
+        RestResult<Void> result = controller.notify(assessmentId);
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();

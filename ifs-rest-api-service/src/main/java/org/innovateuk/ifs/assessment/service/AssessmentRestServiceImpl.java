@@ -50,6 +50,16 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
+    public RestResult<Void> notify(Long id) {
+        return putWithRestResult(format("%s/%s/notify", assessmentRestURL, id), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> withdrawAssessment(Long id) {
+        return putWithRestResult(format("%s/%s/withdraw", assessmentRestURL, id), Void.class);
+    }
+
+    @Override
     public RestResult<Void> acceptInvitation(Long id) {
         return putWithRestResult(format("%s/%s/acceptInvitation", assessmentRestURL, id), Void.class);
     }

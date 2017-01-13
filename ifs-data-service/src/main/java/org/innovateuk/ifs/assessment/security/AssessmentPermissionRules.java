@@ -42,7 +42,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "Only owners can update Assessments")
     public boolean userCanUpdateAssessment(AssessmentResource assessment, UserResource user) {
-        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        Set<AssessmentStates> allowedStates = EnumSet.of(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
