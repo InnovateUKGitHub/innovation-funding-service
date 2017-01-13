@@ -670,12 +670,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/details-readOnly", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        Boolean readOnlyView = (Boolean) result.getModelAndView().getModel().get("readOnlyView");
         assertEquals(applicationResource, model.getApp());
         assertEquals(competitionResource, model.getCompetition());
         assertEquals(project, model.getProject());
@@ -684,8 +685,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertFalse(model.isSubmissionAllowed());
         assertFalse(model.isSubmitProjectDetailsAllowed());
         assertFalse(model.isAnySectionIncomplete());
-        assertTrue(model.isReadOnly());
-
+        assertTrue(readOnlyView);
     }
 }
 
