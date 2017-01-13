@@ -5,7 +5,9 @@ import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -99,8 +101,16 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionSearchResultItem>>() {};
     }
 
-    public static ParameterizedTypeReference<List<CategoryResource>> categoryResourceListType() {
-        return new ParameterizedTypeReference<List<CategoryResource>>() {};
+    public static ParameterizedTypeReference<List<InnovationAreaResource>> innovationAreaResourceListType() {
+        return new ParameterizedTypeReference<List<InnovationAreaResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<InnovationSectorResource>> innovationSectorResourceListType() {
+        return new ParameterizedTypeReference<List<InnovationSectorResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ResearchCategoryResource>> researchCategoryResourceListType() {
+        return new ParameterizedTypeReference<List<ResearchCategoryResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<CompetitionTypeResource>> competitionTypeResourceListType() {
