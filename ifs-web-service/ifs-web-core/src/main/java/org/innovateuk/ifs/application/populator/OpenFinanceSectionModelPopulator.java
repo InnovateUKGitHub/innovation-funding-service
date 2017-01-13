@@ -29,10 +29,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 
 import static java.util.Collections.singletonList;
@@ -43,6 +40,7 @@ import static java.util.Collections.singletonList;
 @Component
 public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
+
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -95,14 +93,14 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId());
+        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), model);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         return openFinanceSectionViewModel;
     }
 
-    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId) {
+    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Model model) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
@@ -116,6 +114,10 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         viewModel.setFundingSectionLocked(!(organisationSizeComplete && applicationDetailsComplete));
         viewModel.setApplicationDetailsQuestionId(applicationDetailsQuestion.getId());
         viewModel.setYourOrganisationSectionId(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).findFirst().map(SectionResource::getId).orElse(null));
+
+        //TODO use finance view model when its complete.
+        Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
+        viewModel.setNotRequestingFunding(organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
     }
 
 

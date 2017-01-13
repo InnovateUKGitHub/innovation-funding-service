@@ -358,7 +358,9 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(EDIT_QUESTION) != null)) {
+                request.getParameter(EDIT_QUESTION) != null ||
+                request.getParameter(REQUESTING_FUNDING) != null ||
+                request.getParameter(NOT_REQUESTING_FUNDING) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();

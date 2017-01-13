@@ -11,6 +11,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private boolean fundingSectionLocked;
     private Long applicationDetailsQuestionId;
     private Long yourOrganisationSectionId;
+    private boolean notRequestingFunding;
 
 
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
@@ -46,5 +47,13 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     public void setYourOrganisationSectionId(Long yourOrganisationSectionId) {
         this.yourOrganisationSectionId = yourOrganisationSectionId;
+    }
+
+    public boolean isNotRequestingFunding() {
+        return notRequestingFunding;
+    }
+
+    public void setNotRequestingFunding(boolean notRequestingFunding) {
+        this.notRequestingFunding = notRequestingFunding;
     }
 }
