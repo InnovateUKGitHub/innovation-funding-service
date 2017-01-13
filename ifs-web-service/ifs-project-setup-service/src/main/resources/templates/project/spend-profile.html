@@ -36,7 +36,7 @@
             <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
             Please review
             <ul class="error-summary-list">
-                <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.fieldName}"></li>
+                <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
             </ul>
         </div>
 
@@ -328,13 +328,8 @@
                 </th:block>
             </th:block>
 
-            <th:block th:if="${model.leadPartner and model.markedAsComplete}">
-                <th:block th:if="${model.userPartOfThisOrganisation}">
-                    <p class="extra-margin">You can still edit your spend profile. Once this section has been marked as complete you can submit it to Innovate UK.</p>
-                </th:block>
-                <th:block th:unless="${model.userPartOfThisOrganisation}">
-                    <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
-                </th:block>
+            <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
+                <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
                 <form method="post"
                       th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">
                     <button class="button button-secondary extra-margin" name="allow-edit">Allow edits</button>

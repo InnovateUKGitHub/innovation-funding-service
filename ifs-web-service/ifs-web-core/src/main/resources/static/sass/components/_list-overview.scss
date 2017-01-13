@@ -188,39 +188,69 @@ ol.list-counted {
 
 }
 
+.standard-definition-list{
+  @include core-19;
+  overflow: auto;
 
+  dt{
+    display: block;
+    float: left;
+    margin-bottom: 0.5em;
+    margin-right: 1em;
+    max-width: 250px;
+    width: 50%;
 
-dl.standard-definition-list{
-    overflow: auto;
-    @include core-19;
+    @include media-down(tablet) {
+      width: 70%;
+    }
+  }
+
+  dd{
+    display: block;
+    float: left;
+    font-weight: normal;
+    margin-bottom: 0.5em;
+
+    &.warning{
+      color: $red;
+    }
+
+    & + dt{
+      clear: both;
+    }
+
+    & + dd{
+      clear: both;
+      margin-left: 250px;
+    }
+  }
+
+  &.reduced-width{
+    margin-top: 0.5em;
 
     dt{
-        display: block;
-        float: left;
-        width: 50%;
-        max-width: 250px;
-        margin-bottom: 0.5em;
-        margin-right: 0.5em;
-
-        @include media-down(tablet) {
-            width: 70%;
-        }
+      margin-bottom: 0.3em;
+      width: 25%;
     }
 
     dd{
-        display: block;
-        float: left;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-
-        &.warning{
-            color: $red;
-        }
-
-        & + dt{
-            clear: both;
-        }
+      margin-bottom: 0.3em
     }
+  }
+
+  &.column-definition-list {
+    dt {
+      margin-right: 15px;
+      max-width: none;
+      width: 33%;
+    }
+
+    dd{
+      & + dd{
+        margin-left: 330px;
+      }
+    }
+  }
 }
 
 .comp-list{
