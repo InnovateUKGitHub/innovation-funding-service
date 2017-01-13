@@ -161,16 +161,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId) {
         Project project = projectRepository.findOne(projectId);
         Application application = project.getApplication();
-        List<ApplicationFinanceResource> applicationFinanceResourceList = financeRowService.financeTotals(application.getId()).getSuccessObject();
-        applicationFinanceResourceList.stream().map(ApplicationFinanceResource::getTotal).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN)
 
         Organisation organisation = organisationRepository.findOne(organisationId);
         financeRowService.findApplicationFinanceByApplicationIdAndOrganisation(projectId, organisationId).andOnSuccess(applicationFinanceResource -> {
                     ProjectFinanceResource projectFinance = simpleFindFirst(projectFinanceService.getProjectFinances(projectId).getSuccessObjectOrThrowException(), v -> v.getOrganisation() == organisationId).get();
 
-            BigDecimal eligibleCostOfNonAcademicPartners;
-            BigDecimal eligibleCostOfAcademicPartners;
-                    BigDecimal grantPercentage = ((eligibleCostOfNonAcademicPartners.subtract(projectFinance.getTotalOtherFunding())).divide(projectFinance.getTotal().subtract(projectFinance.getTotalOtherFunding()).subtract(eligibleCostOfAcademicPartners))).multiply(percentDivisor).intValue();
+                    BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage()).setScale(0, BigDecimal.ROUND_DOWN);
                     BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
                     FinanceCheckEligibilityResource result = new FinanceCheckEligibilityResource(project.getId(),
                             project.getName(),

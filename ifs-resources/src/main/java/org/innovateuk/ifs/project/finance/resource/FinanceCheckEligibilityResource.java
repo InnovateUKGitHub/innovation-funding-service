@@ -19,21 +19,25 @@ public class FinanceCheckEligibilityResource {
     private int durationInMonths;
     private BigDecimal totalCost;
     private BigDecimal percentageGrant;
+    private BigDecimal fundingSought;
     private BigDecimal otherPublicSectorFunding;
+    private BigDecimal contributionToProject;
 
     public FinanceCheckEligibilityResource() {
 
     }
 
-    public FinanceCheckEligibilityResource(Long projectId, String projectName, Long organisationId, String organisationName, int durationInMonths, BigDecimal totalCost, BigDecimal otherPublicSectorFunding, BigDecimal percentageGrant) {
+    public FinanceCheckEligibilityResource(Long projectId, String projectName, Long organisationId, String organisationName, int durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.durationInMonths = durationInMonths;
         this.totalCost = totalCost;
-        this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.percentageGrant = percentageGrant;
+        this.fundingSought = fundingSought;
+        this.otherPublicSectorFunding = otherPublicSectorFunding;
+        this.contributionToProject = contributionToProject;
     }
 
     public Long getProjectId() {
@@ -100,4 +104,12 @@ public class FinanceCheckEligibilityResource {
     public void setPercentageGrant(BigDecimal percentageGrant) {
         this.percentageGrant = percentageGrant;
     }
+
+    public BigDecimal getContributionToProject() { return contributionToProject; }
+
+    public void setContributionToProject(BigDecimal contributionToProject) {this.contributionToProject = contributionToProject; }
+
+    public BigDecimal getFundingSought() { return fundingSought; }
+
+    public void setFundingSought(BigDecimal contributionToProject) {this.fundingSought = fundingSought; }
 }
