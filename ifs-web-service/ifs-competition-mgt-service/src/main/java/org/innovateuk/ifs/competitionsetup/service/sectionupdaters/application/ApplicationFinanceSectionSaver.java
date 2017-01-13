@@ -1,12 +1,17 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,9 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
     @Autowired
     private CompetitionService competitionService;
 
+	@Autowired
+	private CompetitionSetupFinanceService competitionSetupFinanceService;
+
 	@Override
 	public CompetitionSetupSection sectionToSave() { return APPLICATION_FORM; }
 
@@ -33,11 +41,12 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
-		competition.setIncludeGrowthTable(form.isIncludeGrowthTable());
-
-		//INFUND-6773 - Not allowed to at this moment
-		competition.setFullApplicationFinance(Boolean.TRUE);
-		return competitionService.update(competition);
+		CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
+		// INFUND-6773 - Not allowed to at this moment
+		compSetupFinanceRes.setFullApplicationFinance(true);
+		compSetupFinanceRes.setIncludeGrowthTable(form.isIncludeGrowthTable());
+		compSetupFinanceRes.setCompetitionId(competition.getId());
+		return competitionSetupFinanceService.updateFinance(compSetupFinanceRes);
 	}
 
 	@Override

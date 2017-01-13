@@ -39,6 +39,11 @@ Summary of the submitted applications
     Then the calculations should be correct    css=.info-area p:nth-child(2) span
     And both calculations in the page should show the same    css=.info-area p:nth-child(2) span
 
+Excel download button should be visible
+    [Documentation]    INFUND-2307
+    [Tags]    HappyPath
+    Then the user should see the element    link=Export application data (.xls)
+
 Sort by Lead
     [Documentation]    INFUND-2307
     [Tags]    HappyPath
@@ -60,11 +65,6 @@ Finances are showing in the list
     [Tags]    HappyPath
     Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITHOUT_COMMAS}
     And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}
-
-Excel download button should be visible
-    [Documentation]    INFUND-2307
-    [Tags]    HappyPath
-    Then the user should see the element    link=Export application data (.xls)
 
 Only applications from this competition should be visible
     [Documentation]    INFUND-2311
