@@ -49,9 +49,9 @@ public class ProjectSetupSectionStatus {
         return EMPTY;
     }
 
-    public SectionStatus financeChecksSectionStatus(final boolean allBankDetailsApprovedOrNotRequired,
+    public SectionStatus financeChecksSectionStatus(final ProjectActivityStates bankDetailsState,
                                                     final boolean allFinanceChecksApproved) {
-        if (allBankDetailsApprovedOrNotRequired) {
+        if (asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsState)) {
             if (allFinanceChecksApproved) {
                 return TICK;
             }
