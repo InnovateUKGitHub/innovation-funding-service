@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.mockito.internal.util.collections.Sets;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.primitives.Longs.asList;
@@ -106,4 +108,18 @@ public class OpenFinanceSectionViewModelTest {
         assertEquals(Boolean.TRUE, viewModel.getIsSection());
     }
 
+    @Test
+    public void testGetOrganisationSizeAlert() {
+        assertEquals(Boolean.FALSE, viewModel.getOrganisationSizeAlert());
+
+        Long fundingSectionId = 2738L;
+        List<SectionResource> fundingSections = newSectionResource().withId(fundingSectionId).withType(SectionType.FUNDING_FINANCES).build(1);
+        viewModel.setFundingSections(fundingSections);
+
+        assertEquals(Boolean.FALSE, viewModel.getOrganisationSizeAlert());
+
+        sectionsMarkedAsComplete.add(fundingSectionId);
+
+        assertEquals(Boolean.TRUE, viewModel.getOrganisationSizeAlert());
+    }
 }

@@ -89,6 +89,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
+        addFundingSection(openFinanceSectionViewModel, competition.getId());
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
@@ -191,6 +192,10 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
 
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
+    }
+
+    private void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
+        viewModel.setFundingSections(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES));
     }
 
     //TODO - INFUND-7482 - remove usages of Model model
