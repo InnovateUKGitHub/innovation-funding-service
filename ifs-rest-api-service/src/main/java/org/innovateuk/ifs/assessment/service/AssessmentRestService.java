@@ -24,5 +24,9 @@ public interface AssessmentRestService {
 
     RestResult<Void> acceptInvitation(Long id);
 
+    RestResult<Void> notify(Long id);
+
+    RestResult<Void> withdrawAssessment(Long id);
+
     RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions);
 }
