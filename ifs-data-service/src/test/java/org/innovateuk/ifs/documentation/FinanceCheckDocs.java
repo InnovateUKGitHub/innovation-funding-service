@@ -32,6 +32,20 @@ public class FinanceCheckDocs {
             fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
     };
 
+    public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {
+            fieldWithPath("projectId").description("Id or project that the eligibility is from"),
+            fieldWithPath("projectName").description("Name of project that the eligibility is from"),
+            fieldWithPath("organisationId").description("Id of organisation that the eligibility is from"),
+            fieldWithPath("organisationName").description("Name of organisation that the eligibility is from"),
+            fieldWithPath("applicationId").description("Formatted application id that the eligibility is from"),
+            fieldWithPath("durationInMonths").description("Total expected project duration in months"),
+            fieldWithPath("totalCost").description("Total cost of project for the organisation"),
+            fieldWithPath("percentageGrant").description("The percentage of funding of the project through grant for the organisation"),
+            fieldWithPath("fundingSought").description("The funding sought for the organisation for the project"),
+            fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the organisation for the project"),
+            fieldWithPath("contributionToProject").description("The contribution that the organisation is  making to the project")
+    };
+
     public static final FieldDescriptor[] financeCheckResourceFields = {
             fieldWithPath("id").description("Finance check entity unique id"),
             fieldWithPath("project").description("Project id to which the finance check belongs"),

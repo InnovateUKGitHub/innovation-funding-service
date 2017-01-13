@@ -163,25 +163,32 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
 
         Organisation organisation = organisationRepository.findOne(organisationId);
-        financeRowService.findApplicationFinanceByApplicationIdAndOrganisation(projectId, organisationId).andOnSuccess(applicationFinanceResource -> {
-                    ProjectFinanceResource projectFinance = simpleFindFirst(projectFinanceService.getProjectFinances(projectId).getSuccessObjectOrThrowException(), v -> v.getOrganisation() == organisationId).get();
 
-                    BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage()).setScale(0, BigDecimal.ROUND_DOWN);
-                    BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
-                    FinanceCheckEligibilityResource result = new FinanceCheckEligibilityResource(project.getId(),
-                            project.getName(),
-                            organisationId,
-                            organisation.getName(),
-                            application.getDurationInMonths(),
-                            projectFinance.getTotal(),
-                            grantPercentage,
-                            fundingSought,
-                            projectFinance.getTotalOtherFunding(),
-                            projectFinance.getTotal().subtract(fundingSought).subtract(projectFinance.getTotalOtherFunding()));
-            return serviceSuccess(result);
-                });
+        Optional<ProjectFinanceResource> projectFinanceOptional = simpleFindFirst(projectFinanceService.getProjectFinances(projectId).getSuccessObjectOrThrowException(),
+                v -> v.getOrganisation() == organisationId);
+        if(projectFinanceOptional.isPresent()) {
+            return financeRowService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisationId).
+                andOnSuccessReturn(applicationFinanceResource -> {
 
-        return serviceFailure();
+                ProjectFinanceResource projectFinance = projectFinanceOptional.get();
+                BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
+                BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
+                FinanceCheckEligibilityResource eligibilityResource = new FinanceCheckEligibilityResource(project.getId(),
+                        project.getName(),
+                        organisationId,
+                        organisation.getName(),
+                        application.getFormattedId(),
+                        application.getDurationInMonths(),
+                        projectFinance.getTotal(),
+                        grantPercentage,
+                        fundingSought,
+                        projectFinance.getTotalOtherFunding(),
+                        projectFinance.getTotal().subtract(fundingSought).subtract(projectFinance.getTotalOtherFunding()));
+                return eligibilityResource;
+            });
+        } else {
+            return serviceFailure(GENERAL_NOT_FOUND);
+        }
     }
 
     private boolean getFinanceCheckApprovalStatus(Long projectId) {

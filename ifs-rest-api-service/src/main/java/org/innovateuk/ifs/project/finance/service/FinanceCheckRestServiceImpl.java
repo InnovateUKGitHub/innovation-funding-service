@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
@@ -42,5 +43,11 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/status";
         return getWithRestResult(url, FinanceCheckProcessResource.class);
+    }
+
+    @Override
+    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId) {
+        String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/eligibility";
+        return getWithRestResult(url, FinanceCheckEligibilityResource.class);
     }
 }

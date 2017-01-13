@@ -16,7 +16,8 @@ public class FinanceCheckEligibilityResource {
     private String projectName;
     private Long organisationId;
     private String organisationName;
-    private int durationInMonths;
+    private String applicationId;
+    private Long durationInMonths;
     private BigDecimal totalCost;
     private BigDecimal percentageGrant;
     private BigDecimal fundingSought;
@@ -27,11 +28,12 @@ public class FinanceCheckEligibilityResource {
 
     }
 
-    public FinanceCheckEligibilityResource(Long projectId, String projectName, Long organisationId, String organisationName, int durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject) {
+    public FinanceCheckEligibilityResource(Long projectId, String projectName, Long organisationId, String organisationName, String applicationId, Long durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
+        this.applicationId = applicationId;
         this.durationInMonths = durationInMonths;
         this.totalCost = totalCost;
         this.percentageGrant = percentageGrant;
@@ -56,9 +58,7 @@ public class FinanceCheckEligibilityResource {
         this.projectName = projectName;
     }
 
-    public Long getOrgansiationId() {
-        return organisationId;
-    }
+    public Long getOrganisationId() { return organisationId; }
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
@@ -72,11 +72,19 @@ public class FinanceCheckEligibilityResource {
         this.organisationName = organisationName;
     }
 
-    public int getDurationInMonths() {
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    public Long getDurationInMonths() {
         return durationInMonths;
     }
 
-    public void setDurationInMonths(int durationInMonths) {
+    public void setDurationInMonths(Long durationInMonths) {
         this.durationInMonths = durationInMonths;
     }
 

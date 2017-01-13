@@ -16,4 +16,10 @@ public abstract class AbstractFinanceRowCostCategoryBuilder<T extends FinanceRow
     public S withCosts(List<? extends FinanceRowItem>... costs) {
         return withArray((cost, financeRow) -> cost.forEach(financeRow::addCost), costs);
     }
+
+    /*@Override
+    protected void postProcess(int index, T instance) {
+        super.postProcess(index, instance);
+        instance.calculateTotal();
+    }*/
 }

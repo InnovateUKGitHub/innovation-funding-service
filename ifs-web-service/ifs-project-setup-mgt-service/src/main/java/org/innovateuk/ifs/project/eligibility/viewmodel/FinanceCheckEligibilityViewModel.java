@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.eligibility.viewmodel;
+package org.innovateuk.ifs.project.eligibility.viewmodel;
 
 
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;

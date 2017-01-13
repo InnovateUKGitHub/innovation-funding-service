@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.controller.FinanceCheckController;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
@@ -13,7 +14,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.controller.FinanceCheckController.*;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
+
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -48,6 +51,18 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
         verify(financeCheckServiceMock).getFinanceCheckSummary(projectId);
+    }
+
+    @Test
+    public void testGetFinanceCheckEligibility() throws Exception {
+        Long projectId = 123L;
+        Long organisationId = 234L;
+        FinanceCheckEligibilityResource expected = newFinanceCheckEligibilityResource().build();
+        when(financeCheckServiceMock.getFinanceCheckEligibility(projectId, organisationId)).thenReturn(serviceSuccess(expected));
+        mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+        verify(financeCheckServiceMock).getFinanceCheckEligibility(projectId, organisationId);
     }
 
     @Test

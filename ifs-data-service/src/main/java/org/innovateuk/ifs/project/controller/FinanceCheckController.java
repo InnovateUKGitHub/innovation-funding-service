@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
@@ -50,5 +51,10 @@ public class FinanceCheckController {
     @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.PATH)
     public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable("projectId") Long projectId){
         return financeCheckService.getFinanceCheckSummary(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility", method = GET)
+    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId){
+        return financeCheckService.getFinanceCheckEligibility(projectId, organisationId).toGetResponse();
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 
