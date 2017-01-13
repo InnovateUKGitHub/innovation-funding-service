@@ -11,7 +11,9 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               INFUND-6411 As a member of the competitions team, I can add a non-registered assessor to my invite list so...
 ...
-...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so I know if they have accepted, declined or still awaiting repsonse
+...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so...
+...
+...               INFUND-6448 As a member of the competitions team, I can remove an assessor from the invite list so...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -38,11 +40,15 @@ The User can Add and Remove Assessors
 
 Remove users from the list
     [Documentation]    INFUND-7354
+    ...
+    ...    INFUND-6448
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
     And The user should see the text in the page    will.smith@gmail.com
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove from list)
     Then The user should not see the text in the page    will.smith@gmail.com
+    And The user clicks the button/link    link=Find
+    And the user should see the element    jQuery=tr:nth-child(1) button:contains(Add)
     [Teardown]    The user clicks the button/link    link=Find
 
 Invite Individual Assessors
@@ -70,6 +76,8 @@ Invite non-registered assessors server side validations
 
 Invite non-registered users
     [Documentation]    INFUND-6411
+    ...
+    ...    INFUND-6448
     [Tags]
     When The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
@@ -82,6 +90,7 @@ Invite non-registered users
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(worth.email.test+OlivierGiroud@gmail.com)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Data)
+    And The user should see the element    jQuery=tr:nth-child(1) button:contains(Remove from list)
 
 Assessor overview information
     [Documentation]    INFUND-6450
