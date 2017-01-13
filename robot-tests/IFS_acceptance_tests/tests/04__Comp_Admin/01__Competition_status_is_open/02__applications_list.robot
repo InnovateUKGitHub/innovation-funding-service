@@ -17,6 +17,7 @@ ${valid_pdf}      testing.pdf
 Competitions admin should be able to see the list of applications
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    HappyPath
+    Given the user clicks the button/link    link=All applications
     Then the user should see the text in the page    Application list
 
 The correct columns show for the application list table

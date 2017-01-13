@@ -53,7 +53,45 @@
                 </label>
             </fieldset>
         </div>
+    </div>
 
+    <!-- =========================== Form: Staff Turnover =========================== -->
+    <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+            <span th:text="${formInput.description}"/>
+            <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+            <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        </label>
+        <input class="form-control width-medium"
+               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               th:id="${formInput.id}"
+               th:name="'formInput['+${formInput.id}+']'"
+               th:value="*{formInput[__${formInput.id}__]}"
+               required="true"
+               min="0"
+               max="2147483647"
+               type="number"
+
+        />
+    </div>
+
+    <!-- =========================== Form: Staff Count =========================== -->
+    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+            <span th:text="${formInput.description}"/>
+            <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+            <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        </label>
+        <input class="form-control width-medium"
+               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               type="number"
+               th:id="${formInput.id}"
+               th:name="'formInput['+${formInput.id}+']'"
+               th:min="0"
+               th:max="2147483647"
+               th:value="*{formInput[__${formInput.id}__]}"
+               th:required="true"
+        />
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
