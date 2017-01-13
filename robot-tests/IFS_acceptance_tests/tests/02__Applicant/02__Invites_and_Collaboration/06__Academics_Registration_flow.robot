@@ -16,6 +16,7 @@ Academic organisations search
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And The user should see the text in the page    Your organisation must be UK based to receive funding from Innovate UK
     When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
@@ -54,7 +55,7 @@ Accept invitation as academic
     And the user clicks the button/link     link=Your finances
     Then the user should see the element    link=Your project costs
     And the user should see the element     link=Your organisation
-    And the user should see the element     link=Your funding
+    And the user should see the element    jQuery=h3:contains("Your funding")
     When the user clicks the button/link    link=Your project costs
     Then the user should not see the text in the page    Labour
     And the user should not see an error in the page
