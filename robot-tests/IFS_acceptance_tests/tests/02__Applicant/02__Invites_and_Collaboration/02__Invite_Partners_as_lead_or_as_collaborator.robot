@@ -45,14 +45,12 @@ Valid invitation submit
     And the user should see the text in the page    Invites sent
 
 Pending partners visible in the Application details
-    [Documentation]    INFUND-2966
-    ...
-    ...    INFUND-2738
+    [Documentation]    INFUND-2966, INFUND-2738
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
-    Then pending partners should be visible in the page
+    Then the user should see the element   jQuery=ul.list-bullet > li > span:contains("Fannie May")
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -72,7 +70,7 @@ Pending partners visible in Application team page
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     Then the status of the invited people should be correct in the application team page
-    The Lead organisation should show only one time
+    And The Lead organisation should be shown only one time
 
 Pending partners visible in the Manage contributors page
     [Documentation]    INFUND-928
@@ -99,7 +97,7 @@ Business organisation (partner accepts invitation)
     And the user enters text to a text field    id=organisationSearchName    Nomensa
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
@@ -210,7 +208,7 @@ the user adds new collaborator
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add another person')
-    sleep    300ms
+    wait for autosave
 
 The status of the invited people should be correct in the application team page
     the user should see the text in the page    Adrian Booth
@@ -234,11 +232,13 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    the user should see the text in the page    NOMENSA LTD
+    And the user should see the element    link=Your project costs
+    And the user should see the element    link=Your organisation
+    And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view team members and add collaborators
-    the user should see the text in the page    NOMENSA LTD
+    Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
     ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
@@ -248,10 +248,6 @@ the user can invite another person to their own organisation
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-
-pending partners should be visible in the page
-    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
-    Element Should Contain    xpath=//span[contains(text(),"Fannie May")]//following::small    (pending)
 
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
@@ -267,5 +263,5 @@ log into smoke test application
     the user clicks the button/link    link=IFS smoke test
     the user clicks the button/link    link=view team members and add collaborators
 
-The Lead organisation should show only one time
+The Lead organisation should be shown only one time
     Element Should not Contain    css=div:nth-child(7)    Steve Smith

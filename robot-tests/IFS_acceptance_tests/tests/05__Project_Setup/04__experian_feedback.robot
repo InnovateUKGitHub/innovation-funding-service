@@ -6,6 +6,8 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-4903: As a Project Finance team member I want to view a list of the status of all partners' bank details checks so that I can navigate from the internal dashboard
 ...
 ...               INFUND-6714 Proj finance cannot change account details
+...
+...               INFUND-7161 If browser back button is used bank account details can be changed again by IUK inspite of being approved once
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
@@ -125,7 +127,7 @@ Project Finance updates bank account details
     Then the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
 
 Project Finance approves the bank details
-    [Documentation]    INFUND-4054, INFUND-6714
+    [Documentation]    INFUND-4054, INFUND-6714, INFUND-7161
     [Tags]    HappyPath
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name} - Account details
@@ -137,6 +139,12 @@ Project Finance approves the bank details
     Then the user should not see the element    jQuery=.button:contains("Approve bank account details")
     And the user should see the text in the page    The bank details provided have been approved.
     And the user should not see the text in the page  We are unable to save your bank account details
+    When the user goes back to the previous page
+    And the user goes back to the previous page
+    When the user enters text to a text field      id=street    Montrose House 3
+    And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
+    And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
+    Then the user should see the text in the page  Bank details have already been approved and cannot be changed
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763

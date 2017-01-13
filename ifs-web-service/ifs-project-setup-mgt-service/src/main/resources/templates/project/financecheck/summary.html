@@ -61,15 +61,15 @@
       <thead>
         <tr>
           <th scope="col">Organisation</th>
-          <th scope="col">Viability</th>
-          <th scope="col">RAG</th>
-          <th scope="col">Eligibility</th>
+          <th scope="col" class="aligncentre">Viability</th>
+          <th scope="col" class="aligncentre cell-border-right">RAG</th>
+          <th scope="col" class="aligncentre">Eligibility</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
             <th scope="row" th:text="${orgDetails.name}" />
-            <td>
+            <td class="aligncentre">
                 <a th:if="${!orgDetails.viability.notApplicable}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                    th:classappend="${'viability-' + status.index}"/>
@@ -78,9 +78,16 @@
                       th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                       th:classappend="${'viability-' + status.index}"></span>
             </td>
-            <td th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
-                th:classappend="${'viability-rag-' + status.index}">Green</td>
-            <td><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+            <td class="aligncentre cell-border-right">
+                <span th:if="${orgDetails.viability.notApplicable}"
+                      th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                      th:classappend="${'viability-rag-' + status.index}"></span>
+                <span th:unless="${orgDetails.viability.notApplicable}"
+                      th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
+                      th:classappend="${'viability-rag-' + status.index}">Green</span>
+            </td>
+            <td class="aligncentre">
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                    th:classappend="${'eligibility-' + status.index}"/></td>
         </tr>

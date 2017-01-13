@@ -257,7 +257,7 @@
                 <legend class="heading-medium">Filter <span th:text="${filterTitle}">TITLE</span></legend>
 
                 <div class="grid-row">
-                    <div class="column-third" th:unless="${type == 'submittedApplications'} or ${type == 'openApplications'} or ${type == 'notSubmittedApplications'}">
+                    <div class="column-third" th:unless="${type == 'fundingDecision'} or ${type == 'openApplications'} or ${type == 'notSubmittedApplications'} or ${type == 'manageNotifications'}">
                         <label class="form-label" for="filterInnovationArea">Innovation area</label>
                         <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
 
@@ -294,11 +294,12 @@
                         </div>
                     </div>
 
-                    <th:block th:unless="${type == 'submittedApplications'}">
+                    <th:block th:unless="${type == 'fundingDecision'} or ${type == 'manageNotifications'}">
 
                       <div th:class="${(type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-two-thirds' : 'column-third')}">
                           <label class="form-label" for="filterSearch">Search</label>
                           <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                          <a href="#">Clear all filters</a>
                       </div>
 
                       <div th:if="${param.title != null}">
@@ -313,7 +314,7 @@
 
                   </div>
 
-                    <th:block th:if="${type == 'submittedApplications'}">
+                  <th:block th:if="${type == 'fundingDecision'}">
 
                       <div class="grid-row">
 
@@ -361,7 +362,24 @@
 
                       </div>
 
-                    </th:block>
+                  </th:block>
+
+                  <th:block th:if="${type == 'manageNotifications'}">
+
+                    <div class="grid-row">
+                      <div class="column-two-thirds">
+                        <div class="form-group">
+                          <label class="form-label" for="filterSearch">Search</label>
+                          <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                        </div>
+                        <a href="#">Clear all filters</a>
+                      </div>
+                      <div class="column-one-third">
+                        <button class="button">Filter</button>
+                      </div>
+                    </div>
+
+                  </th:block>
 
 
 
@@ -369,7 +387,7 @@
         </form>
     </div>
 
-    <div class="grid-row sorting" th:unless="${type == 'submittedApplications'}">
+    <div class="grid-row sorting" th:unless="${type == 'fundingDecision'} or ${type == 'manageNotifications'}">
         <div class="column-two-thirds">
 
             <div th:if="${param.filterInnovationArea == null}" th:remove="tag">

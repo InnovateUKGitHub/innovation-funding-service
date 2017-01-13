@@ -47,8 +47,8 @@ public class CompetitionResource {
     private String leadTechnologistName;
     private Long innovationSector;
     private String innovationSectorName;
-    private Long innovationArea;
-    private String innovationAreaName;
+    private Set<Long> innovationAreas;
+    private Set<String> innovationAreaNames;
 
     private String pafCode;
     private String budgetCode;
@@ -61,9 +61,6 @@ public class CompetitionResource {
     private LeadApplicantType leadApplicantType;
     private Set<Long> researchCategories;
 
-    private boolean fullApplicationFinance;
-    private boolean includeGrowthTable;
-
     private Integer assessorCount;
     private BigDecimal assessorPay;
 
@@ -71,7 +68,6 @@ public class CompetitionResource {
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private String activityCode;
-    private String innovateBudget;
 
     private Boolean setupComplete;
 
@@ -160,7 +156,7 @@ public class CompetitionResource {
         this.startDate = startDate;
     }
 
-    public String assementEndDateDisplay() {
+    public String assessmentEndDateDisplay() {
         return displayDate(getFundersPanelDate(), ASSESSMENT_DATE_FORMAT);
     }
 
@@ -356,12 +352,12 @@ public class CompetitionResource {
         this.innovationSector = innovationSector;
     }
 
-    public Long getInnovationArea() {
-        return innovationArea;
+    public Set<Long> getInnovationAreas() {
+        return innovationAreas;
     }
 
-    public void setInnovationArea(Long innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreas(Set<Long> innovationAreas) {
+        this.innovationAreas = innovationAreas;
     }
 
     public String getInnovationSectorName() {
@@ -372,12 +368,12 @@ public class CompetitionResource {
         this.innovationSectorName = innovationSectorName;
     }
 
-    public String getInnovationAreaName() {
-        return innovationAreaName;
+    public Set<String> getInnovationAreaNames() {
+        return innovationAreaNames;
     }
 
-    public void setInnovationAreaName(String innovationAreaName) {
-        this.innovationAreaName = innovationAreaName;
+    public void setInnovationAreaNames(Set<String> innovationAreaNames) {
+        this.innovationAreaNames = innovationAreaNames;
     }
 
     public Set<Long> getResearchCategories() {
@@ -452,14 +448,6 @@ public class CompetitionResource {
         this.activityCode = activityCode;
     }
 
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
-    }
-
     public List<CompetitionFunderResource> getFunders() {
         return funders;
     }
@@ -467,23 +455,7 @@ public class CompetitionResource {
     public void setFunders(List<CompetitionFunderResource> funders) {
         this.funders = funders;
     }
-
-    public boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
-    }
-
-    public void setFullApplicationFinance(boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
-        this.includeGrowthTable = includeGrowthTable;
-    }
-
+    
     public boolean isUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }

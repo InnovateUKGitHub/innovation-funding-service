@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;

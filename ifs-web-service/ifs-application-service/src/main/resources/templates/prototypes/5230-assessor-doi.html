@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -54,8 +54,14 @@
 	<h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
 	<p>None declared</p>
 
-	<h2 class="heading-medium no-margin-bottom">Close family member other financial interests</h2>
+	<h2 class="heading-medium no-margin-bottom">Close family members' other financial interests</h2>
 	<p>None declared</p>
+
+	<div class="extra-margin-top">
+		<a href="/prototypes/865-assessor-dashboard-invites" class="button">Return to assessor dashboard</a>
+		<a href="?status=edit" class="button-secondary button-right">Edit</a>
+	</div>
+	<hr />
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

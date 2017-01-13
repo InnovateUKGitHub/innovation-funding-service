@@ -21,11 +21,11 @@ Application details: Previous submission
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    When the user clicks the button/link    jQuery=label:contains(Yes)
     Then the user should see the text in the page    Please provide the details of this previous application
     And the user should see the text in the page    Previous application number
     And the user should see the text in the page    Previous application title
-    When the user clicks the button/link    jQuery=label:contains(No) input
+    When the user clicks the button/link    jQuery=label:contains(No)
     Then The user should not see the element    id=application_details-previousapplicationnumber
 
 Autosave in the form questions
@@ -35,7 +35,7 @@ Autosave in the form questions
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Project summary
-    When the user edits the 'project summary' question
+    When the user edits the project summary question
     And the user reloads the page
     Then the text should be visible
 
@@ -106,7 +106,11 @@ Navigation of the form sections
     When the applicant navigates to the next section
     Then the user should see the text in the page    Only your organisation can see this level of detail.
     When the applicant navigates to the next section
-    Then the user should see the text in the page    This is the financial overview
+    Then the user should see the text in the page    To determine the level of funding you are eligible
+    When the applicant navigates to the next section
+    Then the user should see the text in the page    Please enter the funding level
+    When the applicant navigates to the next section
+    Then the user should see the text in the page    This is the financial overview of all partners
 
 Review and submit button
     [Tags]
@@ -134,7 +138,7 @@ the Applicant edits the Project summary
     Focus    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
-    Sleep    500ms
+    wait for autosave
 
 the word count should be correct for the Project summary
     wait until element contains    css=#form-input-11 .count-down    369
@@ -144,7 +148,7 @@ the Applicant edits the Project description question (300 words)
     Press Key    css=#form-input-11 .editor    \\8
     The user enters text to a text field    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
     Focus    css=.app-submit-btn
-    Sleep    300ms
+    wait for autosave
 
 the text box should turn to green
     the user should see the element    css=#form-input-11 div.marked-as-complete img.marked-as-complete

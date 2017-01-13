@@ -23,7 +23,7 @@
 
 <div th:fragment="prot-test">
   <p>This is just an <strong>example</strong>, real code example is required here</p>
-  <ul class="list-bullet">
+  <ul class="list list-bullet">
     <li>Show example output</li>
     <li>Show example html snippet</li>
   </ul>
@@ -136,7 +136,7 @@
             <div class="task-full-width">
                 <h4 class="heading-small"><a href="#">Task 8</a></h4>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                <ul class="list-bullet">
+                <ul class="list list-bullet">
                     <li>ipsum dolor sit amet</li>
                     <li>consectetur adipiscing</li>
                 </ul>
@@ -150,6 +150,67 @@
             <div class="task-status"><span>No action required</span></div>
         </li>
     </ul>
+</th:block>
+
+
+<!-- =========================== Warnings and panels =========================== -->
+
+<th:block th:fragment="prot-panels">
+  <div class="message-alert extra-margin-bottom">
+    <h2 class="heading-small no-margin">Message alert</h2>
+    <p>This is a message alerting you of something.</p>
+    <ul class="message-summary-list">
+      <li><strong><a href="#">Respond to request</a></strong></li>
+    </ul>
+  </div>
+  <div class="success-alert extra-margin-bottom">
+    <h2 class="heading-small no-margin">Assessor account complete!</h2>
+  </div>
+</th:block>
+
+
+<!-- =========================== File upload =========================== -->
+
+<th:block th:fragment="prot-file-upload">
+  <div class="upload-section">
+    <div class="form-group">
+      <label class="form-label-bold" for="attachment-name-one">
+        Attachment name
+      </label>
+      <input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />
+    </div>
+    <div class="form-group">
+      <h3 class="heading-small no-margin">Attachment file</h3>
+      <a href="#" class="uploaded-file">additional_documentation.pdf</a>
+      <div class="alignright"><a href="#">Remove file</a></div>
+    </div>
+  </div>
+  <div class="upload-section">
+    <h3 class="heading-small no-margin">Attachment file</h3>
+    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
+    <details>
+      <summary><span class="summary">What should I include in the project management appendix?</span></summary>
+      <div class="panel">
+        <p>
+          You should include only supporting information in the appendix. You shouldn’t use it to provide responses to the question.
+        </p>
+        <p>
+          You can include a Gantt chart of your proposed project
+        </p>
+        <p>The appendix must:</p>
+        <ul class="list list-bullet">
+          <li>be in a Portable Document Format (.pdf)</li>
+          <li>be legible at 100% magnification</li>
+          <li>display the application number and project title at the top of the document.</li>
+          <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+          <li>be less than 1mb in size</li>
+        </ul>
+      </div>
+    </details>
+    <input type="file" name="file" id="file" class="inputfile" />
+    <label for="file" class="button-secondary extra-margin">+ Upload</label>
+    <p class="uploaded-file">No file currently uploaded</p>
+  </div>
 </th:block>
 
 </html>

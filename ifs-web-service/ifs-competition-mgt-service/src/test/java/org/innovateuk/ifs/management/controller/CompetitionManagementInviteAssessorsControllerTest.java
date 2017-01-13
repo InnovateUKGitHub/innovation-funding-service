@@ -19,12 +19,15 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
@@ -37,10 +40,13 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBu
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -120,14 +126,21 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
+        InviteNewAssessorsForm expectedForm = new InviteNewAssessorsForm();
+        expectedForm.setInvites(singletonList(new InviteNewAssessorsRowForm()));
+
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/invite", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("assessors/invite"))
                 .andReturn();
 
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
+
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        assertFalse(form.isVisible());
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
@@ -243,10 +256,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
 
-        InviteNewAssessorsForm form = new InviteNewAssessorsForm();
-
-        assertEquals(0, form.getInvites().size());
-
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("addNewUser", "submit"))
                 .andExpect(status().isOk())
@@ -255,11 +264,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/invite"))
                 .andReturn();
 
-        InviteNewAssessorsForm expectedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         InviteNewAssessorsRowForm expectedNewUserRow = new InviteNewAssessorsRowForm();
 
-        assertEquals(1, expectedForm.getInvites().size());
-        assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
+        assertTrue(form.isVisible());
+        assertEquals(1, form.getInvites().size());
+        assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
@@ -291,14 +301,46 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/invite"))
                 .andReturn();
 
-        InviteNewAssessorsForm expectedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
 
         InviteNewAssessorsRowForm expectedNewUserRow = new InviteNewAssessorsRowForm();
         expectedNewUserRow.setName("Tester 2");
         expectedNewUserRow.setEmail("test2@test.com");
 
-        assertEquals(1, expectedForm.getInvites().size());
-        assertEquals(expectedNewUserRow, expectedForm.getInvites().get(0));
+        assertTrue(form.isVisible());
+        assertEquals(1, form.getInvites().size());
+        assertEquals(expectedNewUserRow, form.getInvites().get(0));
+
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void removeNewUserFromInviteView_atLeastOneEmptyRow() throws Exception {
+        List<AssessorCreatedInviteResource> assessorCreatedInviteResources = setUpAssessorCreatedInviteResources();
+        List<CategoryResource> categoryResources = setupCategoryResources();
+
+        setupDefaultInviteViewExpectations(assessorCreatedInviteResources, categoryResources);
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("removeNewUser", "0")
+                .param("invites[0].email", "test1@test.com")
+                .param("invites[0].name", "Tester 1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        InviteNewAssessorsRowForm expectedInviteRow = new InviteNewAssessorsRowForm();
+
+        assertTrue(form.isVisible());
+        assertEquals(1, form.getInvites().size());
+        assertEquals(expectedInviteRow, form.getInvites().get(0));
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
@@ -337,6 +379,79 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void inviteNewUsersFromInviteView_noInnovationArea() throws Exception {
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(emptyList());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("invites[0].email", "test@test.com")
+                .param("invites[0].name", "Tester"))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please select an innovation area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_noRows() throws Exception {
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(emptyList());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1"))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please add at least one person to invite.", bindingResult.getFieldError("invites").getDefaultMessage());
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_invalidRow() throws Exception {
+        when(competitionInviteRestService.getCreatedInvites(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(categoryServiceMock.getCategoryByType(INNOVATION_SECTOR)).thenReturn(emptyList());
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1")
+                .param("invites[0].email", "")
+                .param("invites[0].name", ""))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please enter a name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
+        assertEquals("Please enter an email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
+        inOrder.verify(categoryServiceMock).getCategoryByType(INNOVATION_SECTOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
                 .withName("Dave Smith", "John Barnes")
@@ -369,7 +484,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                         .buildArray(2, CategoryResource.class))
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
-                .withStatus("Invite accepted", "Invite declined")
+                .withStatus(ACCEPTED, REJECTED)
                 .withDetails("", "Invite declined as person is too busy")
                 .build(2);
     }

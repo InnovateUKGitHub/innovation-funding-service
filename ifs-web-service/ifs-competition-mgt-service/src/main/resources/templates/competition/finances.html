@@ -16,7 +16,7 @@
     <div class="hgroup extra-margin-bottom">
         <h1 class="heading-xlarge no-margin">Application finances</h1>
     </div>
-    <div class="panel-indent">
+    <div class="panel">
         Each partner is required to complete the following finance sections, selected by the template for this competition.
     </div>
     <form th:if="${editable}" data-autosave="compSetup" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${competitionSetupForm}" method="POST"
@@ -40,12 +40,12 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
 		                </span>
                 </legend>
-                <label class="block-label" for="full-application-finance-yes">
+                <label class="block-label selection-button-radio" for="full-application-finance-yes">
                     <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
                     Full application finances
                 </label>
-                <label class="block-label" for="full-application-finance-no">
-                    <input id="full-application-finance-no" value="false" type="radio" th:field="*{fullApplicationFinance}" required="required" />
+                <label class="block-label selection-button-radio" for="full-application-finance-no">
+                    <input id="full-application-finance-no" value="false" disabled="disabled" type="radio" th:field="*{fullApplicationFinance}" required="required" />
                     Light finances
                 </label>
             </fieldset>
@@ -59,11 +59,11 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}" />
 		                </span>
                 </legend>
-                <label class="block-label" for="include-growth-table-yes">
+                <label class="block-label selection-button-radio" for="include-growth-table-yes">
                     <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
                     Yes
                 </label>
-                <label class="block-label" for="include-growth-table-no">
+                <label class="block-label selection-button-radio" for="include-growth-table-no">
                     <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" />
                     No
                 </label>

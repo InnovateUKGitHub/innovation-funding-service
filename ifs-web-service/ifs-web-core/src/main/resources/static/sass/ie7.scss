@@ -1,13 +1,18 @@
+// for generating internet explorer 7 specific css
 $is-ie: true;
 $ie-version: 7;
 
-$browser-minimum-versions : (
-	"ie": "7"
-);
+// Path to assets for use with the file-url function
+// in the govuk frontend toolkit's url-helpers partial
+$path: "/images/";
 
-@import "compass/css3";
+// Import all of the govuk-elements-sass files
+// ===========================================
+@import "govuk-template";
+@import "govuk-elements";
 
-@import "govuk";
+// Import all IFS files
+// ===========================================
 @import "components";
 @import "pages";
 @import "print";

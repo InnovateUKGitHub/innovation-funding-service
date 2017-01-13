@@ -37,7 +37,7 @@ Bullet format
 the Applicant clicks on the Bold button in the "business opportunity" field
     Clear Element Text    css=#form-input-1 .editor
     Press Key    css=#form-input-1 .editor    \\8
-    Sleep    1s
+    wait for autosave
     click element    css=.bold_button
 
 the Applicant clicks on the Italic button in the "business opportunity" field
@@ -50,35 +50,37 @@ all text entered should be Bold and stay the same after page refresh
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor b
     Run Keyword If    '${status}' == 'FAIL'    Element Should Be Visible    css=#form-input-1 .editor strong
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
     the user reloads the page
     the user should see the element    css=#form-input-1 .editor strong
 
 the Applicant clicks on the Numbering bullet button in the "business opportunity" field
     The user enters text to a text field    css=#form-input-1 .editor    This is testing for numbering bullets.
+    Press Key    css=#form-input-1 .editor    \\8
     click element    css=.insertOrderedList_button
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
 
 the Applicant clicks on the Bullet format button in the "business opportunity" field
     The user enters text to a text field    css=#form-input-1 .editor    testing
+    Press Key    css=#form-input-1 .editor    \\8
     click element    css=.insertUnorderedList_button
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
 
 all text entered should be Italic and stay the same after page refresh
     The user enters text to a text field    css=#form-input-1 .editor    Entering text to verify ITALIC.
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor i
     Run Keyword If    '${status}' == 'FAIL'    the user should see the element    css=#form-input-1 .editor em
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
     the user reloads the page
     the user should see the element    css=#form-input-1 .editor em
 
 all text entered should be in Numbering bullets and stay the same after page refresh
     the user should see the element    css=#form-input-1 .editor ol
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
     the user reloads the page
     Run Keyword And Ignore Error    Confirm Action
     the user should see the element    css=#form-input-1 .editor ol
@@ -86,7 +88,7 @@ all text entered should be in Numbering bullets and stay the same after page ref
 all text entered should be in Bullet format and stay the same after page refresh
     the user should see the element    css=#form-input-1 .editor li
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
     the user reloads the page
     Focus    css=.app-submit-btn
     the user should see the element    css=#form-input-1 .editor li

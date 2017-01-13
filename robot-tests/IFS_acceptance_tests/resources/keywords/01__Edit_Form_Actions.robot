@@ -2,11 +2,11 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
-
-
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    Select Checkbox    ${checkbox}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
+    Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -18,7 +18,9 @@ the user selects the checkbox
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
-    Unselect Checkbox    ${checkbox}
+    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -30,8 +32,8 @@ the user unselects the checkbox
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
-    the user should see the element    ${RADIO_BUTTON}
-    Select Radio Button    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
+    the user should see the element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
+    Click Element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -56,8 +58,8 @@ the user moves focus to the element
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    wait until element is visible    ${RADIO_BUTTON}
-    Radio Button Should Be Set To    ${RADIO_BUTTON}    ${SELECTION}
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
+    #[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -69,8 +71,7 @@ the user sees that the radio button is selected
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
-    wait until element is visible    ${RADIO_BUTTON}
-    Radio Button Should Not Be Selected    ${RADIO_BUTTON}
+    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -116,6 +117,7 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     wait until keyword succeeds    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
+    Run Keyword And Ignore Error    focus    link=Sign out
     Wait for autosave
 
 the user sees the text in the element
@@ -179,11 +181,11 @@ the user should see the dropdown option selected
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
-the user edits the 'Project Summary' question
+the user edits the project summary question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
-    sleep    1s
+    wait for autosave
 
 the applicant adds some content and marks this section as complete
     Focus    css=#form-input-4 .editor

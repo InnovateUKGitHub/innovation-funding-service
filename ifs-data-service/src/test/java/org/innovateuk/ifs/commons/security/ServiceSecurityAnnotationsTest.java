@@ -274,7 +274,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     private List<Object> unwrapProxies(Collection<Object> services) {
         List<Object> unwrappedProxies = new ArrayList<>();
         for (Object service : services) {
-            if (AopUtils.isJdkDynamicProxy(service)) {
+            if (AopUtils.isAopProxy(service)) {
                 try {
                     unwrappedProxies.add(((Advised) service).getTargetSource().getTarget());
                 } catch (Exception e) {
