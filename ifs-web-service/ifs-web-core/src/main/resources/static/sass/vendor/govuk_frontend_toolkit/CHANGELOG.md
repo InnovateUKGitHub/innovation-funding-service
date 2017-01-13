@@ -1,6 +1,152 @@
+# 5.0.2
+
+- Change colour used in phase tags to govuk-blue ([PR #353](https://github.com/alphagov/govuk_frontend_toolkit/pull/353))
+
+# 5.0.1
+
+- Fix role="button" click shim ([PR #347](https://github.com/alphagov/govuk_frontend_toolkit/pull/347))
+- Make font variables lowercase ([PR #348](https://github.com/alphagov/govuk_frontend_toolkit/pull/348))
+- Update selection button documentation ([PR #350](https://github.com/alphagov/govuk_frontend_toolkit/pull/350))
+
+# 5.0.0
+
+This release includes two breaking changes:
+- Removal of external link styles and icons, if you are using the external-link-* mixins you will need to remove them from your codebase ([PR #293](https://github.com/alphagov/govuk_frontend_toolkit/pull/293))
+- Correct spelling of the 'accordion' icon, you will need to check for the incorrect spelling 'accordian' and update if you are using this icon ([PR #345](https://github.com/alphagov/govuk_frontend_toolkit/pull/345))
+And two minor changes:
+- Amend GOVUK.StickAtTopWhenScrolling to resize the sticky element and shim when the .js-sticky-resize class is set ([PR #343](https://github.com/alphagov/govuk_frontend_toolkit/pull/343))
+- Allow custom options in GOVUK.analytics.trackPageview ([#332](https://github.com/alphagov/govuk_frontend_toolkit/pull/332))
+
+# 4.18.4
+
+- Lint codebase using standard ([PR #334](https://github.com/alphagov/govuk_frontend_toolkit/pull/334))
+- Add semicolons at the start of IIFE's ([PR #339](https://github.com/alphagov/govuk_frontend_toolkit/pull/339))
+
+# 4.18.3
+
+- For smaller screens (<768px) ensure that the GOVUK.StickAtTopWhenScrolling JS "unsticks" the element which was previously "stuck" (by removing both the class which sets fixed positioning and the shim). ([PR #329](https://github.com/alphagov/govuk_frontend_toolkit/pull/329))
+
+# 4.18.2
+
+- Remove unnecessary print font fallback that causes regression downstream ([PR #328](https://github.com/alphagov/govuk_frontend_toolkit/pull/328))
+- Update tooling to use npm script rather than grunt-shell ([PR #327](https://github.com/alphagov/govuk_frontend_toolkit/pull/327))
+
+# 4.18.1
+
+- Fix error in IE - remove trailing comma from shimLinksWithButtonRole JavaScript ([PR #323](https://github.com/alphagov/govuk_frontend_toolkit/pull/323)).
+
+# 4.18.0
+
+- Add GOVUK.ShowHideContent JavaScript to support showing and hiding content, toggled by radio buttons and checkboxes ([PR #315](https://github.com/alphagov/govuk_frontend_toolkit/pull/315)).
+
+# 4.17.0
+
+- SelectionButtons will add a class to the label with the type of the child input ([PR #317](https://github.com/alphagov/govuk_frontend_toolkit/pull/317))
+
+# 4.16.1
+
+- Fix anchor-buttons.js to trigger a native click event, also rename to shimLinksWithButtonRole.js to explain what it does
+- Add tests for shimLinksWithButtonRole ([PR #310](https://github.com/alphagov/govuk_frontend_toolkit/pull/310))
+
+# 4.16.0
+
+- Add Department for International Trade organisation ([PR #308](https://github.com/alphagov/govuk_frontend_toolkit/pull/308))
+
+# 4.15.0
+
+- Add support for Google Analytics fieldsObject ([PR #298](https://github.com/alphagov/govuk_frontend_toolkit/pull/298))
+- anchor-buttons.js: normalise keyboard behaviour between buttons and links with a button role ([PR #297](https://github.com/alphagov/govuk_frontend_toolkit/pull/297))
+
+# 4.14.1
+
+- Fix tabular number sizing in Firefox ([PR #301](https://github.com/alphagov/govuk_frontend_toolkit/pull/301))
+
+# 4.14.0
+
+- Allow use of multiple GA customDimensionIndex. See [this section](https://github.com/alphagov/govuk_frontend_toolkit/blob/master/docs/javascript.md#using-google-custom-dimensions-with-your-own-statistical-model) of the documentation for more information.
+- Configurable duration (in days) for AB Test cookie. See [this section](https://github.com/alphagov/govuk_frontend_toolkit/blob/master/docs/javascript.md#multivariate-test-framework) of the documentation for more information.
+- Allow base scripts to run within a module loader. See [this PR](https://github.com/alphagov/govuk_frontend_toolkit/pull/290) for more information.
+
+# 4.13.0
+
+- Make headings block-level by default (PR #200). If you are styling elements you want to be inline with heading includes, you’ll need to explicitly make them inline in your CSS.
+
+# 4.12.0
+
+- Increase button padding to match padding from GOV.UK elements (PR #275).
+If you have UI which depends on the padding set by the button mixin in the frontend toolkit and this is not overridden by button padding set by GOV.UK elements, this change will affect it.
+
+# 4.11.0
+
+- Remove the GDS-Logo font-face definition (PR #272)
+- Move the @viewport statements to govuk_template (PR #272). If you upgrade to this version of govuk_frontend_toolkit and you’re also using govuk_template you’ll need to upgrade that to at least 0.17.2 to maintain compatibility with desktop IE10 in snap mode.
+
+# 4.10.0
+
+- Allow New Transport font stack to be overridden by apps using `$toolkit-font-stack`
+and `$toolkit-font-stack-tabular` (PR #230)
+
+# 4.9.1
+
+- Fix phase banner alignment (PR #266)
+
+# 4.9.0
+
+- Add websafe organisation colours
+- Split colours into two files with backwards-compatible colours.scss replacement
+
+# 4.8.2
+
+- Add GOV.UK lint to lint scss files (PR #260)
+- Remove reference to old colour palette (PR #256)
+- Fix link to GOV.UK elements - tabular data
+
+# 4.8.1
+
+- Update DEFRA brand colour to new green (PR #249)
+
+# 4.8.0
+
+- Pass cohort name to analytics when using multivariate test (PR #251)
+
+# 4.7.0
+
+- Add 'mailto' tracking to GOV.UK Analytics (PR #244)
+
+# 4.6.1
+
+- Use the Sass variable $light-blue for link active and hover colours (PR #242)
+
+# 4.6.0
+
+- Add breadcrumb styles, separator images and documentation (PR #236)
+- Add fallback image for the back link (PR #235)
+
+# 4.5.0
+
+- Find and auto-start JavaScript modules from markup: `data-module="module-name"`(PR #227)
+
+# 4.4.0
+
+- Add helpers partial for functions
+- Add px to em function and documentation
+
+# 4.3.0
+
+- Allow javascript error tracking to be filtered to avoid noise from plugins
+
+# 4.2.1
+
+- Track download links using events not pageviews
+
+# 4.2.0
+
+- Add two analytics plugins for download and external link tracking
+- Update typography mixins to be mobile first (PR #157)
+
 # 4.1.1
 
-- Update Accessible Media Player to remove dependency on $.browser (PR #206) 
+- Update Accessible Media Player to remove dependency on $.browser (PR #206)
 
 # 4.1.0
 

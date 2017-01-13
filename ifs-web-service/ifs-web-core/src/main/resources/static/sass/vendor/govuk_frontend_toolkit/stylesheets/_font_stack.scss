@@ -1,44 +1,25 @@
 //  GOV.UK font stacks, referred to in typography.scss
 
-
-//  Font stack weirdness
-//
-//  To ensure embedded fonts fall back to appropriate
-//  system fonts (eg, bold embedded font falls back to
-//  bold system font, without anyone getting horrible
-//  artificially emboldened weights) we're setting
-//  the font-stack in a font-face declaration rather
-//  than with the usual font-family.
-
 // New Transport Light
-
-$NTA-Light:
-  "nta", 
-  Arial,
-  sans-serif;
-
-// New Transport Light with Tabular
-
-$NTA-Light-Tabular:
-  "ntatabularnumbers",
-  "nta", 
-  Arial,
-  sans-serif;
+$nta-light: "nta", Arial, sans-serif;
+$nta-light-tabular: "ntatabularnumbers", $nta-light;
 
 // Helvetica Regular
+$helvetica-regular: "HelveticaNeue", "Helvetica Neue", "Arial", "Helvetica", sans-serif;
 
-@font-face {
-  font-family: GDS-Logo;
-  src: local("HelveticaNeue"),
-       local("Helvetica Neue"),
-       local("Arial"),
-       local("Helvetica");
-}
-
-$Helvetica-Regular:
-  "GDS-Logo",
-  sans-serif;
+// Allow font stack to be overridden
+// Not all apps using toolkit use New Transport
+$toolkit-font-stack: $nta-light !default;
+$toolkit-font-stack-tabular: $nta-light-tabular !default;
 
 // Font reset for print
+$print-reset: sans-serif;
 
-$Print-reset: sans-serif;
+// Fallback variable names after renaming previous uppercase names to be lowercase
+// @deprecated, please only use the lowercase versions
+// Make an exception to the linting as these are still used a lot
+// scss-lint:disable NameFormat
+$NTA-Light: $nta-light;
+$NTA-Light-Tabular: $nta-light-tabular;
+$Helvetica-Regular: $helvetica-regular;
+$Print-reset: $print-reset;
