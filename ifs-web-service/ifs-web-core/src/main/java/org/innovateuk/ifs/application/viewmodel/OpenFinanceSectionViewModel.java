@@ -8,6 +8,11 @@ import org.innovateuk.ifs.user.resource.UserResource;
  */
 public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
+    private boolean fundingSectionLocked;
+    private Long applicationDetailsQuestionId;
+    private Long yourOrganisationSectionId;
+
+
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
                                        Boolean hasFinanceSection, Long financeSectionId, UserResource currentUser,
                                        Boolean subFinanceSection) {
@@ -17,5 +22,29 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
         this.financeSectionId = financeSectionId;
         this.currentUser = currentUser;
         this.subFinanceSection = subFinanceSection;
+    }
+
+    public boolean isFundingSectionLocked() {
+        return fundingSectionLocked;
+    }
+
+    public void setFundingSectionLocked(boolean fundingSectionLocked) {
+        this.fundingSectionLocked = fundingSectionLocked;
+    }
+
+    public Long getApplicationDetailsQuestionId() {
+        return applicationDetailsQuestionId;
+    }
+
+    public void setApplicationDetailsQuestionId(Long applicationDetailsQuestionId) {
+        this.applicationDetailsQuestionId = applicationDetailsQuestionId;
+    }
+
+    public Long getYourOrganisationSectionId() {
+        return yourOrganisationSectionId;
+    }
+
+    public void setYourOrganisationSectionId(Long yourOrganisationSectionId) {
+        this.yourOrganisationSectionId = yourOrganisationSectionId;
     }
 }
