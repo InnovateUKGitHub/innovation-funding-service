@@ -331,7 +331,7 @@ public class ApplicationFormController {
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
                 return APPLICATION_FORM;
             } else {
-                return getRedirectUrl(request, applicationId, null);
+                return getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
     }
@@ -348,7 +348,7 @@ public class ApplicationFormController {
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
     }
 
-    private String getRedirectUrl(HttpServletRequest request, Long applicationId, SectionType sectionType) {
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId, Optional<SectionType> sectionType) {
         if (request.getParameter("submit-section") == null
                 && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
@@ -363,8 +363,8 @@ public class ApplicationFormController {
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
-            if (sectionType != null && sectionType.getParent().isPresent()) {
-                return redirectToSection(sectionType.getParent().get(), applicationId);
+            if (sectionType.isPresent() && sectionType.get().getParent().isPresent()) {
+                return redirectToSection(sectionType.get().getParent().get(), applicationId);
             }
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
@@ -659,16 +659,7 @@ public class ApplicationFormController {
 
         model.addAttribute("form", form);
 
-        if (section.getType() == SectionType.FUNDING_FINANCES &&
-                !validFinanceTermsForMarkAsComplete(request, form, bindingResult, section)) {
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
-            return APPLICATION_FORM;
-        } else if (section.getType() == SectionType.PROJECT_COST_FINANCES &&
-                !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
-            return APPLICATION_FORM;
-        } else if (section.getType() == SectionType.ORGANISATION_FINANCES &&
-                !validOrganisationFinancesForMarkAsComplete(request, bindingResult, user.getId(), applicationId)) {
+        if(!validSection(request, form, bindingResult, section, model, application, user, competition)) {
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         }
@@ -689,8 +680,21 @@ public class ApplicationFormController {
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         } else {
-            return getRedirectUrl(request, applicationId, section.getType());
+            return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
         }
+    }
+
+    private boolean validSection(HttpServletRequest request, ApplicationForm form, BindingResult bindingResult,
+                                 SectionResource section, Model model, ApplicationResource application, UserResource user,
+                                 CompetitionResource competition) {
+            if (section.getType() == SectionType.FUNDING_FINANCES) {
+                return validFinanceTermsForMarkAsComplete(request, form, bindingResult, section);
+            } else if (section.getType() == SectionType.PROJECT_COST_FINANCES) {
+                    return validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model);
+            } else if (section.getType() == SectionType.ORGANISATION_FINANCES) {
+                return validOrganisationFinancesForMarkAsComplete(request, bindingResult, user.getId(), application.getId());
+            }
+            return true;
     }
 
     private Boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form, BindingResult bindingResult, SectionResource section) {
