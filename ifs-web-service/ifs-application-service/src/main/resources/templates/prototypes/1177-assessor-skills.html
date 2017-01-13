@@ -178,26 +178,27 @@
         For example; Solar Power, Genetics, Recycling
     </p>
     <textarea name="skills-areas" id="skills-areas" cols="30" rows="5" class="width-full"><div th:if="${param.edit != null}" th:remove="tag">Human Computer Interaction, Wearables, IoT</div></textarea>
+		<div class="form-group">
+			<fieldset class="inline">
+				<legend class="heading-medium">Assessor type</legend>
+				<p class="form-hint">
+					Please select your current area of work. If you are working in both please select the most dominant.
+				</p>
+				<label class="block-label selection-button-radio" for="radio-inline-1">
+						<input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio" checked="checked" th:unless="${param.edit == null}" />
 
-		<fieldset class="inline">
-			<legend class="heading-medium">Assessor type</legend>
-			<p class="form-hint">
-				Please select your current area of work. If you are working in both please select the most dominant.
-			</p>
-			<label class="block-label selection-button-radio" for="radio-inline-1">
-		      <input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio" checked="checked" th:unless="${param.edit == null}" />
+						<input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio"  th:unless="${param.edit != null}" />
 
-		      <input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio"  th:unless="${param.edit != null}" />
+						Business
+					</label>
+					<label class="block-label selection-button-radio" for="radio-inline-2">
+						<input id="radio-inline-2" name="radio-inline-group" value="No" type="radio" />
+						Academic
+					</label>
+			</fieldset>
+		</div>
 
-		      Business
-		    </label>
-		    <label class="block-label selection-button-radio" for="radio-inline-2">
-		      <input id="radio-inline-2" name="radio-inline-group" value="No" type="radio" />
-		      Academic
-		    </label>
-		</fieldset>
-
-		<div th:if="${param.edit == null}" class="extra-margin-top">
+		<div th:if="${param.edit == null}" class="form-group extra-margin">
 
 			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
 				<input type="hidden" name="version" value="v2" />
@@ -210,7 +211,7 @@
 		</div>
 
 
-		<div th:if="${param.edit != null}" class="extra-margin-top">
+		<div th:if="${param.edit != null}" class="form-group extra-margin">
 			<button class="button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to your skills</button>
 			<a href="#">Cancel</a>
 		</div>
