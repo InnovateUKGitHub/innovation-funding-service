@@ -76,6 +76,22 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "VIEW_ELIGIBILITY",
+            description = "Project Finance Users can view Eligibility")
+    public boolean projectFinanceUserCanViewEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "SAVE_ELIGIBILITY",
+            description = "Project Finance Users can save Eligibility")
+    public boolean projectFinanceUserCanSaveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
             value = "VIEW_CREDIT_REPORT",
             description = "Project Finance Users can view the Credit Report flag")
     public boolean projectFinanceUserCanViewCreditReport(Long projectId, UserResource user) {
