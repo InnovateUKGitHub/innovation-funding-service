@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -19,9 +20,8 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
@@ -479,6 +479,18 @@ class CsvUtils {
         String competitionName;
         String hash;
         InviteStatus inviteStatus;
+        String rejectionReason;
+        String rejectionComment;
+        String skillAreas;
+        BusinessType businessType;
+        List<String> innovationAreas;
+        String principalEmployer;
+        String role;
+        String professionalAffiliations;
+        List<Map<String, String>> appointments;
+        String financialInterests;
+        List<Map<String, String>> familyAffiliations;
+        String familyFinancialInterests;
 
         private AssessorUserLine(List<String> line) {
 
@@ -490,6 +502,35 @@ class CsvUtils {
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));
+            rejectionReason = line.get(i++);
+            rejectionComment = line.get(i++);
+            skillAreas = line.get(i++);
+            businessType = BusinessType.valueOf(line.get(i++));
+            innovationAreas = asList(line.get(i++).split("\n"));
+            principalEmployer = line.get(i++);
+            role = line.get(i++);
+            professionalAffiliations = line.get(i++);
+            appointments = extractListOfMaps(line.get(i++));
+            financialInterests = line.get(i++);
+            familyAffiliations = extractListOfMaps(line.get(i++));
+            familyFinancialInterests = line.get(i++);
+        }
+
+        private List<Map<String, String>> extractListOfMaps(String column) {
+            List<String> rows = asList(column.split("\n"));
+
+            return simpleMap(rows, row -> {
+                List<String> pairs = asList(row.split("|"));
+                Map<String, String> kvMap = new HashMap<>();
+
+                pairs.forEach(pair -> {
+                    String[] keyValue = pair.split(":");
+
+                    kvMap.put(keyValue[0].trim(), keyValue[1].trim());
+                });
+
+                return kvMap;
+            });
         }
     }
 
