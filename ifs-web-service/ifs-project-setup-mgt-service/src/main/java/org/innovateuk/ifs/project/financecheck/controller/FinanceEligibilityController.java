@@ -62,7 +62,7 @@ public class FinanceEligibilityController {
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(FINANCE)).get(0);
 
-        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, true);
+        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, true, true);
 
         return "project/financecheck/eligibility";
     }

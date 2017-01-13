@@ -110,4 +110,9 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
         String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report/" + confirmed;
         return postWithRestResult(url);
     }
+
+    @Override
+    public RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId) {
+        return getWithRestResult(projectFinanceRestURL + "/financeTotals/" + applicationId, projectFinanceResourceListType());
+    }
 }

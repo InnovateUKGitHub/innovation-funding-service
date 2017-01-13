@@ -224,7 +224,7 @@ public class CompetitionManagementApplicationController extends BaseController {
             model.addAttribute("applicationReadyForSubmit", false);
 
             //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
-            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId, false);
+            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId, false, false);
             model.addAttribute("model", openFinanceSectionViewModel);
 
             return "comp-mgt-application-finances";

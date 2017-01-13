@@ -47,4 +47,6 @@ public interface ProjectFinanceRestService {
     RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId);
 
     RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
+
+    RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId);
 }

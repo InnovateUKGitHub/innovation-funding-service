@@ -9,8 +9,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Autowired
     private FileEntryRestService fileEntryRestService;
@@ -83,6 +88,14 @@ public class FinanceServiceImpl implements FinanceService {
     public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId) {
         return applicationFinanceRestService.getFinanceTotals(applicationId).handleSuccessOrFailure(
                 failure -> Collections.<ApplicationFinanceResource> emptyList(),
+                success -> success
+        );
+    }
+
+    @Override
+    public List<ProjectFinanceResource> getProjectFinanceTotals(Long applicationId){
+        return projectFinanceRestService.getFinanceTotals(applicationId).handleSuccessOrFailure(
+                failure -> Collections.<ProjectFinanceResource> emptyList(),
                 success -> success
         );
     }

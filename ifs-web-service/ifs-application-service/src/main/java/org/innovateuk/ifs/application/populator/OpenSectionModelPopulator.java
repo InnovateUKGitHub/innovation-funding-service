@@ -86,11 +86,11 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections) {
-        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false);
+        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false, false);
     }
 
     @Override
-    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId, boolean isInternalUser){
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId, boolean isInternalUser, boolean showProjectFinance){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         OpenSectionViewModel openSectionViewModel = new OpenSectionViewModel();

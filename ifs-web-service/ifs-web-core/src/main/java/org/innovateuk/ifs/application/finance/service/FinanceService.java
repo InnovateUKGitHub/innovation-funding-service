@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface FinanceService {
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId);
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
+    List<ProjectFinanceResource> getProjectFinanceTotals(Long applicationId);
     ValidationMessages addCost(Long applicationFinanceId , Long questionId);
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);

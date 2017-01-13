@@ -86,7 +86,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                               final UserResource user,
                               final BindingResult bindingResult,
                               final List<SectionResource> allSections){
-        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false);
+        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false, false);
     }
 
     @Override
@@ -98,7 +98,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                                               BindingResult bindingResult,
                                               List<SectionResource> allSections,
                                               final Long organisationId,
-                                              final boolean isInternalUser){
+                                              final boolean isInternalUser,
+                                              boolean showProjectFinance){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
 
