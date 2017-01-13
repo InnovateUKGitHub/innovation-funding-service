@@ -24,10 +24,12 @@
             </ul>
 
             <h2 class="heading-medium">Skill areas</h2>
-            <p id="skillAreas" th:if="${model.skillAreas}" th:text="${model.skillAreas}" />
+            <p id="skillAreas"
+               th:text="${model.skillAreas} ? (${model.skillAreas} != '' ? ${model.skillAreas} : 'None declared') : 'Not answered'" />
 
             <h2 class="heading-medium">Assessor type</h2>
-            <p id="assessorType" th:if="${model.assessorType}" th:text="${model.assessorType.displayName}" />
+            <p id="assessorType"
+               th:text="${model.assessorType} ? ${model.assessorType.displayName} : 'Not answered'" />
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
         </main>

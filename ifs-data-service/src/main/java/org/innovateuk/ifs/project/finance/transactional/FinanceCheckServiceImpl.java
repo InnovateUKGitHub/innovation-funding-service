@@ -21,7 +21,9 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -264,7 +266,17 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     ServiceResult<Void> validate(FinanceCheckResource toSave) {
         List<BigDecimal> costs = simpleMap(toSave.getCostGroup().getCosts(), CostResource::getValue);
-        return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+
+        return getPartnerOrganisation(toSave.getProject(), toSave.getOrganisation()).andOnSuccess(
+                partnerOrganisation -> {
+                    OrganisationType organisationType = partnerOrganisation.getOrganisation().getOrganisationType();
+                    if(organisationType.getId().equals(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())){
+                        return aggregate(costNull(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+                    } else {
+                        return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+                    }
+                }
+        );
     }
 
     private ServiceResult<Void> costFractional(List<BigDecimal> costs) {

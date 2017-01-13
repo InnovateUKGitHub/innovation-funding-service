@@ -39,17 +39,12 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
 
-    @Value("${ifs.data.service.rest.baseURL}")
-    private String dataUrl;
-
-
-//    @Autowired
-//    public ApplicationRestService applicationRestService;
 
     @Test
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
 
         RestTemplate restTemplate = new RestTemplate();
+        String dataUrl = "http://localhost:" + port;
 
         final long applicationId = 1L;
         try {
@@ -68,7 +63,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String url = dataUrl + "/application/9999";
+            String url = "http://localhost:" + port + "/application/9999";
             restTemplate.exchange(url, GET, leadApplicantHeadersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-existent id was specified");
         } catch (HttpClientErrorException | HttpServerErrorException e) {

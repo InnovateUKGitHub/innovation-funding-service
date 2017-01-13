@@ -2,6 +2,8 @@
 Documentation     INFUND-5182 As an assessor creating an account I need to supply details of my skills and expertise so that InnovateUK can assign me appropriate applications to assess.
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
+...
+...               INFUND-7059 As an assessor I can view my skills page so I can decide if my skills need updating
 Suite Setup       guest user log-in    worth.email.test+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -20,7 +22,7 @@ Client-side validations
     ...    INFUND-5432
     [Tags]    HappyPath
     Given The user should see the text in the page    Complete your assessor account
-    And The user should see the element    link=your skills    #his checks the alert message on the top od the page
+    And The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("your skills")
     And The user should see the element    link=Edit your skills
     When the user clicks the button/link    jQuery=a:contains("Edit your skills")
@@ -41,24 +43,25 @@ Server-side validations
     And the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see an error    This field cannot contain more than 5,000 characters.
 
-Save Skills should redirect to dashboard
+Save Skills should redirect to the read-only view
     [Documentation]    INFUND-5182
     ...
     ...    INFUND-5432
+    ...
+    ...    INFUND-7059
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=label:contains("Business")
     When the user enters text to a text field    id=skillAreas    assessor skill areas text
     And the user clicks the button/link    jQuery=button:contains("Save")
-    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user should not see the element    jQuery=.message-alert a:contains('your skills')    #his checks the alert message on the top od the page
+    Then the user should be redirected to the correct page    ${assessment_skills_url}
+    And the user sees the text in the element    id=skillAreas    assessor skill areas text
+    And the user sees the text in the element    id=assessorType    Business
 
-Skills are saved correctly
+Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("your skills")
-    And the user sees the text in the element    id=assessorType    Business
-    And the user sees the text in the element    id=skillAreas    assessor skill areas text
-    [Teardown]    And the user clicks the button/link    link=Back to assessor dashboard
+    When the user clicks the button/link    link=Back to assessor dashboard
+    Then The user should not see the element    jQuery=.message-alert a:contains('your skills')    #this checks the alert message on the top of the page
 
 *** Keywords ***
 The correct radio button should be selected
