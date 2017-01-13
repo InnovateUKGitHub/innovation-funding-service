@@ -113,6 +113,7 @@
                 </thead>
                 <tbody>
                 <tr>
+                <div th:if="${organisationFinance}" th:remove="tag">
                     <td class="numeric">
                         <strong th:text="'£'+${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}" />
                     </td>
@@ -120,6 +121,16 @@
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                </div>
+                <div th:unless="${organisationFinance}" th:remove="tag">
+                    <td class="numeric">
+                        <strong>&pound;0</strong>
+                    </td>
+                    <td class="numeric">0%</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                </div>
                 </tr>
                 </tbody>
             </table>
