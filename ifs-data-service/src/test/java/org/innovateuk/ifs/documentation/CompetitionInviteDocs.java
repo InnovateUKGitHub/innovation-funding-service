@@ -11,8 +11,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
@@ -68,9 +67,8 @@ public class CompetitionInviteDocs {
             .withEmail("paul.plum@gmail.com")
             .withStatus(CREATED)
             .withAssessorPay(BigDecimal.valueOf(100L))
-            .withInnovationArea(newCategoryResource()
+            .withInnovationArea(newInnovationAreaResource()
                     .withId(10L)
-                    .withType(INNOVATION_AREA)
                     .withName("Emerging Tech and Industries")
                     .withParent(3L)
                     .build());

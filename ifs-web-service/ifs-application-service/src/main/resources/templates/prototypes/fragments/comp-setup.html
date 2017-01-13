@@ -1146,7 +1146,7 @@
                     <tr>
                         <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
                         <th scope="col" class="width-8-percent" id="hour">Hour</th>
-                        <th scope="col" class="width-8-percent" id="min">Min</th>
+                        <th scope="col" class="width-8-percent" id="min">Minute</th>
                         <th scope="col" class="width-8-percent" id="am-pm">am/pm</th>
                         <th scope="col" class="width-8-percent" id="weekday">Weekday</th>
                         <th scope="col" class="width-8-percent" id="day">Day</th>
@@ -1654,21 +1654,21 @@
     <div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Public content'}, ${null})" th:remove="tag" />
 
     <ul class="task-list">
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-competition-information&amp;state=readOnly' : '?section=public-competition-information&amp;state=readOnly')}">Competition information and search</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-summary&amp;state=readOnly' : '?section=public-summary&amp;state=readOnly')}">Summary</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-eligibility&amp;state=readOnly' : '?section=public-eligibility&amp;state=readOnly')}">Eligibility</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-scope&amp;state=readOnly' : '?section=public-scope&amp;state=readOnly')}">Scope</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-dates&amp;state=readOnly' : '?section=public-dates&amp;state=readOnly')}">Dates</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-how-to-apply&amp;state=readOnly' : '?section=public-how-to-apply&amp;state=readOnly')}">How to apply</a></h2></div></li>
-        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-supporting-information&amp;state=readOnly' : '?section=public-supporting-information&amp;state=readOnly')}">Supporting information</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-competition-information&amp;state=edit' : '?section=public-competition-information&amp;state=edit')}">Competition information and search</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-summary&amp;state=edit' : '?section=public-summary&amp;state=edit')}">Summary</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-eligibility&amp;state=edit' : '?section=public-eligibility&amp;state=edit')}">Eligibility</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-scope&amp;state=edit' : '?section=public-scope&amp;state=edit')}">Scope</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-dates&amp;state=edit' : '?section=public-dates&amp;state=edit')}">Dates</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-how-to-apply&amp;state=edit' : '?section=public-how-to-apply&amp;state=edit')}">How to apply</a></h2></div></li>
+        <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-supporting-information&amp;state=edit' : '?section=public-supporting-information&amp;state=edit')}">Supporting information</a></h2></div></li>
     </ul>
     <p><small>Last published 08:55am 12 December 2016</small></p>
     <div class="grid-row">
         <div class="column-half">
-            <a href="#" class="button">Publish public content</a>
+            <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button">Return to setup overview</a>
         </div>
         <div class="column-half alignright">
-            <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button-secondary no-margin">Return to setup overview</a>
+            <a id="prototype-publish-content" href="#" class="button-secondary disabled no-margin">Publish public content</a>
         </div>
     </div>
     <hr />
@@ -1700,34 +1700,43 @@
                         Short description
                         <span class="form-hint">Appears at the top of the competition page.</span>
                     </label>
-                    <input class="form-control width-full" id="short-description" type="text" value="Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow." />
+                    <input class="form-control width-full prot-section-0-empty" id="short-description" type="text" value="" />
+                    <input class="form-control width-full prot-section-0-populated" id="short-description" type="text" value="Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow." />
                 </div>
                 <div class="form-group">
                     <label class="form-label-bold" for="funding-range">
                         Project funding range
                         <span class="form-hint">Appears against the competition search result.</span>
                     </label>
-                    <input class="form-control" id="funding-range" type="text" value="Up to £35,000" />
+                    <input class="form-control prot-section-0-empty" id="funding-range" type="text" value="" />
+                    <input class="form-control prot-section-0-populated" id="funding-range" type="text" value="Up to £35,000" />
                 </div>
                 <div class="form-group">
                     <label class="form-label-bold" for="eligibility-summary">
                         Eligibility summary
                         <span class="form-hint">Appears against the competition search result.</span>
                     </label>
-                    <input class="form-control" id="eligibility-summary" type="text" value="UK based business of any size. Must involve at least one SME." />
+                    <input class="form-control prot-section-0-empty" id="eligibility-summary" type="text" value="" />
+                    <input class="form-control prot-section-0-populated" id="eligibility-summary" type="text" value="UK based business of any size. Must involve at least one SME." />
                 </div>
                 <div class="form-group">
                     <label class="form-label-bold" for="keywords">
                         Keywords
                         <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
                     </label>
-                    <input class="form-control width-full" id="keywords" type="text" value="innovation, drones, drone" />
+                    <input class="form-control width-full prot-section-0-empty" id="keywords" type="text" value="" />
+                    <input class="form-control width-full prot-section-0-populated" id="keywords" type="text" value="innovation, drones, drone" />
                 </div>
             </fieldset>
         </form>
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-competition-information&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="0">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="0">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-competition-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>
@@ -1760,15 +1769,16 @@
                     <label class="form-label-bold" for="competition-description">
                         Competition description
                     </label>
-                    <textarea name="skills-areas" id="competition-description" cols="30" rows="10" class="width-full">
-Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.
+                    <textarea name="skills-areas" id="competition-description" cols="30" rows="10" class="width-full"></textarea>
+                    <!--<textarea name="skills-areas" id="competition-description" cols="30" rows="10" class="width-full">-->
+<!--Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.-->
 
-The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).
+<!--The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).-->
 
-We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.
+<!--We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.-->
 
-There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.
-                    </textarea>
+<!--There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.-->
+                    <!--</textarea>-->
                 </div>
                 <div class="form-group">
                     <fieldset>
@@ -1778,7 +1788,7 @@ There are 2 options to apply into this competition, dependent on project size an
                             Grant
                         </label>
                         <label class="block-label selection-button-radio" for="procurement">
-                            <input id="procurement" name="funding-type-radio-group" value="procurement" type="radio" checked="checked" />
+                            <input id="procurement" name="funding-type-radio-group" value="procurement" type="radio" />
                             Procurement
                         </label>
                     </fieldset>
@@ -1795,7 +1805,8 @@ There are 2 options to apply into this competition, dependent on project size an
                     <label class="form-label-bold" for="project-size">
                         Project size
                     </label>
-                    <input class="form-control" id="project-size" type="text" value="£15,000,000" />
+                    <input class="form-control" id="project-size" type="text" value="" />
+                    <!--<input class="form-control" id="project-size" type="text" value="£15,000,000" />-->
                 </div>
             </fieldset>
             <fieldset>
@@ -1809,8 +1820,13 @@ There are 2 options to apply into this competition, dependent on project size an
             </fieldset>
         </form>
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-summary&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="1">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="1">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-summary&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>
@@ -1873,32 +1889,49 @@ There are 2 options to apply into this competition, dependent on project size an
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-one" type="text" value="Lead applicant eligibility" />
+                        <input class="form-control" id="heading-one" type="text" value="" />
+                        <!--<input class="form-control" id="heading-one" type="text" value="Lead applicant eligibility" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">
-    To lead a project, you must:
+                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">-->
+    <!--To lead a project, you must:-->
 
-    be a UK-based business (of any size)
-    have at least one SME involved in your proposal
-    carry out your project work, and intend to exploit the results, in the UK
-    work alone or in collaboration with others (businesses, research base and third sector)
-                        </textarea>
+    <!--be a UK-based business (of any size)-->
+    <!--have at least one SME involved in your proposal-->
+    <!--carry out your project work, and intend to exploit the results, in the UK-->
+    <!--work alone or in collaboration with others (businesses, research base and third sector)-->
+                        <!--</textarea>-->
                     </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="attachment-name-one">
-                            Attachment name
-                        </label>
-                        <input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label-bold" for="attachment-file-one">
-                            Attachment file
-                        </label>
-                        <a id="attachment-file-one" href="#">additional_documentation.pdf</a> <a href="#" class="button-secondary">Remove</a>
+                    <!--<div class="upload-section">-->
+                        <!--<div class="form-group">-->
+                            <!--<label class="form-label-bold" for="attachment-name-one">-->
+                                <!--Attachment name-->
+                            <!--</label>-->
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<h3 class="heading-small no-margin">Attachment file</h3>-->
+                            <!--<a href="#" class="uploaded-file">additional_documentation.pdf</a>-->
+                            <!--<div class="alignright"><a href="#">Remove file</a></div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
+                        </div>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
                     </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
@@ -1913,30 +1946,39 @@ There are 2 options to apply into this competition, dependent on project size an
                     <label class="form-label-bold" for="heading-two">
                         Heading
                     </label>
-                    <input class="form-control" id="heading-two" type="text" value="Consortium eligibility" />
+                    <input class="form-control" id="heading-two" type="text" value="" />
+                    <!--<input class="form-control" id="heading-two" type="text" value="Consortium eligibility" />-->
                 </div>
                 <div class="form-group">
                     <label class="form-label-bold" for="content-two">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">
-All projects must involve at least one SME and a business must lead the project.
+                    <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full"></textarea>
+                    <!--<textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">-->
+<!--All projects must involve at least one SME and a business must lead the project.-->
 
-If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.
+<!--If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.-->
 
-If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.
+<!--If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.-->
 
-Find out if your business fits the EU definition of an SME
-                    </textarea>
+<!--Find out if your business fits the EU definition of an SME-->
+                    <!--</textarea>-->
                 </div>
-                <fieldset>
-                    <div class="upload-section unstyled-view">
-                        <legend class="heading-small no-margin">Attachment file</legend>
-
+                <div class="upload-section">
+                    <div class="form-group">
+                        <label class="form-label-bold" for="attachment-name-one">
+                            Attachment name
+                        </label>
+                        <input class="form-control" id="attachment-name-one" type="text" value="" />
+                        <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
+                    </div>
+                    <div class="form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                        <p class="uploaded-file">No file currently uploaded</p>
                     </div>
-                </fieldset>
+                </div>
+
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
                     <!--<li><a href="#">Move section up</a></li>-->
@@ -1949,37 +1991,45 @@ Find out if your business fits the EU definition of an SME
                     <label class="form-label-bold" for="heading-three">
                         Heading
                     </label>
-                    <input class="form-control" id="heading-three" type="text" value="Project types" />
+                    <input class="form-control" id="heading-three" type="text" value="" />
+                    <!--<input class="form-control" id="heading-three" type="text" value="Project types" />-->
                 </div>
                 <div class="form-group">
                     <label class="form-label-bold" for="content-three">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">
-Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.
+                    <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full"></textarea>
+                    <!--<textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">-->
+<!--Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.-->
 
-For technical feasibility studies and industrial research, you could get:
+<!--For technical feasibility studies and industrial research, you could get:-->
 
-up to 70% of your eligible project costs if you are a small business
-up to 60% if you are a medium-sized business
-up to 50% if you are a large business
+<!--up to 70% of your eligible project costs if you are a small business-->
+<!--up to 60% if you are a medium-sized business-->
+<!--up to 50% if you are a large business-->
 
-For experimental development projects which are nearer to market, you could get:
+<!--For experimental development projects which are nearer to market, you could get:-->
 
-up to 45% of your eligible project costs if you are a small business
-up to 35% if you are a medium-sized business
-up to 25% if you are a large business
+<!--up to 45% of your eligible project costs if you are a small business-->
+<!--up to 35% if you are a medium-sized business-->
+<!--up to 25% if you are a large business-->
 
-                    </textarea>
+                    <!--</textarea>-->
                 </div>
-                <fieldset>
-                    <div class="upload-section unstyled-view">
-                        <legend class="heading-small no-margin">Attachment file</legend>
-
-                        <input type="file" name="file" id="file-three" class="inputfile" />
-                        <label for="file-three" class="button-secondary extra-margin">+ Upload</label>
+                <div class="upload-section">
+                    <div class="form-group">
+                        <label class="form-label-bold" for="attachment-name-one">
+                            Attachment name
+                        </label>
+                        <input class="form-control" id="attachment-name-one" type="text" value="" />
+                        <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                     </div>
-                </fieldset>
+                    <div class="form-group">
+                        <input type="file" name="file" id="file" class="inputfile" />
+                        <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                        <p class="uploaded-file">No file currently uploaded</p>
+                    </div>
+                </div>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
                     <!--<li><a href="#">Move section up</a></li>-->
@@ -1992,33 +2042,40 @@ up to 25% if you are a large business
                     <label class="form-label-bold" for="heading-four">
                         Heading
                     </label>
-                    <input class="form-control" id="heading-four" type="text" value="Projects we won't fund" />
+                    <input class="form-control" id="heading-four" type="text" value="" />
+                    <!--<input class="form-control" id="heading-four" type="text" value="Projects we won't fund" />-->
                 </div>
                 <div class="form-group">
                     <label class="form-label-bold" for="content-four">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full">
+                    <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full"></textarea>
+                    <!--<textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full">-->
 
 
-In this competition we will not fund applications in the following areas:
+<!--In this competition we will not fund applications in the following areas:-->
 
-    topics defined in the Innovate UK Quantum technologies competition 2016
-    topics defined in the Innovate UK Robotics and autonomous systems competition 2016
-    topics defined in the Innovate UK Compound semiconductor applications competition 2016
+    <!--topics defined in the Innovate UK Quantum technologies competition 2016-->
+    <!--topics defined in the Innovate UK Robotics and autonomous systems competition 2016-->
+    <!--topics defined in the Innovate UK Compound semiconductor applications competition 2016-->
 
-Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.
+<!--Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.-->
 
-                    </textarea>
+                    <!--</textarea>-->
                 </div>
-                <fieldset>
-                    <div class="upload-section unstyled-view">
-                        <legend class="heading-small no-margin">Attachment file</legend>
-
-                        <input type="file" name="file" id="file-four" class="inputfile" />
-                        <label for="file-four" class="button-secondary extra-margin">+ Upload</label>
+                <div class="upload-section">
+                    <div class="form-group">
+                        <label class="form-label-bold" for="attachment-name-one">
+                            Attachment name
+                        </label>
+                        <input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />
                     </div>
-                </fieldset>
+                    <div class="form-group">
+                        <input type="file" name="file" id="file" class="inputfile" />
+                        <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                        <p class="uploaded-file">No file currently uploaded</p>
+                    </div>
+                </div>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
                     <!--<li><a href="#">Move section up</a></li>-->
@@ -2032,8 +2089,13 @@ Note: machine learning or artificial intelligence (AI) is covered by the Innovat
         </div>
 
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-eligibility&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="2">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="2">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-eligibility&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>
@@ -2110,58 +2172,66 @@ Note: machine learning or artificial intelligence (AI) is covered by the Innovat
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-one" type="text" value="Project scope" />
+                        <input class="form-control" id="heading-one" type="text" value="" />
+                        <!--<input class="form-control" id="heading-one" type="text" value="Project scope" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">
+                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">-->
 
 
-Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.
+<!--Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.-->
 
-An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.
+<!--An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.-->
 
-Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.
+<!--Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.-->
 
-The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:
+<!--The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:-->
 
-    harness E&amp;E technologies across the economy
-    develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release
-    use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes
+    <!--harness E&amp;E technologies across the economy-->
+    <!--develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release-->
+    <!--use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes-->
 
-We are looking to fund a portfolio of projects that include:
+<!--We are looking to fund a portfolio of projects that include:-->
 
-    technical feasibility
-    industrial research
-    experimental development
-    We will choose a portfolio that achieves a balance across topic areas, timing and costs
+    <!--technical feasibility-->
+    <!--industrial research-->
+    <!--experimental development-->
+    <!--We will choose a portfolio that achieves a balance across topic areas, timing and costs-->
 
-If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.
+<!--If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.-->
 
-Projects must clearly show high-growth potential innovations in one or more of the following areas:
+<!--Projects must clearly show high-growth potential innovations in one or more of the following areas:-->
 
-    any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches
-    we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms
-    any enabling technology in: satellite applications; electronics
-    sensors; photonics; digital; internet of things; data; cybersecurity
-    virtual or augmented reality; and distributed ledger technology
+    <!--any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches-->
+    <!--we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms-->
+    <!--any enabling technology in: satellite applications; electronics-->
+    <!--sensors; photonics; digital; internet of things; data; cybersecurity-->
+    <!--virtual or augmented reality; and distributed ledger technology-->
 
-The type of innovation project will depend on the challenges and opportunities your business faces
+<!--The type of innovation project will depend on the challenges and opportunities your business faces-->
 
-Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.
+<!--Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.-->
 
-                        </textarea>
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-one" class="inputfile" />
-                            <label for="file-one" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2174,50 +2244,58 @@ Proposals must show how project success will improve business growth and product
                         <label class="form-label-bold" for="heading-two">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-two" type="text" value="Specific competition themes" />
+                        <input class="form-control" id="heading-two" type="text" value="" />
+                        <!--<input class="form-control" id="heading-two" type="text" value="Specific competition themes" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-two">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">
-We welcome applications in one or more of the following areas:
+                        <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">-->
+<!--We welcome applications in one or more of the following areas:-->
 
-Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:
+<!--Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:-->
 
-    energy harvesting
-    imaging technologies
-    graphene
-    biofilms
-    other areas of emerging technology
+    <!--energy harvesting-->
+    <!--imaging technologies-->
+    <!--graphene-->
+    <!--biofilms-->
+    <!--other areas of emerging technology-->
 
-Innovation in enabling technologies that:
+<!--Innovation in enabling technologies that:-->
 
-    show benefits across multiple industrial sectors or markets
-    provide new products and services
-    allow new applications for existing products and services
-    enable new capabilities or business models
+    <!--show benefits across multiple industrial sectors or markets-->
+    <!--provide new products and services-->
+    <!--allow new applications for existing products and services-->
+    <!--enable new capabilities or business models-->
 
-We are particularly encouraging proposals that address:
+<!--We are particularly encouraging proposals that address:-->
 
-    systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance
-    smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications
-    smart technology that provides a richer and more informative output to the end user
-    photonics for manufacturing, healthcare and imaging
-    digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality
+    <!--systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance-->
+    <!--smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications-->
+    <!--smart technology that provides a richer and more informative output to the end user-->
+    <!--photonics for manufacturing, healthcare and imaging-->
+    <!--digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality-->
 
-We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.
+<!--We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.-->
 
-                        </textarea>
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-two" class="inputfile" />
-                            <label for="file-two" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2231,8 +2309,13 @@ We also encourage proposals to include user/customer perspectives or participati
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-scope&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="3">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="3">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-scope&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>
@@ -2276,15 +2359,18 @@ We also encourage proposals to include user/customer perspectives or participati
                     <div class="date-group">
                         <div class="day">
                             <label class="form-label" for="date-one-day">Day</label>
-                            <input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="14" type="number" />
+                            <input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="" type="number" />
+                            <!--<input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="14" type="number" />-->
                         </div>
                         <div class="month">
                             <label class="form-label" for="date-one-month">Month</label>
-                            <input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="10" type="number" />
+                            <input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="" type="number" />
+                            <!--<input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="10" type="number" />-->
                         </div>
                         <div class="year">
                             <label class="form-label" for="date-one-year">Year</label>
-                            <input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="2016" type="number" />
+                            <input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="" type="number" />
+                            <!--<input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="2016" type="number" />-->
                         </div>
                     </div>
                 </div>
@@ -2292,53 +2378,59 @@ We also encourage proposals to include user/customer perspectives or participati
                     <label class="form-label-bold" for="date-content-one">
                         Content
                     </label>
-                    <textarea name="skills-areas" id="date-content-one" cols="30" rows="5" class="width-full">
-Briefing event in Belfast. More information
-                    </textarea>
+                    <textarea name="skills-areas" id="date-content-one" cols="30" rows="5" class="width-full"></textarea>
+                    <!--<textarea name="skills-areas" id="date-content-one" cols="30" rows="5" class="width-full">-->
+<!--Briefing event in Belfast. More information-->
+                    <!--</textarea>-->
                 </div>
                 <div class="form-group">
                     <a href="#">Remove event</a>
                 </div>
             </fieldset>
             <hr />
-            <fieldset>
-                <div class="form-group">
-                    <legend class="form-label form-label-bold">Date</legend>
-                    <div class="date-group">
-                        <div class="day">
-                            <label class="form-label" for="date-two-day">Day</label>
-                            <input class="form-control width-extra-small" placeholder="DD" id="date-two-day" name="date-two-day" value="20" type="number" />
-                        </div>
-                        <div class="month">
-                            <label class="form-label" for="date-two-month">Month</label>
-                            <input class="form-control width-extra-small" placeholder="MM" id="date-two-month" name="date-two-year" value="10" type="number" />
-                        </div>
-                        <div class="year">
-                            <label class="form-label" for="date-two-year">Year</label>
-                            <input class="form-control width-extra-small" placeholder="YYYY" id="date-two-year" name="date-two-year" value="2016" type="number" />
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label-bold" for="date-content-two">
-                        Content
-                    </label>
-                    <textarea name="skills-areas" id="date-content-two" cols="30" rows="5" class="width-full">
-Briefing event in Cardiff. More information
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    <a href="#">Remove event</a>
-                </div>
-            </fieldset>
-            <hr />
+            <!--<fieldset>-->
+                <!--<div class="form-group">-->
+                    <!--<legend class="form-label form-label-bold">Date</legend>-->
+                    <!--<div class="date-group">-->
+                        <!--<div class="day">-->
+                            <!--<label class="form-label" for="date-two-day">Day</label>-->
+                            <!--<input class="form-control width-extra-small" placeholder="DD" id="date-two-day" name="date-two-day" value="20" type="number" />-->
+                        <!--</div>-->
+                        <!--<div class="month">-->
+                            <!--<label class="form-label" for="date-two-month">Month</label>-->
+                            <!--<input class="form-control width-extra-small" placeholder="MM" id="date-two-month" name="date-two-year" value="10" type="number" />-->
+                        <!--</div>-->
+                        <!--<div class="year">-->
+                            <!--<label class="form-label" for="date-two-year">Year</label>-->
+                            <!--<input class="form-control width-extra-small" placeholder="YYYY" id="date-two-year" name="date-two-year" value="2016" type="number" />-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="form-label-bold" for="date-content-two">-->
+                        <!--Content-->
+                    <!--</label>-->
+                    <!--<textarea name="skills-areas" id="date-content-two" cols="30" rows="5" class="width-full">-->
+<!--Briefing event in Cardiff. More information-->
+                    <!--</textarea>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<a href="#">Remove event</a>-->
+                <!--</div>-->
+            <!--</fieldset>-->
+            <!--<hr />-->
         </form>
         <div class="alignright">
             <a href="#">+ add new event</a>
         </div>
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-dates&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="4">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="4">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-dates&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>
@@ -2382,24 +2474,32 @@ Briefing event in Cardiff. More information
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-one" type="text" value="How to apply" />
+                        <input class="form-control" id="heading-one" type="text" value="" />
+                        <!--<input class="form-control" id="heading-one" type="text" value="How to apply" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">
-The lead applicant must register for an account using the link on this page. This will start the application process. During this process the lead applicant will be able to invite all other collaborators. Collaborators will be sent a link, which will help them to create an account and give them access to the application.
-                        </textarea>
+                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">-->
+<!--The lead applicant must register for an account using the link on this page. This will start the application process. During this process the lead applicant will be able to invite all other collaborators. Collaborators will be sent a link, which will help them to create an account and give them access to the application.-->
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-one" class="inputfile" />
-                            <label for="file-one" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2412,30 +2512,38 @@ The lead applicant must register for an account using the link on this page. Thi
                         <label class="form-label-bold" for="heading-two">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-two" type="text" value="The application process" />
+                        <input class="form-control" id="heading-two" type="text" value="" />
+                        <!--<input class="form-control" id="heading-two" type="text" value="The application process" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-two">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">
-The application process uses a collaborative, online form. Application progress can be saved and resumed at a later date without being submitted.
+                        <textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-two" cols="30" rows="10" class="width-full">-->
+<!--The application process uses a collaborative, online form. Application progress can be saved and resumed at a later date without being submitted.-->
 
-For more information on the online application form visit our general guidance for applicants.
+<!--For more information on the online application form visit our general guidance for applicants.-->
 
-External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
+<!--External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.-->
 
-All applicants will receive feedback from the experts, so they can understand their assessment.
-                        </textarea>
+<!--All applicants will receive feedback from the experts, so they can understand their assessment.-->
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-two" class="inputfile" />
-                            <label for="file-two" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2449,24 +2557,32 @@ All applicants will receive feedback from the experts, so they can understand th
                         <label class="form-label-bold" for="heading-three">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-three" type="text" value="Application questions" />
+                        <input class="form-control" id="heading-three" type="text" value="" />
+                        <!--<input class="form-control" id="heading-three" type="text" value="Application questions" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-three">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">
-Application questions are available for reference and to assist with preparation.
-                        </textarea>
+                        <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">-->
+<!--Application questions are available for reference and to assist with preparation.-->
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-three" class="inputfile" />
-                            <label for="file-three" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2480,24 +2596,32 @@ Application questions are available for reference and to assist with preparation
                         <label class="form-label-bold" for="heading-four">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-four" type="text" value="Competition contact" />
+                        <input class="form-control" id="heading-four" type="text" value="" />
+                        <!--<input class="form-control" id="heading-four" type="text" value="Competition contact" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-four">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full">
-If you need more information, contact the competition helpline on 0300 321 4357 or email us at support@innovateuk.gov.uk
-                        </textarea>
+                        <textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-four" cols="30" rows="10" class="width-full">-->
+<!--If you need more information, contact the competition helpline on 0300 321 4357 or email us at support@innovateuk.gov.uk-->
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-four" class="inputfile" />
-                            <label for="file-four" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2511,26 +2635,34 @@ If you need more information, contact the competition helpline on 0300 321 4357 
                         <label class="form-label-bold" for="heading-five">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-five" type="text" value="Rules" />
+                        <input class="form-control" id="heading-five" type="text" value="" />
+                        <!--<input class="form-control" id="heading-five" type="text" value="Rules" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-five">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-five" cols="30" rows="10" class="width-full">
-    Funding rules
-    Information security and confidentiality
-    Assessor confidentiality and potential conflicts of interest
-                        </textarea>
+                        <textarea name="skills-areas" id="content-five" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-five" cols="30" rows="10" class="width-full">-->
+    <!--Funding rules-->
+    <!--Information security and confidentiality-->
+    <!--Assessor confidentiality and potential conflicts of interest-->
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-five" class="inputfile" />
-                            <label for="file-five" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2544,8 +2676,13 @@ If you need more information, contact the competition helpline on 0300 321 4357 
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-how-to-apply&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="5">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="5">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-how-to-apply&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>
@@ -2578,38 +2715,46 @@ If you need more information, contact the competition helpline on 0300 321 4357 
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
-                        <input class="form-control" id="heading-one" type="text" value="Background and further information" />
+                        <input class="form-control" id="heading-one" type="text" value="" />
+                        <!--<input class="form-control" id="heading-one" type="text" value="Background and further information" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
-                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">
+                        <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full"></textarea>
+                        <!--<textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full">-->
 
-Technology is transforming our lives and brings great opportunity. The UK is strong in fundamental research across many different disciplines. However, we sometimes struggle to fully commercialise the opportunities. The most promising emerging technologies and industries need to be guided through the innovation process to market success.
+<!--Technology is transforming our lives and brings great opportunity. The UK is strong in fundamental research across many different disciplines. However, we sometimes struggle to fully commercialise the opportunities. The most promising emerging technologies and industries need to be guided through the innovation process to market success.-->
 
-Enabling technologies or capabilities have the potential to make a difference in many sectors. Yet, they can be slow to spread through target industries. They need support to realise that potential. Some might need to be tailored to excel in the most important markets and sectors.
+<!--Enabling technologies or capabilities have the potential to make a difference in many sectors. Yet, they can be slow to spread through target industries. They need support to realise that potential. Some might need to be tailored to excel in the most important markets and sectors.-->
 
-The government’s Emerging Technologies and Industries strategy aims to provide investment to help companies explore the potential of completely new technologies in their particular markets. It aims to disrupt markets and bring the potential for significant commercial results. Small early investments are followed by increased financial and wider support. This can be seen in areas with very high potential, such as quantum technologies.
+<!--The government’s Emerging Technologies and Industries strategy aims to provide investment to help companies explore the potential of completely new technologies in their particular markets. It aims to disrupt markets and bring the potential for significant commercial results. Small early investments are followed by increased financial and wider support. This can be seen in areas with very high potential, such as quantum technologies.-->
 
-The Enabling and Enabling Technologies programme brings together technology and end users to enhance productivity and efficiency across the UK economy. The programme provides opportunities for innovative companies to develop and use multiple technologies. Applications include disrupting markets and finding new sales routes. This could be through well-established systems integrators and manufacturers.
+<!--The Enabling and Enabling Technologies programme brings together technology and end users to enhance productivity and efficiency across the UK economy. The programme provides opportunities for innovative companies to develop and use multiple technologies. Applications include disrupting markets and finding new sales routes. This could be through well-established systems integrators and manufacturers.-->
 
-In 2016 and 2017 the programme will support companies through investments such as this competition. We will invest in enabling technologies by concentrating on innovative applications and/or service-led solutions in the areas of cybersecurity, data, satellite earth observation, electronics, sensors, photonics, the internet of things and robotics and autonomous systems.
+<!--In 2016 and 2017 the programme will support companies through investments such as this competition. We will invest in enabling technologies by concentrating on innovative applications and/or service-led solutions in the areas of cybersecurity, data, satellite earth observation, electronics, sensors, photonics, the internet of things and robotics and autonomous systems.-->
 
-The Emerging and Enabling Technologies sector group supports the Digital Catapult and Satellite Application and is establishing a new Compound Semiconductor Applications Catapult in Wales. Companies wishing to access the available equipment and expertise are invited to partner with the Catapults in this competition.
+<!--The Emerging and Enabling Technologies sector group supports the Digital Catapult and Satellite Application and is establishing a new Compound Semiconductor Applications Catapult in Wales. Companies wishing to access the available equipment and expertise are invited to partner with the Catapults in this competition.-->
 
-If you want help to find a project partner, contact the Knowledge Transfer Network.
+<!--If you want help to find a project partner, contact the Knowledge Transfer Network.-->
 
-                        </textarea>
+                        <!--</textarea>-->
                     </div>
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Attachment file</legend>
-
-                            <input type="file" name="file" id="file-one" class="inputfile" />
-                            <label for="file-one" class="button-secondary extra-margin">+ Upload</label>
+                    <div class="upload-section">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="attachment-name-one">
+                                Attachment name
+                            </label>
+                            <input class="form-control" id="attachment-name-one" type="text" value="" />
+                            <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                    </fieldset>
+                        <div class="form-group">
+                            <input type="file" name="file" id="file" class="inputfile" />
+                            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                            <p class="uploaded-file">No file currently uploaded</p>
+                        </div>
+                    </div>
                 </fieldset>
                 <ul class="comp-setup-section-navigation">
                     <li><a href="#">Remove section</a></li>
@@ -2623,8 +2768,13 @@ If you want help to find a project partner, contact the Knowledge Transfer Netwo
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="extra-margin">
-        <a th:href="${(param.state != null and param.state[0] == 'readOnly' ? '?section=public-supporting-information&amp;state=edit' : '?')}" class="button prototype-save" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Edit' : 'Save and return')}" data-index="6">[State]</a>
+    <div class="grid-row extra-margin">
+        <div class="column-half">
+            <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="6">[Text]</a>
+        </div>
+        <div class="column-half alignright">
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-supporting-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
+        </div>
     </div>
     <hr />
 </th:block>

@@ -36,7 +36,7 @@
             <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
             Please review
             <ul class="error-summary-list">
-                <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.fieldName}"></li>
+                <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
             </ul>
         </div>
 

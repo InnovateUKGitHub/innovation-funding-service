@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -69,34 +72,30 @@ public class ApplicationAssessmentSummaryResource {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         ApplicationAssessmentSummaryResource that = (ApplicationAssessmentSummaryResource) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-        if (name != null ? !name.equals(that.name) : that.name != null) {
-            return false;
-        }
-        if (competitionId != null ? !competitionId.equals(that.competitionId) : that.competitionId != null) {
-            return false;
-        }
-        if (competitionName != null ? !competitionName.equals(that.competitionName) : that.competitionName != null) {
-            return false;
-        }
-        return partnerOrganisations != null ? partnerOrganisations.equals(that.partnerOrganisations) : that.partnerOrganisations == null;
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(partnerOrganisations, that.partnerOrganisations)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (competitionId != null ? competitionId.hashCode() : 0);
-        result = 31 * result + (competitionName != null ? competitionName.hashCode() : 0);
-        result = 31 * result + (partnerOrganisations != null ? partnerOrganisations.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(competitionId)
+                .append(competitionName)
+                .append(partnerOrganisations)
+                .toHashCode();
     }
 }

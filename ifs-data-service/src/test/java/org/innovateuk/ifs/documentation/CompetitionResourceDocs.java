@@ -48,8 +48,6 @@ public class CompetitionResourceDocs {
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
             fieldWithPath("funders").description("the funders for this competition"),
-            fieldWithPath("fullApplicationFinance").description("are the full finance forms required for applications"),
-            fieldWithPath("includeGrowthTable").description("should applications include a full project growth table"),
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
