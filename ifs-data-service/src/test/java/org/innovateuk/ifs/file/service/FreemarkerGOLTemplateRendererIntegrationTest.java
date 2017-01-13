@@ -26,8 +26,8 @@ import static org.junit.Assert.assertTrue;
 public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegrationTest {
 
     private static final String DATE_PREFIX = "Date: ";
-    private static final String DATE_TODAY = DATE_PREFIX + DateFormatUtils.format(new Date(), "MM/dd/yyyy");
-    private static final String DUMMY_PROJECT_START_DATE = "2016-12-26T15:23:02.409";
+    private static final String DATE_TODAY = DATE_PREFIX + DateFormatUtils.format(new Date(), "dd MMMM yyyy");
+    private static final String DUMMY_PROJECT_START_DATE = "26 December 2016";
     private static final String GOL_HTML_TEMPLATE_NAME = "grant_offer_letter.html";
     private static final String EXPECTED_GOL_HTML_NAME = "dummy_full_grant_offer_letter.html";
     private static final String PATH_TO_GOL_HTML_TEMPLATE = "common" + separator + "grantoffer" + separator;
