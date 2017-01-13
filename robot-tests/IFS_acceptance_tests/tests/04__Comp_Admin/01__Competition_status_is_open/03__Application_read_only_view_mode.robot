@@ -6,20 +6,12 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
 ...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
 ...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
-<<<<<<< HEAD
-...               INFUND-6941  As a Competitions team member I want to be able to view Finances throughout the life of the competition
-...               INFUND-6792  As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
-...               INFUND-7083  As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
-
-=======
 ...
 ...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
->>>>>>> 7d0c54929f14889b187a2123f678b88894b9d0e3
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../CompAdmin_Commons.robot
-
 *** Variables ***
 ${valid_pdf}      testing.pdf
 ${quarantine_warning}    This file has been found to be unsafe
