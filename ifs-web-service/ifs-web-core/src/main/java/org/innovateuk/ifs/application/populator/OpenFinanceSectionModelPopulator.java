@@ -135,11 +135,14 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     }
 
     private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId) {
-        QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
+        QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
 
-        boolean organisationSizeComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
+        boolean organisationSizeComplete = false;
+        if (viewModel.getSectionsMarkedAsComplete() != null) {
+            organisationSizeComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
+        }
         boolean applicationDetailsComplete = applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
 
         viewModel.setFundingSectionLocked(!(organisationSizeComplete && applicationDetailsComplete));
@@ -155,8 +158,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
                                        CompetitionResource competition, Long userId, SectionResource section,
                                        ApplicationForm form, List<ProcessRoleResource> userApplicationRoles,
-                                       List<SectionResource> allSections, List<FormInputResource> inputs) {
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+                                       List<SectionResource> allSections, List<FormInputResource> inputs,
+                                       Optional<OrganisationResource> userOrganisation) {
 
         form = initializeApplicationForm(form);
         form.setApplication(application);
@@ -225,15 +228,15 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                                             List<SectionResource> allSections) {
         List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
 
-        addSectionsMarkedAsComplete(viewModel, userApplicationRoles, userId, application);
-        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs);
+        addSectionsMarkedAsComplete(viewModel, userApplicationRoles, userId, application, userOrganisation);
+        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs, userOrganisation);
 
         addSectionDetails(viewModel, section, inputs);
     }
 
-    private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application) {
-        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
+    private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId)
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));

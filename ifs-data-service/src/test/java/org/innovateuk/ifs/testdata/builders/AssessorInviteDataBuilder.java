@@ -74,6 +74,6 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
     }
 
     private Category retrieveInnovationAreaByName(String name) {
-        return !isBlank(name) ? categoryRepository.findByNameAndType(name, INNOVATION_AREA) : null;
+        return !isBlank(name) ? innovationAreaRepository.findByName(name) : null;
     }
 }

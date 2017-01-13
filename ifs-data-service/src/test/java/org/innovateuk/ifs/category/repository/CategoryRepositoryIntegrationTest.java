@@ -6,10 +6,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.junit.Assert.assertEquals;
 
 public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CategoryRepository> {
@@ -20,52 +23,18 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
         this.repository = repository;
     }
 
-
     @Test
-    public void findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk() throws Exception {
-        Category found = repository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(INNOVATION_SECTOR, "org.innovateuk.ifs.competition.domain.Competition", 7L);
+    public void findAll() {
+        List<Category> categories = asList(
+                repository.save(newInnovationArea().with(id(null)).build()),
+                repository.save(newInnovationSector().with(id(null)).build()),
+                repository.save(newResearchCategory().with(id(null)).build())
+        );
 
-        assertEquals(Long.valueOf(1L), found.getId());
-        assertEquals(INNOVATION_SECTOR, found.getType());
-        assertEquals("Health and life sciences", found.getName());
-    }
+        flushAndClearSession();
 
-    @Test
-    public void findByType() throws Exception {
-        List<Category> found = repository.findByType(INNOVATION_SECTOR);
+        List<Category> found = repository.findAll(categories.stream().map(Category::getId).collect(Collectors.toList()));
 
-        assertEquals(4, found.size());
-        assertEquals(Long.valueOf(4L), found.get(3).getId());
-    }
-
-    @Test
-    public void findByTypeOrderByNameAsc() throws Exception {
-        List<Category> found = repository.findByTypeOrderByNameAsc(INNOVATION_SECTOR);
-
-        assertEquals(4, found.size());
-        assertEquals("Emerging and enabling technologies", found.get(0).getName());
-        assertEquals("Health and life sciences", found.get(1).getName());
-        assertEquals("Infrastructure systems", found.get(2).getName());
-        assertEquals("Materials and manufacturing", found.get(3).getName());
-    }
-
-    @Test
-    public void findByIdAndType() {
-        String innovationAreaName = "Machine learning";
-        Category savedCategory = repository.save(newCategory().withType(INNOVATION_AREA).withName(innovationAreaName).build());
-
-        Category retrievedCategory = repository.findByIdAndType(savedCategory.getId(), INNOVATION_AREA);
-
-        assertEquals(savedCategory, retrievedCategory);
-    }
-
-    @Test
-    public void findByNameAndType() {
-        String innovationAreaName = "Machine learning";
-        Category savedCategory = repository.save(newCategory().withType(INNOVATION_AREA).withName(innovationAreaName).build());
-
-        Category retrievedCategory = repository.findByNameAndType(innovationAreaName, INNOVATION_AREA);
-
-        assertEquals(savedCategory, retrievedCategory);
+        assertEquals(categories, found);
     }
 }

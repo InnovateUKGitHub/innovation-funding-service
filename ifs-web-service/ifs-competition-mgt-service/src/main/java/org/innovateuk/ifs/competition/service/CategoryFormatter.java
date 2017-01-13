@@ -14,7 +14,7 @@ import org.innovateuk.ifs.category.resource.CategoryResource;
 @Service
 public class CategoryFormatter {
 
-	public String format(Set<Long> categoryIds, List<CategoryResource> allCategories) {
+	public String format(Set<Long> categoryIds, List<? extends CategoryResource> allCategories) {
 		if(categoryIds == null) {
 			return "";
 		}
