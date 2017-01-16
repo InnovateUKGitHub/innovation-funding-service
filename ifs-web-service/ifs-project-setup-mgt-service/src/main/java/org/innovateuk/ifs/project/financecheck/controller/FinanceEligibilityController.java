@@ -83,6 +83,8 @@ public class FinanceEligibilityController {
 
         openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, true, true);
 
+        model.addAttribute("project", project);
+
         return "project/financecheck/eligibility";
     }
 
