@@ -5,8 +5,7 @@ import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -116,7 +115,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
 
         if (!StringUtils.isEmpty(value) && FormInputType.ASSESSOR_RESEARCH_CATEGORY == formInputResource.getType()) {
-            List<CategoryResource> categoryResources = categoryService.getByType(CategoryType.RESEARCH_CATEGORY).getSuccessObject();
+            List<ResearchCategoryResource> categoryResources = categoryService.getResearchCategories().getSuccessObject();
             if (categoryResources.stream().filter(category -> category.getId().equals(Long.parseLong(value))).count() == 0) {
                 return serviceFailure(fieldError("value", value, "org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value));
             }
