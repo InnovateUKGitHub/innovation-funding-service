@@ -15,9 +15,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
-import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -42,7 +39,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(28));
-        assertThat(categories, everyItem(hasProperty("type", equalTo(INNOVATION_AREA))));
+        assertThat(categories, everyItem(hasProperty("parent", notNullValue())));
     }
 
     @Test
@@ -52,8 +49,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         List<InnovationSectorResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(4));
-        assertThat(categories, everyItem(hasProperty("type", equalTo(INNOVATION_SECTOR))));
-        assertThat(categories, everyItem(hasProperty("children", everyItem(hasProperty("type", equalTo(INNOVATION_AREA))))));
+        assertThat(categories, everyItem(hasProperty("children", notNullValue())));
     }
 
     @Test
@@ -63,7 +59,6 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         List<ResearchCategoryResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(3));
-        assertThat(categories, everyItem(hasProperty("type", equalTo(RESEARCH_CATEGORY))));
     }
 
     @Test
