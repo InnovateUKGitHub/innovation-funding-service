@@ -68,9 +68,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
             RejectionReasonResource rejectionReasonResource = rejectionReasons.stream()
                     .filter(reason -> reason.getReason().equals(rejectionReason))
                     .findFirst()
-                    .orElseThrow(() -> {
-                        throw new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid");
-                    });
+                    .orElseThrow(() -> new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid"));
 
             doAs(assessor, () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
         });
