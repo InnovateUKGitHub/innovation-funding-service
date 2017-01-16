@@ -95,6 +95,11 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return process != null && GOLState.SENT.equals(process.getActivityState());
     }
 
+    public GOLState getState(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null? process.getActivityState() : GOLState.PENDING;
+    }
+
     boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
         GOLProcess process = getCurrentProcess(project);
         if(process == null)
