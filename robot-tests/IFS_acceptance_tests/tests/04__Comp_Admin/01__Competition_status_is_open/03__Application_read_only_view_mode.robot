@@ -107,7 +107,6 @@ Comp admin has read only view of Assessed Questions after open date
     And the user should not see the element    jquery=.button:contains("Done")
     And the user clicks the button/link    link = Return to application questions
 
-
 Comp admin has read only view of Eligibility past Open date
     [Documentation]    INFUND-6792
     [Tags]
