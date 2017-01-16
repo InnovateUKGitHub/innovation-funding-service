@@ -16,6 +16,9 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-5806 As a partner (non-lead) I want the status indicator of the Other Documents section to show as pending before the lead has uploaded documents so that I am aware there is no action required by me
 ...
 ...               INFUND-6139 Other Docs Team Status table should update
+...               INFUND-7342 As a lead partner I want to be able to submit a document in the "Other Documents" section of Project Setup if an earlier document has been rejected so that I can provide an alternative document for review and approval
+...
+...               INFUND-7345 As an internal user I want to be able to view resubmitted documents in the "Other Documents" section of Project Setup so that they can be reviewed again for approval
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -294,7 +297,6 @@ CompAdmin can see uploaded files
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(2)
     Then the user should see the file without error
 
-
 CompAdmin rejects other documents
     [Documentation]    INFUND-4620
     [Tags]    HappyPath
@@ -304,16 +306,14 @@ CompAdmin rejects other documents
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
-#    When the user clicks the button/link    jQuery=button:contains("Reject documents")
-#    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
-#    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the project team.
-### Commenting out those lines so that the Other Documents can be Approved instead. Have been tested and the functionality works.
+    When the user clicks the button/link    jQuery=button:contains("Reject documents")
+    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
+    Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the Project Manager.
 
 
 Partners can see the documents rejected
-    [Documentation]    INFUND-5559, INFUND-5424
-    ...       This test Case has been deactivated for project id=1. Because the Other Documents are Approved instead.
-    [Tags]    Failing
+    [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342
+    [Tags]
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
@@ -328,8 +328,148 @@ Partners can see the documents rejected
     Then the user should see the element    jQuery=.warning-alert h2:contains("We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.")
 
 
+Project Manager can remove the offending documents
+    [Documentation]    INFUND-7342
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
+    When the user clicks the button/link    name=removeCollaborationAgreementClicked
+    And the user clicks the button/link    name=removeExploitationPlanClicked
+    Then the user should not see the text in the page    ${valid_pdf}
+    And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
+
+After rejection, non-lead partner cannot upload either document
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-7342
+    [Tags]
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
+    And The user should see the text in the page    The lead partner of the consortium will need to upload the following
+    When the user clicks the button/link    link=Other documents
+    Then the user should not see the text in the page    Upload
+
+
+After rejection, PM cannot submit when both documents are not uploaded
+    [Documentation]    INFUND-3012, INFUND-7342
+    [Tags]
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    #Then the user should see the 2 Upload buttons
+    And the user should see the element    jQuery=label[for="collaborationAgreement"]
+    And the user should see the element    jQuery=label[for="exploitationPlan"]
+    Then the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
+
+
+After rejection, large pdfs not allowed for either document
+    [Documentation]    INFUND-3011, INFUND-7342
+    [Tags]
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    When the user uploads to the collaboration agreement question    ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    And the user goes back to the previous page
+    When the user uploads to the exploitation plan question    ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    And the user should not see the text in the page    ${too_large_pdf}
+    And the user goes back to the previous page
+
+After rejection, non pdf files not allowed for either document
+    [Documentation]    INFUND-3011, INFUND-7342
+    [Tags]
+    When the user uploads to the collaboration agreement question    ${text_file}
+    Then the user should see an error    ${wrong_filetype_validation_error}
+    When the user uploads to the exploitation plan question    ${text_file}
+    Then the user should see an error    ${wrong_filetype_validation_error}
+    And the user should not see the text in the page    ${text_file}
+
+After rejection, lead partner cannot remove either document
+    [Documentation]    INFUND-3011, INFUND-7342
+    [Tags]
+    When the user should not see the text in the page    Remove
+    And the user should not see the element    name=removeCollaborationAgreementClicked
+    And the user should not see the element    name=removeExploitationPlanClicked
+
+After rejection, lead partner can upload both documents
+    [Documentation]    INFUND-3011, INFUND-7342
+    [Tags]    HappyPath
+    When the user uploads to the collaboration agreement question    ${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf}
+    When the user uploads to the exploitation plan question    ${valid_pdf}
+    Then the user should not see an error in the page
+
+After rejection, lead partner can view both documents
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-7342
+    [Tags]
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user should see the element    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    [Teardown]    the user navigates to the page    ${project_in_setup_page}
+
+After rejection, lead partner does not have the option to submit the mandatory documents
+    [Documentation]    INFUND-3011, INFUND-7342
+    [Tags]
+    [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
+    When the user should not see an error in the page
+    And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
+
+After rejection, non-lead partner can view both documents
+    [Documentation]    INFUND-2621, INFUND-3011, INFUND-3013, INFUND-5806 , INFUND-4428, INFUND-7342
+    [Tags]    HappyPath
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    Then the user moves focus to the element  jQuery=ul li:nth-child(7)
+    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
+    And the user clicks the button/link    link=Other documents
+    And the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+
+
+After rejection, status in the dashboard remains action required after uploads
+    [Documentation]    INFUND-3011, INFUND-7342
+    [Tags]    HappyPath
+    When the user clicks the button/link    link=Project setup status
+    Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+
+After rejection, mandatory document submission
+    [Documentation]    INFUND-3011, INFUND-6152, INFUND-7342
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    # This ticket assumes that Project_details suite has set as PM the 'test twenty'
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    And the user reloads the page
+    When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
+    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
+    When the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
+    And the user clicks the button/link    jQuery=.button:contains("Submit")
+    When the user clicks the button/link    link=Project setup status
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
+    And the user should see the element    jQuery=ul li.waiting:nth-child(7)
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=What's the status of each of my partners?
+
+
 Project Finance is able to Approve and Reject
-    [Documentation]    INFUND-4621, INFUND-5440
+    [Documentation]    INFUND-4621, INFUND-5440, INFUND-7345
     [Tags]
     [Setup]    Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
@@ -345,7 +485,7 @@ Project Finance is able to Approve and Reject
 
 
 Project Finance user can click the link and go back to the Competition Dashboard page
-    [Documentation]    INFUND-5516
+    [Documentation]    INFUND-5516, INFUND-7345
     [Tags]
     When the user clicks the button/link           link=Competition dashboard
     Then the user should not see an error in the page
@@ -354,7 +494,7 @@ Project Finance user can click the link and go back to the Competition Dashboard
 
 
 CompAdmin approves other documents
-    [Documentation]    INFUND-4621, INFUND-5507
+    [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
     [Tags]    HappyPath
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
@@ -375,7 +515,7 @@ CompAdmin approves other documents
 
 
 Partners can see the documents approved
-    [Documentation]    INFUND-5559, INFUND-5424
+    [Documentation]    INFUND-5559, INFUND-5424, INFUND-7345
     [Tags]    HappyPath
     Given log in as user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd    #Project Manager
     And the user navigates to the page    ${project_in_setup_page}/partner/documents
