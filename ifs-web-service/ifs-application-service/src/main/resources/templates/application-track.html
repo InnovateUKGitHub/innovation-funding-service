@@ -18,26 +18,26 @@
 
     <ul class="ifs-progress-list">
     	<li class="complete">
-        <div class="progress-status" />
-    		<div class="progress-info">
-    			<h2 class="heading-medium">Submitted application</h2>
-    			<p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>'
-            <div th:remove="tag" th:if="${currentApplication.submittedDate != null}">
-              on
-              <div th:remove="tag" th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
-              <div th:include="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" th:remove="tag" />
-              at
-              <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
-            </div>
-          </p>
-    			<p class="linkbar">
-            <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a>
-            <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a>
-          </p>
-    		</div>
+          <div class="progress-status"></div>
+          <div class="progress-info">
+                <h2 class="heading-medium">Submitted application</h2>
+                <p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>'
+                    <div th:remove="tag" th:if="${currentApplication.submittedDate != null}">
+                      on
+                      <div th:remove="tag" th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
+                      <div th:include="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" th:remove="tag" />
+                      at
+                      <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
+                    </div>
+                </p>
+                <p class="linkbar">
+                  <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a>
+                  <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a>
+                </p>
+          </div>
     	</li>
     	<li class="current">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
     			<h2 class="heading-medium">Assessment process</h2>
     			<p>Your application is currently in the process of being assessed. Once the competition submission deadline is reached, all application submitted to the competition are sent for assessment.</p>
@@ -50,7 +50,7 @@
     		</div>
     	</li>
     	<li>
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
     				<h2 class="heading-medium">Decision notification</h2>
     				<p>You will be notified of our decision by
@@ -70,7 +70,7 @@
 
     <ul class="grid-row ifs-progress-list">
     	<li class="column-half successful">
-          <div class="progress-status" />
+          <div class="progress-status"></div>
           <div class="progress-info">
             <h2 class="heading-medium">If your application is successful</h2>
 						<p>If you are successful with this application you will need to provide a series of documents before the project can begin, including</p>
@@ -85,7 +85,7 @@
     		</div>
     	</li>
     	<li class="column-half unsuccessful">
-          <div class="progress-status" />
+          <div class="progress-status"></div>
           <div class="progress-info">
             <h2 class="heading-medium">If your application is unsuccessful</h2>
 						<p>If you are unsuccessful with your application, you will be able to see feedback from the assessors.</p>

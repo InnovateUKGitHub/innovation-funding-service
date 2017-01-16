@@ -340,7 +340,7 @@ Non lead can see the GOL approved
     [Documentation]  INFUND-6377
     [Tags]
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    Then the user should see the element  jQuery=p:nth-child(4) a:contains("testing.pdf")
+    Then the user should see the element  jQuery=.grant-offer-download:contains("testing.pdf")
     And the user should see the element   jQuery=.success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK. Project setup is now complete.")
 
 Non lead can download the signed GOL
