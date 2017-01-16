@@ -20,6 +20,8 @@ textarea[readonly],
 textarea[disabled],
 input[readonly],
 input[disabled],
+select[readonly],
+select[disabled],
 div.readonly,
 .textarea-wrapped div.readonly{
     color: $black;
@@ -330,4 +332,21 @@ select.form-control{
 .form-group.download{
 		padding: 5px 0 0 50px;
 		background: url(../images/icons/icon-download.png) no-repeat;
+}
+
+
+// ------- progressive group select -------- //
+.js-progressive-group-select {
+  margin: 0 0 1em 0;
+
+  @include media (tablet) {
+    margin-right: 1em;
+  }
+}
+
+.js-progressive-group-select,
+[js-progressive-group-select] {
+  @include media (tablet) {
+    max-width: 40%;
+  }
 }
