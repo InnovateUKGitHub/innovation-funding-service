@@ -1,14 +1,10 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.category.resource.CategoryType;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.*;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +18,22 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRestService categoryRestService;
 
     @Override
-    public List<CategoryResource> getCategoryByType(CategoryType type) {
-        return categoryRestService.getByType(type).getSuccessObjectOrThrowException();
+    public List<InnovationAreaResource> getInnovationAreas() {
+        return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
     }
 
     @Override
-    public List<CategoryResource> getCategoryByParentId(Long categoryParentId) {
-        return categoryRestService.getByParent(categoryParentId).getSuccessObjectOrThrowException();
+    public List<InnovationSectorResource> getInnovationSectors() {
+        return categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<ResearchCategoryResource> getResearchCategories() {
+        return categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<InnovationAreaResource> getInnovationAreasBySector(long sectorId) {
+        return categoryRestService.getInnovatationAreasBySector(sectorId).getSuccessObjectOrThrowException();
     }
 }

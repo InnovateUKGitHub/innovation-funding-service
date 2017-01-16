@@ -63,6 +63,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -108,6 +109,7 @@ public class ApplicationFormController {
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
     public static final String TERMS_AGREED_KEY = "termsAgreed";
     public static final String STATE_AID_AGREED_KEY = "stateAidAgreed";
+    public static final String ORGANISATION_SIZE_KEY = "organisationSize";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
 
@@ -329,7 +331,7 @@ public class ApplicationFormController {
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
                 return APPLICATION_FORM;
             } else {
-                return getRedirectUrl(request, applicationId);
+                return getRedirectUrl(request, applicationId, Optional.empty());
             }
         }
     }
@@ -346,7 +348,7 @@ public class ApplicationFormController {
                         && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
     }
 
-    private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId, Optional<SectionType> sectionType) {
         if (request.getParameter("submit-section") == null
                 && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
@@ -361,6 +363,9 @@ public class ApplicationFormController {
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
+            if (sectionType.isPresent() && sectionType.get().getParent().isPresent()) {
+                return redirectToSection(sectionType.get().getParent().get(), applicationId);
+            }
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             LOG.debug("default redirect: ");
             return "redirect:" + APPLICATION_BASE_URL + applicationId;
@@ -661,7 +666,7 @@ public class ApplicationFormController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params);
+        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params, user.getId(), applicationId);
         ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, request, response, bindingResult, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
@@ -675,11 +680,11 @@ public class ApplicationFormController {
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
         } else {
-            return getRedirectUrl(request, applicationId);
+            return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
         }
     }
 
-    private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params) {
+    private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params, Long userId, Long applicationId) {
         Boolean valid = Boolean.TRUE;
 
         if(!isMarkSectionAsCompleteRequest(params)) {
@@ -697,6 +702,15 @@ public class ApplicationFormController {
             if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 valid = Boolean.FALSE;
+            }
+        }
+
+        if(SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
+            List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
+            String organisationType = organisationService.getOrganisationType(userId, applicationId);
+            if (financePositionKeys.isEmpty() && !"University (HEI)".equals(organisationType)) {
+                bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                return false;
             }
         }
 

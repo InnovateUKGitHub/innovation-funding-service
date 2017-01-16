@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -257,5 +258,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval", Boolean.class);
+    }
+
+    @Override
+    public RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GOLState.class);
     }
 }

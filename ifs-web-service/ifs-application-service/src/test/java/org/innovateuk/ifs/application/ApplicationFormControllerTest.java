@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.application.service.ApplicationFinanceService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -34,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
@@ -91,9 +89,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Mock
     private Model model;
 
-    @Mock
-    private ApplicationFinanceService applicationFinanceService;
-
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -131,8 +126,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
-
-        when(applicationFinanceService.getApplicationFinanceSaver(any(SectionType.class))).thenReturn(Optional.empty());
     }
 
     @Test
@@ -336,15 +329,16 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void testApplicationFormSubmitMarkSectionComplete() throws Exception {
-
+    public void testSubmitFinanceSubSectionWithRedirectToYourFinances() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
         mockMvc.perform(
-                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf(sectionId))
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
-                        .param(ApplicationFormController.STATE_AID_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
@@ -373,6 +367,19 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationYourOrganisationMarkAsCompleteFailWithoutOrganisationSize() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your organisation")).withType(SectionType.ORGANISATION_FINANCES).build());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attributeErrorCount("form", 1));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
 

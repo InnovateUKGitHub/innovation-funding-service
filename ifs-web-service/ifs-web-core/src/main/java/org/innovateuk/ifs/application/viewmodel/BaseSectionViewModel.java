@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -241,10 +242,14 @@ public abstract class BaseSectionViewModel {
     }
 
     public Boolean getShowAgreeToStateAidOption() {
-        return null != currentSection && "Your project costs".equals(currentSection.getName()) && !getApplication().getAllReadOnly();
+        return null != currentSection && SectionType.PROJECT_COST_FINANCES.equals(currentSection.getType()) && !getApplication().getAllReadOnly();
     }
 
     public Boolean getShowAgreeToTermsOption() {
-        return null != currentSection && "Your funding".equals(currentSection.getName()) && !getApplication().getAllReadOnly();
+        return null != currentSection && SectionType.FUNDING_FINANCES.equals(currentSection.getType()) && !getApplication().getAllReadOnly();
+    }
+
+    public Boolean isShowReturnButtons() {
+        return !isSubFinanceSection();
     }
 }

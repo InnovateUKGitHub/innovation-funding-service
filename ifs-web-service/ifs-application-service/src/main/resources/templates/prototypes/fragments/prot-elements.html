@@ -169,4 +169,48 @@
 </th:block>
 
 
+<!-- =========================== File upload =========================== -->
+
+<th:block th:fragment="prot-file-upload">
+  <div class="upload-section">
+    <div class="form-group">
+      <label class="form-label-bold" for="attachment-name-one">
+        Attachment name
+      </label>
+      <input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />
+    </div>
+    <div class="form-group">
+      <h3 class="heading-small no-margin">Attachment file</h3>
+      <a href="#" class="uploaded-file">additional_documentation.pdf</a>
+      <div class="alignright"><a href="#">Remove file</a></div>
+    </div>
+  </div>
+  <div class="upload-section">
+    <h3 class="heading-small no-margin">Attachment file</h3>
+    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
+    <details>
+      <summary><span class="summary">What should I include in the project management appendix?</span></summary>
+      <div class="panel">
+        <p>
+          You should include only supporting information in the appendix. You shouldn’t use it to provide responses to the question.
+        </p>
+        <p>
+          You can include a Gantt chart of your proposed project
+        </p>
+        <p>The appendix must:</p>
+        <ul class="list list-bullet">
+          <li>be in a Portable Document Format (.pdf)</li>
+          <li>be legible at 100% magnification</li>
+          <li>display the application number and project title at the top of the document.</li>
+          <li>be no more than 6 sides of A4 – if your appendix is longer than this, we will assess only the first 6 pages</li>
+          <li>be less than 1mb in size</li>
+        </ul>
+      </div>
+    </details>
+    <input type="file" name="file" id="file" class="inputfile" />
+    <label for="file" class="button-secondary extra-margin">+ Upload</label>
+    <p class="uploaded-file">No file currently uploaded</p>
+  </div>
+</th:block>
+
 </html>

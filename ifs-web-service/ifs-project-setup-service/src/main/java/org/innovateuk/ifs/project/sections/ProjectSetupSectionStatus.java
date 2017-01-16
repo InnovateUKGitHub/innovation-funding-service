@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.sections;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -73,11 +74,11 @@ public class ProjectSetupSectionStatus {
     public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
                                                      final boolean leadPartner) {
         if (project.isPartnerDocumentsSubmitted()) {
-            if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+            if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
                 return TICK;
             }
 
-            if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved() && leadPartner) {
+            if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved()) && leadPartner) {
                 return FLAG;
             }
             return HOURGLASS;

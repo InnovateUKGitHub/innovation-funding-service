@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 
-    UserResource systemMaintenanceUser;
+    private UserResource systemMaintenanceUser;
 
     @Before
     public void setUp() throws Exception {

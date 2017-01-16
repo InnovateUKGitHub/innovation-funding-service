@@ -31,6 +31,12 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
         });
     }
 
+    public QuestionStatusResourceBuilder withMarkedAsComplete(Boolean markedAsComplete) {
+        return with(questionStatus -> {
+            questionStatus.setMarkedAsComplete(markedAsComplete);
+        });
+    }
+
     @Override
     protected QuestionStatusResource createInitial() {
         return new QuestionStatusResource();
