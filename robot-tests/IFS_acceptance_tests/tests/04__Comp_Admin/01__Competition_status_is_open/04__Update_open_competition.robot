@@ -55,6 +55,19 @@ Application details are editable before Open date
     Then the user should see the element    jQuery=.button:contains("Edit this question")
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user is able to change the value of the fields
+    [Teardown]    the user clicks the button/link    link=Application
+
+Assessed Questions are editable before open date
+    [Documentation]    INFUND-6936
+    [Tags]    Pending
+    #TODO INFUND-7565
+    Given the user clicks the button/link    link=Business opportunity
+    Then the user should see the element    jquery=h1:contains("Business opportunity")
+    And the user clicks the button/link    jquery=.button:contains("Edit")
+    And the user edits the assessed question information
+    And the user clicks the button/link    jquery=.button:contains("Done")
+    And the user sees the correct assessed question information
+    And the user clicks the button/link    link = Return to application questions
 
 Application details are not editable when competition is open
     [Documentation]    INFUND-6937
@@ -67,6 +80,18 @@ Application details are not editable when competition is open
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
+    [Teardown]   the user clicks the button/link    link=Application
+
+Assessed Questions are not editable after open date
+    [Documentation]    INFUND-6936
+    [Tags]    Pending
+    #TODO INFUND-7566
+    Given the user clicks the button/link    link=Business opportunity
+    Then the user should see the element    jquery=h1:contains("Business opportunity")
+    And the user should not see the element    jquery=.button:contains("Edit")
+    When the user navigates to the page    ${server}/management/competition/setup/1/section/application/question/690/edit
+    And the user clicks the button/link    jQuery=.button:contains("Save and close")
+    Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable."
 
 Project summary is editable before Open date
     [Documentation]    INFUND-6938
