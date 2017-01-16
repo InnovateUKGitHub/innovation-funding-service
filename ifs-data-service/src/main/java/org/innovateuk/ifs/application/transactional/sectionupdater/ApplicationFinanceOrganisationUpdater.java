@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -41,18 +42,34 @@ public class ApplicationFinanceOrganisationUpdater implements ApplicationFinance
 
     }
 
+    private Set<Long> completedSections;
+
     @Override
     public void handleMarkAsComplete(Application currentApplication, Section currentSection, Long processRoleId) {
 
         Optional<ApplicationFinance> applicationFinance = getApplicationFinance(currentApplication.getApplicationFinances(), processRoleId);
 
+        getCompletedSections(applicationFinance);
+
         sectionService.getSectionsByCompetitionIdAndType(currentSection.getCompetition().getId(), SectionType.FUNDING_FINANCES)
         .andOnSuccess(sectionList -> {
-            sectionList.stream().forEach(fundingSection -> {
-                resetFundingSectionToMarkedAsIncomplete(fundingSection.getId(), currentApplication.getId(), processRoleId);
-                resetFundingSectionQuestionInputs(fundingSection.getId(), applicationFinance);
-            });
+            sectionList.stream()
+                .filter(fundingSection -> completedSections != null && completedSections.contains(fundingSection.getId()))
+                .forEach(fundingSection -> {
+                    resetFundingSectionToMarkedAsIncomplete(fundingSection.getId(), currentApplication.getId(), processRoleId);
+                    resetFundingSectionQuestionInputs(fundingSection.getId(), applicationFinance);
+                });
             return serviceSuccess();
+        });
+    }
+
+    private void getCompletedSections(Optional<ApplicationFinance> applicationFinance) {
+        applicationFinance.ifPresent(applicationFinanceFound -> {
+                sectionService.getCompletedSections(applicationFinanceFound.getApplication().getId(), applicationFinanceFound.getOrganisation().getId())
+                        .andOnSuccess(successObject -> {
+                            completedSections = successObject;
+                            return serviceSuccess();
+                        });
         });
     }
 

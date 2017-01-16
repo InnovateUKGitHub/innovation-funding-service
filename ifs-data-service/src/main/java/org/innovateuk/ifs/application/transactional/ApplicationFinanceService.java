@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.transactional.sectionupdater.ApplicationFi
 import java.util.Optional;
 
 /**
- * Service for getting the right updaters, and future populators
+ * Service for getting the right updater based on sectionType
  */
 public interface ApplicationFinanceService {
     Optional<ApplicationFinanceUpdater> getApplicationFinanceSaver(SectionType sectionType);
