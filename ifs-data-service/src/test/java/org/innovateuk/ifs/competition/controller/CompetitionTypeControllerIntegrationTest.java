@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.repository.CategoryLinkRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.junit.Before;
@@ -22,9 +21,6 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class CompetitionTypeControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionTypeController> {
     public static final int EXISTING_CATEGORY_LINK_BEFORE_TEST = 2;
-    @Autowired
-    CategoryLinkRepository categoryLinkRepository;
-
 
     public static final String COMPETITION_NAME_UPDATED = "Competition name updated";
     public static final int INNOVATION_SECTOR_ID = 1;

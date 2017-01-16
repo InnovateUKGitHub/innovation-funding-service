@@ -16,7 +16,7 @@ Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Live Competitions
+Sections of Live Competitions
     [Documentation]    INFUND-3830
     ...
     ...    INFUND-3003
@@ -85,13 +85,9 @@ Upcoming competitions calculations
     And the total calculation in dashboard should be correct    Ready to open    //section[2]/ul/li
     And the total calculation in dashboard should be correct    Upcoming    //section/ul/li
 
-Upcoming competitions ready for open
-    [Documentation]    INFUND-3003
-    Then The user should see the text in the page    ${READY_TO_OPEN_COMPETITION_NAME}
-
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL
+    [Tags]    MySQL    Failing
     [Setup]    Connect to Database    @{database}
     Given the user should see the text in the page    Ready to open
     And The competition is ready to open
@@ -144,7 +140,7 @@ check calculations on one page
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
 
 The competition is ready to open
-    Then element should contain    jQuery=section:nth-child(4)    ${READY_TO_OPEN_COMPETITION_NAME}
+    the user should see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
 
 The competition should be open
-    And element should contain    jQuery=section:nth-child(3)    ${READY_TO_OPEN_COMPETITION_NAME}
+    the user should see the element  jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')

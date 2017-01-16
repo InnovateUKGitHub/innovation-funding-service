@@ -407,17 +407,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(project.getId());
 
         Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
-                Viability.PENDING.equals(finance.getViability()) && !isUsingJesFinances(finance));
+                Viability.REVIEW.equals(finance.getViability()));
 
         if (!existingReviewableFinance.isPresent()) {
             return serviceSuccess();
         } else {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
         }
-    }
-
-    private boolean isUsingJesFinances(ProjectFinance finance) {
-        return organisationFinanceDelegate.isUsingJesFinances(finance.getOrganisation().getOrganisationType().getName());
     }
 
     private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
@@ -530,6 +526,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+        Map<Long, CostCategoryResource> categories = table.getCostCategoryResourceMap();
 
         List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
 
@@ -541,7 +538,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
-                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
+                String categoryName = categories.get(category).getName();
+                //TODO INFUND-7502 could come up with a better way to send the name to the frontend
+                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));
             }
         }
 
