@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
@@ -79,7 +79,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private FinanceOverviewModelManager financeOverviewModelManager;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     private FinanceHandler financeHandler;
@@ -275,8 +275,8 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         if(hasFinanceSection) {
         	
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
-        	
-            financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
             if(!form.isAdminMode()){
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 if(competitionResource.isOpen()) {

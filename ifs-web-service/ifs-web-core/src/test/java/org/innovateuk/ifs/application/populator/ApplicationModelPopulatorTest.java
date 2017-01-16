@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -61,7 +61,7 @@ public class ApplicationModelPopulatorTest {
     protected SectionService sectionService;
 
     @Mock
-    protected FinanceOverviewModelManager financeOverviewModelManager;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
 
     @Mock
     protected OrganisationService organisationService;
@@ -165,7 +165,7 @@ public class ApplicationModelPopulatorTest {
         verifyNoMoreInteractions(model);
 
         //Verify model calls
-        verify(financeOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
         verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, null);
     }
 }

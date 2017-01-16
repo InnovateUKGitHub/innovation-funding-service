@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 //TODO - INFUND-7482 - remove usages of Model model
 @Component
 public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelManager {
+    private ApplicationFinanceRestService appFinanceRestService;
     private ProjectFinanceRestService projectFinanceRestService;
     private SectionService sectionService;
     private QuestionService questionService;
@@ -58,7 +60,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
-        model.addAttribute("researchParticipationPercentage", projectFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+        model.addAttribute("researchParticipationPercentage", appFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
@@ -70,7 +70,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private CompetitionService competitionService;
 
     @Autowired
-    private FinanceOverviewModelManager financeOverviewModelManager;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     private FinanceHandler financeHandler;
@@ -255,7 +255,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
                                                       Model model, ApplicationForm form, String organisationType, Long organisationId) {
-        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+        applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
         financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

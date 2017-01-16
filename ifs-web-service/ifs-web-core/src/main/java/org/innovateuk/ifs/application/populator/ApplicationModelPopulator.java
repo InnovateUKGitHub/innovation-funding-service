@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -43,7 +43,7 @@ public class ApplicationModelPopulator {
     protected SectionService sectionService;
 
     @Autowired
-    protected FinanceOverviewModelManager financeOverviewModelManager;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     protected OrganisationService organisationService;
@@ -144,7 +144,7 @@ public class ApplicationModelPopulator {
         boolean hasFinanceSection = financeSection != null;
 
         if(hasFinanceSection) {
-            financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
 

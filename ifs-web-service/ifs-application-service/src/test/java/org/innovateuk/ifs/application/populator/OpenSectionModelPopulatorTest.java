@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
@@ -83,7 +83,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
     private InviteRestService inviteRestService;
 
     @Mock
-    private FinanceOverviewModelManager financeOverviewModelManager;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private FinanceHandler financeHandler;

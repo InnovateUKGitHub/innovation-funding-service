@@ -178,7 +178,7 @@ public class BaseUnitTest {
     @Mock
     public FinanceHandler financeHandler;
     @Mock
-    public FinanceOverviewModelManager financeOverviewModelManager;
+    public ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock

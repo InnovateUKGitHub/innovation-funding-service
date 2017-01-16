@@ -21,26 +21,29 @@ public class FinanceHandler {
     public static final String APPLICATION_DATA_SOURCE = "APPLICATION_FINANCE";
     public static final String PROJECT_FINANCE_DATA_SOURCE = "PROJECT_FINANCE";
 
+    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
-    private ProjectFinanceRestService projectFinanceRestService;
-    private SectionService sectionService;
-    private QuestionService questionService;
-    private FinanceService financeService;
-    private FileEntryRestService fileEntryRestService;
-    private FormInputService formInputService;
-    private FinanceHandler financeHander;
-
 
     @Autowired
-    public FinanceHandler(ProjectFinanceRestService projectFinanceRestService, SectionService sectionService, QuestionService questionService, FinanceService financeService, FileEntryRestService fileEntryRestService, FormInputService formInputService, FinanceHandler financeHander) {
-        this.projectFinanceRestService = projectFinanceRestService;
-        this.sectionService = sectionService;
-        this.questionService = questionService;
-        this.financeService = financeService;
-        this.fileEntryRestService = fileEntryRestService;
-        this.formInputService = formInputService;
-        this.financeHander = financeHander;
-    }
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private FinanceService financeService;
+
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
+
+    @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
+    private FinanceHandler financeHander;
 
     public FinanceFormHandler getFinanceFormHandler(String organisationType) {
         switch(organisationType) {
