@@ -33,13 +33,13 @@ public interface AssessmentService {
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> rejectInvitation(Long assessmentId, ApplicationRejectionResource applicationRejection);
 
-    @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<Void> withdrawAssessment(Long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(Long assessmentId);
 
-    @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<Void> notify(Long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentSubmissions, 'SUBMIT')")

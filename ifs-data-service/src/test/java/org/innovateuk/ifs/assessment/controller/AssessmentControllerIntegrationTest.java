@@ -208,9 +208,11 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(PENDING, assessmentResource.getAssessmentState());
 
+        loginCompAdmin();
         RestResult<Void> result = controller.withdrawAssessment(assessmentResource.getId());
         assertTrue(result.isSuccess());
 
+        loginPaulPlum();
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
         assertTrue(assessmentResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
@@ -219,7 +221,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     public void withdrawCreatedAssessment() throws Exception {
         Long assessmentId = 9L;
 
-        loginFelixWilson();
+        loginCompAdmin();
         RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
         assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
 
@@ -239,9 +241,11 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
         assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
 
+        loginCompAdmin();
         RestResult<Void> result = controller.notify(assessmentId);
         assertTrue(result.isSuccess());
 
+        loginFelixWilson();
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(PENDING, assessmentResult.getAssessmentState());
     }
