@@ -47,23 +47,11 @@ processTestResources {
     }
 }
 
-configurations {
-    forTesting
-}
-
-task testCommonCode(type: Jar) {
-    baseName += '-tests'
-    from(sourceSets.test.output) {
-        include "**"
-    }
-}
-
-artifacts {
-    forTesting testCommonCode
-}
 
 task cleanDeploy() {
-    build.mustRunAfter clean
-    dependsOn clean
+    dependsOn build
+}
+
+task cleanDeployServices() {
     dependsOn build
 }
