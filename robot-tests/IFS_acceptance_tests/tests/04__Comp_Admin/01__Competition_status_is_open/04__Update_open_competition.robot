@@ -169,8 +169,8 @@ Comp admin has read only view of Public Description past Open date
     Given The user clicks the button/link    link=Application
     When The user should see the text in the page    Public description
     And The user clicks the button/link    link=Public description
-    Then the user should see the element    jquery=h1:contains("Public description")
-    And The user should not see the element    css = input
+    And the user should see the element    jquery=h1:contains("Public description")
+    Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to application questions
@@ -179,8 +179,8 @@ Comp admin has read only view of Project Summary past Open date
     [Documentation]    INFUND-6938
     [Tags]
     When The user clicks the button/link    link=Project summary
-    Then the user should see the element    jquery=h1:contains("Project summary")
-    And The user should not see the element    css = input
+    And the user should see the element    jquery=h1:contains("Project summary")
+    Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to application questions
