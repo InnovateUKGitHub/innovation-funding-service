@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -246,7 +247,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/partner/documents/approved/{approved}", method = POST)
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
-
+        //TODO INFUND-7493
         return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
 
     }
@@ -305,5 +306,10 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval", method = GET)
     public RestResult<Boolean> isSignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
         return projectService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/grant-offer-letter/state", method = GET)
+    public RestResult<GOLState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
+        return projectService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
     }
 }
