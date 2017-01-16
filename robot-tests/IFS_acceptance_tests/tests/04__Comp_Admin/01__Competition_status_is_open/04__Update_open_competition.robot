@@ -47,8 +47,7 @@ User cannot update initial details of a competition after notify date
 Comp admin can edit Application details before Open date
     [Documentation]     INFUND-6937
     [Tags]
-    [Setup]     log in as a different user  &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${CA_UpcomingComp}
+    Given the user navigates to the page      ${CA_UpcomingComp}
     Then the user can see the open date of the competition belongs to the future
     When the user navigates to the page       ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
     And the user clicks the button/link       link=Application
@@ -179,7 +178,7 @@ the user is able to change the value of the fields
     the user clicks the button/link    link=Application details
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("No")
     the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    the user selects the radio button  useResubmissionQuesticton  use-resubmission-question-yes
+    the user clicks the button/link    jQuery=label[for="use-resubmission-question-yes"]
     the user clicks the button/link    jQuery=.button:contains("Save and close")
     the user clicks the button/link    link=Application details
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
