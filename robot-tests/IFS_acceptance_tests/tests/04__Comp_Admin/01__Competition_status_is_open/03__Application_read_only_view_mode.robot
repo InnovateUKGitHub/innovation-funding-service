@@ -9,6 +9,7 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-6941 As a Competitions team member I want to be able to view Finances throughout the life of the competition
 ...               INFUND-6792 As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
 ...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
+...               INFUND-6936 As a Competitions team member I want to be able to view Assessed questions throughout the life of the competition
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
@@ -70,19 +71,6 @@ Comp admin has read only view of Application details past Open date
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
 
-Comp admin has read only view of Project Summary past Open date
-    [Documentation]    INFUND-6938
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    Given the user clicks the button/link    link=Application
-    Then The user should see the text in the page    Project summary
-    And The user clicks the button/link    link=Project summary
-    Then the user should see the element    jquery=h1:contains("Project summary")
-    And The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link    link = Return to application questions
-
 Comp admin has read only view of Scope past Open Date
     [Documentation]    INFUND-6940
     [Tags]
@@ -109,6 +97,16 @@ Comp admin has read only view of Finances past Open Date
     And The user should not see the element    jquery=.button:contains("Done")
     And The user clicks the button/link    link = Return to application questions
 
+Comp admin has read only view of Assessed Questions after open date
+    [Documentation]    INFUND-6936
+    [Tags]
+    Given the user clicks the button/link    link=Business opportunity
+    Then the user should see the element    jquery=h1:contains("Business opportunity")
+    And The user should not see the element    css = input
+    And the user should not see the element    jquery=.button:contains("Edit")
+    And the user should not see the element    jquery=.button:contains("Done")
+    And the user clicks the button/link    link = Return to application questions
+
 Comp admin has read only view of Eligibility past Open date
     [Documentation]    INFUND-6792
     [Tags]
@@ -119,7 +117,7 @@ Comp admin has read only view of Eligibility past Open date
     And The user clicks the button/link    link = Return to setup overview
 
 Comp admin editable fields in Funding Information section past Open date
-    [Documentation]     INFUND-7083
+    [Documentation]    INFUND-7083
     [Tags]
     Given the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
     And the user clicks the button/link    link=Funding information
@@ -130,13 +128,13 @@ Comp admin editable fields in Funding Information section past Open date
     And The user enters text to a text field    id=funders2.funder    InnovateUK
     And The user enters text to a text field    id=2-funderBudget    20000
     And The user enters text to a text field    id= pafNumber    34FAP
-    And The user enters text to a text field    id= budgetCode   45BC
-    And The user enters text to a text field    id= activityCode  56AC
+    And The user enters text to a text field    id= budgetCode    45BC
+    And The user enters text to a text field    id= activityCode    56AC
     And the user should see that the element is disabled    css = input.form-control.width-large[readonly='readonly']
     And The user clicks the button/link    jQuery=.button:contains("Done")
 
 comp admin non-editable fields in Funding Information section past notifications date
-    [Documentation]    INFUND-7083
+    [Documentation]    INFUND-6936
     [Tags]
     Given the user navigates to the page    ${SERVER}/management/competition/setup/${INFORM_COMPETITION}/
     And The user clicks the button/link    link=Funding information
