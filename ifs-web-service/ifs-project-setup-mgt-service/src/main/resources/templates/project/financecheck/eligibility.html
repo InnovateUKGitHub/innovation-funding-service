@@ -13,42 +13,46 @@
     <!-- <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" /> -->
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
-          th:with="readonly=${true}" novalidate="novalidate">
+            th:with="readonly=${true}" novalidate="novalidate">
 
-        <div class="page-title">
-            <h1 class="heading-xlarge"><th:block th:text="${userOrganisation.name}" /></h1>
-        </div>
-        <hr/>
+    <div class="page-title">
+      <h1 class="heading-xlarge"></h1>
+    </div>
+    <hr/>
 
-        <h2 class="heading-medium">Finances overview</h2>
-        <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
-        <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
-
-        <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
-            <h3>
-                <span th:text="${subSection.getName()}" th:remove="tag" />
-                <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
-            </h3>
-            <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
-                <div th:remove="tag" th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-                    <div th:replace="finance/finance :: ${formInput.type.nameLower} (complete='complete')" th:with="formInputIndex=(${status.index})" />
-                </div>
-            </div>
-        </section>
-        <div class="grid-row total-cost">
-            <div class="column-half">
-                <label for="total-cost" class="heading-medium">'<span th:text="${userOrganisation.name}" th:remove="tag"></span>' Total project costs</label>
-            </div>
-            <div class="column-half alignright">
-                <input type="text"
-                       id="total-cost"
-                       readonly="readonly"
-                       class="heading-medium width-full alignright"
-                       data-calculation-fields="[id*=section-total]"
-                       data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+    <h2 class="heading-medium">Finances overview</h2>
+    <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
+    <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+    <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
+        <h3>
+            <span th:text="${subSection.getName()}" th:remove="tag" />
+            <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
+        </h3>
+        <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
+            <div th:remove="tag" th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
+                <!--/*
+                    parameter  status=approved; generates the inputs as text,
+                               status=readonly, generates readonly inputs,
+                               status=edit, generates the editable inputs + repeating row elements)
+                */-->
+                <div th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')"/>
             </div>
         </div>
+    </section>
+    <div class="grid-row total-cost">
+        <div class="column-half">
+            <label for="total-cost" class="heading-medium">'' Total project costs</label>
+        </div>
+        <div class="column-half alignright">
+            <input type="text"
+                   id="total-cost"
+                   readonly="readonly"
+                   class="heading-medium width-full alignright"
+                   data-calculation-fields="[id*=section-total]"
+                   data-calculation-operations="+"
+                   th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+        </div>
+    </div>
     </form>
 
     <!-- /* ACTIVATE WHEN STARTING ON INFUND-4839
