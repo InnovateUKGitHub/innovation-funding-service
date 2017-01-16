@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.viewmodel.BasicProjectDetailsViewModel;
 
 import java.util.List;
@@ -24,11 +25,11 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
     private String projectManagerTelephone;
     private String projectManagerEmail;
 
-    private Boolean approved;
+    private ApprovalType approved;
 
     public ProjectPartnerDocumentsViewModel(Long projectId, long applicationId, String projectName, Long competitionId, String leadPartnerOrganisationName, String projectManagerName,
                                             String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
-                                            FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, Boolean approved
+                                            FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, ApprovalType approved
                                           ) {
         this.projectId = projectId;
         this.applicationId = applicationId;
@@ -81,9 +82,11 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
     public String getProjectManagerEmail() { return projectManagerEmail;}
 
     public Boolean isApproved() {
-        return approved;
+        return ApprovalType.APPROVED.equals(approved);
     }
 
-    public boolean isShowApproveRejectButtons() { return approved != null; }
+    public Boolean isRejected() { return ApprovalType.REJECTED.equals(approved); }
+
+    public Boolean isShowApproveRejectButtons() { return ApprovalType.UNSET.equals(approved); }
 
 }

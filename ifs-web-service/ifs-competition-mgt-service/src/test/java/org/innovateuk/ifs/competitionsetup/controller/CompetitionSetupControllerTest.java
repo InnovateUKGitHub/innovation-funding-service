@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -28,10 +28,14 @@ import org.springframework.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -75,25 +79,26 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Technologist").build()));
 
-        CategoryResource c1 = new CategoryResource();
-        c1.setType(CategoryType.INNOVATION_SECTOR);
-        c1.setName("A Innovation Sector");
-        c1.setId(1L);
-        when(categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR)).thenReturn(asList(c1));
+        List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
+                .withName("A Innovation Sector")
+                .withId(1L)
+                .build(1);
+        when(categoryService.getInnovationSectors()).thenReturn(innovationSectorResources);
 
-        CategoryResource c2 = new CategoryResource();
-        c2.setType(CategoryType.INNOVATION_AREA);
-        c2.setName("A Innovation Area");
-        c2.setId(2L);
-        c2.setParent(1L);
-        when(categoryService.getCategoryByType(CategoryType.INNOVATION_AREA)).thenReturn(asList(c2));
+        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+                .withName("A Innovation Area")
+                .withId(2L)
+                .withParent(1L)
+                .build(1);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
-        CompetitionTypeResource ct1 = new CompetitionTypeResource();
-        ct1.setId(1L);
-        ct1.setName("Comptype with stateAid");
-        ct1.setStateAid(true);
-        ct1.setCompetitions(asList(COMPETITION_ID));
-        when(competitionService.getAllCompetitionTypes()).thenReturn(asList(ct1));
+        List<CompetitionTypeResource> competitionTypeResources = newCompetitionTypeResource()
+                .withId(1L)
+                .withName("Comptype with stateAid")
+                .withStateAid(true)
+                .withCompetitions(asList(COMPETITION_ID))
+                .build(1);
+        when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypeResources);
     }
 
     @Test
@@ -140,18 +145,19 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void getInnovationAreas() throws Exception {
         Long innovationSectorId = 1L;
-        CategoryResource category = new CategoryResource();
-        category.setType(CategoryType.INNOVATION_AREA);
-        category.setId(1L);
-        category.setName("Innovation Area 1");
+        InnovationAreaResource category = newInnovationAreaResource()
+                .withType(INNOVATION_AREA)
+                .withId(1L)
+                .withName("Innovation Area 1")
+                .build();
 
-        when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(asList(category));
+        when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(asList(category));
 
         mockMvc.perform(get(URL_PREFIX + "/getInnovationArea/" + innovationSectorId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(1)))
                 .andExpect(jsonPath("[0]name", is("Innovation Area 1")))
-                .andExpect(jsonPath("[0]type", is(CategoryType.INNOVATION_AREA.toString())));
+                .andExpect(jsonPath("[0]type", is(INNOVATION_AREA.toString())));
 
     }
 
