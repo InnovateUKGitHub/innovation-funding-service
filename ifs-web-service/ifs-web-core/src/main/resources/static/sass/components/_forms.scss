@@ -342,12 +342,12 @@ select.form-control{
 
   @include media (tablet) {
     display: inline-block;
-    margin-right: 1em;
+    margin: 0 1em 0 0;
   }
 }
 
 .js-progressive-group-select,
-[js-progressive-group-select] {
+[data-progressive-group-select] {
   @include media (tablet) {
     max-width: 40%;
   }
