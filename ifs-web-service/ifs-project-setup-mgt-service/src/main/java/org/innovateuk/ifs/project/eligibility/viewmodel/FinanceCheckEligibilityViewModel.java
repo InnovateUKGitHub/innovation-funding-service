@@ -12,13 +12,15 @@ public class FinanceCheckEligibilityViewModel {
     private boolean leadPartnerOrganisation;
     private String projectName;
     private String applicationId;
+    private Long projectId;
 
-    public FinanceCheckEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName, String applicationId, boolean leadPartnerOrganisation) {
-        this.setEligibilityOverview(eligibilityOverview);
+    public FinanceCheckEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName, String applicationId, boolean leadPartnerOrganisation, Long projectId) {
+        this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
         this.applicationId = applicationId;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
+        this.projectId = projectId;
     }
 
     public FinanceCheckEligibilityResource getEligibilityOverview() {
@@ -59,5 +61,13 @@ public class FinanceCheckEligibilityViewModel {
 
     public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

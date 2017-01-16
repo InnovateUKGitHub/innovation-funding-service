@@ -63,6 +63,6 @@ public class FinanceCheckEligibilityController {
 
         FinanceCheckEligibilityResource eligibility = financeCheckService.getFinanceCheckEligibility(projectId, organisationId);
 
-        return new FinanceCheckEligibilityViewModel(eligibility, organisation.getName(), project.getName(), application.getFormattedId(), leadPartnerOrganisation);
+        return new FinanceCheckEligibilityViewModel(eligibility, organisation.getName(), project.getName(), application.getFormattedId(), leadPartnerOrganisation, project.getId());
     }
 }
