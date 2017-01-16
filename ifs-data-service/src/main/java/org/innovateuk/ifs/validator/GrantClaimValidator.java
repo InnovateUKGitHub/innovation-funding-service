@@ -31,32 +31,27 @@ public class GrantClaimValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         GrantClaim response = (GrantClaim) target;
-        FinanceRow cost = financeRowRepository.findOne(response.getId());
-
-        OrganisationType organisationType = ((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType();
-
 
         if(response.getGrantClaimPercentage() == null) {
             rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
             return;
         }
+        //Organisation size isn't required if the claim percentage is 0.
+        if (response.getGrantClaimPercentage() == 0) {
+            return;
+        }
 
+        FinanceRow cost = financeRowRepository.findOne(response.getId());
+        OrganisationType organisationType = ((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType();
         int max;
 
         if(isAcademicOrBusiness(organisationType)) {
-
             OrganisationSize size = ((ApplicationFinanceRow)cost).getTarget().getOrganisationSize();
-
-            //Organisation size isn't required if the claim percentage is 0.
-            if (response.getGrantClaimPercentage() == 0) {
-                max = 0;
-            } else {
-                if (size == null) {
-                    rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
-                    return;
-                }
-                max = size.getMaxGrantClaimPercentage();
+            if (size == null) {
+                rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
+                return;
             }
+            max = size.getMaxGrantClaimPercentage();
         } else {
             max = 100;
         }
