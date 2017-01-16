@@ -133,7 +133,7 @@ Comp admin has read only view of Eligibility past Open date
 
 Comp admin editable fields in Funding Information section past Open date
     [Documentation]     INFUND-7083
-    [Tags]          Pending
+    [Tags]      Pending
     Given the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
     And the user clicks the button/link    link=Funding information
     Then the user should see the element    jquery=h1:contains("Funding information")
@@ -145,13 +145,13 @@ Comp admin editable fields in Funding Information section past Open date
     And The user enters text to a text field    id= pafNumber    34FAP
     And The user enters text to a text field    id= budgetCode   45BC
     And The user enters text to a text field    id= activityCode  56AC
-    And the user should see that the element is disabled   css = input.form-control width-large
+    And the user should see that the element is disabled    css = input.form-control.width-large[readonly='readonly']
     And The user clicks the button/link     jQuery=.button:contains("Done")
 
 comp admin non-editable fields in Funding Information section past notifications date
     [Documentation]     INFUND-7083
     [Tags]
-    Given the user navigates to the page    ${SERVER}/management/competition/setup/7/
+    Given the user navigates to the page    ${SERVER}/management/competition/setup/${INFORM_COMPETITION}/
     And The user clicks the button/link    link=Funding information
     Then the user should see the element    jquery=h1:contains("Funding information")
     And The user should not see the element     css = input
