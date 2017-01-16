@@ -12,11 +12,8 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-//            OrganisationMapper.class,
             RoleMapper.class,
-//            ProcessRoleMapper.class,
             EthnicityMapper.class,
-//            ProfileMapper.class
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {

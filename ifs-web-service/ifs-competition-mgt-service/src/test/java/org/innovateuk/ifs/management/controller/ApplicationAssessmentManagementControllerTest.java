@@ -41,7 +41,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
 
         List<ApplicationCountSummaryResource> summaryResources = newApplicationCountSummaryResource()
                 .withName("one", "two")
-                .withLeadOrganisation("org1", "org2")
+                .withLeadOrganisation(1L, 2L)
                 .withAccepted(2L, 3L)
                 .withAssessors(3L, 4L)
                 .withSubmitted(1L, 2L).build(2);

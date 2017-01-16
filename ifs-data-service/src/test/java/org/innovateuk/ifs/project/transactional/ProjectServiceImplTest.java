@@ -187,7 +187,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        o = application.getLeadOrganisation();
+        o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
         partnerRole = newRole().
@@ -206,7 +206,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         pu = newProjectUser().
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
-                withOrganisation(application.getLeadOrganisation()).
+                withOrganisation(o).
                 withInvite(newInvite().
                         build()).
                 build(1);

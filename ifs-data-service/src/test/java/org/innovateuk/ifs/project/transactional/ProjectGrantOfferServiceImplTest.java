@@ -257,8 +257,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 BigDecimal.valueOf(200));
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-        when(organisationMapperMock.mapToResource(organisation)).thenReturn(organisationResource);
+        when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
+        when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
+        when(organisationRepositoryMock.findOne(organisations.get(2).getId())).thenReturn(organisations.get(2));
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));

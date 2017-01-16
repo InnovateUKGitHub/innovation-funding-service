@@ -218,7 +218,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
                     if (participant.getUser() != null) {
                         assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
-                        assessorInviteOverview.setCompliant(participant.getUser().isProfileCompliant());
+                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
+                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         // TODO INFUND-6865 Users should have innovation areas
                         assessorInviteOverview.setInnovationArea(null);
                     }

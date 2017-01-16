@@ -288,7 +288,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                 || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .collect(Collectors.toCollection(supplier));
     }
 
@@ -307,7 +307,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         return userApplicationRoles.stream()
             .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .findFirst();
     }
 }

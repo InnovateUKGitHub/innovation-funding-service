@@ -28,6 +28,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
     @Test
     public void getApplicationAssessmentSummary() throws Exception {
+        Organisation org1 = buildOrganisationWithName("Acme Ltd.");
+        Organisation org2 = buildOrganisationWithName("IO systems");
+        Organisation org3 = buildOrganisationWithName("Liquid Dynamics");
         Application application = newApplication()
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
@@ -35,9 +38,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
-                        .withOrganisation(buildOrganisationWithName("Acme Ltd."),
-                                buildOrganisationWithName("IO systems"),
-                                buildOrganisationWithName("Liquid Dynamics"))
+                        .withOrganisation(org1, org2, org3)
                         .buildArray(3, ProcessRole.class))
                 .build();
 
@@ -50,6 +51,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(organisationRepositoryMock.findOne(org1.getId())).thenReturn(org1);
+        when(organisationRepositoryMock.findOne(org2.getId())).thenReturn(org2);
+        when(organisationRepositoryMock.findOne(org3.getId())).thenReturn(org3);
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
 

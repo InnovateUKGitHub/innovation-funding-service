@@ -922,8 +922,11 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
 
+        Profile[] profiles = newProfile().
+                withBusinessType(BUSINESS, ACADEMIC, BUSINESS).
+                buildArray(3, Profile.class);
         List<User> users = newUser()
-                .withProfile(newProfile().withBusinessType(BUSINESS, ACADEMIC, BUSINESS).buildArray(3, Profile.class))
+                .withProfile(profiles)
                 .build(3);
 
         List<CompetitionInvite> invites = newCompetitionInvite()
@@ -947,6 +950,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withDetails(null, "Invite declined as not available", null)
                 .build(3);
 
+        when(profileRepositoryMock.findOne(profiles[0].getId())).thenReturn(profiles[0]);
+        when(profileRepositoryMock.findOne(profiles[1].getId())).thenReturn(profiles[1]);
+        when(profileRepositoryMock.findOne(profiles[2].getId())).thenReturn(profiles[2]);
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
         when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
         when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
