@@ -23,6 +23,10 @@
                 </ul>
             </div>
 
+            <h2 class="heading-medium">Finance summary</h2>
+            <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+            <div th:include="finance/your-finances-sub-sections :: your_finance_summary"/>
+
         </th:block>
     </div>
 
@@ -101,6 +105,45 @@
                 </th:block>
             </th:block>
         </li>
+    </div>
+
+    <div th:fragment="your_finance_summary">
+
+        <div class="form-group" style="overflow:auto;">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" class="numeric width-small">Total project costs</th>
+                    <th scope="col" class="numeric width-small">% Grant</th>
+                    <th scope="col" class="numeric width-small">Funding sought</th>
+                    <th scope="col" class="numeric width-small">Other public sector funding</th>
+                    <th scope="col" class="numeric width-small">Contribution to project</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <div th:if="${organisationFinance}" th:remove="tag">
+                    <td class="numeric">
+                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}" />
+                    </td>
+                    <td class="numeric" th:text="${organisationGrantClaimPercentage}+'%'"/>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                </div>
+                <div th:unless="${organisationFinance}" th:remove="tag">
+                    <td class="numeric">
+                        <strong>&pound;0</strong>
+                    </td>
+                    <td class="numeric">0%</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                </div>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </html>
