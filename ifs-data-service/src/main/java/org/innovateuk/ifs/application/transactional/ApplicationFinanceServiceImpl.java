@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.transactional.sectionupdater.ApplicationFinanceUpdater;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class ApplicationFinanceServiceImpl implements ApplicationFinanceService 
     private Map<SectionType, ApplicationFinanceUpdater> financeSectionSavers;
 
     @Autowired
+    @NotSecured("Autowired function, security not needed at this level")
     public void setFinanceSectionSavers(Collection<ApplicationFinanceUpdater> sectionSavers) {
         financeSectionSavers = sectionSavers.stream().collect(Collectors.toMap(p -> p.getRelatedSection(), Function.identity()));
     }
