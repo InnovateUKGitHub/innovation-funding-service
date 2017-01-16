@@ -6,6 +6,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -32,8 +33,14 @@ public interface AssessmentService {
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> rejectInvitation(Long assessmentId, ApplicationRejectionResource applicationRejection);
 
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> withdrawAssessment(Long assessmentId);
+
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(Long assessmentId);
+
+    @PreAuthorize("hasAuthority('comp_admin')")
+    ServiceResult<Void> notify(Long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentSubmissions, 'SUBMIT')")
     ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
