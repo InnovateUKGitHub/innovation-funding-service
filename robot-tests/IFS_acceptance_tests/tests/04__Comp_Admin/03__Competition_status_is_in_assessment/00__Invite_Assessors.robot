@@ -75,6 +75,7 @@ Invite non-registered users
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
+    And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
     And The user should not see the text in the page    Please select an innovation area.    #check for the client side validation
     And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
