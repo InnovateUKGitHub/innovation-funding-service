@@ -8,8 +8,8 @@ Documentation
 ...               INFUND-6941  As a Competitions team member I want to be able to view Finances throughout the life of the competition
 ...               INFUND-6792  As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
 ...               INFUND-7083  As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
-...
-Suite Setup       Log in as user    &{Comp_admin1_credentials}
+...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  MySQL
 Resource          ../../../resources/defaultResources.robot
