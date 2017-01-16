@@ -60,7 +60,6 @@ Comp admin has read only view of Application details past Open date
     [Documentation]  INFUND-6937
     ...  Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
     [Tags]
-    [Setup]     log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page      ${CA_Live}
     Then the user should see the element      jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
     When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail
@@ -161,7 +160,7 @@ Comp admin has read only view of Eligibility past Open date
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
     And The user should not see the element    jQuery=button:contains(Edit)
-    [Teardown]    And The user clicks the button/link    link = Return to setup overview
+    [Teardown]  The user clicks the button/link    link = Return to setup overview
 
 Comp admin has read only view of Public Description past Open date
     [Documentation]    INFUND-6939
