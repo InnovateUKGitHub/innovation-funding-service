@@ -1,17 +1,16 @@
 *** Settings ***
-Documentation
-...               INFUND-6661 As a Competitions team member I want to be able to update Initial details throughout the life of the competition
-...               INFUND-6937  As a Competitions team member I want to be able to view Application details throughout the life of the competition
-...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
-...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
-...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
-...               INFUND-6941  As a Competitions team member I want to be able to view Finances throughout the life of the competition
-...               INFUND-6792  As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
-...               INFUND-7083  As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
+Documentation     INFUND-6661 As a Competitions team member I want to be able to update Initial details throughout the life of the competition
+...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
+...               INFUND-6938 As a Competitions team member I want to be able to view Project summary throughout the life of the competition
+...               INFUND-6939 As a Competitions team member I want to be able to view Public description throughout the life of the competition
+...               INFUND-6940 As a Competitions team member I want to be able to view Scope throughout the life of the competition
+...               INFUND-6941 As a Competitions team member I want to be able to view Finances throughout the life of the competition
+...               INFUND-6792 As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
+...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 ...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin  MySQL
+Force Tags        CompAdmin    MySQL
 Resource          ../../../resources/defaultResources.robot
 Resource          ../CompAdmin_Commons.robot
 
@@ -45,7 +44,7 @@ User cannot update initial details of a competition after notify date
     And the user should not see the element    jQuery=.button:contains("Done")
 
 Comp admin can edit Application details before Open date
-    [Documentation]     INFUND-6937
+    [Documentation]    INFUND-6937
     [Tags]
     Given the user navigates to the page      ${CA_UpcomingComp}
     Then the user can see the open date of the competition belongs to the future
@@ -69,10 +68,11 @@ Comp admin has read only view of Application details past Open date
     When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail/edit
     And the user clicks the button/link       jQuery=.button:contains("Save and close")
     Then the user should see the element      jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
+
 Comp admin can edit Project summary before Open date
-    [Documentation]     INFUND-6938
+    [Documentation]  INFUND-6938
     [Tags]
-    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
+    [Setup]  the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
     Then The user should see the text in the page    Project summary
     And The user clicks the button/link     link=Project summary
@@ -82,7 +82,7 @@ Comp admin can edit Project summary before Open date
     And the user clicks the button/link    css=input.button.button-large
 
 Comp admin can edit Public description details before Open date
-    [Documentation]     INFUND-6939
+    [Documentation]  INFUND-6939
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given The user clicks the button/link    link=Application
@@ -130,16 +130,6 @@ Comp admin can edit Eligibility before Open date
     And the user selects the radio button     singleOrCollaborative    single
     And The user clicks the button/link      css=button.button
 
-Comp admin has read only view of Eligibility past Open date
-    [Documentation]     INFUND-6792
-    [Tags]
-    [Setup]     log in as a different user    &{Comp_admin1_credentials}
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
-    And The user clicks the button/link    link=Eligibility
-    And the user should see the element    jquery=h1:contains("Eligibility")
-    And The user should not see the element     css = input
-    And The user clicks the button/link     link = Return to setup overview
-
 Comp admin can edit Assessors page before Notifications Date
     [Documentation]  INFUND-6695
     [Tags]  MySQL  HappyPath
@@ -162,6 +152,29 @@ Comp admin cannot edit Assessors page after Notifications Date
     [Documentation]  INFUND-6695
     [Tags]  Pending
     # TODO Pending due to INFUND-7511
+
+Comp admin has read only view of Eligibility past Open date
+    [Documentation]    INFUND-6792
+    [Tags]
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
+    And The user clicks the button/link    link=Eligibility
+    And the user should see the element    jquery=h1:contains("Eligibility")
+    And The user should not see the element    css = input
+    And The user should not see the element    jQuery=button:contains(Edit)
+    [Teardown]    And The user clicks the button/link    link = Return to setup overview
+
+Comp admin has read only view of Public Description past Open date
+    [Documentation]    INFUND-6939
+    [Tags]
+    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    And The user clicks the button/link    link=Application
+    Then The user should see the text in the page    Public description
+    And The user clicks the button/link    link=Public description
+    Then the user should see the element    jquery=h1:contains("Public description")
+    And The user should not see the element    css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    And The user clicks the button/link    link = Return to application questions
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future

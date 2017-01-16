@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -122,4 +123,6 @@ public interface ProjectService {
     ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
 
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
+
+    ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
 }
