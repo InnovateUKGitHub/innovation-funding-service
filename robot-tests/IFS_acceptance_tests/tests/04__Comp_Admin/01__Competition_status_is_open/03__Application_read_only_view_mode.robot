@@ -56,60 +56,6 @@ Comp admin should be able to view but not edit the finances for every partner
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
 
-Comp admin has read only view of Application details past Open date
-    [Documentation]  INFUND-6937
-    ...  Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
-    [Tags]
-    [Setup]     log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page      ${CA_Live}
-    Then the user should see the element      jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
-    When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail
-    Then the user should not see the element  jQuery=.button:contains("Edit this question")
-    When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail/edit
-    And the user clicks the button/link       jQuery=.button:contains("Save and close")
-    Then the user should see the element      jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
-
-#The following code is part of another story
-#    And The user should not see the element     css = input
-#    And The user should not see the element    jquery=.button:contains("Edit")
-#    And The user should not see the element    jquery=.button:contains("Done")
-#    And The user clicks the button/link     link = Return to application questions
-#    And The user clicks the button/link     link=Project summary
-#    And the user should see the element    jquery=h1:contains("Project summary")
-#    And The user should not see the element     css = input
-#    And The user should not see the element    jquery=.button:contains("Edit")
-#    And The user should not see the element    jquery=.button:contains("Done")
-#    And The user clicks the button/link     link = Return to application questions
-#    And The user clicks the button/link     link=Public description
-#    And the user should see the element    jquery=h1:contains("Public description")
-#    And The user should not see the element     css = input
-#    And The user should not see the element    jquery=.button:contains("Edit")
-#    And The user should not see the element    jquery=.button:contains("Done")
-#    And The user clicks the button/link     link = Return to application questions
-#    And The user clicks the button/link     link=Scope
-#    And the user should see the element    jquery=h1:contains("Scope")
-#    And The user should not see the element     css = input
-#    And The user should not see the element    jquery=.button:contains("Edit")
-#    And The user should not see the element    jquery=.button:contains("Done")
-#    And The user clicks the button/link     link = Return to application questions
-#    And The user clicks the button/link     link=Finances
-#    And the user should see the element    jquery=h1:contains("Application finances")
-#    And The user should not see the element     css = input
-#    And The user should not see the element    jquery=.button:contains("Edit")
-#    And The user should not see the element    jquery=.button:contains("Done")
-#    And The user clicks the button/link     link = Return to application questions
-
-Comp admin has read only view of Eligibility past Open date
-    [Documentation]     INFUND-6792
-    [Tags]
-    [Setup]     log in as a different user    &{Comp_admin1_credentials}
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
-    And The user clicks the button/link    link=Eligibility
-    And the user should see the element    jquery=h1:contains("Eligibility")
-    And The user should not see the element     css = input
-    And The user clicks the button/link     link = Return to setup overview
-
-
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
