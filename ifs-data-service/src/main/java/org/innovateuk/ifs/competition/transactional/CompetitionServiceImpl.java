@@ -2,9 +2,8 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.domain.*;
+import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
@@ -24,9 +23,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
+import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -40,13 +43,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
 
-    public static final String COMPETITION_CLASS_NAME = Competition.class.getName();
-
     @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
@@ -74,17 +75,27 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private void addInnovationSector(Competition competition) {
-        Category category = categoryRepository.findByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_SECTOR, COMPETITION_CLASS_NAME, competition.getId());
+        InnovationSector category =
+                (InnovationSector) Optional.ofNullable(
+                        competitionCategoryLinkRepository.findByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_SECTOR)
+                ).map(CompetitionCategoryLink::getCategory).orElse(null);
         competition.setInnovationSector(category);
     }
 
     private void addInnovationAreas(Competition competition) {
-        Set<Category> categories = categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.INNOVATION_AREA, COMPETITION_CLASS_NAME, competition.getId());
+        Set<InnovationArea> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_AREA)
+                .stream()
+                .map(competitionCategoryLink -> (InnovationArea)competitionCategoryLink.getCategory())
+                .collect(Collectors.toSet());
+
         competition.setInnovationAreas(categories);
     }
 
     private void addResearchCategories(Competition competition) {
-        Set<Category> categories = categoryRepository.findAllByTypeAndCategoryLinks_ClassNameAndCategoryLinks_ClassPk(CategoryType.RESEARCH_CATEGORY, COMPETITION_CLASS_NAME, competition.getId());
+        Set<ResearchCategory> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), RESEARCH_CATEGORY)
+                .stream()
+                .map(competitionCategoryLink -> (ResearchCategory)competitionCategoryLink.getCategory())
+                .collect(Collectors.toSet());
         competition.setResearchCategories(categories);
     }
 

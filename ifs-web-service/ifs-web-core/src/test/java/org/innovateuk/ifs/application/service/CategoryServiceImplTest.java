@@ -1,18 +1,19 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -30,62 +31,64 @@ public class CategoryServiceImplTest extends BaseServiceUnitTest<CategoryService
         return new CategoryServiceImpl();
     }
 
-    @Override
-    @Before
-    public void setUp() {
-        super.setUp();
+    @Test
+    public void getInnovationAreasBySector() throws Exception {
+        List<InnovationAreaResource> expected = newInnovationAreaResource()
+                .withId(1L, 3L)
+                .withName("Category 1", "Category 2")
+                .withParent(1L, 1L)
+                .build(2);
 
+        when(categoryRestService.getInnovatationAreasBySector(1L)).thenReturn(restSuccess(expected));
+
+        final List<InnovationAreaResource> actual = service.getInnovationAreasBySector(1L);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void test_getCategoryByParentId() throws Exception {
-        CategoryResource cat1 = new CategoryResource();
-        cat1.setType(CategoryType.INNOVATION_AREA);
-        cat1.setName("Category 1");
-        cat1.setParent(1L);
-        cat1.setId(2L);
+    public void getInnovationAreas() throws Exception {
+        List<InnovationAreaResource> expected = newInnovationAreaResource()
+                .withId(2L, 3L)
+                .withName("Category 1", "Category 2")
+                .withParent(1L, 1L)
+                .build(2);
 
-        CategoryResource cat2 = new CategoryResource();
-        cat2.setType(CategoryType.INNOVATION_AREA);
-        cat2.setName("Category 2");
-        cat2.setParent(1L);
-        cat2.setId(3L);
+        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(expected));
 
+        final List<InnovationAreaResource> actual = service.getInnovationAreas();
 
-        final List<CategoryResource> expected = new ArrayList<>(asList(cat1, cat2));
-
-        when(categoryRestService.getByParent(1L)).thenReturn(restSuccess(expected));
-
-        final List<CategoryResource> found = service.getCategoryByParentId(1L);
-        assertEquals(2, found.size());
-        assertEquals(Long.valueOf(2L), found.get(0).getId());
-        assertEquals(Long.valueOf(3L), found.get(1).getId());
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void test_getCategoryByType() throws Exception {
-        CategoryResource cat1 = new CategoryResource();
-        cat1.setType(CategoryType.INNOVATION_AREA);
-        cat1.setName("Category 1");
-        cat1.setParent(1L);
-        cat1.setId(2L);
+    public void getInnovationSectors() throws Exception {
+        List<InnovationSectorResource> expected = newInnovationSectorResource()
+                .withId(2L, 3L)
+                .withName("Sector 1", "Sector 2")
+                .withChildren(
+                        newInnovationAreaResource().build(2),
+                        newInnovationAreaResource().build(2)
+                )
+                .build(2);
 
-        CategoryResource cat2 = new CategoryResource();
-        cat2.setType(CategoryType.INNOVATION_AREA);
-        cat2.setName("Category 2");
-        cat2.setParent(1L);
-        cat2.setId(3L);
+        when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(expected));
 
+        final List<InnovationSectorResource> actual = service.getInnovationSectors();
 
-        final List<CategoryResource> expected = new ArrayList<>(asList(cat1, cat2));
-
-        when(categoryRestService.getByType(CategoryType.INNOVATION_AREA)).thenReturn(restSuccess(expected));
-
-        final List<CategoryResource> found = service.getCategoryByType(CategoryType.INNOVATION_AREA);
-        assertEquals(2, found.size());
-        assertEquals(CategoryType.INNOVATION_AREA, found.get(0).getType());
-        assertEquals(CategoryType.INNOVATION_AREA, found.get(1).getType());
+        assertEquals(expected, actual);
     }
 
+    @Test
+    public void getResearchCategories() throws Exception {
+        List<ResearchCategoryResource> expected = newResearchCategoryResource()
+                .withId(2L, 3L)
+                .withName("Research Sector 1", "Research Sector 2")
+                .build(2);
 
+        when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(expected));
+
+        final List<ResearchCategoryResource> actual = service.getResearchCategories();
+
+        assertEquals(expected, actual);
+    }
 }
