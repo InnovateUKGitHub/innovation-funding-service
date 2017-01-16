@@ -20,7 +20,7 @@ oc cluster up && {
   done
 
   sleep 10 # Need a further sleep...
-  exit 0
+  exit 0 # Don't need to sync ldap against ifs-database
 
   ldap=$(docker ps |awk '/ldap:/ {print $1}')
   [ -z "$ldap" ] && {
