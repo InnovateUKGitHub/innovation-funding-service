@@ -7,6 +7,8 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
@@ -17,6 +19,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,11 +51,21 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     private ActivityStateRepository activityStateRepositoryMock;
     private AssessmentRepository assessmentRepositoryMock;
+    private ProcessRoleRepository processRoleRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
         activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         assessmentRepositoryMock = (AssessmentRepository) mockSupplier.apply(AssessmentRepository.class);
+        processRoleRepositoryMock = (ProcessRoleRepository) mockSupplier.apply(ProcessRoleRepository.class);
+    }
+
+
+    @Override
+    protected List<Class<? extends Repository>> getRepositoriesToMock() {
+        List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
+        repositories.add(ProcessRoleRepository.class);
+        return repositories;
     }
 
     @Test
@@ -61,7 +74,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
-    public void withdrawAssessment_createdToDeleted() throws Exception {
+    public void withdrawAssessment_createdToWithdrawn() throws Exception {
         assertWorkflowStateChangeForWithdrawnFromCreated((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(CREATED));
     }
 
@@ -259,6 +272,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     private void assertWorkflowStateChangeForWithdrawnFromCreated(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
         assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment) -> {
             verify(assessmentRepositoryMock).delete(assessment);
+            verify(processRoleRepositoryMock).delete(assessment.getParticipant());
         });
     }
 
