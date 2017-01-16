@@ -34,6 +34,7 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -128,6 +129,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected BankDetailsService bankDetailsService;
     protected ProjectFinanceService projectFinanceService;
     protected FinanceCheckService financeCheckService;
+    protected RejectionReasonRepository rejectionReasonRepository;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -180,6 +182,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
         this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
+        this.rejectionReasonRepository = serviceLocator.getBean(RejectionReasonRepository.class);
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -51,6 +52,15 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
             doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
             doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccessObjectOrThrowException());
+        });
+    }
+
+    public AssessorInviteDataBuilder rejectInvite(String hash, String assessorEmail, String rejectionReason, Optional<String> rejectionComment) {
+        return with(data  -> {
+
+            UserResource assessor = retrieveUserByEmail(assessorEmail);
+
+            doAs(assessor, () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
         });
     }
 

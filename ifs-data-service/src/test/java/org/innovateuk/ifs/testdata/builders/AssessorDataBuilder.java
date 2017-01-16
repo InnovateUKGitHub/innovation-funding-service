@@ -79,6 +79,16 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         return with(data -> newAssessorInviteData(serviceLocator).acceptInvite(hash, data.getEmail()).build());
     }
 
+    public AssessorDataBuilder rejectInvite(String hash, String rejectionReason, String rejectionComment) {
+        return with(data -> newAssessorInviteData(serviceLocator).rejectInvite(
+                hash,
+                data.getEmail(),
+                rejectionReason,
+                Optional.of(rejectionComment)
+        )
+                .build());
+    }
+
     private RoleResource getAssessorRoleResource() {
         return roleService.findByUserRoleType(ASSESSOR).getSuccessObjectOrThrowException();
     }

@@ -775,7 +775,9 @@ public class GenerateTestData extends BaseIntegrationTest {
             baseBuilder = baseBuilder.addAssessorRole();
         }
 
-        if (InviteStatus.OPENED.equals(line.inviteStatus)) {
+        if (!line.rejectionReason.isEmpty()) {
+            baseBuilder.rejectInvite(inviteHash).build();
+        } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
             baseBuilder.acceptInvite(inviteHash).build();
         } else {
             baseBuilder.build();
