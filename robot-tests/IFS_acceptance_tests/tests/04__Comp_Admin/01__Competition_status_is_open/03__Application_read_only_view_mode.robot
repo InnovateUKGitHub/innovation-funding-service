@@ -7,7 +7,7 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-6939 As a Competitions team member I want to be able to view Public description throughout the life of the competition
 ...               INFUND-6940 As a Competitions team member I want to be able to view Scope throughout the life of the competition
 ...               INFUND-6941 As a Competitions team member I want to be able to view Finances throughout the life of the competition
-...
+...               INFUND-6792 As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
 ...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -119,13 +119,8 @@ Comp admin has read only view of Eligibility past Open date
     And The user clicks the button/link    link = Return to setup overview
 
 Comp admin editable fields in Funding Information section past Open date
-<<<<<<< HEAD
     [Documentation]     INFUND-7083
-    [Tags]      Pending
-=======
-    [Documentation]    INFUND-7083
-    [Tags]    Pending
->>>>>>> 7e2051db03437026118f90966db0e29296e71c04
+    [Tags]
     Given the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
     And the user clicks the button/link    link=Funding information
     Then the user should see the element    jquery=h1:contains("Funding information")
@@ -135,17 +130,10 @@ Comp admin editable fields in Funding Information section past Open date
     And The user enters text to a text field    id=funders2.funder    InnovateUK
     And The user enters text to a text field    id=2-funderBudget    20000
     And The user enters text to a text field    id= pafNumber    34FAP
-<<<<<<< HEAD
     And The user enters text to a text field    id= budgetCode   45BC
     And The user enters text to a text field    id= activityCode  56AC
     And the user should see that the element is disabled    css = input.form-control.width-large[readonly='readonly']
-    And The user clicks the button/link     jQuery=.button:contains("Done")
-=======
-    And The user enters text to a text field    id= budgetCode    45BC
-    And The user enters text to a text field    id= activityCode    56AC
-    And the user should see that the element is disabled    css = input.form-control width-large
     And The user clicks the button/link    jQuery=.button:contains("Done")
->>>>>>> 7e2051db03437026118f90966db0e29296e71c04
 
 comp admin non-editable fields in Funding Information section past notifications date
     [Documentation]    INFUND-7083
