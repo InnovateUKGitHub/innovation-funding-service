@@ -49,7 +49,9 @@ processTestResources {
 
 
 task cleanDeploy() {
-    build.mustRunAfter clean
-    dependsOn clean
+    dependsOn build
+}
+
+task cleanDeployServices() {
     dependsOn build
 }
