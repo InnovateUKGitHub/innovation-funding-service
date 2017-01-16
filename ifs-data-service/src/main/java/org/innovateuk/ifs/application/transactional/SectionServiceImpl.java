@@ -65,6 +65,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Autowired
     private ValidationUtil validationUtil;
 
+    @Autowired
+    private ApplicationFinanceService applicationFinanceService;
+
     @Override
     public ServiceResult<SectionResource> getById(final Long sectionId) {
         return getSection(sectionId).andOnSuccessReturn(sectionMapper::mapToResource);
@@ -136,6 +139,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                     // Assign back to lead applicant.
                     questionService.assign(new QuestionApplicationCompositeId(q, applicationId), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
                 });
+
+                applicationFinanceService.getApplicationFinanceSaver(section.getType())
+                        .ifPresent(applicationFinanceSaver -> applicationFinanceSaver.handleMarkAsComplete(application, section, markedAsCompleteById));
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
             }
