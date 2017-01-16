@@ -13,22 +13,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 
 /**
  * Generates assessor invites and gives the ability to accept them
  */
 public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInviteDataBuilder> {
 
-    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser, String innovationAreaName) {
+    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName,
+                                                                   String emailAddress,
+                                                                   String name,
+                                                                   String inviteHash,
+                                                                   Optional<User> existingUser,
+                                                                   String innovationAreaName
+    ) {
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
             final Competition competition = retrieveCompetitionByName(competitionName);
-            final Category innovationArea =  retrieveInnovationAreaByName(innovationAreaName);
+            final Category innovationArea = retrieveInnovationAreaByName(innovationAreaName);
 
             final CompetitionInvite invite = newCompetitionInvite().
                     withCompetition(competition).
@@ -56,9 +61,16 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
     }
 
     public AssessorInviteDataBuilder rejectInvite(String hash, String assessorEmail, String rejectionReason, Optional<String> rejectionComment) {
-        return with(data  -> {
-
+        return with(data -> {
             UserResource assessor = retrieveUserByEmail(assessorEmail);
+            List<RejectionReasonResource> rejectionReasons = rejectionReasonService.findAllActive().getSuccessObjectOrThrowException();
+
+            RejectionReasonResource rejectionReasonResource = rejectionReasons.stream()
+                    .filter(reason -> reason.getReason().equals(rejectionReason))
+                    .findFirst()
+                    .orElseThrow(() -> {
+                        throw new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid");
+                    });
 
             doAs(assessor, () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
         });

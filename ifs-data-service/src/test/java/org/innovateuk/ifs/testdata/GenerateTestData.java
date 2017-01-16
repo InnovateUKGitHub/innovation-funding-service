@@ -196,7 +196,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Before
     public void setup() throws Exception {
-         freshDb();
+        freshDb();
     }
 
     @BeforeClass
@@ -332,12 +332,12 @@ public class GenerateTestData extends BaseIntegrationTest {
                         builder.withApprovedFinanceChecks(line.organisationsWithApprovedFinanceChecks) : builder;
 
         assignProjectManagerIfNecessary.
-            andThen(setProjectAddressIfNecessary).
-            andThen(submitProjectDetailsIfNecessary).
-            andThen(setMonitoringOfficerIfNecessary).
-            andThen(selectFinanceContactsIfNecessary).
-            andThen(submitBankDetailsIfNecessary).
-            andThen(approveFinanceChecksIfNecessary).
+                andThen(setProjectAddressIfNecessary).
+                andThen(submitProjectDetailsIfNecessary).
+                andThen(setMonitoringOfficerIfNecessary).
+                andThen(selectFinanceContactsIfNecessary).
+                andThen(submitBankDetailsIfNecessary).
+                andThen(approveFinanceChecksIfNecessary).
                 apply(baseBuilder).
                 build();
 
@@ -457,9 +457,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                             : builder;
 
             UnaryOperator<ResponseDataBuilder> uploadFilesIfNecessary = builder ->
-                !line.filesUploaded.isEmpty() ?
-                    builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
-                    builder;
+                    !line.filesUploaded.isEmpty() ?
+                            builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
+                            builder;
 
             UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
@@ -571,25 +571,41 @@ public class GenerateTestData extends BaseIntegrationTest {
     private IndustrialCostDataBuilder addFinanceRow(IndustrialCostDataBuilder builder, ApplicationFinanceRow financeRow) {
 
         switch (financeRow.category) {
-            case "Working days per year": return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
-            case "Grant claim": return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
-            case "Organisation size": return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
-            case "Labour": return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
-            case "Overheads": switch (financeRow.metadata.get(0).toLowerCase()) {
-                case "custom": return builder.withAdministrationSupportCostsCustomRate(Integer.valueOf(financeRow.metadata.get(1)));
-                case "default": return builder.withAdministrationSupportCostsDefaultRate();
-                case "none": return builder.withAdministrationSupportCostsNone();
-                default: throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
-            }
-            case "Materials": return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
-            case "Capital usage": return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(4)),
-                    financeRow.metadata.get(0), Boolean.parseBoolean(financeRow.metadata.get(1)),
-                    bd(financeRow.metadata.get(2)), bd(financeRow.metadata.get(3)), Integer.valueOf(financeRow.metadata.get(5)));
-            case "Subcontracting": return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
-            case "Travel and subsistence": return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
-            case "Other costs": return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
-            case "Other funding": return builder.withOtherFunding(financeRow.metadata.get(0), LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN), bd(financeRow.metadata.get(2)));
-            default: throw new RuntimeException("Unknown category " + financeRow.category);
+            case "Working days per year":
+                return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Grant claim":
+                return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Organisation size":
+                return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
+            case "Labour":
+                return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+            case "Overheads":
+                switch (financeRow.metadata.get(0).toLowerCase()) {
+                    case "custom":
+                        return builder.withAdministrationSupportCostsCustomRate(Integer.valueOf(financeRow.metadata.get(1)));
+                    case "default":
+                        return builder.withAdministrationSupportCostsDefaultRate();
+                    case "none":
+                        return builder.withAdministrationSupportCostsNone();
+                    default:
+                        throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
+                }
+            case "Materials":
+                return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+            case "Capital usage":
+                return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(4)),
+                        financeRow.metadata.get(0), Boolean.parseBoolean(financeRow.metadata.get(1)),
+                        bd(financeRow.metadata.get(2)), bd(financeRow.metadata.get(3)), Integer.valueOf(financeRow.metadata.get(5)));
+            case "Subcontracting":
+                return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
+            case "Travel and subsistence":
+                return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
+            case "Other costs":
+                return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
+            case "Other funding":
+                return builder.withOtherFunding(financeRow.metadata.get(0), LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN), bd(financeRow.metadata.get(2)));
+            default:
+                throw new RuntimeException("Unknown category " + financeRow.category);
         }
     }
 
@@ -657,15 +673,15 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
-                withOpenDate(line.openDate).
-                withSubmissionDate(line.submissionDate).
-                withFundersPanelDate(line.fundersPanelDate).
-                withFundersPanelEndDate(line.fundersPanelEndDate).
-                withAssessorBriefingDate(line.assessorBriefingDate).
-                withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
-                withAssessorEndDate(line.assessorEndDate).
-                withAssessmentClosedDate(line.assessmentClosedDate);
+                        withOpenDate(line.openDate).
+                        withSubmissionDate(line.submissionDate).
+                        withFundersPanelDate(line.fundersPanelDate).
+                        withFundersPanelEndDate(line.fundersPanelEndDate).
+                        withAssessorBriefingDate(line.assessorBriefingDate).
+                        withAssessorAcceptsDate(line.assessorAcceptsDate).
+                        withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                        withAssessorEndDate(line.assessorEndDate).
+                        withAssessmentClosedDate(line.assessmentClosedDate);
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
@@ -673,7 +689,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void freshDb() throws Exception {
         try {
             cleanAndMigrateDatabaseWithPatches(locations.split(","));
-        } catch (Exception e){
+        } catch (Exception e) {
             fail("Exception thrown migrating with script directories: " + locations.split(",") + e.getMessage());
         }
     }
@@ -681,8 +697,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private Object unwrapProxy(Object services) {
         try {
             return unwrapProxies(asList(services)).get(0);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -703,7 +718,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         return unwrappedProxies;
     }
 
-    private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations){
+    private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations) {
         Flyway f = new Flyway();
         f.setDataSource(databaseUrl, databaseUser, databasePassword);
         f.setLocations(patchLocations);
@@ -759,24 +774,45 @@ public class GenerateTestData extends BaseIntegrationTest {
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
-            builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
-                    invite.name, invite.hash, existingUser, invite.innovationAreaName);
+            builder = builder.withInviteToAssessCompetition(
+                    invite.targetName,
+                    invite.email,
+                    invite.name,
+                    invite.hash,
+                    existingUser,
+                    invite.innovationAreaName
+            );
         }
 
         String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
+        String innovationArea = !line.innovationAreas.isEmpty() ? line.innovationAreas.get(0) : "";
 
-        AssessorDataBuilder baseBuilder = builder.
-                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser, null);
+        AssessorDataBuilder baseBuilder = builder.withInviteToAssessCompetition(
+                line.competitionName,
+                line.emailAddress,
+                line.firstName + " " + line.lastName,
+                inviteHash,
+                existingUser,
+                innovationArea
+        );
 
         if (!existingUser.isPresent()) {
-            baseBuilder = baseBuilder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
-                    line.ethnicity, line.gender, line.disability, inviteHash);
+            baseBuilder = baseBuilder.registerUser(
+                    line.firstName,
+                    line.lastName,
+                    line.emailAddress,
+                    line.phoneNumber,
+                    line.ethnicity,
+                    line.gender,
+                    line.disability,
+                    inviteHash
+            );
         } else {
-            baseBuilder = baseBuilder.addAssessorRole();
+            baseBuilder = baseBuilder.addAssessorRoleAndInnovationAreas(line.innovationAreas);
         }
 
         if (!line.rejectionReason.isEmpty()) {
-            baseBuilder.rejectInvite(inviteHash).build();
+            baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment).build();
         } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
             baseBuilder.acceptInvite(inviteHash).build();
         } else {
@@ -827,8 +863,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case UNIVERSITY_HEI : return OrganisationTypeEnum.ACADEMIC;
-            default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
+            case UNIVERSITY_HEI:
+                return OrganisationTypeEnum.ACADEMIC;
+            default:
+                return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }
     }
 

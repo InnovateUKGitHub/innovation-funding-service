@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
 import org.innovateuk.ifs.user.domain.Ethnicity;
@@ -9,23 +10,32 @@ import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Generates data for an Assessor on the platform
  */
 public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorDataBuilder> {
 
-    public AssessorDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, String ethnicity, Gender gender, Disability disability, String hash) {
-
+    public AssessorDataBuilder registerUser(String firstName,
+                                            String lastName,
+                                            String emailAddress,
+                                            String phoneNumber,
+                                            String ethnicity,
+                                            Gender gender,
+                                            Disability disability,
+                                            String hash
+    ) {
         return with(data -> doAs(systemRegistrar(), () -> {
 
             EthnicityResource ethnicityResource;
@@ -55,23 +65,52 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         }));
     }
 
-    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser, String innovationAreaName) {
+    public AssessorDataBuilder withInviteToAssessCompetition(String competitionName,
+                                                             String emailAddress,
+                                                             String name,
+                                                             String inviteHash,
+                                                             Optional<User> existingUser,
+                                                             String innovationAreaName
+    ) {
         return with(data -> {
-            newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(competitionName, emailAddress, name, inviteHash, existingUser, innovationAreaName).build();
+            newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(
+                    competitionName,
+                    emailAddress,
+                    name,
+                    inviteHash,
+                    existingUser,
+                    innovationAreaName
+            ).build();
             data.setEmail(emailAddress);
         });
     }
 
 
-    public AssessorDataBuilder addAssessorRole() {
-        return with(data -> {
+    public AssessorDataBuilder addAssessorRoleAndInnovationAreas(List<String> innovationAreas) {
+        return with((AssessorData data) -> {
             User user = userRepository.findByEmail(data.getEmail()).get();
+
+            Set<InnovationArea> userInnovationAreas = innovationAreas.stream()
+                    .map(innovationAreaName -> {
+                        InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
+
+                        if (innovationArea == null) {
+                            throw new IllegalArgumentException("Invalid innovation area '" + innovationAreaName + "' for assessor user");
+                        }
+
+                        return innovationArea;
+                    })
+                    .collect(toSet());
+
+            user.addInnovationAreas(userInnovationAreas);
+
             Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
 
             if (!user.getRoles().contains(assessorRole)) {
                 user.getRoles().add(assessorRole);
-                userRepository.save(user);
             }
+
+            userRepository.save(user);
         });
     }
 
@@ -99,7 +138,8 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     }
 
     private AssessorDataBuilder(List<BiConsumer<Integer, AssessorData>> multiActions,
-                                ServiceLocator serviceLocator) {
+                                ServiceLocator serviceLocator
+    ) {
         super(multiActions, serviceLocator);
     }
 

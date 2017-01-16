@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -9,8 +11,6 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -21,13 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
@@ -506,7 +505,7 @@ class CsvUtils {
             rejectionComment = line.get(i++);
             skillAreas = line.get(i++);
             businessType = BusinessType.valueOf(line.get(i++));
-            innovationAreas = asList(line.get(i++).split("\n"));
+            innovationAreas = simpleMap(line.get(i++).split("\n"), String::trim);
             principalEmployer = line.get(i++);
             role = line.get(i++);
             professionalAffiliations = line.get(i++);
