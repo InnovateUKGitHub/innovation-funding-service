@@ -337,9 +337,11 @@ select.form-control{
 
 // ------- progressive group select -------- //
 .js-progressive-group-select {
+  display: block;
   margin: 0 0 1em 0;
 
   @include media (tablet) {
+    display: inline-block;
     margin-right: 1em;
   }
 }
