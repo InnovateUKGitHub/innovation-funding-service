@@ -45,7 +45,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-5633 As a Competitions team member I want to be able to set up questions in the Application Details section of Competition Setup so that I can amend the defaults if necessary for the competitions
 ...
-...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is 'Sector competition'
+...               INFUND-6478 As a Competitions executive I will be able to view all innovation areas selected when viewing Initial details of my competition in read only mode and the Competition type is Sector competition
+...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -87,7 +88,7 @@ New competition shows in Preparation section
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details - User enters valid values and marks as done
-    [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6479
+    [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
     [Setup]    the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}
     Given The user clicks the button/link           link=Initial details
@@ -107,7 +108,7 @@ Initial details - User enters valid values and marks as done
     And the user should see the element             jQuery=.button:contains("Edit")
 
 Initial details - Sector competitions allow multiple innovation areas
-   [Documentation]    INFUND-6479
+   [Documentation]    INFUND-6478, INFUND-6479
    [Tags]    HappyPath
    Given the user clicks the button/link            jQuery=.button:contains("Edit")
    When the user enters multiple innovation areas
@@ -116,7 +117,7 @@ Initial details - Sector competitions allow multiple innovation areas
    And The user should see the text in the page     Design
 
 Initial Details - User can remove an innovation area
-   [Documentation]    INFUND-6479
+   [Documentation]    INFUND-6478, INFUND-6479
    [Tags]
    Given the user clicks the button/link  jQuery=.button:contains("Edit")
    And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
