@@ -239,4 +239,12 @@ public abstract class BaseSectionViewModel {
     public void setSubFinanceSection(Boolean subFinanceSection) {
         this.subFinanceSection = subFinanceSection;
     }
+
+    public Boolean getShowAgreeToStateAidOption() {
+        return null != currentSection && "Your project costs".equals(currentSection.getName()) && !getApplication().getAllReadOnly();
+    }
+
+    public Boolean getShowAgreeToTermsOption() {
+        return null != currentSection && "Your funding".equals(currentSection.getName()) && !getApplication().getAllReadOnly();
+    }
 }

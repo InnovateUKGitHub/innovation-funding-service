@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.service.ApplicationFinanceService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
@@ -89,6 +91,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Mock
     private Model model;
 
+    @Mock
+    private ApplicationFinanceService applicationFinanceService;
+
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -126,6 +131,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+
+        when(applicationFinanceService.getApplicationFinanceSaver(any(SectionType.class))).thenReturn(Optional.empty());
     }
 
     @Test
@@ -1008,7 +1015,5 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()));
 
     }
-
-
 
 }

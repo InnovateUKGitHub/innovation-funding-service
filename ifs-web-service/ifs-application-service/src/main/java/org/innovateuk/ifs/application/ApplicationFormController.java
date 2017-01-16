@@ -312,7 +312,7 @@ public class ApplicationFormController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult, true));
+                errors.addAll(saveApplicationForm(application, competition, form, null, question, request, response, bindingResult, true));
             }
 
             model.addAttribute("form", form);
@@ -404,12 +404,17 @@ public class ApplicationFormController {
     private ValidationMessages saveApplicationForm(ApplicationResource application,
                                                    CompetitionResource competition,
                                                    ApplicationForm form,
-                                                   Long applicationId, Long sectionId, QuestionResource question,
+                                                   Long sectionId, QuestionResource question,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response, BindingResult bindingResult, Boolean validFinanceTerms) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
+
+        SectionResource selectedSection = null;
+        if (sectionId != null) {
+            selectedSection = sectionService.getById(sectionId);
+        }
 
         // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
         Map<String, String[]> params = request.getParameterMap();
@@ -419,9 +424,8 @@ public class ApplicationFormController {
         boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
 
         ValidationMessages errors = new ValidationMessages();
-        SectionResource selectedSection = null;
-        if (sectionId != null) {
-            selectedSection = sectionService.getById(sectionId);
+
+        if (null != selectedSection) {
             if (isMarkSectionAsCompleteRequest(params)) {
                 application.setStateAidAgreed(form.isStateAidAgreed());
             } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
@@ -446,8 +450,8 @@ public class ApplicationFormController {
         }
 
         if(!isMarkSectionAsIncompleteRequest(params)) {
-            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId()));
+            String organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
+            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId()));
         }
 
         if(isMarkQuestionRequest(params)) {
@@ -460,6 +464,7 @@ public class ApplicationFormController {
         if (errors.hasErrors()) {
             errors.setErrors(sortValidationMessages(errors));
         }
+
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return errors;
@@ -654,20 +659,10 @@ public class ApplicationFormController {
 
         model.addAttribute("form", form);
 
-        if (section.getType() == SectionType.FUNDING_FINANCES &&
-                !validFinanceTermsForMarkAsComplete(form, bindingResult, section)) {
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
-            return APPLICATION_FORM;
-        } else if (section.getType() == SectionType.PROJECT_COST_FINANCES &&
-                !validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model)) {
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
-            return APPLICATION_FORM;
-        }
-
         Map<String, String[]> params = request.getParameterMap();
 
-        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section);
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult, validFinanceTerms);
+        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, request, response, bindingResult, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -684,8 +679,12 @@ public class ApplicationFormController {
         }
     }
 
-    private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section) {
+    private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params) {
         Boolean valid = Boolean.TRUE;
+
+        if(!isMarkSectionAsCompleteRequest(params)) {
+            return valid;
+        }
 
         if (SectionType.FUNDING_FINANCES.equals(section.getType())) {
             if (!form.isTermsAgreed()) {
@@ -693,19 +692,14 @@ public class ApplicationFormController {
                 valid = Boolean.FALSE;
             }
         }
-        return valid;
-    }
 
-    private boolean validStateAidForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
-                                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
-                                                       CompetitionResource competition, UserResource user, Model model) {
-        Boolean valid = Boolean.TRUE;
-        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
+        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType())) {
             if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 valid = Boolean.FALSE;
             }
         }
+
         return valid;
     }
 
