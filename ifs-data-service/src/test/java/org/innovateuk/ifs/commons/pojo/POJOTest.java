@@ -125,6 +125,7 @@ public class POJOTest {
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             ViabilityResource.class,
+            EligibilityResource.class,
             CompetitionFunderResource.class,
             CompetitionCountResource.class,
             LocalDateResource.class,
