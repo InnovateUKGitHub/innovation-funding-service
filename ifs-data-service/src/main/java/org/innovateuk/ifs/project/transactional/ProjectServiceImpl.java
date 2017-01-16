@@ -42,6 +42,7 @@ import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -317,7 +318,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
                 failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
+                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
                         serviceSuccess(true) :
                         serviceSuccess(false));
     }
@@ -456,17 +457,20 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-        if (approved == null) {
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
+        //TODO INFUND-7493
+        if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }
         return getProject(projectId)
                 .andOnSuccess(project -> {
-                    if (project.getOtherDocumentsApproved() != null
-                            && project.getOtherDocumentsApproved()) {
+                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
                         return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
                     }
-                    project.setOtherDocumentsApproved(approved);
+                    project.setOtherDocumentsApproved(approval ? ApprovalType.APPROVED : ApprovalType.REJECTED);
+                    if (approval.equals(false)) {
+                        project.setDocumentsSubmittedDate(null);
+                    }
                     return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
                 });
     }
@@ -512,6 +516,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
         project.setCollaborationAgreement(fileEntry);
     }
 
@@ -534,6 +539,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
         project.setExploitationPlan(fileEntry);
     }
 
@@ -1140,6 +1146,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
+    }
+
+    @Override
+    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
+
     }
 
 

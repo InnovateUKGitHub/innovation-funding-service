@@ -3,12 +3,12 @@ package org.innovateuk.ifs.project.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.controller.ProjectController;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
@@ -595,6 +595,27 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         )))
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
+    }
+
+    @Test
+    public void getGrantOfferLetterWorkflowState() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
+
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(GOLState.APPROVED)))
+                .andDo(document("project/grant-offer-letter/state/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which Grant Offer Letter Workflow state is being retrieved.")
+                        )
+                        )
+                )
+                .andReturn();
+
+        verify(projectServiceMock).getGrantOfferLetterWorkflowState(projectId);
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){

@@ -106,7 +106,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(6, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -123,7 +123,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(6, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -140,7 +140,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(6, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 
