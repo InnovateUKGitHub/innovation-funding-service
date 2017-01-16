@@ -128,7 +128,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId());
+        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, organisationId);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
