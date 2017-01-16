@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.repository.CategoryLinkRepository;
+import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -27,8 +27,11 @@ import static org.junit.Assert.*;
  */
 public class CompetitionControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionController> {
 
+//    @Autowired
+//    private CategoryLinkRepository categoryLinkRepository;
+
     @Autowired
-    private CategoryLinkRepository categoryLinkRepository;
+    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -274,7 +277,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         // Create new competition
         CompetitionResource competition = createNewCompetition();
         checkCompetitionCount(3);
-        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST, categoryLinkRepository.count());
+        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST, competitionCategoryLinkRepository.count());
 
 
         // Update competition
@@ -286,7 +289,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         // Check if the categorylink is only stored once.
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
-        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 2, categoryLinkRepository.count());
+        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 2, competitionCategoryLinkRepository.count());
 
         CompetitionResource savedCompetition = saveResult.getSuccessObject();
         checkUpdatedCompetitionCategories(savedCompetition);
@@ -294,20 +297,20 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         // check that the link is not duplicated
         saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
-        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 2, categoryLinkRepository.count());
+        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 2, competitionCategoryLinkRepository.count());
 
         // check that the link is removed
         competition.setInnovationSector(null);
         saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
-        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 1, categoryLinkRepository.count());
+        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 1, competitionCategoryLinkRepository.count());
 
         // check that the link is updated (or removed and added)
         Set<Long> areaIds2 = new HashSet<>(Arrays.asList(Long.valueOf(INNOVATION_AREA_ID_TWO)));
         competition.setInnovationAreas(areaIds2);
         saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
-        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 1, categoryLinkRepository.count());
+        assertEquals(EXISTING_CATEGORY_LINK_BEFORE_TEST + 1, competitionCategoryLinkRepository.count());
 
         checkCompetitionCount(3);
     }

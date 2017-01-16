@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.mapper;
 
-import org.innovateuk.ifs.category.mapper.CategoryMapper;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
@@ -14,7 +14,7 @@ import org.mapstruct.Mappings;
  */
 @Mapper(
         config = GlobalMapperConfig.class,
-        uses = { CategoryMapper.class }
+        uses = { InnovationAreaMapper.class }
 )
 public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvite, CompetitionInviteResource, Long> {
 

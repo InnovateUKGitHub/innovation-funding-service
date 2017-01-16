@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
@@ -20,7 +20,7 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        CategoryResource expectedInnovationArea = newCategoryResource().build();
+        InnovationAreaResource expectedInnovationArea = newInnovationAreaResource().build();
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
         BusinessType expectedBusinessType = BUSINESS;
@@ -46,7 +46,7 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildMany() {
         String[] expectedNames = {"name1", "name2"};
-        CategoryResource[] expectedInnovationAreas = newCategoryResource().buildArray(2, CategoryResource.class);
+        InnovationAreaResource[] expectedInnovationAreas = newInnovationAreaResource().buildArray(2, InnovationAreaResource.class);
         Boolean[] expectedCompliants = {TRUE, FALSE};
         String[] expectedEmails = {"email1", "email2"};
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
