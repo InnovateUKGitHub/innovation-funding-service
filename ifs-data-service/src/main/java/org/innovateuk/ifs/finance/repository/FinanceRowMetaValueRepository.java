@@ -11,7 +11,8 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface FinanceRowMetaValueRepository extends PagingAndSortingRepository<FinanceRowMetaValue, Long> {
-	@Override
+    @Override
     List<FinanceRowMetaValue> findAll();
+    FinanceRowMetaValue financeRowIdAndFinanceRowMetaField(Long financeRowId, Long financeRowMetaFieldId);
     void deleteByFinanceRowId(Long financeRowId);
 }
