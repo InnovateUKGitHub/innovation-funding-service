@@ -159,21 +159,31 @@ Comp admin has read only view of Eligibility past Open date
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
-    And The user should not see the element    jQuery=button:contains(Edit)
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to setup overview
 
 Comp admin has read only view of Public Description past Open date
     [Documentation]    INFUND-6939
     [Tags]
-    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    And The user clicks the button/link    link=Application
-    Then The user should see the text in the page    Public description
+    Given The user clicks the button/link    link=Application
+    When The user should see the text in the page    Public description
     And The user clicks the button/link    link=Public description
     Then the user should see the element    jquery=h1:contains("Public description")
     And The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link    link = Return to application questions
+    [Teardown]    The user clicks the button/link    link = Return to application questions
+
+Comp admin has read only view of Project Summary past Open date
+    [Documentation]    INFUND-6938
+    [Tags]
+    When The user clicks the button/link    link=Project summary
+    Then the user should see the element    jquery=h1:contains("Project summary")
+    And The user should not see the element    css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    [Teardown]    The user clicks the button/link    link = Return to application questions
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future

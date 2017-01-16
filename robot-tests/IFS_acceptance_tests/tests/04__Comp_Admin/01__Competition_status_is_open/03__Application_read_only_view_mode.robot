@@ -70,19 +70,6 @@ Comp admin has read only view of Application details past Open date
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
 
-Comp admin has read only view of Project Summary past Open date
-    [Documentation]    INFUND-6938
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    Given the user clicks the button/link    link=Application
-    Then The user should see the text in the page    Project summary
-    And The user clicks the button/link    link=Project summary
-    Then the user should see the element    jquery=h1:contains("Project summary")
-    And The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link    link = Return to application questions
-
 Comp admin has read only view of Scope past Open Date
     [Documentation]    INFUND-6940
     [Tags]
@@ -119,7 +106,7 @@ Comp admin has read only view of Eligibility past Open date
     And The user clicks the button/link    link = Return to setup overview
 
 Comp admin editable fields in Funding Information section past Open date
-    [Documentation]     INFUND-7083
+    [Documentation]    INFUND-7083
     [Tags]
     Given the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
     And the user clicks the button/link    link=Funding information
@@ -130,8 +117,8 @@ Comp admin editable fields in Funding Information section past Open date
     And The user enters text to a text field    id=funders2.funder    InnovateUK
     And The user enters text to a text field    id=2-funderBudget    20000
     And The user enters text to a text field    id= pafNumber    34FAP
-    And The user enters text to a text field    id= budgetCode   45BC
-    And The user enters text to a text field    id= activityCode  56AC
+    And The user enters text to a text field    id= budgetCode    45BC
+    And The user enters text to a text field    id= activityCode    56AC
     And the user should see that the element is disabled    css = input.form-control.width-large[readonly='readonly']
     And The user clicks the button/link    jQuery=.button:contains("Done")
 
