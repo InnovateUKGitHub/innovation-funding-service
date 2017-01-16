@@ -117,7 +117,11 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
         //TODO use finance view model when its complete.
         Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
-        viewModel.setNotRequestingFunding(organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
+        boolean yourFundingComplete = false;
+        if (viewModel.getSectionsMarkedAsComplete() != null) {
+            yourFundingComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.FUNDING_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
+        }
+        viewModel.setNotRequestingFunding(yourFundingComplete && organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
     }
 
 

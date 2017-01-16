@@ -34,26 +34,34 @@ public class GrantClaimValidator implements Validator {
         FinanceRow cost = financeRowRepository.findOne(response.getId());
 
         OrganisationType organisationType = ((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType();
-        
+
+
+        if(response.getGrantClaimPercentage() == null) {
+            rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
+            return;
+        }
+
         int max;
-        
+
         if(isAcademicOrBusiness(organisationType)) {
-        	
+
             OrganisationSize size = ((ApplicationFinanceRow)cost).getTarget().getOrganisationSize();
 
-        	if(size == null) {
-                rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
-                return;
+            //Organisation size isn't required if the claim percentage is 0.
+            if (response.getGrantClaimPercentage() == 0) {
+                max = 0;
+            } else {
+                if (size == null) {
+                    rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
+                    return;
+                }
+                max = size.getMaxGrantClaimPercentage();
             }
-        	
-        	max = size.getMaxGrantClaimPercentage();
         } else {
-        	max = 100;
+            max = 100;
         }
-        
-    	if(response.getGrantClaimPercentage() == null) {
-            rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
-        } else if(response.getGrantClaimPercentage() > max){
+
+        if(response.getGrantClaimPercentage() > max){
             rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.lower", max);
         } else if(response.getGrantClaimPercentage().intValue() < 0){
             rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);

@@ -30,9 +30,11 @@ import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
@@ -444,11 +446,13 @@ public class ApplicationFormController {
         }
 
         if(isNotRequestingFundingRequest(params)) {
-
+            setRequestingFunding(NOT_REQUESTING_FUNDING, user.getId(), applicationId, competition.getId(), processRole.getId(), errors);
         }
+
         if(isRequestingFundingRequest(params)) {
-
+            setRequestingFunding(REQUESTING_FUNDING, user.getId(), applicationId, competition.getId(), processRole.getId(), errors);
         }
+
         setApplicationDetails(application, form.getApplication());
 
         if(applicationModelPopulator.userIsLeadApplicant(application, user.getId())) {
@@ -473,6 +477,25 @@ public class ApplicationFormController {
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return errors;
+    }
+
+    private void setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId, ValidationMessages errors) {
+        ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
+        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+        finance.getGrantClaim().setGrantClaimPercentage(0);
+        errors.addAll(financeRowService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
+
+        if (!errors.hasErrors()) {
+            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
+            if (REQUESTING_FUNDING.equals(requestingFunding)) {
+                sectionService.markAsInComplete(organisationSection.getId(), applicationId, processRoleId);
+                sectionService.markAsInComplete(fundingSection.getId(), applicationId, processRoleId);
+            } else if (NOT_REQUESTING_FUNDING.equals(requestingFunding)) {
+                errors.addAll(sectionService.markAsComplete(organisationSection.getId(), applicationId, processRoleId));
+                errors.addAll(sectionService.markAsComplete(fundingSection.getId(), applicationId, processRoleId));
+            }
+        }
     }
 
     private List<Error> sortValidationMessages(ValidationMessages errors) {
