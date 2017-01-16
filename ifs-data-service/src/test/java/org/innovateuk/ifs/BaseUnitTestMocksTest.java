@@ -8,14 +8,12 @@ import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
+import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.*;
-import org.innovateuk.ifs.application.transactional.ApplicationFundingService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.AssessorFeedbackService;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
@@ -25,15 +23,16 @@ import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseReposit
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
-import org.innovateuk.ifs.category.mapper.CategoryLinkMapper;
-import org.innovateuk.ifs.category.mapper.CategoryMapper;
-import org.innovateuk.ifs.category.repository.CategoryLinkRepository;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.transactional.CategoryLinkService;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.category.repository.*;
+import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -124,6 +123,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationMapper applicationMapperMock;
 
     @Mock
+    protected ApplicationAssessmentSummaryService applicationAssessmentSummaryServiceMock;
+
+    @Mock
     protected ApplicationFinanceMapper applicationFinanceMapperMock;
 
     @Mock
@@ -178,6 +180,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationStatusRepository applicationStatusRepositoryMock;
 
     @Mock
+    protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+
+    @Mock
+    protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
+
+    @Mock
     protected FormInputRepository formInputRepositoryMock;
 
     @Mock
@@ -194,6 +202,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationService applicationServiceMock;
+
+    @Mock
+    protected ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Mock
     protected QuestionService questionServiceMock;
@@ -236,6 +247,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionInviteMapper competitionInviteMapperMock;
+
+    @Mock
+    protected CompetitionMapper competitionMapperMock;
 
     @Mock
     protected AssessorInviteToSendMapper assessorInviteToSendMapperMock;
@@ -370,16 +384,28 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CategoryRepository categoryRepositoryMock;
 
     @Mock
-    protected CategoryMapper categoryMapperMock;
+    protected InnovationAreaRepository innovationAreaRepositoryMock;
 
     @Mock
-    protected CategoryLinkService categoryLinkServiceMock;
+    protected InnovationSectorRepository innovationSectorRepositoryMock;
 
     @Mock
-    protected CategoryLinkRepository categoryLinkRepositoryMock;
+    protected ResearchCategoryRepository researchCategoryRepositoryMock;
 
     @Mock
-    protected CategoryLinkMapper categoryLinkMapperMock;
+    protected InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    protected InnovationSectorMapper innovationSectorMapperMock;
+
+    @Mock
+    protected ResearchCategoryMapper researchCategoryMapperMock;
+
+    @Mock
+    protected CompetitionCategoryLinkService competitionCategoryLinkServiceMock;
+
+    @Mock
+    protected CompetitionCategoryLinkRepository competitionCategoryLinkRepositoryMock;
 
     @Mock
     protected BankDetailsMapper bankDetailsMapperMock;

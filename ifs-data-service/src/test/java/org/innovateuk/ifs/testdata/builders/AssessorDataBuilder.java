@@ -49,9 +49,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     withRoles(singletonList(getAssessorRoleResource())).
                     build();
 
-//            assessorService.registerAssessorByHash(hash, registration).getSuccessObjectOrThrowException();
-            registrationService.createUser(registration).andOnSuccess(created ->
-                    registrationService.activateUser(created.getId())).getSuccessObjectOrThrowException();
+            assessorService.registerAssessorByHash(hash, registration).getSuccessObjectOrThrowException();
 
             data.setEmail(emailAddress);
         }));

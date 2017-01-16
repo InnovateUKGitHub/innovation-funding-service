@@ -225,7 +225,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
             if(approval == ApprovalType.APPROVED) {
                 return getProject(projectId).andOnSuccess(project -> {
-                    if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
 
                         FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
                         return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
@@ -424,6 +424,20 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(project.getId()).getSuccessObject();
         Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectMapper.mapToResource(project),
                 monthlyCostsPerOrganisationMap, months, financeCheckSummary.getTotalPercentageGrant());
+
+        List<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
+                !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                        && organisationAndGrantPercentageMap.get(organisation.getName()).equals(Integer.valueOf(0))
+                        && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
+                .collect(Collectors.toList());
+        organisationsExcludedFromGrantOfferLetter.forEach( excludedOrganisation -> {
+            organisationAndGrantPercentageMap.remove(excludedOrganisation.getName());
+            organisationYearsMap.remove(excludedOrganisation.getName());
+            organisationEligibleCostTotal.remove(excludedOrganisation.getName());
+            organisationGrantAllocationTotal.remove(excludedOrganisation.getName());
+            yearEligibleCostTotal.remove(excludedOrganisation.getName());
+            yearlyGrantAllocationTotal.remove(excludedOrganisation.getName());
+        });
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,

@@ -1,3 +1,7 @@
+textarea {
+  border: 2px solid;
+}
+
 /*----- Search ----*/
 .form-search{
   position: relative;
@@ -152,6 +156,7 @@ select.form-control{
   background: $grey-4;
   padding: 16px 16px 8px 16px;
   margin-top: 16px;
+  overflow: auto;
 
   &.error{
     @extend .warning-alert;

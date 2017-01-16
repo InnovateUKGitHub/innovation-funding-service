@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
+import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
@@ -9,8 +11,10 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.assertEquals;
@@ -20,10 +24,10 @@ public class AssessorInviteOverviewResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        CategoryResource expectedInnovationArea = newCategoryResource().build();
+        CategoryResource expectedInnovationArea = newInnovationAreaResource().build();
         Boolean expectedCompliant = FALSE;
         BusinessType expectedBusinessType = ACADEMIC;
-        String expectedStatus = "status";
+        ParticipantStatusResource expectedStatus = ACCEPTED;
         String expectedDetails = "details";
 
         AssessorInviteOverviewResource assessorInviteOverviewResource = newAssessorInviteOverviewResource()
@@ -46,10 +50,10 @@ public class AssessorInviteOverviewResourceBuilderTest {
     @Test
     public void buildMany() {
         String[] expectedNames = {"name1", "name2"};
-        CategoryResource[] expectedInnovationAreas = newCategoryResource().buildArray(2, CategoryResource.class);
+        CategoryResource[] expectedInnovationAreas = newInnovationAreaResource().buildArray(2, InnovationAreaResource.class);
         Boolean[] expectedCompliants = {TRUE, FALSE};
         BusinessType[] expectedBusinessTypes = {ACADEMIC, BUSINESS};
-        String[] expectedStatuses = {"status1", "status2"};
+        ParticipantStatusResource[] expectedStatuses = {PENDING, ACCEPTED};
         String[] expectedDetails = {"details1", "details2"};
 
         List<AssessorInviteOverviewResource> assessorCreatedInviteResources = newAssessorInviteOverviewResource()
@@ -77,5 +81,4 @@ public class AssessorInviteOverviewResourceBuilderTest {
         assertEquals(expectedStatuses[1], second.getStatus());
         assertEquals(expectedDetails[1], second.getDetails());
     }
-
 }

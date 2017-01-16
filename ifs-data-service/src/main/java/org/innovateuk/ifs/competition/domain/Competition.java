@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
@@ -82,14 +84,13 @@ public class Competition implements ProcessActivity {
     private Integer academicGrantPercentage;
 
     @Transient
-    private Category innovationSector;
+    private InnovationSector innovationSector;
     @Transient
-    private Set<Category> innovationAreas;
+    private Set<InnovationArea> innovationAreas;
     @Transient
-    private Set<Category> researchCategories;
+    private Set<ResearchCategory> researchCategories;
 
     private String activityCode;
-    private String innovateBudget;
 
     private boolean multiStream;
     private Boolean resubmission;
@@ -108,8 +109,6 @@ public class Competition implements ProcessActivity {
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private boolean fullApplicationFinance = true;
-    private boolean includeGrowthTable = true;
-
     private Boolean setupComplete;
 
     private boolean useResubmissionQuestion = true;
@@ -421,27 +420,27 @@ public class Competition implements ProcessActivity {
         this.competitionType = competitionType;
     }
 
-    public Category getInnovationSector() {
+    public InnovationSector getInnovationSector() {
         return innovationSector;
     }
 
-    public void setInnovationSector(Category innovationSector) {
+    public void setInnovationSector(InnovationSector innovationSector) {
         this.innovationSector = innovationSector;
     }
 
-    public Set<Category> getInnovationAreas() {
+    public Set<InnovationArea> getInnovationAreas() {
         return innovationAreas;
     }
 
-    public void setInnovationAreas(Set<Category> innovationAreas) {
+    public void setInnovationAreas(Set<InnovationArea> innovationAreas) {
         this.innovationAreas = innovationAreas;
     }
 
-    public Set<Category> getResearchCategories() {
+    public Set<ResearchCategory> getResearchCategories() {
 		return researchCategories;
 	}
 
-    public void setResearchCategories(Set<Category> researchCategories) {
+    public void setResearchCategories(Set<ResearchCategory> researchCategories) {
 		this.researchCategories = researchCategories;
 	}
 
@@ -505,14 +504,6 @@ public class Competition implements ProcessActivity {
         this.activityCode = activityCode;
     }
 
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
-    }
-
     public List<CompetitionFunder> getFunders() {
         return funders;
     }
@@ -538,14 +529,6 @@ public class Competition implements ProcessActivity {
 
     public void setFullApplicationFinance(boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
-        this.includeGrowthTable = includeGrowthTable;
     }
 
     public Integer getAssessorCount() {

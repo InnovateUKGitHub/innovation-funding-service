@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -192,6 +193,24 @@ public class ProjectSpendProfileController {
 
     private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
                                       ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
+
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().keySet().forEach(key -> {
+            List<BigDecimal> monthlyCostNullsReplacedWithZeros = new ArrayList();
+            boolean monthlyCostNullsReplaced = false;
+            for (BigDecimal mon : spendProfileTableResource.getMonthlyCostsPerCategoryMap().get(key) ) {
+                if(null == mon) {
+                    monthlyCostNullsReplaced = true;
+                    monthlyCostNullsReplacedWithZeros.add(BigDecimal.ZERO);
+                } else {
+                    monthlyCostNullsReplacedWithZeros.add(mon);
+                }
+            }
+            if (monthlyCostNullsReplaced) {
+                Map<Long, List<BigDecimal>> updatedCostPerCategoryMap = spendProfileTableResource.getMonthlyCostsPerCategoryMap();
+                updatedCostPerCategoryMap.replace(key, monthlyCostNullsReplacedWithZeros);
+                spendProfileTableResource.setMonthlyCostsPerCategoryMap(updatedCostPerCategoryMap);
+            }
+        });
 
         form.setTable(spendProfileTableResource);
 

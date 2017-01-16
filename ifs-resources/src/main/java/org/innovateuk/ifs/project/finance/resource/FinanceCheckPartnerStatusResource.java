@@ -65,14 +65,4 @@ public class FinanceCheckPartnerStatusResource {
         REVIEW,
         APPROVED,
     }
-
-    public enum Viability {
-        REVIEW,
-        APPROVED,
-        NOT_APPLICABLE;
-
-        public boolean isNotApplicable() {
-            return this == NOT_APPLICABLE;
-        }
-    }
 }

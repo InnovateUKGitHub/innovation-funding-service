@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.assessment.domain;
 
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -18,12 +17,12 @@ public class CompetitionInviteTest {
 
     private CompetitionInvite invite;
     private Competition competition;
-    private Category innovationArea;
+    private InnovationArea innovationArea;
 
     @Before
     public void setup() {
         competition = newCompetition().build();
-        innovationArea = newCategory().withType(INNOVATION_AREA).build();
+        innovationArea = newInnovationArea().build();
         invite = new CompetitionInvite("invite name", "email", "hash", competition, innovationArea);
     }
 

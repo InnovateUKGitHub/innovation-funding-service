@@ -15,7 +15,7 @@
 <main id="content">
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-  <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage funding notifications'}, ${'/prototypes/1561-funding-notifications?status=panel'})"  th:remove="tag" />
+  <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage funding notifications'}, ${'/prototypes/1561-funding-notifications?comp=panel'})"  th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -48,90 +48,88 @@
 		</div>
   </div>
 
-  <h2 class="heading-small">Recipients</h2>
+  <form>
 
-  <details>
-    <summary><span class="summary">Review list of recipients</span></summary>
+    <h2 class="heading-small">Recipients</h2>
 
-    <div class="panel">
+    <details>
+      <summary><span class="summary">Review list of recipients</span></summary>
 
-      <div class="table-overflow">
-				<table id="application-list">
-					<thead>
-						<tr>
-              <th scope="col" id="select-applications-label">Select application(s)</th>
-							<th scope="col">Application number</th>
-							<th scope="col">Project title</th>
-							<th scope="col">Lead</th>
-              <th scope="col">Funding decision</th>
-              <th scope="col">Email status</th>
-              <th scope="col" class="alignright">Date sent</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-              <td><input type="checkbox" class="app-row-select row-successful" name="app-row" value="app-row-1" aria-labelledby="select-applications-label" /></td>
-							<td>194731</td>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-              <td>Successful</td>
-              <td>-</td>
-              <td class="alignright">-</td>
-						</tr>
-						<tr>
-              <td><input type="checkbox" class="app-row-select row-unsuccessful" name="app-row" value="app-row-2" aria-labelledby="select-applications-label" /></td>
-							<td>194732</td>
-							<td>Robots that learn</td>
-							<td>Max Digital</td>
-							<td>Unsuccessful</td>
-              <td>Sent</td>
-              <td class="alignright">30 December 2016</td>
-						</tr>
-						<tr>
-              <td><input type="checkbox" class="app-row-select row-onhold" name="app-row" value="app-row-3" aria-labelledby="select-applications-label" /></td>
-							<td>194733</td>
-							<td>AI in learning</td>
-							<td>BBC</td>
-							<td>On hold</td>
-              <td>-</td>
-              <td class="alignright">-</td>
-						</tr>
-						<tr>
-              <td><input type="checkbox" class="app-row-select row-successful" name="app-row" value="app-row-4" aria-labelledby="select-applications-label" /></td>
-							<td>194734</td>
-							<td>Progressive machines</td>
-							<td>Kingfisher</td>
-							<td>Successful</td>
-              <td>Sent</td>
-              <td class="alignright">30 December 2016</td>
-						</tr>
-					</tbody>
-				</table>
+      <div class="panel">
+
+        <div class="table-overflow">
+  				<table id="application-list">
+  					<thead>
+  						<tr>
+  							<th scope="col">Application number</th>
+  							<th scope="col">Project title</th>
+  							<th scope="col">Lead</th>
+                <th scope="col">Funding decision</th>
+                <th scope="col" class="alignright">Remove application</th>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<tr>
+  							<td>194731</td>
+  							<td>Machine learning in robots</td>
+  							<td>PWC</td>
+                <td>Successful</td>
+                <td class="alignright"><a href="#">Remove</a></td>
+  						</tr>
+  						<tr>
+  							<td>194732</td>
+  							<td>Robots that learn</td>
+  							<td>Max Digital</td>
+                <td>Successful</td>
+                <td class="alignright"><a href="#">Remove</a></td>
+  						</tr>
+  						<tr>
+  							<td>194733</td>
+  							<td>AI in learning</td>
+  							<td>BBC</td>
+                <td>Successful</td>
+                <td class="alignright"><a href="#">Remove</a></td>
+  						</tr>
+  						<tr>
+  							<td>194734</td>
+  							<td>Progressive machines</td>
+  							<td>Kingfisher</td>
+                <td>Successful</td>
+                <td class="alignright"><a href="#">Remove</a></td>
+  						</tr>
+  					</tbody>
+  				</table>
+        </div>
+
       </div>
 
-    </div>
+    </details>
 
-  </details>
+    <fieldset class="extra-margin-top">
 
-  <fieldset class="extra-margin-top">
+      <legend class="visuallyhidden">Email notification</legend>
 
-    <legend class="visuallyhidden">Email notification</legend>
+      <div class="form-group">
+        <label class="form-label-bold" for="notification-subject">Subject</label>
+        <input class="form-control" type="text" name="notification-subject" id="notification-subject" value="" required="required" />
+      </div>
 
-    <div class="form-group">
-      <label class="form-label-bold" for="notification-subject">Subject</label>
-      <input class="form-control" type="text" name="notification-subject" id="notification-subject" value="" />
-    </div>
+      <div class="form-group">
+        <label class="form-label-bold" for="notification-message">Message</label>
+        <textarea  class="form-control " name="notification-message" id="notification-message" cols="30" rows="10" required="required"></textarea>
+      </div>
 
-    <div class="form-group">
-      <label class="form-label-bold" for="notification-message">Message</label>
-      <textarea  class="form-control " name="notification-message" id="notification-message" cols="30" rows="10"></textarea>
-    </div>
+      <input type="hidden" name="comp" value="panel" />
+      <input type="hidden" name="action" value="emails-sent" />
 
-    <button class="button">Send email to all applicants</button>
-    <a href="#" class="button-link-style">Cancel</a>
+      <button class="button" formaction="/prototypes/1561-funding-notifications" >Send email to all applicants</button>
+
+      <a href="#" class="button-link-style">Cancel</a>
+
+    </fieldset>
 
 
-  </fieldset>
+  </form>
 
 
 

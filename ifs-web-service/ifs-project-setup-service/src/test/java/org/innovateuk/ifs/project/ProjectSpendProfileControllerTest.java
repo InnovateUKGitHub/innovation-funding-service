@@ -384,6 +384,68 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void saveSpendProfileWithMissingTableEntries() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource()
+                .withUser(1L)
+                .withOrganisation(1L)
+                .withRoleName(PARTNER)
+                .build(1);
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+
+        SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
+
+        when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
+        List<Error> incorrectCosts = new ArrayList<>();
+        incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST));
+
+        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
+        when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
+
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+
+        MvcResult result = mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("table.markedAsComplete", "true")
+                .param("table.monthlyCostsPerCategoryMap[1][0]", "a")
+                .param("table.monthlyCostsPerCategoryMap[1][1]", "10")
+                .param("table.monthlyCostsPerCategoryMap[1][2]", "10")
+                .param("table.monthlyCostsPerCategoryMap[2][0]", "10")
+                .param("table.monthlyCostsPerCategoryMap[2][1]", "10")
+                .param("table.monthlyCostsPerCategoryMap[2][2]", "10")
+                .param("table.monthlyCostsPerCategoryMap[3][0]", "10")
+                .param("table.monthlyCostsPerCategoryMap[3][1]", "10")
+                .param("table.monthlyCostsPerCategoryMap[3][2]", "10")
+        )
+                .andExpect(view().name("project/spend-profile")).andReturn();
+
+        SpendProfileForm form = (SpendProfileForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(1, form.getObjectErrors().size());
+
+        verify(projectService).getById(projectId);
+        verify(projectFinanceService).getSpendProfileTable(projectId, organisationId);
+        verify(organisationService).getOrganisationById(organisationId);
+        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
+
+    }
+
+    @Test
     public void viewSpendProfileSuccessfulViewModelPopulationInLeadPartnerOrganisation() throws Exception {
 
         Long organisationId = 1L;

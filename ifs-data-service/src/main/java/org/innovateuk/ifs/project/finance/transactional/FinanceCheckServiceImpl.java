@@ -4,13 +4,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
@@ -24,8 +21,9 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -195,7 +193,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> viability = getViability(org);
+            Pair<Viability, ViabilityStatus> viability = getViability(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
@@ -209,25 +207,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private Pair<FinanceCheckPartnerStatusResource.Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
+    private Pair<Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
 
-        if (organisationFinanceDelegate.isUsingJesFinances(org.getOrganisation().getOrganisationType().getName())) {
+        ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
+                org.getProject().getId(), org.getOrganisation().getId());
 
-            return Pair.of(FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
+        ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
 
-        } else {
+        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityStatus());
 
-            ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
-                    org.getProject().getId(), org.getOrganisation().getId());
-
-            ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
-
-            FinanceCheckPartnerStatusResource.Viability viability = viabilityDetails.getViability() == Viability.APPROVED ?
-                    FinanceCheckPartnerStatusResource.Viability.APPROVED :
-                    FinanceCheckPartnerStatusResource.Viability.REVIEW;
-
-            return Pair.of(viability, viabilityDetails.getViabilityStatus());
-        }
     }
 
     private FinanceCheck mapToDomain(FinanceCheckResource financeCheckResource) {
@@ -304,7 +292,17 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     ServiceResult<Void> validate(FinanceCheckResource toSave) {
         List<BigDecimal> costs = simpleMap(toSave.getCostGroup().getCosts(), CostResource::getValue);
-        return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+
+        return getPartnerOrganisation(toSave.getProject(), toSave.getOrganisation()).andOnSuccess(
+                partnerOrganisation -> {
+                    OrganisationType organisationType = partnerOrganisation.getOrganisation().getOrganisationType();
+                    if(organisationType.getId().equals(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())){
+                        return aggregate(costNull(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+                    } else {
+                        return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
+                    }
+                }
+        );
     }
 
     private ServiceResult<Void> costFractional(List<BigDecimal> costs) {

@@ -73,6 +73,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("activitiyCode", activityCode, competition));
     }
 
+    public CompetitionBuilder withFullFinance(boolean fullFinance) {
+        return with(competition -> setField("fullApplicationFinance", fullFinance, competition));
+    }
+
     public CompetitionBuilder withInnovateBudget(String innovateBudget) {
         return with(competition -> setField("innovateBudget", innovateBudget, competition));
     }
