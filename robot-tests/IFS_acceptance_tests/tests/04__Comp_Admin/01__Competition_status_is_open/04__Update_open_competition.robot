@@ -80,18 +80,13 @@ Comp admin can edit Project summary before Open date
     And The user enters text to a text field    id= question.maxWords    100
     And the user clicks the button/link    css=input.button.button-large
 
-Comp admin can edit Public description details before Open date
+Public description should be editable before Open date
     [Documentation]    INFUND-6939
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given The user clicks the button/link    link=Application
     Then The user should see the text in the page    Public description
     And The user clicks the button/link    link=Public description
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    And The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
-    And The user clicks the button/link    link=Scope
-    And the user should see the element    jquery=h1:contains("Scope")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And The user enters text to a text field    id= question.maxWords    100
     And the user clicks the button/link    css=input.button.button-large
@@ -119,7 +114,7 @@ Comp admin can edit Finances before open Date
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
 
-Comp admin can edit Eligibility before Open date
+Eligibility is editable before Open date
     [Documentation]    INFUND-6792
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
@@ -147,12 +142,12 @@ Comp admin can edit Assessors page before Notifications Date
     And the user should see the element    jQuery=.button:contains("Edit")
     [Teardown]    return the database to its previous status
 
-Comp admin cannot edit Assessors page after Notifications Date
+Assessors page is not editable after Notifications Date
     [Documentation]    INFUND-6695
     [Tags]    Pending
     # TODO Pending due to INFUND-7511
 
-Comp admin has read only view of Eligibility past Open date
+Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
     [Tags]
     Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
@@ -163,7 +158,7 @@ Comp admin has read only view of Eligibility past Open date
     And The user should not see the element    jquery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to setup overview
 
-Comp admin has read only view of Public Description past Open date
+Public Description is not editable when competition is open
     [Documentation]    INFUND-6939
     [Tags]
     Given The user clicks the button/link    link=Application
@@ -175,7 +170,7 @@ Comp admin has read only view of Public Description past Open date
     And The user should not see the element    jquery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
-Comp admin has read only view of Project Summary past Open date
+Project Summary is not editable when competition is open
     [Documentation]    INFUND-6938
     [Tags]
     When The user clicks the button/link    link=Project summary
