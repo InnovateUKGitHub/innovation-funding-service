@@ -431,10 +431,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertTrue((new BigDecimal("5000033.33").multiply(new BigDecimal("0.25"))).compareTo(eligibility.getFundingSought()) == 0);
         assertTrue(new BigDecimal("1000").compareTo(eligibility.getOtherPublicSectorFunding()) == 0);
         assertTrue((new BigDecimal("4999033.33").subtract(new BigDecimal("5000033.33").multiply(new BigDecimal("0.25")))).compareTo(eligibility.getContributionToProject()) == 0);
-        assertTrue(new String("00000456").equals(eligibility.getApplicationId()));
-        assertTrue(new String("Project1").equals(eligibility.getProjectName()));
-        assertTrue(new String("Organisation1").equals(eligibility.getOrganisationName()));
-
     }
 
     @Test

@@ -2,11 +2,8 @@ package org.innovateuk.ifs.project.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -40,7 +37,7 @@ public class FinanceCheckEligibilityResourceBuilder extends BaseBuilder<FinanceC
     public FinanceCheckEligibilityResourceBuilder withProjectName(String... projectNames) {
         return withArray((projectName, financeCheckEligibilityResource) -> setField("projectName", projectName, financeCheckEligibilityResource), projectNames);
     }
-    
+
     public FinanceCheckEligibilityResourceBuilder withOrganisationId(Long... organisationIds) {
         return withArray((organisationId, financeCheckEligibilityResource) -> setField("organisationId", organisationId, financeCheckEligibilityResource), organisationIds);
     }
@@ -56,11 +53,11 @@ public class FinanceCheckEligibilityResourceBuilder extends BaseBuilder<FinanceC
     public FinanceCheckEligibilityResourceBuilder withDurationInMonths(Long... durationInMonthsLst) {
         return withArray((durationInMonths, financeCheckEligibilityResource) -> setField("durationInMonths", durationInMonths, financeCheckEligibilityResource), durationInMonthsLst);
     }
-    
+
     public FinanceCheckEligibilityResourceBuilder withTotalCost(BigDecimal... totalCosts) {
         return withArray((totalCost, financeCheckEligibilityResource) -> setField("totalCost", totalCost, financeCheckEligibilityResource), totalCosts);
     }
-    
+
     public FinanceCheckEligibilityResourceBuilder withPercentageGrant(BigDecimal... percentageGrants) {
         return withArray((percentageGrant, financeCheckEligibilityResource) -> setField("percentageGrant", percentageGrant, financeCheckEligibilityResource), percentageGrants);
     }
@@ -68,7 +65,7 @@ public class FinanceCheckEligibilityResourceBuilder extends BaseBuilder<FinanceC
     public FinanceCheckEligibilityResourceBuilder withFundingSought(BigDecimal... fundingSoughts) {
         return withArray((fundingSought, financeCheckEligibilityResource) -> setField("fundingSought", fundingSought, financeCheckEligibilityResource), fundingSoughts);
     }
-    
+
     public FinanceCheckEligibilityResourceBuilder withOtherPublicSectorFunding(BigDecimal... otherPublicSectorFundings) {
         return withArray((otherPublicSectorFunding, financeCheckEligibilityResource) -> setField("otherPublicSectorFunding", otherPublicSectorFunding, financeCheckEligibilityResource), otherPublicSectorFundings);
     }
@@ -76,5 +73,6 @@ public class FinanceCheckEligibilityResourceBuilder extends BaseBuilder<FinanceC
     public FinanceCheckEligibilityResourceBuilder withContributionToProject(BigDecimal... contributionToProjects) {
         return withArray((contributionToProject, financeCheckEligibilityResource) -> setField("contributionToProject", contributionToProject, financeCheckEligibilityResource), contributionToProjects);
     }
-    
+
 }
+

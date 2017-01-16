@@ -13,11 +13,13 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" />
 
-    <h1 class="heading-xlarge">
-        <th:block th:text="${model.organisationName}" />
-        <small th:if="${model.organisationName == model.leadPartnerOrganisation}">(Lead Partner)</small>
-    </h1>
-    <hr/>
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">
+            <th:block th:text="${model.organisationName}" />
+            <small th:if="${model.organisationName == model.leadPartnerOrganisation}">(Lead Partner)</small>
+        </h1>
+    </div>
 
     <h2 class="heading-medium"><th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}"/> : <th:block th:text="${model.financeCheckSummaryResource.projectName}"/></h2>
 
@@ -43,11 +45,11 @@
             <tbody>
             <tr>
                 <td th:text="${model.financesOverview.durationInMonths+' months'}" />
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.financesOverview.totalCosts,1,'COMMA')}" /></td>
-                <td class="numeric" th:text="${#numbers.formatInteger(model.financesOverview.percentageGrant,1,'NONE')+'%'}" />
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.financesOverview.fundingSought,1,'COMMA')}" /></td>
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.financesOverview.otherPublicSectorFunding,1,'COMMA')}" /></td>
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.financesOverview.contributionToProject,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.totalCost,1,'COMMA')}" /></td>
+                <td class="numeric" th:text="${#numbers.formatInteger(model.eligibilityOverview.percentageGrant,1,'NONE')+'%'}" />
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.fundingSought,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.contributionToProject,1,'COMMA')}" /></td>
 
             </tr>
             </tbody>

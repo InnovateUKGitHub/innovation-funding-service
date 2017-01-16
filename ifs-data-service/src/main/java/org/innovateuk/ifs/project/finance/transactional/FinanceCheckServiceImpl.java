@@ -174,10 +174,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
                 BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
                 FinanceCheckEligibilityResource eligibilityResource = new FinanceCheckEligibilityResource(project.getId(),
-                        project.getName(),
                         organisationId,
-                        organisation.getName(),
-                        application.getFormattedId(),
                         application.getDurationInMonths(),
                         projectFinance.getTotal(),
                         grantPercentage,

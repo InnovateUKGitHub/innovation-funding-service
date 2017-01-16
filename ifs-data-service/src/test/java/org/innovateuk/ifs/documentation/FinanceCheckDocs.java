@@ -34,10 +34,7 @@ public class FinanceCheckDocs {
 
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {
             fieldWithPath("projectId").description("Id or project that the eligibility is from"),
-            fieldWithPath("projectName").description("Name of project that the eligibility is from"),
             fieldWithPath("organisationId").description("Id of organisation that the eligibility is from"),
-            fieldWithPath("organisationName").description("Name of organisation that the eligibility is from"),
-            fieldWithPath("applicationId").description("Formatted application id that the eligibility is from"),
             fieldWithPath("durationInMonths").description("Total expected project duration in months"),
             fieldWithPath("totalCost").description("Total cost of project for the organisation"),
             fieldWithPath("percentageGrant").description("The percentage of funding of the project through grant for the organisation"),

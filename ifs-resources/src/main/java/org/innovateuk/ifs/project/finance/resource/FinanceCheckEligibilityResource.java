@@ -13,10 +13,7 @@ import static java.util.Arrays.asList;
  */
 public class FinanceCheckEligibilityResource {
     private Long projectId;
-    private String projectName;
     private Long organisationId;
-    private String organisationName;
-    private String applicationId;
     private Long durationInMonths;
     private BigDecimal totalCost;
     private BigDecimal percentageGrant;
@@ -28,12 +25,9 @@ public class FinanceCheckEligibilityResource {
 
     }
 
-    public FinanceCheckEligibilityResource(Long projectId, String projectName, Long organisationId, String organisationName, String applicationId, Long durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject) {
+    public FinanceCheckEligibilityResource(Long projectId, Long organisationId, Long durationInMonths, BigDecimal totalCost, BigDecimal percentageGrant, BigDecimal fundingSought, BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject) {
         this.projectId = projectId;
-        this.projectName = projectName;
         this.organisationId = organisationId;
-        this.organisationName = organisationName;
-        this.applicationId = applicationId;
         this.durationInMonths = durationInMonths;
         this.totalCost = totalCost;
         this.percentageGrant = percentageGrant;
@@ -50,34 +44,10 @@ public class FinanceCheckEligibilityResource {
         this.projectId = projectId;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
     public Long getOrganisationId() { return organisationId; }
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
-    }
-
-    public String getOrganisationName() {
-        return organisationName;
-    }
-
-    public void setOrganisationName(String organisationName) {
-        this.organisationName = organisationName;
-    }
-
-    public String getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(String applicationId) {
-        this.applicationId = applicationId;
     }
 
     public Long getDurationInMonths() {
@@ -119,5 +89,5 @@ public class FinanceCheckEligibilityResource {
 
     public BigDecimal getFundingSought() { return fundingSought; }
 
-    public void setFundingSought(BigDecimal contributionToProject) {this.fundingSought = fundingSought; }
+    public void setFundingSought(BigDecimal fundingSought) {this.fundingSought = fundingSought; }
 }

@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.new
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
@@ -203,10 +203,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         FinanceCheckEligibilityResource expected = newFinanceCheckEligibilityResource().
                 withProjectId(projectId).
-                withProjectName("Project1").
                 withOrganisationId(organisationId).
-                withOrganisationName("Organisation1").
-                withApplicationId("00001234").
                 withDurationInMonths(6L).
                 withTotalCost(new BigDecimal(10000.00)).
                 withPercentageGrant(new BigDecimal(50.00)).
