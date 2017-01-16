@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectPartnerDocumentsViewModel;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -119,7 +120,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         ProjectResource project = newProjectResource()
                 .withId(projectId)
                 .withName("My Project")
-                .withOtherDocumentsApproved(true)
+                .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .build();
         boolean approved = true;
 
