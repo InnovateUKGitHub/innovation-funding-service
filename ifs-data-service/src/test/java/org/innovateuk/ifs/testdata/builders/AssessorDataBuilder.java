@@ -8,9 +8,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -21,6 +19,8 @@ import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBu
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Generates data for an Assessor on the platform
@@ -85,8 +85,20 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         });
     }
 
+    public AssessorDataBuilder addAssessorRole() {
+        return with((AssessorData data) -> {
+            User user = userRepository.findByEmail(data.getEmail()).get();
 
-    public AssessorDataBuilder addAssessorRoleAndInnovationAreas(List<String> innovationAreas) {
+            Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+
+            if (!user.getRoles().contains(assessorRole)) {
+                user.getRoles().add(assessorRole);
+                userRepository.save(user);
+            }
+        });
+    }
+
+    public AssessorDataBuilder addSkills(String skillAreas, BusinessType businessType, List<String> innovationAreas) {
         return with((AssessorData data) -> {
             User user = userRepository.findByEmail(data.getEmail()).get();
 
@@ -102,16 +114,94 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     })
                     .collect(toSet());
 
+            ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
+            profileSkillsResource.setBusinessType(businessType);
+            profileSkillsResource.setSkillsAreas(skillAreas);
+            profileSkillsResource.setUser(data.getUser().getId());
+
+            userProfileService.updateProfileSkills(user.getId(), profileSkillsResource);
+
             user.addInnovationAreas(userInnovationAreas);
-
-            Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-
-            if (!user.getRoles().contains(assessorRole)) {
-                user.getRoles().add(assessorRole);
-            }
 
             userRepository.save(user);
         });
+    }
+
+    public AssessorDataBuilder addAffiliations(String principalEmployer,
+                                               String role,
+                                               String professionalAffiliations,
+                                               List<Map<String, String>> appointments,
+                                               String financialInterests,
+                                               List<Map<String, String>> familyAffiliations,
+                                               String familyFinancialInterests) {
+        return with((AssessorData data) -> {
+            if (checkAffiliationsEmpty(
+                    principalEmployer,
+                    role,
+                    professionalAffiliations,
+                    appointments,
+                    financialInterests,
+                    familyAffiliations,
+                    familyFinancialInterests
+            )) {
+                return;
+            }
+
+            User user = userRepository.findByEmail(data.getEmail()).get();
+
+            List<AffiliationResource> allAffiliations = combineLists(
+                    combineLists(
+                            mapAppointments(appointments),
+                            mapFamilyAffiliations(familyAffiliations)
+                    ),
+                    AffiliationResourceBuilder.createPrincipalEmployer(principalEmployer, role),
+                    AffiliationResourceBuilder.createProfessaionAffiliations(professionalAffiliations),
+                    AffiliationResourceBuilder.createFinancialInterests(!financialInterests.isEmpty(), financialInterests),
+                    AffiliationResourceBuilder.createFamilyFinancialInterests(!familyFinancialInterests.isEmpty(), familyFinancialInterests)
+            );
+
+            userProfileService.updateUserAffiliations(user.getId(), allAffiliations);
+        });
+    }
+
+    private List<AffiliationResource> mapAppointments(List<Map<String, String>> appointments) {
+        if (appointments.isEmpty()) {
+            return singletonList(AffiliationResourceBuilder.createEmptyAppointments());
+        }
+
+        return simpleMap(appointments, appointment ->
+                AffiliationResourceBuilder.createAppointment(appointment.get("Organisation"), appointment.get("Position"))
+        );
+    }
+
+    private List<AffiliationResource> mapFamilyAffiliations(List<Map<String, String>> familyAffiliations) {
+        if (familyAffiliations.isEmpty()) {
+            return singletonList(AffiliationResourceBuilder.createEmptyFamilyAffiliations());
+        }
+
+        return simpleMap(familyAffiliations, familyAffiliation ->
+                AffiliationResourceBuilder.createFamilyAffiliation(
+                        familyAffiliation.get("Relation"),
+                        familyAffiliation.get("Organisation"),
+                        familyAffiliation.get("Position")
+                )
+        );
+    }
+
+    private boolean checkAffiliationsEmpty(String principalEmployer,
+                                           String role,
+                                           String professionalAffiliations,
+                                           List<Map<String, String>> appointments,
+                                           String financialInterests,
+                                           List<Map<String, String>> familyAffiliations,
+                                           String familyFinancialInterests) {
+        return principalEmployer.isEmpty() &&
+                role.isEmpty() &&
+                professionalAffiliations.isEmpty() &&
+                appointments.isEmpty() &&
+                financialInterests.isEmpty() &&
+                familyAffiliations.isEmpty() &&
+                familyFinancialInterests.isEmpty();
     }
 
     public AssessorDataBuilder acceptInvite(String hash) {

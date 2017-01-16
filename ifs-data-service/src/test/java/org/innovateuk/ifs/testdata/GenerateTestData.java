@@ -808,8 +808,19 @@ public class GenerateTestData extends BaseIntegrationTest {
                     inviteHash
             );
         } else {
-            baseBuilder = baseBuilder.addAssessorRoleAndInnovationAreas(line.innovationAreas);
+            baseBuilder = baseBuilder.addAssessorRole();
         }
+
+        baseBuilder.addSkills(line.skillAreas, line.businessType, line.innovationAreas);
+        baseBuilder.addAffiliations(
+                line.principalEmployer,
+                line.role,
+                line.professionalAffiliations,
+                line.appointments,
+                line.financialInterests,
+                line.familyAffiliations,
+                line.familyFinancialInterests
+        );
 
         if (!line.rejectionReason.isEmpty()) {
             baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment).build();

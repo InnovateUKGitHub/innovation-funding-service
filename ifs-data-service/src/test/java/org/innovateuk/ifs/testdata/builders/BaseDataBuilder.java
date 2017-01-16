@@ -50,10 +50,7 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.RoleService;
-import org.innovateuk.ifs.user.transactional.UserService;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
@@ -130,6 +127,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectFinanceService projectFinanceService;
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
+    protected UserProfileService userProfileService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -183,6 +181,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
         this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
         this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
+        this.userProfileService = serviceLocator.getBean(UserProfileService.class);
     }
 
     @Override
