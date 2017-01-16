@@ -6,8 +6,9 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 ...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
 ...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
 ...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
-...
-...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
+...               INFUND-6941  As a Competitions team member I want to be able to view Finances throughout the life of the competition
+...               INFUND-6792  As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
+...               INFUND-7083  As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
@@ -55,6 +56,107 @@ Comp admin should be able to view but not edit the finances for every partner
     When Log in as a different user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
+
+Comp admin has read only view of Application details past Open date
+    [Documentation]  INFUND-6937
+    ...  Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
+    [Tags]
+    [Setup]     log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page      ${CA_Live}
+    Then the user should see the element      jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
+    When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail
+    Then the user should not see the element  jQuery=.button:contains("Edit this question")
+    When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail/edit
+    And the user clicks the button/link       jQuery=.button:contains("Save and close")
+    Then the user should see the element      jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
+
+Comp admin has read only view of Project Summary past Open date
+    [Documentation]     INFUND-6938
+    [Tags]
+    [Setup]  the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    Given the user clicks the button/link    link=Application
+    Then The user should see the text in the page    Project summary
+    And The user clicks the button/link     link=Project summary
+    Then the user should see the element    jquery=h1:contains("Project summary")
+    And The user should not see the element     css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    And The user clicks the button/link     link = Return to application questions
+
+Comp admin has read only view of Public Description past Open date
+    [Documentation]     INFUND-6939
+    [Tags]
+    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    And The user clicks the button/link    link=Application
+    Then The user should see the text in the page    Public description
+    And The user clicks the button/link     link=Public description
+    Then the user should see the element    jquery=h1:contains("Public description")
+    And The user should not see the element     css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    And The user clicks the button/link     link = Return to application questions
+
+Comp admin has read only view of Scope past Open Date
+    [Documentation]     INFUND-6940
+    [Tags]
+    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    And The user clicks the button/link    link=Application
+    Then The user should see the text in the page    Scope
+    And The user clicks the button/link     link=Scope
+    Then the user should see the element    jquery=h1:contains("Scope")
+    And The user should not see the element     css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    And The user clicks the button/link     link = Return to application questions
+
+Comp admin has read only view of Finances past Open Date
+    [Documentation]     INFUND-6941
+    [Tags]
+    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    And The user clicks the button/link    link=Application
+    Then The user should see the text in the page    Finances
+    And The user clicks the button/link     link=Finances
+    Then the user should see the element    jquery=h1:contains("Application finances")
+    And The user should not see the element     css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    And The user clicks the button/link     link = Return to application questions
+
+Comp admin has read only view of Eligibility past Open date
+    [Documentation]     INFUND-6792
+    [Tags]
+    [Setup]  the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    Given the user clicks the button/link    link=Eligibility
+    Then the user should see the element    jquery=h1:contains("Eligibility")
+    And The user should not see the element     css = input
+    And The user clicks the button/link     link = Return to setup overview
+
+Comp admin editable fields in Funding Information section past Open date
+    [Documentation]     INFUND-7083
+    [Tags]          Pending
+    Given the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    And the user clicks the button/link    link=Funding information
+    Then the user should see the element    jquery=h1:contains("Funding information")
+    And the user clicks the button/link     jQuery=.button:contains("Edit")
+    And The user enters text to a text field    id=funders0.funder    Best Works Test
+    And The user clicks the button/link      css=button.buttonlink
+    And The user enters text to a text field    id=funders2.funder    InnovateUK
+    And The user enters text to a text field    id=2-funderBudget     20000
+    And The user enters text to a text field    id= pafNumber    34FAP
+    And The user enters text to a text field    id= budgetCode   45BC
+    And The user enters text to a text field    id= activityCode  56AC
+    And the user should see that the element is disabled   css = input.form-control width-large
+    And The user clicks the button/link     jQuery=.button:contains("Done")
+
+comp admin non-editable fields in Funding Information section past notifications date
+    [Documentation]     INFUND-7083
+    [Tags]
+    Given the user navigates to the page    ${SERVER}/management/competition/setup/7/
+    And The user clicks the button/link    link=Funding information
+    Then the user should see the element    jquery=h1:contains("Funding information")
+    And The user should not see the element     css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question

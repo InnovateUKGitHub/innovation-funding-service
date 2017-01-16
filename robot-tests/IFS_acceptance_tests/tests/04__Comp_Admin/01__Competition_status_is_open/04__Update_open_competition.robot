@@ -1,10 +1,15 @@
 *** Settings ***
-Documentation     INFUND-6661 As a Competitions team member I want to be able to update Initial details throughout the life of the competition
+Documentation
+...               INFUND-6661 As a Competitions team member I want to be able to update Initial details throughout the life of the competition
+...               INFUND-6937  As a Competitions team member I want to be able to view Application details throughout the life of the competition
+...               INFUND-6938  As a Competitions team member I want to be able to view Project summary throughout the life of the competition
+...               INFUND-6939  As a Competitions team member I want to be able to view Public description throughout the life of the competition
+...               INFUND-6940  As a Competitions team member I want to be able to view Scope throughout the life of the competition
+...               INFUND-6941  As a Competitions team member I want to be able to view Finances throughout the life of the competition
+...               INFUND-6792  As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
+...               INFUND-7083  As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 ...
-...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
-...
-...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
-Suite Setup       Custom suite setup
+Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  MySQL
 Resource          ../../../resources/defaultResources.robot
@@ -65,14 +70,63 @@ Comp admin has read only view of Application details past Open date
     When the user navigates to the page       ${server}/management/competition/setup/1/section/application/detail/edit
     And the user clicks the button/link       jQuery=.button:contains("Save and close")
     Then the user should see the element      jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
+Comp admin can edit Project summary before Open date
+    [Documentation]     INFUND-6938
+    [Tags]
+    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
+    Given the user clicks the button/link    link=Application
+    Then The user should see the text in the page    Project summary
+    And The user clicks the button/link     link=Project summary
+    And the user should see the element    jquery=h1:contains("Project summary")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+
+Comp admin can edit Public description details before Open date
+    [Documentation]     INFUND-6939
+    [Tags]
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
+    Given The user clicks the button/link    link=Application
+    Then The user should see the text in the page    Public description
+    And The user clicks the button/link     link=Public description
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+    And The user clicks the button/link     link=Scope
+    And the user should see the element    jquery=h1:contains("Scope")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+
+Comp admin can edit Scope before Open date
+    [Documentation]     INFUND-6940
+    [Tags]
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
+    Given the user clicks the button/link    link=Application
+    Then The user should see the text in the page    Scope
+    And The user clicks the button/link     link=Scope
+    And the user should see the element    jquery=h1:contains("Scope")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords  100
+    And the user clicks the button/link    css=input.button.button-large
+
+Comp admin can edit Finances before open Date
+    [Documentation]     INFUND-6941
+    [Tags]
+    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
+    Given the user clicks the button/link    link=Application
+    Then The user should see the text in the page    Finances
+    And The user clicks the button/link     link=Finances
+    And the user should see the element    jquery=h1:contains("Application finances")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And the user clicks the button/link    jQuery=.button:contains("Save and close")
 
 Comp admin can edit Eligibility before Open date
     [Documentation]     INFUND-6792
     [Tags]
-    [Setup]     log in as a different user    &{Comp_admin1_credentials}
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/6/
-    And The user clicks the button/link    link=Eligibility
-    And the user should see the element    jquery=h1:contains("Eligibility")
+    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
+    Given the user clicks the button/link    link=Eligibility
+    Then the user should see the element    jquery=h1:contains("Eligibility")
     And The user clicks the button/link     css=button.button
     And the user selects the radio button     singleOrCollaborative    single
     And The user clicks the button/link      css=button.button
@@ -125,7 +179,7 @@ the user is able to change the value of the fields
     the user clicks the button/link    link=Application details
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("No")
     the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    the user selects the radio button  useResubmissionQuestion  use-resubmission-question-yes
+    the user selects the radio button  useResubmissionQuesticton  use-resubmission-question-yes
     the user clicks the button/link    jQuery=.button:contains("Save and close")
     the user clicks the button/link    link=Application details
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
