@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 /**
  * DTO for a created assessor invite that is ready to be sent.
@@ -15,7 +15,7 @@ public class AssessorCreatedInviteResource extends AssessorInviteResource {
     public AssessorCreatedInviteResource() {
     }
 
-    public AssessorCreatedInviteResource(String name, CategoryResource innovationArea, boolean compliant, String email, long inviteId) {
+    public AssessorCreatedInviteResource(String name, InnovationAreaResource innovationArea, boolean compliant, String email, long inviteId) {
         super(name, innovationArea, compliant);
         this.email = email;
         this.inviteId = inviteId;

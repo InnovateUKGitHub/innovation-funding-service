@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -31,7 +31,7 @@ public class CompetitionInviteResource extends InviteResource {
 
     private InviteStatus status;
 
-    private CategoryResource innovationArea;
+    private InnovationAreaResource innovationArea;
 
     public String getCompetitionName() {
         return competitionName;
@@ -97,11 +97,11 @@ public class CompetitionInviteResource extends InviteResource {
         this.assessorPay = assessorPay;
     }
 
-    public CategoryResource getInnovationArea() {
+    public InnovationAreaResource getInnovationArea() {
         return innovationArea;
     }
 
-    public void setInnovationArea(CategoryResource innovationArea) {
+    public void setInnovationArea(InnovationAreaResource innovationArea) {
         this.innovationArea = innovationArea;
     }
 

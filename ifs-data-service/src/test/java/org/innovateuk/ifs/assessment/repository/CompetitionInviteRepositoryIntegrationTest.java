@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
@@ -16,8 +16,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.junit.Assert.assertEquals;
@@ -27,13 +26,13 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     private Competition competition;
 
-    private Category innovationArea;
+    private InnovationArea innovationArea;
 
     @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     @Override
@@ -44,7 +43,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
     @Before
     public void setup() {
         competition = competitionRepository.save( newCompetition().withName("competition").build() );
-        innovationArea = categoryRepository.save( newCategory().withName("innovation area").withType(INNOVATION_AREA).build() );
+        innovationArea = innovationAreaRepository.save( newInnovationArea().withName("innovation area").build() );
     }
 
     @Test
