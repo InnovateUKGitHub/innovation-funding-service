@@ -98,7 +98,9 @@
                             </label>
                             <p class="form-hint">The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</p>
                             <select th:field="*{selectedInnovationArea}"
-                                    class="form-control width-full progressive-group-select"
+                                    class="form-control width-full"
+                                    data-progressive-group-select="Innovation sector"
+                                    data-progressive-group-select-instruction="Please select an innovation sector"
                                     required="required"
                                     th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     aria-labelledby="innovation-area"
