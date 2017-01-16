@@ -20,11 +20,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
-    [Documentation]    INFUND-2300
-    ...
-    ...    INFUND-2304
-    ...
-    ...    INFUND-2435
+    [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
     [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
@@ -33,15 +29,15 @@ Comp admin can open the view mode of the application
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     Then the user should see the element    id=sort-by
     And the user selects the option from the drop-down menu    id    id=sort-by
-    #    TODO the following lines fail due to INFUND-7503
-    #    When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    #    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    #    And the user should see the element    link=Print application
-    #    And the user should see the text in the page    A novel solution to an old problem
-    #    And the user should see the text in the page    ${valid_pdf}
-    #    And the user can view this file without any errors
-    # And the user should see the text in the page    ${quarantine_pdf}
-    # nad the user cannot see this file but gets a quarantined message
+    When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user should see the element           link=Print application
+    And the user should see the text in the page  A novel solution to an old problem
+    And the user should see the text in the page  ${valid_pdf}
+    And the user can view this file without any errors
+    #    And the user should see the text in the page  ${quarantine_pdf}
+    #    And the user cannot see this file but gets a quarantined message
+    # TODO when working on Guarantined files. Variable has been removed
 
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443
@@ -181,6 +177,7 @@ the user can view this file without any errors
     the user goes back to the previous page
 
 the user cannot see this file but gets a quarantined message
+    [Documentation]  Currently not used.  It was used in Comp admin can open the view mode of the application
     the user clicks the button/link    link=test_quarantine.pdf(7 KB)
     the user should not see an error in the page
     the user should see the text in the page    ${quarantine_warning}
