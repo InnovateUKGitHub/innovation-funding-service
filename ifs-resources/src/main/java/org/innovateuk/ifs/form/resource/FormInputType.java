@@ -43,9 +43,13 @@ public enum FormInputType implements Identifiable {
     private static List<FormInputType> COST_CATEGORIES =
             asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);
 
-    private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE);
+    private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, FINANCE, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE);
 
     private static List<FormInputType> ACADEMIC_FINANCE_TYPES = asList(YOUR_FINANCE, FINANCE_UPLOAD);
+
+    private static List<FormInputType> FINANCIAL_SUMMARY_TYPES = singletonList(FINANCIAL_SUMMARY);
+
+    private static List<FormInputType> PRINT_TYPES = asList(APPLICATION_DETAILS, TEXTAREA);
 
     private long id;
 
@@ -66,7 +70,7 @@ public enum FormInputType implements Identifiable {
      * @return whether or not we would expect a displayable question-type fragment for this form input type
      */
     public boolean isDisplayableQuestionType() {
-        return !combineLists(FINANCE_TYPES, ACADEMIC_FINANCE_TYPES, asList(FINANCE, FINANCIAL_SUMMARY)).contains(this);
+        return !combineLists(FINANCE_TYPES, ACADEMIC_FINANCE_TYPES, FINANCIAL_SUMMARY_TYPES).contains(this);
     }
 
     /**
@@ -77,10 +81,33 @@ public enum FormInputType implements Identifiable {
     }
 
     /**
+     * @return whether or not we would expect a displayable finance fragment for this form input type
+     */
+    public boolean isDisplayableAcademicFinanceType() {
+        return ACADEMIC_FINANCE_TYPES.contains(this);
+    }
+
+    /**
+     * @return whether or not we would expect a displayable finance fragment for this form input type
+     */
+    public boolean isDisplayableFinanceType(String financeView) {
+
+        switch (financeView) {
+            case "finance": return isDisplayableFinanceType();
+            case "academic-finance": return isDisplayableAcademicFinanceType();
+            default: throw new IllegalArgumentException("Don't know how to filter financial fields based on view " + financeView);
+        }
+    }
+
+    /**
      * @return whether or not we would expect a displayable financial summary fragment for this form input type
      */
     public boolean isDisplayableFinancialSummaryType() {
-        return singletonList(FINANCIAL_SUMMARY).contains(this);
+        return FINANCIAL_SUMMARY_TYPES.contains(this);
+    }
+
+    public boolean isDisplayablePrintType() {
+        return PRINT_TYPES.contains(this);
     }
 
     public static FormInputType findByName(String name) {

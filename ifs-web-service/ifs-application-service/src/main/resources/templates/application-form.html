@@ -58,7 +58,7 @@
                                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                             </th:block>
 
-                            <th:block th:if="${formInput.type.displayableFinanceType}">
+                            <th:block th:if="${formInput.type.isDisplayableFinanceType(financeView)}">
                                 <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
                             </th:block>
 
