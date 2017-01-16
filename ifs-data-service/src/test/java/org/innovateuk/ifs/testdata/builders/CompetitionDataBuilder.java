@@ -3,7 +3,6 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -23,7 +22,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.category.resource.CategoryType.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
@@ -64,9 +62,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
-                Long innovationArea = getCategoryIdOrNull(INNOVATION_AREA, innovationAreaName);
-                Long innovationSector = getCategoryIdOrNull(INNOVATION_SECTOR, innovationSectorName);
-                Long researchCategory = getCategoryIdOrNull(RESEARCH_CATEGORY, researchCategoryName);
+                Long innovationArea = getInnovationAreaIdOrNull(innovationAreaName);
+                Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
+                Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
 
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
                 LeadApplicantType leadApplicantType = LeadApplicantType.BUSINESS.fromCode(leadApplicantTypeCode);
@@ -96,8 +94,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    private Long getCategoryIdOrNull(CategoryType type, String name) {
-        return !isBlank(name) ? simpleFindFirst(categoryRepository.findByType(type), c -> name.equals(c.getName())).get().getId() : null;
+    private Long getInnovationAreaIdOrNull(String name) {
+        return !isBlank(name) ? simpleFindFirst(innovationAreaRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
+    }
+
+    private Long getInnovationSectorIdOrNull(String name) {
+        return !isBlank(name) ? simpleFindFirst(innovationSectorRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
+    }
+
+    private Long getResearchCategoryIdOrNull(String name) {
+        return !isBlank(name) ? simpleFindFirst(researchCategoryRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
     }
 
     private void doCompetitionDetailsUpdate(CompetitionData data, Consumer<CompetitionResource> updateFn) {
@@ -305,6 +311,4 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     protected CompetitionData createInitial() {
         return new CompetitionData();
     }
-
-
 }

@@ -152,9 +152,9 @@ public class FinanceCheckSummaryResource {
     @JsonIgnore
     public boolean isViabilityAllApprovedOrNotRequired() {
 
-        List<FinanceCheckPartnerStatusResource.Viability> relevantStatuses = asList(
-                FinanceCheckPartnerStatusResource.Viability.APPROVED,
-                FinanceCheckPartnerStatusResource.Viability.NOT_APPLICABLE);
+        List<Viability> relevantStatuses = asList(
+                Viability.APPROVED,
+                Viability.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
     }

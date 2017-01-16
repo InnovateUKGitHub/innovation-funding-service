@@ -1,0 +1,23 @@
+=== Save competition setup finance
+==== Request
+include::{snippets}/competition-setup-finance/save/http-request.adoc[]
+include::{snippets}/competition-setup-finance/save/path-parameters.adoc[]
+include::{snippets}/competition-setup-finance/save/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competition-setup-finance/save/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-setup-finance/save/curl-request.adoc[]
+
+=== Get competition setup finance
+==== Request
+include::{snippets}/competition-setup-finance/get-by-competition/http-request.adoc[]
+include::{snippets}/competition-setup-finance/get-by-competition/path-parameters.adoc[]
+include::{snippets}/competition-setup-finance/get-by-competition/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competition-setup-finance/get-by-competition/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-setup-finance/get-by-competition/curl-request.adoc[]

@@ -58,6 +58,22 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void findAssignableById() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment().build();
+        AssessmentResource expected = newAssessmentResource().build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
+
+        AssessmentResource found = assessmentService.findAssignableById(assessmentId).getSuccessObject();
+
+        assertSame(expected, found);
+        verify(assessmentRepositoryMock, only()).findOne(assessmentId);
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         Long userId = 2L;
         Long competitionId = 1L;

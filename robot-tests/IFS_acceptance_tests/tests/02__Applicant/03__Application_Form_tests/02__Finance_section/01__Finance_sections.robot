@@ -44,7 +44,8 @@ Working days per year should be 232
 
 Finance fields are empty
     [Documentation]    INFUND-2051: Remove the '0' in finance fields
-    [Tags]    HappyPath
+    [Tags]    HappyPath  Pending
+    #TODO pending due to INFUND-6390
     Then the user should see the element  jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 User pressing back button should get the correct version of the page
