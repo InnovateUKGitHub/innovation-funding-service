@@ -43,7 +43,7 @@ User cannot update initial details of a competition after notify date
     Then the user should not see the element    jQuery=.button:contains("Edit")
     And the user should not see the element    jQuery=.button:contains("Done")
 
-Comp admin can edit Application details before Open date
+Application details are editable before Open date
     [Documentation]    INFUND-6937
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
@@ -56,7 +56,7 @@ Comp admin can edit Application details before Open date
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user is able to change the value of the fields
 
-Comp admin has read only view of Application details past Open date
+Application details are not editable when competition is open
     [Documentation]    INFUND-6937
     ...    Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
     [Tags]
@@ -68,7 +68,7 @@ Comp admin has read only view of Application details past Open date
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
 
-Comp admin can edit Project summary before Open date
+Project summary is editable before Open date
     [Documentation]    INFUND-6938
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
@@ -85,13 +85,13 @@ Public description should be editable before Open date
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given The user clicks the button/link    link=Application
-    Then The user should see the text in the page    Public description
-    And The user clicks the button/link    link=Public description
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user should see the text in the page    Public description
+    When The user clicks the button/link    link=Public description
+    Then the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And The user enters text to a text field    id= question.maxWords    100
     And the user clicks the button/link    css=input.button.button-large
 
-Comp admin can edit Scope before Open date
+Scope is editable before Open date
     [Documentation]    INFUND-6940
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
@@ -103,7 +103,7 @@ Comp admin can edit Scope before Open date
     And The user enters text to a text field    id= question.maxWords    100
     And the user clicks the button/link    css=input.button.button-large
 
-Comp admin can edit Finances before open Date
+Finances are editable before open Date
     [Documentation]    INFUND-6941
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
@@ -124,7 +124,7 @@ Eligibility is editable before Open date
     And the user selects the radio button    singleOrCollaborative    single
     And The user clicks the button/link    jQuery=button:contains(Done)
 
-Comp admin can edit Assessors page before Notifications Date
+Assessors page is editable before Notifications Date
     [Documentation]    INFUND-6695
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
