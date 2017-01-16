@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
@@ -324,9 +324,9 @@ public class CompetitionSetupController {
     /* AJAX Function */
     @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
     @ResponseBody
-    public List<CategoryResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
+    public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
-        return categoryService.getCategoryByParentId(innovationSectorId);
+        return categoryService.getInnovationAreasBySector(innovationSectorId);
     }
 
     /* AJAX Function */

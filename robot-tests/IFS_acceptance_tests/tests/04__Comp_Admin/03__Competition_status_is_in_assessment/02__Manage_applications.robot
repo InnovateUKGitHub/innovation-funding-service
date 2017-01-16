@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     INFUND-7042 As a member of the competitions team I can see list of applications with assessor statistics on the 'Manage Applications' dashboard so...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 
