@@ -44,7 +44,7 @@ User cannot update initial details of a competition after notify date
 Comp admin can edit Application details before Open date
     [Documentation]     INFUND-6937
     [Tags]
-    [Setup]    the user navigates to the page    ${SERVER}/management/competition/setup/6/
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
     Then The user should see the text in the page   Application details
     And The user clicks the button/link     link=Application details
@@ -56,7 +56,7 @@ Comp admin can edit Application details before Open date
 Comp admin can edit Project summary before Open date
     [Documentation]     INFUND-6938
     [Tags]
-    [Setup]    the user navigates to the page    ${SERVER}/management/competition/setup/6/
+    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
     Then The user should see the text in the page    Project summary
     And The user clicks the button/link     link=Project summary
@@ -69,7 +69,7 @@ Comp admin can edit Project summary before Open date
 Comp admin can edit Public description details before Open date
     [Documentation]     INFUND-6939
     [Tags]
-    [Setup]    the user navigates to the page    ${SERVER}/management/competition/setup/6/
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given The user clicks the button/link    link=Application
     Then The user should see the text in the page    Public description
     And The user clicks the button/link     link=Public description
@@ -85,7 +85,7 @@ Comp admin can edit Public description details before Open date
 Comp admin can edit Scope before Open date
     [Documentation]     INFUND-6940
     [Tags]
-    [Setup]    the user navigates to the page    ${SERVER}/management/competition/setup/6/
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
     Then The user should see the text in the page    Scope
     And The user clicks the button/link     link=Scope
@@ -94,25 +94,10 @@ Comp admin can edit Scope before Open date
     And The user enters text to a text field    id= question.maxWords  100
     And the user clicks the button/link    css=input.button.button-large
 
-
-Comp admin can edit Application details before Open date efy edited
-    [Documentation]     INFUND-6937
-    [Tags]      pending
-    [Setup]     log in as a different user  &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${SERVER}/management/competition/setup/6/
-    Then the user can see the open date of the competition belongs to the future
-    When the user navigates to the page       ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    And the user clicks the button/link       link=Application
-    Then the user should see the element      link=Application details
-    When the user clicks the button/link      link=Application details
-    Then the user should see the element      jQuery=.button:contains("Edit this question")
-    When the user clicks the button/link      jQuery=.button:contains("Edit this question")
-    Then the user is able to change the value of the fields
-
 Comp admin can edit Finances before open Date
     [Documentation]     INFUND-6941
     [Tags]
-    [Setup]    the user navigates to the page   ${SERVER}/management/competition/setup/6/
+    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
     Then The user should see the text in the page    Finances
     And The user clicks the button/link     link=Finances
@@ -124,13 +109,12 @@ Comp admin can edit Finances before open Date
 Comp admin can edit Eligibility before Open date
     [Documentation]     INFUND-6792
     [Tags]
-    [Setup]    the user navigates to the page   ${SERVER}/management/competition/setup/6/
+    [Setup]    the user navigates to the page   ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Eligibility
     Then the user should see the element    jquery=h1:contains("Eligibility")
     And The user clicks the button/link     css=button.button
     And the user selects the radio button     singleOrCollaborative    single
     And The user clicks the button/link      css=button.button
-
 
 
 *** Keywords ***

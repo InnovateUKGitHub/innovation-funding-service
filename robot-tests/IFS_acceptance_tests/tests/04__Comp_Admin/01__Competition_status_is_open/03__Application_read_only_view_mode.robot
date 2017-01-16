@@ -157,8 +157,6 @@ comp admin non-editable fields in Funding Information section past notifications
     And The user should not see the element     css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
-   # And The user clicks the button/link     link = Return to application questions
-
 
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
