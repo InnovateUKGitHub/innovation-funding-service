@@ -138,52 +138,52 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     public static class TestAssessmentService implements AssessmentService {
         @Override
-        public ServiceResult<AssessmentResource> findById(Long id) {
+        public ServiceResult<AssessmentResource> findById(long id) {
             return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
         }
 
         @Override
-        public ServiceResult<AssessmentResource> findAssignableById(Long id) {
+        public ServiceResult<AssessmentResource> findAssignableById(long id) {
             return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
         }
 
         @Override
-        public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
+        public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, Long competitionId) {
+        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
+        public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> rejectInvitation(@P("assessmentId") Long assessmentId, ApplicationRejectionResource applicationRejection) {
+        public ServiceResult<Void> rejectInvitation(@P("assessmentId") long assessmentId, ApplicationRejectionResource applicationRejection) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> withdrawAssessment(@P("assessmentId") Long assessmentId) {
+        public ServiceResult<Void> withdrawAssessment(@P("assessmentId") long assessmentId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
+        public ServiceResult<Void> acceptInvitation(@P("assessmentId") long assessmentId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> notify(@P("assessmentId") Long assessmentId) {
+        public ServiceResult<Void> notify(@P("assessmentId") long assessmentId) {
             return null;
         }
 

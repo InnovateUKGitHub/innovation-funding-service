@@ -10,7 +10,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.WITHDRAW;
 
 /**
- * The {@code WithdrawAction} is used by the assessor. If handles the withdrawal event
+ * The {@code WithdrawAction} is used by the assessor. It handles the withdrawal event.
  * for an application during assessment
  * For more info see {@link AssessmentWorkflow}
  */
