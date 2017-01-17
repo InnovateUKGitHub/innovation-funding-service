@@ -2,13 +2,12 @@
 Documentation     INFUND-2443 Acceptance test: Check that the comp manager cannot edit an application's finances
 ...
 ...               INFUND-2304 Read only view mode of applications from the application list page
+...
 ...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
-...               INFUND-6938 As a Competitions team member I want to be able to view Project summary throughout the life of the competition
-...               INFUND-6939 As a Competitions team member I want to be able to view Public description throughout the life of the competition
-...               INFUND-6940 As a Competitions team member I want to be able to view Scope throughout the life of the competition
-...               INFUND-6941 As a Competitions team member I want to be able to view Finances throughout the life of the competition
+...
 ...               INFUND-6792 As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
 ...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
+...
 ...               INFUND-6936 As a Competitions team member I want to be able to view Assessed questions throughout the life of the competition
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -70,19 +69,6 @@ Comp admin has read only view of Application details past Open date
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
-
-Comp admin has read only view of Finances past Open Date
-    [Documentation]    INFUND-6941
-    [Tags]
-    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    And The user clicks the button/link    link=Application
-    Then The user should see the text in the page    Finances
-    And The user clicks the button/link    link=Finances
-    Then the user should see the element    jquery=h1:contains("Application finances")
-    And The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link    link = Return to application questions
 
 Comp admin has read only view of Eligibility past Open date
     [Documentation]    INFUND-6792

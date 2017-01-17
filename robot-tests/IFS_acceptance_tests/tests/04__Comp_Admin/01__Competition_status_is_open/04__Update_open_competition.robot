@@ -219,6 +219,15 @@ Scope is not editable when competition is open
     And The user should not see the element    jQuery=.button[value="Save and close"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
+Finances are not editable when the Competition is open
+    [Documentation]    INFUND-6941
+    [Tags]
+    When The user clicks the button/link    link=Finances
+    And the user should see the element    jquery=h1:contains("Application finances")
+    Then The user should not see the element    css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
     the user should see the element    jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
