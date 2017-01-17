@@ -32,9 +32,9 @@ public class ApplicationAssessorResourceBuilderTest {
         String expectedRejectComment = "rejectComment";
         boolean expectedAvailable = true;
         AssessmentStates expectedMostRecentAssessmentState = ACCEPTED;
-        int expectedTotalApplicationsCount = 10;
-        int expectedAssignedCount = 20;
-        int expectedSubmittedCount = 30;
+        long expectedTotalApplicationsCount = 10;
+        long expectedAssignedCount = 20;
+        long expectedSubmittedCount = 30;
 
         ApplicationAssessorResource applicationAssessorResource = newApplicationAssessorResource()
                 .withUserId(expectedUserId)
@@ -86,9 +86,9 @@ public class ApplicationAssessorResourceBuilderTest {
         String[] expectedRejectComments = {"rejectComment1", "rejectComment2"};
         Boolean[] expectedAvailable = {true, false};
         AssessmentStates[] expectedMostRecentAssessmentStates = {ACCEPTED, OPEN};
-        Integer[] expectedTotalApplicationsCount = {10, 11};
-        Integer[] expectedAssignedCount = {20, 21};
-        Integer[] expectedSubmittedCount = {30, 31};
+        Long[] expectedTotalApplicationsCount = {10L, 11L};
+        Long[] expectedAssignedCount = {20L, 21L};
+        Long[] expectedSubmittedCount = {30L, 31L};
 
         List<ApplicationAssessorResource> applicationAssessorResources = newApplicationAssessorResource()
                 .withUserId(expectedUserIds)

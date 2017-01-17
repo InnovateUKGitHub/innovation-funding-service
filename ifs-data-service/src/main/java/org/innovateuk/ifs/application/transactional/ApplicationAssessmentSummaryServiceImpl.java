@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.EnumSet.complementOf;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -53,7 +55,8 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     @Override
     public ServiceResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
-                simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(1L, ASSESSOR), competitionParticipant -> getApplicationAssessor(competitionParticipant))
+                simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(1L, ASSESSOR),
+                        competitionParticipant -> getApplicationAssessor(competitionParticipant, applicationId))
         );
     }
 
@@ -79,47 +82,47 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                 .collect(toList());
     }
 
-    private ApplicationAssessorResource getApplicationAssessor(CompetitionParticipant competitionParticipant) {
+    private ApplicationAssessorResource getApplicationAssessor(CompetitionParticipant competitionParticipant, Long applicationId) {
+        Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
+
         User user = competitionParticipant.getUser();
         Profile profile = user.getProfile();
+
         ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
+        applicationAssessorResource.setUserId(user.getId());
         applicationAssessorResource.setFirstName(user.getFirstName());
         applicationAssessorResource.setLastName(user.getLastName());
         applicationAssessorResource.setBusinessType(profile.getBusinessType());
         applicationAssessorResource.setInnovationAreas(simpleMap(user.getInnovationAreas(), innovationAreaMapper::mapToResource));
         applicationAssessorResource.setSkillAreas(profile.getSkillsAreas());
+        applicationAssessorResource.setAvailable(!mostRecentAssessment.isPresent());
+        applicationAssessorResource.setMostRecentAssessmentState(mostRecentAssessment.map(Assessment::getActivityState).orElse(null));
+        applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));
+        applicationAssessorResource.setAssignedCount(countAssignedApplications(competitionParticipant));
+        applicationAssessorResource.setSubmittedCount(countSubmittedApplications(competitionParticipant));
+
         return applicationAssessorResource;
     }
 
-    private AssessmentStates getMostRecentAssessmentState(Long applicationId, Long userId) {
-        // TODO
-        return AssessmentStates.PENDING;
+    private Optional<Assessment> getMostRecentAssessment(CompetitionParticipant competitionParticipant, Long applicationId) {
+        return assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(competitionParticipant.getUser().getId(), applicationId);
     }
 
-    private boolean isAvailableToAssess(Long applicationId, Long userId) {
-        // get all assessments
-        // TODO true if user has no non-rejected assessments for this application, otherwise false.
-        return false;
+    private long countAssignedApplications(Long userId) {
+        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, simpleMapSet(of(REJECTED, WITHDRAWN), AssessmentStates::getBackingState));
     }
 
-    private int countAssignedApplications(Long userId) {
-        // TODO count applications for ALL competitions that are in assessment where exists an assessment not REJECTED or WITHDRAWN
-        return 0;
+    private long countAssignedApplications(CompetitionParticipant competitionParticipant) {
+        return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, complementOf(of(REJECTED, WITHDRAWN)));
     }
 
-    private int countAssignedApplications(Long userId, Long competitionId) {
-        return countApplicationsByCompetitionAndUserAndAssessmentStates(userId, competitionId, complementOf(of(REJECTED, WITHDRAWN)));
+    private long countSubmittedApplications(CompetitionParticipant competitionParticipant) {
+        return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, of(SUBMITTED));
     }
 
-    private int countSubmittedApplications(Long userId, Long competitionId) {
-        return countApplicationsByCompetitionAndUserAndAssessmentStates(userId, competitionId, of(SUBMITTED));
-    }
-
-    private int countApplicationsByCompetitionAndUserAndAssessmentStates(Long userId, Long competitionId, Set<AssessmentStates> states) {
-        // TODO count applications of the specified competition, assessed by the specified user, where exists assessments in the specified states
-        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(
-                userId, competitionId
-        );
-        return 0;
+    private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentStates> states) {
+        return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(competitionParticipant.getUser().getId(),
+                competitionParticipant.getProcess().getId(),
+                simpleMapSet(states, AssessmentStates::getBackingState));
     }
 }

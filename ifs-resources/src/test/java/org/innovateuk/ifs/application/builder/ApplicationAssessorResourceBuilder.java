@@ -71,15 +71,15 @@ public class ApplicationAssessorResourceBuilder extends BaseBuilder<ApplicationA
         return withArraySetFieldByReflection("mostRecentAssessmentState", value);
     }
 
-    public ApplicationAssessorResourceBuilder withTotalApplicationsCount(Integer... value) {
+    public ApplicationAssessorResourceBuilder withTotalApplicationsCount(Long... value) {
         return withArraySetFieldByReflection("totalApplicationsCount", value);
     }
 
-    public ApplicationAssessorResourceBuilder withAssignedCount(Integer... value) {
+    public ApplicationAssessorResourceBuilder withAssignedCount(Long... value) {
         return withArraySetFieldByReflection("assignedCount", value);
     }
 
-    public ApplicationAssessorResourceBuilder withSubmittedCount(Integer... value) {
+    public ApplicationAssessorResourceBuilder withSubmittedCount(Long... value) {
         return withArraySetFieldByReflection("submittedCount", value);
     }
 }
