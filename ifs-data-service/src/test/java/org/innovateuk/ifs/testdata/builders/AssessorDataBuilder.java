@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
 import org.innovateuk.ifs.user.domain.Ethnicity;
@@ -61,6 +62,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
             assessorService.registerAssessorByHash(hash, registration).getSuccessObjectOrThrowException();
 
+            data.setUser(userService.findByEmail(data.getEmail()).getSuccessObjectOrThrowException());
             data.setEmail(emailAddress);
         }));
     }
@@ -69,6 +71,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                                                              String emailAddress,
                                                              String name,
                                                              String inviteHash,
+                                                             InviteStatus inviteStatus,
                                                              Optional<User> existingUser,
                                                              String innovationAreaName
     ) {
@@ -78,9 +81,11 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     emailAddress,
                     name,
                     inviteHash,
+                    inviteStatus,
                     existingUser,
                     innovationAreaName
             ).build();
+
             data.setEmail(emailAddress);
         });
     }
@@ -93,14 +98,19 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
             if (!user.getRoles().contains(assessorRole)) {
                 user.getRoles().add(assessorRole);
-                userRepository.save(user);
             }
+
+            userRepository.save(user);
+
+            UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccessObjectOrThrowException());
+
+            data.setUser(userResource);
         });
     }
 
     public AssessorDataBuilder addSkills(String skillAreas, BusinessType businessType, List<String> innovationAreas) {
         return with((AssessorData data) -> {
-            User user = userRepository.findByEmail(data.getEmail()).get();
+            User user = userRepository.findOne(data.getUser().getId());
 
             Set<InnovationArea> userInnovationAreas = innovationAreas.stream()
                     .map(innovationAreaName -> {
@@ -114,16 +124,19 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     })
                     .collect(toSet());
 
-            ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
-            profileSkillsResource.setBusinessType(businessType);
-            profileSkillsResource.setSkillsAreas(skillAreas);
-            profileSkillsResource.setUser(data.getUser().getId());
-
-            userProfileService.updateProfileSkills(user.getId(), profileSkillsResource);
-
             user.addInnovationAreas(userInnovationAreas);
 
             userRepository.save(user);
+
+            doAs(data.getUser(), () -> {
+                ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
+                profileSkillsResource.setBusinessType(businessType);
+                profileSkillsResource.setSkillsAreas(skillAreas);
+                profileSkillsResource.setUser(data.getUser().getId());
+
+                userProfileService.updateProfileSkills(data.getUser().getId(), profileSkillsResource);
+                testService.flushAndClearSession();
+            });
         });
     }
 
@@ -147,8 +160,6 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                 return;
             }
 
-            User user = userRepository.findByEmail(data.getEmail()).get();
-
             List<AffiliationResource> allAffiliations = combineLists(
                     combineLists(
                             mapAppointments(appointments),
@@ -160,7 +171,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     AffiliationResourceBuilder.createFamilyFinancialInterests(!familyFinancialInterests.isEmpty(), familyFinancialInterests)
             );
 
-            userProfileService.updateUserAffiliations(user.getId(), allAffiliations);
+            doAs(data.getUser(), () -> userProfileService.updateUserAffiliations(data.getUser().getId(), allAffiliations));
         });
     }
 
@@ -209,13 +220,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     }
 
     public AssessorDataBuilder rejectInvite(String hash, String rejectionReason, String rejectionComment) {
-        return with(data -> newAssessorInviteData(serviceLocator).rejectInvite(
-                hash,
-                data.getEmail(),
-                rejectionReason,
-                Optional.of(rejectionComment)
-        )
-                .build());
+        return with(data -> newAssessorInviteData(serviceLocator).rejectInvite(hash, rejectionReason, Optional.of(rejectionComment)).build());
     }
 
     private RoleResource getAssessorRoleResource() {

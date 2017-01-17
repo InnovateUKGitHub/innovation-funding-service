@@ -494,7 +494,7 @@ class CsvUtils {
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 6;
+            int i = line.size() - 18;
             disability = Disability.fromDisplayName(line.get(i++));
             ethnicity = line.get(i++);
             gender = Gender.fromDisplayName(line.get(i++));
@@ -504,7 +504,10 @@ class CsvUtils {
             rejectionReason = line.get(i++);
             rejectionComment = line.get(i++);
             skillAreas = line.get(i++);
-            businessType = BusinessType.valueOf(line.get(i++));
+
+            String businessTypeString = line.get(i++);
+            businessType = !businessTypeString.isEmpty() ? BusinessType.valueOf(businessTypeString) : null;
+
             innovationAreas = simpleMap(line.get(i++).split("\n"), String::trim);
             principalEmployer = line.get(i++);
             role = line.get(i++);
@@ -516,10 +519,15 @@ class CsvUtils {
         }
 
         private List<Map<String, String>> extractListOfMaps(String column) {
+            if (column.isEmpty()) {
+                return emptyList();
+            }
+
             List<String> rows = asList(column.split("\n"));
 
             return simpleMap(rows, row -> {
-                List<String> pairs = asList(row.split("|"));
+                List<String> pairs = asList(row.split("\\|"));
+
                 Map<String, String> kvMap = new HashMap<>();
 
                 pairs.forEach(pair -> {

@@ -779,6 +779,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.email,
                     invite.name,
                     invite.hash,
+                    invite.status,
                     existingUser,
                     invite.innovationAreaName
             );
@@ -792,6 +793,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.emailAddress,
                 line.firstName + " " + line.lastName,
                 inviteHash,
+                line.inviteStatus,
                 existingUser,
                 innovationArea
         );
@@ -811,8 +813,8 @@ public class GenerateTestData extends BaseIntegrationTest {
             baseBuilder = baseBuilder.addAssessorRole();
         }
 
-        baseBuilder.addSkills(line.skillAreas, line.businessType, line.innovationAreas);
-        baseBuilder.addAffiliations(
+        baseBuilder = baseBuilder.addSkills(line.skillAreas, line.businessType, line.innovationAreas);
+        baseBuilder = baseBuilder.addAffiliations(
                 line.principalEmployer,
                 line.role,
                 line.professionalAffiliations,
@@ -823,17 +825,25 @@ public class GenerateTestData extends BaseIntegrationTest {
         );
 
         if (!line.rejectionReason.isEmpty()) {
-            baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment).build();
+            baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);
         } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
-            baseBuilder.acceptInvite(inviteHash).build();
-        } else {
-            baseBuilder.build();
+            baseBuilder = baseBuilder.acceptInvite(inviteHash);
         }
+
+        baseBuilder.build();
     }
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
-        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash,
-                userRepository.findByEmail(line.email), line.innovationAreaName).build();
+        assessorInviteUserBuilder.withInviteToAssessCompetition(
+                line.targetName,
+                line.email,
+                line.name,
+                line.hash,
+                line.status,
+                userRepository.findByEmail(line.email),
+                line.innovationAreaName
+        ).
+                build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {

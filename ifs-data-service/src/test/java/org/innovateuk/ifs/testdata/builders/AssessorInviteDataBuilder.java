@@ -26,6 +26,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                                                                    String emailAddress,
                                                                    String name,
                                                                    String inviteHash,
+                                                                   InviteStatus inviteStatus,
                                                                    Optional<User> existingUser,
                                                                    String innovationAreaName
     ) {
@@ -38,7 +39,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
             final CompetitionInvite invite = newCompetitionInvite().
                     withCompetition(competition).
                     withEmail(emailAddress).
-                    withStatus(InviteStatus.SENT).
+                    withStatus(inviteStatus).
                     withHash(inviteHash).
                     withName(name).
                     withUser(existingUser.orElse(null)).
@@ -60,9 +61,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
         });
     }
 
-    public AssessorInviteDataBuilder rejectInvite(String hash, String assessorEmail, String rejectionReason, Optional<String> rejectionComment) {
+    public AssessorInviteDataBuilder rejectInvite(String hash, String rejectionReason, Optional<String> rejectionComment) {
         return with(data -> {
-            UserResource assessor = retrieveUserByEmail(assessorEmail);
             List<RejectionReasonResource> rejectionReasons = rejectionReasonService.findAllActive().getSuccessObjectOrThrowException();
 
             RejectionReasonResource rejectionReasonResource = rejectionReasons.stream()
@@ -70,7 +70,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid"));
 
-            doAs(assessor, () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
+            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
+            doAs(systemRegistrar(), () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
         });
     }
 

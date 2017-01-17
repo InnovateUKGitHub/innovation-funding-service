@@ -180,6 +180,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
         this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
+        this.innovationAreaRepository = serviceLocator.getBean(InnovationAreaRepository.class);
+        this.innovationSectorRepository = serviceLocator.getBean(InnovationSectorRepository.class);
+        this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
         this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
         this.userProfileService = serviceLocator.getBean(UserProfileService.class);
     }
