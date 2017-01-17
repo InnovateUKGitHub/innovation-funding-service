@@ -1,12 +1,20 @@
 *** Settings ***
 Documentation     INFUND-6661 As a Competitions team member I want to be able to update Initial details throughout the life of the competition
+...
 ...               INFUND-6937 As a Competitions team member I want to be able to view Application details throughout the life of the competition
+...
 ...               INFUND-6938 As a Competitions team member I want to be able to view Project summary throughout the life of the competition
+...
 ...               INFUND-6939 As a Competitions team member I want to be able to view Public description throughout the life of the competition
+...
 ...               INFUND-6940 As a Competitions team member I want to be able to view Scope throughout the life of the competition
+...
 ...               INFUND-6941 As a Competitions team member I want to be able to view Finances throughout the life of the competition
+...
 ...               INFUND-6792 As a Competitions team member I want to be able to view Eligibility throughout the life of the competition
+...
 ...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
+...
 ...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
@@ -80,7 +88,7 @@ Application details are not editable when competition is open
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
-    [Teardown]   the user clicks the button/link    link=Application
+    [Teardown]    the user clicks the button/link    link=Application
 
 Assessed Questions are not editable after open date
     [Documentation]    INFUND-6936
@@ -121,9 +129,7 @@ Scope is editable before Open date
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
-    Then The user should see the text in the page    Scope
-    And The user clicks the button/link    link=Scope
-    And the user should see the element    jquery=h1:contains("Scope")
+    When The user clicks the button/link    link=Scope
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And The user enters text to a text field    id= question.maxWords    100
     And the user clicks the button/link    css=input.button.button-large
@@ -133,10 +139,9 @@ Finances are editable before open Date
     [Tags]
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
     Given the user clicks the button/link    link=Application
-    Then The user should see the text in the page    Finances
-    And The user clicks the button/link    link=Finances
+    When The user clicks the button/link    link=Finances
     And the user should see the element    jquery=h1:contains("Application finances")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    Then the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
 
 Eligibility is editable before Open date
@@ -174,9 +179,8 @@ Assessors page is not editable after Notifications Date
 
 Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
-    [Tags]  Pending
-    # TODO Edit button visible
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
+    [Tags]
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/1
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
@@ -186,11 +190,9 @@ Eligibility is not editable when the competition is open
 
 Public Description is not editable when competition is open
     [Documentation]    INFUND-6939
-    [Tags]  Pending
-    # TODO Edit button visible
+    [Tags]
     Given The user clicks the button/link    link=Application
-    When The user should see the text in the page    Public description
-    And The user clicks the button/link    link=Public description
+    When The user clicks the button/link    link=Public description
     And the user should see the element    jquery=h1:contains("Public description")
     Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
@@ -199,11 +201,20 @@ Public Description is not editable when competition is open
 
 Project Summary is not editable when competition is open
     [Documentation]    INFUND-6938
-    [Tags]  Pending
-    # TODO Edit button visible
+    [Tags]
     When The user clicks the button/link    link=Project summary
     And the user should see the element    jquery=h1:contains("Project summary")
     Then The user should not see the element    css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    [Teardown]    The user clicks the button/link    link = Return to application questions
+
+Scope is not editable when competition is open
+    [Documentation]    INFUND-6940
+    [Tags]
+    When The user clicks the button/link    link=Scope
+    Then the user should see the element    jquery=h1:contains("Scope")
+    And The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
     [Teardown]    The user clicks the button/link    link = Return to application questions
