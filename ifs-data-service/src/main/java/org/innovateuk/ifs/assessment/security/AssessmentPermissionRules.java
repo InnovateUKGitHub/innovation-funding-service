@@ -41,7 +41,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
-    @PermissionRule(value = "ASSIGN", description = "Assessors can only accept or reject assessments that are pending")
+    @PermissionRule(value = "ASSIGN", description = "Assessors can only accept assessments that are pending")
     public boolean userCanAssignAssessment(AssessmentResource assessment, UserResource user) {
         Set<AssessmentStates> allowedAssignStates = Collections.singleton(PENDING);
         return isAssessorForAssessment(assessment, user, allowedAssignStates);
@@ -49,7 +49,7 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "Only owners can update Assessments")
     public boolean userCanUpdateAssessment(AssessmentResource assessment, UserResource user) {
-        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        Set<AssessmentStates> allowedStates = EnumSet.of(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 

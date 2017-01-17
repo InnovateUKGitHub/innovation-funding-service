@@ -7,7 +7,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class ApplicationAssessmentSummaryDocs {
+public class ApplicationAssessmentSummaryResourceDocs {
 
     public static final FieldDescriptor[] applicationAssessmentSummaryFields = {
             fieldWithPath("id").description("Id of the application"),

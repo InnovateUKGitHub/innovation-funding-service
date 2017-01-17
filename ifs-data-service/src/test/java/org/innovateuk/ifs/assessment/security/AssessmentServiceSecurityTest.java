@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
+import javax.persistence.Temporal;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
@@ -18,6 +19,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -81,6 +83,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void notifyAssessor() {
+        Long assessmentId = 1L;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN);
+    }
+
+    @Test
     public void recommend() {
         Long assessmentId = 1L;
         AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
@@ -100,6 +108,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.rejectInvitation(assessmentId, applicationRejection),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
+    }
+
+    @Test
+    public void withdrawAssessment() {
+        Long assessmentId = 1L;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN);
     }
 
     @Test
@@ -154,7 +168,17 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
+        public ServiceResult<Void> withdrawAssessment(@P("assessmentId") Long assessmentId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> notify(@P("assessmentId") Long assessmentId) {
             return null;
         }
 

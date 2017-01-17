@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.assessment.resource.ApplicationRejectionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +25,7 @@ public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
 
-    @RequestMapping(value= "/{id}", method = GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public RestResult<AssessmentResource> findById(@PathVariable("id") Long id) {
         return assessmentService.findById(id).toGetResponse();
     }
@@ -54,14 +50,24 @@ public class AssessmentController {
         return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
-    @RequestMapping(value= "/{id}/rejectInvitation", method = PUT)
-    public RestResult<Void> rejectInvitation(@PathVariable("id") Long id,@RequestBody @Valid ApplicationRejectionResource applicationRejection) {
+    @RequestMapping(value = "/{id}/notify", method = PUT)
+    public RestResult<Void> notify(@PathVariable("id") Long id) {
+        return assessmentService.notify(id).toPutResponse();
+    }
+
+    @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)
+    public RestResult<Void> rejectInvitation(@PathVariable("id") Long id, @RequestBody @Valid ApplicationRejectionResource applicationRejection) {
         return assessmentService.rejectInvitation(id, applicationRejection).toPutResponse();
     }
 
-    @RequestMapping(value= "/{id}/acceptInvitation", method = PUT)
+    @RequestMapping(value = "/{id}/acceptInvitation", method = PUT)
     public RestResult<Void> acceptInvitation(@PathVariable("id") Long id) {
         return assessmentService.acceptInvitation(id).toPutResponse();
+    }
+
+    @RequestMapping(value = "/{id}/withdraw", method = PUT)
+    public RestResult<Void> withdrawAssessment(@PathVariable("id") Long id) {
+        return assessmentService.withdrawAssessment(id).toPutResponse();
     }
 
     @RequestMapping(value = "/submitAssessments", method = PUT)
