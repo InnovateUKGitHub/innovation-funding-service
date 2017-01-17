@@ -19,14 +19,15 @@ import org.mapstruct.Mappings;
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
 
     @Mappings({
-            @Mapping(target = "affiliations", ignore = true)
+            @Mapping(target = "affiliations", ignore = true),
+            @Mapping(target = "innovationAreas", ignore = true)
+
     })
     @Override
     public abstract User mapToDomain(UserResource resource);
 
     @Mappings({
-            @Mapping(target = "password", ignore = true)
-    })
+            @Mapping(target = "password", ignore = true)    })
     @Override
     public abstract UserResource mapToResource(User domain);
 

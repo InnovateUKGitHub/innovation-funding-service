@@ -45,6 +45,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<AssessmentResource> findAssignableById(Long id) {
+        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccessReturn(assessmentMapper::mapToResource);
+    }
+
+    @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
         return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
     }

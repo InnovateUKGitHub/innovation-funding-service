@@ -3,9 +3,10 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.mapper.CategoryMapper;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -47,7 +48,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -87,13 +87,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     private CompetitionInviteMapper competitionInviteMapper;
 
     @Autowired
-    private CategoryMapper categoryMapper;
+    private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
     private AssessorInviteToSendMapper toSendMapper;
@@ -295,11 +295,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return result.isSuccess() ? result.getSuccessObject().getStatus() == CREATED : FALSE;
     }
 
-    private ServiceResult<Category> getInnovationArea(long innovationCategoryId) {
-        return find(categoryRepository.findByIdAndType(innovationCategoryId, INNOVATION_AREA), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
+    private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
+        return find( innovationAreaRepository.findOne(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
     }
 
-    private ServiceResult<CompetitionInvite> inviteUserToCompetition(String name, String email, Competition competition, Category innovationArea) {
+    private ServiceResult<CompetitionInvite> inviteUserToCompetition(String name, String email, Competition competition, InnovationArea innovationArea) {
         return serviceSuccess(
                 competitionInviteRepository.save(new CompetitionInvite(name, email, generateInviteHash(), competition, innovationArea))
         );
@@ -441,10 +441,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return profile.isCompliant(competitionInvite.getUser());
     }
 
-    private CategoryResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {
+    private InnovationAreaResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {
         boolean inviteForNewUser = competitionInvite.getUser() == null;
         if (inviteForNewUser) {
-            return categoryMapper.mapToResource(competitionInvite.getInnovationArea());
+            return innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea());
         }
         // TODO INFUND-6865 User should have an innovation area
         return null;

@@ -107,8 +107,8 @@ Business organisation (partner accepts invitation)
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
     [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    Passw0rd123
+    Given the user clicks the button/link  jQuery=.button:contains("Sign in")
+    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com  ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
