@@ -125,13 +125,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                                                          final Long markedAsCompleteById) {
         LOG.debug(String.format("markSectionAsComplete %s / %s / %s ", sectionId, applicationId, markedAsCompleteById));
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
-            Set<Long> questions = collectAllQuestionFrom(section);
-
             List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
-                markAllQuestionsAsComplete(application, questions, markedAsCompleteById);
+                markSectionAsComplete(section, application, markedAsCompleteById);
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
             }
@@ -142,13 +140,13 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
-            Set<Long> questions = collectAllQuestionFrom(section);
-            markAllQuestionsAsComplete(application, questions, markedAsCompleteById);
+            markSectionAsComplete(section, application, markedAsCompleteById);
             return serviceSuccess();
         });
     }
 
-    private void markAllQuestionsAsComplete(Application application, Set<Long> questions, Long markedAsCompleteById) {
+    private void markSectionAsComplete(Section section, Application application, Long markedAsCompleteById) {
+        Set<Long> questions = collectAllQuestionFrom(section);
         questions.forEach(q -> {
             questionService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
