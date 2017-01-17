@@ -236,7 +236,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.withdrawAssessment(assessmentId);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(ASSESSMENT_WITHDRAWN_FAILED));
+        assertTrue(result.getFailure().is(ASSESSMENT_WITHDRAW_FAILED));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);

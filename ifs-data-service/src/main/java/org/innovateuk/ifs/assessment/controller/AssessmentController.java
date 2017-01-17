@@ -26,47 +26,47 @@ public class AssessmentController {
     private AssessmentService assessmentService;
 
     @RequestMapping(value = "/{id}", method = GET)
-    public RestResult<AssessmentResource> findById(@PathVariable("id") Long id) {
+    public RestResult<AssessmentResource> findById(@PathVariable("id") long id) {
         return assessmentService.findById(id).toGetResponse();
     }
 
     @RequestMapping(value= "/{id}/assign", method = GET)
-    public RestResult<AssessmentResource> findAssignableById(@PathVariable("id") Long id) {
+    public RestResult<AssessmentResource> findAssignableById(@PathVariable("id") long id) {
         return assessmentService.findAssignableById(id).toGetResponse();
     }
 
     @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
-    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") Long userId, @PathVariable("competitionId") Long competitionId ) {
+    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId ) {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{id}/score", method = GET)
-    public RestResult<AssessmentTotalScoreResource> getTotalScore(@PathVariable("id") Long id) {
+    public RestResult<AssessmentTotalScoreResource> getTotalScore(@PathVariable("id") long id) {
         return assessmentService.getTotalScore(id).toGetResponse();
     }
 
     @RequestMapping(value = "/{id}/recommend", method = PUT)
-    public RestResult<Void> recommend(@PathVariable("id") Long id, @RequestBody @Valid AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentFundingDecisionResource assessmentFundingDecision) {
         return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/notify", method = PUT)
-    public RestResult<Void> notify(@PathVariable("id") Long id) {
+    public RestResult<Void> notify(@PathVariable("id") long id) {
         return assessmentService.notify(id).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)
-    public RestResult<Void> rejectInvitation(@PathVariable("id") Long id, @RequestBody @Valid ApplicationRejectionResource applicationRejection) {
+    public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid ApplicationRejectionResource applicationRejection) {
         return assessmentService.rejectInvitation(id, applicationRejection).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/acceptInvitation", method = PUT)
-    public RestResult<Void> acceptInvitation(@PathVariable("id") Long id) {
+    public RestResult<Void> acceptInvitation(@PathVariable("id") long id) {
         return assessmentService.acceptInvitation(id).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/withdraw", method = PUT)
-    public RestResult<Void> withdrawAssessment(@PathVariable("id") Long id) {
+    public RestResult<Void> withdrawAssessment(@PathVariable("id") long id) {
         return assessmentService.withdrawAssessment(id).toPutResponse();
     }
 
