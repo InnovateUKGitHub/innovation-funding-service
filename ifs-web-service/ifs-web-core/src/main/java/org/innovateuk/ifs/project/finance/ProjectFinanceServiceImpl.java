@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.finance;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -88,6 +91,16 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     @Override
     public ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
         return projectFinanceRestService.saveViability(projectId, organisationId, viability, viabilityRagRating).toServiceResult();
+    }
+
+    @Override
+    public EligibilityResource getEligibility(Long projectId, Long organisationId) {
+        return projectFinanceRestService.getEligibility(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+        return projectFinanceRestService.saveEligibility(projectId, organisationId, eligibility, eligibilityStatus).toServiceResult();
     }
 
     @Override
