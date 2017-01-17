@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -31,7 +33,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -816,8 +820,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         InnovationArea innovationArea = newInnovationArea().build();
         InnovationAreaResource innovationAreaCategoryResource = newInnovationAreaResource()
+                .withId(2L)
                 .withName("Earth Observation")
                 .build();
+        Set<CategoryResource> innovationAreaSet = newHashSet(newInnovationAreaResource()
+                .withId(2L)
+                .withName("Earth Observation")
+                .build());
 
         // TODO INFUND-6865 Users should have innovation areas
         User compliantUser = newUser()
@@ -827,6 +836,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                         .withPosition("Software Developer")
                         .withExists(true)
                         .build(1))
+
                 .withProfile(newProfile()
                         .withSkillsAreas("Java")
                         .withContractSignedDate(now())
@@ -886,7 +896,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
                 .withInviteId(1L, 2L, 3L, 4L, 5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
-                .withInnovationArea(null, null, null, null, innovationAreaCategoryResource)
+                .withInnovationAreas(newHashSet(), newHashSet(), newHashSet(), newHashSet(), innovationAreaSet)
                 .withCompliant(true, false, false, false, false)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "christopher@example.com")
                 .build(5);

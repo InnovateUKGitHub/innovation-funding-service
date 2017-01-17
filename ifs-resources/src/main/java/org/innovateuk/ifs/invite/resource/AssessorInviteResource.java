@@ -4,22 +4,24 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
+import java.util.Set;
+
 /**
  * Abstract DTO for fields common to assessor invite resources.
  */
 abstract class AssessorInviteResource {
 
     private String name;
-    private InnovationAreaResource innovationArea;
+    private Set<InnovationAreaResource> innovationAreas;
     private boolean compliant;
 
 
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(String name, InnovationAreaResource innovationArea, boolean compliant) {
+    protected AssessorInviteResource(String name, Set<InnovationAreaResource> innovationAreas, boolean compliant) {
         this.name = name;
-        this.innovationArea = innovationArea;
+        this.innovationAreas = innovationAreas;
         this.compliant = compliant;
     }
 
@@ -31,12 +33,12 @@ abstract class AssessorInviteResource {
         this.name = name;
     }
 
-    public InnovationAreaResource getInnovationArea() {
-        return innovationArea;
+    public Set<InnovationAreaResource> getInnovationAreas() {
+        return innovationAreas;
     }
 
-    public void setInnovationArea(InnovationAreaResource innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreas(Set<InnovationAreaResource> innovationAreas) {
+        this.innovationAreas = innovationAreas;
     }
 
     public boolean isCompliant() {
@@ -47,26 +49,18 @@ abstract class AssessorInviteResource {
         this.compliant = compliant;
     }
 
-    public String getInnovationAreaName() {
-        return this.getInnovationArea() == null ? null : this.getInnovationArea().getName();
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessorInviteResource that = (AssessorInviteResource) o;
 
         return new EqualsBuilder()
                 .append(compliant, that.compliant)
                 .append(name, that.name)
-                .append(innovationArea, that.innovationArea)
+                .append(innovationAreas, that.innovationAreas)
                 .isEquals();
     }
 
@@ -74,7 +68,7 @@ abstract class AssessorInviteResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(name)
-                .append(innovationArea)
+                .append(innovationAreas)
                 .append(compliant)
                 .toHashCode();
     }

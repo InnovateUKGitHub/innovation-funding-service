@@ -40,7 +40,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
                 .build();
 
         assertEquals(expectedName, assessorInviteOverviewResource.getName());
-        assertEquals(expectedInnovationArea, assessorInviteOverviewResource.getInnovationArea());
+        assertEquals(expectedInnovationArea, assessorInviteOverviewResource.getInnovationAreas());
         assertEquals(expectedCompliant, assessorInviteOverviewResource.isCompliant());
         assertEquals(expectedBusinessType, assessorInviteOverviewResource.getBusinessType());
         assertEquals(expectedStatus, assessorInviteOverviewResource.getStatus());
@@ -67,7 +67,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
 
         AssessorInviteOverviewResource first = assessorCreatedInviteResources.get(0);
         assertEquals(expectedNames[0], first.getName());
-        assertEquals(expectedInnovationAreas[0], first.getInnovationArea());
+        assertEquals(expectedInnovationAreas[0], first.getInnovationAreas());
         assertEquals(expectedCompliants[0], first.isCompliant());
         assertEquals(expectedBusinessTypes[0], first.getBusinessType());
         assertEquals(expectedStatuses[0], first.getStatus());
@@ -75,7 +75,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
 
         AssessorInviteOverviewResource second = assessorCreatedInviteResources.get(1);
         assertEquals(expectedNames[1], second.getName());
-        assertEquals(expectedInnovationAreas[1], second.getInnovationArea());
+        assertEquals(expectedInnovationAreas[1], second.getInnovationAreas());
         assertEquals(expectedCompliants[1], second.isCompliant());
         assertEquals(expectedBusinessTypes[1], second.getBusinessType());
         assertEquals(expectedStatuses[1], second.getStatus());

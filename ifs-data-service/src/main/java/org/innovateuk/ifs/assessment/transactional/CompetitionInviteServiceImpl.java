@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
@@ -36,9 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -46,6 +46,7 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -190,7 +191,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     availableAssessor.setCompliant(assessor.isProfileCompliant());
                     availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
                     // TODO INFUND-6865 Users should have innovation areas
-                    availableAssessor.setInnovationArea(null);
+                    availableAssessor.setInnovationAreas(null);
                     return availableAssessor;
                 }).collect(toList()));
     }
@@ -198,7 +199,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
         return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
-                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreaForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
+                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreasForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
     }
 
     @Override
@@ -214,7 +215,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
                         assessorInviteOverview.setCompliant(participant.getUser().isProfileCompliant());
                         // TODO INFUND-6865 Users should have innovation areas
-                        assessorInviteOverview.setInnovationArea(null);
+                        assessorInviteOverview.setInnovationAreas(null);
                     }
                     return assessorInviteOverview;
                 }));
@@ -429,12 +430,15 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return competitionInvite.getUser() != null && competitionInvite.getUser().isProfileCompliant();
     }
 
-    private InnovationAreaResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {
+    private Set<InnovationAreaResource> getInnovationAreasForInvite(CompetitionInvite competitionInvite) {
         boolean inviteForNewUser = competitionInvite.getUser() == null;
+
         if (inviteForNewUser) {
-            return innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea());
+            return Sets.newHashSet(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
+        } else {
+            return competitionInvite.getUser().getInnovationAreas().stream()
+                    .map(innovationArea -> innovationAreaMapper.mapToResource(innovationArea))
+                    .collect(toSet());
         }
-        // TODO INFUND-6865 User should have an innovation area
-        return null;
     }
 }

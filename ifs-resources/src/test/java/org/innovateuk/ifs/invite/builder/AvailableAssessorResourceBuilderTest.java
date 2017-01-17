@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.invite.builder;
 
+import com.google.common.collect.Sets;
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -20,7 +25,7 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        InnovationAreaResource expectedInnovationArea = newInnovationAreaResource().build();
+        Set<CategoryResource> expectedInnovationAreas = Sets.newHashSet(newInnovationAreaResource().build());
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
         BusinessType expectedBusinessType = BUSINESS;
@@ -28,7 +33,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         AvailableAssessorResource availableAssessorResource = newAvailableAssessorResource()
                 .withName(expectedName)
-                .withInnovationArea(expectedInnovationArea)
+                .withInnovationArea(expectedInnovationAreas)
                 .withCompliant(expectedCompliant)
                 .withEmail(expectedEmail)
                 .withBusinessType(expectedBusinessType)
@@ -36,7 +41,7 @@ public class AvailableAssessorResourceBuilderTest {
                 .build();
 
         assertEquals(expectedName, availableAssessorResource.getName());
-        assertEquals(expectedInnovationArea, availableAssessorResource.getInnovationArea());
+        assertEquals(expectedInnovationAreas, availableAssessorResource.getInnovationAreas());
         assertEquals(expectedCompliant, availableAssessorResource.isCompliant());
         assertEquals(expectedEmail, availableAssessorResource.getEmail());
         assertEquals(expectedBusinessType, availableAssessorResource.getBusinessType());
@@ -46,7 +51,9 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildMany() {
         String[] expectedNames = {"name1", "name2"};
-        InnovationAreaResource[] expectedInnovationAreas = newInnovationAreaResource().buildArray(2, InnovationAreaResource.class);
+        List<Set<CategoryResource>> expectedInnovationAreas = new ArrayList<>();
+        expectedInnovationAreas.add(Sets.newHashSet(newInnovationAreaResource().build()));
+        expectedInnovationAreas.add(Sets.newHashSet(newInnovationAreaResource().build()));
         Boolean[] expectedCompliants = {TRUE, FALSE};
         String[] expectedEmails = {"email1", "email2"};
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
@@ -54,7 +61,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
                 .withName(expectedNames)
-                .withInnovationArea(expectedInnovationAreas)
+                .withInnovationArea(expectedInnovationAreas.get(0), expectedInnovationAreas.get(1))
                 .withCompliant(expectedCompliants)
                 .withEmail(expectedEmails)
                 .withBusinessType(expectedBusinessTypes)
@@ -63,7 +70,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         AvailableAssessorResource first = availableAssessorResources.get(0);
         assertEquals(expectedNames[0], first.getName());
-        assertEquals(expectedInnovationAreas[0], first.getInnovationArea());
+        assertEquals(expectedInnovationAreas.get(0), first.getInnovationAreas());
         assertEquals(expectedCompliants[0], first.isCompliant());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedBusinessTypes[0], first.getBusinessType());
@@ -71,7 +78,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         AvailableAssessorResource second = availableAssessorResources.get(1);
         assertEquals(expectedNames[1], second.getName());
-        assertEquals(expectedInnovationAreas[1], second.getInnovationArea());
+        assertEquals(expectedInnovationAreas.get(1), second.getInnovationAreas());
         assertEquals(expectedCompliants[1], second.isCompliant());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedBusinessTypes[1], second.getBusinessType());
