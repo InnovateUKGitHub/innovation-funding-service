@@ -405,6 +405,21 @@
                 <div th:if="${overheadCosts?.getUseTotalOption()}" id="overhead-total">
                     <h3 class="heading-medium">Calculate overheads</h3>
                     <p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
+                    <div class="form-group download">
+                        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+                        <a href="#">Overhead calculation spreadsheet.pdf (56kb)</a>
+                    </div>
+                    <fieldset>
+                        <legend class="visuallyhidden">Upload your completed spreadsheet</legend>
+                        <div class="upload-section extra-margin">
+                            <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+                            <input type="hidden" name="fileoverheadid" value="${overheadCosts?.id}">
+                            <input type="file" name="overheadfile" id="overheadfile" class="inputfile"/>
+                            <label for="overheadfile" class="button-secondary extra-margin">+ Upload</label>
+                            <input type="submit" name="overheadfilesubmit" id="overheadfilesubmit" value=""/>
+                            <label for="overheadfilesubmit" class="button-secondary extra-margin">Submit</label>
+                        </div>
+                    </fieldset>
                     <div class="form-group alignright inline">
                         <label th:for="${'section-total-'+subSection.id+'-total'}">
                             <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
