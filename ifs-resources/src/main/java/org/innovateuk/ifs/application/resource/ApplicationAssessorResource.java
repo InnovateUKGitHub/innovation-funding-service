@@ -13,7 +13,7 @@ import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 
 /**
- * TODO
+ * DTO for an assessor that is either allocatable, or previously allocated to an application.
  */
 public class ApplicationAssessorResource {
 

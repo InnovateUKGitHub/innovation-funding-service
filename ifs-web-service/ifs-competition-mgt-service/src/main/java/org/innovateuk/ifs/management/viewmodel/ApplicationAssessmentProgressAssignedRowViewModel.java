@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import java.util.List;
 
 /**
- * TODO
+ * Holder of model attributes for an assigned assessor in the Application Progress view.
  */
 public class ApplicationAssessmentProgressAssignedRowViewModel extends ApplicationAssessmentProgressRowViewModel {
 
