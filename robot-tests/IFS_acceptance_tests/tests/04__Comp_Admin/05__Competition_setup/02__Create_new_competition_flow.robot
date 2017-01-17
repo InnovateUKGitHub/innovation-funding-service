@@ -51,6 +51,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Test Cases ***
 User can create a new competition
@@ -607,28 +608,6 @@ the user checks the scope assessment questions
     The user should see the text in the page    Guidance for assessing scope section
     The user should see the text in the page    Scope 'Y/N' question
     The user should see the text in the page    Research category question
-
-the user edits the assessed question information
-    the user enters text to a text field    id=question.scoreTotal    100
-    the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
-    the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    the user enters text to a text field    id=guidancerow-5-scorefrom    11
-    the user enters text to a text field    id=guidancerow-5-scoreto    12
-    the user enters text to a text field    id=guidancerow-5-justification    This is a justification
-    the user clicks the button/link    id=remove-guidance-row-2
-
-
-the user sees the correct assessed question information
-    the user should see the text in the page    Assessment of this question
-    #the user should see the text in the page    Business opportunity guidance
-    the user should see the text in the page    11
-    the user should see the text in the page    12
-    the user should see the text in the page    This is a justification
-    the user should see the text in the page    100
-    the user should see the text in the page    Written feedback
-    the user should see the text in the page    Scored
-    the user should see the text in the page    Out of
-    the user should not see the text in the page    The business opportunity is plausible
 
 the user should not be able to edit the scope feedback
     the user should not see the element    id=question.assessmentGuidanceTitle
