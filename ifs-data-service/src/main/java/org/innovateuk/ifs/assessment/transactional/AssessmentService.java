@@ -24,6 +24,9 @@ public interface AssessmentService {
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId);
 
+    @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
+    ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, Long competitionId);
+
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ_SCORE')")
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId);
 

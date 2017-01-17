@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -21,6 +24,8 @@ public class CompetitionController {
     private CompetitionService competitionService;
     @Autowired
     private CompetitionSetupService competitionSetupService;
+    @Autowired
+    private AssessmentService assessmentService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
@@ -106,6 +111,11 @@ public class CompetitionController {
 
     @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
     public RestResult<Void> notifyAssessors(@PathVariable("id") final Long id) {
+
+        for (AssessmentResource assessment : assessmentService.findByStateAndCompetition(AssessmentStates.CREATED, id).getSuccessObject()) {
+            assessmentService.notify(assessment.getId());
+        }
+
         return competitionService.notifyAssessors(id).toPutResponse();
     }
 }

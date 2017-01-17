@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.application.repository.ApplicationStatusRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -52,6 +53,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
         return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, Long competitionId) {
+        return serviceSuccess(simpleMap(assessmentRepository.findByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId), assessmentMapper::mapToResource));
     }
 
     @Override

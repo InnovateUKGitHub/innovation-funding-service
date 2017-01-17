@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionClosedModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInAssessmentModelPopulator;
@@ -14,6 +16,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -47,7 +53,10 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withName("Technology inspired")
                 .build();
 
+        List<AssessmentResource> assessments = newAssessmentResource().build(3);
+
         when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(assessmentRestService.getByStateAndCompetition(AssessmentStates.CREATED, competition.getId())).thenReturn(restSuccess(assessments));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())

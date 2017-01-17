@@ -16,6 +16,8 @@ public interface AssessmentRestService {
 
     RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long CompetitionId);
 
+    RestResult<List<AssessmentResource>> getByStateAndCompetition(AssessmentStates state, Long competitionId);
+
     RestResult<AssessmentTotalScoreResource> getTotalScore(Long id);
 
     RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision);

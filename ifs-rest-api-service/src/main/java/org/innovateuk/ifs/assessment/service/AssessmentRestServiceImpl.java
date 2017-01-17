@@ -40,6 +40,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
+    public RestResult<List<AssessmentResource>> getByStateAndCompetition(AssessmentStates state, Long competitionId) {
+        return getWithRestResult(format("%s/state/%s/competition/%s", assessmentRestURL, state.getStateName(), competitionId), ParameterizedTypeReferences.assessmentResourceListType());
+    }
+
+    @Override
     public RestResult<AssessmentTotalScoreResource> getTotalScore(Long id) {
         return getWithRestResult(format("%s/%s/score", assessmentRestURL, id), AssessmentTotalScoreResource.class);
     }
