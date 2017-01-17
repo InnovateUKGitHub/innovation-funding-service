@@ -64,6 +64,7 @@
           <th scope="col" class="aligncentre">Viability</th>
           <th scope="col" class="aligncentre cell-border-right">RAG</th>
           <th scope="col" class="aligncentre">Eligibility</th>
+          <th scope="col" class="aligncentre">RAG</th>
         </tr>
       </thead>
       <tbody>
@@ -91,12 +92,8 @@
                    th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                    th:classappend="${'eligibility-' + status.index}"/>
             </td>
-            <td class="aligncentre cell-border-right">
-                <span th:if="${orgDetails.eligibility.notApplicable}"
-                      th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
-                      th:classappend="${'eligibility-rag-' + status.index}"></span>
-                <span th:unless="${orgDetails.eligibility.notApplicable}"
-                      th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
+            <td class="aligncentre">
+                <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
                       th:classappend="${'eligibility-rag-' + status.index}">Green</span>
             </td>
         </tr>

@@ -68,9 +68,4 @@ public class FinanceCheckPartnerStatusResource {
     public void setViabilityRagStatus(ViabilityStatus viabilityRagStatus) {
         this.viabilityRagStatus = viabilityRagStatus;
     }
-
-    public enum Eligibility {
-        REVIEW,
-        APPROVED,
-    }
 }

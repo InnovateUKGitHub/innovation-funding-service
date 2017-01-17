@@ -296,6 +296,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityStatus.AMBER);
         ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
         ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityStatus.UNSET);
+        EligibilityResource eligibility1 = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.AMBER);
+        EligibilityResource eligibility2 = new EligibilityResource(Eligibility.REVIEW, EligibilityStatus.UNSET);
+        EligibilityResource eligibility3 = new EligibilityResource(Eligibility.REVIEW, EligibilityStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
@@ -311,6 +314,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(eligibility1));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(eligibility2));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(eligibility3));
 
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
@@ -322,14 +328,20 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
         assertEquals(Viability.APPROVED, organisation1Results.getViability());
         assertEquals(viability1.getViabilityStatus(), organisation1Results.getViabilityRagStatus());
+        assertEquals(Eligibility.APPROVED, organisation1Results.getEligibility());
+        assertEquals(eligibility1.getEligibilityStatus(), organisation1Results.getEligibilityRagStatus());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
         assertEquals(Viability.NOT_APPLICABLE, organisation2Results.getViability());
         assertEquals(ViabilityStatus.UNSET, organisation2Results.getViabilityRagStatus());
+        assertEquals(Eligibility.REVIEW, organisation2Results.getEligibility());
+        assertEquals(eligibility2.getEligibilityStatus(), organisation2Results.getEligibilityRagStatus());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(Viability.REVIEW, organisation3Results.getViability());
         assertEquals(viability3.getViabilityStatus(), organisation3Results.getViabilityRagStatus());
+        assertEquals(Eligibility.REVIEW, organisation3Results.getEligibility());
+        assertEquals(eligibility3.getEligibilityStatus(), organisation3Results.getEligibilityRagStatus());
     }
 
     @Override

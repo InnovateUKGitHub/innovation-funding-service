@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class FinanceCheckPartnerStatusResourceBuilder extends BaseBuilder<Financ
         return withArray((name, financeCheckPartnerStatusResource) -> setField("name", name, financeCheckPartnerStatusResource), names);
     }
 
-    public FinanceCheckPartnerStatusResourceBuilder withEligibility(FinanceCheckPartnerStatusResource.Eligibility... eligibilitys) {
+    public FinanceCheckPartnerStatusResourceBuilder withEligibility(Eligibility... eligibilitys) {
         return withArray((eligibility, financeCheckPartnerStatusResource) -> setField("eligibility", eligibility, financeCheckPartnerStatusResource), eligibilitys);
     }
 }
