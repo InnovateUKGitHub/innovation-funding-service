@@ -6,28 +6,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for the available assessors shown in the 'Application progress' page
  */
-public class ApplicationAvailableAssessorsRowViewModel {
+public class ApplicationAvailableAssessorsRowViewModel extends ApplicationAssessmentProgressRowViewModel {
 
-    private String name;
     private String skillAreas;
-    private long totalApplications;
-    private long assignedApplications;
     private long submittedApplications;
 
     public ApplicationAvailableAssessorsRowViewModel(String name, String skillAreas, long totalApplications, long assignedApplications, long submittedApplications) {
-        this.name = name;
+        super(name, totalApplications, assignedApplications);
         this.skillAreas = skillAreas;
-        this.totalApplications = totalApplications;
-        this.assignedApplications = assignedApplications;
         this.submittedApplications = submittedApplications;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getSkillAreas() {
@@ -36,22 +23,6 @@ public class ApplicationAvailableAssessorsRowViewModel {
 
     public void setSkillAreas(String skillAreas) {
         this.skillAreas = skillAreas;
-    }
-
-    public long getTotalApplications() {
-        return totalApplications;
-    }
-
-    public void setTotalApplications(long totalApplications) {
-        this.totalApplications = totalApplications;
-    }
-
-    public long getAssignedApplications() {
-        return assignedApplications;
-    }
-
-    public void setAssignedApplications(long assignedApplications) {
-        this.assignedApplications = assignedApplications;
     }
 
     public long getSubmittedApplications() {
@@ -71,10 +42,8 @@ public class ApplicationAvailableAssessorsRowViewModel {
         ApplicationAvailableAssessorsRowViewModel that = (ApplicationAvailableAssessorsRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(totalApplications, that.totalApplications)
-                .append(assignedApplications, that.assignedApplications)
+                .appendSuper(super.equals(o))
                 .append(submittedApplications, that.submittedApplications)
-                .append(name, that.name)
                 .append(skillAreas, that.skillAreas)
                 .isEquals();
     }
@@ -82,10 +51,8 @@ public class ApplicationAvailableAssessorsRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(name)
+                .appendSuper(super.hashCode())
                 .append(skillAreas)
-                .append(totalApplications)
-                .append(assignedApplications)
                 .append(submittedApplications)
                 .toHashCode();
     }

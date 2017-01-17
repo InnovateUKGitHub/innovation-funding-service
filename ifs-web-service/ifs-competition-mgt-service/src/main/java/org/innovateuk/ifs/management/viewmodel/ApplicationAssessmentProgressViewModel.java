@@ -16,14 +16,19 @@ public class ApplicationAssessmentProgressViewModel {
     private String competitionName;
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
+    private List<ApplicationAvailableAssessorsRowViewModel> available;
 
-    public ApplicationAssessmentProgressViewModel(Long applicationId, String applicationName, Long competitionId, String competitionName, List<String> partnerOrganisations, List<ApplicationAssessmentProgressAssignedRowViewModel> assigned) {
+    public ApplicationAssessmentProgressViewModel(Long applicationId, String applicationName, Long competitionId,
+                                                  String competitionName, List<String> partnerOrganisations,
+                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
+                                                  List<ApplicationAvailableAssessorsRowViewModel> available) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.partnerOrganisations = partnerOrganisations;
         this.assigned = assigned;
+        this.available = available;
     }
 
     public Long getApplicationId() {
@@ -50,15 +55,19 @@ public class ApplicationAssessmentProgressViewModel {
         return assigned;
     }
 
+    public List<ApplicationAvailableAssessorsRowViewModel> getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(List<ApplicationAvailableAssessorsRowViewModel> available) {
+        this.available = available;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         ApplicationAssessmentProgressViewModel that = (ApplicationAssessmentProgressViewModel) o;
 
@@ -69,6 +78,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(competitionName, that.competitionName)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(assigned, that.assigned)
+                .append(available, that.available)
                 .isEquals();
     }
 
@@ -81,6 +91,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(competitionName)
                 .append(partnerOrganisations)
                 .append(assigned)
+                .append(available)
                 .toHashCode();
     }
 }

@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.form.AvailableAssessorsForm;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.model.ApplicationAvailableAssessorsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,16 +26,12 @@ public class CompetitionManagementApplicationAssessmentProgressController {
     @Autowired
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
 
-    @Autowired
-    private ApplicationAvailableAssessorsModelPopulator applicationAvailableAssessorsModelPopulator;
-
     @RequestMapping(method = RequestMethod.GET)
     public String applicationProgress(Model model,
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId));
-        model.addAttribute("available", applicationAvailableAssessorsModelPopulator.populateModel(new CompetitionResource(), sortFieldForAvailableAssessors(form.getSort())));
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sortFieldForAvailableAssessors(form.getSort())));
         model.addAttribute("activeSortField", sortFieldForAvailableAssessors(form.getSort()));
         return "competition/application-progress";
     }

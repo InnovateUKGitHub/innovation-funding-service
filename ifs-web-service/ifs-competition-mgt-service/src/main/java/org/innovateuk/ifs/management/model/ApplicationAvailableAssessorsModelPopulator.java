@@ -27,9 +27,9 @@ public class ApplicationAvailableAssessorsModelPopulator {
         return Collections.unmodifiableMap(Stream.of(
                 new AbstractMap.SimpleEntry<>("title", comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
                 new AbstractMap.SimpleEntry<>("skills", comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
-                new AbstractMap.SimpleEntry<>("totalApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)),
-                new AbstractMap.SimpleEntry<>("assignedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)),
-                new AbstractMap.SimpleEntry<>("acceptedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplications)))
+                new AbstractMap.SimpleEntry<>("totalApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
+                new AbstractMap.SimpleEntry<>("assignedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
+                new AbstractMap.SimpleEntry<>("submittedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
                 .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
     }
 
