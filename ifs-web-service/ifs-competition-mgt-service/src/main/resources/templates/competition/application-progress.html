@@ -60,25 +60,25 @@
                     </thead>
                     <tbody>
                         <tr th:each="assigned : ${model.assigned}">
-                            <td><a th:href="#" th:text="${assigned.name}">Oliver Romero</a></td>
+                            <td><a href="#" th:text="${assigned.name}">Oliver Romero</a></td>
                             <td th:text="${assigned.businessType}">Academic</td>
-                            <td th:text="${assigned.skillAreas}">Healthcare, Regenerative medicine</td>
+                            <td th:text="${#strings.listJoin(assigned.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assigned.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assigned.assignedCount}">4</td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.notified} ? 'all' : 'tag'}">-</span>
-                                <div th:remove="${assigned.notified} ? 'tag' : 'all'}"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></div>
+                                <span th:remove="${assigned.notified} ? 'all' : 'tag'">-</span>
+                                <div th:remove="${assigned.notified} ? 'tag' : 'all'"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></div>
                             </td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.accepted} ? 'all' : 'tag'}">-</span>
+                                <span th:remove="${assigned.accepted} ? 'all' : 'tag'">-</span>
                                 <div th:remove="${assigned.accepted} ? 'tag' : 'all'"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></div>
                             </td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.started} ? 'all' : 'tag'}">-</span>
+                                <span th:remove="${assigned.started} ? 'all' : 'tag'">-</span>
                                 <div th:remove="${assigned.started} ? 'tag' : 'all'"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></div>
                             </td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.submitted} ? 'all' : 'tag'}">-</span>
+                                <span th:remove="${assigned.submitted} ? 'all' : 'tag'">-</span>
                                 <div th:remove="${assigned.submitted} ? 'tag' : 'all'"><strong class="show-mobile">Submitted:</strong>  <span><span class="yes">Yes</span></span></div>
                             </td>
                             <td class="alignright">

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -26,6 +27,7 @@ import java.util.Set;
 
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -55,7 +57,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     @Override
     public ServiceResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
-                simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(1L, ASSESSOR),
+                simpleMap(competitionParticipantRepository.getByCompetitionIdAndRoleAndStatus(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED),
                         competitionParticipant -> getApplicationAssessor(competitionParticipant, applicationId))
         );
     }
@@ -86,15 +88,15 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
 
         User user = competitionParticipant.getUser();
-        Profile profile = user.getProfile();
+        Optional<Profile> profile = ofNullable(user.getProfile());
 
         ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
         applicationAssessorResource.setUserId(user.getId());
         applicationAssessorResource.setFirstName(user.getFirstName());
         applicationAssessorResource.setLastName(user.getLastName());
-        applicationAssessorResource.setBusinessType(profile.getBusinessType());
+        applicationAssessorResource.setBusinessType(profile.map(Profile::getBusinessType).orElse(null));
         applicationAssessorResource.setInnovationAreas(simpleMap(user.getInnovationAreas(), innovationAreaMapper::mapToResource));
-        applicationAssessorResource.setSkillAreas(profile.getSkillsAreas());
+        applicationAssessorResource.setSkillAreas(profile.map(Profile::getSkillsAreas).orElse(null));
         applicationAssessorResource.setAvailable(!mostRecentAssessment.isPresent());
         applicationAssessorResource.setMostRecentAssessmentState(mostRecentAssessment.map(Assessment::getActivityState).orElse(null));
         applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));

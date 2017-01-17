@@ -7,21 +7,21 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import java.util.List;
 
 /**
- * TODO
+ * Holder of model attributes for an assigned assessor in the Application Progress view.
  */
 public class ApplicationAssessmentProgressAssignedRowViewModel extends ApplicationAssessmentProgressRowViewModel {
 
     private BusinessType businessType;
-    private List<String> innovationArea;
+    private List<String> innovationAreas;
     private boolean notified;
     private boolean accepted;
     private boolean started;
     private boolean submitted;
 
-    public ApplicationAssessmentProgressAssignedRowViewModel(String name, long totalApplicationsCount, long assignedCount, BusinessType businessType, List<String> innovationArea, boolean notified, boolean accepted, boolean started, boolean submitted) {
+    public ApplicationAssessmentProgressAssignedRowViewModel(String name, long totalApplicationsCount, long assignedCount, BusinessType businessType, List<String> innovationAreas, boolean notified, boolean accepted, boolean started, boolean submitted) {
         super(name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
-        this.innovationArea = innovationArea;
+        this.innovationAreas = innovationAreas;
         this.notified = notified;
         this.accepted = accepted;
         this.started = started;
@@ -32,8 +32,8 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
         return businessType;
     }
 
-    public List<String> getInnovationArea() {
-        return innovationArea;
+    public List<String> getInnovationAreas() {
+        return innovationAreas;
     }
 
     public boolean isNotified() {
@@ -70,7 +70,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
                 .append(started, that.started)
                 .append(submitted, that.submitted)
                 .append(businessType, that.businessType)
-                .append(innovationArea, that.innovationArea)
+                .append(innovationAreas, that.innovationAreas)
                 .isEquals();
     }
 
@@ -78,7 +78,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(businessType)
-                .append(innovationArea)
+                .append(innovationAreas)
                 .append(notified)
                 .append(accepted)
                 .append(started)
