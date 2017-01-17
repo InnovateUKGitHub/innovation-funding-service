@@ -79,8 +79,6 @@ public class FinanceEligibilityController {
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
 
-        //addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-
         openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, true, true);
 
         model.addAttribute("project", project);
@@ -88,12 +86,8 @@ public class FinanceEligibilityController {
         return "project/financecheck/eligibility";
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, userId, Optional.empty(), Optional.empty(), model, form);
-    }
-
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
+        //organisationDetailsModelPopulator.populateModel(model, application.getId());
         applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 }
