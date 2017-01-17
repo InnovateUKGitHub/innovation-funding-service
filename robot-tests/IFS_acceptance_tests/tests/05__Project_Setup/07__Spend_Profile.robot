@@ -40,6 +40,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-7119 GOL status for Internal user
 ...
 ...               INFUND-6977 As a lead partner I want to be given back edit rights to the Spend Profile so that I can manage further edits if they have been rejected by Innovate UK
+...
+...               INFUND-6907 Internal server error if tried to save SP with a validation error in it
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -124,7 +126,7 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765
+    [Documentation]    INFUND-3765, INFUND-6907
     [Tags]    #HappyPath
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
@@ -147,6 +149,11 @@ Lead partner can edit his spend profile with invalid values
     When the user enters text to a text field          css=#row-24-2    35.25
     And the user moves focus to the element            css=#row-25-2
     Then the user should see the text in the page      This field can only accept whole numbers
+    When the user enters text to a text field          css=#row-24-2    abcd
+    And the user moves focus to the element            css=#row-25-2
+    Then the user should see the text in the page      Unable to submit spend profile
+    When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see the text in the page  internal server error
     When the user enters text to a text field          css=#row-26-2    200
     And the user moves focus to the element            css=#row-26-1
     And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
