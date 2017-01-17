@@ -80,7 +80,7 @@ Application details are not editable when competition is open
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
-    [Teardown]   the user clicks the button/link    link=Application
+    [Teardown]    the user clicks the button/link    link=Application
 
 Assessed Questions are not editable after open date
     [Documentation]    INFUND-6936
@@ -174,9 +174,8 @@ Assessors page is not editable after Notifications Date
 
 Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
-    [Tags]  Pending
-    # TODO Edit button visible
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/11/
+    [Tags]
+    Given The user navigates to the page    ${SERVER}/management/competition/setup/1
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
@@ -186,8 +185,7 @@ Eligibility is not editable when the competition is open
 
 Public Description is not editable when competition is open
     [Documentation]    INFUND-6939
-    [Tags]  Pending
-    # TODO Edit button visible
+    [Tags]
     Given The user clicks the button/link    link=Application
     When The user should see the text in the page    Public description
     And The user clicks the button/link    link=Public description
@@ -199,8 +197,7 @@ Public Description is not editable when competition is open
 
 Project Summary is not editable when competition is open
     [Documentation]    INFUND-6938
-    [Tags]  Pending
-    # TODO Edit button visible
+    [Tags]
     When The user clicks the button/link    link=Project summary
     And the user should see the element    jquery=h1:contains("Project summary")
     Then The user should not see the element    css = input
