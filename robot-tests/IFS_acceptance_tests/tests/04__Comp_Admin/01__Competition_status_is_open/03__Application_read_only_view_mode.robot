@@ -71,19 +71,6 @@ Comp admin has read only view of Application details past Open date
     And the user clicks the button/link    jQuery=.button:contains("Save and close")
     Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
 
-Comp admin has read only view of Scope past Open Date
-    [Documentation]    INFUND-6940
-    [Tags]
-    Given The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    And The user clicks the button/link    link=Application
-    Then The user should see the text in the page    Scope
-    And The user clicks the button/link    link=Scope
-    Then the user should see the element    jquery=h1:contains("Scope")
-    And The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-    And The user clicks the button/link    link = Return to application questions
-
 Comp admin has read only view of Finances past Open Date
     [Documentation]    INFUND-6941
     [Tags]
