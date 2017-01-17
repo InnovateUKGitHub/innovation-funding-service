@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.mapper;
 
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -16,7 +17,8 @@ import org.mapstruct.Mappings;
     uses = {
             OrganisationMapper.class,
             ApplicationMapper.class,
-            FileEntryMapper.class
+            FileEntryMapper.class,
+            ResearchCategoryMapper.class
     }
 )
 public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFinance, ApplicationFinanceResource, Long> {
@@ -25,10 +27,11 @@ public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFin
         @Mapping(target = "financeOrganisationDetails", ignore = true ),
         @Mapping(source = "application", target = "target")
     })
-    
     @Override
     public abstract ApplicationFinanceResource mapToResource(ApplicationFinance domain);
 
+    @Override
+    public abstract ApplicationFinance mapToDomain(ApplicationFinanceResource resource);
 
     public Long mapApplicationFinanceToId(ApplicationFinance object) {
         if (object == null) {

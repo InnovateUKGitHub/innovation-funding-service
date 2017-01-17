@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.form;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
@@ -13,6 +15,9 @@ public class ApplicationForm extends Form {
 
     @Valid
     private ApplicationResource application;
+
+    @NotNull
+    private Long researchCategoryId;
 
     private MultipartFile assessorFeedback;
 
@@ -74,5 +79,13 @@ public class ApplicationForm extends Form {
 
     public void setStateAidAgreed(boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
+    }
+
+    public Long getResearchCategoryId() {
+        return researchCategoryId;
+    }
+
+    public void setResearchCategory(Long researchCategoryId) {
+        this.researchCategoryId = researchCategoryId;
     }
 }

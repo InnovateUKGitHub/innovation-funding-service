@@ -1,9 +1,15 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.item.*;
+import org.innovateuk.ifs.application.service.CategoryService;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -14,9 +20,6 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.util.Either;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -51,6 +54,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     
     @Autowired
     private UnsavedFieldsManager unsavedFieldsManager;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private CategoryRestService categoryRestService;
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
@@ -172,6 +181,10 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         switch (fieldNameReplaced) {
             case "organisationSize":
                 applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
+                break;
+            case "researchCategoryId":
+                Set<ResearchCategoryResource> cats = categoryService.getResearchCategories().stream().filter(cat -> cat.getId().toString().equals(value)).collect(Collectors.toSet());
+                applicationFinance.setResearchCategories(cats);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));

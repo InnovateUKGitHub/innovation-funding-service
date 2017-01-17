@@ -125,6 +125,33 @@
                               />
                     </div>
 
+                    <fieldset>
+                        <div class="message-alert extra-margin-bottom" th:unless="${readonly}">
+                            <h2 class="heading-small no-margin">Research area determines funding</h2>
+                            <p>The research area is used to calculate the funding for all collaborators in the application.</p>
+                            <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryId__}')} ? 'error'">
+                            <legend>
+                                <span class="form-label-bold">Research area</span>
+                                <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Please confirm the research area for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules&lt;/a&gt;')" th:remove="tag" />
+                                <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='researchCategoryId')" th:remove="tag" />
+                            </legend>
+
+                            <label th:class="${'block-label selection-button-radio '  + (researchCategoryId != null ? ' selected focused' : '')}" th:each="cat : ${researchCategories}" th:for="${'financePosition-cat-' + cat.id}">
+                                <input th:value="${cat.id}"
+                                       type="radio"
+                                       th:field="*{__researchCategoryId__}"
+                                       th:id="${'financePosition-cat-' + cat.id}"
+                                       th:checked="${cat.id == researchCategoryId}"
+                                       th:disabled="${readonly and (cat.id != researchCategoryId)}"
+                                       required="required"
+                                       data-required-errormessage="Please select at least one research category" />
+                                <span th:text="${cat.name}" th:remove="tag" />
+                            </label>
+                        </div>
+                    </fieldset>
+
                         <fieldset>
                             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                                 <legend>

@@ -2,13 +2,15 @@ package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.category.domain.ApplicationFinanceResearchCategoryLink;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.Organisation;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.
@@ -23,6 +25,9 @@ public class ApplicationFinance extends Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="financeFileEntryId", referencedColumnName="id")
     private FileEntry financeFileEntry;
+
+    @OneToMany(mappedBy = "applicationFinance", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ApplicationFinanceResearchCategoryLink> researchCategories = new HashSet<>();
 
     public ApplicationFinance() {
     	// no-arg constructor
@@ -53,5 +58,14 @@ public class ApplicationFinance extends Finance {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public Set<ResearchCategory> getResearchCategories() {
+        //return researchCategories.stream().map(ApplicationFinanceResearchCategoryLink::getCategory).findFirst().orElse(null);
+        return researchCategories.stream().map(ApplicationFinanceResearchCategoryLink::getCategory).collect(Collectors.toSet());
+    }
+
+    public void addResearchCategory(ResearchCategory researchCategory) {
+        researchCategories.add(new ApplicationFinanceResearchCategoryLink(this, researchCategory));
     }
 }

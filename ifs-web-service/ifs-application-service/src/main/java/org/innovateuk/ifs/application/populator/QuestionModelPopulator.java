@@ -74,6 +74,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
+    @Autowired
+    private CategoryService categoryService;
+
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
         QuestionResource question = questionService.getById(questionId);
@@ -117,8 +120,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         return questionViewModel;
     }
 
-
-
     private QuestionApplicationViewModel addApplicationDetails(ApplicationResource application,
                                                                CompetitionResource competition,
                                                                Long userId,
@@ -141,6 +142,8 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         );
 
         addApplicationFormDetailInputs(application, form);
+
+        questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
 
         return questionApplicationViewModel;
     }

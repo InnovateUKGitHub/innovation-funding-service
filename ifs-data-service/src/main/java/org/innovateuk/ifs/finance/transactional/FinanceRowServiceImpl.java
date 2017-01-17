@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -105,6 +106,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
+
+    @Autowired
+    private ResearchCategoryMapper researchCategoryMapper;
 
     @Override
     public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
@@ -284,9 +288,10 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
-                    dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
-                    dbFinance = applicationFinanceRepository.save(dbFinance);
-                    return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
+                    ApplicationFinance dbFinanceWithUpload = setFinanceUpload(dbFinance, financeFileEntryId);
+                    applicationFinance.getResearchCategories().forEach(researchCategoryResource -> dbFinanceWithUpload.addResearchCategory(researchCategoryMapper.mapToDomain(researchCategoryResource)));
+                    ApplicationFinance saved = applicationFinanceRepository.save(dbFinanceWithUpload);
+                    return serviceSuccess(applicationFinanceMapper.mapToResource(saved));
                 })
         );
     }
