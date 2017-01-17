@@ -91,11 +91,4 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(
-            value = "VIEW_PROJECT_FINANCE",
-            description = "Project Finance Users can view Project Finances")
-    public boolean projectFinanceUserCanViewProjectFinance(Long projectId, UserResource user) {
-
-        return isProjectFinanceUser(user);
-    }
 }
