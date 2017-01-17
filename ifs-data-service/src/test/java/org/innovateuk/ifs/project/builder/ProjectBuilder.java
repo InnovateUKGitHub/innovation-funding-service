@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -96,7 +97,7 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
     }
 
-    public ProjectBuilder withOtherDocumentsApproved(Boolean... approved){
+    public ProjectBuilder withOtherDocumentsApproved(ApprovalType... approved){
         return withArray((approval, project) -> project.setOtherDocumentsApproved(approval), approved);
     }
 

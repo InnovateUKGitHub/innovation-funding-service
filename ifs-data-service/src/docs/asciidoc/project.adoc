@@ -665,3 +665,15 @@ include::{snippets}/project/is-send-grant-offer-letter-allowed/http-response.ado
 
 ===== Curl Example
 include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc[]
+
+=== Get Grant Offer Letter Workflow State
+==== Success
+===== Request
+include::{snippets}/project/get-grant-offer-letter-workflow-state/http-request.adoc[]
+include::{snippets}/project/get-grant-offer-letter-workflow-state/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-grant-offer-letter-workflow-state/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-grant-offer-letter-workflow-state/curl-request.adoc[]
