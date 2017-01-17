@@ -51,6 +51,18 @@ User cannot update initial details of a competition after notify date
     Then the user should not see the element    jQuery=.button:contains("Edit")
     And the user should not see the element    jQuery=.button:contains("Done")
 
+Funding Information is editable before open date
+    [Documentation]    INFUND-7083
+    [Tags]
+    [Setup]    The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    When the user clicks the button/link    link=Funding information
+    And the user should see the element    jquery=h1:contains("Funding information")
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    And The user enters text to a text field    id=funders0.funder    Funders Edit test
+    And The user clicks the button/link    jQuery=.button:contains("Done")
+    Then The user should see the element    jQuery=.button:contains("Edit")
+    And The user should see the text in the page    Funders Edit test
+
 Application details are editable before Open date
     [Documentation]    INFUND-6937
     [Tags]
@@ -177,10 +189,20 @@ Assessors page is not editable after Notifications Date
     [Tags]    Pending
     # TODO Pending due to INFUND-7511
 
+Funding Information not editable after notifications date
+    [Documentation]    INFUND-7183
+    [Tags]
+    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/${IN_ASSESSMENT_COMPETITION}
+    When The user clicks the button/link    link=Funding information
+    And the user should see the element    jquery=h1:contains("Funding information")
+    Then The user should not see the element    css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+
 Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
     [Tags]
-    Given The user navigates to the page    ${SERVER}/management/competition/setup/1
+    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/1
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
