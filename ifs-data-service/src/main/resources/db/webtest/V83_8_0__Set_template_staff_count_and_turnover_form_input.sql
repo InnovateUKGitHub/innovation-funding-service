@@ -1,5 +1,5 @@
 -- Set the default presence (i.e. 'active'-ness) field for the turnover and staff count form inputs on the template competitions
--- Set both form inputs to be active for the programme template (and inactive for the sector template)
+-- Set both these form inputs to be active for the programme template (and inactive for the sector template)
 -- Hence these inputs will be active by default for all programme competitions and inactive by default for all sector competitions made from these templates.
 
 -- Set the variables for the form_input types to change
