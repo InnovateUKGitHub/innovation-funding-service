@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
@@ -11,6 +12,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private boolean fundingSectionLocked;
     private Long applicationDetailsQuestionId;
     private Long yourOrganisationSectionId;
+    private boolean notRequestingFunding;
 
 
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
@@ -46,5 +48,34 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     public void setYourOrganisationSectionId(Long yourOrganisationSectionId) {
         this.yourOrganisationSectionId = yourOrganisationSectionId;
+    }
+
+    public boolean isNotRequestingFunding() {
+        return notRequestingFunding;
+    }
+
+    public void setNotRequestingFunding(boolean notRequestingFunding) {
+        this.notRequestingFunding = notRequestingFunding;
+    }
+
+    /* Your finances display logic */
+    public boolean showSectionAsNotRequired(SectionResource subSection) {
+        return notRequestingFunding && (SectionType.ORGANISATION_FINANCES.equals(subSection.getType())
+            || SectionType.FUNDING_FINANCES.equals(subSection.getType()));
+    }
+
+    public boolean showSectionAsLockedFunding(SectionResource subSection) {
+        return !showSectionAsNotRequired(subSection) && SectionType.FUNDING_FINANCES.equals(subSection.getType())
+                && fundingSectionLocked;
+    }
+
+    public boolean showSectionAsLink(SectionResource subSection) {
+        return !showSectionAsLockedFunding(subSection);
+
+    }
+
+    public boolean showSectionStatus(SectionResource subSection) {
+        return showSectionAsLink(subSection);
+
     }
 }
