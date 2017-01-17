@@ -62,6 +62,7 @@
                         <tr th:each="assigned : ${model.assigned}">
                             <td><a href="#" th:text="${assigned.name}">Oliver Romero</a></td>
                             <td th:text="${assigned.businessType}">Academic</td>
+                            <td th:text="${#strings.listJoin(assigned.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assigned.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assigned.assignedCount}">4</td>
                             <td class="aligncentre">
