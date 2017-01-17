@@ -57,16 +57,13 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 
 
 	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
-		if(!competition.isSetupAndLive()) {
-			competition.setActivityCode(additionalInfoForm.getActivityCode());
-			competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
-			competition.setBudgetCode(additionalInfoForm.getBudgetCode());
-			competition.setPafCode(additionalInfoForm.getPafNumber());
-		}
+		//All fields set by saver are valid when live. Competition code cannot be set, but is not saved via this class.
 	}
 
 	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
-		additionalInfoForm.setCompetitionCode(competition.getCode());
+		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
+		competition.setPafCode(additionalInfoForm.getPafNumber());
+		competition.setActivityCode(additionalInfoForm.getActivityCode());
 
 		competition.setFunders(new ArrayList());
 		additionalInfoForm.getFunders().forEach(funder -> {

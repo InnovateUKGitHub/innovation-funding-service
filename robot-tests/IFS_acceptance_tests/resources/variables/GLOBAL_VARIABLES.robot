@@ -131,6 +131,7 @@ ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
 ${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
 ${COMP_MANAGEMENT_OPEN_COMP}    ${SERVER}/management/competition/setup/${FUNDERS_PANEL_COMPETITION}
+${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/${FUNDERS_PANEL_APPLICATION_2}/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
@@ -188,7 +189,10 @@ ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/com
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
 ${Assessment_summary_Pending_12}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/summary
 ${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/summary
-${assessment_skills}    ${server}/assessment/profile/declaration
+${assessment_declaration_url}    ${server}/assessment/profile/declaration
+${assessment_declaration_edit_url}    ${server}/assessment/profile/declaration/edit
+${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_skills_edit_url}   ${server}/assessment/profile/skills/edit
 ${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
 # Database variables

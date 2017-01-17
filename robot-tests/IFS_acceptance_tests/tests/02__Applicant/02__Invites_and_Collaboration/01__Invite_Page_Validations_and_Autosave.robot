@@ -1,9 +1,7 @@
 *** Settings ***
 Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so that they can contribute to the application in a collaborative competition
 ...
-...
 ...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
-...
 ...
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 ...
@@ -121,9 +119,9 @@ the applicant fills the lead organisation fields
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    jquery=button:contains("Save Changes")
+    Focus    jQuery=.button:contains("Save Changes")
     browser validations have been disabled
-    The user clicks the button/link    jquery=button:contains("Save Changes")
+    The user clicks the button/link    jQuery=.button:contains("Save Changes")
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May

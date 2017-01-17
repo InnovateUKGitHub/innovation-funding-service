@@ -98,6 +98,8 @@ public class CompetitionManagementInviteAssessorsController {
                                          @PathVariable("competitionId") Long competitionId,
                                          @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         form.getInvites().add(new InviteNewAssessorsRowForm());
+        form.setVisible(true);
+
         return invite(model, competitionId, form);
     }
 
@@ -107,6 +109,8 @@ public class CompetitionManagementInviteAssessorsController {
                                               @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                               @RequestParam(name = "removeNewUser") int position) {
         form.getInvites().remove(position);
+        form.setVisible(true);
+
         return invite(model, competitionId, form);
     }
 
@@ -116,6 +120,8 @@ public class CompetitionManagementInviteAssessorsController {
                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                                 @SuppressWarnings("unused") BindingResult bindingResult,
                                                 ValidationHandler validationHandler) {
+        form.setVisible(true);
+
         return validationHandler.failNowOrSucceedWith(
                 () -> invite(model, competitionId, form),
                 () -> {

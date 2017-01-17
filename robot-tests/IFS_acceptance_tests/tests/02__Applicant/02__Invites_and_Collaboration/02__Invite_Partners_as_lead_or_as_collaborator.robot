@@ -1,15 +1,11 @@
 *** Settings ***
 Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so that they can contribute to the application in a collaborative competition
 ...
-...
 ...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
-...
 ...
 ...               INFUND-928: As a lead applicant i want a separate screen within the application form, so that i can invite/track partners/contributors throughout the application process
 ...
-...
 ...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
-...
 ...
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 ...
@@ -45,14 +41,12 @@ Valid invitation submit
     And the user should see the text in the page    Invites sent
 
 Pending partners visible in the Application details
-    [Documentation]    INFUND-2966
-    ...
-    ...    INFUND-2738
+    [Documentation]    INFUND-2966, INFUND-2738
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
-    Then pending partners should be visible in the page
+    Then the user should see the element   jQuery=ul.list-bullet > li > span:contains("Fannie May")
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -109,8 +103,8 @@ Business organisation (partner accepts invitation)
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
     [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    Passw0rd123
+    Given the user clicks the button/link  jQuery=.button:contains("Sign in")
+    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com  ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
@@ -152,10 +146,7 @@ Lead should not be able to edit Partners
     And the invited collaborators are not editable
 
 Lead applicant invites a non registered user in the same organisation
-    [Documentation]    INFUND-928
-    ...
-    ...    INFUND-1463
-    ...
+    [Documentation]    INFUND-928, INFUND-1463
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
@@ -173,7 +164,6 @@ Lead applicant invites a non registered user in the same organisation
 
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
-    ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
@@ -234,11 +224,13 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    the user should see the text in the page    NOMENSA LTD
+    And the user should see the element    link=Your project costs
+    And the user should see the element    link=Your organisation
+    And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view team members and add collaborators
-    the user should see the text in the page    NOMENSA LTD
+    Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
     ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
@@ -248,10 +240,6 @@ the user can invite another person to their own organisation
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-
-pending partners should be visible in the page
-    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
-    Element Should Contain    xpath=//span[contains(text(),"Fannie May")]//following::small    (pending)
 
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label

@@ -16,13 +16,43 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-7027 Partners can access the GOL before the internal user hits Send to proj team
 ...
 ...               INFUND-7049 Validation missing for PDF file upload in GOL upload page for internal user
-Suite Setup       all the other sections of the project are completed
+...
+...               INFUND-6375 As a partner I want to receive a notification when Project Setup has been successfully completed so that I am clear on what steps to take now the project is live
+...
+...               INFUND-6741 As the service delivery manager I want the service to generate a Grant Offer Letter once both the Spend Profiles and Other documents are approved so that the competitions team can review and publish to the project team
+...
+...               INFUND-7361 GOL is seen by internal user soon after the external user uploads it
+Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 
 *** Test Cases ***
+
+
+External user cannot view the GOL section before spend profiles have been approved
+    [Documentation]    INFUND-6741
+    [Tags]
+    [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    When the user should not see the element    jQuery=li.waiting:nth-child(8)
+    And the user should not see the element    link=Grant offer letter
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
+
+
+GOL not generated before spend profiles have been approved
+    [Documentation]    INFUND-6741
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send    ${403_error_message}
+    [Teardown]    proj finance approves the spend profiles
+
+
+
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
     [Tags]    Experian
@@ -178,6 +208,14 @@ PM should be able upload a file and then access the Send button
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+
+Project finance cannot access the GOL before it is sent by PM
+    [Documentation]    INFUND-7361
+    [Tags]    HappyPath
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    # TODO Remove the below comment once acceptance branch is merged to dev
+    # Then the user should not see the text in the page  Signed grant offer letter
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849
@@ -350,17 +388,36 @@ Non lead can download the signed GOL
     Then the user downloads the file      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system    testing.pdf
 
+PM receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath    Pending
+    # TODO Pending due to INFUND-7413
+    Then the user reads his email    amy.ortiz@gabtype.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
+Industrial finance contact receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath    Pending
+    # TODO Pending due to INFUND-7413
+    Then the user reads his email    karen.ramos@kazio.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
+Academic finance contact receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath    Pending
+    # TODO Pending due to INFUND-7413
+    Then the user reads his email    juan.campbell@cogilith.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
+
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
     choose file    name=${name}    ${upload_folder}/${file}
 
-all the other sections of the project are completed
+all the other sections of the project are completed (except spend profile approval)
     the project finance user has approved bank details
     other documents have been uploaded and approved
     project finance generates the Spend Profile
     all partners submit their Spend Profile
-    proj finance approves the spend profiles
+
 
 the project finance user has approved bank details
     Guest user log-in  &{internal_finance_credentials}

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -92,7 +93,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
                 if (competition.getInnovationSector() != null) {
-                    List<CategoryResource> children = categoryService.getCategoryByParentId(competition.getInnovationSector());
+                    List<InnovationAreaResource> children = categoryService.getInnovationAreasBySector(competition.getInnovationSector());
                     List<CategoryResource> matchingChildren =
                             children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());
 
