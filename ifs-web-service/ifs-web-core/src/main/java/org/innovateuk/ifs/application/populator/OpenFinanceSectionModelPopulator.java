@@ -93,14 +93,16 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), model);
+        //TODO INFUND-7482 use finance view model when its complete.
+        Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
+        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), organisationGrantClaimPercentage);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         return openFinanceSectionViewModel;
     }
 
-    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Model model) {
+    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
@@ -115,13 +117,12 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         viewModel.setApplicationDetailsQuestionId(applicationDetailsQuestion.getId());
         viewModel.setYourOrganisationSectionId(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).findFirst().map(SectionResource::getId).orElse(null));
 
-        //TODO use finance view model when its complete.
-        Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
+
         boolean yourFundingComplete = false;
         if (viewModel.getSectionsMarkedAsComplete() != null) {
             yourFundingComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.FUNDING_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
         }
-        viewModel.setNotRequestingFunding(yourFundingComplete && organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
+        viewModel.setNotRequestingFunding(yourFundingComplete && organisationSizeComplete && organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
     }
 
 

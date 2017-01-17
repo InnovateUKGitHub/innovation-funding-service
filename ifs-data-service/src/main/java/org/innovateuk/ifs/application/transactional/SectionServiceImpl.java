@@ -131,17 +131,31 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
-                questions.forEach(q -> {
-                    questionService.markAsComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsCompleteById);
-                    // Assign back to lead applicant.
-                    questionService.assign(new QuestionApplicationCompositeId(q, applicationId), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
-                });
+                markAllQuestionsAsComplete(application, questions, markedAsCompleteById);
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
             }
             return serviceSuccess(sectionIsValid);
         });
     }
+
+    @Override
+    public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
+            Set<Long> questions = collectAllQuestionFrom(section);
+            markAllQuestionsAsComplete(application, questions, markedAsCompleteById);
+            return serviceSuccess();
+        });
+    }
+
+    private void markAllQuestionsAsComplete(Application application, Set<Long> questions, Long markedAsCompleteById) {
+        questions.forEach(q -> {
+            questionService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+            // Assign back to lead applicant.
+            questionService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
+        });
+    }
+
 
     @Override
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,

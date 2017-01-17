@@ -348,7 +348,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
         verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
         assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
-        verify(sectionService, times(2)).markAsComplete(anyLong(), anyLong(), anyLong());
+        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
 
     @Test

@@ -110,7 +110,6 @@ public class OpenFinanceSectionViewModelTest {
         assertEquals(Boolean.TRUE, viewModel.getIsSection());
     }
 
-    //
     @Test
     public void testShowSectionAsNotRequired() {
         viewModel.setNotRequestingFunding(true);

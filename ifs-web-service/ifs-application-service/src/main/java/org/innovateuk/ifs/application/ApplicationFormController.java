@@ -497,8 +497,8 @@ public class ApplicationFormController {
                 sectionService.markAsInComplete(organisationSection.getId(), applicationId, processRoleId);
                 sectionService.markAsInComplete(fundingSection.getId(), applicationId, processRoleId);
             } else if (NOT_REQUESTING_FUNDING.equals(requestingFunding)) {
-                errors.addAll(sectionService.markAsComplete(organisationSection.getId(), applicationId, processRoleId));
-                errors.addAll(sectionService.markAsComplete(fundingSection.getId(), applicationId, processRoleId));
+                sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+                sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
             }
         }
     }
