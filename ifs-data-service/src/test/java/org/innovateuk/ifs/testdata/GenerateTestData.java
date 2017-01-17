@@ -82,7 +82,7 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@Ignore("Manual web test data generation")
+//@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
 public class GenerateTestData extends BaseIntegrationTest {
@@ -823,6 +823,10 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.familyAffiliations,
                 line.familyFinancialInterests
         );
+
+        if (line.contractSigned) {
+            baseBuilder = baseBuilder.addContractSigned();
+        }
 
         if (!line.rejectionReason.isEmpty()) {
             baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);

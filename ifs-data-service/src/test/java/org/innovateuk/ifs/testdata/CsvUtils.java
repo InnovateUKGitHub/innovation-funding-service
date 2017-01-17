@@ -490,11 +490,12 @@ class CsvUtils {
         String financialInterests;
         List<Map<String, String>> familyAffiliations;
         String familyFinancialInterests;
+        boolean contractSigned;
 
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 18;
+            int i = line.size() - 19;
             disability = Disability.fromDisplayName(line.get(i++));
             ethnicity = line.get(i++);
             gender = Gender.fromDisplayName(line.get(i++));
@@ -516,6 +517,7 @@ class CsvUtils {
             financialInterests = line.get(i++);
             familyAffiliations = extractListOfMaps(line.get(i++));
             familyFinancialInterests = line.get(i++);
+            contractSigned = Boolean.valueOf(line.get(i++));
         }
 
         private List<Map<String, String>> extractListOfMaps(String column) {

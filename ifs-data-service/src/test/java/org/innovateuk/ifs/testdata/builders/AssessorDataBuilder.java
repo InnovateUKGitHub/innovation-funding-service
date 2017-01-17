@@ -175,6 +175,15 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         });
     }
 
+    public AssessorDataBuilder addContractSigned() {
+        return with((AssessorData data) ->
+                doAs(data.getUser(), () -> {
+                    userProfileService.updateProfileContract(data.getUser().getId());
+                    testService.flushAndClearSession();
+                })
+        );
+    }
+
     private List<AffiliationResource> mapAppointments(List<Map<String, String>> appointments) {
         if (appointments.isEmpty()) {
             return singletonList(AffiliationResourceBuilder.createEmptyAppointments());
