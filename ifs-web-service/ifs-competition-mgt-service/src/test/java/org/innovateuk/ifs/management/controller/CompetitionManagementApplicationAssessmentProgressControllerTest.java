@@ -86,9 +86,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .build(2)
                 )
                 .withMostRecentAssessmentState(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED)
-                .withTotalApplicationsCount(6, 4, 5, 7, 6, 3)
-                .withAssignedCount(6, 3, 1, 5, 2, 1)
-                .withSubmittedCount(4, 1, 0, 2, 1, 0)
+                .withTotalApplicationsCount(6L, 4L, 5L, 7L, 6L, 3L)
+                .withAssignedCount(6L, 3L, 1L, 5L, 2L, 1L)
+                .withSubmittedCount(4L, 1L, 0L, 2L, 1L, 0L)
                 .build(6);
 
         List<ApplicationAssessorResource> rejected = newApplicationAssessorResource()
@@ -107,9 +107,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withRejectReason("Conflict of interest", "Not available", "Not my area of expertise")
                 .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.", "No prior experience")
                 .withMostRecentAssessmentState(REJECTED)
-                .withTotalApplicationsCount(6, 7, 1)
-                .withAssignedCount(6, 4, 1)
-                .withSubmittedCount(2, 3, 0)
+                .withTotalApplicationsCount(6L, 7L, 1L)
+                .withAssignedCount(6L, 4L, 1L)
+                .withSubmittedCount(2L, 3L, 0L)
                 .build(3);
 
         List<ApplicationAssessorResource> withdrawn = newApplicationAssessorResource()
@@ -126,9 +126,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("Advanced Materials", "Nuclear")
                                 .build(2))
                 .withMostRecentAssessmentState(WITHDRAWN)
-                .withTotalApplicationsCount(24, 2, 5)
-                .withAssignedCount(6, 1, 3)
-                .withSubmittedCount(2, 0, 3)
+                .withTotalApplicationsCount(24L, 2L, 5L)
+                .withAssignedCount(6L, 1L, 3L)
+                .withSubmittedCount(2L, 0L, 3L)
                 .build(3);
 
         List<ApplicationAssessorResource> available = newApplicationAssessorResource()
@@ -146,9 +146,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .build(2))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
                 .withAvailable(true)
-                .withTotalApplicationsCount(9, 4, 3)
-                .withAssignedCount(5, 1, 1)
-                .withSubmittedCount(2, 1, 0)
+                .withTotalApplicationsCount(9L, 4L, 3L)
+                .withAssignedCount(5L, 1L, 1L)
+                .withSubmittedCount(2L, 1L, 0L)
                 .build(3);
 
         when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));

@@ -35,7 +35,7 @@ public class ApplicationAssessorResourceDocs {
             .withRejectReason("Conflict of interest", "Not available")
             .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.")
             .withMostRecentAssessmentState(READY_TO_SUBMIT, REJECTED)
-            .withTotalApplicationsCount(6, 8)
-            .withAssignedCount(4, 6)
-            .withSubmittedCount(1, 3);
+            .withTotalApplicationsCount(6L, 8L)
+            .withAssignedCount(4L, 6L)
+            .withSubmittedCount(1L, 3L);
 }

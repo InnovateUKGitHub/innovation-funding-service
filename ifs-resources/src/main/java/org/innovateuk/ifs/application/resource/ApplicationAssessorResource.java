@@ -27,14 +27,14 @@ public class ApplicationAssessorResource {
     private String rejectComment;
     private boolean available;
     private AssessmentStates mostRecentAssessmentState;
-    private int totalApplicationsCount;
-    private int assignedCount;
-    private int submittedCount;
+    private long totalApplicationsCount;
+    private long assignedCount;
+    private long submittedCount;
 
     public ApplicationAssessorResource() {
     }
 
-    public ApplicationAssessorResource(Long userId, String firstName, String lastName, BusinessType businessType, List<InnovationAreaResource> innovationAreas, String skillAreas, String rejectReason, String rejectComment, boolean available, AssessmentStates mostRecentAssessmentState, int totalApplicationsCount, int assignedCount, int submittedCount) {
+    public ApplicationAssessorResource(Long userId, String firstName, String lastName, BusinessType businessType, List<InnovationAreaResource> innovationAreas, String skillAreas, String rejectReason, String rejectComment, boolean available, AssessmentStates mostRecentAssessmentState, long totalApplicationsCount, long assignedCount, long submittedCount) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -130,27 +130,27 @@ public class ApplicationAssessorResource {
         this.mostRecentAssessmentState = mostRecentAssessmentState;
     }
 
-    public int getTotalApplicationsCount() {
+    public long getTotalApplicationsCount() {
         return totalApplicationsCount;
     }
 
-    public void setTotalApplicationsCount(int totalApplicationsCount) {
+    public void setTotalApplicationsCount(long totalApplicationsCount) {
         this.totalApplicationsCount = totalApplicationsCount;
     }
 
-    public int getAssignedCount() {
+    public long getAssignedCount() {
         return assignedCount;
     }
 
-    public void setAssignedCount(int assignedCount) {
+    public void setAssignedCount(long assignedCount) {
         this.assignedCount = assignedCount;
     }
 
-    public int getSubmittedCount() {
+    public long getSubmittedCount() {
         return submittedCount;
     }
 
-    public void setSubmittedCount(int submittedCount) {
+    public void setSubmittedCount(long submittedCount) {
         this.submittedCount = submittedCount;
     }
 

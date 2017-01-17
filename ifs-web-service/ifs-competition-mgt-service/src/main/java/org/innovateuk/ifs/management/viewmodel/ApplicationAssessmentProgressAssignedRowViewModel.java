@@ -18,7 +18,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
     private boolean started;
     private boolean submitted;
 
-    public ApplicationAssessmentProgressAssignedRowViewModel(String name, int totalApplicationsCount, int assignedCount, BusinessType businessType, List<String> innovationArea, boolean notified, boolean accepted, boolean started, boolean submitted) {
+    public ApplicationAssessmentProgressAssignedRowViewModel(String name, long totalApplicationsCount, long assignedCount, BusinessType businessType, List<String> innovationArea, boolean notified, boolean accepted, boolean started, boolean submitted) {
         super(name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
         this.innovationArea = innovationArea;
