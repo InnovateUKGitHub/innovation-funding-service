@@ -41,7 +41,7 @@
       <dd>Agriculture and food</dd>
   </dl>
 
-  <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+  <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and review assessor invites for this competition.</p>
 
 </div>
 
@@ -242,11 +242,7 @@
 
         <div class="grid-row">
                <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Find people on the system that you would like to invite to be an assessor.</h2>
-                   <h2 class="heading-small" th:unless="${site == null}">Find people on the system that you would like to invite to the panel.</h2>
-
-                   <p th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
-                   <p th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
+                  <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition</h2>
                </div>
                <!--<div class="column-quarter aligncentre">
                    <h3 class="heading-large no-margin">6</h3>
@@ -456,10 +452,8 @@
         <div class="grid-row">
             <div class="column-three-quarters">
 
-                <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
+                <h2 class="heading-small no-margin-top" th:unless="${site == 'rc'}">Invite one or more people to become assessors for this competition</h2>
                 <h2 class="heading-small no-margin-top" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
-
-                <p>You can invite people on your list individually or as a group.</p>
             </div>
             <!-- <div class="column-quarter aligncentre">
                  <h3 class="heading-large no-margin">6</h3>
@@ -467,91 +461,95 @@
              </div> -->
         </div>
 
-        <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
-            <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
+        <div class="boxed extra-margin extra-margin-bottom">
+          <h3 class="heading-small no-margin-top">Invite a non-registered assessor</h3>
+          <details th:unless="${site == 'rc'}">
+              <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
 
-            <div class="panel">
-                <form th:action="${#httpServletRequest.requestURI}">
-                    <p>Enter the new assessor's details below to add them to your invite list.</p>
+              <div class="panel">
+                  <form th:action="${#httpServletRequest.requestURI}">
+                      <p>Enter new assessor's details below and then add them to your invite list.</p>
 
-                    <div class="form-group">
-                        <label for="grouped-innovation-area" class="form-label-bold">Innovation area</label>
+                      <div class="form-group">
+                          <label for="grouped-innovation-area" class="form-label-bold">Innovation area</label>
 
-                        <p class="form-hint">The innovation area will remain the same until you click 'Add assessor(s) to list'.</p>
+                          <p class="form-hint">The innovation area will remain the same until you click 'Add assessor(s) to list' button.</p>
 
-                        <select class="form-control" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
-                            <option value="">Please select an innovation area</option>
-                            <optgroup label="Emerging and enabling technologies">
-                                <option value="15">Creative economy</option>
-                                <option value="8">Cyber Security</option>
-                                <option value="7">Data</option>
-                                <option value="14">Design</option>
-                                <option value="5">Earth Observation</option>
-                                <option value="12">Electronics, Sensors and photonics</option>
-                                <option value="10">Emerging Tech and Industries</option>
-                                <option value="6">Internet of Things</option>
-                                <option value="13">Open</option>
-                                <option value="11">Robotics and AS</option>
-                                <option value="9">User Experience</option>
-                            </optgroup>
-                            <optgroup label="Health and life sciences">
-                                <option value="16">Advanced Therapies</option>
-                                <option value="20">Agri Productivity</option>
-                                <option value="19">Bioscience</option>
-                                <option value="21">Enhanced Food Quality</option>
-                                <option value="18">Medicines Technology</option>
-                                <option value="17">Precision Medicine</option>
-                            </optgroup>
-                        </select>
-                    </div>
+                          <select class="form-control" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
+                              <option value="">Please select an innovation area</option>
+                              <optgroup label="Emerging and enabling technologies">
+                                  <option value="15">Creative economy</option>
+                                  <option value="8">Cyber Security</option>
+                                  <option value="7">Data</option>
+                                  <option value="14">Design</option>
+                                  <option value="5">Earth Observation</option>
+                                  <option value="12">Electronics, Sensors and photonics</option>
+                                  <option value="10">Emerging Tech and Industries</option>
+                                  <option value="6">Internet of Things</option>
+                                  <option value="13">Open</option>
+                                  <option value="11">Robotics and AS</option>
+                                  <option value="9">User Experience</option>
+                              </optgroup>
+                              <optgroup label="Health and life sciences">
+                                  <option value="16">Advanced Therapies</option>
+                                  <option value="20">Agri Productivity</option>
+                                  <option value="19">Bioscience</option>
+                                  <option value="21">Enhanced Food Quality</option>
+                                  <option value="18">Medicines Technology</option>
+                                  <option value="17">Precision Medicine</option>
+                              </optgroup>
+                          </select>
+                      </div>
 
-                    <div class="table-overflow">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th id="invite-label-assessor-name" scope="col">Name</th>
-                                    <th id="invite-label-assessor-email" scope="col">Email</th>
-                                    <th scope="col"><span class="visuallyhidden">Remove</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="width-40-percent">
-                                        <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
-                                    </td>
-                                    <td class="width-40-percent">
-                                        <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
-                                    </td>
-                                    <td class="width-20-percent">
+                      <div class="table-overflow">
+                          <table>
+                              <thead>
+                                  <tr>
+                                      <th id="invite-label-assessor-name" scope="col">Name</th>
+                                      <th id="invite-label-assessor-email" scope="col">Email</th>
+                                      <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td class="width-40-percent">
+                                          <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
+                                      </td>
+                                      <td class="width-40-percent">
+                                          <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
+                                      </td>
+                                      <td class="width-20-percent">
 
-                                    </td>
-                                </tr>
-                                <tr id="prototype-assessor-row-two">
-                                    <td class="width-40-percent">
-                                        <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
-                                    </td>
-                                    <td class="width-40-percent">
-                                        <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
-                                    </td>
-                                    <td class="alignright width-20-percent">
-                                        <a href="#" id="prototype-remove-two">Remove</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="alignright">
-                            <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
-                        </div>
-                    </div>
+                                      </td>
+                                  </tr>
+                                  <tr id="prototype-assessor-row-two">
+                                      <td class="width-40-percent">
+                                          <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
+                                      </td>
+                                      <td class="width-40-percent">
+                                          <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
+                                      </td>
+                                      <td class="alignright width-20-percent">
+                                          <a href="#" id="prototype-remove-two">Remove</a>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                          <div class="alignright">
+                              <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
+                          </div>
+                      </div>
 
-                    <div class="alignright extra-margin-top">
-                        <input type="hidden" name="status" value="invite-new" />
-                        <input type="hidden" name="tab" value="invite" />
-                        <a class="button no-margin " id="prototype-add-assessors">Add assessor(s) to list</a>
-                    </div>
-                </form>
-            </div>
-        </details>
+                      <div class="alignright extra-margin-top">
+                          <input type="hidden" name="status" value="invite-new" />
+                          <input type="hidden" name="tab" value="invite" />
+                          <a class="button no-margin " id="prototype-add-assessors">Add assessor(s) to list</a>
+                      </div>
+                  </form>
+              </div>
+          </details>
+        </div>
+
         <!--<div class="alignright">-->
             <!--<div class="form-group">-->
                 <!--<label for="sort-by">Sort by</label>-->
@@ -695,14 +693,13 @@
 
             <div class="column-three-quarters">
 
-                <h2 class="heading-small no-margin-top">Overview of invited assessors</h2>
-                <p>An overview of assessors that have been invited to assess applications.</p>
+                <h2 class="heading-small">Overview of invited assessors, their contract, DOI and acceptance status</h2>
 
             </div>
 
         </div>
 
-        <div class="search-filters">
+        <div class="search-filters extra-margin">
             <div class="grid-row">
 
                 <div class="column-third">
