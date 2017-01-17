@@ -133,7 +133,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .build(3);
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.ASSESSOR)).thenReturn(competitionParticipants);
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
         when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class))).then(invocation -> {
             InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
             return newInnovationAreaResource()
@@ -154,7 +154,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         InOrder inOrder = inOrder(applicationRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, assessmentRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
-        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.ASSESSOR);
+        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED);
         competitionParticipants.forEach(competitionParticipant -> {
             Long userId = competitionParticipant.getUser().getId();
             inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(userId, application.getId());
