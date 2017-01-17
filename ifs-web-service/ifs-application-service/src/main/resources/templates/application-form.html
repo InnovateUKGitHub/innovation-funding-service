@@ -93,7 +93,7 @@
             <input type="hidden" id="application_id" th:value="${model.application.currentApplication.id}"/>
             <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.id}"/>
 
-            <th:block th:unless="${model.showReturnButtons}">
+            <th:block th:if="${model.showReturnButtons}">
                 <div th:if="${model.application.allReadOnly}" th:remove="tag">
                     <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
                 </div>
