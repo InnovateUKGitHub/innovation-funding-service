@@ -102,7 +102,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId) { return null; }
+        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return null; }
     }
 }
 

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceCheckEligibilityViewModel;
+import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -24,7 +24,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  */
 @Controller
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility")
-public class FinanceCheckEligibilityController {
+public class FinanceChecksEligibilityController {
 
     @Autowired
     private ProjectService projectService;
@@ -51,7 +51,7 @@ public class FinanceCheckEligibilityController {
         return "project/financecheck/eligibility";
     }
 
-    private FinanceCheckEligibilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
+    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
 
 
         ProjectResource project = projectService.getById(projectId);
@@ -61,8 +61,8 @@ public class FinanceCheckEligibilityController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
-        FinanceCheckEligibilityResource eligibility = financeCheckService.getFinanceCheckEligibility(projectId, organisationId);
+        FinanceCheckEligibilityResource eligibility = financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId);
 
-        return new FinanceCheckEligibilityViewModel(eligibility, organisation.getName(), project.getName(), application.getFormattedId(), leadPartnerOrganisation, project.getId());
+        return new FinanceChecksEligibilityViewModel(eligibility, organisation.getName(), project.getName(), application.getFormattedId(), leadPartnerOrganisation, project.getId());
     }
 }

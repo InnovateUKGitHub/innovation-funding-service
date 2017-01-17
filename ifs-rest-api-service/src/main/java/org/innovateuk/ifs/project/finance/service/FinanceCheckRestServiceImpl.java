@@ -46,7 +46,7 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
-    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId) {
+    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/eligibility";
         return getWithRestResult(url, FinanceCheckEligibilityResource.class);
     }

@@ -42,7 +42,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public FinanceCheckEligibilityResource getFinanceCheckEligibility(Long projectId, Long organisationId) {
-        return financeCheckRestService.getFinanceCheckEligibility(projectId, organisationId).getSuccessObjectOrThrowException();
+    public FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
+        return financeCheckRestService.getFinanceCheckEligibilityDetails(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 }

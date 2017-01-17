@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 /**
  * View model backing the internal Finance Team members view of the Finance Check Eligibility page
  */
-public class FinanceCheckEligibilityViewModel {
+public class FinanceChecksEligibilityViewModel {
     private FinanceCheckEligibilityResource eligibilityOverview;
     private String organisationName;
     private boolean leadPartnerOrganisation;
@@ -14,7 +14,7 @@ public class FinanceCheckEligibilityViewModel {
     private String applicationId;
     private Long projectId;
 
-    public FinanceCheckEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName, String applicationId, boolean leadPartnerOrganisation, Long projectId) {
+    public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName, String applicationId, boolean leadPartnerOrganisation, Long projectId) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;

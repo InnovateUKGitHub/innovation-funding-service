@@ -425,7 +425,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
 
-        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibility(projectId, organisationId);
+        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
         FinanceCheckEligibilityResource eligibility = result.getSuccessObject();
@@ -456,7 +456,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(financeRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
-        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibility(projectId, organisationId);
+        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
 
     }
@@ -512,7 +512,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
         when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
-        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibility(projectId, organisationId);
+        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
 
     }

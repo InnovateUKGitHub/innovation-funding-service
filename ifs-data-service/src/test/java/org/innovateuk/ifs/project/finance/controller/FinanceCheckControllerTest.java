@@ -57,11 +57,11 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long projectId = 123L;
         Long organisationId = 234L;
         FinanceCheckEligibilityResource expected = newFinanceCheckEligibilityResource().build();
-        when(financeCheckServiceMock.getFinanceCheckEligibility(projectId, organisationId)).thenReturn(serviceSuccess(expected));
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(serviceSuccess(expected));
         mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
-        verify(financeCheckServiceMock).getFinanceCheckEligibility(projectId, organisationId);
+        verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(projectId, organisationId);
     }
 
     @Test

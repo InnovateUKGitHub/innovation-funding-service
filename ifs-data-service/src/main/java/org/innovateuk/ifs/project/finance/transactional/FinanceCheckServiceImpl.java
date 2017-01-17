@@ -157,7 +157,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 getPartnerStatuses(partnerOrganisations), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
-    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId) {
+    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
         Project project = projectRepository.findOne(projectId);
         Application application = project.getApplication();
 

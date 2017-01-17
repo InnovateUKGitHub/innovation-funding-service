@@ -19,5 +19,5 @@ public interface FinanceCheckService {
 
     FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
-    FinanceCheckEligibilityResource getFinanceCheckEligibility(Long projectId, Long organisationId);
+    FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 }

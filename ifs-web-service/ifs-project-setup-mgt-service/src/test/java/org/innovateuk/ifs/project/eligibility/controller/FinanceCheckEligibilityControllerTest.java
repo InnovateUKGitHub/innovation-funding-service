@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceCheckEligibilityViewModel;
+import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVCTest<FinanceCheckEligibilityController> {
+public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVCTest<FinanceChecksEligibilityController> {
 
     private OrganisationResource industrialOrganisation = newOrganisationResource().
             withName("Industrial Org").
@@ -50,7 +50,7 @@ public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVC
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        when(financeCheckServiceMock.getFinanceCheckEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), industrialOrganisation.getId())).
@@ -61,7 +61,7 @@ public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVC
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        FinanceCheckEligibilityViewModel viewModel = (FinanceCheckEligibilityViewModel) model.get("model");
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("model");
 
         assertTrue(viewModel.isLeadPartnerOrganisation());
         assertTrue(viewModel.getApplicationId().equals(application.getFormattedId()));
@@ -77,7 +77,7 @@ public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVC
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeCheckServiceMock.getFinanceCheckEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), industrialOrganisation.getId())).
@@ -88,7 +88,7 @@ public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVC
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        FinanceCheckEligibilityViewModel viewModel = (FinanceCheckEligibilityViewModel) model.get("model");
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("model");
 
         assertFalse(viewModel.isLeadPartnerOrganisation());
         assertTrue(viewModel.getApplicationId().equals(application.getFormattedId()));
@@ -98,7 +98,7 @@ public class FinanceCheckEligibilityControllerTest extends BaseControllerMockMVC
     }
 
     @Override
-    protected FinanceCheckEligibilityController supplyControllerUnderTest() {
-        return new FinanceCheckEligibilityController();
+    protected FinanceChecksEligibilityController supplyControllerUnderTest() {
+        return new FinanceChecksEligibilityController();
     }
 }

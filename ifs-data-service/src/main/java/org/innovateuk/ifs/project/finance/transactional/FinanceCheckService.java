@@ -38,5 +38,5 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckEligibilityResource.class, description = "Project finance users have the ability to view the finance checks eligibility status for a partner" )
-    ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId);
+    ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 }

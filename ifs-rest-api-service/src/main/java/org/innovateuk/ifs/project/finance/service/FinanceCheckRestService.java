@@ -21,5 +21,5 @@ public interface FinanceCheckRestService {
 
     RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
-    RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(Long projectId, Long organisationId);
+    RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 }
