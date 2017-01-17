@@ -195,8 +195,8 @@ Public Description is not editable when competition is open
     When The user clicks the button/link    link=Public description
     And the user should see the element    jquery=h1:contains("Public description")
     Then The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
+    And The user should not see the element    jQuery=.button:contains("Edit this question")
+    And The user should not see the element    jQuery=.button[value="Save and close"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Project Summary is not editable when competition is open
@@ -205,8 +205,8 @@ Project Summary is not editable when competition is open
     When The user clicks the button/link    link=Project summary
     And the user should see the element    jquery=h1:contains("Project summary")
     Then The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
+    And The user should not see the element    jQuery=.button:contains("Edit this question")
+    And The user should not see the element    jQuery=.button[value="Save and close"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Scope is not editable when competition is open
@@ -215,8 +215,8 @@ Scope is not editable when competition is open
     When The user clicks the button/link    link=Scope
     Then the user should see the element    jquery=h1:contains("Scope")
     And The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
+    And The user should not see the element    jQuery=.button:contains("Edit this question")
+    And The user should not see the element    jQuery=.button[value="Save and close"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 *** Keywords ***
