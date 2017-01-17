@@ -13,21 +13,21 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           var target = jQuery(this).attr('data-repeatable-rowcontainer')
 
           if (jQuery(target).children().length === 0) {
-            IFS.assessment.repeatableDeclarationRows.addRow(this, e)
+            IFS.assessment.repeatableDeclarationRows.addRow(this, false)
           }
         } else {
           e.preventDefault()
 
-          IFS.assessment.repeatableDeclarationRows.addRow(this, e)
+          IFS.assessment.repeatableDeclarationRows.addRow(this, true)
         }
       })
       jQuery('body').on('click', '.remove-another-row', function (e) {
         e.preventDefault()
 
-        IFS.assessment.repeatableDeclarationRows.removeRow(this, e)
+        IFS.assessment.repeatableDeclarationRows.removeRow(this, true)
       })
     },
-    addRow: function (el) {
+    addRow: function (el, focus) {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
@@ -82,7 +82,11 @@ IFS.assessment.repeatableDeclarationRows = (function () {
 
       // insert the new row with the correct values and move focus to the first field to aid keyboard users
       newRow.appendTo(target)
-      newRow.find('input').first().focus()
+
+      // only move focus if required. We don't want to move focus when clicking the radio button
+      if (focus === true) {
+        newRow.find('input').first().focus()
+      }
     },
     removeRow: function (el) {
       var $element = jQuery(el)
