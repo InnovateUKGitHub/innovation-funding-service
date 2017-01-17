@@ -149,8 +149,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                         withOrganisation(organisation1, organisation2).
                         build(2));
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(isA(String.class))).thenReturn(false);
-
         List<Cost> expectedOrganisation1EligibleCosts = asList(
                 new Cost("100").withCategory(type1Cat1),
                 new Cost("200").withCategory(type1Cat2));
@@ -251,11 +249,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 newProjectFinance().
-                        withViability(Viability.APPROVED, Viability.PENDING).
+                        withViability(Viability.APPROVED, Viability.REVIEW).
                         withOrganisation(organisation1, organisation2).
                         build(2));
-
-        when(organisationFinanceDelegateMock.isUsingJesFinances(isA(String.class))).thenReturn(false);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -266,7 +262,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGenerateSpendProfileAndNotAllViabilityApprovedButAcademicSoNotApplicable() {
+    public void testGenerateSpendProfileWhenAllViabilityApprovedButAcademicViabilityNotApplicable() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -278,12 +274,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 newProjectFinance().
-                        withViability(Viability.APPROVED, Viability.PENDING).
+                        withViability(Viability.APPROVED, Viability.NOT_APPLICABLE).
                         withOrganisation(organisation1, organisation2).
                         build(2));
-
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation1.getOrganisationType().getName())).thenReturn(false);
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation2.getOrganisationType().getName())).thenReturn(true);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
@@ -773,11 +766,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.PENDING, ViabilityStatus.UNSET, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityStatus.UNSET, null, null);
     }
 
     @Test
@@ -789,11 +782,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.PENDING, ViabilityStatus.AMBER, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityStatus.AMBER, null, null);
     }
 
     @Test

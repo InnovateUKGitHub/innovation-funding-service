@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,8 +19,6 @@ import org.springframework.ui.Model;
 
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
@@ -61,10 +61,10 @@ public class InitialDetailsModelPopulatorTest {
 		
 		List<UserResource> compExecs = new ArrayList<>();
 		when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(compExecs);
-		List<CategoryResource> innovationSectors = new ArrayList<>();
-		when(categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR)).thenReturn(innovationSectors);
-		List<CategoryResource> innovationAreas = new ArrayList<>();
-		when(categoryService.getCategoryByType(CategoryType.INNOVATION_AREA)).thenReturn(innovationAreas);
+		List<InnovationSectorResource> innovationSectors = new ArrayList<>();
+		when(categoryService.getInnovationSectors()).thenReturn(innovationSectors);
+		List<InnovationAreaResource> innovationAreas = new ArrayList<>();
+		when(categoryService.getInnovationAreas()).thenReturn(innovationAreas);
 		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
 		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
 		List<UserResource> leadTechs = new ArrayList<>();

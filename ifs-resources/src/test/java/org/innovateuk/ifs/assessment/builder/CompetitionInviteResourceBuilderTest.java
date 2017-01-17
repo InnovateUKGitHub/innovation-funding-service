@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -26,7 +26,7 @@ public class CompetitionInviteResourceBuilderTest {
         BigDecimal expectedAssessorPay = BigDecimal.ONE;
         String expectedEmail = "tom@poly.io";
         String expectedHash = "inviteHash";
-        CategoryResource expectedCategory = newCategoryResource().build();
+        InnovationAreaResource expectedCategory = newInnovationAreaResource().build();
 
         CompetitionInviteResource invite = newCompetitionInviteResource()
                 .withIds(expectedId)
@@ -61,7 +61,7 @@ public class CompetitionInviteResourceBuilderTest {
         BigDecimal[] expectedAssessorPays = {BigDecimal.ONE, BigDecimal.TEN};
         String[] expectedEmails = {"tom@poly.io", "steve.smith@empire.com"};
         String[] expectedHashes = {"hash1", "hash2"};
-        List<CategoryResource> expectedCategories = newCategoryResource().build(2);
+        List<InnovationAreaResource> expectedCategories = newInnovationAreaResource().build(2);
 
         List<CompetitionInviteResource> invites = newCompetitionInviteResource()
                 .withIds(expectedIds)

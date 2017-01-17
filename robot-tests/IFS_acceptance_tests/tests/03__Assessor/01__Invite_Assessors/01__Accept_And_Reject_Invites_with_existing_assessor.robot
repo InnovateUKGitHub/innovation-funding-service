@@ -22,6 +22,10 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-943 As an assessor I have to accept invitations to assess a competition within a timeframe...
 ...
 ...               INFUND-6500 Speedbump when not logged in and attempting to accept invite where a user already exists
+...
+...               INFUND-6455 As an assessor with an account, I can see invitations to assess competitions on my dashboard...
+...
+...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -35,7 +39,7 @@ ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
 
 *** Test Cases ***
-Assessor dashboard contains one upcoming competition
+Assessor dashboard contains the correct competitions
     [Documentation]    INFUND-3716
     ...
     ...    INFUND-4950
@@ -44,22 +48,27 @@ Assessor dashboard contains one upcoming competition
     [Tags]    HappyPath
     [Setup]
     Given the user should see the text in the page    Assessor dashboard
-    Then The user should not see the element    css=.my-applications h2
-    And The user should not see the text in the page    Competitions for assessment
+    Then The user should not see the text in the page    Competitions for assessment
     And The user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And The user should see the text in the page    Invitations to assess
 
-Calculation of the Upcoming competitions to assess should be correct
+Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
+    ...
+    ...    INFUND-6455
     [Tags]    HappyPath
     Then the total calculation in dashboard should be correct    Upcoming competitions to assess    //*[@class="upcoming-to-assess"]/ul/li
+    And the total calculation in dashboard should be correct    Invitations to assess    //*[@class="invite-to-assess"]/ul/li
 
-Existing assessor: Reject invitation
+Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631
     ...
     ...    INFUND-5157
+    ...
+    ...    INFUND-6455
     [Tags]    HappyPath
-    Given the user navigates to the page    ${Invitation_existing_assessor1}
+    Given the user clicks the button/link    link=Photonics for health
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
@@ -73,17 +82,16 @@ Existing assessor: Reject invitation
 
 Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
-    [Tags]    Pending
+    [Tags]
     [Setup]    Close the competition in assessment
-    #TODO Pending INFUND-943 to be ready for test
-    Given The guest user opens the browser
-    When the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
-    Then The user should see the text in the page    The invitation is now closed
+    Given Log in as a different user    &{existing_assessor1_credentials}
+    Then The user should not see the element    link=Sustainable living models for the future
+    And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
+    Then The user should see the text in the page    This invitation is now closed
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
-    ...    AND    the user closes the browser
 
-Existing assessor: Accept invitation
+Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228
     ...
     ...    INFUND-304
@@ -102,11 +110,17 @@ Existing assessor: Accept invitation
     And the user should see the text in the page    taking place at 15 January 2016.
     And the user should see the text in the page    100 per application.
     When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
-    Then the user should see the text in the page  Your email address is linked to an existing account.
-    And the user clicks the button/link  jQuery=a:contains("Click here to sign in")
+    Then the user should see the text in the page    Your email address is linked to an existing account.
+    And the user clicks the button/link    jQuery=a:contains("Click here to sign in")
     And Invited guest user log in    &{existing_assessor1_credentials}
     And The user should see the text in the page    Assessor dashboard
     And the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
+
+Accepted and Rejected invites are not visible
+    [Documentation]    INFUND-6455
+    [Tags]
+    Then the user should not see the element    link=Photonics for health
+    And The user should not see the text in the page    Invitations to assess
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
@@ -121,7 +135,8 @@ Upcoming competition should be visible
     And The user clicks the button/link    link=Back to assessor dashboard
     Then The user should see the text in the page    Upcoming competitions to assess
 
-When the assessment period starts the comp moves to the comp for assessment
+The assessment period starts the comp moves to the comp for assessment
+    [Documentation]
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
@@ -153,10 +168,20 @@ Registered user should not allowed to accept other assessor invite
 
 The user should not be able to accept or reject the same applications
     [Documentation]    NFUND-5165
+    [Tags]
     Then the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
     Then the assessor shouldn't be able to accept the accepted competition
     And the assessor shouldn't be able to reject the accepted competition
+
+The Admin's invites overview should be updated for accepted invites
+    [Documentation]    INFUND-6450
+    [Tags]
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    And The user clicks the button/link    link=Overview
+    And the user should see the element    jQuery=tr:nth-child(1) td:contains(Invite accepted)
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
@@ -196,7 +221,6 @@ the assessor should see the correct date
     Should Be Equal    ${Assessment_period}    ${Correct_date}
 
 Close the competition in assessment
-    Guest user log-in    &{Comp_admin1_credentials}
+    Log in as a different user    &{Comp_admin1_credentials}
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
-    Close Browser

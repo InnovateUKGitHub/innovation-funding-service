@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -328,6 +329,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
         return projectRestService.isSignedGrantOfferLetterApproved(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+        return projectRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
     }
 
 }

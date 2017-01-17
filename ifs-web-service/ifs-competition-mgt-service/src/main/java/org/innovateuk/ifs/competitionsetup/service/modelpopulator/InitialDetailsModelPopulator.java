@@ -35,8 +35,8 @@ public class InitialDetailsModelPopulator implements CompetitionSetupSectionMode
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource) {
 		model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_EXEC));
-		model.addAttribute("innovationSectors", categoryService.getCategoryByType(CategoryType.INNOVATION_SECTOR));
-		model.addAttribute("innovationAreas", categoryService.getCategoryByType(CategoryType.INNOVATION_AREA));
+		model.addAttribute("innovationSectors", categoryService.getInnovationSectors());
+		model.addAttribute("innovationAreas", categoryService.getInnovationAreas());
 		model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
 		model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
 	}

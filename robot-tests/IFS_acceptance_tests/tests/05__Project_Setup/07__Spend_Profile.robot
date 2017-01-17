@@ -38,6 +38,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6881 Non-lead External User should see Green Check once he submits SP
 ...
 ...               INFUND-7119 GOL status for Internal user
+...
+...               INFUND-6977 As a lead partner I want to be given back edit rights to the Spend Profile so that I can manage further edits if they have been rejected by Innovate UK
+...
+...               INFUND-6907 Internal server error if tried to save SP with a validation error in it
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -122,7 +126,7 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765
+    [Documentation]    INFUND-3765, INFUND-6907
     [Tags]    #HappyPath
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
@@ -135,7 +139,7 @@ Lead partner can edit his spend profile with invalid values
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     When the user clicks the button/link               link=${Katz_Name}
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
-    And the user should see the element                jQuery=.error-summary-list li:contains("24")  #TODO this will change due to INFUND-6801
+    And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field          css=#row-24-0    222
     And the user should not see the element            jQuery=.cell-error #row-total-24
@@ -145,6 +149,11 @@ Lead partner can edit his spend profile with invalid values
     When the user enters text to a text field          css=#row-24-2    35.25
     And the user moves focus to the element            css=#row-25-2
     Then the user should see the text in the page      This field can only accept whole numbers
+    When the user enters text to a text field          css=#row-24-2    abcd
+    And the user moves focus to the element            css=#row-25-2
+    Then the user should see the text in the page      Unable to submit spend profile
+    When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see the text in the page  internal server error
     When the user enters text to a text field          css=#row-26-2    200
     And the user moves focus to the element            css=#row-26-1
     And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
@@ -541,10 +550,89 @@ Project Finance is able to Reject Spend Profile
     Then the user should see the text in the page    Before taking this action please contact the project manager
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    #    When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
-    #    And the user clicks the button/link    jQuery=.modal-reject-profile button:contains('Reject')
-    #    Then the user should see the element    jQuery=h3:contains("The spend profile has been rejected")
-    # The above lines are passing, but they are disabled so that the Sp Prof can be Approved. This will be changed with upcoming functionality.
+    When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
+    And the user clicks the button/link    jQuery=.modal-reject-profile button:contains('Reject')
+
+Status updates to a cross for the internal user's table
+    [Documentation]    INFUND-6977
+    [Tags]
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.rejected
+
+Lead partner can see that the spend profile has been rejected
+    [Documentation]    INFUND-6977
+    [Tags]
+    Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    [Teardown]    the user goes back to the previous page
+
+Lead partner no longer has the 'submitted' view of the spend profiles
+    [Documentation]    INFUND-6977
+    When the user clicks the button/link    link=Spend profile
+    Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
+    And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
+    And the user should see the element    jQuery=.button:contains("Review and submit total project profile")
+
+Lead partner can return edit rights to other project partners
+    [Documentation]    INFUND-6977
+    When the user returns edit rights for the organisation    ${Zooveo_Name}
+    And the user returns edit rights for the organisation    ${Meembee_name}
+
+
+Lead partner can edit own spend profile and mark as complete
+    [Documentation]    INFUND-6977
+    When the user clicks the button/link    link=${Katz_name}
+    And the user should see the text in the page    Your spend profile is marked as complete
+    And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
+    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    And the user clicks the button/link    link=${Katz_name}
+    And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+
+Industrial partner receives edit rights and can submit their spend profile
+    [Documentation]    INFUND-6977
+    Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=Spend profile
+    And the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    Then the user should see the text in the page    Your spend profile has been sent to the lead partner
+    When the user goes back to the previous page
+    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
+
+Academic partner receives edit rights and can submit their spend profile
+    [Documentation]    INFUND-6977
+    Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
+    When the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
+    And the user goes back to the previous page
+    And the user clicks the button/link    link=Spend profile
+    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    Then the user should see the text in the page    Your spend profile has been sent to the lead partner
+    When the user goes back to the previous page
+    And the user clicks the button/link    link=Project setup status
+    And the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+
+
+Lead partner can submit the combined spend profile
+    [Documentation]    INFUND-6977
+    [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    Given the user navigates to the page     ${external_spendprofile_summary}
+    When the user clicks the button/link     jQuery=.button:contains("Review and submit total project profile")
+    Then the user clicks the button/link     jQuery=.button:contains("Submit project spend profile")
+    And the user should see the element      jQuery=.button:contains("Cancel")
+    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+
 
 Project Finance is able to Approve Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
@@ -583,6 +671,7 @@ Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
+
 
 *** Keywords ***
 the user uploads the file
@@ -727,3 +816,10 @@ the user fills in and approves project costs
     the user selects the checkbox    costs-reviewed
     the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+
+
+the user returns edit rights for the organisation
+    [Arguments]    ${org_name}
+    the user clicks the button/link    link=${org_name}
+    the user clicks the button/link    jQuery=.button:contains("Allow edits")
+    the user should see the text in the page    In progress
