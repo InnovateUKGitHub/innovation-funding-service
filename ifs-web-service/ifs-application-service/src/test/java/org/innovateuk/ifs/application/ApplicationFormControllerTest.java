@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
@@ -12,16 +13,15 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -36,6 +36,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -333,6 +335,46 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
                 .andReturn();
+    }
+
+    @Test
+    public void testNotRequestingFunding() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        QuestionResource financeQuestion = newQuestionResource().build();
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(financeQuestion));
+        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.NOT_REQUESTING_FUNDING, "1")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
+
+        ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
+        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
+        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
+    }
+
+    @Test
+    public void testRequestingFunding() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        QuestionResource financeQuestion = newQuestionResource().build();
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(financeQuestion));
+        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.REQUESTING_FUNDING, "1")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
+
+        ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
+        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
+        verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
     }
 
     @Test
