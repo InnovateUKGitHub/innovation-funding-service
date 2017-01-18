@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
-import org.innovateuk.ifs.application.transactional.OverheadFileService;
+import org.innovateuk.ifs.finance.transactional.OverheadFileService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
