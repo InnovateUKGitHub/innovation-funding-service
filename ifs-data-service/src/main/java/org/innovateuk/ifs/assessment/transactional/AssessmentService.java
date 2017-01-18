@@ -18,7 +18,7 @@ public interface AssessmentService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<AssessmentResource> findById(long id);
 
-    @PostAuthorize("hasPermission(returnObject, 'ASSIGN')")
+    @PostAuthorize("hasPermission(returnObject, 'READ_ASSIGNMENT')")
     ServiceResult<AssessmentResource> findAssignableById(long id);
 
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
