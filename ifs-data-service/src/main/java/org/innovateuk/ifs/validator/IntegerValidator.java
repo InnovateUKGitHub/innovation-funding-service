@@ -33,7 +33,7 @@ public class IntegerValidator extends BaseValidator {
             if (value.compareTo(valueOf(MAX_VALUE)) > 0){
                 rejectValue(errors, "value", "validation.standard.integer.max.value.format");
             }
-            if (value.compareTo(valueOf(MIN_VALUE)) > 0){
+            if (value.compareTo(valueOf(MIN_VALUE)) < 0){
                 rejectValue(errors, "value", "validation.standard.integer.min.value.format");
             }
 
