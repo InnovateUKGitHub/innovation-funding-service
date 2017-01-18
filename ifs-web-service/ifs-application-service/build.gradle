@@ -6,7 +6,6 @@ bootRun {
     addResources = false
 }
 
-
 configurations {
     providedRuntime
 }

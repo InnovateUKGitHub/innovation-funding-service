@@ -13,7 +13,4 @@ dependencies {
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
-bootRepackage {
-    mainClass = 'org.innovateuk.ifs.Application'
-    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
+bootRepackage.enabled=false
