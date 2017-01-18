@@ -17,6 +17,7 @@ import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
+import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.function.Supplier;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Service for handling the overhead calculation file upload & linking it to the correct over
  */
+@Service
 public class OverheadFileServiceImpl extends BaseTransactionalService implements OverheadFileService {
 
     private static String fileMetaFieldType = "file_entry";
@@ -63,6 +65,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
                         fileService.getFileByFileEntryId(fileEntry.getId()).andOnSuccessReturn(fileContentsResult ->
                                 new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), fileContentsResult))));
     }
+
     public ServiceResult<FileEntryResource> getFileEntryDetails(long overheadId) {
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
                 find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
@@ -92,7 +95,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<FileEntryResource> updateFile(FinanceRowMetaValue financeRowMetaValue, BasicFileAndContents fileAndContents) {
         FileEntryResource fileEntryResource = fileAndContents.getFileEntry();
-        fileEntryResource.setId(financeRowMetaValue.getId());
+        fileEntryResource.setId(Long.valueOf(financeRowMetaValue.getValue()));
 
         return fileService.updateFile(fileEntryResource, fileAndContents.getContentsSupplier()).
                 andOnSuccess(updatedFileEntry -> serviceSuccess(fileEntryMapper.mapToResource(updatedFileEntry.getValue())));
@@ -119,10 +122,10 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<FinanceRowMetaValue> findMetaRowValue(FinanceRow overheadFinanceRow, FinanceRowMetaField metaField) {
-        return find(financeRowMetaValueRepository.financeRowIdAndFinanceRowMetaField(overheadFinanceRow.getId(), metaField.getId()), notFoundError(FinanceRow.class, overheadFinanceRow.getId()));
+        return find(financeRowMetaValueRepository.financeRowIdAndFinanceRowMetaFieldId(overheadFinanceRow.getId(), metaField.getId()), notFoundError(FinanceRow.class, overheadFinanceRow.getId()));
     }
 
     private ServiceResult<FinanceRowMetaField> findMetaRowField() {
-        return find(financeRowMetaFieldRepository.findByType(fileMetaFieldType), notFoundError(FinanceRow.class, fileMetaFieldType));
+        return find(financeRowMetaFieldRepository.findByTitle(fileMetaFieldType), notFoundError(FinanceRow.class, fileMetaFieldType));
     }
 }

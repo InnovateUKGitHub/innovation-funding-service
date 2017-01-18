@@ -11,6 +11,8 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private boolean fundingSectionLocked;
     private Long applicationDetailsQuestionId;
     private Long yourOrganisationSectionId;
+    private String uploadedOverheadFileName;
+    private Long uploadedOverheadFileId;
 
 
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
@@ -46,5 +48,21 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     public void setYourOrganisationSectionId(Long yourOrganisationSectionId) {
         this.yourOrganisationSectionId = yourOrganisationSectionId;
+    }
+
+    public String getUploadedOverheadFileName() {
+        return uploadedOverheadFileName;
+    }
+
+    public void setUploadedOverheadFileName(String uploadedOverheadFileName) {
+        this.uploadedOverheadFileName = uploadedOverheadFileName;
+    }
+
+    public Long getUploadedOverheadFileId() {
+        return uploadedOverheadFileId;
+    }
+
+    public void setUploadedOverheadFileId(Long uploadedOverheadFileId) {
+        this.uploadedOverheadFileId = uploadedOverheadFileId;
     }
 }

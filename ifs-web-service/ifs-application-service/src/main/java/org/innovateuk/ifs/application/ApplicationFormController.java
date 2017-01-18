@@ -173,6 +173,9 @@ public class ApplicationFormController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Autowired
+    private OverheadFileSaver overheadFileSaver;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -392,6 +395,8 @@ public class ApplicationFormController {
         return String.format("finance/finance :: %s_row", costType.getType());
     }
 
+
+
     @RequestMapping(value = "/remove_cost/{costId}")
     public @ResponseBody String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
         financeRowService.delete(costId);
@@ -450,6 +455,8 @@ public class ApplicationFormController {
             applicationService.save(application);
         }
 
+        errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
+
         if(!isMarkSectionAsIncompleteRequest(params)) {
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
             errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId()));
@@ -457,7 +464,6 @@ public class ApplicationFormController {
 
         if(isMarkQuestionRequest(params)) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors, bindingResult));
-
         } else if(isMarkSectionRequest(params)){
             errors.addAll(handleMarkSectionRequest(application, sectionId, request, processRole, errors, validFinanceTerms));
         }
@@ -480,7 +486,6 @@ public class ApplicationFormController {
     private void logSaveApplicationDetails(Map<String, String[]> params) {
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
     }
-
 
     private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar, BindingResult bindingResult) {
         ValidationMessages messages = new ValidationMessages();

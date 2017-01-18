@@ -13,6 +13,6 @@ import java.util.List;
 public interface FinanceRowMetaValueRepository extends PagingAndSortingRepository<FinanceRowMetaValue, Long> {
     @Override
     List<FinanceRowMetaValue> findAll();
-    FinanceRowMetaValue financeRowIdAndFinanceRowMetaField(Long financeRowId, Long financeRowMetaFieldId);
+    FinanceRowMetaValue financeRowIdAndFinanceRowMetaFieldId(Long financeRowId, Long financeRowMetaFieldId);
     void deleteByFinanceRowId(Long financeRowId);
 }

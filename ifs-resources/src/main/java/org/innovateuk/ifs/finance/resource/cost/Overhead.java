@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -16,6 +18,8 @@ public class Overhead implements FinanceRowItem {
     private Long id;
     private OverheadRateType rateType;
     private Boolean useTotalOption;
+
+    private FileEntryResource calculationFile;
 
     @Min.List({
         @Min(value = 0, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
@@ -91,6 +95,14 @@ public class Overhead implements FinanceRowItem {
 
     public void setUseTotalOption(Boolean useTotalOption) {
         this.useTotalOption = useTotalOption;
+    }
+
+    public FileEntryResource getCalculationFile() {
+        return calculationFile;
+    }
+
+    public void setCalculationFile(FileEntryResource calculationFile) {
+        this.calculationFile = calculationFile;
     }
 }
 

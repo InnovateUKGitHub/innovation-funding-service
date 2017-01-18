@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.finance.handler.item;
 
+import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
@@ -19,6 +21,9 @@ import java.util.Optional;
  */
 public class OverheadsHandler extends FinanceRowHandler {
     public static final String COST_KEY = "overhead";
+
+    @Autowired
+    private FileEntryService fileEntryService;
 
     @Override
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
@@ -68,9 +73,21 @@ public class OverheadsHandler extends FinanceRowHandler {
         }
         else {
             overhead.setUseTotalOption(true);
+            addOptionalCalculationFile(cost, overhead);
         }
 
         return overhead;
+    }
+
+    private void addOptionalCalculationFile(ApplicationFinanceRow cost, Overhead overhead) {
+        Optional<FinanceRowMetaValue> overheadFileMetaValue = cost.getFinanceRowMetadata().stream().
+                filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD)).
+                findFirst();
+
+        if(overheadFileMetaValue.isPresent()) {
+            fileEntryService.findOne(Long.valueOf(overheadFileMetaValue.get().getValue())).
+                    andOnSuccessReturnVoid(fileEntry -> overhead.setCalculationFile(fileEntry));
+        }
     }
 
     @Override

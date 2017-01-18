@@ -14,4 +14,5 @@ public interface FinanceRowMetaFieldRepository extends PagingAndSortingRepositor
 	@Override
     List<FinanceRowMetaField> findAll();
 	FinanceRowMetaField findByType(String type);
+	FinanceRowMetaField findByTitle(String title);
 }

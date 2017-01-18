@@ -413,11 +413,22 @@
                         <legend class="visuallyhidden">Upload your completed spreadsheet</legend>
                         <div class="upload-section extra-margin">
                             <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
-                            <input type="hidden" name="fileoverheadid" value="${overheadCosts?.id}">
-                            <input type="file" name="overheadfile" id="overheadfile" class="inputfile"/>
-                            <label for="overheadfile" class="button-secondary extra-margin">+ Upload</label>
-                            <input type="submit" name="overheadfilesubmit" id="overheadfilesubmit" value=""/>
-                            <label for="overheadfilesubmit" class="button-secondary extra-margin">Submit</label>
+
+                            <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
+                            <div th:if="${!#strings.isEmpty(overheadCosts?.calculationFile)}">
+                                <div>
+                                    <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.name}">The-uploaded-file-example.pdf</a>
+                                </div>
+                                <div th:unless="${readonly}" class="alignright">
+                                    <button class="button-secondary no-margin-right" type="submit" th:name="overheadfiledelete">Remove</button>
+                                </div>
+                            </div>
+                            <div th:unless="${!#strings.isEmpty(overheadCosts?.getCalculationFile())}">
+                                <p class="uploaded-file">No file currently uploaded</p>
+                                <input type="file" name="overheadfile" id="overheadfile" class="inputfile"/>
+                                <label for="overheadfile" class="button-secondary extra-margin">+ Upload</label>
+                                <input class="button-secondary no-margin-right" type="submit" name="overheadfilesubmit" id="overheadfilesubmit" value="Submit"/>
+                            </div>
                         </div>
                     </fieldset>
                     <div class="form-group alignright inline">
