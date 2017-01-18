@@ -978,7 +978,7 @@ public class ApplicationFormController {
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
             ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);

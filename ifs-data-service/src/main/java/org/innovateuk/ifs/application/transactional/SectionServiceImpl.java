@@ -65,9 +65,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Autowired
     private ValidationUtil validationUtil;
 
-    @Autowired
-    private ApplicationFinanceService applicationFinanceService;
-
     @Override
     public ServiceResult<SectionResource> getById(final Long sectionId) {
         return getSection(sectionId).andOnSuccessReturn(sectionMapper::mapToResource);
@@ -133,9 +130,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
                 markSectionAsComplete(section, application, markedAsCompleteById);
-				
-				applicationFinanceService.getApplicationFinanceSaver(section.getType())
-                        .ifPresent(applicationFinanceSaver -> applicationFinanceSaver.handleMarkAsComplete(application, section, markedAsCompleteById));
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
             }
