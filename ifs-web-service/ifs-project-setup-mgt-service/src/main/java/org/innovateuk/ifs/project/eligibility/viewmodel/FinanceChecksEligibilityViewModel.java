@@ -105,6 +105,12 @@ public class FinanceChecksEligibilityViewModel {
         this.projectId = projectId;
     }
 
+    public boolean isShowApprovalMessage() {
+        return isApproved();
+    }
+
+    public String getApproverName() { return getApproverFirstName().concat(getApproverLastName()); }
+
     public boolean isEligibilityApproved() {
         return eligibilityApproved;
     }

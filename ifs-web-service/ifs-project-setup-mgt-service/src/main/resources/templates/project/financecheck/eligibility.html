@@ -13,13 +13,23 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" />
 
-    <div class="page-title">
+<!--    <div class="page-title">
         <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">
             <th:block th:text="${model.organisationName}" />
             <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
         </h1>
     </div>
+
+    <h2 class="heading-medium"><th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}"/> : <th:block th:text="${model.financeCheckSummaryResource.projectName}"/></h2>-->
+
+    <hr/>
+
+    <th:block th:if="${model.isShowApprovalMessage()}">
+        <div class="success-alert">
+            <p>The partner's finance eligibility has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+        </div>
+    </th:block>
 
     <h2 class="heading-medium">Finances Overview</h2>
     <div class="table-overflow">
