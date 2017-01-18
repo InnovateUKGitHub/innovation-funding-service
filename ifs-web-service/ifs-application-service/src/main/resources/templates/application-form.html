@@ -53,15 +53,17 @@
                 </th:block>
 
                 <div th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}" th:remove="tag">
-                    <th:block th:if="${financeView != null}">
-                        <div class="question" th:each="formInput, status : ${model.questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
-                             th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
+                    <th:block th:if="${financeView != null}" th:with="formInputsForQuestion=(${model.questionFormInputs?.get(question?.id)})">
+                        <div class="question" th:each="formInput, status : ${formInputsForQuestion}" th:id="'form-input-'+${formInput.getId()}"
+                             th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),
+                                      questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
                              <th:block th:if="${model.isSection}">
                                 <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
                                                 markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
                                                 subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection})">
-
+                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
+                                                previousFormInput=(${status.index &gt; 0 ? formInputsForQuestion.get(status.index - 1) : null}),
+                                                nextFormInput=(${status.index &lt; status.size - 1? formInputsForQuestion.get(status.index + 1) : null})">
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
                                     <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}"></div>
                                     <th:block th:if="${model.isFinanceOverview}">

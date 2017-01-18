@@ -55,6 +55,16 @@
         </div>
     </div>
 
+    <!-- =========================== m: financial row =========================== -->
+    <div th:fragment="financial_overview_row"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <div th:if="${previousFormInput == null or previousFormInput.type.nameLower != 'financial_overview_row'}">
+            This is the first element
+        </div>
+        <div th:if="${nextFormInput == null or nextFormInput.type.nameLower != 'financial_overview_row'}">
+            This is the last element
+        </div>
+    </div>
+
     <!-- =========================== Form: Staff Turnover =========================== -->
     <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
