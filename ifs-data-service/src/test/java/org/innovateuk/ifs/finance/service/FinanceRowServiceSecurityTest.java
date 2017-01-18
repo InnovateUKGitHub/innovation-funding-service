@@ -420,6 +420,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 		}
 
         @Override
+        public ServiceResult<FinanceRowItem> addProjectCostWithoutPersisting(Long projectFinanceId, Long questionId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
             return serviceSuccess(newApplicationFinanceResource().build());
         }
