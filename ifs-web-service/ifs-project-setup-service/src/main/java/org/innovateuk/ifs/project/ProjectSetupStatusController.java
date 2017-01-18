@@ -62,9 +62,7 @@ public class ProjectSetupStatusController {
         ProjectSetupStatusViewModel projectSetupStatusViewModel = getProjectSetupStatusViewModel(projectId, loggedInUser);
         model.addAttribute("model", projectSetupStatusViewModel);
         model.addAttribute("url", dashboardUrl);
-        return projectSetupStatusViewModel.isProjectComplete()
-                ? PROJECT_SETUP_COMPLETE_PAGE
-                : PROJECT_SETUP_PAGE;
+        return PROJECT_SETUP_PAGE;
     }
 
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {

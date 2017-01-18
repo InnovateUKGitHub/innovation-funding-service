@@ -524,7 +524,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(get("/project/{id}", project.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-complete-status"))
+                .andExpect(view().name("project/setup-status"))
                 .andReturn();
 
         ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
