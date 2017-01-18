@@ -69,18 +69,18 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withInnovationArea(newInnovationArea()
+                        .withInnovationAreas(asList(newInnovationArea()
                                         .withId(1L)
                                         .withName("Emerging Tech and Industries")
-                                        .build(),
-                                newInnovationArea()
+                                        .build()),
+                                asList(newInnovationArea()
                                         .withId(2L)
                                         .withName("Robotics and AS")
-                                        .build(),
-                                newInnovationArea()
+                                        .build()),
+                                asList(newInnovationArea()
                                         .withId(3L)
                                         .withName("Electronics, Sensors and photonics")
-                                        .build())
+                                        .build()))
                         .withProfile(newProfile()
                                         .withBusinessType(BUSINESS)
                                         .withSkillsAreas("Solar Power, Genetics, Recycling")
