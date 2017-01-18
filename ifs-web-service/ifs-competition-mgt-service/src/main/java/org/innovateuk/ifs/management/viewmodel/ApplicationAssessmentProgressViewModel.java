@@ -17,7 +17,12 @@ public class ApplicationAssessmentProgressViewModel {
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
 
-    public ApplicationAssessmentProgressViewModel(Long applicationId, String applicationName, Long competitionId, String competitionName, List<String> partnerOrganisations, List<ApplicationAssessmentProgressAssignedRowViewModel> assigned) {
+    public ApplicationAssessmentProgressViewModel(Long applicationId,
+                                                  String applicationName,
+                                                  Long competitionId,
+                                                  String competitionName,
+                                                  List<String> partnerOrganisations,
+                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;

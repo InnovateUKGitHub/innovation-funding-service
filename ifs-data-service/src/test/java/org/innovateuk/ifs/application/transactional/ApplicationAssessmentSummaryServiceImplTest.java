@@ -133,7 +133,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                                 .build(1))
                 .withAvailable(true, false, false)
                 .withMostRecentAssessmentState(null, PENDING, OPEN)
-                .withTotalApplicationsCount(totalApplicationCountsForParticipants.get(1L), totalApplicationCountsForParticipants.get(2L), totalApplicationCountsForParticipants.get(3L))
+                .withTotalApplicationsCount(totalApplicationCountsForParticipants.get(1L),
+                        totalApplicationCountsForParticipants.get(2L),
+                        totalApplicationCountsForParticipants.get(3L))
                 .withAssignedCount(assignedCountsForParticipants.get(1L), assignedCountsForParticipants.get(2L), assignedCountsForParticipants.get(3L))
                 .withSubmittedCount(submittedCountsForParticipants.get(1L), submittedCountsForParticipants.get(2L), submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
@@ -144,22 +146,29 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         EnumSet<AssessmentStates> assessmentStatesThatAreSubmitted = of(SUBMITTED);
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
-        when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class))).then(invocation -> {
-            InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
+        when(competitionParticipantRepositoryMock
+                .getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
+        when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class)))
+                .then(invocation -> {InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
             return newInnovationAreaResource()
                     .withId(argument.getId())
                     .withName(argument.getName())
                     .build();
         });
-        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(isA(Long.class), eq(application.getId()))).then(invocation ->
-                ofNullable(assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class))));
-        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(isA(Long.class), eq(getBackingStates(assessmentStatesThatAreUnassigned)))).then(invocation ->
-                totalApplicationCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(isA(Long.class), eq(competition.getId()), eq(getBackingStates(assessmentStatesThatAreAssigned)))).then(invocation ->
-                assignedCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(isA(Long.class), eq(competition.getId()), eq(getBackingStates(assessmentStatesThatAreSubmitted)))).then(invocation ->
-                submittedCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
+        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(isA(Long.class), eq(application.getId())))
+                .then(invocation -> ofNullable(assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class))));
+
+        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(
+                isA(Long.class), eq(getBackingStates(assessmentStatesThatAreUnassigned))))
+                .then(invocation -> totalApplicationCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
+
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(
+                isA(Long.class), eq(competition.getId()), eq(getBackingStates(assessmentStatesThatAreAssigned))))
+                .then(invocation -> assignedCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
+
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(
+                isA(Long.class), eq(competition.getId()), eq(getBackingStates(assessmentStatesThatAreSubmitted))))
+                .then(invocation -> submittedCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
 
         List<ApplicationAssessorResource> found = service.getAssessors(application.getId()).getSuccessObjectOrThrowException();
 
