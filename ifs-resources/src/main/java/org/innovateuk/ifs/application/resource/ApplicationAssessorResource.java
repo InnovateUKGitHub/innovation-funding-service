@@ -34,7 +34,19 @@ public class ApplicationAssessorResource {
     public ApplicationAssessorResource() {
     }
 
-    public ApplicationAssessorResource(Long userId, String firstName, String lastName, BusinessType businessType, List<InnovationAreaResource> innovationAreas, String skillAreas, String rejectReason, String rejectComment, boolean available, AssessmentStates mostRecentAssessmentState, long totalApplicationsCount, long assignedCount, long submittedCount) {
+    public ApplicationAssessorResource(Long userId,
+                                       String firstName,
+                                       String lastName,
+                                       BusinessType businessType,
+                                       List<InnovationAreaResource> innovationAreas,
+                                       String skillAreas,
+                                       String rejectReason,
+                                       String rejectComment,
+                                       boolean available,
+                                       AssessmentStates mostRecentAssessmentState,
+                                       long totalApplicationsCount,
+                                       long assignedCount,
+                                       long submittedCount) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

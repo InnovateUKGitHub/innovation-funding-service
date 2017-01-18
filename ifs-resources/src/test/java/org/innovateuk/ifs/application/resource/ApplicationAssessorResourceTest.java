@@ -15,22 +15,26 @@ public class ApplicationAssessorResourceTest {
 
     @Test
     public void isAssigned() throws Exception {
-        assertTrueOnlyForMostRecentAssessmentStates(of(AssessmentStates.CREATED, PENDING, ACCEPTED, OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT, SUBMITTED), ApplicationAssessorResource::isAssigned);
+        assertTrueOnlyForMostRecentAssessmentStates(of(CREATED, PENDING, ACCEPTED, OPEN,
+                DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT, SUBMITTED), ApplicationAssessorResource::isAssigned);
     }
 
     @Test
     public void isAccepted() throws Exception {
-        assertTrueOnlyForMostRecentAssessmentStates(of(ACCEPTED, OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT, SUBMITTED), ApplicationAssessorResource::isAccepted);
+        assertTrueOnlyForMostRecentAssessmentStates(of(ACCEPTED, OPEN, DECIDE_IF_READY_TO_SUBMIT,
+                READY_TO_SUBMIT, SUBMITTED), ApplicationAssessorResource::isAccepted);
     }
 
     @Test
     public void isNotified() throws Exception {
-        assertTrueOnlyForMostRecentAssessmentStates(of(PENDING, REJECTED, ACCEPTED, OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT, SUBMITTED, WITHDRAWN), ApplicationAssessorResource::isNotified);
+        assertTrueOnlyForMostRecentAssessmentStates(of(PENDING, REJECTED, ACCEPTED, OPEN,
+                DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT, SUBMITTED, WITHDRAWN), ApplicationAssessorResource::isNotified);
     }
 
     @Test
     public void isStarted() throws Exception {
-        assertTrueOnlyForMostRecentAssessmentStates(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT, SUBMITTED), ApplicationAssessorResource::isStarted);
+        assertTrueOnlyForMostRecentAssessmentStates(of(OPEN, DECIDE_IF_READY_TO_SUBMIT,
+                READY_TO_SUBMIT, SUBMITTED), ApplicationAssessorResource::isStarted);
     }
 
     @Test
@@ -48,7 +52,8 @@ public class ApplicationAssessorResourceTest {
         assertTrueOnlyForMostRecentAssessmentStates(of(AssessmentStates.WITHDRAWN), ApplicationAssessorResource::isWithdrawn);
     }
 
-    private void assertTrueOnlyForMostRecentAssessmentStates(EnumSet<AssessmentStates> statesExpectedTrue, Function<ApplicationAssessorResource, Boolean> testable) {
+    private void assertTrueOnlyForMostRecentAssessmentStates(EnumSet<AssessmentStates>
+                                                                     statesExpectedTrue, Function<ApplicationAssessorResource, Boolean> testable) {
         ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
         statesExpectedTrue.forEach(state -> {
             applicationAssessorResource.setMostRecentAssessmentState(state);
