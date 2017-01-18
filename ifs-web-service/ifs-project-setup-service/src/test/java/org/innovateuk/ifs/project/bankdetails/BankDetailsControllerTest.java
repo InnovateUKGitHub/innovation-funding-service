@@ -3,8 +3,10 @@ package org.innovateuk.ifs.project.bankdetails;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.BankDetailsController;
@@ -13,6 +15,7 @@ import org.innovateuk.ifs.project.form.BankDetailsForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -71,6 +74,37 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 .andExpect(model().attribute(FORM_ATTR_NAME, form))
                 .andExpect(view().name("project/bank-details"));
     }
+
+    @Test
+    public void testReadOnlyViewBankDetails() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
+                .withAddressType(newAddressTypeResource().withName(OrganisationAddressType.BANK_DETAILS.name()).build())
+                .build();
+
+        BankDetailsResource bankDetailsResource = newBankDetailsResource().withOrganiationAddress(organisationAddressResource).build();
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(RestResult.restSuccess(bankDetailsResource, HttpStatus.OK));
+        when(organisationAddressRestService.findOne(bankDetailsResource.getOrganisationAddress().getId())).thenReturn(RestResult.restSuccess(organisationAddressResource, HttpStatus.OK));
+
+        BankDetailsForm form = new BankDetailsForm();
+
+        mockMvc.perform(get("/project/{id}/bank-details/readonly", projectResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("project", projectResource))
+                .andExpect(model().attribute("applicationId", projectResource.getApplication()))
+                .andExpect(model().attribute("currentUser", loggedInUser))
+                .andExpect(model().attribute("organisation", organisationResource))
+                .andExpect(model().attribute("readOnlyView", true))
+                .andExpect(model().attribute(FORM_ATTR_NAME, form))
+                .andExpect(view().name("project/bank-details"));
+    }
+
 
     @Test
     public void testsubmitBankDetailsWithAddressToBeSameAsRegistered() throws Exception {

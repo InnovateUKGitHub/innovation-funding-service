@@ -132,6 +132,60 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void testProjectDetailsReadOnlyView() throws Exception {
+        Long projectId = 20L;
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(1);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(false));
+
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/detail"))
+                .andReturn();
+
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        Boolean readOnlyView = (Boolean) result.getModelAndView().getModel().get("readOnlyView");
+
+        assertEquals(applicationResource, model.getApp());
+        assertEquals(competitionResource, model.getCompetition());
+        assertEquals(project, model.getProject());
+        assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
+        assertEquals(null, model.getProjectManager());
+        assertTrue(model.isProjectDetailsSubmitted());
+        assertFalse(model.isSubmissionAllowed());
+        assertTrue(model.isUserLeadPartner());
+        assertFalse(model.isSubmitProjectDetailsAllowed());
+        assertFalse(model.isAnySectionIncomplete());
+
+        assertTrue(readOnlyView);
+    }
+
+    @Test
     public void testProjectDetailsProjectManager() throws Exception {
     	Long projectId = 20L;
 

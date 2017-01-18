@@ -522,7 +522,14 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        MvcResult result = mockMvc.perform(get("/project/{id}", project.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/setup-complete-status"))
+                .andReturn();
+
+        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
+
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -530,6 +537,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.TICK));
+
+        assertTrue(viewModel.isProjectComplete());
     }
 
 

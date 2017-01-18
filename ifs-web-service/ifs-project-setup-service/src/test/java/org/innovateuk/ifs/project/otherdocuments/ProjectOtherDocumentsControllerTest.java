@@ -90,6 +90,57 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
+    public void testViewOtherDocumentsPageReadOnly() throws Exception {
+
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource()
+                .withDocumentsSubmittedDate(LocalDateTime.now())
+                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+                .withId(projectId)
+                .build();
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents/readonly")).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        Boolean readOnlyView = (Boolean) result.getModelAndView().getModel().get("readOnlyView");
+
+        // test the view model
+        assertEquals(project.getId(), model.getProjectId());
+        assertEquals(project.getName(), model.getProjectName());
+        assertNull(model.getCollaborationAgreementFileDetails());
+        assertNull(model.getExploitationPlanFileDetails());
+        assertEquals(emptyList(), model.getRejectionReasons());
+        assertEquals(simpleMap(partnerOrganisations, OrganisationResource::getName),
+                model.getPartnerOrganisationNames());
+
+        // test flags that help to drive the page
+        assertTrue(model.isReadOnly());
+        assertFalse(model.isEditable());
+        assertTrue(model.isLeadPartner());
+        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertTrue(model.isShowApprovedMessage());
+        assertFalse(model.isShowDocumentsBeingReviewedMessage());
+        assertFalse(model.isShowRejectionMessages());
+        assertFalse(model.isSubmitAllowed());
+        assertFalse(model.isShowSubmitDocumentsButton());
+        assertFalse(model.isShowDisabledSubmitDocumentsButton());
+
+        assertTrue(readOnlyView);
+
+    }
+
+    @Test
     public void testViewOtherDocumentsPageAsPartner() throws Exception {
 
         long projectId = 123L;

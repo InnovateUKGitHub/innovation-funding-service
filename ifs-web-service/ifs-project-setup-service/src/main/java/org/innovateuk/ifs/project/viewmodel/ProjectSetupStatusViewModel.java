@@ -58,7 +58,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.competitionName = competition.getName();
         this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
-        this.hasCompanyHouse = organisation.getCompanyHouseNumber() != null &&!organisation.getCompanyHouseNumber().isEmpty();
+        this.hasCompanyHouse = organisation.getCompanyHouseNumber() != null && !organisation.getCompanyHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.organisationId = organisation.getId();
@@ -175,11 +175,11 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public boolean isProjectComplete() {
         return
-                projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
-                        && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
-                        && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
-                        && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.name())
-                        && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.name());
+                projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                        && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                        && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                        && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                        && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
     }
 
     public Long getCompetitionId() {
