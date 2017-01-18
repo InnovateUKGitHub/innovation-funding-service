@@ -91,7 +91,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                         .with(idBasedValues("Value "))
                         .build();
 
-        when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource().withApplication(applicationId).build());
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource().withApplication(applicationId).build());
         when(competitionService.getById(competitionId)).thenReturn(newCompetitionResource().build());
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
         when(formInputResponseService.getByFormInputIdAndApplication(formInput, applicationId)).thenReturn(restSuccess(asList(applicantResponse)));

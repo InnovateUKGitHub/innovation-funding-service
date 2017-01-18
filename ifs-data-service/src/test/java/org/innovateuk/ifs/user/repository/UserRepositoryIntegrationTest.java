@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.BuilderAmendFunctions.*;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -30,6 +33,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected void setRepository(UserRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -133,5 +139,17 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
 
         assertFalse(user.isPresent());
+    }
+
+    @Test
+    public void saveWithInnovationArea() {
+        InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
+        User user = newUser().with(id(null)).withUid("my-uid").withInnovationAreas(asList(innovationArea)).build();
+        User savedUser = repository.save(user);
+        flushAndClearSession();
+
+        User retrievedUser = repository.findOne(savedUser.getId());
+
+        assertTrue(retrievedUser.getInnovationAreas().contains(innovationArea));
     }
 }

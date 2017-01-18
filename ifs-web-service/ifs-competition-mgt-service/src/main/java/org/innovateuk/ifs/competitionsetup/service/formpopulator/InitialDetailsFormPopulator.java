@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
@@ -57,7 +56,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 	}
 
 	private String getFormattedInnovationAreaNames(Set<Long> ids) {
-		List<CategoryResource> allAreas = categoryService.getCategoryByType(CategoryType.INNOVATION_AREA);
+		List<InnovationAreaResource> allAreas = categoryService.getInnovationAreas();
 		return categoryFormatter.format(ids, allAreas);
 	}
 }

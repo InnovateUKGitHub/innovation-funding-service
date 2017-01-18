@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.category.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +15,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -32,35 +32,40 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         loginCompAdmin();
     }
 
-
     @Test
-    public void getCategoriesByTypeArea() {
-        RestResult<List<CategoryResource>> categoriesResult = controller.findByType(INNOVATION_AREA.getName());
+    public void findInnovationAreas() {
+        RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreas();
         assertTrue(categoriesResult.isSuccess());
-        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(28));
-        assertThat(categories, everyItem(hasProperty("type", equalTo(INNOVATION_AREA))));
-        assertThat(categories, everyItem(hasProperty("children", hasSize(0))));
+        assertThat(categories, everyItem(hasProperty("parent", notNullValue())));
     }
 
     @Test
-    public void getCategoriesByTypeSector() {
-        RestResult<List<CategoryResource>> categoriesResult = controller.findByType(INNOVATION_SECTOR.getName());
+    public void findInnovationSectors() {
+        RestResult<List<InnovationSectorResource>> categoriesResult = controller.findInnovationSectors();
         assertTrue(categoriesResult.isSuccess());
-        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationSectorResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(4));
-        assertThat(categories, everyItem(hasProperty("type", equalTo(INNOVATION_SECTOR))));
-        assertThat(categories, everyItem(hasProperty("children", everyItem(hasProperty("type", equalTo(INNOVATION_AREA))))));
-        assertThat(categories, everyItem(hasProperty("children", everyItem(hasProperty("children", hasSize(0))))));
+        assertThat(categories, everyItem(hasProperty("children", notNullValue())));
     }
 
     @Test
-    public void getCategoriesByParent() {
-        RestResult<List<CategoryResource>> categoriesResult = controller.findByParent(1L);
+    public void findResearchCategories() {
+        RestResult<List<ResearchCategoryResource>> categoriesResult = controller.findResearchCategories();
         assertTrue(categoriesResult.isSuccess());
-        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+        List<ResearchCategoryResource> categories = categoriesResult.getSuccessObject();
+
+        assertThat(categories, hasSize(3));
+    }
+
+    @Test
+    public void findInnovationAreasBySector() {
+        RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreasBySector(1L);
+        assertTrue(categoriesResult.isSuccess());
+        List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(6));
         assertThat(categories, everyItem(hasProperty("parent", equalTo(1L))));

@@ -53,7 +53,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
 
     @Override
-    public <R> RestResult<R> andOnSuccess(Supplier<FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+    public <R> RestResult<R> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, RestFailure>> successHandler) {
         return (RestResult<R>) super.andOnSuccess(successHandler);
     }
 

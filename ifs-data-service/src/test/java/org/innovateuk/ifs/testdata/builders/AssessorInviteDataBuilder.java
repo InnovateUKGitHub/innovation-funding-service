@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
@@ -27,7 +27,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
         return with(data -> doAs(systemRegistrar(), () -> {
 
             final Competition competition = retrieveCompetitionByName(competitionName);
-            final Category innovationArea =  retrieveInnovationAreaByName(innovationAreaName);
+            final InnovationArea innovationArea = retrieveInnovationAreaByName(innovationAreaName);
 
             final CompetitionInvite invite = newCompetitionInvite().
                     withCompetition(competition).
@@ -73,7 +73,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
         return null;
     }
 
-    private Category retrieveInnovationAreaByName(String name) {
-        return !isBlank(name) ? categoryRepository.findByNameAndType(name, INNOVATION_AREA) : null;
+    private InnovationArea retrieveInnovationAreaByName(String name) {
+        return !isBlank(name) ? innovationAreaRepository.findByName(name) : null;
     }
 }

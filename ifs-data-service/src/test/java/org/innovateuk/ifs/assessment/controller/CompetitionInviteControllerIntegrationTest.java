@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.controller;
 
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.domain.Category;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -24,11 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -58,7 +58,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private InnovationAreaRepository innovationAreaRepository;
 
     private Competition competition;
 
@@ -71,7 +71,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void getCreatedInvite() {
-        Category category = newCategory().withName("category").build();
+        InnovationArea category = newInnovationArea().withName("category").build();
         long createdId = competitionInviteRepository.save(newCompetitionInvite()
                 .with(id(null))
                 .withName("tom poly")
@@ -521,7 +521,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void inviteNewUser() throws Exception {
-        Category innovationArea = categoryRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
         NewUserStagedInviteResource newUserStagedInvite = newNewUserStagedInviteResource()
                 .withName("new user name")
@@ -543,7 +543,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void inviteNewUsers() throws Exception {
-        Category innovationArea = categoryRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
 
@@ -558,7 +558,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         long competitionId = 10000L;
         assertNull(competitionRepository.findOne(competitionId));
 
-        Category innovationArea = categoryRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
         loginCompAdmin();
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competitionId, innovationArea.getId());
@@ -571,7 +571,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Test
     public void inviteNewUsers_innovationAreaNotFound() throws Exception {
         long categoryId = 10000L;
-        assertNull(categoryRepository.findOne(categoryId));
+        assertNull(innovationAreaRepository.findOne(categoryId));
 
         loginCompAdmin();
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), categoryId);
@@ -587,7 +587,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void inviteNewUsers_userExists() throws Exception {
-        Category innovationArea = categoryRepository.findOne(5L);
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
         competitionInviteRepository.save(new CompetitionInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
 

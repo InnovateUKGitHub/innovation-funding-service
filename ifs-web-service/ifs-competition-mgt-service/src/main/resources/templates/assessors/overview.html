@@ -172,6 +172,9 @@
                         <td th:text="${assessor.status.displayName}">Invite accepted</td>
                         <td th:text="${assessor.details}">Invite declined as person is too busy</td>
                     </tr>
+                    <tr th:if="${#lists.isEmpty(model.assessors)}">
+                        <td colspan="6">There are no assessors invited to this competition.</td>
+                    </tr>
                 </tbody>
             </table>
 
