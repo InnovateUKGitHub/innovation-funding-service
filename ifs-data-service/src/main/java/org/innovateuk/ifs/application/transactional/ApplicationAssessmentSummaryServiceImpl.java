@@ -63,14 +63,13 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
 
     @Override
     public ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId) {
-        return getApplication(applicationId).andOnSuccessReturn((Application application) -> {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
             Competition competition = application.getCompetition();
-            ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = new ApplicationAssessmentSummaryResource(application.getId(),
+            return new ApplicationAssessmentSummaryResource(application.getId(),
                     application.getName(),
                     competition.getId(),
                     competition.getName(),
                     getPartnerOrganisationNames(application));
-            return applicationAssessmentSummaryResource;
         });
     }
 
