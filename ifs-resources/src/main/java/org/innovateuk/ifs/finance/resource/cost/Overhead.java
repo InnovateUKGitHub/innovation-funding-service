@@ -8,6 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * {@code Overhead} implements {@link FinanceRowItem}
@@ -23,7 +24,7 @@ public class Overhead implements FinanceRowItem {
     private OverheadRateType rateType;
     private Boolean useTotalOption;
 
-    private FileEntryResource calculationFile;
+    private Optional<FileEntryResource> calculationFile;
 
     @Min.List({
         @Min(value = 0, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
@@ -101,12 +102,14 @@ public class Overhead implements FinanceRowItem {
         this.useTotalOption = useTotalOption;
     }
 
-    public FileEntryResource getCalculationFile() {
+    public Optional<FileEntryResource> getCalculationFile() {
         return calculationFile;
     }
 
     public void setCalculationFile(FileEntryResource calculationFile) {
-        this.calculationFile = calculationFile;
+        if(calculationFile!=null) {
+            this.calculationFile = Optional.of(calculationFile);
+        }
     }
 }
 

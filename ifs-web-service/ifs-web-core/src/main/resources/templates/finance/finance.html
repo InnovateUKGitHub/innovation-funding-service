@@ -417,7 +417,7 @@
                             <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
                             <div th:if="${!#strings.isEmpty(overheadCosts?.calculationFile)}">
                                 <div>
-                                    <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.name}">The-uploaded-file-example.pdf</a>
+                                    <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.get()?.name}">The-uploaded-file-example.pdf</a>
                                 </div>
                                 <div th:unless="${readonly}" class="alignright">
                                     <button class="button-secondary no-margin-right" type="submit" th:name="overheadfiledelete">Remove</button>
@@ -425,9 +425,9 @@
                             </div>
                             <div th:unless="${!#strings.isEmpty(overheadCosts?.getCalculationFile())}">
                                 <p class="uploaded-file">No file currently uploaded</p>
-                                <input type="file" name="overheadfile" id="overheadfile" class="inputfile"/>
+                                <input name="overheadfile" type="file" id="overheadfile" class="inputfile"/>
                                 <label for="overheadfile" class="button-secondary extra-margin">+ Upload</label>
-                                <input class="button-secondary no-margin-right" type="submit" name="overheadfilesubmit" id="overheadfilesubmit" value="Submit"/>
+                                <button name="overheadfilesubmit" class="button-secondary" type="submit" data-for-file-upload="overheadfile">Save</button>
                             </div>
                         </div>
                     </fieldset>

@@ -471,9 +471,12 @@ public class ApplicationFormController {
 
         errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
 
-        if(!isMarkSectionAsIncompleteRequest(params)) {
+        if(!isMarkSectionAsIncompleteRequest(params) ) {
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId()));
+            ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId());
+            if(!overheadFileSaver.isOverheadFileDeleteRequest(request)) {
+                errors.addAll(saveErrors);
+            }
         }
 
         if(isMarkQuestionRequest(params)) {

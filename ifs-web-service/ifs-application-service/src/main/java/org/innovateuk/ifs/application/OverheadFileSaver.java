@@ -83,7 +83,7 @@ public class OverheadFileSaver {
         return request instanceof StandardMultipartHttpServletRequest && request.getParameter("overheadfilesubmit") != null;
     }
 
-    private boolean isOverheadFileDeleteRequest(HttpServletRequest request) {
+    public boolean isOverheadFileDeleteRequest(HttpServletRequest request) {
         return request instanceof StandardMultipartHttpServletRequest && request.getParameter("overheadfiledelete") != null;
     }
 }
