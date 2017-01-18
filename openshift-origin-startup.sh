@@ -1,6 +1,26 @@
 #!/bin/bash
 # A Munro: Startup openshift origin and load in some pods
 
+s=0
+for i in \
+orangebus/ifs-ldap \
+orangebus/ifs-shib-sp \
+orangebus/ifs-shib-idp \
+worth/project-setup-service \
+worth/project-setup-management-service \
+worth/competition-management-service \
+worth/assessment-service \
+worth/application-service \
+worth/data-service
+do
+   [ -z "$(docker images -q $i)" ] && {
+      echo Image $i not loaded in docker. Make sure its loaded.
+      s=1
+   }
+done
+
+[ $s -eq 1 ] && exit 1
+
 oc cluster up && {
   oc new-project test-project
   oc adm policy add-scc-to-user anyuid -n test-project -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
@@ -40,7 +60,7 @@ oc cluster up && {
   }
 
   echo Waiting some time for the IFS app to initialise...
-  sleep 120
+  sleep 60
 
   echo "Refreshing ldap with users in ifs db"
   docker exec -it $ldap /usr/local/bin/ldap-delete-all-users.sh
