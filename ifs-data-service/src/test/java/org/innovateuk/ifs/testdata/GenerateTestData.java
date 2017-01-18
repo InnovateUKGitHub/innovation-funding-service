@@ -82,7 +82,7 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-//@Ignore("Manual web test data generation")
+@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
 public class GenerateTestData extends BaseIntegrationTest {
