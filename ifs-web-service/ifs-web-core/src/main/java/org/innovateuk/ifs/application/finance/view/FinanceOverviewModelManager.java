@@ -95,7 +95,8 @@ public class FinanceOverviewModelManager {
                 .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
         questionsWithoutNonEmptyFormInput.forEach(questionId -> {
             financeSectionChildrenQuestionFormInputs.remove(questionId);
-            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key).removeIf(questionResource -> questionResource.getId().equals(questionId)));
+            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
+                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
         });
 
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
