@@ -3,8 +3,7 @@ IFS.projectSetup.clearInputs = (function () {
   var s // private alias to settings
   return {
     settings: {
-      clearInputsEl: 'data-clear-inputs',
-      html5Mode: false
+      clearInputsEl: 'data-clear-inputs'
     },
     init: function () {
       s = this.settings
