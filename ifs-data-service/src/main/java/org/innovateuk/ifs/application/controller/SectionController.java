@@ -50,6 +50,13 @@ public class SectionController {
         return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
+    @RequestMapping(value = "/markAsNotRequired/{sectionId}/{applicationId}/{markedAsCompleteById}", method = POST)
+    public RestResult<Void> markAsNotRequired(@PathVariable("sectionId") final Long sectionId,
+                                                               @PathVariable("applicationId") final Long applicationId,
+                                                               @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
+        return sectionService.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById).toGetResponse();
+    }
+
     @RequestMapping(value = "/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}", method = POST)
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                            @PathVariable("applicationId") final Long applicationId,

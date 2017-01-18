@@ -161,8 +161,32 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
-                                        parameterWithName("sectionId").description("id of section to mark as complete"),
-                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
+                                        parameterWithName("sectionId").description("id of section to mark as incomplete"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as incomplete on"),
+                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void markSectionAsNotRequired() throws Exception {
+        Section section = newSection().withId(7L).withCompetitionAndPriority(newCompetition().build(), 1).build();
+        Long processRoleId = 1L;
+        Long applicationId = 1L;
+
+        when(sectionService.markSectionAsNotRequired(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsNotRequired/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk())
+                .andDo(
+                        document(
+                                "section/mark-as-not-required",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("sectionId").description("id of section to mark as not required"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as not required"),
                                         parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
                                 )
                         )
