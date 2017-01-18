@@ -22,7 +22,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
- * TODO DW - document this class
+ * Configuration for Thymeleaf 3 to replace the auto-configuration that was available for Thymeleaf 2 in
+ * {@link org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration}
  */
 @Configuration
 @ConditionalOnClass({SpringTemplateEngine.class})

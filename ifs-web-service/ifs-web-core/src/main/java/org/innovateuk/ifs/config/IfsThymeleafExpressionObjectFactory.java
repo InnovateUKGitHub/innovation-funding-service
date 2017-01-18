@@ -9,7 +9,7 @@ import java.util.Set;
 import static java.util.Collections.singleton;
 
 /**
- * TODO DW - document this class
+ * Factory for creating the expression objects that are made available in Thymeleaf expressions e.g. #ifsUtil
  */
 public class IfsThymeleafExpressionObjectFactory implements IExpressionObjectFactory {
 
