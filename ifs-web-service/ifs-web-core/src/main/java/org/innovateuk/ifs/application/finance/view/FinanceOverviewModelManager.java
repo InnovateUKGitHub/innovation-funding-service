@@ -91,7 +91,8 @@ public class FinanceOverviewModelManager {
 
 
         //Remove all questions with empty form inputs.
-        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream().filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
+        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
+                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
         questionsWithoutNonEmptyFormInput.forEach(questionId -> {
             financeSectionChildrenQuestionFormInputs.remove(questionId);
             financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key).removeIf(questionResource -> questionResource.getId().equals(questionId)));
