@@ -223,7 +223,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     }
 
     private void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
-        viewModel.setFundingSections(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES));
+        viewModel.setFundingSection(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).stream().findFirst().orElse(null));
     }
 
     //TODO - INFUND-7482 - remove usages of Model model

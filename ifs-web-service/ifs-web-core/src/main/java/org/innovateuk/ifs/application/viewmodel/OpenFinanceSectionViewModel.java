@@ -4,9 +4,6 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
  * ViewModel for Finance open sections
  */
@@ -17,7 +14,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private Long yourOrganisationSectionId;
     private boolean notRequestingFunding;
 
-	private List<SectionResource> fundingSections;
+	private SectionResource fundingSection;
 
 
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
@@ -84,19 +81,15 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     }
 
-    public void setFundingSections(List<SectionResource> fundingSections) {
-        this.fundingSections = fundingSections;
+    public void setFundingSection(SectionResource fundingSection) {
+        this.fundingSection = fundingSection;
     }
 
     public Boolean getOrganisationSizeAlert() {
-        if(null == fundingSections) {
+        if(null == fundingSection) {
             return Boolean.FALSE;
         }
 
-        Optional<SectionResource> fundingFinance = fundingSections.stream()
-                .filter(sectionResource -> sectionsMarkedAsComplete.contains(sectionResource.getId()))
-                .findAny();
-
-        return fundingFinance.isPresent();
+        return sectionsMarkedAsComplete.contains(fundingSection.getId());
     }
 }

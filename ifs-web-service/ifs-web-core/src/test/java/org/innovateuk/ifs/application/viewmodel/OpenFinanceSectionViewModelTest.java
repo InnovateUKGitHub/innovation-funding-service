@@ -202,7 +202,7 @@ public class OpenFinanceSectionViewModelTest {
 
         Long fundingSectionId = 2738L;
         List<SectionResource> fundingSections = newSectionResource().withId(fundingSectionId).withType(SectionType.FUNDING_FINANCES).build(1);
-        viewModel.setFundingSections(fundingSections);
+        viewModel.setFundingSection(fundingSections.stream().findFirst().orElse(null));
 
         assertEquals(Boolean.FALSE, viewModel.getOrganisationSizeAlert());
 

@@ -188,7 +188,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             case "organisationSize":
                 OrganisationSize newValue = OrganisationSize.valueOf(value);
                 handleOrganisationSizeChange(applicationFinance, competitionId, userId, applicationFinance.getOrganisationSize(), newValue);
-                applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
+                applicationFinance.setOrganisationSize(newValue);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
