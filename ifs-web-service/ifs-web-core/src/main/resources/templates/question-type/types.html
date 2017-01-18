@@ -138,7 +138,8 @@
                                 <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='researchCategoryId')" th:remove="tag" />
                             </legend>
 
-                            <label th:class="${'block-label selection-button-radio '  + (researchCategoryId != null ? ' selected focused' : '')}" th:each="cat : ${researchCategories}" th:for="${'financePosition-cat-' + cat.id}">
+                            <label th:class="${'block-label selection-button-radio '  + (cat.id == researchCategoryId ? ' selected focused' : '')}" th:each="cat : ${researchCategories}" th:for="${'financePosition-cat-' + cat.id}">
+
                                 <input th:value="${cat.id}"
                                        type="radio"
                                        th:field="*{__researchCategoryId__}"
@@ -146,7 +147,7 @@
                                        th:checked="${cat.id == researchCategoryId}"
                                        th:disabled="${readonly and (cat.id != researchCategoryId)}"
                                        required="required"
-                                       data-required-errormessage="Please select at least one research category" />
+                                       th:attr="data-required-errormessage=#{validation.application.research.category.type.required}"/>
                                 <span th:text="${cat.name}" th:remove="tag" />
                             </label>
                         </div>

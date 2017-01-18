@@ -101,7 +101,6 @@ public class POJOTest {
             Token.class,
             InviteOrganisation.class,
             Section.class,
-            ApplicationFinance.class,
             ProjectFinanceResource.class,
             Competition.class,
             CreateUserResource.class,

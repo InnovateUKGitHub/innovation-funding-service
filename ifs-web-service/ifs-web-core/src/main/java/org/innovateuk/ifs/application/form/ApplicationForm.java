@@ -16,7 +16,7 @@ public class ApplicationForm extends Form {
     @Valid
     private ApplicationResource application;
 
-    @NotNull
+    @NotNull(message="{validation.application.research.category.type.required}")
     private Long researchCategoryId;
 
     private MultipartFile assessorFeedback;

@@ -12,6 +12,7 @@ import java.util.Set;
  * ViewModel for the application part of the question
  */
 public class QuestionApplicationViewModel {
+
     private Set<Long> markedAsComplete;
     private Boolean allReadOnly;
     private OrganisationResource leadOrganisation;
@@ -19,6 +20,7 @@ public class QuestionApplicationViewModel {
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
     private List<ResearchCategoryResource> researchCategories;
+    private Long researchCategoryId;
 
     public QuestionApplicationViewModel(Set<Long> markedAsComplete, Boolean allReadOnly, ApplicationResource currentApplication,
                                         CompetitionResource competitionResource, OrganisationResource userOrganisation) {
@@ -71,5 +73,13 @@ public class QuestionApplicationViewModel {
 
     public void setResearchCategories(List<ResearchCategoryResource> researchCategories) {
         this.researchCategories = researchCategories;
+    }
+
+    public Long getResearchCategoryId() {
+        return researchCategoryId;
+    }
+
+    public void setResearchCategoryId(Long researchCategoryId) {
+        this.researchCategoryId = researchCategoryId;
     }
 }

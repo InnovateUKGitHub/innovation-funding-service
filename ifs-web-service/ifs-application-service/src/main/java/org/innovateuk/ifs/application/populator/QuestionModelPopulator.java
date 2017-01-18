@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.populator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
@@ -76,6 +78,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private FinanceService financeService;
 
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
@@ -143,7 +148,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         addApplicationFormDetailInputs(application, form);
 
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, application.getId());
         questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
+        questionApplicationViewModel.setResearchCategoryId(applicationFinanceResource.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
 
         return questionApplicationViewModel;
     }

@@ -66,6 +66,7 @@ public class ApplicationFinance extends Finance {
     }
 
     public void addResearchCategory(ResearchCategory researchCategory) {
+        researchCategories.clear();
         researchCategories.add(new ApplicationFinanceResearchCategoryLink(this, researchCategory));
     }
 }
