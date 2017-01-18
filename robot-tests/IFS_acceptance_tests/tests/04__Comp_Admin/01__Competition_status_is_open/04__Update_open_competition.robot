@@ -63,7 +63,6 @@ Application details are editable before Open date
     Then the user should see the element    jQuery=.button:contains("Edit this question")
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user is able to change the value of the fields
-    [Teardown]    the user clicks the button/link    link=Application
 
 Assessed Questions are editable before open date
     [Documentation]    INFUND-6936
@@ -77,7 +76,7 @@ Assessed Questions are editable before open date
     And the user sees the correct assessed question information
     And the user clicks the button/link    link = Return to application questions
 
-Application details are not editable when competition is open
+Application details are not editable after Open date
     [Documentation]    INFUND-6937
     ...    Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
     [Tags]
@@ -86,20 +85,17 @@ Application details are not editable when competition is open
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail
     Then the user should not see the element    jQuery=.button:contains("Edit this question")
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
-    And the user clicks the button/link    jQuery=.button:contains("Save and close")
-    Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
-    [Teardown]    the user clicks the button/link    link=Application
+    Then the user should be redirected to the correct page without error checking  ${CA_Live}
 
 Assessed Questions are not editable after open date
     [Documentation]    INFUND-6936
-    [Tags]    Pending
-    #TODO INFUND-7566
+    [Tags]
+    [Setup]  the user navigates to the page  ${server}/management/competition/setup/1/section/application/landing-page
     Given the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jquery=h1:contains("Business opportunity")
     And the user should not see the element    jquery=.button:contains("Edit")
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/question/690/edit
-    And the user clicks the button/link    jQuery=.button:contains("Save and close")
-    Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable."
+    Then the user should be redirected to the correct page without error checking  ${CA_Live}
 
 Project summary is editable before Open date
     [Documentation]    INFUND-6938
