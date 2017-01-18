@@ -149,13 +149,14 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         when(competitionParticipantRepositoryMock
                 .getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
         when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class)))
-                .then(invocation -> {InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
-            return newInnovationAreaResource()
-                    .withId(argument.getId())
-                    .withName(argument.getName())
-                    .build();
-        });
-        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(isA(Long.class), eq(application.getId())))
+                .then(invocation -> {
+                    InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
+                    return newInnovationAreaResource()
+                            .withId(argument.getId())
+                            .withName(argument.getName())
+                            .build();
+                });
+        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(isA(Long.class), eq(application.getId())))
                 .then(invocation -> ofNullable(assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class))));
 
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(
@@ -179,10 +180,12 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED);
         competitionParticipants.forEach(competitionParticipant -> {
             Long userId = competitionParticipant.getUser().getId();
-            inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(userId, application.getId());
+            inOrder.verify(assessmentRepositoryMock)
+                    .findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(userId, application.getId());
             competitionParticipant.getUser().getInnovationAreas().forEach(
                     innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
-            inOrder.verify(assessmentRepositoryMock).countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
+            inOrder.verify(assessmentRepositoryMock)
+                    .countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
             inOrder.verify(assessmentRepositoryMock)
                     .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreAssigned));
             inOrder.verify(assessmentRepositoryMock)

@@ -105,7 +105,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     private Optional<Assessment> getMostRecentAssessment(CompetitionParticipant competitionParticipant, Long applicationId) {
-        return assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(competitionParticipant.getUser().getId(), applicationId);
+        return assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(competitionParticipant.getUser().getId(), applicationId);
     }
 
     private long countAssignedApplications(Long userId) {
