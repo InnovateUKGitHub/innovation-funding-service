@@ -9,7 +9,6 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -31,7 +30,7 @@ public class InviteAssessorProfileModelPopulator {
                 assessorProfile.getEmail(),
                 assessorProfile.getPhoneNumber(),
                 assessorProfile.getAddress(),
-                Collections.emptyList(),
+                assessorProfile.getInnovationAreas(),
                 Optional.ofNullable(assessorProfile.getBusinessType()).map(BusinessType::getDisplayName).orElse(null),
                 assessorProfile.getSkillsAreas()
         );

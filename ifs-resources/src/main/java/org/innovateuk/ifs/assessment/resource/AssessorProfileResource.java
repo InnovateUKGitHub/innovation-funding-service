@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserProfileBaseResource;
@@ -15,16 +15,16 @@ import java.util.List;
  */
 public class AssessorProfileResource extends UserProfileBaseResource {
 
-    private List<CategoryResource> innovationAreas = new ArrayList<>();
+    private List<InnovationAreaResource> innovationAreas = new ArrayList<>();
     private BusinessType businessType;
     private String skillsAreas;
     private List<AffiliationResource> affiliations = new ArrayList<>();
 
-    public List<CategoryResource> getInnovationAreas() {
+    public List<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
     }
 
-    public void setInnovationAreas(List<CategoryResource> innovationAreas) {
+    public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
         this.innovationAreas = innovationAreas;
     }
 
