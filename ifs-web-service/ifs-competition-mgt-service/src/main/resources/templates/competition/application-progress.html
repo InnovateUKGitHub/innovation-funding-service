@@ -85,6 +85,9 @@
                                 <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor" th:unless="${assigned.submitted}">Remove</a>
                             </td>
                         </tr>
+                        <tr th:if="${#lists.isEmpty(model.assigned)}">
+                            <td colspan="10">There are no assessors assigned to this application.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
