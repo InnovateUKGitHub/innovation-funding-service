@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,9 @@ public class OpenFinanceSectionViewModelTest {
     private NavigationViewModel navigationViewModel;
     private SectionApplicationViewModel applicationViewModel;
     Set<Long> sectionsMarkedAsComplete;
+    private SectionResource yourFunding = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
+    private SectionResource yourOrganisation = newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build();
+    private SectionResource yourProjectCosts = newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build();
 
     @Before
     public void setup() {
@@ -105,5 +109,90 @@ public class OpenFinanceSectionViewModelTest {
     public void testGetIsSection() {
         assertEquals(Boolean.TRUE, viewModel.getIsSection());
     }
+
+    @Test
+    public void testShowSectionAsNotRequired() {
+        viewModel.setNotRequestingFunding(true);
+
+        assertFalse(viewModel.showSectionAsNotRequired(yourProjectCosts));
+        assertTrue(viewModel.showSectionAsNotRequired(yourOrganisation));
+        assertTrue(viewModel.showSectionAsNotRequired(yourFunding));
+
+        viewModel.setNotRequestingFunding(false);
+
+        assertFalse(viewModel.showSectionAsNotRequired(yourProjectCosts));
+        assertFalse(viewModel.showSectionAsNotRequired(yourOrganisation));
+        assertFalse(viewModel.showSectionAsNotRequired(yourFunding));
+    }
+
+    @Test
+    public void testShowSectionAsLockedFunding() {
+        viewModel.setFundingSectionLocked(true);
+        viewModel.setNotRequestingFunding(true);
+
+        assertFalse(viewModel.showSectionAsLockedFunding(yourProjectCosts));
+        assertFalse(viewModel.showSectionAsLockedFunding(yourOrganisation));
+        assertFalse(viewModel.showSectionAsLockedFunding(yourFunding));
+
+        viewModel.setNotRequestingFunding(false);
+
+        assertFalse(viewModel.showSectionAsLockedFunding(yourProjectCosts));
+        assertFalse(viewModel.showSectionAsLockedFunding(yourOrganisation));
+        assertTrue(viewModel.showSectionAsLockedFunding(yourFunding));
+
+        viewModel.setFundingSectionLocked(false);
+
+        assertFalse(viewModel.showSectionAsLockedFunding(yourProjectCosts));
+        assertFalse(viewModel.showSectionAsLockedFunding(yourOrganisation));
+        assertFalse(viewModel.showSectionAsLockedFunding(yourFunding));
+
+    }
+
+    @Test
+    public void testShowSectionAsLink() {
+        viewModel.setFundingSectionLocked(true);
+        viewModel.setNotRequestingFunding(true);
+
+        assertTrue(viewModel.showSectionAsLink(yourProjectCosts));
+        assertTrue(viewModel.showSectionAsLink(yourOrganisation));
+        assertTrue(viewModel.showSectionAsLink(yourFunding));
+
+        viewModel.setNotRequestingFunding(false);
+
+        assertTrue(viewModel.showSectionAsLink(yourProjectCosts));
+        assertTrue(viewModel.showSectionAsLink(yourOrganisation));
+        assertFalse(viewModel.showSectionAsLink(yourFunding));
+
+        viewModel.setFundingSectionLocked(false);
+
+        assertTrue(viewModel.showSectionAsLink(yourProjectCosts));
+        assertTrue(viewModel.showSectionAsLink(yourOrganisation));
+        assertTrue(viewModel.showSectionAsLink(yourFunding));
+
+    }
+
+    @Test
+    public void testShowSectionStatus() {
+        viewModel.setFundingSectionLocked(true);
+        viewModel.setNotRequestingFunding(true);
+
+        assertTrue(viewModel.showSectionStatus(yourProjectCosts));
+        assertTrue(viewModel.showSectionStatus(yourOrganisation));
+        assertTrue(viewModel.showSectionStatus(yourFunding));
+
+        viewModel.setNotRequestingFunding(false);
+
+        assertTrue(viewModel.showSectionStatus(yourProjectCosts));
+        assertTrue(viewModel.showSectionStatus(yourOrganisation));
+        assertFalse(viewModel.showSectionStatus(yourFunding));
+
+        viewModel.setFundingSectionLocked(false);
+
+        assertTrue(viewModel.showSectionStatus(yourProjectCosts));
+        assertTrue(viewModel.showSectionStatus(yourOrganisation));
+        assertTrue(viewModel.showSectionStatus(yourFunding));
+
+    }
+
 
 }
