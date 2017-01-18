@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financecheck;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -17,4 +18,6 @@ public interface FinanceCheckService {
     ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
 
     FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
+
+    FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 }

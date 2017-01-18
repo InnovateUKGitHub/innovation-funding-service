@@ -39,7 +39,7 @@ public class CategoryServiceImplTest extends BaseServiceUnitTest<CategoryService
                 .withParent(1L, 1L)
                 .build(2);
 
-        when(categoryRestService.getInnovatationAreasBySector(1L)).thenReturn(restSuccess(expected));
+        when(categoryRestService.getInnovationAreasBySector(1L)).thenReturn(restSuccess(expected));
 
         final List<InnovationAreaResource> actual = service.getInnovationAreasBySector(1L);
         assertEquals(expected, actual);

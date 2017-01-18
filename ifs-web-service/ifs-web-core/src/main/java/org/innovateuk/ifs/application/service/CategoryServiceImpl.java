@@ -34,6 +34,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<InnovationAreaResource> getInnovationAreasBySector(long sectorId) {
-        return categoryRestService.getInnovatationAreasBySector(sectorId).getSuccessObjectOrThrowException();
+        return categoryRestService.getInnovationAreasBySector(sectorId).getSuccessObjectOrThrowException();
     }
 }
