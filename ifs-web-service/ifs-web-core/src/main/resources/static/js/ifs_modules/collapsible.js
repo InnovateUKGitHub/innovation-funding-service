@@ -7,16 +7,17 @@ IFS.core.collapsible = (function () {
 
   return {
     settings: {
-      collapsibleEl: '.collapsible > h2, .collapsible > h3'
+      collapsibleEl: '.collapsible > h2, .collapsible > h3',
+      collapsibleTabs: '.tabs section > h2, .tabs section > h3'
     },
-    init: function () {
+    init: function (type) {
       s = this.settings
-      console.log('collapsible')
-        // if this has to be more dynamicly updated in the future we can add a custom event
-      jQuery(s.collapsibleEl).each(function () {
+      s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
+      // if this has to be more dynamicly updated in the future we can add a custom event
+      jQuery(s.collapsible).each(function () {
         IFS.core.collapsible.initCollapsibleHTML(this)
       })
-      jQuery('body').on('click', '.collapsible > h2 >  [aria-controls], .collapsible > h3 >  [aria-controls]', function () {
+      jQuery('body').on('click', s.collapsible, function () {
         IFS.core.collapsible.toggleCollapsible(this)
       })
     },
@@ -26,8 +27,15 @@ IFS.core.collapsible = (function () {
       var loadstate = IFS.core.collapsible.getLoadstateFromCookie(id)
         // wrap the content and make it focusable
       inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
-        // Add the button inside the <h2> so both the heading and button semanics are read
-      inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
+
+        // Add the button inside the <h2> so both the heading and button semantics are read
+      // inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
+      // Add a role of button to the h2
+      inst.attr({
+        'role': 'button',
+        'aria-expanded': loadstate,
+        'aria-controls': id
+      })
       index++
     },
     toggleCollapsible: function (el) {
@@ -78,8 +86,17 @@ IFS.core.collapsible = (function () {
       }
       Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
     },
-    destroy: function () {
-      console.log('collapsible destroy')
+    destroy: function (type) {
+      s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
+      jQuery('body').off('click', s.collapsible)
+      jQuery(s.collapsible).each(function () {
+        IFS.core.collapsible.destroyHTHL(this)
+      })
+    },
+    destroyHTHL: function (el) {
+      var inst = jQuery(el)
+      inst.next().children(':first').unwrap()
+      inst.removeAttr('role aria-expanded aria-controls')
     }
   }
 })()

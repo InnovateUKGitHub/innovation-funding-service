@@ -40,13 +40,13 @@ IFS.core.loadOrder = {
   },
   stateManaged: {
     mobile: function () {
-      IFS.core.collapsible.init()
+      IFS.core.collapsible.init('tabs')
     },
     desktop: function () {
       IFS.core.tabs.init()
     },
     mobileLeave: function () {
-      IFS.core.collapsible.destroy()
+      IFS.core.collapsible.destroy('tabs')
     },
     desktopLeave: function () {
       IFS.core.tabs.destroy()

@@ -6,65 +6,79 @@ IFS.core.tabs = (function () {
 
   return {
     settings: {
-      tabContainer: '.tab-interface'
+      tabContainer: '.tabs'
     },
     init: function () {
-      console.log('tabs init')
       settings = this.settings
       IFS.core.tabs.initTabHTML()
       // Change focus between tabs with arrow keys
-      $('body').on('keydown', '[role="tab"]', function (e) {
-        IFS.core.tabs.changeFocus(e, $(this))
+      jQuery('body').on('keydown', '[role="tab"]', function (e) {
+        if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
+          IFS.core.tabs.changeFocus(e, jQuery(this))
+        }
       })
       // Handle click on tab to show + focus tabpanel
-      $('body').on('click', '[role="tab"]', function (e) {
-        IFS.core.tabs.handleClick(e, $(this))
+      jQuery('body').on('click', '[role="tab"]', function (e) {
+        IFS.core.tabs.handleClick(e, jQuery(this))
       })
     },
-    initTabHTML: function() {
+    initTabHTML: function () {
       // The setup
-      $(settings.tabContainer +' > ul').attr('role','tablist').show()
-      $(settings.tabContainer +' [role="tablist"] li').attr('role','presentation')
-      $(settings.tabContainer +' section div').removeAttr('aria-hidden')
-      $('[role="tablist"] a').attr({
-        'role' : 'tab',
-        'tabindex' : '-1'
+      jQuery(settings.tabContainer + ' > ul').attr({
+        'role': 'tablist',
+        'aria-hidden': null
+      }).show()
+      jQuery(settings.tabContainer + ' [role="tablist"] li').attr('role', 'presentation')
+      jQuery(settings.tabContainer + ' section div').removeAttr('aria-hidden')
+
+      jQuery('[role="tablist"] a').attr({
+        'role': 'tab',
+        'tabindex': '-1'
       })
 
       // Make each aria-controls correspond id of targeted section (re href)
-      $('[role="tablist"] a').each(function() {
-        $(this).attr(
-          'aria-controls', $(this).attr('href').substring(1)
+      jQuery('[role="tablist"] a').each(function () {
+        jQuery(this).attr(
+          'aria-controls', jQuery(this).attr('href').substring(1)
         )
       })
 
-      // Make the first tab selected by default and allow it focus
-      $('[role="tablist"] li:first-child a').attr({
-        'aria-selected' : 'true',
-        'tabindex' : '0'
-      })
-
       // Make each section focusable and give it the tabpanel role
-      $(settings.tabContainer +' section').attr({
-        'role' : 'tabpanel'
+      jQuery(settings.tabContainer + ' section').attr({
+        'role': 'tabpanel'
       })
 
       // Make first child of each panel focusable programmatically
-      $(settings.tabContainer +' section > *:first-child').attr({
-        'tabindex' : '0'
+      jQuery(settings.tabContainer + ' section > *:first-child').attr({
+        'tabindex': '0'
       })
 
-      // Make all but the first section hidden (ARIA state and display CSS)
-      $('[role="tabpanel"]:not(:first-of-type)').attr({
-        'aria-hidden' : 'true'
+      jQuery(settings.tabContainer).each(function () {
+        // do we have a tab set in the query string?
+        var defaultIndex = 0
+        if (jQuery(this).attr('id')) {
+          var parameter = IFS.core.tabs.getParameterByName(jQuery(this).attr('id'))
+          if (parameter !== null && parameter !== '') {
+            defaultIndex = parseInt(parameter) - 1
+          }
+        }
+        // If we have a default index then set the right tab otherwise set it to 1
+        jQuery(this).find('li').eq(defaultIndex).find('a').attr({
+          'aria-selected': 'true',
+          'tabindex': '0'
+        })
+        // Make all but the first section hidden (ARIA state and display CSS)
+        jQuery(this).find('[role="tabpanel"]').not(':eq(' + defaultIndex + ')').attr({
+          'aria-hidden': 'true'
+        })
       })
     },
-    changeFocus: function(e, element) {
+    changeFocus: function (e, element) {
       // define current, previous and next (possible) tabs
-      var $original = $(element)
-      var tabsLength = $(element).parents('li').siblings().length ++
-      var $prev = $(element).parents('li').index('li') === 0 ? $(element).parents('li').siblings().eq(tabsLength - 1).children('[role="tab"]') : $(element).parents('li').prev().children('[role="tab"]')
-      var $next = $(element).parents('li').index('li') === tabsLength ? $(element).parents('li').siblings().eq(0).children('[role="tab"]') : $(element).parents('li').next().children('[role="tab"]')
+      var $original = jQuery(element)
+      var tabsLength = $original.parent().siblings().length ++
+      var $prev = $original.parent().index() === 0 ? $original.parent().siblings().eq(tabsLength - 1).children('[role="tab"]') : $original.parent().prev().children('[role="tab"]')
+      var $next = $original.parent().index() === tabsLength ? $original.parent().siblings().eq(0).children('[role="tab"]') : $original.parent().next().children('[role="tab"]')
       var $target
       // find the direction (prev or next)
       switch (e.keyCode) {
@@ -89,46 +103,106 @@ IFS.core.tabs = (function () {
 
       if ($target.length) {
         $original.attr({
-          'tabindex' : '-1',
-          'aria-selected' : null
+          'tabindex': '-1',
+          'aria-selected': null
         })
         $target.attr({
-          'tabindex' : '0',
-          'aria-selected' : true
+          'tabindex': '0',
+          'aria-selected': true
         }).focus()
       }
 
       // Hide panels
-      $(settings.tabContainer +' [role="tabpanel"]').attr('aria-hidden', 'true')
+      $original.parents(settings.tabContainer).find('[role="tabpanel"]').attr('aria-hidden', 'true')
 
       // Show panel which corresponds to target
-      $('#' + $(document.activeElement).attr('href').substring(1)).attr('aria-hidden', null)
+      $original.parents(settings.tabContainer).find('#' + jQuery(document.activeElement).attr('href').substring(1)).attr('aria-hidden', null)
+
+      // append id to query string
+      this.handleQueryString($target)
     },
-    handleClick: function(e, element) {
+    handleClick: function (e, element) {
       e.preventDefault()
 
-      var instance = $(element)
+      var instance = jQuery(element)
 
       // remove focusability [sic] and aria-selected
-      $('[role="tab"]').attr({
+      instance.parents('[role="tablist"]').find('[role="tab"]').attr({
         'tabindex': '-1',
-        'aria-selected' : null
+        'aria-selected': null
       })
 
       // replace above on clicked tab
       instance.attr({
-        'aria-selected' : true,
-        'tabindex' : '0'
+        'aria-selected': true,
+        'tabindex': '0'
       })
 
       // Hide panels
-      $(settings.tabContainer +' [role="tabpanel"]').attr('aria-hidden', 'true')
+      instance.parents(settings.tabContainer).find('[role="tabpanel"]').attr('aria-hidden', 'true')
 
       // show corresponding panel
-      $('#' + instance.attr('href').substring(1)).attr('aria-hidden', null)
+      instance.parents(settings.tabContainer).find('#' + instance.attr('href').substring(1)).attr('aria-hidden', null)
+
+      // append id to query string
+      this.handleQueryString(instance)
+    },
+    handleQueryString: function (instance) {
+      var index = instance.parent().index()
+      var uniqueID = instance.parents('div').attr('id')
+      var oldURL = document.location
+      var newURL = this.updateQueryStringParameter(oldURL.toString(), uniqueID, index + 1)
+      var title = document.getElementsByTagName('title')[0].innerHTML
+      window.history.replaceState({}, title, newURL)
+    },
+    updateQueryStringParameter: function (uri, key, value) {
+      var re = new RegExp('([?&])' + key + '=.*?(&|#|$)', 'i')
+      if (value === undefined) {
+        if (uri.match(re)) {
+          return uri.replace(re, '$1$2')
+        } else {
+          return uri
+        }
+      } else {
+        if (uri.match(re)) {
+          return uri.replace(re, '$1' + key + '=' + value + '$2')
+        } else {
+          var hash = ''
+          if (uri.indexOf('#') !== -1) {
+            hash = uri.replace(/.*#/, '#')
+            uri = uri.replace(/#.*/, '')
+          }
+          var separator = uri.indexOf('?') !== -1 ? '&' : '?'
+          return uri + separator + key + '=' + value + hash
+        }
+      }
+    },
+    getParameterByName: function (name, url) {
+      if (!url) {
+        url = window.location.href
+      }
+      name = name.replace(/[[\]]/g, '$&')
+      // name = name.replace(/[\[\]]/g, '\\$&')
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+      var results = regex.exec(url)
+      if (!results) return null
+      if (!results[2]) return ''
+      return decodeURIComponent(results[2].replace(/\+/g, ' '))
     },
     destroy: function () {
-      console.log('Tabs destroy')
+      // Unbind events
+      jQuery('body').off('keydown', '[role="tab"]')
+      jQuery('body').off('click', '[role="tab"]')
+
+      // Remove roles and attributes
+      jQuery('[role="tablist"] a').removeAttr('role tabindex aria-controls aria-selected').attr({
+        'aria-hidden': true
+      })
+      jQuery(settings.tabContainer + ' [role="tablist"] li').removeAttr('role')
+      jQuery(settings.tabContainer + ' > ul').removeAttr('role').hide()
+      jQuery(settings.tabContainer + ' section > *:first-child').removeAttr('tabindex')
+      jQuery(settings.tabContainer + ' section div').removeAttr('tabindex')
+      jQuery(settings.tabContainer + ' section').removeAttr('role aria-hidden')
     }
   }
 })()

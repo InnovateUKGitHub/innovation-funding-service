@@ -29,15 +29,6 @@ The collapsible element will show a normal header when there is no javascript, w
 		position: relative;
 		border-top: 1px solid $border-colour;
 		clear:both;
-  }
-  > h2:last-child,
-  > h3:last-child {
-		border-top: 1px solid $border-colour;
-  }
-
-	> h2 button,
-	> h3 button {
-		border:0;
 		cursor: pointer;
 		position: relative;
 		@extend %toggle-button;
@@ -49,12 +40,16 @@ The collapsible element will show a normal header when there is no javascript, w
 		&[aria-expanded="true"]{
 			margin-bottom:0;
 		}
-	}
+  }
+  > h2:last-child,
+  > h3:last-child {
+		border-top: 1px solid $border-colour;
+  }
 
-	> h2 button[aria-expanded],
-	> h3 button[aria-expanded]  {
+	> h2[aria-expanded],
+	> h3[aria-expanded]  {
 		display: block;
-		width: 100%;
+		//width: 100%;
 		&:after {
 			content: '\25bc\0020';
 			position:absolute; //absolute position for ie8
@@ -63,8 +58,8 @@ The collapsible element will show a normal header when there is no javascript, w
 			line-height: 1;
 		}
 	}
-	> h2 button[aria-expanded="true"],
-	> h3 button[aria-expanded="true"]{
+	> h2[aria-expanded="true"],
+	> h3[aria-expanded="true"]{
 		margin-bottom: 0;
 		&:after {
 			content: '\25b2\0020';
