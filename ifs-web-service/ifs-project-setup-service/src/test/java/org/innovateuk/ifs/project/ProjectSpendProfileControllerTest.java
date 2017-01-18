@@ -132,6 +132,36 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void viewSpendProfileConfirm() throws Exception {
+
+        Long organisationId = 1L;
+        Long projectId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .build();
+
+        SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+
+        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("project/spend-profile-confirm"));
+
+    }
+
+    @Test
     public void saveSpendProfileWhenErrorWhilstSaving() throws Exception {
 
         Long projectId = 1L;
