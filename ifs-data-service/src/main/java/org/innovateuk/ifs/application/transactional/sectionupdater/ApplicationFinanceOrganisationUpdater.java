@@ -42,19 +42,17 @@ public class ApplicationFinanceOrganisationUpdater implements ApplicationFinance
 
     }
 
-    private Set<Long> completedSections;
-
     @Override
     public void handleMarkAsComplete(Application currentApplication, Section currentSection, Long processRoleId) {
 
         Optional<ApplicationFinance> applicationFinance = getApplicationFinance(currentApplication.getApplicationFinances(), processRoleId);
 
-        getCompletedSections(applicationFinance);
+        Optional<Set<Long>> completedSections = getCompletedSections(applicationFinance);
 
         sectionService.getSectionsByCompetitionIdAndType(currentSection.getCompetition().getId(), SectionType.FUNDING_FINANCES)
         .andOnSuccess(sectionList -> {
             sectionList.stream()
-                .filter(fundingSection -> completedSections != null && completedSections.contains(fundingSection.getId()))
+                .filter(fundingSection -> completedSections.isPresent() && completedSections.get().contains(fundingSection.getId()))
                 .forEach(fundingSection -> {
                     resetFundingSectionToMarkedAsIncomplete(fundingSection.getId(), currentApplication.getId(), processRoleId);
                     resetFundingSectionQuestionInputs(fundingSection.getId(), applicationFinance);
@@ -63,14 +61,16 @@ public class ApplicationFinanceOrganisationUpdater implements ApplicationFinance
         });
     }
 
-    private void getCompletedSections(Optional<ApplicationFinance> applicationFinance) {
-        applicationFinance.ifPresent(applicationFinanceFound -> {
-                sectionService.getCompletedSections(applicationFinanceFound.getApplication().getId(), applicationFinanceFound.getOrganisation().getId())
-                        .andOnSuccess(successObject -> {
-                            completedSections = successObject;
-                            return serviceSuccess();
-                        });
-        });
+    private Optional<Set<Long>> getCompletedSections(Optional<ApplicationFinance> applicationFinance) {
+        if(applicationFinance.isPresent()) {
+            return Optional.ofNullable(
+                    sectionService
+                            .getCompletedSections(applicationFinance.get().getApplication().getId(),
+                                                    applicationFinance.get().getOrganisation().getId())
+                            .getSuccessObjectOrThrowException());
+        }
+
+        return Optional.empty();
     }
 
     private Optional<ApplicationFinance> getApplicationFinance(List<ApplicationFinance> applicationFinances, Long processRoleId) {
