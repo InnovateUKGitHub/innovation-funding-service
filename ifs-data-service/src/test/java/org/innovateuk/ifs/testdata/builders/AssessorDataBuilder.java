@@ -133,6 +133,10 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
             userRepository.save(user);
 
+            if (skillAreas.isEmpty() || businessType == null) {
+                return;
+            }
+
             doAs(data.getUser(), () -> {
                 ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
                 profileSkillsResource.setBusinessType(businessType);

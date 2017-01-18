@@ -1,5 +1,5 @@
 Email,First name,Last name,Status,Organisation name,Phone number,Disability,Ethnicity,Gender,Competition name,Hash,Invite Status,Rejection reason,Rejection comment,Skill areas,Business Type,Innovation Areas,Principal employer,Role,Professional affiliations,Appointments,Financial interests,Family affiliations,Family financial interests,Contract signed
-worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,No,Black British,Male,Home and industrial efficiency programme,,OPENED,,,,BUSINESS,Resource efficiency,,,,,,,,TRUE
+worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,No,Black British,Male,Home and industrial efficiency programme,,OPENED,,,,,Resource efficiency,,,,,,,,FALSE
 paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Yes,Asian/Asian British,Prefer not to say,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban Living
 Infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE
 felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,,,,Sustainable living models for the future,,OPENED,,,,ACADEMIC,"Early Stage Manufacturing
@@ -11,4 +11,4 @@ Precision Medicine",,,,,,,,TRUE
 laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,047682659263,No,White,Female,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore Renewable Energy,,,,,,,,FALSE
 sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,047682659263,No,Asian/Asian British,Female,Photonics for health,,OPENED,,,,ACADEMIC,"Advanced Materials
 Emerging Tech and Industries",,,,,,,,TRUE
-matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,047682659263,No,White,Male,Photonics for health,,OPENED,,,,BUSINESS,Digital Manufacturing,,,,,,,,TRUE
+matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,047682659263,No,White,Male,Photonics for health,,OPENED,,,,,Digital Manufacturing,,,,,,,,TRUE
