@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
@@ -44,6 +45,7 @@ import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEP
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -85,6 +87,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .withName("Technology inspired")
+                .withInnovationSectorName("Infrastructure systems")
+                .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
@@ -494,13 +498,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertEquals(expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
-        assertInnovationSectorAndArea(model);
+        assertInnovationSectorAndArea(expectedCompetition, model);
         assertStatistics(model);
     }
 
-    private void assertInnovationSectorAndArea(InviteAssessorsViewModel model) {
-        assertEquals("Health and life sciences", model.getInnovationSector());
-        assertEquals("Agriculture and food", model.getInnovationArea());
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
+        assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
+        assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
     private void assertStatistics(InviteAssessorsViewModel model) {

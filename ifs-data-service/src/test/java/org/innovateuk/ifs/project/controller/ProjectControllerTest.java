@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -500,5 +501,20 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andReturn();
+    }
+
+    @Test
+    public void getGrantOfferLetterWorkflowState() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
+
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(GOLState.APPROVED)))
+                .andReturn();
+
+        verify(projectServiceMock).getGrantOfferLetterWorkflowState(projectId);
     }
 }
