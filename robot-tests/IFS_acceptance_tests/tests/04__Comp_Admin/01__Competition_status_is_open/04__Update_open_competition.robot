@@ -59,6 +59,10 @@ Funding Information is editable before open date
     And the user should see the element    jquery=h1:contains("Funding information")
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And The user enters text to a text field    id=funders0.funder    Funders Edit test
+    And the user should see the element    id=0-funderBudget
+    And the user should see the element    id=pafNumber
+    And the user should see the element    id=budgetCode
+    And the user should see the element    id=activityCode
     And The user clicks the button/link    jQuery=.button:contains("Done")
     Then The user should see the element    jQuery=.button:contains("Edit")
     And The user should see the text in the page    Funders Edit test
