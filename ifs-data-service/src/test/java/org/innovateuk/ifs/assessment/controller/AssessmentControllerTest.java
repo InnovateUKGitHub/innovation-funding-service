@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.junit.Test;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,8 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AssessmentControllerTest extends BaseControllerMockMVCTest<AssessmentController> {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
     protected AssessmentController supplyControllerUnderTest() {
         return new AssessmentController();
@@ -56,7 +52,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         mockMvc.perform(get("/assessment/{id}", assessmentId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+                .andExpect(content().json(toJson(expected)));
 
         verify(assessmentServiceMock, only()).findById(assessmentId);
     }
@@ -88,7 +84,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+                .andExpect(content().json(toJson(expected)));
 
         verify(assessmentServiceMock, only()).findByUserAndCompetition(userId, competitionId);
     }
@@ -104,7 +100,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         mockMvc.perform(get("/assessment/{id}/score", assessmentId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
+                .andExpect(content().json(toJson(expected)));
 
         verify(assessmentServiceMock, only()).getTotalScore(assessmentId);
     }
@@ -124,7 +120,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).recommend(assessmentId, assessmentFundingDecision);
@@ -144,7 +140,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(fundingConfirmationError))));
 
@@ -164,7 +160,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).recommend(assessmentId, assessmentFundingDecision);
@@ -181,9 +177,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         Error feedbackError = fieldError("feedback", null, "validation.assessmentFundingDecision.feedback.required", "", "fundingConfirmation", "false", "feedback");
 
-        MvcResult resultActions = mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(feedbackError))))
                 .andReturn();
@@ -207,7 +203,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(asList(feedbackError, commentError)))));
 
@@ -230,7 +226,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(asList(feedbackError, commentError)))));
 
@@ -254,7 +250,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(toJson(assessmentFundingDecision)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(recommendationFailedError))))
                 .andReturn();
@@ -276,7 +272,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationRejection)))
+                .content(toJson(applicationRejection)))
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).rejectInvitation(assessmentId, applicationRejection);
@@ -294,7 +290,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationRejection)))
+                .content(toJson(applicationRejection)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectReasonError))));
 
@@ -315,7 +311,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationRejection)))
+                .content(toJson(applicationRejection)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
 
@@ -336,7 +332,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationRejection)))
+                .content(toJson(applicationRejection)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
 
@@ -359,7 +355,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationRejection)))
+                .content(toJson(applicationRejection)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectionFailedError))))
                 .andReturn();
@@ -415,7 +411,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/submitAssessments")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
+                .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).submitAssessments(assessmentSubmissions);
@@ -443,7 +439,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/submitAssessments")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
+                .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(error))));
 
@@ -465,7 +461,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         mockMvc.perform(put("/assessment/submitAssessments")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
+                .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(toJson(new RestErrorResponse(errorList))))
                 .andReturn();
