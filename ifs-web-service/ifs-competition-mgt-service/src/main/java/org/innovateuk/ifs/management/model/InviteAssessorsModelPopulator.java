@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
     public ViewModelType populateModel(CompetitionResource competition) {
         ViewModelType model = populateCompetitionDetails(createModel(), competition);
         populateStatistics(model);
-        populateCompetitionInnovationSectorAndArea(model);
+        populateCompetitionInnovationSectorAndArea(model, competition);
         return model;
     }
 
@@ -33,9 +34,9 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
         return model;
     }
 
-    private ViewModelType populateCompetitionInnovationSectorAndArea(ViewModelType model) {
-        model.setInnovationSector("Health and life sciences");
-        model.setInnovationArea("Agriculture and food");
+    private ViewModelType populateCompetitionInnovationSectorAndArea(ViewModelType model, CompetitionResource competition) {
+        model.setInnovationSector(competition.getInnovationSectorName());
+        model.setInnovationArea(StringUtils.join(competition.getInnovationAreaNames(),", "));
         return model;
     }
 }
