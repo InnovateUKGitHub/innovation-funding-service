@@ -164,6 +164,9 @@
                                 <button class="button button-secondary" name="remove" th:value="${assessor.email}" th:if="${assessor.added}">Remove<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
                             </td>
                         </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="5">There were no available assessors found.</td>
+                        </tr>
                     </tbody>
                 </table>
             </form>
