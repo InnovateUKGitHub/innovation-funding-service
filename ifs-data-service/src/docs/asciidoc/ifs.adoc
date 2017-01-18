@@ -113,6 +113,10 @@ include::application.adoc[]
 == Application Status
 include::application-status.adoc[]
 
+[[ApplicationAssessmentSummary]]
+== Application Assessment Summary
+include::application-assessment-summary.adoc[]
+
 [[applicationfundingdecision]]
 == Application Funding Decision
 include::application-funding-decision.adoc[]
@@ -154,6 +158,10 @@ include::competitionParticipant.adoc[]
 == Competition Setup Question
 include::competitionSetupQuestion.adoc[]
 
+[[competitionSetupFinance]]
+== Competition Setup Finance
+include::competitionSetupFinance.adoc[]
+
 [[assessment]]
 == Assessment
 include::assessment.adoc[]
@@ -187,3 +195,7 @@ include::bank-details.adoc[]
 [[processOutcome]]
 == ProcessOutcome
 include::processOutcome.adoc[]
+
+[[applicationCountSummary]]
+== ApplicationCountSummary
+include::applicationCountSummary.adoc[]

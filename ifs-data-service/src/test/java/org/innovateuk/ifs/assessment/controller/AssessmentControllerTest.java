@@ -1,17 +1,22 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.nCopies;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -21,11 +26,6 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.nCopies;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -59,6 +59,20 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessmentServiceMock, only()).findById(assessmentId);
+    }
+
+    @Test
+    public void findAssignableById() throws Exception {
+        AssessmentResource expected = newAssessmentResource().build();
+
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.findAssignableById(assessmentId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(expected)));
+        verify(assessmentServiceMock, only()).findAssignableById(assessmentId);
     }
 
     @Test
@@ -363,6 +377,30 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isOk());
 
         verify(assessmentServiceMock, only()).acceptInvitation(assessmentId);
+    }
+
+    @Test
+    public void notifyAssessor() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.notify(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/notify", assessmentId))
+                .andExpect(status().isOk());
+
+        verify(assessmentServiceMock, only()).notify(assessmentId);
+    }
+
+    @Test
+    public void withdrawAssessment() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.withdrawAssessment(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId))
+                .andExpect(status().isOk());
+
+        verify(assessmentServiceMock, only()).withdrawAssessment(assessmentId);
     }
 
     @Test

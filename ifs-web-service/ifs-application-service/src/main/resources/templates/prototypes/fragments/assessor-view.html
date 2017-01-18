@@ -19,10 +19,13 @@
             <a href="/prototypes/1178-assessor-profile-details">your details</a>
         </li>
         <li>
+            <a href="/prototypes/7120-assessor-profile-address">your address</a>
+        </li>
+        <li>
             <a href="/prototypes/675-change-password?assessor">change your password</a>
         </li>
         <li>
-          <a href="/info/terms-and-conditions">read terms and conditions</a>
+          <a href="/prototypes/7428-terms-and-conditions">read terms and conditions</a>
         </li>
         <!-- <li>
             <a href="/prototypes/1178-assessor-profile-skills">your skills and CV</a>
@@ -109,7 +112,9 @@
         </fieldset>
     </div>
 
-     <fieldset>
+    <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
+
+     <fieldset class="extra-margin-top">
         <legend class="visuallyhidden">Question feedback</legend>
         <div class="form-group">
             <div class="form-group">
@@ -118,7 +123,6 @@
                     <span class="form-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
                  </label>
 
-                 <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
 
                 <div class="textarea-wrapped word-count">
 
@@ -128,7 +132,7 @@
 
                         <span class="count-label">
                                 <span class="count-message">Words remaining:</span>
-                                <span class="count-down positive" aria-live="polite">349</span>
+                                <span class="count-down positive" aria-live="polite">100</span>
                         </span>
 
                     </div>
@@ -764,8 +768,8 @@
                     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
 
                         <button class="js-close close" aria-label="Close Popup">X</button>
-                        <h3 class="heading-medium no-margin">You are about to submit your assessments.</h3>
-                        <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
+                        <h3 class="heading-medium no-margin">Are you sure you want to submit these assessments?</h3>
+                        <p>Once you have submitted them you will no longer be able to edit or view the assessments.</p>
                         <div>
                             <input type="hidden" name="status" value="accept" />
                             <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes I want to submit the assessments</button>
@@ -786,7 +790,7 @@
                                     <p>Pending</p>
                                     <!--if assessment is pending acceptance-->
                                     <p class="application-listing_pending">
-                                        <a href="/prototypes/868-accept-reject-application">accept / reject assessment</a>
+                                        <a href="/prototypes/868-accept-reject-application">accept or reject assessment</a>
                                     </p>
                                     <!--otherwise shows the overall score -->
 
@@ -826,6 +830,27 @@
 
                         <!--</label>-->
                     <!--</li>-->
+                    <li th:if="${param.status != null and param.status[0] == 'accept'}">
+                        <div class="grid-row">
+                            <div class="column-assessment-details">
+                                <h3 class="heading-medium">
+                                    <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
+                                </h3>
+                                <div><p>Empire Ltd</p></div>
+                            </div>
+                            <div class="column-assessment-status navigation-right">
+
+                                <div class="application-status open empty">
+                                    <p>Accepted</p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <label>
+
+                        </label>
+                    </li>
+
                     <li>
                         <div class="grid-row">
                             <div class="column-assessment-details">
@@ -858,28 +883,6 @@
 
                         </label>
                     </li>
-
-                    <li th:if="${param.status != null and param.status[0] == 'accept'}">
-                        <div class="grid-row">
-                            <div class="column-assessment-details">
-                                <h3 class="heading-medium">
-                                    <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
-                                </h3>
-                                <div><p>Empire Ltd</p></div>
-                            </div>
-                            <div class="column-assessment-status navigation-right">
-
-                                <div class="application-status open empty">
-                                    <p>Accepted</p>
-                                </div>
-
-                            </div>
-                        </div>
-                        <label>
-
-                        </label>
-                    </li>
-
 
                     <li>
                         <div class="grid-row">
@@ -943,7 +946,7 @@
                     <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
                     <div class="alignright">
                         <input type="hidden" name="competitionId" value="1" />
-                        <a class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit">Submit assessments</a>
+                        <button class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit" disabled="disabled">Submit assessments</button>
                     </div>
                 </form>
             </ul>
@@ -1001,7 +1004,8 @@
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>
                 <input type="hidden" name="status" value="reject" />
-                <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
+                <button class="button button-warning" name="reject" value="rejected" type="submit">Reject</button>
+                <a th:href="${#httpServletRequest.requestURI}" class="button-link-style">Cancel</a>
             </form>
             <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
         </div>
@@ -1032,7 +1036,8 @@
                     <label for="rejection-observations" class="form-label">Use this space to provide more information</label>
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>
-                <button class="button button-warning large" name="reject" value="rejected" type="submit">Reject</button>
+                <button class="button button-warning" name="reject" value="rejected" type="submit">Reject</button>
+                <a th:href="${#httpServletRequest.requestURI}" class="button-link-style">Cancel</a>
             </form>
             <!--<a role="button" tabindex="0" class="button" th:href="@{/application/{id}/submit(id=${currentApplication.getId()})}">Yes, I want to submit my application</a>-->
         </div>
@@ -1254,6 +1259,11 @@
     <p class="extra-margin">
       <strong>Please make sure your travel claims, receipts and tickets are all submitted.</strong>
     </p>
+
+    <div class="extra-margin">
+        <a href="/prototypes/865-assessor-dashboard-invites" class="button">Return to assessor dashboard</a>
+    </div>
+    <hr />
 
   </div>
 

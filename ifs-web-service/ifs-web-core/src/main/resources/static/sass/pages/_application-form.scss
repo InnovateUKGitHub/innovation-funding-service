@@ -52,9 +52,10 @@
 }
 
 .form-row {
+  @extend %contain-floats;
 	border-bottom:1px solid $border-colour;
 	padding:20px 0;
-	overflow: hidden;
+
 	&:first-child { border-top:1px solid $border-colour; }
 	+ .alignright {
 		margin-top:10px;
@@ -123,4 +124,8 @@ table img.table-tick {
 	&:first-child {
 		min-width:60%;
 	}
+}
+
+.your-finances {
+  margin-bottom: 30px;
 }
