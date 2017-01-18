@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -35,5 +36,14 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
         setupGetWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/status", FinanceCheckProcessResource.class, processStatus);
 
         Assert.assertEquals(processStatus, service.getFinanceCheckApprovalStatus(123L, 456L).getSuccessObject());
+    }
+
+    @Test
+    @Ignore
+    public void testGetFinanceCheckEligibility() {
+        FinanceCheckEligibilityResource processStatus = new FinanceCheckEligibilityResource();
+        setupGetWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/eligibility", FinanceCheckEligibilityResource.class, processStatus);
+
+        Assert.assertEquals(processStatus, service.getFinanceCheckEligibilityDetails(123L, 456L).getSuccessObject());
     }
 }

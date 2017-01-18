@@ -3,18 +3,55 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Eligibility'" th:remove="tag" />
 </head>
+
 <body th:with="context='project-management'">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${project.id})},currentCompetition=null"  />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">
+            <th:block th:text="${model.organisationName}" />
+            <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
+        </h1>
+    </div>
+
+    <h2 class="heading-medium">Finances Overview</h2>
+    <div class="table-overflow">
+        <table class="table-overview">
+            <thead>
+            <tr>
+                <th scope="col">Project duration</th>
+                <th scope="col">Total costs</th>
+                <th scope="col" class="numeric">% grant</th>
+                <th scope="col" class="numeric">Funding sought</th>
+                <th scope="col" class="numeric">Other public sector funding</th>
+                <th scope="col" class="numeric">Contribution to project</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${model.eligibilityOverview.durationInMonths+' months'}" />
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.totalCost,1,'COMMA')}" /></td>
+                <td class="numeric" th:text="${#numbers.formatInteger(model.eligibilityOverview.percentageGrant,1,'NONE')+'%'}" />
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.fundingSought,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(model.eligibilityOverview.contributionToProject,1,'COMMA')}" /></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"  enctype="multipart/form-data" novalidate="novalidate">
         <div class="page-title">
-          <h1 class="heading-xlarge" th:text="${project.name}"></h1>
+          <h1 class="heading-xlarge" th:text="${model.projectName}"></h1>
         </div>
         <hr/>
         <h2 class="heading-medium">Finances overview</h2>

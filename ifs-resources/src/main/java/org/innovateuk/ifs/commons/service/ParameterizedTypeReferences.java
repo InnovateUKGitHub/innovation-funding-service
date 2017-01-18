@@ -81,6 +81,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<ApplicationAssessorResource>> applicationAssessorResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationAssessorResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<AssessorFormInputResponseResource>> assessorFormInputResponseResourceListType() {
         return new ParameterizedTypeReference<List<AssessorFormInputResponseResource>>() {};
     }

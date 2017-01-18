@@ -40,8 +40,7 @@
                 <a href="#">Review application</a>
             </div>
 
-            <!--/* TODO INFUND-7230
-            <h2 class="heading-medium">Assigned (4)</h2>
+            <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
             <div class="table-overflow">
                 <table id="application-list">
@@ -60,58 +59,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                            <td>Academic</td>
-                            <td>Healthcare, Regenerative medicine</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="alignright"></td>
-                        </tr>
-                        <tr id="prototype-started-removable">
-                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                            <td>Business</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre">-</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor">Remove</a>
+                        <tr th:each="assigned : ${model.assigned}">
+                            <td><a href="#" th:text="${assigned.name}">Oliver Romero</a></td>
+                            <td th:text="${assigned.businessType}">Academic</td>
+                            <td th:text="${#strings.listJoin(assigned.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
+                            <td class="aligncentre" th:text="${assigned.totalApplicationsCount}">6</td>
+                            <td class="aligncentre" th:text="${assigned.assignedCount}">4</td>
+                            <td class="aligncentre">
+                                <span th:remove="${assigned.notified} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assigned.notified} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                        </tr>
-                        <tr id="prototype-assigned-row-three">
-                            <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
-                            <td>Business</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                            <td class="aligncentre">-</td>
-                            <td class="aligncentre">-</td>
-                            <td class="aligncentre">-</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" id="prototype-remove-row-three">Remove</a>
+                            <td class="aligncentre">
+                                <span th:remove="${assigned.accepted} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assigned.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                        </tr>
-                        <tr id="prototype-assigned-row-four">
-                            <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
-                            <td>Business</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">-</td>
-                            <td class="aligncentre">-</td>
-                            <td class="aligncentre">-</td>
-                            <td class="aligncentre">-</td>
+                            <td class="aligncentre">
+                                <span th:remove="${assigned.started} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assigned.started} ? 'tag' : 'all'" class="yes">Yes</span>
+                            </td>
+                            <td class="aligncentre">
+                                <span th:remove="${assigned.submitted} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assigned.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
+                            </td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" id="prototype-remove-row-four">Remove</a>
+                                <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor" th:unless="${assigned.submitted}">Remove</a>
                             </td>
                         </tr>
                     </tbody>
@@ -133,7 +104,6 @@
                     </div>
                 </div>
             </div>
-            */-->
 
             <!--/* TODO INFUND-7047
             <h2 class="heading-medium">Rejected (1)</h2>
@@ -190,7 +160,7 @@
                             <td>Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre">6</td>
                             <td class="aligncentre">6</td>
-                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><span class="yes">Yes</span></td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin" id="prototype-row-one-reassign">Re-assign</a>
                             </td>
@@ -201,7 +171,7 @@
                             <td>Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre">6</td>
                             <td class="aligncentre">4</td>
-                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><span class="yes">Yes</span></td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin" id="prototype-row-two-reassign">Re-assign</a>
                             </td>
@@ -212,7 +182,7 @@
                             <td>Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre">6</td>
                             <td class="aligncentre">3</td>
-                            <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
+                            <td class="aligncentre"><span class="yes">Yes</span></td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin" id="prototype-row-three-reassign">Re-assign</a>
                             </td>

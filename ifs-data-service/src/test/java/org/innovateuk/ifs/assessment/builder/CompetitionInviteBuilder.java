@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
@@ -13,7 +13,6 @@ import org.innovateuk.ifs.user.domain.User;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -80,7 +79,7 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
         return withArraySetFieldByReflection("hash", hashes);
     }
 
-    public CompetitionInviteBuilder withInnovationArea(Category... innovationAreas) {
+    public CompetitionInviteBuilder withInnovationArea(InnovationArea... innovationAreas) {
         return withArraySetFieldByReflection("innovationArea", innovationAreas);
     }
 }
