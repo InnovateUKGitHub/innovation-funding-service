@@ -14,7 +14,8 @@ ${quarantine_warning}    This file has been found to be unsafe
 *** Test Cases ***
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
-    [Tags]    HappyPath
+    [Tags]    HappyPath  Pending
+    # TODO PEnding due to INFUND-7596
     [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
     ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
@@ -53,7 +54,8 @@ Comp admin should be able to view but not edit the finances for every partner
 Comp admin has read only view of Application details past Open date
     [Documentation]    INFUND-6937
     ...    Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
-    [Tags]
+    [Tags]  Pending
+    # TODO Pending due to INFUND-7601
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${CA_Live}
     Then the user should see the element    jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
