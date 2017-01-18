@@ -23,14 +23,14 @@ public static final FieldDescriptor[] categoryResourceFields = {
 
     public static final InnovationAreaResourceBuilder innovationAreaResourceBuilder = newInnovationAreaResource()
             .withId(2L ,3L)
-            .withName("Category name")
+            .withName("Innovation area name")
             .withParent(1L);
 
     public static final InnovationSectorResourceBuilder innovationSectorResourceBuilder = newInnovationSectorResource()
             .withId(2L ,3L)
-            .withName("Category name");
+            .withName("Innovation sector name");
 
     public static final ResearchCategoryResourceBuilder researchCategoryResourceBuilder = newResearchCategoryResource()
             .withId(2L ,3L)
-            .withName("Category name");
+            .withName("Research category name");
 }
