@@ -12,3 +12,8 @@ dependencies {
     testCompile project(":ifs-resources").sourceSets.test.output
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
+
+bootRepackage {
+    mainClass = 'org.innovateuk.ifs.Application'
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+}
