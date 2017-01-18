@@ -285,9 +285,18 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
 
+    private String getOrganisationName(Long organisationId) {
+        Organisation organisation = organisationRepository.findOne(organisationId);
+        return organisation != null ? organisation.getName() : null;
+    }
+
     @Override
     public ServiceResult<ApplicationInviteResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(applicationInviteMapper::mapToResource);
+        return getByHash(hash).andOnSuccessReturn(invite -> {
+            ApplicationInviteResource inviteResource = applicationInviteMapper.mapToResource(invite);
+            inviteResource.setLeadOrganisation(getOrganisationName(inviteResource.getLeadOrganisationId()));
+            return inviteResource;
+        });
     }
 
     @Override

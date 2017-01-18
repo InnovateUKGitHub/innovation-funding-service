@@ -190,7 +190,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite inviteProject = newInvite().build();
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(inviteProject);
         when(inviteProjectRepositoryMock.findByProjectId(project.getId())).thenReturn(asList(inviteProject));
-        when(inviteProjectMapperMock.mapToResource(asList(inviteProject))).thenReturn(asList(inviteProjectResource));
+        when(inviteProjectMapperMock.mapToResource(inviteProject)).thenReturn(inviteProjectResource);
         ServiceResult<List<InviteProjectResource>> invitesByProject = inviteProjectService.getInvitesByProject(project.getId());
         assertTrue(invitesByProject.isSuccess());
         assertEquals(asList(inviteProjectResource), invitesByProject.getSuccessObject());

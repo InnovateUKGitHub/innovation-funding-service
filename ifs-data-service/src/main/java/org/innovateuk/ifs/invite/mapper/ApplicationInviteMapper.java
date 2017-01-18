@@ -40,6 +40,7 @@ public abstract class ApplicationInviteMapper extends BaseMapper<ApplicationInvi
             @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
             @Mapping(source = "user.name", target = "nameConfirmed"),
             @Mapping(source = "user.id", target = "user"),
+            @Mapping(target = "leadOrganisation", ignore = true)
     })
     @Override
     public abstract ApplicationInviteResource mapToResource(ApplicationInvite domain);

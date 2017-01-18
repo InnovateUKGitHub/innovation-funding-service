@@ -128,7 +128,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     profile.setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
                     profile = profileRepository.save(profile);
                     user.setProfileId(profile.getId());
-                    userRepository.save(user);
                     return createUserWithUid(user, userResource.getPassword());
                 });
     }

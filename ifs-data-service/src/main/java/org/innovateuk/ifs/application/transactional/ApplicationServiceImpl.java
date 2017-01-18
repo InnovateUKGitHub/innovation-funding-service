@@ -112,31 +112,29 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
         ApplicationStatus applicationStatus = applicationStatusList.get(0);
-
         application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
+        application.setCompetition(competition);
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
+
+            Application savedApplication = applicationRepository.save(application);
 
             List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
             List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
 
-            Long userOrganisation = usersProcessRoles.size() != 0
+            Long userOrganisationId = usersProcessRoles.size() != 0
                     ? usersProcessRoles.get(0).getOrganisationId()
                     : usersOrganisations.get(0).getId();
 
-            ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisation);
-
+            ProcessRole processRole = new ProcessRole(user, savedApplication.getId(), role, userOrganisationId);
             List<ProcessRole> processRoles = new ArrayList<>();
             processRoles.add(processRole);
+            savedApplication.setProcessRoles(processRoles);
 
-            application.setProcessRoles(processRoles);
-            application.setCompetition(competition);
-
-            applicationRepository.save(application);
             processRoleRepository.save(processRole);
 
-            return serviceSuccess(applicationMapper.mapToResource(application));
+            return serviceSuccess(applicationMapper.mapToResource(savedApplication));
         });
     }
 
@@ -320,7 +318,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
             List<Application> applications = simpleMap(roles, processRole -> {
                 Long appId = processRole.getApplicationId();
-                return applicationRepository.findOne(appId);
+                return appId != null ? applicationRepository.findOne(appId) : null;
             });
             return applicationsToResources(applications);
         });

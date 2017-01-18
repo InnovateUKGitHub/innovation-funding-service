@@ -105,14 +105,11 @@ public class AcceptProjectInviteController extends BaseController {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
 
-                    OrganisationResource organisation =
-                            organisationRestService.getOrganisationById(invite.getLeadOrganisationId()).getSuccessObjectOrThrowException();
-
                     JoinAProjectViewModel japvm = new JoinAProjectViewModel();
                     japvm.setCompetitionName(invite.getCompetitionName());
                     japvm.setLeadApplicantName(invite.getLeadApplicant());
                     japvm.setOrganisationName(invite.getOrganisationName());
-                    japvm.setLeadOrganisationName(organisation.getName());
+                    japvm.setLeadOrganisationName(invite.getLeadOrganisation());
                     japvm.setProjectName(invite.getProjectName());
                     model.addAttribute("model", japvm);
                     return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);

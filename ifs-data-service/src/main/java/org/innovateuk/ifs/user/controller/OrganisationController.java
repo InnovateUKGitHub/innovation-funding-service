@@ -34,7 +34,7 @@ public class OrganisationController {
     }
 
     @RequestMapping("/findByUserId/{userId}")
-    public RestResult<OrganisationResource> findByUserId(@PathVariable("usersId") final Long userId) {
+    public RestResult<OrganisationResource> findByUserId(@PathVariable("userId") final Long userId) {
         return organisationService.findByUserId(userId).toGetResponse();
     }
 

@@ -22,6 +22,7 @@ public class InviteProjectResource extends InviteResource {
     private String hash;
     private InviteStatus status;
     private Long leadOrganisationId;
+    private String leadOrganisation;
     private String organisationName;
     private String leadApplicant;
     private String competitionName;
@@ -101,6 +102,14 @@ public class InviteProjectResource extends InviteResource {
 
     public void setLeadOrganisationId(Long leadOrganisationId) {
         this.leadOrganisationId = leadOrganisationId;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
     }
 
     public String getOrganisationName() {

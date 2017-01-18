@@ -41,8 +41,8 @@ public abstract class InviteProjectMapper extends BaseMapper<ProjectInvite, Invi
             @Mapping(source = "target.name", target = "projectName"),
             @Mapping(source = "user.name", target = "nameConfirmed"),
             @Mapping(source = "user.id", target = "user"),
+            @Mapping(target = "leadOrganisation", ignore = true)
     })
-
     @Override
     public abstract InviteProjectResource mapToResource(ProjectInvite domain);
 

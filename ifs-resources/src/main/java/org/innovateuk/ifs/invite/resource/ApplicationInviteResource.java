@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class ApplicationInviteResource extends InviteResource {
     private Long leadOrganisationId;
+    private String leadOrganisation;
     private String leadApplicant;
     private String leadApplicantEmail;
     private Long id;
@@ -134,6 +135,14 @@ public class ApplicationInviteResource extends InviteResource {
 
     public void setLeadOrganisationId(Long leadOrganisationId) {
         this.leadOrganisationId = leadOrganisationId;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
     }
 
     public String getLeadApplicant() {

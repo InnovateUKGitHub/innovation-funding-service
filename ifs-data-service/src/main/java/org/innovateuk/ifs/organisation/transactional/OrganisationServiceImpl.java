@@ -67,7 +67,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> findById(final Long organisationId) {
-        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(organisationMapper::mapToResource);
+        Organisation org = organisationRepository.findOne(organisationId);
+        return find(org, notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(o -> {
+            return organisationMapper.mapToResource(o);
+        });
     }
 
     /**
