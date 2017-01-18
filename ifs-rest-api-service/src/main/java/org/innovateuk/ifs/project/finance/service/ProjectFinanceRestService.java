@@ -40,6 +40,8 @@ public interface ProjectFinanceRestService {
 
     RestResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
+    RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId);
+
     RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);
 
     RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating);
@@ -49,4 +51,6 @@ public interface ProjectFinanceRestService {
     RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed);
 
     RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId);
+
+    RestResult<ProjectFinanceResource> getFinanceDetails(Long projectId, Long organisationId);
 }

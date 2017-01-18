@@ -20,11 +20,15 @@ public interface FinanceService {
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId);
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
-    List<ProjectFinanceResource> getProjectFinanceTotals(Long applicationId);
     ValidationMessages addCost(Long applicationFinanceId , Long questionId);
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
     RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceFileEntryId);
     RestResult<FileEntryResource> getFinanceEntryByApplicationFinanceId(Long applicationFinanceId);
     RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId);
+
+    ProjectFinanceResource getProjectFinanceDetails(Long userId, Long projectId, Long organisationId);
+    List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId);
+    ProjectFinanceResource addProjectFinance(Long userId, Long projectId);
+    ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId);
 }

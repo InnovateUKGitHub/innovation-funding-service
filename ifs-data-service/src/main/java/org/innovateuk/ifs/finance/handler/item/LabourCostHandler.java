@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
@@ -44,6 +44,11 @@ public class LabourCostHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
         return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
     }
 

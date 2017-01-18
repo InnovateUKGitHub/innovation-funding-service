@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
@@ -19,10 +20,11 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +63,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private OrganisationService organisationService;
 
     @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
     private FormInputService formInputService;
 
     @Autowired
@@ -73,10 +72,16 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
+    private ProjectFinanceOverviewModelManager projectFinanceOverviewModelManager;
+
+    @Autowired
     private FinanceHandler financeHandler;
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Override
     public BaseSectionViewModel populateModel(final ApplicationForm form,
@@ -118,7 +123,8 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         if(isInternalUser && organisationId != null){
             OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
             String organisationType = organisationResource.getOrganisationTypeName();
-            addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form, organisationType, organisationId);
+            ProjectResource projectResource = projectService.getByApplicationId(application.getId());
+            addOrganisationAndUserProjectFinanceDetails(application.getCompetition(), projectResource.getId(), costsQuestions, user, model, form, organisationType, organisationId);
         } else {
             ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), application.getId()).getSuccessObjectOrThrowException();
             addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form, userApplicationRole.getOrganisation());
@@ -257,5 +263,12 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                                                       Model model, ApplicationForm form, String organisationType, Long organisationId) {
         applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
         financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+    }
+
+    private void addOrganisationAndUserProjectFinanceDetails(Long competitionId, Long projectId, List<QuestionResource> costsQuestions, UserResource user,
+                                                      Model model, ApplicationForm form, String organisationType, Long organisationId) {
+        projectFinanceOverviewModelManager.addFinanceDetails(model, competitionId, projectId);
+        // Probably needs replacing. TODO: INFUND-4833
+        financeHandler.getProjectFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, projectId, costsQuestions, user.getId(), form, organisationId);
     }
 }

@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
@@ -8,15 +11,13 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.util.Either;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -129,6 +130,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return financeRowService.addWithoutPersisting(applicationFinance.getId(), questionId);
+    }
+
+    @Override
+    public FinanceRowItem addProjectCostWithoutPersisting(Long projectId, Long organisationId, Long questionId) {
+        ProjectFinanceResource projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
+        return financeRowService.addProjectCostWithoutPersisting(projectFinanceResource.getId(), questionId);
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {

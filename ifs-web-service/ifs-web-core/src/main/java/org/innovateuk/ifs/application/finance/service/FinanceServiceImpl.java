@@ -101,6 +101,15 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
+    public ProjectFinanceResource addProjectFinance(Long userId, Long applicationId) {
+        return null;
+    }
+
+    public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId){
+        return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public ValidationMessages addCost(Long applicationFinanceId, Long questionId) {
         return financeRowRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrThrowException();
     }
@@ -128,5 +137,10 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId) {
         return applicationFinanceRestService.getFile(applicationFinanceId);
+    }
+
+    @Override
+    public ProjectFinanceResource getProjectFinanceDetails(Long userId, Long projectId, Long organisationId) {
+        return projectFinanceRestService.getFinanceDetails(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 }

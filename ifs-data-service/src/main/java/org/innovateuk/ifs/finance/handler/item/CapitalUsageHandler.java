@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
@@ -29,6 +30,29 @@ public class CapitalUsageHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        String existing = "";
+        BigDecimal residualValue = BigDecimal.ZERO;
+        Integer utilisation = 0;
+
+        for (FinanceRowMetaValue costValue : cost.getFinanceRowMetadata()) {
+            if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle() != null){
+                String title = costValue.getFinanceRowMetaField().getTitle();
+                if (title.equals(COST_FIELD_EXISTING)) {
+                    existing = costValue.getValue();
+                } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
+                    residualValue = new BigDecimal(costValue.getValue());
+                } else if (title.equals(COST_FIELD_UTILISATION)) {
+                    utilisation = Integer.valueOf(costValue.getValue());
+                }
+            }
+        }
+
+        return new CapitalUsage(cost.getId(), cost.getQuantity(), cost.getDescription(), existing,
+                cost.getCost(), residualValue, utilisation);
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
         String existing = "";
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;

@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -26,32 +22,26 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 //TODO - INFUND-7482 - remove usages of Model model
 @Component
 public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelManager {
-    private ApplicationFinanceRestService appFinanceRestService;
-    private ProjectFinanceRestService projectFinanceRestService;
     private SectionService sectionService;
     private QuestionService questionService;
-    private FinanceService financeService;
-    private FileEntryRestService fileEntryRestService;
     private FormInputService formInputService;
     private FinanceHandler financeHandler;
 
     @Autowired
-    public ProjectFinanceOverviewModelManager(ProjectFinanceRestService applicationFinanceRestService, SectionService sectionService,
-                                              FinanceService financeService, QuestionService questionService, FileEntryRestService fileEntryRestService,
-                                              FormInputService formInputService, FinanceHandler financeHandler) {
-        this.projectFinanceRestService = applicationFinanceRestService;
+    public ProjectFinanceOverviewModelManager(SectionService sectionService,
+                                              QuestionService questionService,
+                                              FormInputService formInputService,
+                                              FinanceHandler financeHandler) {
         this.sectionService = sectionService;
-        this.financeService = financeService;
         this.questionService = questionService;
-        this.fileEntryRestService = fileEntryRestService;
         this.formInputService = formInputService;
         this.financeHandler = financeHandler;
     }
 
     // TODO DW - INFUND-1555 - handle rest results
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
+    public void addFinanceDetails(Model model, Long competitionId, Long projectId) {
         addFinanceSections(competitionId, model);
-        OrganisationFinanceOverview organisationFinanceOverview = financeHandler.getOrganisationFinanceOverview(FinanceHandler.PROJECT_FINANCE_DATA_SOURCE, applicationId);
+        OrganisationFinanceOverview organisationFinanceOverview = financeHandler.getOrganisationProjectFinanceOverview(projectId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
@@ -60,7 +50,6 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
-        model.addAttribute("researchParticipationPercentage", appFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

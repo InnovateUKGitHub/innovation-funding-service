@@ -16,4 +16,5 @@ public interface FinanceRowRestService {
     RestResult<ValidationMessages> update(FinanceRowItem costItem);
     RestResult<FinanceRowItem> findById(Long id);
     RestResult<Void> delete(Long costId);
+    RestResult<FinanceRowItem> addProjectCostWithoutPersisting(Long projectFinanceId, Long questionId);
 }

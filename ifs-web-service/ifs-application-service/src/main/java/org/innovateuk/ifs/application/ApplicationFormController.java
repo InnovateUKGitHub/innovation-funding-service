@@ -39,6 +39,7 @@ import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -172,6 +173,9 @@ public class ApplicationFormController {
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -386,7 +390,8 @@ public class ApplicationFormController {
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, costType);
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, userApplicationRole.getOrganisation(), user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row", costType.getType());

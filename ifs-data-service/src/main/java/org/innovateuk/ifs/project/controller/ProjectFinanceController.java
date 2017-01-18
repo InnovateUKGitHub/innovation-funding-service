@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -24,6 +25,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping("/project")
 public class ProjectFinanceController {
+    @Autowired
+    private FinanceRowService financeRowService;
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
@@ -126,5 +129,10 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/credit-report", method = GET)
     public RestResult<Boolean> getCreditReport(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
         return projectFinanceService.getCreditReport(projectId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping("/financeDetails/{projectId}/{organisationId}")
+    public RestResult<ProjectFinanceResource> financeDetails(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId) {
+        return financeRowService.financeChecksDetails(projectId, organisationId).toGetResponse();
     }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class JESFinanceModelManager implements FinanceModelManager {
+public class JESProjectFinanceModelManager implements FinanceModelManager {
 
     @Autowired
     ProcessRoleService processRoleService;
@@ -64,7 +64,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
     }
 
     @Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId,  long userId, Long questionId, FinanceRowType costType) {
 
     }
 

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 
@@ -24,6 +25,18 @@ public class SubContractingCostHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        String country = "";
+        for(FinanceRowMetaValue costValue : cost.getFinanceRowMetadata()) {
+            if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle().equals(COST_FIELD_COUNTRY)) {
+                country = costValue.getValue();
+            }
+        }
+
+        return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription());
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
         String country = "";
         for(FinanceRowMetaValue costValue : cost.getFinanceRowMetadata()) {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle().equals(COST_FIELD_COUNTRY)) {

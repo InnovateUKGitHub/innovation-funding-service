@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.finance.view.jes;
 
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
@@ -14,10 +17,6 @@ import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -238,4 +237,10 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 		// not to be implemented, can't add extra rows of finance to the JES form
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
 	}
+
+    @Override
+    public FinanceRowItem addProjectCostWithoutPersisting(Long projectId, Long userId, Long questionId) {
+        // not to be implemented, can't add extra rows of finance to the JES form
+        throw new NotImplementedException("Can't add extra rows of finance to the JES form");
+    }
 }

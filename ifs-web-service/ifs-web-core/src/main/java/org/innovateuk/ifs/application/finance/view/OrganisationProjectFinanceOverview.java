@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Configurable
 public class OrganisationProjectFinanceOverview implements OrganisationFinanceOverview {
 
-    private Long applicationId;
+    private Long projectId;
     private List<ProjectFinanceResource> projectFinances = new ArrayList<>();
 
     @Autowired
@@ -31,15 +31,15 @@ public class OrganisationProjectFinanceOverview implements OrganisationFinanceOv
     	// no-arg constructor
     }
 
-    public OrganisationProjectFinanceOverview(FinanceService financeService, FileEntryRestService fileEntryRestService, Long applicationId) {
-        this.applicationId = applicationId;
+    public OrganisationProjectFinanceOverview(FinanceService financeService, FileEntryRestService fileEntryRestService, Long projectId) {
+        this.projectId = projectId;
         this.financeService = financeService;
         this.fileEntryService = fileEntryRestService;
         initializeOrganisationFinances();
     }
 
     private void initializeOrganisationFinances() {
-        projectFinances = financeService.getProjectFinanceTotals(applicationId);
+        projectFinances = financeService.getProjectFinanceTotals(projectId);
     }
 
     public Map<Long, BaseFinanceResource> getFinancesByOrganisation(){

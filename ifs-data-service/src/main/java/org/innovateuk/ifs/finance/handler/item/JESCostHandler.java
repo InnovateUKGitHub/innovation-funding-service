@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.validator.AcademicValidator;
@@ -34,6 +34,11 @@ public class JESCostHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem());
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
         return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem());
     }
 }

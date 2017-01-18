@@ -13,6 +13,7 @@ public interface FinanceFormHandler {
     void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value);
     ValidationMessages addCost(Long applicationId, Long userId, Long questionId);
     FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId);
+    FinanceRowItem addProjectCostWithoutPersisting(Long projectId, Long organisationId, Long questionId);
     RestResult<ByteArrayResource> getFile(Long applicationFinanceId);
 	
 }

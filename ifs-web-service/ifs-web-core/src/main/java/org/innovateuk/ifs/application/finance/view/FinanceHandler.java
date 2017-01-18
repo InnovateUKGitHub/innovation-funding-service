@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.finance.view;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.jes.JESProjectFinanceModelManager;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -63,22 +64,26 @@ public class FinanceHandler {
         }
     }
 
+    public FinanceModelManager getProjectFinanceModelManager(String organisationType) {
+        switch(organisationType) {
+            case "University (HEI)":
+                return getJESProjectFinanceModelManager();
+            default:
+                return getDefaultProjectFinanceModelManager();
+        }
+    }
+
     public FinanceOverviewModelManager getFinanceOverviewModelManager(String financeDataSource){
         switch(financeDataSource){
             case PROJECT_FINANCE_DATA_SOURCE :
-                return new ProjectFinanceOverviewModelManager(projectFinanceRestService, sectionService, financeService, questionService, fileEntryRestService, formInputService, financeHander);
+                return new ProjectFinanceOverviewModelManager(sectionService, questionService, formInputService, financeHander);
             default:
                 return new ApplicationFinanceOverviewModelManager(applicationFinanceRestService, sectionService, financeService, questionService, fileEntryRestService, formInputService);
         }
     }
 
-    public OrganisationFinanceOverview getOrganisationFinanceOverview(String financeDataSource, Long applicationId){
-        switch(financeDataSource) {
-            case PROJECT_FINANCE_DATA_SOURCE:
-                return new OrganisationProjectFinanceOverview(financeService, fileEntryRestService, applicationId);
-            default:
-                return new OrganisationApplicationFinanceOverview(financeService, fileEntryRestService, applicationId);
-        }
+    public OrganisationFinanceOverview getOrganisationProjectFinanceOverview(Long projectId){
+        return new OrganisationProjectFinanceOverview(financeService, fileEntryRestService, projectId);
     }
 
     @Bean
@@ -99,6 +104,16 @@ public class FinanceHandler {
     @Bean
     protected FinanceModelManager getDefaultFinanceModelManager() {
         return new DefaultFinanceModelManager();
+    }
+
+    @Bean
+    protected FinanceModelManager getJESProjectFinanceModelManager() {
+        return new JESProjectFinanceModelManager();
+    }
+
+    @Bean
+    protected FinanceModelManager getDefaultProjectFinanceModelManager() {
+        return new DefaultProjectFinanceModelManager();
     }
 }
 

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.finance.handler.item;
 
-import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
@@ -35,6 +35,11 @@ public class MaterialsHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity());
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
         return new Materials(cost.getId(),cost.getItem(),cost.getCost(),cost.getQuantity());
     }
 }
