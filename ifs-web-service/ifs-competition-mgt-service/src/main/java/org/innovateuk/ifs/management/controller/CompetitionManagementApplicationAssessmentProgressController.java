@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.

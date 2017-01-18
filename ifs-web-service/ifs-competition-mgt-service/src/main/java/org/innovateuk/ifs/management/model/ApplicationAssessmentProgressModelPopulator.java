@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.management.model;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
+import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressAssignedRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressViewModel;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAvailableAssessorsRowViewModel;
@@ -21,6 +19,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -32,13 +31,13 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
 
-    private static Map<String, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap() {
+    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap() {
         return Collections.unmodifiableMap(Stream.of(
-                new AbstractMap.SimpleEntry<>("title", comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
-                new AbstractMap.SimpleEntry<>("skills", comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
-                new AbstractMap.SimpleEntry<>("totalApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
-                new AbstractMap.SimpleEntry<>("assignedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
-                new AbstractMap.SimpleEntry<>("submittedApplications", comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
+                new AbstractMap.SimpleEntry<>(TITLE, comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
+                new AbstractMap.SimpleEntry<>(SKILLS, comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
+                new AbstractMap.SimpleEntry<>(TOTAL_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
+                new AbstractMap.SimpleEntry<>(ASSIGNED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
+                new AbstractMap.SimpleEntry<>(SUBMITTED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
                 .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
     }
 
@@ -49,7 +48,7 @@ public class ApplicationAssessmentProgressModelPopulator {
         Map<Boolean, List<ApplicationAssessorResource>> assessorsPartitionedByAvailable = assessors.stream().collect(partitioningBy(ApplicationAssessorResource::isAvailable));
         List<ApplicationAssessorResource> notAvailableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.FALSE, Collections.emptyList());
         List<ApplicationAssessorResource> availableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.TRUE, Collections.emptyList());
-        String sortField = sortFieldForAvailableAssessors(sortSelection);
+        AvailableAssessorsSortFieldType sortField = sortFieldForAvailableAssessors(sortSelection);
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
@@ -57,8 +56,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessmentSummary.getCompetitionName(),
                 applicationAssessmentSummary.getPartnerOrganisations(),
                 getAssignedAssessors(notAvailableAssessors),
-                getSortedAvailableAssessors(availableAssessors, sortFieldForAvailableAssessors(sortSelection)),
-                sortField);
+                getSortedAvailableAssessors(availableAssessors, sortField),
+                sortField.getValue());
     }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> getAssignedAssessors(List<ApplicationAssessorResource> assessors) {
@@ -80,10 +79,9 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessorResource.isSubmitted());
     }
 
-    private List<ApplicationAvailableAssessorsRowViewModel> getSortedAvailableAssessors(List<ApplicationAssessorResource> assessors, String selectedSort) {
+    private List<ApplicationAvailableAssessorsRowViewModel> getSortedAvailableAssessors(List<ApplicationAssessorResource> assessors, AvailableAssessorsSortFieldType selectedSort) {
         List<ApplicationAvailableAssessorsRowViewModel> available = assessors.stream()
-                .map(this::getAvailableRowViewModel)
-                .collect(toList());
+                .map(this::getAvailableRowViewModel).collect(toList());
         available.sort(sortMap().get(selectedSort));
         return available;
     }
@@ -96,13 +94,13 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessorResource.getSubmittedCount());
     }
 
-    private String sortFieldForAvailableAssessors(String sort) {
-        return activeSortField(sort,  "title", "skills", "totalApplications", "assignedApplications", "acceptedApplications");
+    private AvailableAssessorsSortFieldType sortFieldForAvailableAssessors(String selectedSort) {
+        return activeSortField(selectedSort,  TITLE, SKILLS, TOTAL_APPLICATIONS, ASSIGNED_APPLICATIONS, SUBMITTED_APPLICATIONS);
     }
 
-    private String activeSortField(String givenField, String defaultField, String... allowedFields) {
+    private AvailableAssessorsSortFieldType activeSortField(String givenField, AvailableAssessorsSortFieldType defaultField, AvailableAssessorsSortFieldType... allowedFields) {
         return Arrays.stream(allowedFields)
-                .filter(field -> givenField != null && givenField.equals(field))
+                .filter(field -> givenField != null && fromString(givenField).equals(field))
                 .findAny()
                 .orElse(defaultField);
     }

@@ -277,7 +277,7 @@
                                 <option value="skills" th:selected="${(model.sortField == 'skills')}">Skill areas</option>
                                 <option value="totalApplications" th:selected="${(model.sortField == 'totalApplications')}">Total applications</option>
                                 <option value="assignedApplications" th:selected="${(model.sortField == 'assignedApplications')}">Assigned applications</option>
-                                <option value="acceptedApplications" th:selected="${(model.sortField == 'acceptedApplications')}">Submitted applications</option>
+                                <option value="submittedApplications" th:selected="${(model.sortField == 'submittedApplications')}">Submitted applications</option>
                             </select>
 
                             <button class="button button-secondary button-small" type="submit">Sort</button>
@@ -287,7 +287,7 @@
             </div>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table id="available-assessors-list">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
