@@ -14,8 +14,8 @@ public class ApplicationAssessorResourceDocs {
 
     public static final FieldDescriptor[] applicationAssessorFields = {
             fieldWithPath("userId").description("Id of the user"),
-            fieldWithPath("firstName").description("first name of the user"),
-            fieldWithPath("lastName").description("last name of the user"),
+            fieldWithPath("firstName").description("First name of the user"),
+            fieldWithPath("lastName").description("Last name of the user"),
             fieldWithPath("businessType").description("Assessor type (business or academic)"),
             fieldWithPath("skillAreas").description("Skills of the user"),
             fieldWithPath("rejectReason").description("The reason for rejecting the application"),

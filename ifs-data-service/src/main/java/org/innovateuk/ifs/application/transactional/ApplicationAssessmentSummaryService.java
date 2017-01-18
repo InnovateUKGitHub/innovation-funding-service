@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +13,8 @@ import java.util.List;
  */
 public interface ApplicationAssessmentSummaryService {
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
     ServiceResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId);
 
     @PreAuthorize("hasAuthority('comp_admin')")

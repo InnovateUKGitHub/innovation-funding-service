@@ -24,6 +24,12 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
                                                   List<ApplicationAvailableAssessorsRowViewModel> available,
                                                   String sortField) {
+    public ApplicationAssessmentProgressViewModel(Long applicationId,
+                                                  String applicationName,
+                                                  Long competitionId,
+                                                  String competitionName,
+                                                  List<String> partnerOrganisations,
+                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;
