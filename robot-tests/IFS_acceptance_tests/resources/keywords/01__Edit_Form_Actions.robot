@@ -2,13 +2,11 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
-
-
 the user selects the checkbox
     [Arguments]    ${checkbox}
     ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
-    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
-    Run Keyword If    '${status}' == 'PASS'     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -21,8 +19,46 @@ the user selects the checkbox
 the user unselects the checkbox
     [Arguments]    ${checkbox}
     ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
-    Execute Javascript    jQuery('form label a').contents().unwrap();  # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
-    Run Keyword If    '${status}' == 'PASS'     Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
+    Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user should see the checkbox
+    [Arguments]    ${checkbox}
+    Wait Until Element Is Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+
+the user should see that the checkbox is disabled
+    [Arguments]    ${checkbox}
+    Wait Until Element Is Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @disabled='disabled']/ancestor::label[contains(@class,"selected")]
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+
+the user should not see the checkbox
+    [Arguments]    ${checkbox}
+    Wait Until Element Is Not Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -120,6 +156,7 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     wait until keyword succeeds    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
+    Run Keyword And Ignore Error    focus    link=Sign out
     Wait for autosave
 
 the user sees the text in the element

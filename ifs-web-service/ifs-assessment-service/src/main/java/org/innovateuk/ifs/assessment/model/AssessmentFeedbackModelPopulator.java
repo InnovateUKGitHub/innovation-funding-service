@@ -9,8 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -71,7 +70,7 @@ public class AssessmentFeedbackModelPopulator {
         boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, FILEUPLOAD);
         boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE);
         boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE);
-        List<CategoryResource> researchCategories = scopeFormInputExists ? categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY) : null;
+        List<ResearchCategoryResource> researchCategories = scopeFormInputExists ? categoryService.getResearchCategories() : null;
 
         if (appendixFormInputExists) {
             FormInputResource appendixFormInput = applicationFormInputs.get(1);

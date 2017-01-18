@@ -5,6 +5,7 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -12,11 +13,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
-    [Documentation]    INFUND-2300
-    ...
-    ...    INFUND-2304
-    ...
-    ...    INFUND-2435
+    [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
     [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
@@ -31,8 +28,9 @@ Comp admin can open the view mode of the application
     And the user should see the text in the page    A novel solution to an old problem
     And the user should see the text in the page    ${valid_pdf}
     And the user can view this file without any errors
-    # And the user should see the text in the page    ${quarantine_pdf}
-    # nad the user cannot see this file but gets a quarantined message
+    #    And the user should see the text in the page    ${quarantine_pdf}
+    #    And the user cannot see this file but gets a quarantined message
+    # TODO when working on Guarantined files. Variable has been removed
 
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443
@@ -52,11 +50,23 @@ Comp admin should be able to view but not edit the finances for every partner
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
 
+Comp admin has read only view of Application details past Open date
+    [Documentation]    INFUND-6937
+    ...    Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
+    [Tags]
+    [Setup]    log in as a different user    &{Comp_admin1_credentials}
+    Given the user navigates to the page    ${CA_Live}
+    Then the user should see the element    jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
+    When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail
+    Then the user should not see the element    jQuery=.button:contains("Edit this question")
+    When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
+    And the user clicks the button/link    jQuery=.button:contains("Save and close")
+    Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
+
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
-
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
@@ -69,6 +79,7 @@ the user can view this file without any errors
     the user goes back to the previous page
 
 the user cannot see this file but gets a quarantined message
+    [Documentation]    Currently not used. It was used in Comp admin can open the view mode of the application
     the user clicks the button/link    link=test_quarantine.pdf(7 KB)
     the user should not see an error in the page
     the user should see the text in the page    ${quarantine_warning}

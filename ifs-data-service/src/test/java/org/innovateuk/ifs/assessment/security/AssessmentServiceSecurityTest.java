@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
+import javax.persistence.Temporal;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
@@ -20,6 +21,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -54,6 +56,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void findAssignableById() {
+        AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
+
+        assertAccessDenied(
+                () -> classUnderTest.findAssignableById(ID_TO_FIND),
+                () -> verify(assessmentPermissionRules).userCanAssignAssessment(eq(assessmentResource), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void findByUserAndCompetition() {
         long userId = 3L;
         long competitionId = 1L;
@@ -70,6 +82,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.getTotalScore(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
         );
+    }
+
+    @Test
+    public void notifyAssessor() {
+        Long assessmentId = 1L;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN);
     }
 
     @Test
@@ -92,6 +110,12 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.rejectInvitation(assessmentId, applicationRejection),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
+    }
+
+    @Test
+    public void withdrawAssessment() {
+        Long assessmentId = 1L;
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN);
     }
 
     @Test
@@ -130,32 +154,47 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     public static class TestAssessmentService implements AssessmentService {
         @Override
-        public ServiceResult<AssessmentResource> findById(Long id) {
+        public ServiceResult<AssessmentResource> findById(long id) {
             return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
         }
 
         @Override
-        public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(Long userId, Long competitionId) {
+        public ServiceResult<AssessmentResource> findAssignableById(long id) {
+            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
+        }
+
+        @Override
+        public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<AssessmentTotalScoreResource> getTotalScore(Long assessmentId) {
+        public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") Long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> rejectInvitation(@P("assessmentId") Long assessmentId, ApplicationRejectionResource applicationRejection) {
+        public ServiceResult<Void> rejectInvitation(@P("assessmentId") long assessmentId, ApplicationRejectionResource applicationRejection) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> acceptInvitation(@P("assessmentId") Long assessmentId) {
+        public ServiceResult<Void> withdrawAssessment(@P("assessmentId") long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptInvitation(@P("assessmentId") long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> notify(@P("assessmentId") long assessmentId) {
             return null;
         }
 

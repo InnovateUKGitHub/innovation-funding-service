@@ -17,6 +17,7 @@ Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Applicant_Commons.robot
 
 *** Variables ***
 
@@ -180,10 +181,13 @@ Lead marks finances as complete
     [Tags]    Email
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
+    Given the user navigates to the page  ${DASHBOARD_URL}
+    And the user clicks the button/link  link=Assign test
+    And the applicant completes the application details
     Given the user navigates to his finances page
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
-    And the user should see the element    link=Your funding
+    And the user should see the element    jQuery=h3:contains("Your funding")
     When the user clicks the button/link   link=Your project costs
     Then the user fills in the project costs
     When the user navigates to his finances page
@@ -371,4 +375,4 @@ the user should see all sections complete
 the user should see all sections incomplete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.assigned
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
-    the user should see the element  jQuery=li.grid-row.section:nth-of-type(3) img.section-status.assigned
+    the user should see the element  jQuery=h3:contains("Your funding")

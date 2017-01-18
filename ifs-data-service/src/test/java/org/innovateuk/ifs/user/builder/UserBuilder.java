@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -106,6 +107,10 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {
         return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
+    }
+
+    public UserBuilder withInnovationAreas(List<InnovationArea>... innovationAreaLists) {
+        return withArray((innovationAreaList, user) -> innovationAreaList.forEach(user::addInnovationArea), innovationAreaLists);
     }
 
     @Override

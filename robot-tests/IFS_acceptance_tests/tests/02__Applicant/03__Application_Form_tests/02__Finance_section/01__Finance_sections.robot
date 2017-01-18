@@ -9,8 +9,7 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2051: Remove the '0' in finance fields
 ...
 ...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
-Suite Setup       Run keywords    log in and create new application if there is not one already
-...               AND    Applicant navigates to the finances of the Robot application
+Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -29,23 +28,19 @@ Organisation name visible in the Finance section
     Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
     And the user should see the text in the page    'Empire Ltd' Total project costs
 
-Guidance in the Your Finances section
+Guidance in the your project costs
     [Documentation]    INFUND-192
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
-    When the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link    css=#collapsible-0 summary
+    When the user clicks the button/link    jQuery=#form-input-20 button:contains("Labour")
+    And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
+    And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
     Then the working days per year should be 232 by default
-
-Finance fields are empty
-    [Documentation]    INFUND-2051: Remove the '0' in finance fields
-    [Tags]    HappyPath
-    Then the user should see the element  jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
@@ -60,6 +55,10 @@ User pressing back button should get the correct version of the page
     [Teardown]    the user removes the materials rows
 
 *** Keywords ***
+Custom Suite Setup
+    log in and create new application if there is not one already
+    Applicant navigates to the finances of the Robot application
+
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input

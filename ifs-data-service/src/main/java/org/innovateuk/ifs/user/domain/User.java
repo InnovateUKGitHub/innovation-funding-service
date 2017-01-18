@@ -3,6 +3,8 @@ package org.innovateuk.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.UserInnovationAreaLink;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -13,7 +15,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
@@ -78,6 +83,9 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserInnovationAreaLink> innovationAreas = new HashSet<>();
 
     public User() {
         // no-arg constructor
@@ -293,5 +301,16 @@ public class User implements Serializable {
         boolean affiliationsComplete = affiliations != null && !affiliations.isEmpty();
         boolean contractComplete = profile != null && profile.getContractSignedDate() != null;
         return skillsComplete && affiliationsComplete && contractComplete;
+    }
+
+    public Set<InnovationArea> getInnovationAreas() {
+        return innovationAreas.stream().map(UserInnovationAreaLink::getCategory).collect(Collectors.toSet());
+    }
+
+    public void addInnovationArea(InnovationArea innovationArea) {
+        if (innovationArea == null) {
+            throw new NullPointerException("innovationArea cannot be null");
+        }
+        innovationAreas.add(new UserInnovationAreaLink(this, innovationArea));
     }
 }
