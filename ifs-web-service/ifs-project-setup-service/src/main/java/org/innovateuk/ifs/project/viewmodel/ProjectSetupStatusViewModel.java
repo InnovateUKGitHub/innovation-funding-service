@@ -24,6 +24,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
     private boolean hasCompanyHouse;
+    private boolean projectComplete;
     private String monitoringOfficerName;
     private Long organisationId;
     private SectionAccess companiesHouseSection;
@@ -77,6 +78,11 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.spendProfileStatus = spendProfileStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+        this.projectComplete = projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
     }
 
     public Long getProjectId() {
@@ -173,16 +179,15 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         return grantOfferLetterStatus;
     }
 
-    public boolean isProjectComplete() {
-        return
-                projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                        && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                        && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                        && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
-                        && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
-    }
-
     public Long getCompetitionId() {
         return competitionId;
+    }
+
+    public boolean isHasCompanyHouse() {
+        return hasCompanyHouse;
+    }
+
+    public boolean isProjectComplete() {
+        return projectComplete;
     }
 }

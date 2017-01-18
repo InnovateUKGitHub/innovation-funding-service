@@ -16,7 +16,7 @@
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
 
-    <th:block th:if="${model.isProjectComplete}">
+    <th:block th:if="${model.projectComplete}">
         <div class="success-alert extra-margin-bottom">
             The project is live, you can review progress at <a href="#">_connect</a>
         </div>
@@ -24,7 +24,7 @@
         <p>The following steps have been completed by all partners. The project can now start.</p>
     </th:block>
 
-    <p th:unless="${model.isProjectComplete}" class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
+    <p th:unless="${model.projectComplete}" class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
 
 
     <div class="warning-alert extra-margin-bottom" th:unless="${model.hasCompanyHouse}">
@@ -34,7 +34,7 @@
         <p><a href="/prototypes/4242-register-no-companies-house">Business has no legal repsonsibility to register with Companies House</a></p>
     </div>
 
-    <strong><a th:unless="${model.isProjectComplete}" th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
+    <strong><a th:unless="${model.projectComplete}" th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
 
     <ul class="ifs-progress-list extra-margin">
 
@@ -54,15 +54,15 @@
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.projectDetailsSection.accessible and not model.isProjectComplete}" th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
-            <th:block th:unless="${model.projectDetailsSection.accessible or model.isProjectComplete}">Project details</th:block>
+            <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
+            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project details</th:block>
           </h2>
             <h2 class="heading-medium">
-                <a th:if="${model.isProjectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project details</a>
-                <th:block th:unless="${model.isProjectComplete}">Project details</th:block>
+                <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project details</a>
+                <th:block th:unless="${model.projectComplete}">Project details</th:block>
             </h2>
-          <p th:if="${not model.isProjectComplet}">Confirm the contact details, proposed start date and location of the project.</p>
-          <p th:if="${model.isProjectComplet}">The contact details, start date and location of the project.</p>
+          <p th:if="${not model.projectComplete}">Confirm the contact details, proposed start date and location of the project.</p>
+          <p th:if="${model.projectComplete}">The contact details, start date and location of the project.</p>
         </div>
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
@@ -71,12 +71,12 @@
         <div class="progress-info">
 
           <h2 class="heading-medium">
-            <a th:if="${model.monitoringOfficerSection.accessible and not model.isProjectComplete}" th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
+            <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
             <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
           </h2>
             <h2 class="heading-medium">
-                <a th:if="${model.isProjectComplete}" th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}">Monitoring Officer</a>
-                <th:block th:unless="${model.isProjectComplete}">Monitoring Officer</th:block>
+                <a th:if="${model.projectComplete}" th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}">Monitoring Officer</a>
+                <th:block th:unless="${model.projectComplete}">Monitoring Officer</th:block>
             </h2>
           <p th:if="${model.monitoringOfficerAssigned}">
             Your Monitoring Officer for this project is  <th:block th:text="${model.monitoringOfficerName}" />.
@@ -100,11 +100,11 @@
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.bankDetailsSection.accessible and not model.isProjectComplete}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+            <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
             <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
           </h2>
             <h2 class="heading-medium">
-                <a th:if="${model.isProjectComplete}" th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
+                <a th:if="${model.projectComplete}" th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
                 <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
             </h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
@@ -145,11 +145,11 @@
         <div class="progress-status" />
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.otherDocumentsSection.accessible and not model.isProjectComplete}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
+            <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
             <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
           </h2>
             <h2 class="heading-medium">
-                <a th:if="${model.isProjectComplete}" th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}">Other documents</a>
+                <a th:if="${model.projectComplete}" th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}">Other documents</a>
                 <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
             </h2>
             <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
