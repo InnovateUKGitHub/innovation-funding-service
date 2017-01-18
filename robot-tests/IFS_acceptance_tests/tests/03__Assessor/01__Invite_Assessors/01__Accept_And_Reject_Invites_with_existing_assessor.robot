@@ -135,7 +135,8 @@ Upcoming competition should be visible
     And The user clicks the button/link    link=Back to assessor dashboard
     Then The user should see the text in the page    Upcoming competitions to assess
 
-When the assessment period starts the comp moves to the comp for assessment
+The assessment period starts the comp moves to the comp for assessment
+    [Documentation]
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past

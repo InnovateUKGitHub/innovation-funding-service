@@ -17,18 +17,20 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
+import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.PENDING;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -40,6 +42,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
@@ -96,16 +99,20 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build(3);
 
-        Map<Long, Assessment> assessmentsForUsers = asMap(
+        Map<Long, Assessment> assessmentsForParticipants = asMap(
                 // Intentionally leaving the first user without an assessment to make them available
-                competitionParticipants.get(1).getUser().getId(),
+                2L,
                 newAssessment()
                         .withActivityState(buildActivityStateWithState(PENDING))
                         .build(),
-                competitionParticipants.get(2).getUser().getId(),
+                3L,
                 newAssessment()
                         .withActivityState(buildActivityStateWithState(OPEN))
                         .build());
+
+        Map<Long, Long> totalApplicationCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
+        Map<Long, Long> assignedCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
+        Map<Long, Long> submittedCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
 
         List<ApplicationAssessorResource> expected = newApplicationAssessorResource()
                 .withUserId(1L, 2L, 3L)
@@ -126,11 +133,15 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                                 .build(1))
                 .withAvailable(true, false, false)
                 .withMostRecentAssessmentState(null, PENDING, OPEN)
-                .withTotalApplicationsCount(0L)
-                .withAssignedCount(0L)
-                .withSubmittedCount(0L)
+                .withTotalApplicationsCount(totalApplicationCountsForParticipants.get(1L), totalApplicationCountsForParticipants.get(2L), totalApplicationCountsForParticipants.get(3L))
+                .withAssignedCount(assignedCountsForParticipants.get(1L), assignedCountsForParticipants.get(2L), assignedCountsForParticipants.get(3L))
+                .withSubmittedCount(submittedCountsForParticipants.get(1L), submittedCountsForParticipants.get(2L), submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
                 .build(3);
+
+        EnumSet<AssessmentStates> assessmentStatesThatAreUnassigned = of(REJECTED, WITHDRAWN);
+        EnumSet<AssessmentStates> assessmentStatesThatAreAssigned = EnumSet.complementOf(assessmentStatesThatAreUnassigned);
+        EnumSet<AssessmentStates> assessmentStatesThatAreSubmitted = of(SUBMITTED);
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
@@ -142,11 +153,13 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                     .build();
         });
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(isA(Long.class), eq(application.getId()))).then(invocation ->
-                ofNullable(assessmentsForUsers.get(invocation.getArgumentAt(0, Long.class))));
-        // TODO replace any's
-        // TODO replace scores
-        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(any(), any())).thenReturn(0L);
-        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(any(), eq(competition.getId()), any())).thenReturn(0L);
+                ofNullable(assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class))));
+        when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(isA(Long.class), eq(getBackingStates(assessmentStatesThatAreUnassigned)))).then(invocation ->
+                totalApplicationCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(isA(Long.class), eq(competition.getId()), eq(getBackingStates(assessmentStatesThatAreAssigned)))).then(invocation ->
+                assignedCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
+        when(assessmentRepositoryMock.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(isA(Long.class), eq(competition.getId()), eq(getBackingStates(assessmentStatesThatAreSubmitted)))).then(invocation ->
+                submittedCountsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
 
         List<ApplicationAssessorResource> found = service.getAssessors(application.getId()).getSuccessObjectOrThrowException();
 
@@ -158,13 +171,13 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         competitionParticipants.forEach(competitionParticipant -> {
             Long userId = competitionParticipant.getUser().getId();
             inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdAsc(userId, application.getId());
-            competitionParticipant.getUser().getInnovationAreas().forEach(innovationArea -> {
-                inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
-            });
-            // TODO replace any
-            inOrder.verify(assessmentRepositoryMock).countByParticipantUserIdAndActivityStateStateNotIn(eq(userId), any());
-            // TODO replace any and replace times(2)
-            inOrder.verify(assessmentRepositoryMock, times(2)).countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(eq(userId), eq(competition.getId()), any());
+            competitionParticipant.getUser().getInnovationAreas().forEach(
+                    innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
+            inOrder.verify(assessmentRepositoryMock).countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
+            inOrder.verify(assessmentRepositoryMock)
+                    .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreAssigned));
+            inOrder.verify(assessmentRepositoryMock)
+                    .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreSubmitted));
         });
         inOrder.verifyNoMoreInteractions();
     }
@@ -211,5 +224,10 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
     private ActivityState buildActivityStateWithState(AssessmentStates state) {
         return new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState());
+    }
+
+    private Map<Long, Long> setUpScoresForParticipants(List<CompetitionParticipant> competitionParticipants) {
+        Random random = new Random();
+        return simpleToMap(competitionParticipants, competitionParticipant -> competitionParticipant.getUser().getId(), competitionParticipant -> random.nextLong());
     }
 }

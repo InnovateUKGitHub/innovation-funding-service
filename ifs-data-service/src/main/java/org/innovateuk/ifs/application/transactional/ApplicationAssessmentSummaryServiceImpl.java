@@ -33,7 +33,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -100,8 +99,8 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         applicationAssessorResource.setAvailable(!mostRecentAssessment.isPresent());
         applicationAssessorResource.setMostRecentAssessmentState(mostRecentAssessment.map(Assessment::getActivityState).orElse(null));
         applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));
-        applicationAssessorResource.setAssignedCount(countAssignedApplications(competitionParticipant));
-        applicationAssessorResource.setSubmittedCount(countSubmittedApplications(competitionParticipant));
+        applicationAssessorResource.setAssignedCount(countAssignedApplicationsByCompetition(competitionParticipant));
+        applicationAssessorResource.setSubmittedCount(countSubmittedApplicationsByCompetition(competitionParticipant));
 
         return applicationAssessorResource;
     }
@@ -111,20 +110,20 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     private long countAssignedApplications(Long userId) {
-        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, simpleMapSet(of(REJECTED, WITHDRAWN), AssessmentStates::getBackingState));
+        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(of(REJECTED, WITHDRAWN)));
     }
 
-    private long countAssignedApplications(CompetitionParticipant competitionParticipant) {
+    private long countAssignedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
         return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, complementOf(of(REJECTED, WITHDRAWN)));
     }
 
-    private long countSubmittedApplications(CompetitionParticipant competitionParticipant) {
+    private long countSubmittedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
         return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, of(SUBMITTED));
     }
 
     private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentStates> states) {
         return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(competitionParticipant.getUser().getId(),
                 competitionParticipant.getProcess().getId(),
-                simpleMapSet(states, AssessmentStates::getBackingState));
+                getBackingStates(states));
     }
 }
