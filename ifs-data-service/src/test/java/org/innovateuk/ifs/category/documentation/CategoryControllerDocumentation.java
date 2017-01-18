@@ -5,9 +5,7 @@ import org.innovateuk.ifs.category.controller.CategoryController;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
@@ -19,25 +17,16 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<CategoryController> {
-    private RestDocumentationResultHandler document;
 
     @Override
     protected CategoryController supplyControllerUnderTest() {
         return new CategoryController();
-    }
-
-    @Before
-    public void setup(){
-        this.document = document("category/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -47,7 +36,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationAreas()).thenReturn(serviceSuccess(innovationAreaResources));
 
         mockMvc.perform(get("/category/findInnovationAreas"))
-                .andDo(this.document.snippets(
+                .andDo(document("category/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list with all innovation areas")
                         )
@@ -61,7 +50,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationSectors()).thenReturn(serviceSuccess(innovationSectorResources));
 
         mockMvc.perform(get("/category/findInnovationSectors"))
-                .andDo(this.document.snippets(
+                .andDo(document("category/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list with all innovation sectors")
                         )
@@ -75,7 +64,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getResearchCategories()).thenReturn(serviceSuccess(researchCategoryResources));
 
         mockMvc.perform(get("/category/findResearchCategories"))
-                .andDo(this.document.snippets(
+                .andDo(document("category/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list with all research categories")
                         )
@@ -89,7 +78,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         when(categoryServiceMock.getInnovationAreasBySector(anyLong())).thenReturn(serviceSuccess(innovationAreaResources));
 
         mockMvc.perform(get("/category/findByInnovationSector/{sectorId}", 1L))
-                .andDo(this.document.snippets(
+                .andDo(document("category/{method-name}",
                         pathParameters(
                                 parameterWithName("sectorId").description("sector id to filter on")
                         ),
