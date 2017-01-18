@@ -30,9 +30,11 @@ import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
@@ -105,6 +107,8 @@ public class ApplicationFormController {
     public static final String REMOVE_COST = "remove_cost";
     public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
+    public static final String REQUESTING_FUNDING = "requesting_funding";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
     public static final String TERMS_AGREED_KEY = "termsAgreed";
@@ -358,7 +362,9 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(EDIT_QUESTION) != null)) {
+                request.getParameter(EDIT_QUESTION) != null ||
+                request.getParameter(REQUESTING_FUNDING) != null ||
+                request.getParameter(NOT_REQUESTING_FUNDING) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
@@ -448,6 +454,14 @@ public class ApplicationFormController {
             }
         }
 
+        if(isNotRequestingFundingRequest(params)) {
+            setRequestingFunding(NOT_REQUESTING_FUNDING, user.getId(), application.getId(), competition.getId(), processRole.getId(), errors);
+        }
+
+        if(isRequestingFundingRequest(params)) {
+            setRequestingFunding(REQUESTING_FUNDING, user.getId(), application.getId(), competition.getId(), processRole.getId(), errors);
+        }
+
         setApplicationDetails(application, form.getApplication());
 
         if(applicationModelPopulator.userIsLeadApplicant(application, user.getId())) {
@@ -473,6 +487,25 @@ public class ApplicationFormController {
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return errors;
+    }
+
+    private void setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId, ValidationMessages errors) {
+        ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
+        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+        finance.getGrantClaim().setGrantClaimPercentage(0);
+        errors.addAll(financeRowService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
+
+        if (!errors.hasErrors()) {
+            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
+            if (REQUESTING_FUNDING.equals(requestingFunding)) {
+                sectionService.markAsInComplete(organisationSection.getId(), applicationId, processRoleId);
+                sectionService.markAsInComplete(fundingSection.getId(), applicationId, processRoleId);
+            } else if (NOT_REQUESTING_FUNDING.equals(requestingFunding)) {
+                sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+                sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
+            }
+        }
     }
 
     private List<Error> sortValidationMessages(ValidationMessages errors) {
@@ -591,6 +624,13 @@ public class ApplicationFormController {
 
     private boolean isMarkQuestionAsInCompleteRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_AS_INCOMPLETE);
+    }
+
+    private boolean isNotRequestingFundingRequest(@NotNull Map<String, String[]> params) {
+        return params.containsKey(NOT_REQUESTING_FUNDING);
+    }
+    private boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
+        return params.containsKey(REQUESTING_FUNDING);
     }
 
     private boolean isMarkSectionRequest(@NotNull Map<String, String[]> params){

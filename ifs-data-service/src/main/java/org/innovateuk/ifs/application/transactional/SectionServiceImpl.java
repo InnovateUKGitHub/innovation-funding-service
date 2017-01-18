@@ -128,19 +128,13 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                                                          final Long markedAsCompleteById) {
         LOG.debug(String.format("markSectionAsComplete %s / %s / %s ", sectionId, applicationId, markedAsCompleteById));
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
-            Set<Long> questions = collectAllQuestionFrom(section);
-
             List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
-                questions.forEach(q -> {
-                    questionService.markAsComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsCompleteById);
-                    // Assign back to lead applicant.
-                    questionService.assign(new QuestionApplicationCompositeId(q, applicationId), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
-                });
-
-                applicationFinanceService.getApplicationFinanceSaver(section.getType())
+                markSectionAsComplete(section, application, markedAsCompleteById);
+				
+				applicationFinanceService.getApplicationFinanceSaver(section.getType())
                         .ifPresent(applicationFinanceSaver -> applicationFinanceSaver.handleMarkAsComplete(application, section, markedAsCompleteById));
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
@@ -148,6 +142,24 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
             return serviceSuccess(sectionIsValid);
         });
     }
+
+    @Override
+    public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
+            markSectionAsComplete(section, application, markedAsCompleteById);
+            return serviceSuccess();
+        });
+    }
+
+    private void markSectionAsComplete(Section section, Application application, Long markedAsCompleteById) {
+        Set<Long> questions = collectAllQuestionFrom(section);
+        questions.forEach(q -> {
+            questionService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+            // Assign back to lead applicant.
+            questionService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
+        });
+    }
+
 
     @Override
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
