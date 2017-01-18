@@ -214,6 +214,9 @@
                                 <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
                             </td>
                         </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="5">There are no assessors to be invited to this competition.</td>
+                        </tr>
                     </tbody>
                 </table>
             </form>
