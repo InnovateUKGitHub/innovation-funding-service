@@ -3,17 +3,17 @@ package org.innovateuk.ifs;
 import org.apache.catalina.connector.Connector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.config.Thymeleaf3Application;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = { "classpath:/application.properties", "classpath:/assessmentapplication.properties" })
-public class Application extends Thymeleaf3Application {
+public class Application extends SpringBootServletInitializer {
 
     private static final Log LOG = LogFactory.getLog(Application.class);
 
