@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 public class CompetitionInAssessmentModelPopulator {
 
     public CompetitionInAssessmentViewModel populateModel(CompetitionResource competition) {
-        return new CompetitionInAssessmentViewModel(competition.getId(), competition.getName());
+        return new CompetitionInAssessmentViewModel(competition.getId(), competition.getName(), competition.getCompetitionStatus());
     }
 }

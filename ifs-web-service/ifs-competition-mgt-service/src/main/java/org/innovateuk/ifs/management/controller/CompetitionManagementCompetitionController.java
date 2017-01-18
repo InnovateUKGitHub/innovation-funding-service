@@ -37,7 +37,7 @@ public class CompetitionManagementCompetitionController {
                 return "competition/competition-closed";
             case IN_ASSESSMENT:
                 model.addAttribute("model", competitionInAssessmentModelPopulator.populateModel(competition));
-                return "competition/competition-in-assessment";
+                return "competition/competition-in-fLight";
             default:
                 throw new IllegalStateException("Unexpected competition state for competition: " + competitionId);
         }
