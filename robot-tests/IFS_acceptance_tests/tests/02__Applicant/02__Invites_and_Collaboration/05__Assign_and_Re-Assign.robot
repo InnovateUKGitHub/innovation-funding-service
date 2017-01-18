@@ -75,7 +75,8 @@ Collaborator should see the review button instead of the review and submit
     [Documentation]    INFUND-2451
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath  Pending
+    # TODO Pending due to INFUND-7608
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Assign test
     Then the user should not see the element    jQuery=.button:contains("Review and submit")
@@ -88,7 +89,8 @@ Collaborator should be able to edit the assigned question
     [Documentation]    INFUND-2302
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath  Pending
+    # TODO Pending due to INFUND-7608
     When the user clicks the button/link    jQuery=button:contains("Public description")
     And the user should see the element    jQuery=button:contains("Assign to lead for review")
 
