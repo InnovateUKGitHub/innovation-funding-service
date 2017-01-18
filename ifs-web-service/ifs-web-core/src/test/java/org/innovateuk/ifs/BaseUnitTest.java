@@ -23,6 +23,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.contract.service.ContractService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -36,8 +40,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -452,6 +456,7 @@ public class BaseUnitTest {
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FINANCE)).thenReturn(Arrays.asList(sectionResource7));
         when(sectionService.getFinanceSection(1L)).thenReturn(sectionResource7);
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource9));
+        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FUNDING_FINANCES)).thenReturn(Arrays.asList(sectionResource10));
 
         when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource)) ;
         when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS)).thenReturn(restSuccess(q01Resource));
@@ -656,6 +661,11 @@ public class BaseUnitTest {
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
+        FinanceRowCostCategory costCategory = new GrantClaimCategory();
+        costCategory.addCost(new GrantClaim(1L, 50));
+        organisationFinances.put(FinanceRowType.FINANCE, costCategory);
+        applicationFinanceResource.setFinanceOrganisationDetails(organisationFinances);
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
