@@ -18,8 +18,8 @@ public class AssessmentCreateResource {
     public AssessmentCreateResource() {
     }
 
-    public AssessmentCreateResource(Long competitionId, Long assessorId) {
-        this.applicationId = competitionId;
+    public AssessmentCreateResource(Long applicationId, Long assessorId) {
+        this.applicationId = applicationId;
         this.assessorId = assessorId;
     }
 
