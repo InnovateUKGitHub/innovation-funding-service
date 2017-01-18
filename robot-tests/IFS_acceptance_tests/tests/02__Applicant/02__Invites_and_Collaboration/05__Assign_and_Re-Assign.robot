@@ -222,7 +222,8 @@ The question is disabled on the summary page for other collaborators
     [Documentation]    INFUND-2302
     ...
     ...    This test case is still using the old application
-    [Tags]
+    [Tags]  Pending
+    # TODO Pending due to INFUND-7608
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    jQuery=button:contains("Public description")
     Then the user should see the element    css=#form-input-12 .readonly
