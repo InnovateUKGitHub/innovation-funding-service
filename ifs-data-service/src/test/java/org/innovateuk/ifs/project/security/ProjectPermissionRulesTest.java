@@ -487,4 +487,38 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         setupUserAsPartner(project, user);
         assertFalse(rules.internalUserCanSendGrantOfferLetter(project, user));
     }
+
+    @Test
+    public void testInternalUserCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
+                assertTrue(rules.internalUserCanViewSendGrantOfferLetterStatus(project, user));
+            } else {
+                assertFalse(rules.internalUserCanViewSendGrantOfferLetterStatus(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testPartnersCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        // Ensure partners can access
+        UserResource user = newUserResource().build();
+        setupUserAsPartner(project, user);
+        assertTrue(rules.externalUserCanViewSendGrantOfferLetterStatus(project, user));
+    }
+
+    @Test
+    public void testNonPartnersCannotViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        // Ensure non-partners cannot access
+        allGlobalRoleUsers.forEach(user2 -> assertFalse(rules.externalUserCanViewSendGrantOfferLetterStatus(project, user2)));
+    }
 }

@@ -204,18 +204,13 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project){
 
-        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved() && project.getDocumentsSubmittedDate() != null) {
+        if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved())) {
             return REJECTED;
         }
-        if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+        if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
             return COMPLETE;
         }
-
-        if (project.getOtherDocumentsApproved() != null && !project.getOtherDocumentsApproved()) {
-            return PENDING;
-        }
-
-        if (project.getOtherDocumentsApproved() == null && project.getDocumentsSubmittedDate() != null) {
+        if (project.getDocumentsSubmittedDate() != null) {
             return ACTION_REQUIRED;
         }
 
@@ -248,7 +243,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
         ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus);
-        if(project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved() && COMPLETE.equals(spendProfileStatus)) {
+        if(ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved()) && COMPLETE.equals(spendProfileStatus)) {
             if(golWorkflowHandler.isApproved(project)) {
                 roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
             } else {

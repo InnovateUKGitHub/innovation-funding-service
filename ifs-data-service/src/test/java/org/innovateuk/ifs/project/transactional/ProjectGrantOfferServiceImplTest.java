@@ -514,7 +514,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withPostcode("SN1 1AA")
                 .build();
         Project project = newProject()
-                .withOtherDocumentsApproved(Boolean.TRUE)
+                .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .withName("project 1")
                 .withApplication(app)
                 .withPartnerOrganisations(asList(po))
@@ -636,7 +636,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
-        Project project = newProject().withOtherDocumentsApproved(Boolean.FALSE).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
+        Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
 
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);

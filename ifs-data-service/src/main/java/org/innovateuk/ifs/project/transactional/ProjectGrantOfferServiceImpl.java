@@ -226,7 +226,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
             if(approval == ApprovalType.APPROVED) {
                 return getProject(projectId).andOnSuccess(project -> {
-                    if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
 
                         FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
                         return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)

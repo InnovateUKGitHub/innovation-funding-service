@@ -385,7 +385,7 @@
 
 				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:with="action='feedback'" th:remove="tag" />
 			</div>
 
 		</div>
@@ -394,7 +394,7 @@
 
 
 	<h2 class="heading-medium">
-		Your assessors feedback
+		Your assessors' feedback
 	</h2>
 
 	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
