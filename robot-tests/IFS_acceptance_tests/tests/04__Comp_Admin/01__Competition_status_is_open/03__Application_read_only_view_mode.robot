@@ -33,13 +33,13 @@ Comp admin can open the view mode of the application
     # TODO when working on Guarantined files. Variable has been removed
 
 Comp admin should be able to view but not edit the finances for every partner
-    [Documentation]    INFUND-2443
-    ...    INFUND-2483
-    [Tags]    Failing
+    [Documentation]    INFUND-2443, INFUND-2483
+    [Tags]
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should not see the element    link=your finances
-    And the user should see the text in the page    Funding breakdown
+    And the user should see the element     jQuery=h3:contains("Finances Summary")
+    And the user should see the element     jQuery=h2:contains("Funding breakdown")
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user    &{collaborator1_credentials}
@@ -109,15 +109,16 @@ the finance Project cost breakdown calculations should be correct
     Wait Until Element Contains    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 
 the applicant edits the Subcontracting costs section
-    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
-    the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
+    the user clicks the button/link    link=Your project costs
+    the user clicks the button/link    jQuery=#form-input-20 button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
-    Mouse Out    css=input
-    focus    css=.app-submit-btn
+    the user selects the checkbox           css=#agree-state-aid-page
+    the user clicks the button/link         jQuery=.button:contains("Mark as complete")
+
 
 the user should see the correct finances change
     Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
