@@ -87,7 +87,7 @@ Assessed Questions are editable before open date
     #TODO INFUND-7565
     Given the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jquery=h1:contains("Business opportunity")
-    And the user clicks the button/link    jquery=.button:contains("Edit")
+    And the user clicks the button/link    jquery=.button:contains("Edit this question")
     And the user edits the assessed question information
     And the user clicks the button/link    jquery=.button:contains("Done")
     And the user sees the correct assessed question information
