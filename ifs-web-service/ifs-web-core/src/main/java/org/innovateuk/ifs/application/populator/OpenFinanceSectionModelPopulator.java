@@ -44,7 +44,6 @@ import static java.util.Collections.singletonList;
 public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
-
     @Autowired
     private FormInputResponseService formInputResponseService;
 
@@ -80,17 +79,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
 
     @Autowired
     private ProjectService projectService;
-
-    @Override
-    public BaseSectionViewModel populateModel(final ApplicationForm form,
-                              final Model model,
-                              final ApplicationResource application,
-                              final SectionResource section,
-                              final UserResource user,
-                              final BindingResult bindingResult,
-                              final List<SectionResource> allSections){
-        return populateModel(form, model, application, section, user, bindingResult, allSections, null, false, false);
-    }
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form,
@@ -279,7 +267,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private void addOrganisationAndUserProjectFinanceDetails(Long competitionId, Long projectId, List<QuestionResource> costsQuestions, UserResource user,
                                                       Model model, ApplicationForm form, String organisationType, Long organisationId) {
         projectFinanceOverviewModelManager.addFinanceDetails(model, competitionId, projectId);
-        // Probably needs replacing. TODO: INFUND-4833
         financeHandler.getProjectFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, projectId, costsQuestions, user.getId(), form, organisationId);
     }
 }

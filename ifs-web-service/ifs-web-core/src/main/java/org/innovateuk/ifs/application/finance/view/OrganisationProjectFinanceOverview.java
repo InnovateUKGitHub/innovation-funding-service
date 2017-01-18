@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -24,17 +23,14 @@ public class OrganisationProjectFinanceOverview implements OrganisationFinanceOv
     @Autowired
     private FinanceService financeService;
 
-    @Autowired
-    private FileEntryRestService fileEntryService;
 
     public OrganisationProjectFinanceOverview() {
     	// no-arg constructor
     }
 
-    public OrganisationProjectFinanceOverview(FinanceService financeService, FileEntryRestService fileEntryRestService, Long projectId) {
+    public OrganisationProjectFinanceOverview(FinanceService financeService, Long projectId) {
         this.projectId = projectId;
         this.financeService = financeService;
-        this.fileEntryService = fileEntryRestService;
         initializeOrganisationFinances();
     }
 

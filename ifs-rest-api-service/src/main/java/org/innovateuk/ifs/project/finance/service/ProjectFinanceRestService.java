@@ -53,4 +53,6 @@ public interface ProjectFinanceRestService {
     RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId);
 
     RestResult<ProjectFinanceResource> getFinanceDetails(Long projectId, Long organisationId);
+
+    RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId);
 }

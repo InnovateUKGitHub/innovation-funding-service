@@ -189,16 +189,19 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public FinanceRowItem costToCostItem(ApplicationFinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
-        FinanceRowHandler financeRowHandler = getCostHandler(costType);
+        FinanceRowHandler financeRowHandler = getRowHandler(cost);
         return financeRowHandler.toCostItem(cost);
     }
 
     @Override
     public FinanceRowItem costToCostItem(ProjectFinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
-        FinanceRowHandler financeRowHandler = getCostHandler(costType);
+        FinanceRowHandler financeRowHandler = getRowHandler(cost);
         return financeRowHandler.toCostItem(cost);
+    }
+
+    private FinanceRowHandler getRowHandler(FinanceRow cost){
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
+        return getCostHandler(costType);
     }
 
     @Override

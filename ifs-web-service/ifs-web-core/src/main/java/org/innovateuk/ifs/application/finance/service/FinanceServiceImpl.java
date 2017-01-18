@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -48,6 +49,9 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
@@ -93,18 +97,19 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
-    public List<ProjectFinanceResource> getProjectFinanceTotals(Long applicationId){
-        return projectFinanceRestService.getFinanceTotals(applicationId).handleSuccessOrFailure(
+    public List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId){
+        return projectFinanceRestService.getFinanceTotals(projectId).handleSuccessOrFailure(
                 failure -> Collections.<ProjectFinanceResource> emptyList(),
                 success -> success
         );
     }
 
     @Override
-    public ProjectFinanceResource addProjectFinance(Long userId, Long applicationId) {
-        return null;
+    public ProjectFinanceResource addProjectFinance(Long projectId, Long organisationId) {
+        return projectFinanceRestService.addProjectFinanceForOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
+    @Override
     public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId){
         return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccessObjectOrThrowException();
     }

@@ -53,8 +53,6 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections);
-
     public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId, boolean isInternalUser, boolean showProjectFinance);
 
     protected NavigationViewModel addNavigation(SectionResource section, Long applicationId) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.service;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -127,5 +128,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     @Override
     public RestResult<ProjectFinanceResource> getFinanceDetails(Long projectId, Long organisationId) {
         return getWithRestResult(projectFinanceRestURL + "/financeDetails/" + projectId + "/" + organisationId, ProjectFinanceResource.class);
+    }
+
+    @Override
+    public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
+        throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
     }
 }

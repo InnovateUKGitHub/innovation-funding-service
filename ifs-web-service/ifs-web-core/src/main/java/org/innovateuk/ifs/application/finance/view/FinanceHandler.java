@@ -19,9 +19,6 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class FinanceHandler {
 
-    public static final String APPLICATION_DATA_SOURCE = "APPLICATION_FINANCE";
-    public static final String PROJECT_FINANCE_DATA_SOURCE = "PROJECT_FINANCE";
-
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
@@ -71,19 +68,6 @@ public class FinanceHandler {
             default:
                 return getDefaultProjectFinanceModelManager();
         }
-    }
-
-    public FinanceOverviewModelManager getFinanceOverviewModelManager(String financeDataSource){
-        switch(financeDataSource){
-            case PROJECT_FINANCE_DATA_SOURCE :
-                return new ProjectFinanceOverviewModelManager(sectionService, questionService, formInputService, financeHander);
-            default:
-                return new ApplicationFinanceOverviewModelManager(applicationFinanceRestService, sectionService, financeService, questionService, fileEntryRestService, formInputService);
-        }
-    }
-
-    public OrganisationFinanceOverview getOrganisationProjectFinanceOverview(Long projectId){
-        return new OrganisationProjectFinanceOverview(financeService, fileEntryRestService, projectId);
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -26,27 +27,29 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     private QuestionService questionService;
     private FormInputService formInputService;
     private FinanceHandler financeHandler;
+    private FinanceService financeService;
 
     @Autowired
     public ProjectFinanceOverviewModelManager(SectionService sectionService,
                                               QuestionService questionService,
                                               FormInputService formInputService,
-                                              FinanceHandler financeHandler) {
+                                              FinanceHandler financeHandler,
+                                              FinanceService financeService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.formInputService = formInputService;
         this.financeHandler = financeHandler;
+        this.financeService = financeService;
     }
 
     // TODO DW - INFUND-1555 - handle rest results
     public void addFinanceDetails(Model model, Long competitionId, Long projectId) {
         addFinanceSections(competitionId, model);
-        OrganisationFinanceOverview organisationFinanceOverview = financeHandler.getOrganisationProjectFinanceOverview(projectId);
+        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationProjectFinanceOverview(financeService, projectId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);
-        //model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
