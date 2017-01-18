@@ -2,14 +2,11 @@ package org.innovateuk.ifs.category.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 
 /**
  * Represents an Innovation Area. {@link InnovationArea}s have a parent {@link InnovationSector}
@@ -25,11 +22,6 @@ public class InnovationArea extends Category {
     // todo this is public just to support the mapper -- can be instantited with reflection
     public InnovationArea() {
         // default constructor
-    }
-
-    @Override
-    public CategoryType getType() {
-        return INNOVATION_AREA;
     }
 
     public InnovationArea(String name, InnovationSector sector) {
