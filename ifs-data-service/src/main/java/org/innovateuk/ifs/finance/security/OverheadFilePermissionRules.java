@@ -34,7 +34,7 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
 
-    @PermissionRule(value = "CREATE_OVERHEAD_FILE", description = "The consortium can update the overhead file for their application and organisation")
+    @PermissionRule(value = "CREATE_OVERHEAD_FILE", description = "The consortium can create the overhead file for their application and organisation")
     public boolean consortiumCanCreateAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
         return isCollaborator(overheads, user);
     }
@@ -44,17 +44,17 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
         return isCollaborator(overheads, user);
     }
 
-    @PermissionRule(value = "DELETE_OVERHEAD_FILE", description = "The consortium can update the overhead file for their application and organisation")
+    @PermissionRule(value = "DELETE_OVERHEAD_FILE", description = "The consortium can delete the overhead file for their application and organisation")
     public boolean consortiumCanDeleteAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
         return isCollaborator(overheads, user);
     }
 
-    @PermissionRule(value = "READ_OVERHEAD_CONTENTS", description = "The consortium can read the overhead file for their application and organisation")
+    @PermissionRule(value = "READ_OVERHEAD_CONTENTS", description = "The consortium can read the overhead file contents for their application and organisation")
     public boolean consortiumCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
         return isCollaborator(overheads, user);
     }
 
-    @PermissionRule(value = "READ_OVERHEAD_DETAILS", description = "The consortium can read the overhead file for their application and organisation")
+    @PermissionRule(value = "READ_OVERHEAD_DETAILS", description = "The consortium can read the overhead file details for their application and organisation")
     public boolean consortiumCanReadDetailsAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
         return isCollaborator(overheads, user);
     }
