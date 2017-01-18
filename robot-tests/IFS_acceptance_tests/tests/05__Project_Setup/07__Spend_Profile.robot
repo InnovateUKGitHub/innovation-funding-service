@@ -247,7 +247,8 @@ Non-lead partner can see correct project start date and duration
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link             jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link             jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link             jQuery=.button:contains("Send")
     Then the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element          css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -335,7 +336,8 @@ Academic partner edits spend profile and this updates on the table
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link           jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -428,7 +430,8 @@ Partner can receive edit rights to his SP
     Then the user should see the element    jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link    link=Spend profile
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
 
 Project Manager can submit the project's spend profiles
     [Documentation]    INFUND-3767
@@ -600,7 +603,8 @@ Industrial partner receives edit rights and can submit their spend profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
-    And the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    And the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
@@ -616,7 +620,8 @@ Academic partner receives edit rights and can submit their spend profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
-    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status

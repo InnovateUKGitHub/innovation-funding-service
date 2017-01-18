@@ -81,15 +81,15 @@ function resetDB() {
 function buildAndDeploy() {
     section "=> BUILDING AND DEPLOYING APPLICATION"
     cd ${rootDir}
-    if [[ ${noDeploy} -eq 1 ]]
+    if [[ ${noDeploy} -eq 0 ]]
     then
-        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
-        ./gradlew -Pcloud=development composeUp
-        return
-    else
         echo "=> Starting build and deploy script..."
         ./gradlew -Pcloud=development cleanDeployServices -x test
+    else
+        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
+
+    ./gradlew -Pcloud=development composeUp
 }
 
 function startSeleniumGrid() {
