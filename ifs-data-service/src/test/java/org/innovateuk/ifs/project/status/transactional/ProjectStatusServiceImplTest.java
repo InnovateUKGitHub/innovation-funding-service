@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
+import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -592,46 +593,26 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
             ApprovalType otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
             LocalDateTime otherDocsSubmittedDate) {
 
-        Application application = newApplication()
-                .build();
-        Organisation organisation = newOrganisation()
-                .build();
-        Role role = newRole()
-                .withType(UserRoleType.LEADAPPLICANT)
-                .build();
-        ProcessRole processRole = newProcessRole()
-                .withRole(role)
-                .withApplication(application)
-                .withOrganisation(organisation)
-                .build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation()
-                .withOrganisation(organisation)
-                .build();
-        Project project;
-        if (otherDocsSubmittedDate != null) {
-            project = newProject()
-                    .withId(projectId)
-                    .withApplication(application)
-                    .withPartnerOrganisations(asList(partnerOrganisation))
-                    .withOtherDocumentsApproved(otherDocsApproved)
-                    .withOtherDocumentsSubmittedDate(otherDocsSubmittedDate)
-                    .build();
-        } else {
-            project = newProject()
-                    .withId(projectId)
-                    .withApplication(application)
-                    .withPartnerOrganisations(asList(partnerOrganisation))
-                    .withOtherDocumentsApproved(otherDocsApproved)
-                    .build();
-        }
-        BankDetails bankDetail = newBankDetails()
-                .withProject(project)
-                .build();
-        SpendProfile spendprofile = newSpendProfile()
-                .withOrganisation(organisation)
-                .build();
-        MonitoringOfficer monitoringOfficer = newMonitoringOfficer()
-                .build();
+        Application application = newApplication().build();
+        Organisation organisation = newOrganisation().build();
+        Role role = newRole().withType(UserRoleType.LEADAPPLICANT).build();
+        ProcessRole processRole = newProcessRole().
+                withRole(role).
+                withApplication(application).
+                withOrganisation(organisation).
+                build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(partnerOrganisation)).
+                withOtherDocumentsApproved(otherDocsApproved).
+                withOtherDocumentsSubmittedDate(otherDocsSubmittedDate).
+                build();
+
+        BankDetails bankDetail = newBankDetails().withProject(project).build();
+        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));

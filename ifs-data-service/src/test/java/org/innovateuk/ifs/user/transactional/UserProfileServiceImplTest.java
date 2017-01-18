@@ -214,7 +214,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
-        inOrder.verify(profileRepositoryMock, times(2)).findOne(profile.getId());
+        inOrder.verify(profileRepositoryMock).findOne(profile.getId());
         inOrder.verify(profileRepositoryMock).save(profile);
         inOrder.verifyNoMoreInteractions();
     }
@@ -545,7 +545,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(profileRepositoryMock).findOne(initialProfile.getId());
         inOrder.verify(contractRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
@@ -586,7 +585,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(profileRepositoryMock).findOne(initialProfile.getId());
         inOrder.verify(contractRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
@@ -652,9 +650,8 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(profileRepositoryMock).save(newProfile);
         inOrder.verify(contractRepositoryMock).findByCurrentTrue();
-        inOrder.verify(profileRepositoryMock, times(2)).findOne(profileId);
+        inOrder.verify(profileRepositoryMock).findOne(profileId);
         inOrder.verify(profileRepositoryMock).save(profileWithContract);
         inOrder.verifyNoMoreInteractions();
     }
@@ -892,7 +889,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
         inOrder.verify(ethnicityMapperMock).mapIdToDomain(ethnicityResource.getId());
-        inOrder.verify(profileRepositoryMock, times(2)).findOne(originalProfile.getId());
+        inOrder.verify(profileRepositoryMock).findOne(originalProfile.getId());
         inOrder.verify(addressMapperMock).mapToDomain(addressResource);
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
 

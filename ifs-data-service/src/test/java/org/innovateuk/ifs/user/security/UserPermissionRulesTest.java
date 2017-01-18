@@ -154,8 +154,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role leadRole = newRole().withType(LEADAPPLICANT).build();
         Role collaboratorRole = newRole().withType(COLLABORATOR).build();
 
-        // ---- set-up Application 1 ----
-
         Application application1 = newApplication().build();
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
 
@@ -183,8 +181,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         when(processRoleRepositoryMock.findByUserId(application1Collaborator2.getId())).
                 thenReturn(singletonList(application1ConsortiumRoles.get(4)));
 
-        // ---- set-up Application 2 ----
-
         Application application2 = newApplication().build();
         when(applicationRepositoryMock.findOne(application2.getId())).thenReturn(application2);
 
@@ -207,10 +203,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         // user common to both applications
         when(processRoleRepositoryMock.findByUserId(application1Lead3AndApplication2Collaborator2.getId())).
                 thenReturn(asList(application1ConsortiumRoles.get(2),application2ConsortiumRoles.get(2)));
-
-
-        // ---- tests ----
-
+        
         // assert that all members of the application 1 consortium can see all other consortium members
         application1ConsortiumResources.forEach(user -> {
             application1ConsortiumResources.forEach(otherUser -> {

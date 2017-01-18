@@ -169,7 +169,11 @@ public class Application implements ProcessActivity {
         if (this.processRoles == null) {
             this.processRoles = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(processRoles));
+        for (ProcessRole processRole : processRoles) {
+            if (!this.processRoles.contains(processRole)) {
+                this.processRoles.add(processRole);
+            }
+        }
     }
 
     public LocalDate getStartDate() {

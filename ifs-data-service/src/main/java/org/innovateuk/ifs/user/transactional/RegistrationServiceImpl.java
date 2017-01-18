@@ -143,10 +143,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             roleName = APPLICANT.getName();
         }
         User newUser = assembleUserFromResource(userResource);
-        return validateUser(userResource, userResource.getPassword()).andOnSuccess(
-                validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(
-                        user -> addRoleToUser(user, roleName))).andOnSuccess(
-                                () -> createUserWithUid(newUser, userResource.getPassword()));
+        return validateUser(userResource, userResource.getPassword()).
+                andOnSuccess(
+                        () -> addUserToOrganisation(newUser, organisationId).
+                                andOnSuccess(user -> addRoleToUser(user, roleName))).
+                andOnSuccess(
+                        () -> createUserWithUid(newUser, userResource.getPassword())
+                );
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
@@ -191,9 +194,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     }
 
-    private ServiceResult<User> addOrganisationToUser(User user, Long organisationId) {
-        return find(organisation(organisationId)).andOnSuccessReturn(userOrganisation -> {
-            userOrganisation.addUser(user);
+    private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
+        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
+            org.addUser(user);
             return user;
         });
     }

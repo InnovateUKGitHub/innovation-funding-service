@@ -65,14 +65,8 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     public ProcessRoleBuilder withApplication(Application... applications) {
         return withArray((application, processRole) -> {
                 processRole.setApplicationId(application.getId());
-                // set the back reference
-                if (application.getProcessRoles() == null) {
-                    application.setProcessRoles(new ArrayList<>());
-                }
-                if (!application.getProcessRoles().contains(processRole)) {
-                    application.addUserApplicationRole(processRole);
-                }
-            }, applications);
+                application.addUserApplicationRole(processRole);
+           }, applications);
     }
 
     public ProcessRoleBuilder withOrganisation(Organisation... organisations) {

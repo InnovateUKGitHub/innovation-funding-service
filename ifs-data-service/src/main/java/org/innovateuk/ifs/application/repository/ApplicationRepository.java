@@ -41,7 +41,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
 	
 	List<Application> findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
-	
+
     Long countByCompetitionId(Long competitionId);
 
     Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
@@ -53,5 +53,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	Long countByCompetitionIdAndApplicationStatusIdNotInAndCompletionGreaterThan(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
 
 	Long countByCompetitionIdAndApplicationStatusIdInAndCompletionLessThanEqual(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
-    
+
+	Long countByProcessRolesUserIdAndCompetitionId(Long userId, Long competitionId);
+
 }

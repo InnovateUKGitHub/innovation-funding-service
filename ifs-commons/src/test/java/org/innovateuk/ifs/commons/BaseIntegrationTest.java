@@ -20,7 +20,7 @@ import java.util.List;
  * (e.g. {BaseRepositoryIntegrationTest}).
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest/*(classes = IntegrationTestConfiguration.class)*/
+@SpringBootTest
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest extends BaseTest {
 

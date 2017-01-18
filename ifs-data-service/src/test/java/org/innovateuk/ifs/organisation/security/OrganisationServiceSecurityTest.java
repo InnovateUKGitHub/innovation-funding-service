@@ -141,7 +141,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         }
 
         @Override
-        public ServiceResult<OrganisationResource> findByUserId(Long userId) {
+        public ServiceResult<OrganisationResource> getPrimaryForUser(Long userId) {
             return null;
         }
 

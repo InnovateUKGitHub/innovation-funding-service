@@ -16,7 +16,7 @@ public class ManageApplicationsRowViewModel {
     public ManageApplicationsRowViewModel(ApplicationCountSummaryResource applicationCountSummaryResource) {
         this.id = applicationCountSummaryResource.getId();
         this.title = applicationCountSummaryResource.getName();
-        this.leadOrganisation = applicationCountSummaryResource.getLeadOrganisation();
+        this.leadOrganisation = applicationCountSummaryResource.getLeadOrganisationId();
         this.assessors = applicationCountSummaryResource.getAssessors();
         this.accepted = applicationCountSummaryResource.getAccepted();
         this.completed = applicationCountSummaryResource.getSubmitted();

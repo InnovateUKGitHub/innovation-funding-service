@@ -73,11 +73,8 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    /**
-     * Find the first organisation associated with a user
-     */
     @Override
-    public ServiceResult<OrganisationResource> findByUserId(final Long userId) {
+    public ServiceResult<OrganisationResource> getPrimaryForUser(final Long userId) {
         List<Organisation> organisations = organisationRepository.findByUsersId(userId);
         if (organisations.size() == 0) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));

@@ -122,8 +122,12 @@ public class Organisation {
     }
 
     public void addUser(User user) {
-        if (users == null) users = new ArrayList<>();
-        if (!users.contains(user)) users.add(user);
+        if (users == null) {
+            users = new ArrayList<>();
+        }
+        if (!users.contains(user)) {
+            users.add(user);
+        }
     }
 
     public OrganisationType getOrganisationType() {

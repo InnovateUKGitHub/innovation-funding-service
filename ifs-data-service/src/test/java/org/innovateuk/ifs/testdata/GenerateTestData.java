@@ -724,7 +724,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     protected OrganisationResource retrieveOrganisationByUserId(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.findByUserId(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccessObjectOrThrowException());
     }
 
     protected UserResource systemRegistrar() {

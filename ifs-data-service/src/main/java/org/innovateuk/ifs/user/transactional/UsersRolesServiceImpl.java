@@ -72,12 +72,7 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
-        List<ProcessRole> processRoles = processRoleRepository.findByUserId(userId);
-        long count = processRoles.stream().filter(processRole -> {
-            Application application = applicationRepository.findOne(processRole.getApplicationId());
-            return application.getCompetition().getId().equals(competitionId);
-        }).count();
-        return serviceSuccess(count > 0);
+        return serviceSuccess(applicationRepository.countByProcessRolesUserIdAndCompetitionId(userId, competitionId) > 0);
     }
 
     private List<ProcessRoleResource> processRolesToResources(final List<ProcessRole> processRoles) {
