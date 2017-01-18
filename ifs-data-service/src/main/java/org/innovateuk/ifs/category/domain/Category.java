@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.util.List;
 
 /**
  * Abstract Category.
@@ -19,14 +18,10 @@ public abstract class Category {
     private Long id;
     private String name;
 
+    // the type attribute is used by a spring data query
     @Column(name = "type", insertable = false, updatable = false)
     @Enumerated(value = EnumType.STRING)
     private CategoryType type;
-
-
-    // todo can we do without this?
-    @OneToMany(mappedBy="category")
-    private List<CategoryLink> categoryLinks;
 
     Category() {
         // default constructor
@@ -56,10 +51,6 @@ public abstract class Category {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public CategoryType getType() {
-        return type;
     }
 
     @Override
