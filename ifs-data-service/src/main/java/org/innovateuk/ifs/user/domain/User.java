@@ -308,6 +308,9 @@ public class User implements Serializable {
     }
 
     public void addInnovationArea(InnovationArea innovationArea) {
+        if (innovationArea == null) {
+            throw new NullPointerException("innovationArea cannot be null");
+        }
         innovationAreas.add(new UserInnovationAreaLink(this, innovationArea));
     }
 
