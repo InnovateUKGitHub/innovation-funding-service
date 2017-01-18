@@ -161,8 +161,7 @@ Economic Benefit: Guidance
 
 Finance overview
     [Documentation]    INFUND-3394
-    [Tags]    Pending
-    # TODO Pending due to Infund-7501
+    [Tags]
     When the user clicks the button/link    link=Finances overview
     Then the user should see the text in the page    Finances summary
     And the finance summary total should be correct
