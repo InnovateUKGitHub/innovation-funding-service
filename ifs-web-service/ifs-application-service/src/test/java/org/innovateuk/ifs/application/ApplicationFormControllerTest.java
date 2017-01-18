@@ -90,6 +90,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Mock
+    private OverheadFileSaver overheadFileSaver;
+
+    @Mock
     private Model model;
 
     private ApplicationResource application;
@@ -129,6 +132,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
     }
 
     @Test
