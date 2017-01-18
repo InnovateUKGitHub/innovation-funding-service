@@ -21,11 +21,7 @@ Lead applicant details should show in the invite page
     And the user should see the text in the page    Worth Internet Systems
 
 User cannot continue if an organisation type is not selected
-    [Documentation]    INFUND-1005
-    ...
-    ...    INFUND-1780
-    ...
-    ...    INFUND-1166
+    [Documentation]    INFUND-1005, INFUND-1780, INFUND-1166
     [Tags]
     Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -44,9 +40,7 @@ User is able to select only one type
     Then the radio button should have the new selection    1
 
 The type of organisation navigates to the correct page
-    [Documentation]    INFUND-1780
-    ...
-    ...    INFUND-1231
+    [Documentation]    INFUND-1780, INFUND-1231
     [Tags]
     When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")

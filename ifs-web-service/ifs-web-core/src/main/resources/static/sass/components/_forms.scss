@@ -347,7 +347,7 @@ select.form-control{
 }
 
 .js-progressive-group-select,
-[data-progressive-group-select] {
+.js-enabled [data-progressive-group-select] {
   @include media (tablet) {
     max-width: 40%;
   }

@@ -27,7 +27,6 @@ IFS.competitionManagement.loadOrder = {
   'competition-management': {
     init: function () {
       IFS.competitionManagement.repeatableRows.init()
-      IFS.competitionManagement.progressiveGroupSelect.init()
     }
   },
   'competition-setup': {

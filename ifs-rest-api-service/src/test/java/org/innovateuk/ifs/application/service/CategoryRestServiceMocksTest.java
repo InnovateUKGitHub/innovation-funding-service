@@ -1,17 +1,20 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestServiceImpl;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.innovationAreaResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.innovationSectorResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.researchCategoryResourceListType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -27,32 +30,53 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
         return new CategoryRestServiceImpl();
     }
 
-    // todo rename the test methdds
-    // todo test the other reset service methods
-
     @Test
-    public void test_findByType() {
-
+    public void getInnovationAreas() {
         String expectedUrl = categoryRestURL + "/findInnovationAreas";
-        List<InnovationAreaResource> returnedCategoryResources = Arrays.asList(1,2,3).stream().map(i -> new InnovationAreaResource()).collect(Collectors.toList());
+        List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
 
         setupGetWithRestResultExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources);
 
-        // now run the method under test
-        List<? extends CategoryResource> categoryResources = service.getInnovationAreas().getSuccessObjectOrThrowException();
+        List<InnovationAreaResource> categoryResources = service.getInnovationAreas().getSuccessObjectOrThrowException();
+
         assertNotNull(categoryResources);
         assertEquals(returnedCategoryResources, categoryResources);
     }
 
     @Test
-    public void test_findByParent() {
+    public void getInnovationSectors() {
+        String expectedUrl = categoryRestURL + "/findInnovationSectors";
+        List<InnovationSectorResource> returnedCategoryResources = newInnovationSectorResource().build(3);
 
+        setupGetWithRestResultExpectations(expectedUrl, innovationSectorResourceListType(), returnedCategoryResources);
+
+        List<InnovationSectorResource> categoryResources = service.getInnovationSectors().getSuccessObjectOrThrowException();
+
+        assertNotNull(categoryResources);
+        assertEquals(returnedCategoryResources, categoryResources);
+    }
+
+    @Test
+    public void getResearchCategories() {
+        String expectedUrl = categoryRestURL + "/findResearchCategories";
+        List<ResearchCategoryResource> returnedCategoryResources = newResearchCategoryResource().build(3);
+
+        setupGetWithRestResultExpectations(expectedUrl, researchCategoryResourceListType(), returnedCategoryResources);
+
+        List<ResearchCategoryResource> categoryResources = service.getResearchCategories().getSuccessObjectOrThrowException();
+
+        assertNotNull(categoryResources);
+        assertEquals(returnedCategoryResources, categoryResources);
+    }
+
+    @Test
+    public void getInnovationAreasBySector() {
         String expectedUrl = categoryRestURL + "/findByInnovationSector/1";
-        List<InnovationAreaResource> returnedCategoryResources = Arrays.asList(1,2,3).stream().map(i -> new InnovationAreaResource()).collect(Collectors.toList());
+        List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources);
 
-        // now run the method under test
-        List<? extends CategoryResource> categoryResources = service.getInnovatationAreasBySector(1L).getSuccessObjectOrThrowException();
+        List<InnovationAreaResource> categoryResources = service.getInnovationAreasBySector(1L).getSuccessObjectOrThrowException();
+
         assertNotNull(categoryResources);
         assertEquals(returnedCategoryResources, categoryResources);
     }

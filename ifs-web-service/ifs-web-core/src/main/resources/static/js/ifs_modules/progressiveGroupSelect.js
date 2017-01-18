@@ -1,5 +1,5 @@
 // creates additional <select> elements using the <optgroup> for progressive filters of long drop-downs
-IFS.competitionManagement.progressiveGroupSelect = (function () {
+IFS.core.progressiveGroupSelect = (function () {
   'use strict'
   var s // private alias to settings
 
@@ -10,7 +10,7 @@ IFS.competitionManagement.progressiveGroupSelect = (function () {
     init: function () {
       s = this.settings
 
-      jQuery.each(jQuery(s.progressiveGroupSelect), function () {
+      jQuery(s.progressiveGroupSelect).each(function () {
         var el = jQuery(this)
 
         // disable the second <select> if an option is not already selected
@@ -28,10 +28,7 @@ IFS.competitionManagement.progressiveGroupSelect = (function () {
           })
         })
 
-        IFS.competitionManagement.progressiveGroupSelect.createParentSelect(el)
-
-        // remove the <optgroup> wrappers
-        jQuery('optgroup option', el).unwrap('optgroup')
+        IFS.core.progressiveGroupSelect.createParentSelect(el)
       })
     },
     createParentSelect: function (el) {
@@ -41,8 +38,9 @@ IFS.competitionManagement.progressiveGroupSelect = (function () {
       var parentSelect = jQuery('<select class="form-control width-full js-progressive-group-select" aria-label="' + parentSelectTitle + '"><option value="">' + parentSelectInstruction + '</option></select>')
       var optgroupsArray = el.find('optgroup')
       var optionsArray = []
+      var selectedOption = el.find('option:selected')
 
-      jQuery(optgroupsArray).each(function () {
+      optgroupsArray.each(function () {
         // create new options for each optgroup element
         optionsArray.push('<option value="' + jQuery(this).attr('label') + '">' + jQuery(this).attr('label') + '</option>')
       })
@@ -51,16 +49,17 @@ IFS.competitionManagement.progressiveGroupSelect = (function () {
       parentSelect.append(optionsArray)
 
       // select parent option if an option is already selected
-      if (el.find('option:selected').val() !== '') {
-        var selectedOption = jQuery('option:selected', el).attr('data-optgroup-label')
-
-        jQuery('option[value="' + selectedOption + '"]', parentSelect).prop('selected', true)
+      if (selectedOption.val() !== '') {
+        jQuery('option[value="' + selectedOption.attr('data-optgroup-label') + '"]', parentSelect).prop('selected', true)
       }
 
       // bind event handlers
       parentSelect.on('change', function () {
-        IFS.competitionManagement.progressiveGroupSelect.update(el, parentSelect)
+        IFS.core.progressiveGroupSelect.update(el, parentSelect)
       })
+
+      // remove the <optgroup> wrappers
+      jQuery('optgroup option', el).unwrap('optgroup')
 
       // update the DOM with the new <select>
       el.before(parentSelect)

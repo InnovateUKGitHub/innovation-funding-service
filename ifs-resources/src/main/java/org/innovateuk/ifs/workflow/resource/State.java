@@ -5,7 +5,9 @@ package org.innovateuk.ifs.workflow.resource;
  */
 public enum State {
 
+    CREATED,
     PENDING,
+    WITHDRAWN,
     REJECTED,
     ACCEPTED,
     OPEN,
