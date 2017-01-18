@@ -64,8 +64,7 @@
                     Yes
                 </label>
                 <label class="block-label selection-button-radio" for="include-growth-table-no">
-                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required"
-                           th:disabled="${competition.competitionTypeName=='Sector'}"/>
+                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${isSectorCompetition}"/>
                     No
                 </label>
             </fieldset>

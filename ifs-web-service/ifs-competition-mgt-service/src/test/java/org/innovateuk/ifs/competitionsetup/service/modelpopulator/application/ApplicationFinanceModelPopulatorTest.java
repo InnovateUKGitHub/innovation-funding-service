@@ -3,9 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +15,8 @@ import org.springframework.ui.Model;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationFinanceModelPopulatorTest {
@@ -34,9 +29,6 @@ public class ApplicationFinanceModelPopulatorTest {
 
 	@Mock
 	private SectionService sectionService;
-
-	@Mock
-	private CompetitionSetupFinanceService competitionSetupFinanceService;
 	
 	@Test
 	public void testSectionToPopulateModel() {
@@ -52,16 +44,16 @@ public class ApplicationFinanceModelPopulatorTest {
 				.withName("name")
 				.withId(competitionId)
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+				.withCompetitionTypeName("programme")
 				.build();
-		CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
-				build();
+
 		Model model = new ExtendedModelMap();
-		when(competitionSetupFinanceService.getByCompetitionId(cr.getId())).thenReturn(serviceSuccess(csfr));
 		// Method under test
 		populator.populateModel(model, cr, Optional.empty());
 		// Assertions
 		// First check that there is not more than we expect
-		assertEquals(1, model.asMap().size());
+		assertEquals(2, model.asMap().size());
 		assertEquals(competitionId, model.asMap().get("competitionId"));
+		assertEquals(false, model.asMap().get("isSectorCompetition"));
 	}
 }

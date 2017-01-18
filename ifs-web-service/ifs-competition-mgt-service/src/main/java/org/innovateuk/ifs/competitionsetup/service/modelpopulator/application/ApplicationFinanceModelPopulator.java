@@ -29,6 +29,7 @@ public class ApplicationFinanceModelPopulator implements CompetitionSetupSubsect
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
 
+		model.addAttribute("isSectorCompetition", "sector".equalsIgnoreCase(competitionResource.getCompetitionTypeName()));
 		model.addAttribute(COMPETITION_ID_KEY, competitionResource.getId());
 	}
 }
