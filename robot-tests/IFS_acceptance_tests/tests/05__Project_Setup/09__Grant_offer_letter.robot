@@ -22,6 +22,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-6741 As the service delivery manager I want the service to generate a Grant Offer Letter once both the Spend Profiles and Other documents are approved so that the competitions team can review and publish to the project team
 ...
 ...               INFUND-7361 GOL is seen by internal user soon after the external user uploads it
+...
+...               INFUND-6048 As the contracts team I can have access to a generated Grant Offer Letter so that I can send it to the partners
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -67,7 +69,7 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
 Project finance user selects the grant offer letter
-    [Documentation]  INFUND-6377
+    [Documentation]  INFUND-6377, INFUND-6048
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
