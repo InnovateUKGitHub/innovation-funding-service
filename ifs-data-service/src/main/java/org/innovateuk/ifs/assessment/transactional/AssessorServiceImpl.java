@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -36,6 +37,9 @@ public class AssessorServiceImpl implements AssessorService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private InnovationAreaMapper innovationAreaMapper;
+
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
@@ -46,6 +50,8 @@ public class AssessorServiceImpl implements AssessorService {
                 userRegistrationResource.setRoles(singletonList(assessorRole));
                 return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
                     assignCompetitionParticipantsToUser(created);
+                    created.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
+                    userRepository.save(created);
                 });
             });
         });

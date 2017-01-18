@@ -36,7 +36,7 @@ public class CategoryRestServiceImpl extends BaseRestService implements Category
     }
 
     @Override
-    public RestResult<List<InnovationAreaResource>> getInnovatationAreasBySector(long sectorId) {
+    public RestResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId) {
         return getWithRestResult(categoryRestURL + "/findByInnovationSector/" + sectorId, innovationAreaResourceListType());
     }
 }
