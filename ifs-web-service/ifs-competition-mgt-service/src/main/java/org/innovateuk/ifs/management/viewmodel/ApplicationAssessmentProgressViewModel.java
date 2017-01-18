@@ -19,17 +19,14 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAvailableAssessorsRowViewModel> available;
     private String sortField;
 
-    public ApplicationAssessmentProgressViewModel(Long applicationId, String applicationName, Long competitionId,
-                                                  String competitionName, List<String> partnerOrganisations,
-                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
-                                                  List<ApplicationAvailableAssessorsRowViewModel> available,
-                                                  String sortField) {
     public ApplicationAssessmentProgressViewModel(Long applicationId,
                                                   String applicationName,
                                                   Long competitionId,
                                                   String competitionName,
                                                   List<String> partnerOrganisations,
-                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned) {
+                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
+                                                  List<ApplicationAvailableAssessorsRowViewModel> available,
+                                                  String sortField) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;
