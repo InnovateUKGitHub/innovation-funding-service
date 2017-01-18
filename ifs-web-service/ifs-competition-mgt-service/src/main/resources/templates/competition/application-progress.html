@@ -43,7 +43,7 @@
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -112,7 +112,7 @@
             <h2 class="heading-medium">Rejected (1)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -141,7 +141,7 @@
             <h2 class="heading-medium">Previously assigned (0)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -268,7 +268,7 @@
 
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
-                    <h4><span class="heading-xlarge no-margin available" th:text="${#lists.size(model.available)}">20</span> <strong>Assessors</strong></h4>
+                    <p><span class="heading-xlarge no-margin" th:text="${#lists.size(model.available)}">20</span> <span class="heading-small">Assessors</span></p>
                 </div>
 
                 <div class="column-third alignright">
@@ -290,7 +290,7 @@
             </div>
 
             <div class="table-overflow">
-                <table id="available-assessors-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -311,6 +311,9 @@
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin">Assign</a>
                             </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.available)}">
+                            <td colspan="6">There were no available assessors found.</td>
                         </tr>
                     </tbody>
                 </table>
