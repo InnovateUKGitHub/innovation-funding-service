@@ -85,7 +85,7 @@ public class ApplicationForm extends Form {
         return researchCategoryId;
     }
 
-    public void setResearchCategory(Long researchCategoryId) {
+    public void setResearchCategoryId(Long researchCategoryId) {
         this.researchCategoryId = researchCategoryId;
     }
 }

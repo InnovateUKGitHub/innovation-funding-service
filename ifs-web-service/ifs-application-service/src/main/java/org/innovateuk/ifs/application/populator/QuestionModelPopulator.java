@@ -150,7 +150,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, application.getId());
         questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
-        questionApplicationViewModel.setResearchCategoryId(applicationFinanceResource.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+        if (applicationFinanceResource != null) {
+            questionApplicationViewModel.setResearchCategoryId(applicationFinanceResource.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+        }
 
         return questionApplicationViewModel;
     }

@@ -165,6 +165,8 @@ public class ApplicationController {
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        applicationModelPopulator.addResearchCategoryDetails(competition.getId(), applicationId, user, model);
+
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {

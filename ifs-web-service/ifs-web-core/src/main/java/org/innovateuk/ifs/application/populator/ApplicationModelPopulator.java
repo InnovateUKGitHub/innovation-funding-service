@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -47,6 +49,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Autowired
+    private FinanceService financeService;
 
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
@@ -147,6 +152,17 @@ public class ApplicationModelPopulator {
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
             }
+        }
+    }
+
+    public void addResearchCategoryDetails(Long competitionId, Long applicationId, UserResource user,
+                                           Model model) {
+
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(user.getId(), applicationId);
+        if (applicationFinanceResource != null) {
+            model.addAttribute("rsCategory", applicationFinanceResource.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+        } else {
+            model.addAttribute("rsCategory", null);
         }
     }
 
