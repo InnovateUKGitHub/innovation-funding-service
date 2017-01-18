@@ -154,8 +154,8 @@ Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831
     [Tags]
     when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
-    Then the user should see the text in the page    Empire Ltd
-    And the user should see the text in the page    60674010
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
 
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
@@ -216,8 +216,8 @@ Project finance user can see the viability checks for the industrial partner
     [Documentation]    INFUND-4831
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
-    Then the user should see the text in the page    Ludlow
-    And the user should see the text in the page    5353232
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user should see the text in the page
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856
