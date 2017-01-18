@@ -101,10 +101,6 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((affiliations, user) -> setField("affiliations", affiliations, user), affiliationsList);
     }
 
-    public UserBuilder withInnovationArea(InnovationArea... innovationAreas) {
-        return withArray((innovationArea, user) -> user.addInnovationArea(innovationArea), innovationAreas);
-    }
-
     @Override
     protected User createInitial() {
         return new User();

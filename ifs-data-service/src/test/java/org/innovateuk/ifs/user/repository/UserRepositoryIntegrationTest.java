@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
@@ -15,13 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.BuilderAmendFunctions.*;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
 public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<UserRepository> {
@@ -31,9 +30,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected void setRepository(UserRepository repository) {
         this.repository = repository;
     }
-
-    @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -129,20 +125,5 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
-    }
-
-    @Test
-    public void saveWithInnovationArea() {
-        InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
-
-        User user = newUser().with(id(null)).withUid("my-uid").withInnovationArea(innovationArea).build();
-
-        User savedUser = repository.save(user);
-
-        flushAndClearSession();
-
-        User retrievedUser = repository.findOne(savedUser.getId());
-
-        assertTrue(retrievedUser.getInnovationAreas().contains(innovationArea));
     }
 }

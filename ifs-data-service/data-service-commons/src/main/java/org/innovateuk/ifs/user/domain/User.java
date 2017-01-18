@@ -3,29 +3,22 @@ package org.innovateuk.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.domain.UserInnovationAreaLink;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -71,9 +64,6 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserInnovationAreaLink> innovationAreas = new HashSet<>();
 
     @Column(unique = true)
     private Long profileId;
@@ -249,13 +239,5 @@ public class User implements Serializable {
     public void setAffiliations(List<Affiliation> affiliations) {
         this.affiliations.clear();
         this.affiliations.addAll(affiliations);
-    }
-
-    public Set<InnovationArea> getInnovationAreas() {
-        return innovationAreas.stream().map(UserInnovationAreaLink::getCategory).collect(Collectors.toSet());
-    }
-
-    public void addInnovationArea(InnovationArea innovationArea) {
-        innovationAreas.add(new UserInnovationAreaLink(this, innovationArea));
     }
 }

@@ -2,36 +2,39 @@ package org.innovateuk.ifs.category.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.domain.Profile;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
- * Links a {@link User} to an {@link InnovationArea}.
+ * Links a {@link Profile} to an {@link InnovationArea}.
  */
 @Entity
-@DiscriminatorValue("org.innovateuk.ifs.user.domain.User")
-public class UserInnovationAreaLink extends CategoryLink<User, InnovationArea> {
+@DiscriminatorValue("org.innovateuk.ifs.user.domain.Profile")
+public class ProfileInnovationAreaLink extends CategoryLink<Profile, InnovationArea> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
-    private User user;
+    private Profile profile;
 
-    UserInnovationAreaLink() {
+    ProfileInnovationAreaLink() {
         // default constructor
     }
 
-    public UserInnovationAreaLink(User user, InnovationArea innovationArea) {
+    public ProfileInnovationAreaLink(Profile profile, InnovationArea innovationArea) {
         super(innovationArea);
-        if (user == null) {
-            throw new NullPointerException("user cannot be null");
+        if (profile == null) {
+            throw new NullPointerException("profile cannot be null");
         }
-        this.user = user;
+        this.profile = profile;
     }
 
     @Override
-    public User getEntity() {
-        return user;
+    public Profile getEntity() {
+        return profile;
     }
 
     @Override
@@ -40,11 +43,11 @@ public class UserInnovationAreaLink extends CategoryLink<User, InnovationArea> {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserInnovationAreaLink that = (UserInnovationAreaLink) o;
+        ProfileInnovationAreaLink that = (ProfileInnovationAreaLink) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(user, that.user)
+                .append(profile.getId(), that.profile.getId())
                 .isEquals();
     }
 
@@ -52,7 +55,7 @@ public class UserInnovationAreaLink extends CategoryLink<User, InnovationArea> {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(user)
+                .append(profile.getId())
                 .toHashCode();
     }
 }
