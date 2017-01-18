@@ -58,19 +58,6 @@ Comp admin should be able to view but not edit the finances for every partner
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
 
-Comp admin has read only view of Application details past Open date
-    [Documentation]    INFUND-6937
-    ...    Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
-    [Tags]
-    [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${CA_Live}
-    Then the user should see the element    jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
-    When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail
-    Then the user should not see the element    jQuery=.button:contains("Edit this question")
-    When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
-    And the user clicks the button/link    jQuery=.button:contains("Save and close")
-    Then the user should see the element    jQuery=ul.error-summary-list:contains("The competition is no longer editable.")
-
 Comp admin has read only view of Finances past Open Date
     [Documentation]    INFUND-6941
     [Tags]
