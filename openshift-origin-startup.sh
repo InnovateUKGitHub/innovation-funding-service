@@ -20,24 +20,30 @@ oc cluster up && {
   done
 
   sleep 10 # Need a further sleep...
-  exit 0 # Don't need to sync ldap against ifs-database
 
-  ldap=$(docker ps |awk '/ldap:/ {print $1}')
+  ldap=$(docker ps |awk '/k8s_ldap\./ {print $1}')
   [ -z "$ldap" ] && {
     echo ldap container not running. Investigate and fix.
     exit 1
   }
 
-  docker cp setup-files/scripts/docker/_delete-shib-users-remote.sh $ldap:/usr/local/bin/
-  docker exec -it $ldap /usr/local/bin/_delete-shib-users-remote.sh
+  export IDPHOST=$(oc get svc idp|awk '/^idp/ {print $2}')
+  [ -z "$IDPHOST" ] && {
+    echo cannot determine IP for idp openshift service. Investigate.
+    exit 1
+  }
 
-  echo "Refreshing ldap with users in ifs db"
-  ifsdb=$(oc get svc ifs-database|awk '/ifs-database/ {print $2}')
-  [ -z "$ifsdb" ] && {
+  export IFSDB=$(oc get svc ifs-database |awk '/^ifs-database/ {print $2}')
+  [ -z "$IFSDB" ] && {
     echo cannot determine IP for ifs-database openshift service. Investigate.
     exit 1
   }
 
-#  No longer required since the orangebus/ifs-ldap has up to date users that match the database image.
-  ./gradlew syncShib
+  echo Waiting some time for the IFS app to initialise...
+  sleep 120
+
+  echo "Refreshing ldap with users in ifs db"
+  docker exec -it $ldap /usr/local/bin/ldap-delete-all-users.sh
+  setup-files/scripts/docker/k8s-ldap-sync-from-ifs-db.sh
+  sudo sed -i "s/.*\sidp$/$IDPHOST idp/" /etc/hosts
 }

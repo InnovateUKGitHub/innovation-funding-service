@@ -21,7 +21,6 @@ items:
           name: idp
           ports:
           - containerPort: 443
-          - containerPort: 8443
           resources: {}
     test: false
     triggers:
@@ -36,9 +35,6 @@ items:
     - name: 443-tcp
       port: 443
       targetPort: 443
-    - name: 8443-tcp
-      port: 8443
-      targetPort: 8443
     selector:
       deploymentconfig: idp
   status:
@@ -51,7 +47,6 @@ items:
     host: idp
     port:
       targetPort: 443-tcp
-      targetPort: 8443-tcp
     tls:
       termination: passthrough
     to:
