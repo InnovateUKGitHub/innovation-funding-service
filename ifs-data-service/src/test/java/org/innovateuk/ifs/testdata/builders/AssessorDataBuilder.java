@@ -112,7 +112,12 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         return with((AssessorData data) -> {
             User user = userRepository.findOne(data.getUser().getId());
 
-            Set<InnovationArea> userInnovationAreas = innovationAreas.stream()
+            Set<String> userInnovationAreaNames = user.getInnovationAreas().stream()
+                    .map(InnovationArea::getName)
+                    .collect(toSet());
+
+            Set<InnovationArea> additionalInnovationAreas = innovationAreas.stream()
+                    .filter(innovationAreaName -> !userInnovationAreaNames.contains(innovationAreaName))
                     .map(innovationAreaName -> {
                         InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
 
@@ -124,7 +129,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     })
                     .collect(toSet());
 
-            user.addInnovationAreas(userInnovationAreas);
+            user.addInnovationAreas(additionalInnovationAreas);
 
             userRepository.save(user);
 
