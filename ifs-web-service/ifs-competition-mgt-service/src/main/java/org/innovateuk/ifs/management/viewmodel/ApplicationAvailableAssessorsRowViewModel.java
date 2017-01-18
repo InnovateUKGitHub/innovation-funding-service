@@ -9,12 +9,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ApplicationAvailableAssessorsRowViewModel extends ApplicationAssessmentProgressRowViewModel {
 
     private String skillAreas;
-    private long submittedApplications;
+    private long submittedCount;
 
     public ApplicationAvailableAssessorsRowViewModel(String name, String skillAreas, long totalApplications, long assignedApplications, long submittedApplications) {
         super(name, totalApplications, assignedApplications);
         this.skillAreas = skillAreas;
-        this.submittedApplications = submittedApplications;
+        this.submittedCount = submittedApplications;
     }
 
     public String getSkillAreas() {
@@ -26,11 +26,11 @@ public class ApplicationAvailableAssessorsRowViewModel extends ApplicationAssess
     }
 
     public long getSubmittedApplications() {
-        return submittedApplications;
+        return submittedCount;
     }
 
     public void setSubmittedApplications(long submittedApplications) {
-        this.submittedApplications = submittedApplications;
+        this.submittedCount = submittedApplications;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ApplicationAvailableAssessorsRowViewModel extends ApplicationAssess
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(submittedApplications, that.submittedApplications)
+                .append(submittedCount, that.submittedCount)
                 .append(skillAreas, that.skillAreas)
                 .isEquals();
     }
@@ -53,7 +53,7 @@ public class ApplicationAvailableAssessorsRowViewModel extends ApplicationAssess
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(skillAreas)
-                .append(submittedApplications)
+                .append(submittedCount)
                 .toHashCode();
     }
 }

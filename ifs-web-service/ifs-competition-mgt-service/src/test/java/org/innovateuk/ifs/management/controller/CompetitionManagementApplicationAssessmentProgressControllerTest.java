@@ -160,7 +160,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressAssignedRowViewModel("Gareth Morris", 3, 1, ACADEMIC,
                         asList("Technical feasibility", "Medicines Technology"), true, true, true, true));
 
-        List<ApplicationAvailableAssessorsRowViewModel> assessors = asList(
+        List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = asList(
                 new ApplicationAvailableAssessorsRowViewModel("Christopher Dockerty", "Solar Power, Genetics, Recycling", 9, 5, 2),
                 new ApplicationAvailableAssessorsRowViewModel("Jayne Gill", "Human computer interaction, Wearables, IoT", 4, 1, 1),
                 new ApplicationAvailableAssessorsRowViewModel("Narinder Goddard", "Electronic/photonic components", 3, 1, 0));
@@ -172,12 +172,12 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Connected digital additive manufacturing",
                 asList("Acme Ltd.", "IO Systems"),
                 expectedAssignedRows,
-                assessors
+                expectedAvailableAssessors,
+                "title"
         );
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("activeSortField", "title"))
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
 
@@ -188,7 +188,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
     }
 
     @Test
-    public void availableAssessorsSortedByTotalApplications() throws Exception {
+    public void applicationProgressWithAvailableAssessorsSortedByTotalApplications() throws Exception {
         Long competitionId = 1L;
         Long applicationId = 2L;
 
@@ -306,12 +306,12 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressAssignedRowViewModel("Gareth Morris", 3, 1, ACADEMIC,
                         asList("Technical feasibility", "Medicines Technology"), true, true, true, true));
 
-        List<ApplicationAvailableAssessorsRowViewModel> assessors = asList(
+        List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = asList(
                 new ApplicationAvailableAssessorsRowViewModel("Christopher Dockerty", "Solar Power, Genetics, Recycling", 9, 5, 2),
                 new ApplicationAvailableAssessorsRowViewModel("Jayne Gill", "Human computer interaction, Wearables, IoT", 4, 1, 1),
                 new ApplicationAvailableAssessorsRowViewModel("Narinder Goddard", "Electronic/photonic components", 3, 1, 0));
 
-        Collections.sort(assessors, Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
+        Collections.sort(expectedAvailableAssessors, Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
 
         ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
                 applicationId,
@@ -320,12 +320,12 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Connected digital additive manufacturing",
                 asList("Acme Ltd.", "IO Systems"),
                 expectedAssignedRows,
-                assessors
+                expectedAvailableAssessors,
+                "totalApplications"
         );
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sort=totalApplications", competitionId, applicationId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("activeSortField", "totalApplications"))
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
 

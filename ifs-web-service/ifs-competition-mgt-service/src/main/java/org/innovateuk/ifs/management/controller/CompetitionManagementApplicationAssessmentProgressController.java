@@ -31,19 +31,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sortFieldForAvailableAssessors(form.getSort())));
-        model.addAttribute("activeSortField", sortFieldForAvailableAssessors(form.getSort()));
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, form.getSort()));
         return "competition/application-progress";
-    }
-
-    private String sortFieldForAvailableAssessors(String sort) {
-        return activeSortField(sort,  "title", "skills", "totalApplications", "assignedApplications", "acceptedApplications");
-    }
-
-    private String activeSortField(String givenField, String defaultField, String... allowedFields) {
-        return Arrays.stream(allowedFields)
-                .filter(field -> givenField != null && givenField.equals(field))
-                .findAny()
-                .orElse(defaultField);
     }
 }

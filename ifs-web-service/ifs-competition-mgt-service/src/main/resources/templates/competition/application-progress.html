@@ -190,6 +190,7 @@
                     </tbody>
                 </table>
             </div>
+            */-->
 
             <h2 class="heading-medium">Available assessors</h2>
 
@@ -264,7 +265,7 @@
 
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
-                    <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+                    <h4><span class="heading-xlarge no-margin available" th:text="${#lists.size(model.available)}">20</span> <strong>Assessors</strong></h4>
                 </div>
 
                 <div class="column-third alignright">
@@ -272,11 +273,11 @@
                         <form method="get" >
                             <label for="sort-by">Sort by</label>
                             <select name="sort" id="sort-by" class="js-auto-submit form-control">
-                                <option value="title" th:selected="${(activeSortField == 'title')}">Assessor Name</option>
-                                <option value="skills" th:selected="${(activeSortField == 'skills')}">Skill areas</option>
-                                <option value="totalApplications" th:selected="${(activeSortField == 'totalApplications')}">Total applications</option>
-                                <option value="assignedApplications" th:selected="${(activeSortField == 'assignedApplications')}">Assigned applications</option>
-                                <option value="acceptedApplications" th:selected="${(activeSortField == 'acceptedApplications')}">Submitted applications</option>
+                                <option value="title" th:selected="${(model.sortField == 'title')}">Assessor Name</option>
+                                <option value="skills" th:selected="${(model.sortField == 'skills')}">Skill areas</option>
+                                <option value="totalApplications" th:selected="${(model.sortField == 'totalApplications')}">Total applications</option>
+                                <option value="assignedApplications" th:selected="${(model.sortField == 'assignedApplications')}">Assigned applications</option>
+                                <option value="acceptedApplications" th:selected="${(model.sortField == 'acceptedApplications')}">Submitted applications</option>
                             </select>
 
                             <button class="button button-secondary button-small" type="submit">Sort</button>
@@ -298,11 +299,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="assessor : ${available.availableAssessors}">
+                        <tr th:each="assessor : ${model.available}">
                             <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">John Barnes</a></td>
                             <td th:text="${assessor.skillAreas}">skills</td>
-                            <td class="aligncentre" th:text="${assessor.totalApplications}">4</td>
-                            <td class="aligncentre" th:text="${assessor.assignedApplications}">2</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
+                            <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
                             <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin">Assign</a>

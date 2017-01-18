@@ -17,11 +17,13 @@ public class ApplicationAssessmentProgressViewModel {
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
     private List<ApplicationAvailableAssessorsRowViewModel> available;
+    private String sortField;
 
     public ApplicationAssessmentProgressViewModel(Long applicationId, String applicationName, Long competitionId,
                                                   String competitionName, List<String> partnerOrganisations,
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
-                                                  List<ApplicationAvailableAssessorsRowViewModel> available) {
+                                                  List<ApplicationAvailableAssessorsRowViewModel> available,
+                                                  String sortField) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;
@@ -29,6 +31,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.partnerOrganisations = partnerOrganisations;
         this.assigned = assigned;
         this.available = available;
+        this.sortField = sortField;
     }
 
     public Long getApplicationId() {
@@ -63,6 +66,14 @@ public class ApplicationAssessmentProgressViewModel {
         this.available = available;
     }
 
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,6 +90,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(assigned, that.assigned)
                 .append(available, that.available)
+                .append(sortField, that.sortField)
                 .isEquals();
     }
 
@@ -92,6 +104,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(partnerOrganisations)
                 .append(assigned)
                 .append(available)
+                .append(sortField)
                 .toHashCode();
     }
 }

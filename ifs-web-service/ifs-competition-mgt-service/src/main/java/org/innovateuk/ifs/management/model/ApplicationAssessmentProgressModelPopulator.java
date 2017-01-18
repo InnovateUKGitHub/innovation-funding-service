@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -47,6 +49,7 @@ public class ApplicationAssessmentProgressModelPopulator {
         Map<Boolean, List<ApplicationAssessorResource>> assessorsPartitionedByAvailable = assessors.stream().collect(partitioningBy(ApplicationAssessorResource::isAvailable));
         List<ApplicationAssessorResource> notAvailableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.FALSE, Collections.emptyList());
         List<ApplicationAssessorResource> availableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.TRUE, Collections.emptyList());
+        String sortField = sortFieldForAvailableAssessors(sortSelection);
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
@@ -54,8 +57,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessmentSummary.getCompetitionName(),
                 applicationAssessmentSummary.getPartnerOrganisations(),
                 getAssignedAssessors(notAvailableAssessors),
-                getSortedAvailableAssessors(availableAssessors, sortSelection)
-        );
+                getSortedAvailableAssessors(availableAssessors, sortFieldForAvailableAssessors(sortSelection)),
+                sortField);
     }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> getAssignedAssessors(List<ApplicationAssessorResource> assessors) {
@@ -87,9 +90,20 @@ public class ApplicationAssessmentProgressModelPopulator {
 
     private ApplicationAvailableAssessorsRowViewModel getAvailableRowViewModel(ApplicationAssessorResource applicationAssessorResource) {
         return new ApplicationAvailableAssessorsRowViewModel(applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
-                applicationAssessorResource.getSkillAreas(),
+                defaultString(applicationAssessorResource.getSkillAreas()),
                 applicationAssessorResource.getTotalApplicationsCount(),
                 applicationAssessorResource.getAssignedCount(),
                 applicationAssessorResource.getSubmittedCount());
+    }
+
+    private String sortFieldForAvailableAssessors(String sort) {
+        return activeSortField(sort,  "title", "skills", "totalApplications", "assignedApplications", "acceptedApplications");
+    }
+
+    private String activeSortField(String givenField, String defaultField, String... allowedFields) {
+        return Arrays.stream(allowedFields)
+                .filter(field -> givenField != null && givenField.equals(field))
+                .findAny()
+                .orElse(defaultField);
     }
 }
