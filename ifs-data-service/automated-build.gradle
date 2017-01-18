@@ -35,6 +35,8 @@ ext.idpRestBaseURL=""
 
 ext.ifsDataServiceRestBaseURL="http://localhost:8080"
 
+ext.companyHouseKey=ext.get('ifs.company-house.key')
+
 ext.postcodeLookupKey=""
 
 // Choose an appropriate location for a location to store uploaded files.
@@ -46,6 +48,8 @@ ext.postcodeLookupKey=""
 ext.ifsFileStorageLocation="/tmp"
 
 ext.ifsWebBaseURL="http://localhost:8080"
+
+ext.ifsWebSystemUserId=ext.get('ifs.web.system.user.id')
 
 ext.serverPort=""
 ext.activeProfile="environment"
