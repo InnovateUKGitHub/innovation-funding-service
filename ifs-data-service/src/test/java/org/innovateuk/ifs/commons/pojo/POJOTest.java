@@ -142,6 +142,7 @@ public class POJOTest {
             PartnerOrganisationResource.class,
             SpendProfileCSVResource.class,
             FinanceCheckSummaryResource.class,
+            FinanceCheckEligibilityResource.class,
             FinanceCheckPartnerStatusResource.class,
             SpendProfileCSVResource.class,
             ContractResource.class,
