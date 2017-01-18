@@ -13,9 +13,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -63,5 +61,9 @@ public class SectionPermissionRulesTest extends BasePermissionRulesTest<SectionP
 
         assertTrue(rules.onlyMemberOfProjectTeamCanMarkSectionAsInComplete(application, leadApplicant));
         assertFalse(rules.onlyMemberOfProjectTeamCanMarkSectionAsInComplete(application, nonProjectTeamMember));
+
+        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(application, leadApplicant));
+        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(application, nonProjectTeamMember));
+
     }
 }

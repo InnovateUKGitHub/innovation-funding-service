@@ -119,11 +119,11 @@
                     <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
                     <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
                         <#list 0..costLength as i>
-                            <td class="textright">${TableData.organisationEligibleCostTotal[org][i]}</td>
-                            <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]}</td>
+                            <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
+                            <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
                         </#list>
-                        <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]}</td>
-                        <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]}</td>
+                        <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
+                        <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
                 </tr>
             </#list>
         </tbody>
@@ -139,8 +139,8 @@
                     <#assign YearlyEligible += TableData.organisationEligibleCostTotal[org][i]>
                     <#assign YearlyGrant += TableData.organisationGrantAllocationTotal[org][i]>
                 </#list>
-                <td class="textright">${YearlyEligible}</td>
-                <td class="textright">${YearlyGrant}</td>
+                <td class="textright">${YearlyEligible?round}</td>
+                <td class="textright">${YearlyGrant?round}</td>
             </#list>
 
             <#assign grandTotalEligible = 0>
@@ -149,8 +149,8 @@
                 <#assign grandTotalEligible += TableData.getEligibleCostGrandTotalPerOrganisation()[org]>
                 <#assign grandTotalGrant += TableData.getGrantAllocationGrandTotalPerOrganisation()[org]>
             </#list>
-            <td class="textright">${grandTotalEligible}</td>
-            <td class="textright">${grandTotalGrant}</td>
+            <td class="textright">${grandTotalEligible?round}</td>
+            <td class="textright">${grandTotalGrant?round}</td>
         </tr>
         </tfoot>
     </table>
