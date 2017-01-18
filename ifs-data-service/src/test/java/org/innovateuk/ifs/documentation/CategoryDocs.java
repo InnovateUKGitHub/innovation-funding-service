@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.documentation;
 
+import org.innovateuk.ifs.category.builder.*;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
@@ -17,10 +21,16 @@ public static final FieldDescriptor[] categoryResourceFields = {
             fieldWithPath("children").description("child categories if exists")
     };
 
-// TODO https://devops.innovateuk.org/issue-tracking/browse/INFUND-7518
-//    public static final CategoryResourceBuilder categoryResourceBuilder = newCategoryResource()
-//            .withId(2L ,3L)
-//            .withName("Category name")
-//            .withType(CategoryType.INNOVATION_AREA)
-//            .withParent(1L);
+    public static final InnovationAreaResourceBuilder innovationAreaResourceBuilder = newInnovationAreaResource()
+            .withId(2L ,3L)
+            .withName("Category name")
+            .withParent(1L);
+
+    public static final InnovationSectorResourceBuilder innovationSectorResourceBuilder = newInnovationSectorResource()
+            .withId(2L ,3L)
+            .withName("Category name");
+
+    public static final ResearchCategoryResourceBuilder researchCategoryResourceBuilder = newResearchCategoryResource()
+            .withId(2L ,3L)
+            .withName("Category name");
 }
