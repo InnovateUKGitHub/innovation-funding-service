@@ -24,10 +24,6 @@ INSERT INTO form_input (word_count, form_input_type_id, competition_id, included
      SELECT null, @financial_overview_row_id, q.competition_id, false, "Research and development spend", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.name = 'Organisation Size';
-INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
-     SELECT null, @financial_overview_row_id, q.competition_id, false, "Full time employees", "Number of full time employees at your organisation at the end of the last financial year.", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
-     FROM question AS q
-     WHERE q.name = 'Organisation Size';
 
 -- Full time employees at year end
 SET @financial_staff_count_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_STAFF_COUNT');
