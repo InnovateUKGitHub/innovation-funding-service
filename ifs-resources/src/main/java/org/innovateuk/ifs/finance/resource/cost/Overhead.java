@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import javax.validation.constraints.Digits;
@@ -12,7 +13,10 @@ import java.math.BigDecimal;
  * {@code Overhead} implements {@link FinanceRowItem}
  *
  */
+@FieldRequiredIf(required = "calculationFile", argument = "useTotalOption", predicate = true, message = Overhead.FINANCE_OVERHEAD_FILE_REQUIRED, groups=Overhead.TotalCost.class)
 public class Overhead implements FinanceRowItem {
+    public final static String FINANCE_OVERHEAD_FILE_REQUIRED = "{validation.finance.overhead.file.required}";
+
     public interface RateNotZero{}
     public interface TotalCost{}
     private Long id;
