@@ -54,7 +54,7 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility", method = GET)
-    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibility(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId){
+    public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId){
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
 }

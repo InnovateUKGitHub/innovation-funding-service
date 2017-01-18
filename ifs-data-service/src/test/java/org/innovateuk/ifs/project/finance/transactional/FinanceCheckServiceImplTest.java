@@ -359,32 +359,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId).withName("Organisation1").build();
 
 
-        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = asMap(
-                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
-                        newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000000"), BigDecimal.ZERO).
-                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
-                                withLabourDays(100, 200).
-                                build(2)).
-                        build(),
-                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
-                        newMaterials().
-                                withCost(new BigDecimal("33.33")).
-                                withQuantity(1).
-                                build(1)).
-                        build(),
-                FinanceRowType.FINANCE, newGrantClaimCostCategory().withCosts(
-                        newGrantClaim().
-                                withGrantClaimPercentage(30).
-                                build(1)).
-                        build(),
-                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
-                        newOtherFunding().
-                                withOtherPublicFunding("Yes", "").
-                                withFundingSource(OTHER_FUNDING, "Other funder").
-                                withFundingAmount(null, BigDecimal.valueOf(1000)).
-                                build(2)).
-                        build());
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
 
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
@@ -475,7 +450,30 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId).withName("Organisation1").build();
 
-        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = asMap(
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().
+                withProject(projectId).
+                withOrganisation(organisation.getId()).
+                withFinanceOrganisationDetails(projectFinances).
+                build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+        when(financeRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+
+        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
+        assertTrue(result.isFailure());
+
+    }
+
+    @Override
+    protected FinanceCheckServiceImpl supplyServiceUnderTest() {
+        return new FinanceCheckServiceImpl();
+    }
+
+    private Map<FinanceRowType, FinanceRowCostCategory> createProjectFinance() {
+        return asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
                                 withGrossAnnualSalary(new BigDecimal("10000000"), BigDecimal.ZERO).
@@ -501,24 +499,5 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withFundingAmount(null, BigDecimal.valueOf(1000)).
                                 build(2)).
                         build());
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().
-                withProject(projectId).
-                withOrganisation(organisation.getId()).
-                withFinanceOrganisationDetails(projectFinances).
-                build();
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
-        when(financeRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
-
-        ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
-        assertTrue(result.isFailure());
-
-    }
-
-    @Override
-    protected FinanceCheckServiceImpl supplyServiceUnderTest() {
-        return new FinanceCheckServiceImpl();
     }
 }
