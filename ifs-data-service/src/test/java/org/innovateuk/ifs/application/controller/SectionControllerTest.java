@@ -177,7 +177,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
         when(sectionService.markSectionAsNotRequired(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsInComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsNotRequired/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andDo(
                         document(

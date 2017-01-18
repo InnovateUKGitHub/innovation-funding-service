@@ -57,7 +57,7 @@ public class SectionController {
         return sectionService.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
-    @RequestMapping(value = "/markAsIncomplete/{sectionId}/{applicationId}/{markedAsInCompleteById}", method = POST)
+    @RequestMapping(value = "/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}", method = POST)
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                            @PathVariable("applicationId") final Long applicationId,
                                            @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
