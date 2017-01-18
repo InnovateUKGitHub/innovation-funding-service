@@ -20,6 +20,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-6375 As a partner I want to receive a notification when Project Setup has been successfully completed so that I am clear on what steps to take now the project is live
 ...
 ...               INFUND-6741 As the service delivery manager I want the service to generate a Grant Offer Letter once both the Spend Profiles and Other documents are approved so that the competitions team can review and publish to the project team
+...
+...               INFUND-7361 GOL is seen by internal user soon after the external user uploads it
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -206,6 +208,14 @@ PM should be able upload a file and then access the Send button
     When the user clicks the button/link    link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
+
+Project finance cannot access the GOL before it is sent by PM
+    [Documentation]    INFUND-7361
+    [Tags]    HappyPath
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    # TODO Remove the below comment once acceptance branch is merged to dev
+    # Then the user should not see the text in the page  Signed grant offer letter
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849
@@ -460,10 +470,12 @@ project finance approves Viability for
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Send")
     log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Send")
     log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}

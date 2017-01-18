@@ -3,11 +3,13 @@ package org.innovateuk.ifs.assessment.repository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -25,6 +27,12 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     @Override
     Assessment findOneByParticipantId(Long participantId);
+
+    Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
+
+    long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
+
+    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long applicationId, Set<State> states);
 
     List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 

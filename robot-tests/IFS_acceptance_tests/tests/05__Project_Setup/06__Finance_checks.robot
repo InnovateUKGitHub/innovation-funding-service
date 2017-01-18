@@ -24,7 +24,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 *** Test Cases ***
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016
-    [Tags]  HappyPath    Failing
+    [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=table.table-progress
@@ -37,7 +37,6 @@ Project Finance user can see the finance check summary page
 Project finance approves Viability
     [Documentation]  INFUND-7076
     [Tags]  HappyPath
-    [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     When project finance approves Viability for  1
     Then project finance approves Viability for  2
     # TODO some extra validation testing INFUND-7076

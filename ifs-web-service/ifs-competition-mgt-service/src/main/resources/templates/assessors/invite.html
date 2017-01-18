@@ -96,7 +96,7 @@
                                           th:text="${err}" />
                                 </span>
                             </label>
-                            <p class="form-hint">The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</p>
+                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessor(s) to list'.</p>
                             <select th:field="*{selectedInnovationArea}"
                                     class="form-control width-full"
                                     required="required"
@@ -213,6 +213,9 @@
                                 <br />
                                 <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
                             </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="5">There are no assessors to be invited to this competition.</td>
                         </tr>
                     </tbody>
                 </table>

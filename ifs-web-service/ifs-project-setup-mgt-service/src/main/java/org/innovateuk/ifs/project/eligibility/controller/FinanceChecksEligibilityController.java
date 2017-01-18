@@ -1,28 +1,25 @@
 package org.innovateuk.ifs.project.eligibility.controller;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.function.Supplier;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * This controller serves the Eligibility page where internal users can confirm the eligibility of a partner organisation's
+ * This controller serves the Eligibility page where internal users can confirm the viability of a partner organisation's
  * financial position on a Project
  */
 @Controller
@@ -30,95 +27,42 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class FinanceChecksEligibilityController {
 
     @Autowired
-    private ProjectFinanceService financeService;
+    private ProjectService projectService;
 
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private FinanceCheckService financeCheckService;
+
+    @Autowired
+    private OrganisationService organisationService;
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
     public String viewEligibility(@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId, Model model) {
+                                @PathVariable("organisationId") Long organisationId, Model model) {
 
-        return doViewEligibility(projectId, organisationId, model, null);
+        return doViewEligibility(projectId, organisationId, model);
     }
 
-    private String doViewEligibility(Long projectId, Long organisationId, Model model, FinanceChecksEligibilityForm form) {
-
-        EligibilityResource eligibility = financeService.getEligibility(projectId, organisationId);
-
-        if (form == null) {
-            form = getEligibilityForm(eligibility);
-        }
-
-        model.addAttribute("model", getViewModel(projectId, eligibility));
-        model.addAttribute("form", form);
+    private String doViewEligibility(Long projectId, Long organisationId, Model model) {
+        model.addAttribute("model", getViewModel(projectId, organisationId, model));
         return "project/financecheck/eligibility";
     }
 
-    private FinanceChecksEligibilityForm getEligibilityForm(EligibilityResource eligibility) {
+    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
 
-        boolean confirmEligibilityChecked = eligibility.getEligibilityStatus() != EligibilityStatus.UNSET;
 
-        return new FinanceChecksEligibilityForm(eligibility.getEligibilityStatus(), confirmEligibilityChecked);
-    }
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
 
-    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, EligibilityResource eligibility) {
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
-        boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
+        FinanceCheckEligibilityResource eligibility = financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId);
 
-        return new FinanceChecksEligibilityViewModel(projectId, eligibilityApproved, eligibility.getEligibilityStatus(),
-                eligibility.getEligibilityApprovalUserFirstName(), eligibility.getEligibilityApprovalUserLastName(),
-                eligibility.getEligibilityApprovalDate());
-
-    }
-
-    @RequestMapping(method = POST, params = "confirm-eligibility")
-    public String confirmEligibility(@PathVariable("projectId") Long projectId,
-                                     @PathVariable("organisationId") Long organisationId,
-                                     @ModelAttribute("form") FinanceChecksEligibilityForm form,
-                                     @SuppressWarnings("unused") BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
-                                     Model model) {
-
-        Supplier<String> successView = () ->
-                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
-
-        return doSaveEligibility(projectId, organisationId, Eligibility.APPROVED, form, validationHandler, model, successView);
-    }
-
-    @RequestMapping(method = POST, params = "save-and-continue")
-    public String saveAndContinue(@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId,
-                                  @ModelAttribute("form") FinanceChecksEligibilityForm form,
-                                  @SuppressWarnings("unused") BindingResult bindingResult,
-                                  ValidationHandler validationHandler,
-                                  Model model) {
-
-        Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
-
-        return doSaveEligibility(projectId, organisationId, Eligibility.REVIEW, form, validationHandler, model, successView);
-    }
-
-    private String doSaveEligibility(Long projectId, Long organisationId, Eligibility eligibility, FinanceChecksEligibilityForm form,
-                                   ValidationHandler validationHandler, Model model, Supplier<String> successView) {
-
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, form);
-
-        EligibilityStatus statusToSend = getRagStatus(form);
-
-        ServiceResult<Void> saveEligibilityResult = financeService.saveEligibility(projectId, organisationId, eligibility, statusToSend);
-
-        return validationHandler
-                .addAnyErrors(saveEligibilityResult)
-                .failNowOrSucceedWith(failureView, successView);
-
-    }
-
-    private EligibilityStatus getRagStatus(FinanceChecksEligibilityForm form) {
-        EligibilityStatus statusToSend;
-
-        if (form.isConfirmEligibilityChecked()) {
-            statusToSend = form.getEligibilityStatus();
-        } else {
-            statusToSend = EligibilityStatus.UNSET;
-        }
-        return statusToSend;
+        return new FinanceChecksEligibilityViewModel(eligibility, organisation.getName(), project.getName(), application.getFormattedId(), leadPartnerOrganisation, project.getId());
     }
 }
