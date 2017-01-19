@@ -3,7 +3,6 @@ package org.innovateuk.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.domain.Application;
 
 import javax.persistence.*;
 
@@ -110,9 +109,9 @@ public class ProcessRole {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(user, that.user)
-                .append(application, that.application)
+                .append(applicationId, that.applicationId)
                 .append(role, that.role)
-                .append(organisation, that.organisation)
+                .append(organisationId, that.organisationId)
                 .isEquals();
     }
 
@@ -121,9 +120,9 @@ public class ProcessRole {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(user)
-                .append(application)
+                .append(applicationId)
                 .append(role)
-                .append(organisation)
+                .append(organisationId)
                 .toHashCode();
     }
 }

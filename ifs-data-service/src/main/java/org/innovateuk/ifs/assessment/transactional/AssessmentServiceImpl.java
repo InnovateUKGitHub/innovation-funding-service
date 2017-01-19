@@ -154,7 +154,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                         .andOnSuccess(activityState -> {
                                             ProcessRole processRole = new ProcessRole();
                                             processRole.setUser(assessor);
-                                            processRole.setApplication(application);
+                                            processRole.setApplicationId(application.getId());
                                             processRole.setRole(role);
 
                                             ProcessRole newProcessRole = processRoleRepository.save(processRole);
