@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.transactional;
+package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
