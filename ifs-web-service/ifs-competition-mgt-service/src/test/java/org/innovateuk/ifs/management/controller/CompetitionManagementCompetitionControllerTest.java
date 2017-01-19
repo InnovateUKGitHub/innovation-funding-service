@@ -4,8 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionClosedModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.CompetitionClosedViewModel;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInAssessmentViewModel;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,10 +51,10 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("competition/competition-in-assessment"))
+                .andExpect(view().name("competition/competition-in-flight"))
                 .andReturn();
 
-        CompetitionInAssessmentViewModel model = (CompetitionInAssessmentViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInFlightViewModel model = (CompetitionInFlightViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competition.getId(), model.getCompetitionId());
         assertEquals("Technology inspired", model.getCompetitionName());
@@ -75,10 +74,10 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("competition/competition-closed"))
+                .andExpect(view().name("competition/competition-in-flight"))
                 .andReturn();
 
-        CompetitionClosedViewModel model = (CompetitionClosedViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInFlightViewModel model = (CompetitionInFlightViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(competition.getId(), model.getCompetitionId());
         assertEquals("Photonics for health", model.getCompetitionName());

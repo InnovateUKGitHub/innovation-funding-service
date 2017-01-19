@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInAssessmentViewModel;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompetitionInFlightModelPopulator {
 
-    public CompetitionInAssessmentViewModel populateModel(CompetitionResource competition) {
-        return new CompetitionInAssessmentViewModel(competition);
+    public CompetitionInFlightViewModel populateModel(CompetitionResource competition) {
+        return new CompetitionInFlightViewModel(competition);
     }
 }

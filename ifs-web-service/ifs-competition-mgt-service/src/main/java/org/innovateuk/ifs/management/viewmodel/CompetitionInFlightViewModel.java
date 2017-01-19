@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * Holder of model attributes for the Competition Management Competition 'In Assessment' view.
  */
-public class CompetitionInAssessmentViewModel {
+public class CompetitionInFlightViewModel {
 
     private Long competitionId;
     private String competitionName;
@@ -22,7 +22,7 @@ public class CompetitionInAssessmentViewModel {
     private String lead;
     private BigDecimal funding;
 
-    public CompetitionInAssessmentViewModel(CompetitionResource competitionResource) {
+    public CompetitionInFlightViewModel(CompetitionResource competitionResource) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
