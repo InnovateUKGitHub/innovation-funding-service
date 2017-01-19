@@ -13,6 +13,8 @@ Documentation     INFUND-262: As a (lead) applicant, I want to see which fields 
 ...               INFUND-3288: Assigning questions more than once leads to an internal server error
 ...
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
+...
+...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
 Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Applicant
@@ -174,13 +176,36 @@ Appendices are assigned along with the question
     And the user clicks the button/link    jQuery=button:contains("Assign to lead for review")
     And the user should not see the text in the page    Upload
 
+Collaborator can see that Research area is not selected
+    [Documentation]  INFUND-6823
+    [Tags]
+    Given the user navigates to his finances page
+    Then the user should see the element  jQuery=.error-summary
+
+Lead selects Research Area
+    [Documentation]  INFUND-6823
+    [Tags]  Email
+    [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
+    # this test is tagged as Email since it relies on an earlier invitation being accepted via email
+    Given the user navigates to his finances page
+    Then the user should see the element      jQuery=.error-summary
+    When the user navigates to the page       ${DASHBOARD_URL}
+    Then the user clicks the button/link      link=Assign test
+    When the user clicks the button/link      Application details
+    Then the user should see the element      jQuery=h2:contains("Research area determines funding")
+    And the user should see the element       jQuery=legend:contains("Research area")
+    When the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
+    Then the user clicks the button/link      link=Mark as complete
+    #    When the user navigates to his finances page
+    #    Then the user should not see the element  jQuery=.error-summary
+    # This is not yet working, due to upcomign functionality.
+
+
 Lead marks finances as complete
     [Documentation]    INFUND-3016
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Email
-    [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
-    # this test is tagged as Email since it relies on an earlier invitation being accepted via email
+    [Tags]  Pending
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link  link=Assign test
     And the applicant completes the application details
