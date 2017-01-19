@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
-import java.util.List;
+import java.util.Set;
 
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
@@ -21,7 +21,7 @@ public class ApplicationAssessorResource {
     private String firstName;
     private String lastName;
     private BusinessType businessType;
-    private List<InnovationAreaResource> innovationAreas;
+    private Set<InnovationAreaResource> innovationAreas;
     private String skillAreas;
     private String rejectReason;
     private String rejectComment;
@@ -39,7 +39,7 @@ public class ApplicationAssessorResource {
                                        String firstName,
                                        String lastName,
                                        BusinessType businessType,
-                                       List<InnovationAreaResource> innovationAreas,
+                                       Set<InnovationAreaResource> innovationAreas,
                                        String skillAreas,
                                        String rejectReason,
                                        String rejectComment,
@@ -97,11 +97,11 @@ public class ApplicationAssessorResource {
         this.businessType = businessType;
     }
 
-    public List<InnovationAreaResource> getInnovationAreas() {
+    public Set<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
     }
 
-    public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
+    public void setInnovationAreas(Set<InnovationAreaResource> innovationAreas) {
         this.innovationAreas = innovationAreas;
     }
 

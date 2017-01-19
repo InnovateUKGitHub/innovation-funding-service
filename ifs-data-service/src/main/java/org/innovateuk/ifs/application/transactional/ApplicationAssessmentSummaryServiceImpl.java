@@ -8,7 +8,6 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -24,10 +23,12 @@ import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.Optional.ofNullable;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -94,18 +96,15 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         User user = competitionParticipant.getUser();
         Optional<Profile> profile = ofNullable(profileRepository.findOne(user.getProfileId()));
 
-        Optional<Set<InnovationArea>> innovationAreas = profile.map(Profile::getInnovationAreas);
-        List<InnovationAreaResource> innovationAreaResources = null;
-        if (innovationAreas.isPresent()) {
-            innovationAreaResources = simpleMap(innovationAreas.get(), innovationAreaMapper::mapToResource);
-        }
+        Set<InnovationAreaResource> innovationAreas = simpleMapSet(profile.map(Profile::getInnovationAreas)
+                .orElse(emptySet()), innovationAreaMapper::mapToResource);
 
         ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
         applicationAssessorResource.setUserId(user.getId());
         applicationAssessorResource.setFirstName(user.getFirstName());
         applicationAssessorResource.setLastName(user.getLastName());
         applicationAssessorResource.setBusinessType(profile.map(Profile::getBusinessType).orElse(null));
-        applicationAssessorResource.setInnovationAreas(innovationAreaResources);
+        applicationAssessorResource.setInnovationAreas(innovationAreas);
         applicationAssessorResource.setSkillAreas(profile.map(Profile::getSkillsAreas).orElse(null));
         applicationAssessorResource.setRejectReason(rejectedOutcome.map(ProcessOutcome::getDescription).orElse(null));
         applicationAssessorResource.setRejectComment(rejectedOutcome.map(ProcessOutcome::getComment).orElse(null));

@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
@@ -37,10 +40,10 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return "competition/application-progress";
     }
 
-    @RequestMapping(params = {"withdraw"}, method = RequestMethod.POST)
-    public String withdrawAssessment(@RequestParam(name = "withdraw") Long assessmentId,
-                                     @PathVariable("competitionId") Long competitionId,
-                                     @PathVariable("applicationId") Long applicationId) {
+    @RequestMapping(value = "/withdraw/{assessmentId}", method = RequestMethod.POST)
+    public String withdrawAssessment(@PathVariable("competitionId") Long competitionId,
+                                     @PathVariable("applicationId") Long applicationId,
+                                     @PathVariable("assessmentId") Long assessmentId) {
         assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
         return format("redirect:/competition/%s/application/%s/assessors", competitionId, applicationId);
     }

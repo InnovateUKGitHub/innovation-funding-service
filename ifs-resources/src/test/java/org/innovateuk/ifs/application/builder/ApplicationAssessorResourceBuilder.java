@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -47,7 +48,7 @@ public class ApplicationAssessorResourceBuilder extends BaseBuilder<ApplicationA
         return withArraySetFieldByReflection("businessType", value);
     }
 
-    public ApplicationAssessorResourceBuilder withInnovationAreas(List<InnovationAreaResource>... value) {
+    public ApplicationAssessorResourceBuilder withInnovationAreas(Set<InnovationAreaResource>... value) {
         return withArraySetFieldByReflection("innovationAreas", value);
     }
 
