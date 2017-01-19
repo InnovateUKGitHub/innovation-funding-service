@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.domain.Application;
 
 import javax.persistence.*;
 
@@ -18,35 +17,31 @@ public class ProcessRole {
     @JoinColumn(name="userId", referencedColumnName="id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationId", referencedColumnName="id")
-    private Application application;
+    private Long applicationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="roleId", referencedColumnName="id")
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="organisationId", referencedColumnName="id")
-    private Organisation organisation;
+    private Long organisationId;
 
     public ProcessRole(){
     	// no-arg constructor
     }
 
-    public ProcessRole(Long id, User user, Application application, Role role, Organisation organisation) {
+    public ProcessRole(Long id, User user, Long applicationId, Role role, Long organisationId) {
         this.id = id;
         this.user = user;
-        this.application = application;
+        this.applicationId = applicationId;
         this.role = role;
-        this.organisation = organisation;
+        this.organisationId = organisationId;
     }
 
-    public ProcessRole(User user, Application application, Role role, Organisation organisation) {
+    public ProcessRole(User user, Long applicationId, Role role, Long organisationId) {
         this.user = user;
-        this.application = application;
+        this.applicationId = applicationId;
         this.role = role;
-        this.organisation = organisation;
+        this.organisationId = organisationId;
     }
 
     public Role getRole() {
@@ -57,12 +52,12 @@ public class ProcessRole {
         return user;
     }
     @JsonIgnore
-    public Application getApplication() {
-        return application;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public Organisation getOrganisation() {
-        return organisation;
+    public Long getOrganisationId() {
+        return organisationId;
     }
 
     public Long getId() {
@@ -73,12 +68,12 @@ public class ProcessRole {
         this.role = role;
     }
 
-    public void setApplication(Application application) {
-        this.application = application;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public void setUser(User user) {

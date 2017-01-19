@@ -73,7 +73,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
     }
 
     private void updateUserInUserData(T data, Long userId) {
-        UserResource user = userService.getUserById(userId).getSuccessObjectOrThrowException();
+        UserResource user = baseUserService.getUserById(userId).getSuccessObjectOrThrowException();
         data.setUser(user);
     }
 

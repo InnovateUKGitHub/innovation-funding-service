@@ -19,6 +19,7 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.ProjectFinanceEmailRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -66,6 +67,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private CompAdminEmailRepository compAdminEmailRepository;
@@ -120,8 +124,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
-                    user.setProfile(new Profile());
-                    user.getProfile().setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
+                    Profile profile = new Profile();
+                    profile.setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
+                    profile = profileRepository.save(profile);
+                    user.setProfileId(profile.getId());
                     return createUserWithUid(user, userResource.getPassword());
                 });
     }
@@ -137,9 +143,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             roleName = APPLICANT.getName();
         }
         User newUser = assembleUserFromResource(userResource);
-        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-                addRoleToUser(user, roleName))).andOnSuccess(() ->
-                createUserWithUid(newUser, userResource.getPassword()));
+        return validateUser(userResource, userResource.getPassword()).
+                andOnSuccess(
+                        () -> addUserToOrganisation(newUser, organisationId).
+                                andOnSuccess(user -> addRoleToUser(user, roleName))).
+                andOnSuccess(
+                        () -> createUserWithUid(newUser, userResource.getPassword())
+                );
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
@@ -184,13 +194,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     }
 
-    private ServiceResult<User> addOrganisationToUser(User user, Long organisationId) {
-
-        return find(organisation(organisationId)).andOnSuccessReturn(userOrganisation -> {
-
-            List<Organisation> userOrganisationList = new ArrayList<>();
-            userOrganisationList.add(userOrganisation);
-            user.setOrganisations(userOrganisationList);
+    private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
+        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
+            org.addUser(user);
             return user;
         });
     }

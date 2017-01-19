@@ -44,8 +44,6 @@
       </div>
     </fieldset>
 
-    <div th:if="${model.registeredAddress}" th:include="project/fragments :: display-address(address=${model.registeredAddress})" th:with="id=registeredAddress" th:remove="tag"/>
-
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
         <p>
           <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">

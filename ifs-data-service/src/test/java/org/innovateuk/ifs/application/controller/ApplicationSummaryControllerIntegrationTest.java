@@ -52,29 +52,30 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
         List<ProcessRole> leadApplicantProccessRoles = new ArrayList<>();
+        Application application = new Application(
+                APPLICATION_ID,
+                "",
+                new ApplicationStatus(
+                        ApplicationStatusConstants.CREATED.getId(),
+                        ApplicationStatusConstants.CREATED.getName()
+                )
+        );
         leadApplicantProccessRoles.add(
                 new ProcessRole(
                         leadApplicantProcessRole,
                         null,
-                        new Application(
-                                APPLICATION_ID,
-                                "",
-                                new ApplicationStatus(
-                                        ApplicationStatusConstants.CREATED.getId(),
-                                        ApplicationStatusConstants.CREATED.getName()
-                                )
-                        ),
+                        application.getId(),
                         null,
                         null
                 )
         );
-        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", leadApplicantProccessRoles, "123abc");
+        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
         leadApplicantProccessRoles.get(0).setUser(user);
 
         compAdminUserId = 2L;
         compAdminRoleId = 2L;
         UserResource compAdminUser = newUserResource().withId(compAdminUserId).withFirstName("jim").withLastName("kirk").withEmail("j.kirk@starfleet.org").build();
-        RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName(), new ArrayList<>());
+        RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName());
         compAdminUser.getRoles().add(compAdminRole);
         swapOutForUser(compAdminUser);
     }
