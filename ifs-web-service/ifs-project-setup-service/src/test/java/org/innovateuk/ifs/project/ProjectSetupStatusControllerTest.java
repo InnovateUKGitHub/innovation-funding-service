@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -100,6 +101,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         assertStatuses(viewModel);
 
+        assertFalse(viewModel.isProjectComplete());
+
     }
 
     @Test
@@ -122,6 +125,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -146,6 +151,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -169,6 +176,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -191,6 +200,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -211,6 +222,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
                 Pair.of("bankDetailsStatus", SectionStatus.EMPTY));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -233,6 +246,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -259,6 +274,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -286,6 +303,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.TICK));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -315,6 +334,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.FLAG));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -344,6 +365,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.FLAG));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -373,6 +396,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -402,6 +427,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.TICK));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -434,6 +461,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -466,6 +495,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.FLAG));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -498,6 +529,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("financeChecksStatus", SectionStatus.TICK),
                 Pair.of("spendProfileStatus", SectionStatus.TICK),
                 Pair.of("grantOfferLetterStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test

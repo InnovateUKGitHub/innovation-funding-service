@@ -116,6 +116,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
@@ -222,6 +223,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andExpect(view().name("project/project-manager"));
     }
     
@@ -260,6 +262,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param(SAVE_PM, INVITE_FC)
         		.param("projectManager", projectManagerUserId.toString()))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andExpect(redirectedUrl("/project/" + projectId + "/details"));
 
     }
@@ -290,6 +293,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         MvcResult result = mockMvc.perform(get("/project/{id}/details/start-date", project.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details-start-date"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         Map<String, Object> model = result.getModelAndView().getModel();
@@ -321,6 +325,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                     param("projectStartDate.monthValue", "6").
                     param("projectStartDate.year", "2017"))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andExpect(view().name("redirect:/project/" + projectResource.getId() + "/details"))
                 .andReturn();
 
@@ -377,6 +382,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                     param("organisation", "1").
                     param("financeContact", "2")).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
 
@@ -449,6 +455,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 param("inviteStatus", testStatus.toString()).
                 param("organisation", organisationId + "")).
                 andExpect(status().isOk()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("project/finance-contact")).
                 andReturn();
     }
@@ -469,6 +476,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(status().isOk()).
                 andExpect(view().name("project/details-address")).
                 andExpect(model().hasErrors()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(model().attributeHasFieldErrors("form", "addressType")).
                 andReturn();
     }
@@ -492,6 +500,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(status().isOk()).
                 andExpect(view().name("project/details-address")).
                 andExpect(model().hasNoErrors()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         Map<String, Object> model = result.getModelAndView().getModel();
@@ -527,6 +536,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param("addressType", REGISTERED.name())).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
                 andReturn();
     }
@@ -555,8 +565,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("addressForm.selectedPostcode.addressLine1", addressResource.getAddressLine1())
                 .param("addressForm.selectedPostcode.town", addressResource.getTown())
                 .param("addressForm.selectedPostcode.postcode", addressResource.getPostcode()))
-                .andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
-                andReturn();
+                .andExpect(redirectedUrl("/project/" + project.getId() + "/details"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andReturn();
     }
 
     @Test
@@ -580,6 +591,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("search-address", "")
                 .param("addressForm.postcodeInput", "")).
                 andExpect(model().hasErrors()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput")).
                 andReturn();
     }
@@ -588,8 +600,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void testSubmitProjectDetails() throws Exception {
         when(projectService.setApplicationDetailsSubmitted(1L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{id}/details/submit", 1L)).
-        andExpect(redirectedUrl("/project/1/details"));
+        mockMvc.perform(post("/project/{id}/details/submit", 1L))
+        .andExpect(model().attributeDoesNotExist("readOnlyView"))
+        .andExpect(redirectedUrl("/project/1/details"));
     }
 
     @Test
@@ -631,6 +644,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("organisation", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/finance-contact"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         SelectFinanceContactViewModel model = (SelectFinanceContactViewModel) result.getModelAndView().getModel().get("model");
@@ -677,6 +691,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("organisation", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/finance-contact"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         SelectFinanceContactViewModel model = (SelectFinanceContactViewModel) result.getModelAndView().getModel().get("model");
@@ -727,6 +742,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
+                .andExpect(model().attributeExists("readOnlyView"))
+                .andExpect(model().attribute("readOnlyView", true))
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");

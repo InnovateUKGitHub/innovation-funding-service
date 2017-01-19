@@ -58,6 +58,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
@@ -110,6 +111,8 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents/readonly")).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeExists("readOnlyView")).
+                andExpect(model().attribute("readOnlyView", true)).
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
@@ -157,6 +160,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
@@ -208,6 +212,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
@@ -261,6 +266,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
@@ -325,6 +331,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
                 andExpect(status().isNotFound()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("404"));
     }
 
@@ -343,6 +350,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                         file(uploadedFile).
                         param("uploadCollaborationAgreementClicked", "")).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("redirect:/project/123/partner/documents"));
     }
 
@@ -375,6 +383,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                         param("uploadCollaborationAgreementClicked", "")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
@@ -392,6 +401,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 post("/project/123/partner/documents").
                         param("removeCollaborationAgreementClicked", "")).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("redirect:/project/123/partner/documents"));
 
         verify(projectService).removeCollaborationAgreementDocument(123L);
@@ -429,6 +439,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
                 andExpect(status().isNotFound()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("404"));
     }
 
@@ -447,6 +458,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                         file(uploadedFile).
                         param("uploadExploitationPlanClicked", "")).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("redirect:/project/123/partner/documents"));
     }
 
@@ -487,6 +499,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 get("/project/123/partner/documents")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/other-documents")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         verify(projectService).isOtherDocumentSubmitAllowed(123L);
@@ -535,6 +548,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/project/{id}/partner/documents/confirm", projectId)).
                 andExpect(status().isOk()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("project/other-documents-confirm")).
                 andReturn();
     }

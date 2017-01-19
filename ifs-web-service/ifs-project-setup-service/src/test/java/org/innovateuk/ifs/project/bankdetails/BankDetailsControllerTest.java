@@ -71,6 +71,8 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 .andExpect(model().attribute("applicationId", projectResource.getApplication()))
                 .andExpect(model().attribute("currentUser", loggedInUser))
                 .andExpect(model().attribute("organisation", organisationResource))
+                .andExpect(model().attributeExists("readOnlyView"))
+                .andExpect(model().attribute("readOnlyView", false))
                 .andExpect(model().attribute(FORM_ATTR_NAME, form))
                 .andExpect(view().name("project/bank-details"));
     }
@@ -141,6 +143,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 param("accountNumber", "12345678").
                 param("addressType", REGISTERED.name())).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(redirectedUrl("/project/" + projectResource.getId() + "/bank-details")).
                 andReturn();
     }
@@ -155,6 +158,8 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 param("sortCode", "123456").
                 param("accountNumber", "12345678").
                 param("addressType", ADD_NEW.name())).
+                andExpect(model().attributeExists("readOnlyView")).
+                andExpect(model().attribute("readOnlyView", false)).
                 andExpect(view().name("project/bank-details"));
 
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
@@ -176,6 +181,8 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 andExpect(model().errorCount(2)).
                 andExpect(model().attributeHasFieldErrors(FORM_ATTR_NAME, "accountNumber")).
                 andExpect(model().attributeHasFieldErrors(FORM_ATTR_NAME, "sortCode")).
+                andExpect(model().attributeExists("readOnlyView")).
+                andExpect(model().attribute("readOnlyView", false)).
                 andReturn();
 
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());
@@ -198,6 +205,8 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 andExpect(view().name("project/bank-details")).
                 andExpect(model().hasErrors()).
                 andExpect(model().errorCount(1)).
+                andExpect(model().attributeExists("readOnlyView")).
+                andExpect(model().attribute("readOnlyView", false)).
                 andExpect(model().attributeHasFieldErrors(FORM_ATTR_NAME, "sortCode")).
                 andReturn();
 
@@ -220,6 +229,8 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
                 param("addressForm.postcodeInput", "")).
                 andExpect(view().name("project/bank-details")).
                 andExpect(model().hasErrors()).
+                andExpect(model().attributeExists("readOnlyView")).
+                andExpect(model().attribute("readOnlyView", false)).
                 andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput"));
 
         verify(bankDetailsRestService, never()).submitBankDetails(any(), any());

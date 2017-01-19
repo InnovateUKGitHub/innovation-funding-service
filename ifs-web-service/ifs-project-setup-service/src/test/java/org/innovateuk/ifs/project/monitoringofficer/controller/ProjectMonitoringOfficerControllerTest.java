@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
@@ -93,6 +94,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
@@ -115,6 +117,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer/readonly")).
                 andExpect(view().name("project/monitoring-officer")).
+                andExpect(model().attributeExists("readOnlyView")).
+                andExpect(model().attribute("readOnlyView", true)).
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
