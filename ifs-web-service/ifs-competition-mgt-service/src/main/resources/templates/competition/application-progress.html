@@ -5,6 +5,8 @@
     </head>
 
     <body th:with="context='comp-management'" class="competition-management competition-setup">
+        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+        <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -55,12 +57,12 @@
                             <th class="aligncentre" scope="col">Accepted</th>
                             <th class="aligncentre" scope="col">Started</th>
                             <th class="aligncentre" scope="col">Submitted</th>
-                            <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.assigned}">
-                            <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">Oliver Romero</a></td>
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">Oliver Romero</a></td>
                             <td th:text="${assessor.businessType}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
@@ -82,7 +84,10 @@
                                 <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor" th:attr="data-assessment-id=${assessor.assessmentId}" th:unless="${assessor.submitted}">Remove</a>
+                                <a href="#" class="button-secondary no-margin"
+                                data-js-modal="remove-assigned-assessor-modal"
+                                th:attr="data-modal-form-url='/FORM ACTION/'+${assessor.assessmentId}"
+                                th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assigned)}">
@@ -91,26 +96,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="remove-assigned-assessor" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-                <button class="js-close close" aria-label="Close Popup">X</button>
-                <div>
-
-                    <h2 class="heading-medium no-margin">Are you sure you want to remove this Assessor from the application?</h2>
-
-                    <p>When you click <strong>Remove and notify</strong> the application will be removed from the assessor and they will be notified of the removal straight away.</p>
-                    <p>If they have started the assessment of this application, their assessment will be <strong>permanently deleted</strong> when you click <strong>Remove and notify</strong>.</p>
-                    <hr />
-
-                    <div class="alignright-button">
-                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                        <a class="button js-close" href="#" id="prototype-remove-started">Remove and notify</a>
-                    </div>
-                </div>
-            </div>
 
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
-            <div class="table-overflow">
+            <div class="table-overflow" th:if="${#lists.size(model.rejected) > 0}">
                 <table>
                     <thead>
                         <tr>
@@ -124,7 +113,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="assessor : ${model.rejected}">
-                            <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">Irving Wolfe</a></td>
+                            <td><a th:href="${'/}" th:text="${assessor.name}">Irving Wolfe</a></td>
                             <td th:text="${assessor.businessType}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
@@ -135,9 +124,11 @@
                 </table>
             </div>
 
+            <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
+
             <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
 
-            <div class="table-overflow">
+            <div class="table-overflow" th:if="${#lists.size(model.previouslyAssigned) > 0}">
                 <table>
                     <thead>
                         <tr>
@@ -151,21 +142,20 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.previouslyAssigned}">
-                            <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">Dave Smith</a></td>
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">Dave Smith</a></td>
                             <td th:text="${assessor.businessType}">Business</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" id="prototype-row-one-reassign">Re-assign</a>
+                                <a href="#" class="button-secondary no-margin">Re-assign</a>
                             </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(model.previouslyAssigned)}">
-                            <td colspan="6">There are no assessors previously assigned to this application.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">There are no assessors previously assigned to this application.</p>
 
             <h2 class="heading-medium">Available assessors</h2>
 
@@ -274,7 +264,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.available}">
-                            <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">John Barnes</a></td>
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">John Barnes</a></td>
                             <td th:text="${assessor.skillAreas}">skills</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
