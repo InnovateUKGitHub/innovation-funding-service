@@ -9,10 +9,6 @@
               <div class="textarea-wrapped">
                   <div class="readonly" th:text="${application_title}" />
               </div>
-            <h2 class="heading-small">Research area</h2>
-            <div class="textarea-wrapped">
-                <div class="readonly" th:text="${application_research_area}" />
-            </div>
             <h2 class="heading-small">Estimated timescales</h2>
             <p>Project start date :<br/>
                 <span th:text="${application_startdate_day}" th:remove="tag" />-<span th:remove="tag" th:text="${application_startdate_month}" />-<span th:remove="tag" th:text="${application_startdate_year}" />
