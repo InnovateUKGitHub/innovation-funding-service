@@ -61,7 +61,6 @@ public class ApplicationFinance extends Finance {
     }
 
     public Set<ResearchCategory> getResearchCategories() {
-        //return researchCategories.stream().map(ApplicationFinanceResearchCategoryLink::getCategory).findFirst().orElse(null);
         return researchCategories.stream().map(ApplicationFinanceResearchCategoryLink::getCategory).collect(Collectors.toSet());
     }
 
