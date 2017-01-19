@@ -116,6 +116,7 @@ public class ApplicationFormController {
     public static final String ORGANISATION_SIZE_KEY = "organisationSize";
     public static final String APPLICATION_BASE_URL = "/application/";
     public static final String APPLICATION_START_DATE = "application.startDate";
+    public static final String RESEARCH_CATEGORY_ID_KEY = "researchCategoryId";
 
     @Autowired
     private FinanceRowService financeRowService;

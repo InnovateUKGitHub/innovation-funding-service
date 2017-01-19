@@ -271,7 +271,22 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/1/form/question/1")
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
+                        .param(ApplicationFormController.RESEARCH_CATEGORY_ID_KEY, "1")
         ).andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void testQuestionSubmitMarkAsCompleteQuestionWithoutResearchCategory() throws Exception {
+        ApplicationResource application = applications.get(0);
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        mockMvc.perform(
+                post("/application/1/form/question/1")
+                        .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
+        ).andExpect(status().isOk())
+                .andExpect(view().name("application-form"))
+                .andExpect(model().attributeErrorCount("form", 1))
+                .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.RESEARCH_CATEGORY_ID_KEY));
     }
 
     @Test
@@ -392,6 +407,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.RESEARCH_CATEGORY_ID_KEY, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
@@ -406,6 +422,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.RESEARCH_CATEGORY_ID_KEY, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
@@ -420,6 +437,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.RESEARCH_CATEGORY_ID_KEY, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
@@ -609,6 +627,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
+                        .param(ApplicationFormController.RESEARCH_CATEGORY_ID_KEY, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
