@@ -146,7 +146,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void getInnovationAreas() throws Exception {
         Long innovationSectorId = 1L;
         InnovationAreaResource category = newInnovationAreaResource()
-                .withType(INNOVATION_AREA)
                 .withId(1L)
                 .withName("Innovation Area 1")
                 .build();

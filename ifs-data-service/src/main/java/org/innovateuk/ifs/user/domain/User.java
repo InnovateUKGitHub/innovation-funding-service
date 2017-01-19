@@ -3,14 +3,14 @@ package org.innovateuk.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.UserInnovationAreaLink;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,11 +21,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -308,6 +308,17 @@ public class User implements Serializable {
     }
 
     public void addInnovationArea(InnovationArea innovationArea) {
+        if (innovationArea == null) {
+            throw new NullPointerException("innovationArea cannot be null");
+        }
         innovationAreas.add(new UserInnovationAreaLink(this, innovationArea));
+    }
+
+    public void addInnovationAreas(Set<InnovationArea> innovationAreas) {
+        Set<UserInnovationAreaLink> innovationAreaLinks = innovationAreas.stream()
+                .map(innovationArea -> new UserInnovationAreaLink(this, innovationArea))
+                .collect(Collectors.toSet());
+
+        this.innovationAreas.addAll(innovationAreaLinks);
     }
 }

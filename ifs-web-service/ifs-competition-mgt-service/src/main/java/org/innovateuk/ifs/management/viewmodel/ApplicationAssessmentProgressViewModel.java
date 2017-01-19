@@ -15,13 +15,20 @@ public class ApplicationAssessmentProgressViewModel {
     private Long competitionId;
     private String competitionName;
     private List<String> partnerOrganisations;
+    private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
 
-    public ApplicationAssessmentProgressViewModel(Long applicationId, String applicationName, Long competitionId, String competitionName, List<String> partnerOrganisations) {
+    public ApplicationAssessmentProgressViewModel(Long applicationId,
+                                                  String applicationName,
+                                                  Long competitionId,
+                                                  String competitionName,
+                                                  List<String> partnerOrganisations,
+                                                  List<ApplicationAssessmentProgressAssignedRowViewModel> assigned) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.partnerOrganisations = partnerOrganisations;
+        this.assigned = assigned;
     }
 
     public Long getApplicationId() {
@@ -44,6 +51,10 @@ public class ApplicationAssessmentProgressViewModel {
         return partnerOrganisations;
     }
 
+    public List<ApplicationAssessmentProgressAssignedRowViewModel> getAssigned() {
+        return assigned;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,6 +73,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(partnerOrganisations, that.partnerOrganisations)
+                .append(assigned, that.assigned)
                 .isEquals();
     }
 
@@ -73,6 +85,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(competitionId)
                 .append(competitionName)
                 .append(partnerOrganisations)
+                .append(assigned)
                 .toHashCode();
     }
 }
