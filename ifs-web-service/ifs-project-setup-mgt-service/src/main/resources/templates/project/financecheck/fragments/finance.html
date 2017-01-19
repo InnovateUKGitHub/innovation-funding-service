@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+    <th:block th:fragment="empty (viewmode)"></th:block>
+
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},formInputIndex=${status.index}">
         <th:block th:if="${viewmode == 'approved'}">
