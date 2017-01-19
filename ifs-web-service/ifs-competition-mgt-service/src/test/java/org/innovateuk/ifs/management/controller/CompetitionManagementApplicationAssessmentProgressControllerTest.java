@@ -73,8 +73,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Connected digital additive manufacturing",
                 asList("Acme Ltd.", "IO Systems"),
                 expectedAssignedRows,
-                expectedAvailableAssessors,
-                "title"
+                expectedAvailableAssessors
         );
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
@@ -114,11 +113,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Connected digital additive manufacturing",
                 asList("Acme Ltd.", "IO Systems"),
                 expectedAssignedRows,
-                expectedAvailableAssessors,
-                "totalApplications"
+                expectedAvailableAssessors
         );
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sort=totalApplications", competitionId, applicationId))
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sortField=TOTAL_APPLICATIONS", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));

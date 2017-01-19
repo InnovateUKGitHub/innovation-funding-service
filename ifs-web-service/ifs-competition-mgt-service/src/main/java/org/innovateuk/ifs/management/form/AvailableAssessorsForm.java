@@ -2,18 +2,24 @@ package org.innovateuk.ifs.management.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+
+import javax.validation.constraints.NotNull;
+
+import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TITLE;
 
 public class AvailableAssessorsForm extends BaseBindingResultTarget {
 
-    private String sort;
+    @NotNull(message = "{validation.availableAssessorsForm.selectedSortField.required}")
+    private AvailableAssessorsSortFieldType sortField = TITLE;
 
-    public String getSort() {
-        return sort;
+    public AvailableAssessorsSortFieldType getSortField() {
+        return sortField;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort;
+    public void setSortField(AvailableAssessorsSortFieldType sortField) {
+        this.sortField = sortField;
     }
 
     @Override
@@ -25,14 +31,14 @@ public class AvailableAssessorsForm extends BaseBindingResultTarget {
         AvailableAssessorsForm that = (AvailableAssessorsForm) o;
 
         return new EqualsBuilder()
-                .append(sort, that.sort)
+                .append(sortField, that.sortField)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(sort)
+                .append(sortField)
                 .toHashCode();
     }
 }

@@ -31,24 +31,22 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
 
-    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap() {
-        return Collections.unmodifiableMap(Stream.of(
+    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap =
+        Collections.unmodifiableMap(Stream.of(
                 new AbstractMap.SimpleEntry<>(TITLE, comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
                 new AbstractMap.SimpleEntry<>(SKILLS, comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
                 new AbstractMap.SimpleEntry<>(TOTAL_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
                 new AbstractMap.SimpleEntry<>(ASSIGNED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
                 new AbstractMap.SimpleEntry<>(SUBMITTED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
                 .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
-    }
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String sortSelection) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, AvailableAssessorsSortFieldType sortSelection) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
 
         List<ApplicationAssessorResource> assessors = applicationAssessmentSummaryRestService.getAssessors(applicationId).getSuccessObjectOrThrowException();
         Map<Boolean, List<ApplicationAssessorResource>> assessorsPartitionedByAvailable = assessors.stream().collect(partitioningBy(ApplicationAssessorResource::isAvailable));
         List<ApplicationAssessorResource> notAvailableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.FALSE, Collections.emptyList());
         List<ApplicationAssessorResource> availableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.TRUE, Collections.emptyList());
-        AvailableAssessorsSortFieldType sortField = sortFieldForAvailableAssessors(sortSelection);
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
@@ -56,8 +54,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessmentSummary.getCompetitionName(),
                 applicationAssessmentSummary.getPartnerOrganisations(),
                 getAssignedAssessors(notAvailableAssessors),
-                getSortedAvailableAssessors(availableAssessors, sortField),
-                sortField.getValue());
+                getSortedAvailableAssessors(availableAssessors, sortSelection));
     }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> getAssignedAssessors(List<ApplicationAssessorResource> assessors) {
@@ -86,7 +83,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                                                                                         AvailableAssessorsSortFieldType selectedSort) {
         List<ApplicationAvailableAssessorsRowViewModel> available = assessors.stream()
                 .map(this::getAvailableRowViewModel).collect(toList());
-        available.sort(sortMap().get(selectedSort));
+        available.sort(sortMap.get(selectedSort));
         return available;
     }
 
@@ -99,16 +96,5 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessorResource.getAssignedCount(),
                 applicationAssessorResource.getSubmittedCount()
         );
-    }
-
-    private AvailableAssessorsSortFieldType sortFieldForAvailableAssessors(String selectedSort) {
-        return activeSortField(selectedSort,  TITLE, SKILLS, TOTAL_APPLICATIONS, ASSIGNED_APPLICATIONS, SUBMITTED_APPLICATIONS);
-    }
-
-    private AvailableAssessorsSortFieldType activeSortField(String givenField, AvailableAssessorsSortFieldType defaultField, AvailableAssessorsSortFieldType... allowedFields) {
-        return Arrays.stream(allowedFields)
-                .filter(field -> givenField != null && fromString(givenField).equals(field))
-                .findAny()
-                .orElse(defaultField);
     }
 }

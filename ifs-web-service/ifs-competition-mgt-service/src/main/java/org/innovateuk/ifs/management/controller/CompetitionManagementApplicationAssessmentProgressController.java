@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.form.AvailableAssessorsForm;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId) {
-        return doProgressView(model, applicationId, form.getSort());
+        return doProgressView(model, applicationId, form.getSortField());
     }
 
     @RequestMapping(path = "/assign/{assessorId}", method = RequestMethod.POST)
@@ -44,10 +45,10 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                  @PathVariable("applicationId") Long applicationId,
                                  @PathVariable("assessorId") Long assessorId) {
         assessmentRestService.createAssessment(new AssessmentCreateResource(applicationId, assessorId));
-        return doProgressView(model, applicationId, form.getSort());
+        return doProgressView(model, applicationId, form.getSortField());
     }
 
-    private String doProgressView(Model model, Long applicationId, String sort) {
+    private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort) {
         model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
         return "competition/application-progress";
     }

@@ -2,30 +2,19 @@ package org.innovateuk.ifs.competition.resource;
 
 public enum AvailableAssessorsSortFieldType {
 
-    TITLE ("title"),
-    SKILLS ("skills"),
-    TOTAL_APPLICATIONS ("totalApplications"),
-    ASSIGNED_APPLICATIONS ("assignedApplications"),
-    SUBMITTED_APPLICATIONS ("submittedApplications");
+    TITLE ("Assessor name"),
+    SKILLS ("Skill areas"),
+    TOTAL_APPLICATIONS ("Total applications"),
+    ASSIGNED_APPLICATIONS ("Assigned applications"),
+    SUBMITTED_APPLICATIONS ("Submitted applications");
 
-    String value;
+    String label;
 
     AvailableAssessorsSortFieldType(String value) {
-        this.value = value;
+        this.label = value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public static AvailableAssessorsSortFieldType fromString(String text) {
-        if (text != null) {
-            for (AvailableAssessorsSortFieldType field : AvailableAssessorsSortFieldType.values()) {
-                if (text.equalsIgnoreCase(field.getValue())) {
-                    return field;
-                }
-            }
-        }
-        return null;
+    public String getLabel() {
+        return label;
     }
 }

@@ -273,16 +273,15 @@
 
                 <div class="column-third alignright">
                     <div class="form-group">
-                        <form method="get" >
+                        <form method="get" th:object="${form}">
                             <label for="sort-by">Sort by</label>
-                            <select name="sort" id="sort-by" class="js-auto-submit form-control">
-                                <option value="title" th:selected="${(model.sortField == 'title')}">Assessor Name</option>
-                                <option value="skills" th:selected="${(model.sortField == 'skills')}">Skill areas</option>
-                                <option value="totalApplications" th:selected="${(model.sortField == 'totalApplications')}">Total applications</option>
-                                <option value="assignedApplications" th:selected="${(model.sortField == 'assignedApplications')}">Assigned applications</option>
-                                <option value="submittedApplications" th:selected="${(model.sortField == 'submittedApplications')}">Submitted applications</option>
+                            <select th:field="*{sortField}" name="sort" id="sort-by" class="js-auto-submit form-control"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.availableAssessorsForm.selectedSortField.required}">
+                                <option th:each="sortType : ${T(org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType).values()}"
+                                        th:value="${sortType}"
+                                        th:text="${sortType.label}">value</option>
                             </select>
-
                             <button class="button button-secondary button-small js-hidden" type="submit">Sort</button>
                         </form>
                     </div>

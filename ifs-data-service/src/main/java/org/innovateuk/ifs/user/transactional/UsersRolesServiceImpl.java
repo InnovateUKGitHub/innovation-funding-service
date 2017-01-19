@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -13,13 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Arrays.asList;
 
 /**
  * Service that encompasses functions that relate to users and their roles
@@ -71,7 +72,7 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
-        return serviceSuccess(processRoleRepository.countByUserIdAndApplicationCompetitionId(userId, competitionId) > 0);
+        return serviceSuccess(applicationRepository.countByProcessRolesUserIdAndCompetitionId(userId, competitionId) > 0);
     }
 
     private List<ProcessRoleResource> processRolesToResources(final List<ProcessRole> processRoles) {
