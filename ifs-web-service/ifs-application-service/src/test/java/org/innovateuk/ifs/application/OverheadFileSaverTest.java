@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.service.OverheadFileRestService;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;

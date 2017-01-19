@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.service;
+package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
