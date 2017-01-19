@@ -32,6 +32,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -97,9 +98,16 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         })));
     }
 
+    private InviteProjectResource mapInviteToInviteResource(ProjectInvite invite) {
+        InviteProjectResource inviteResource = inviteMapper.mapToResource(invite);
+        Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
+        inviteResource.setLeadOrganisation(organisation.getName());
+        return inviteResource;
+    }
+
     @Override
     public ServiceResult<InviteProjectResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(inviteMapper::mapToResource);
+        return getByHash(hash).andOnSuccessReturn(this::mapInviteToInviteResource);
     }
 
     @Override
@@ -108,7 +116,8 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
             return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
         }
         List<ProjectInvite> invites = inviteProjectRepository.findByProjectId(projectId);
-        return serviceSuccess(Lists.newArrayList(inviteMapper.mapToResource(invites)));
+        List<InviteProjectResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
+        return serviceSuccess(Lists.newArrayList(inviteResources));
     }
 
     @Override
@@ -173,9 +182,9 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     private ServiceResult<Void> validateUserIsInSameOrganisation(InviteProjectResource invite, User user) {
 
-        List<Organisation> usersOrganisations = user.getOrganisations();
+        List<Long> usersOrganisations = simpleMap(organisationRepository.findByUsers(user), Organisation::getId);
 
-        if (!simpleMap(usersOrganisations, Organisation::getId).contains(invite.getOrganisation())) {
+        if (!usersOrganisations.contains(invite.getOrganisation())) {
             return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_NOT_IN_CORRECT_ORGANISATION);
         }
 

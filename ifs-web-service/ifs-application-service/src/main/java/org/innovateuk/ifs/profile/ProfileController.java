@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
-import static org.innovateuk.ifs.util.ProfileUtil.getUserOrganisationId;
 
 /**
  * This controller will handle all requests that are related to a user profile.
@@ -58,7 +57,7 @@ public class ProfileController {
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String viewUserProfile(Model model, HttpServletRequest request) {
         final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(getUserOrganisationId(userResource));
+        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
         model.addAttribute("userIsLoggedIn", userIsLoggedIn(request));
@@ -66,9 +65,9 @@ public class ProfileController {
     }
 
     private void populateUserDetailsForm(Model model, HttpServletRequest request){
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(getUserOrganisationId(user));
-        UserDetailsForm userDetailsForm = buildUserDetailsForm(user, organisationResource);
+        final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
+        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }

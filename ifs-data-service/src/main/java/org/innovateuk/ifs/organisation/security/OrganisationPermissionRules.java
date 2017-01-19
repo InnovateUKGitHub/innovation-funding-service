@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.organisation.security;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -65,13 +63,13 @@ public class OrganisationPermissionRules {
     public boolean usersCanViewOrganisationsOnTheirOwnApplications(OrganisationResource organisation, UserResource user) {
 
         // TODO DW - INFUND-1556 - this code feels pretty heavy given that all we need to do is find a link between a User and an Organisation via an Application
-        List<Long> applicationRoles = user.getProcessRoles();
-        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
-        List<Application> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplication);
-        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, Application::getProcessRoles));
-        List<Organisation> allOrganisationsLinkedToAnyOfUsersApplications = simpleMap(processRolesForAllApplications, ProcessRole::getOrganisation);
+        List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
+        List<Long> applicationsThatThisUserIsLinkedTo = simpleMap(processRoles, ProcessRole::getApplicationId);
+        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, applicationId -> {
+            return processRoleRepository.findByApplicationId(applicationId);
+        }));
 
-        return simpleMap(allOrganisationsLinkedToAnyOfUsersApplications, Organisation::getId).contains(organisation.getId());
+        return simpleMap(processRolesForAllApplications, ProcessRole::getOrganisationId).contains(organisation.getId());
     }
 
     @PermissionRule(value = "CREATE", description = "The System Registration User can create Organisations on behalf of non-logged in Users " +
