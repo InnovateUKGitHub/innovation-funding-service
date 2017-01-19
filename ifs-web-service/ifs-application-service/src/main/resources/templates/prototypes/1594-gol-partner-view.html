@@ -43,14 +43,13 @@
 
 	<th:block th:if="${param.user != null and param.user[0] == 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLAccepted'}">
 		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
-
-		<p>The unsigned grant offer letter is available for your records.</p>
+		<p>A copy of the unsigned grant offer letter is available for your records.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-		<p>The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
+		<p>We have received the signed grant offer letter and are currently reviewing this.</p>
 
-		<p>The unsigned grant offer letter is available for your records.</p>
+		<p>A copy of the unsigned grant offer letter is available for your records.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
@@ -59,7 +58,7 @@
 			<p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
 		</div>
 
-		<p>The grant offer letter is available for your records below.</p>
+		<p>The grant offer letter is available for your record below.</p>
 	</th:block>
 
 	<h2 class="heading-medium">Grant offer letter</h2>

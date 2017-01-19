@@ -88,11 +88,15 @@ public class OverheadFileSaver {
         }
     }
 
+    public boolean isOverheadFileRequest(HttpServletRequest request) {
+        return isOverheadFileUploadRequest(request) || isOverheadFileDeleteRequest(request);
+    }
+
     private boolean isOverheadFileUploadRequest(HttpServletRequest request) {
         return request instanceof StandardMultipartHttpServletRequest && request.getParameter("overheadfilesubmit") != null;
     }
 
-    public boolean isOverheadFileDeleteRequest(HttpServletRequest request) {
+    private boolean isOverheadFileDeleteRequest(HttpServletRequest request) {
         return request.getParameter("overheadfiledelete") != null;
     }
 }
