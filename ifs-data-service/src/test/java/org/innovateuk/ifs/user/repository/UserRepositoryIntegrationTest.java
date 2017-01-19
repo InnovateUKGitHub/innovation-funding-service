@@ -127,11 +127,8 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     @Test
     public void saveWithInnovationArea() {
         InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
-
-        User user = newUser().with(id(null)).withUid("my-uid").withInnovationArea(innovationArea).build();
-
+        User user = newUser().with(id(null)).withUid("my-uid").withInnovationAreas(asList(innovationArea)).build();
         User savedUser = repository.save(user);
-
         flushAndClearSession();
 
         User retrievedUser = repository.findOne(savedUser.getId());

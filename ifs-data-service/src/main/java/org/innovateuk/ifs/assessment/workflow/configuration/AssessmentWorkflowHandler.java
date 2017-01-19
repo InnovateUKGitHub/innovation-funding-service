@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.workflow.configuration;
 
+import org.apache.tomcat.jni.Proc;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -69,8 +70,16 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return fireEvent(assessmentEventWithOutcome(assessment, fundingDecisionOutcome(assessmentFundingDecision), FUNDING_DECISION), assessment);
     }
 
+    public boolean withdrawAssessment(Assessment assessment) {
+        return fireEvent(assessmentEventWithOutcome(assessment, withdrawAssessmentOutcome(), WITHDRAW), assessment);
+    }
+
     public boolean submit(Assessment assessment) {
         return fireEvent(assessmentEvent(assessment, SUBMIT), assessment);
+    }
+
+    public boolean notify(Assessment assessment) {
+        return fireEvent(assessmentEvent(assessment, NOTIFY), assessment);
     }
 
     @Override
@@ -120,6 +129,11 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         ProcessOutcome processOutcome = new ProcessOutcome();
         processOutcome.setDescription(applicationRejection.getRejectReason());
         processOutcome.setComment(applicationRejection.getRejectComment());
+        return processOutcome;
+    }
+
+    private ProcessOutcome withdrawAssessmentOutcome() {
+        ProcessOutcome processOutcome = new ProcessOutcome();
         return processOutcome;
     }
 

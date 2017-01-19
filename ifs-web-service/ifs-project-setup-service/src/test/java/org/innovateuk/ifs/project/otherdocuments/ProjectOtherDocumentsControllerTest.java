@@ -6,6 +6,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.controller.ProjectOtherDocumentsController;
 import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -197,7 +198,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         long projectId = 123L;
 
         ProjectResource project = newProjectResource().withId(projectId)
-                .withDocumentsSubmittedDate(LocalDateTime.now()).build();
+                .withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.UNSET).build();
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
