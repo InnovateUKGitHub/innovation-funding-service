@@ -14,6 +14,8 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     private Long yourOrganisationSectionId;
     private boolean notRequestingFunding;
 
+	private SectionResource fundingSection;
+
 
     public OpenFinanceSectionViewModel(NavigationViewModel navigationViewModel, SectionResource currentSection,
                                        Boolean hasFinanceSection, Long financeSectionId, UserResource currentUser,
@@ -76,5 +78,17 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     public boolean showSectionStatus(SectionResource subSection) {
         return showSectionAsLink(subSection);
+    }
+
+    public void setFundingSection(SectionResource fundingSection) {
+        this.fundingSection = fundingSection;
+    }
+
+    public Boolean getOrganisationSizeAlert() {
+        if(null == fundingSection) {
+            return Boolean.FALSE;
+        }
+
+        return sectionsMarkedAsComplete.contains(fundingSection.getId());
     }
 }
