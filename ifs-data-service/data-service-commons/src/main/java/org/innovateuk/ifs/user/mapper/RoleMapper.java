@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        ProcessRoleMapper.class,
         UserMapper.class
     }
 )

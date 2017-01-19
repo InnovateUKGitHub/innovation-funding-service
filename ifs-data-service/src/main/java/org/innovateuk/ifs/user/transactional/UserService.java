@@ -17,18 +17,6 @@ import java.util.Set;
  */
 public interface UserService {
 
-    @NotSecured(value = "This UID method is needed prior to being able to put a User on the SecurityContext, and so it cannot be secured itself", mustBeSecuredByOtherServices = false)
-    ServiceResult<UserResource> getUserResourceByUid(final String uid);
-
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<UserResource> getUserById(final Long id);
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<UserResource>> findAll();
-
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType);
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findByEmail(final String email);
 

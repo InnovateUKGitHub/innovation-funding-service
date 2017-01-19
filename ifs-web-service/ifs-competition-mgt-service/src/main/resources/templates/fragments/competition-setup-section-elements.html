@@ -188,7 +188,8 @@
                        min="1"
                        required="required"
                        th:name="question.maxWords"
-                       th:value="${question.maxWords}"/>
+                       th:value="${question.maxWords}"
+                       th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
             </div>
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
@@ -471,7 +472,8 @@
                                        min="0"
                                        required="required"
                                        th:name="question.assessmentMaxWords"
-                                       th:value="${question.assessmentMaxWords}"/>
+                                       th:value="${question.assessmentMaxWords}"
+                                       th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
                             </div>
                         </div>
                     </th:block>

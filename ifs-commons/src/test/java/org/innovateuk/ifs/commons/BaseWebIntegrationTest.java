@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.commons;
 
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 

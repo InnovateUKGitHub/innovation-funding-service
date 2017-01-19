@@ -60,8 +60,8 @@ public class ProjectInviteResourceBuilder  extends BaseBuilder<InviteProjectReso
         return with((inviteResource) -> inviteResource.setOrganisation(organisationId));
     }
 
-    public  ProjectInviteResourceBuilder withLeadOrganisation(final String leadOrganisation) {
-        return with((inviteResource) -> inviteResource.setLeadOrganisation(leadOrganisation));
+    public  ProjectInviteResourceBuilder withLeadOrganisation(final Long leadOrganisationId) {
+        return with((inviteResource) -> inviteResource.setLeadOrganisationId(leadOrganisationId));
     }
 
     public  ProjectInviteResourceBuilder withInviteOrganisationName(final String inviteOrganisationName) {
