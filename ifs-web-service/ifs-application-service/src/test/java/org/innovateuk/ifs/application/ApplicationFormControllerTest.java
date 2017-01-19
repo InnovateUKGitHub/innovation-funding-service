@@ -1066,6 +1066,4 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     }
 
-
-
 }
