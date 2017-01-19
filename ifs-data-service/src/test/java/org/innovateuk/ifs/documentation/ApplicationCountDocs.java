@@ -8,9 +8,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationCountDocs {
     public static final FieldDescriptor[] applicationCountSummaryResourcesFields = {
-            fieldWithPath("[].id").description("Id of the application"),
+            fieldWithPath("[].id").description("ID of the application"),
             fieldWithPath("[].name").description("Name of the application"),
-            fieldWithPath("[].leadOrganisation").description("The lead organisation"),
+            fieldWithPath("[].leadOrganisationId").description("The lead organisation ID"),
             fieldWithPath("[].assessors").description("Count of assessors"),
             fieldWithPath("[].accepted").description("Count of accepted assessments"),
             fieldWithPath("[].submitted").description("Count of submitted assessments")
@@ -19,7 +19,7 @@ public class ApplicationCountDocs {
     public static final ApplicationCountSummaryResourceBuilder applicationCountSummaryResourceBuilder = newApplicationCountSummaryResource()
             .withId(1L)
             .withName("application name")
-            .withLeadOrganisation("lead organisation")
+            .withLeadOrganisationId(1L)
             .withAssessors(4L)
             .withAccepted(2L)
             .withSubmitted(1L);

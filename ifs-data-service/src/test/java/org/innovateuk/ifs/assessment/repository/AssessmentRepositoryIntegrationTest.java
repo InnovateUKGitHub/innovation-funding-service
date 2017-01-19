@@ -193,7 +193,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         setUpShuffledAssessments(user, application, numOfAssessmentsForEachState);
 
         List<Assessment> found = repository
-                .findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(
+                .findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
                         user.getId(),
                         application.getCompetition().getId());
 
