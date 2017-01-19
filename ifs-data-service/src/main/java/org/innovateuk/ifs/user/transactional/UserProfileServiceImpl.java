@@ -87,7 +87,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsResource profileSkills) {
-        Profile profile = getOrSetUserProfile(user);
+        Profile profile = getOrCreateUserProfile(user);
         profile.setBusinessType(profileSkills.getBusinessType());
         profile.setSkillsAreas(profileSkills.getSkillsAreas());
         profileRepository.save(profile);
@@ -115,7 +115,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private void updateProfileContract(User user, Contract contract) {
-        Profile profile = getOrSetUserProfile(user);
+        Profile profile = getOrCreateUserProfile(user);
         profile.setContractSignedDate(LocalDateTime.now(clock));
         profile.setContract(contract);
         profileRepository.save(profile);
@@ -188,7 +188,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<Void> updateUserProfileDetails(User user, UserProfileResource profileDetails) {
         updateBasicDetails(user, profileDetails);
 
-        Profile profile = getOrSetUserProfile(user);
+        Profile profile = getOrCreateUserProfile(user);
         profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
         profileRepository.save(profile);
 
@@ -252,14 +252,14 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> validateContract(Contract contract, User user) {
-        Profile profile = getOrSetUserProfile(user);
+        Profile profile = getOrCreateUserProfile(user);
         if (profile.getContract() != null && contract.getId().equals(profile.getContract().getId())) {
             return serviceFailure(badRequestError("validation.assessorprofilecontractform.terms.alreadysigned"));
         }
         return serviceSuccess();
     }
 
-    private Profile getOrSetUserProfile(User user) {
+    private Profile getOrCreateUserProfile(User user) {
         Profile profile = user.getProfileId() != null ? profileRepository.findOne(user.getProfileId()) : null;
         if (profile == null) {
             profile = profileRepository.save(new Profile());
