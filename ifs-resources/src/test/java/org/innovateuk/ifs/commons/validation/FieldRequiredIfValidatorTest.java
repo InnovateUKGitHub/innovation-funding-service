@@ -167,10 +167,10 @@ public class FieldRequiredIfValidatorTest {
 
     @Test
     public void isValid_optionalFieldIsRequiredAndNull() throws Exception {
-        TestResource testResource = new TestResource();
+        TestDTO testResource = new TestDTO();
         testResource.setDogPossiblyHasName(true);
 
-        Set<ConstraintViolation<TestResource>> result = localValidatorFactory.validate(testResource);
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
 
         assertEquals(1, result.size());
         assertEquals(result.stream().findFirst().get().getMessage(), "{validation.testform.dogname.required}");
@@ -178,11 +178,11 @@ public class FieldRequiredIfValidatorTest {
 
     @Test
     public void isValid_optionalFieldIsRequiredAndNotPresent() throws Exception {
-        TestResource testResource = new TestResource();
+        TestDTO testResource = new TestDTO();
         testResource.setDogPossiblyHasName(true);
         testResource.setPossibleDogName(Optional.empty());
 
-        Set<ConstraintViolation<TestResource>> result = localValidatorFactory.validate(testResource);
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
 
         assertEquals(1, result.size());
         assertEquals(result.stream().findFirst().get().getMessage(), "{validation.testform.dogname.required}");
@@ -190,23 +190,23 @@ public class FieldRequiredIfValidatorTest {
 
     @Test
     public void isValid_optionalFieldIsRequiredAndPresent() throws Exception {
-        TestResource testResource = new TestResource();
+        TestDTO testResource = new TestDTO();
         testResource.setDogPossiblyHasName(true);
 
         String dogName = "test";
         testResource.setPossibleDogName(Optional.of(dogName));
 
-        Set<ConstraintViolation<TestResource>> result = localValidatorFactory.validate(testResource);
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
 
         assertEquals(0, result.size());
      }
 
     @Test
     public void isValid_optionalFieldIsNotRequiredAndNull() throws Exception {
-        TestResource testResource = new TestResource();
+        TestDTO testResource = new TestDTO();
         testResource.setDogPossiblyHasName(false);
 
-        Set<ConstraintViolation<TestResource>> result = localValidatorFactory.validate(testResource);
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
 
         assertEquals(0, result.size());
      }
@@ -291,8 +291,8 @@ public class FieldRequiredIfValidatorTest {
     }
 
     @FieldRequiredIf(required = "possibleDogName", argument = "dogPossiblyHasName", predicate = true, message="{validation.testform.dogname.required}")
-    public static class TestResource {
-        public TestResource() {}
+    public static class TestDTO {
+        public TestDTO() {}
 
         private Boolean dogPossiblyHasName;
         private Optional<String> possibleDogName;
