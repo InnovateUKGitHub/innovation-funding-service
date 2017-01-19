@@ -18,6 +18,7 @@ import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -177,6 +178,9 @@ public class ApplicationFormController {
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -974,7 +978,7 @@ public class ApplicationFormController {
     private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
-        if (fieldName.startsWith("application.")) {
+        if (fieldName.startsWith("application.") || fieldName.equals("researchCategoryId")) {
         	// this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
@@ -1057,6 +1061,12 @@ public class ApplicationFormController {
             applicationService.save(application);
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
+            applicationService.save(application);
+        } else if (fieldName.equals("researchCategoryId")) {
+            Long catId = Long.parseLong(value);
+            Set<ResearchCategoryResource> cats =
+                    categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
+            application.setResearchCategories(cats);
             applicationService.save(application);
         }
         return errors;

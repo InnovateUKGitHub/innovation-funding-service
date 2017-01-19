@@ -75,6 +75,7 @@ public class ApplicationPrintPopulator {
         applicationModelPopulator.addApplicationInputs(application, model);
         applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
         financeOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
+        applicationModelPopulator.addResearchCategoryName(application, model);
 
         return "application/print";
     }

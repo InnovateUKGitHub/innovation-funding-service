@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -18,6 +19,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -65,6 +67,7 @@ public class ApplicationResource {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+    private Set<ResearchCategoryResource> researchCategories;
 
     public Long getId() {
         return id;
@@ -275,5 +278,13 @@ public class ApplicationResource {
 
     public void setStateAidAgreed(Boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
+    }
+
+    public Set<ResearchCategoryResource> getResearchCategories() {
+        return researchCategories;
+    }
+
+    public void setResearchCategories(Set<ResearchCategoryResource> researchCategories) {
+        this.researchCategories = researchCategories;
     }
 }

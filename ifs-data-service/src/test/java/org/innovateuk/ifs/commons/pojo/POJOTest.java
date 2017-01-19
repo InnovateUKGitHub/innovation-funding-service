@@ -98,6 +98,7 @@ public class POJOTest {
             Token.class,
             InviteOrganisation.class,
             Section.class,
+            ApplicationFinance.class,
             ProjectFinanceResource.class,
             Competition.class,
             CreateUserResource.class,
@@ -156,28 +157,28 @@ public class POJOTest {
             NewUserStagedInviteListResource.class,
             CompetitionSetupFinanceResource.class,
             ApplicationCountSummaryResource.class
-            );
+    );
 
     @Before
     public void setup() {
         classes = PojoClassFactory.getPojoClassesRecursively(POJO_PACKAGE, new FilterPackages(classesToTest));
 
         validator = ValidatorBuilder.create()
-            .with(
-                new GetterMustExistRule(),
-                new SetterMustExistRule(),
-                new NoNestedClassRule(),
-                new NoStaticExceptFinalRule(),
-                new SerializableMustHaveSerialVersionUIDRule(),
-                new NoFieldShadowingRule(),
-                new NoPublicFieldsExceptStaticFinalRule(),
-                new TestClassMustBeProperlyNamedRule()
-            )
-            .with(
-                new SetterTester(),
-                new GetterTester()
-            )
-            .build();
+                .with(
+                        new GetterMustExistRule(),
+                        new SetterMustExistRule(),
+                        new NoNestedClassRule(),
+                        new NoStaticExceptFinalRule(),
+                        new SerializableMustHaveSerialVersionUIDRule(),
+                        new NoFieldShadowingRule(),
+                        new NoPublicFieldsExceptStaticFinalRule(),
+                        new TestClassMustBeProperlyNamedRule()
+                )
+                .with(
+                        new SetterTester(),
+                        new GetterTester()
+                )
+                .build();
     }
 
     @Test

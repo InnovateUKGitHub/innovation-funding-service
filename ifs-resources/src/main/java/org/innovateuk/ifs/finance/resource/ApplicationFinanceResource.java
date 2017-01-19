@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
-
-import java.util.Set;
 
 /**
  * Application finance resource holds the organisation's finance resources for an application
@@ -13,7 +10,6 @@ import java.util.Set;
 public class ApplicationFinanceResource extends BaseFinanceResource {
 
     private Long financeFileEntry;
-    private Set<ResearchCategoryResource> researchCategories;
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
 
@@ -55,15 +51,6 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
     public void setApplication(Long target) {
         super.setTarget(target);
-    }
-
-
-    public Set<ResearchCategoryResource> getResearchCategories() {
-        return researchCategories;
-    }
-
-    public void setResearchCategories(Set<ResearchCategoryResource> researchCategories) {
-        this.researchCategories = researchCategories;
     }
 
     @Override

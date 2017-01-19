@@ -95,9 +95,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     @Mock
     private CategoryService categoryService;
 
-    @Mock
-    private FinanceService financeService;
-
     private Long questionId;
     private Long applicationId;
     private Long competitionId;
@@ -114,7 +111,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     private List<FormInputResource> formInputs;
     private List<ProcessRoleResource> userApplicationRoles;
     private List<ResearchCategoryResource> researchCategories;
-    private ApplicationFinanceResource applicationFinance;
 
     @Before
     public void setUp() {
@@ -126,15 +122,14 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         organisationId = 3L;
         researchCategoryId = 1L;
         question = newQuestionResource().withId(questionId).build();
-        application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
+        researchCategories = newResearchCategoryResource().build(1);
+        application = newApplicationResource().withId(applicationId).withCompetition(competitionId).withResearchCategories(researchCategories.stream().collect(Collectors.toSet())).build();
         competition = newCompetitionResource().withId(competitionId).build();
         organisation = newOrganisationResource().withId(organisationId).build();
         user = newUserResource().build();
         form = new ApplicationForm();
         formInputs = newFormInputResource().build(10);
         organisationDetailsViewModel = new QuestionOrganisationDetailsViewModel();
-        researchCategories = newResearchCategoryResource().build(1);
-        applicationFinance = newApplicationFinanceResource().withApplication(applicationId).withResearchCategories(researchCategories.stream().collect(Collectors.toSet())).build();
 
         userApplicationRoles = newProcessRoleResource()
             .withApplication(applicationId)
@@ -162,7 +157,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         assertEquals(user, viewModel.getLeadApplicant());
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(researchCategories, viewModel.getApplication().getResearchCategories());
-        //assertEquals(researchCategoryId, viewModel.getApplication().getResearchCategoryId());
     }
 
     private void setupSuccess(){
@@ -178,6 +172,5 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         when(userService.getLeadApplicantProcessRoleOrNull(application)).thenReturn(newProcessRoleResource().withUser(user).build());
         when(userService.findById(user.getId())).thenReturn(user);
         when(categoryService.getResearchCategories()).thenReturn(researchCategories);
-        when(financeService.getApplicationFinanceDetails(user.getId(), applicationId)).thenReturn(applicationFinance);
     }
 }

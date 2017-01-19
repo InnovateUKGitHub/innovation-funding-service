@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.mapper;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -21,7 +22,8 @@ import org.mapstruct.Mappings;
                 ApplicationStatusMapper.class,
                 CompetitionMapper.class,
                 ApplicationInviteMapper.class,
-                FileEntryMapper.class
+                FileEntryMapper.class,
+                ResearchCategoryMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {

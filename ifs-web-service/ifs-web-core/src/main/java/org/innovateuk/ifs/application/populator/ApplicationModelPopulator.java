@@ -5,12 +5,14 @@ import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ApplicationModelPopulator {
@@ -155,15 +159,14 @@ public class ApplicationModelPopulator {
         }
     }
 
-    public void addResearchCategoryDetails(Long competitionId, Long applicationId, UserResource user,
-                                           Model model) {
+    public void addResearchCategoryId(ApplicationResource application, Model model) {
 
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(user.getId(), applicationId);
-        if (applicationFinanceResource != null) {
-            model.addAttribute("rsCategory", applicationFinanceResource.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
-        } else {
-            model.addAttribute("rsCategory", null);
-        }
+        model.addAttribute("rsCategoryId", application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+    }
+
+    public void addResearchCategoryName(ApplicationResource application, Model model) {
+
+        model.addAttribute("researchCategoryName", application.getResearchCategories().stream().findFirst().map(cat -> cat.getName()).orElse(""));
     }
 
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {

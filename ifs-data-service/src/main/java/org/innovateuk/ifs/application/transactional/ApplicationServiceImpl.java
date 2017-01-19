@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -97,6 +98,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private SystemNotificationSource systemNotificationSource;
     @Autowired
     private ApplicationMapper applicationMapper;
+    @Autowired
+    private ResearchCategoryMapper researchCategoryMapper;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -337,6 +340,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingApplication.setResubmission(application.getResubmission());
             existingApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
             existingApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+            application.getResearchCategories().forEach(researchCategoryResource ->
+                    existingApplication.addResearchCategory(researchCategoryMapper.mapToDomain(researchCategoryResource)));
+
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
         });

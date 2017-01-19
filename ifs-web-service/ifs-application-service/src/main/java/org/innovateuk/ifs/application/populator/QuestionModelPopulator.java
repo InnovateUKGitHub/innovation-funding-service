@@ -13,7 +13,6 @@ import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
@@ -148,11 +147,8 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         addApplicationFormDetailInputs(application, form);
 
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, application.getId());
         questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
-        if (applicationFinanceResource != null) {
-            questionApplicationViewModel.setResearchCategoryId(applicationFinanceResource.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
-        }
+        questionApplicationViewModel.setResearchCategoryId(application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
 
         return questionApplicationViewModel;
     }
