@@ -244,7 +244,10 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 		model.addAttribute("competition", competitionResource);
 		model.addAttribute("currentSection", section);
-		model.addAttribute("currentSectionFragment", "section-" + section.getPath());
+
+		if (section.hasDisplayableSetupFragment()) {
+			model.addAttribute("currentSectionFragment", "section-" + section.getPath());
+		}
 
 		model.addAttribute("allSections", CompetitionSetupSection.values());
         model.addAttribute("isInitialComplete", isInitialComplete(competitionResource));
