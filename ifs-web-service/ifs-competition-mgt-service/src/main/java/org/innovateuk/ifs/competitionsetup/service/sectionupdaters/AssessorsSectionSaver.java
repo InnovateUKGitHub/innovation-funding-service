@@ -1,15 +1,17 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
@@ -38,7 +40,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 			return competitionService.update(competition);
 		}
 		else {
-			return serviceFailure(asList(new Error("COMPETITION_NOT_EDITABLE")));
+			return serviceFailure(singletonList(new Error("COMPETITION_NOT_EDITABLE", HttpStatus.INTERNAL_SERVER_ERROR)));
 		}
 	}
 
