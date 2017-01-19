@@ -408,7 +408,7 @@ Application: Finances
     And The user clicks the button/link      jQuery=button:contains("Save and close")
     Then the user navigates to the page      ${landingPage}
     When the user clicks the button/link     link=Finances
-    Then the user should see the element     jQuery=dt:contains("Include Project Growth Table") ~ dd:contains("No")
+    Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
 
 Application: Mark as done and the Edit again
     [Documentation]    INFUND-3000
