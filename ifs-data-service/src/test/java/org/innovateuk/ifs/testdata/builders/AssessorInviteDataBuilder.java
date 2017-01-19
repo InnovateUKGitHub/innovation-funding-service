@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -12,27 +13,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 
 /**
  * Generates assessor invites and gives the ability to accept them
  */
 public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInviteDataBuilder> {
 
-    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName, String emailAddress, String name, String inviteHash, Optional<User> existingUser, String innovationAreaName) {
+    public AssessorInviteDataBuilder withInviteToAssessCompetition(String competitionName,
+                                                                   String emailAddress,
+                                                                   String name,
+                                                                   String inviteHash,
+                                                                   InviteStatus inviteStatus,
+                                                                   Optional<User> existingUser,
+                                                                   String innovationAreaName
+    ) {
 
         return with(data -> doAs(systemRegistrar(), () -> {
 
             final Competition competition = retrieveCompetitionByName(competitionName);
-            final Category innovationArea =  retrieveInnovationAreaByName(innovationAreaName);
+            final InnovationArea innovationArea = retrieveInnovationAreaByName(innovationAreaName);
 
             final CompetitionInvite invite = newCompetitionInvite().
                     withCompetition(competition).
                     withEmail(emailAddress).
-                    withStatus(InviteStatus.SENT).
+                    withStatus(inviteStatus).
                     withHash(inviteHash).
                     withName(name).
                     withUser(existingUser.orElse(null)).
@@ -51,6 +58,20 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
             doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
             doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccessObjectOrThrowException());
+        });
+    }
+
+    public AssessorInviteDataBuilder rejectInvite(String hash, String rejectionReason, Optional<String> rejectionComment) {
+        return with(data -> {
+            List<RejectionReasonResource> rejectionReasons = rejectionReasonService.findAllActive().getSuccessObjectOrThrowException();
+
+            RejectionReasonResource rejectionReasonResource = rejectionReasons.stream()
+                    .filter(reason -> reason.getReason().equals(rejectionReason))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid"));
+
+            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
+            doAs(systemRegistrar(), () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
         });
     }
 
@@ -73,7 +94,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
         return null;
     }
 
-    private Category retrieveInnovationAreaByName(String name) {
+    private InnovationArea retrieveInnovationAreaByName(String name) {
         return !isBlank(name) ? innovationAreaRepository.findByName(name) : null;
     }
 }

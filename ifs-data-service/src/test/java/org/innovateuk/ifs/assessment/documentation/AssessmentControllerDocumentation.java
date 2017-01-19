@@ -167,6 +167,36 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void withdrawAssessment() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.withdrawAssessment(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the assessment for which to withdraw")
+                        )
+                ));
+    }
+
+    @Test
+    public void notifyAssessor() throws Exception {
+        Long assessmentId = 1L;
+
+        when(assessmentServiceMock.notify(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/notify", assessmentId))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the asssessment for which to notify")
+                        )
+                ));
+    }
+
+    @Test
     public void submitAssessments() throws Exception {
         AssessmentSubmissionsResource assessmentSubmissions = assessmentSubmissionsResourceBuilder.build();
         when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());

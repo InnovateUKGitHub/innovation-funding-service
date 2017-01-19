@@ -81,4 +81,8 @@ public enum CompetitionSetupSection {
 				&& competitionResource.getSectionSetupStatus().get(this);
 	}
 
+	public boolean hasDisplayableSetupFragment() {
+		return HOME != this;
+	}
+
 }

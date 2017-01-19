@@ -37,7 +37,6 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-5636 As a Competitions team member I want to be able to view setup questions in the Project Summary section of Competition Setup so that I can review the questions and guidance to be shown to the applicants
 ...
-...
 ...               INFUND-5637 As a Competitions team member I want to be able to edit setup questions in the Project Summary section of Competition Setup so that I can amend the defaults if required for the competition
 ...
 ...               INFUND-5635 As a Competitions team member I want to be able to edit questions in the Scope section of Competition Setup so that I can amend the defaults if required for the competition
@@ -45,10 +44,14 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-5641 As a Competitions team member I want to be able to update the assessor setup questions so that I can amend the defaults if required for the competition
 ...
 ...               INFUND-5633 As a Competitions team member I want to be able to set up questions in the Application Details section of Competition Setup so that I can amend the defaults if necessary for the competitions
-Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+...
+...               INFUND-6478 As a Competitions executive I will be able to view all innovation areas selected when viewing Initial details of my competition in read only mode and the Competition type is Sector competition
+...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
+Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Test Cases ***
 User can create a new competition
@@ -85,71 +88,60 @@ New competition shows in Preparation section
     And The user clicks the button/link    id=section-3
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
-Initial details: correct state aid status
-    [Documentation]    INFUND-2982
-    ...
-    ...    INFUND-2983
-    ...
-    ...    INFUND-3888
-    ...
-    ...    INFUND-4979
-    [Tags]    Pending
-    [Setup]
-    #TODO This ticket marked as pending because atm there is no SBRI competition type.
-    #Change the test setup
-    Given the user should not see the element    css=#stateAid
-    When the user selects the option from the drop-down menu    SBRI    id=competitionTypeId
-    Then the user should see the element    css=.no
-    When the user selects the option from the drop-down menu    Special    id=competitionTypeId
-    Then the user should see the element    css=.no
-    When the user selects the option from the drop-down menu    Additive Manufacturing    id=competitionTypeId
-    Then the user should see the element    css=.yes
-    When the user selects the option from the drop-down menu    Sector    id=competitionTypeId
-    Then the user should see the element    css=.yes
-
-Initial details: User enters valid values and marks as done
-    [Documentation]    INFUND-2982
-    ...
-    ...    INFUND-3888
-    ...
-    ...    INFUND-2983
+Initial details - User enters valid values and marks as done
+    [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given The user clicks the button/link    link=Initial details
+    [Setup]    the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}
+    Given The user clicks the button/link           link=Initial details
+    When the user selects the option from the drop-down menu  Programme  id=competitionTypeId
+    And the user should not see the element         jQuery=.buttonlink:contains("+ add another innovation area")
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    Toby Reader
-    And the user should see the text in the page    1/12/2017
+    When the user clicks the button/link            jQuery=.button:contains("Done")
+    Then the user should see the text in the page   Toby Reader
+    And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Health and life sciences
-    And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    Programme
-    And the user should see the text in the page    NO
-    And the user should see the element    jQuery=.button:contains("Edit")
+    And the user should see the text in the page    Emerging and enabling technologies
+    And the user should see the text in the page    Creative economy
+    And the user should see the text in the page    Sector
+    And the user should see the text in the page    Yes
+    And the user should see the element             jQuery=.button:contains("Edit")
 
-Initial details: Comp Type and Date should not be editable
-    [Documentation]    INFUND-2985
-    ...
-    ...    INFUND-3182
-    ...
-    ...    INFUND-4892
+Initial details - Sector competitions allow multiple innovation areas
+   [Documentation]    INFUND-6478, INFUND-6479
+   [Tags]    HappyPath
+   Given the user clicks the button/link            jQuery=.button:contains("Edit")
+   When the user enters multiple innovation areas
+   And the user clicks the button/link              jQuery=.button:contains("Done")
+   Then The user should see the text in the page    Cyber Security
+   And The user should see the text in the page     Design
+
+Initial Details - User can remove an innovation area
+   [Documentation]    INFUND-6478, INFUND-6479
+   [Tags]
+   Given the user clicks the button/link  jQuery=.button:contains("Edit")
+   And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
+   When the user clicks the button/link   jQuery=.button:contains("Done")
+   Then the user should not see the text in the page  Creative economy
+
+Initial details - Comp Type and Date should not be editable
+    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user enters text to a text field    id=title    Test competition
-    And The element should be disabled    id=competitionTypeId
-    And The element should be disabled    id=openingDateDay
-    And the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the text in the page    1/12/2017
+    When the user clicks the button/link      jQuery=.button:contains("Edit")
+    And the user enters text to a text field  css=#title  Test competition
+    And The element should be disabled        css=#competitionTypeId
+    And The element should be disabled        css=#openingDateDay
+    And the user clicks the button/link       jQuery=.button:contains("Done")
+    Then the user should see the text in the page   1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
-    And the user should see the text in the page    Health and life sciences
-    And the user should see the text in the page    Advanced Therapies
-    And the user should see the text in the page    Programme
-    And the user should see the text in the page    NO
+    And the user should see the text in the page    Emerging and enabling technologies
+    And the user should see the text in the page    Design
+    And the user should see the text in the page    Sector
+    And the user should see the text in the page    Yes
 
-Initial details: should have a green check
+Initial details - should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
@@ -204,7 +196,7 @@ Funding information: can be saved
     And the user should see the text in the page    2016
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
-    And the user should see the text in the page    1712-1
+    And the user should see the text in the page    1812-1
     And the user should see the element    jQuery=.button:contains("Edit")
 
 Funding information: can be edited
@@ -313,12 +305,12 @@ Milestones: Green check should show
     Then the user should see the element    css=li:nth-child(4) .section-status
     And the user should not see the element    jQuery=.button:contains("Save")
 
-Application: Application process Page
+Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]    HappyPath
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application
-    Then The user should see the text in the page    Programme competition questions
+    Then The user should see the text in the page  Sector competition questions
     And the user should see the element    link=Business opportunity
     And the user should see the element    link=Potential market
     And the user should see the element    link=Project exploitation
@@ -571,9 +563,9 @@ the weekdays should be correct
     element should contain    css=tr:nth-child(13) td:nth-child(2)    Tue
 
 the pre-field date should be correct
-    Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Fri
+    Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Sat
     ${YEAR} =    Get Value    css=.date-group:nth-child(1) .year .width-small
-    Should Be Equal As Strings    ${YEAR}    2017
+    Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
     Should Be Equal As Strings    ${MONTH}    12
     ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .width-small
@@ -583,13 +575,13 @@ the resubmission should not have a default selection
     the user sees that the radio button is not selected    resubmission
 
 The user enters valid data in the initial details
-    Given the user enters text to a text field    id=title    Competition title
-    And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    Given the user enters text to a text field                css=#title  Competition title
+    When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
+    And the user selects the option from the drop-down menu   Emerging and enabling technologies  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Creative economy  id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
-    And the user enters text to a text field    id=openingDateYear    2017
+    And the user enters text to a text field    id=openingDateYear  ${nextyear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
     And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
 
@@ -617,28 +609,6 @@ the user checks the scope assessment questions
     The user should see the text in the page    Scope 'Y/N' question
     The user should see the text in the page    Research category question
 
-the user edits the assessed question information
-    the user enters text to a text field    id=question.scoreTotal    100
-    the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
-    the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    the user enters text to a text field    id=guidancerow-5-scorefrom    11
-    the user enters text to a text field    id=guidancerow-5-scoreto    12
-    the user enters text to a text field    id=guidancerow-5-justification    This is a justification
-    the user clicks the button/link    id=remove-guidance-row-2
-
-
-the user sees the correct assessed question information
-    the user should see the text in the page    Assessment of this question
-    #the user should see the text in the page    Business opportunity guidance
-    the user should see the text in the page    11
-    the user should see the text in the page    12
-    the user should see the text in the page    This is a justification
-    the user should see the text in the page    100
-    the user should see the text in the page    Written feedback
-    the user should see the text in the page    Scored
-    the user should see the text in the page    Out of
-    the user should not see the text in the page    The business opportunity is plausible
-
 the user should not be able to edit the scope feedback
     the user should not see the element    id=question.assessmentGuidanceTitle
     the user should not see the element    id=question.assessmentGuidance
@@ -665,3 +635,14 @@ the user should not see the assessed question feedback
     the user should not see the text in the page    Guidance for assessing business opportunity
     the user should not see the text in the page    Your score should be based upon the following:
     the user should not see the text in the page    There is little or no business drive to the project.
+
+Custom suite setup
+    Guest user log-in    &{Comp_admin1_credentials}
+    ${nextyear} =  get next year
+    Set suite variable  ${nextyear}
+
+the user enters multiple innovation areas
+    the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    the user selects the option from the drop-down menu    Cyber Security    id=innovationAreaCategoryId-1
+    the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    the user selects the option from the drop-down menu    Design    id=innovationAreaCategoryId-2

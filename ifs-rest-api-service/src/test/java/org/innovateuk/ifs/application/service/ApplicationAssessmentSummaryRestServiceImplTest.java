@@ -2,10 +2,15 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Test;
+
+import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
+import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.junit.Assert.assertSame;
 
 public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestServiceUnitTest<ApplicationAssessmentSummaryRestServiceImpl> {
@@ -17,6 +22,16 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
         ApplicationAssessmentSummaryRestServiceImpl applicationAssessmentSummaryRestService = new ApplicationAssessmentSummaryRestServiceImpl();
         applicationAssessmentSummaryRestService.setDataRestServiceUrl(applicationAssessmentSummaryRestUrl);
         return applicationAssessmentSummaryRestService;
+    }
+
+    @Test
+    public void getAssessors() throws Exception {
+        List<ApplicationAssessorResource> expected = newApplicationAssessorResource().build(2);
+
+        Long applicationId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/assessors", applicationAssessmentSummaryRestUrl, applicationId), ParameterizedTypeReferences.applicationAssessorResourceListType(), expected);
+        assertSame(expected, service.getAssessors(applicationId).getSuccessObject());
     }
 
     @Test
