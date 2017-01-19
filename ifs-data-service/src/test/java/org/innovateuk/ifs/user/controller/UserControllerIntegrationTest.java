@@ -8,8 +8,10 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.Contract;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ContractRepository;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Ignore;
@@ -59,6 +61,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -196,12 +201,12 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
         User user = userRepository.findOne(getPaulPlum().getId());
         Long userId = user.getId();
-
-        user.setProfile(newProfile()
-                .with(id(null))
+        Profile profile = newProfile()
                 .withBusinessType(BUSINESS)
                 .withSkillsAreas("Skills")
-                .build());
+                .build();
+        profile = profileRepository.save(profile);
+        user.setProfileId(profile.getId());
         userRepository.save(user);
 
         ProfileSkillsResource response = controller.getProfileSkills(userId).getSuccessObjectOrThrowException();
@@ -247,7 +252,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isSuccess());
 
         User userAfterUpdate = userRepository.findOne(userId);
-        assertEquals(contract, userAfterUpdate.getProfile().getContract());
+        Profile profile = profileRepository.findOne(userAfterUpdate.getProfileId());
+
+        assertEquals(contract, profile.getContract());
     }
 
     @Ignore("TODO DW - INFUND-936 - this test will cause issues when not running Shib or on an environment like Bamboo where no Shib is available")
@@ -337,19 +344,18 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void testGetProfileDetails() {
         loginPaulPlum();
 
-        User user = userRepository.findOne(getPaulPlum().getId());
-        Long userId = user.getId();
+        Long userId = getPaulPlum().getId();
+        User user = userRepository.findOne(userId);
 
         Address address = newAddress()
-                .with(id(null))
                 .withAddressLine1("10 Test St")
                 .withTown("Test Town")
                 .build();
-
-        user.setProfile(newProfile()
-                .with(id(null))
+        Profile profile = newProfile()
                 .withAddress(address)
-                .build());
+                .build();
+        profile = profileRepository.save(profile);
+        user.setProfileId(profile.getId());
         userRepository.save(user);
 
         UserProfileResource response = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
@@ -391,6 +397,11 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
         User user = userRepository.findOne(getPaulPlum().getId());
         Long userId = user.getId();
+        Profile profile = newProfile()
+                .withSkillsAreas("java developer")
+                .withContractSignedDate(LocalDateTime.now())
+                .build();
+        profile = profileRepository.save(profile);
 
         user.setAffiliations(newAffiliation()
                 .withId(null, null)
@@ -398,11 +409,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .withUser(user, user)
                 .withExists(true, false)
                 .build(2));
-        user.setProfile(newProfile()
-                .with(id(null))
-                .withSkillsAreas("java developer")
-                .withContractSignedDate(LocalDateTime.now())
-                .build());
+        user.setProfileId(profile.getId());
         userRepository.save(user);
         flushAndClearSession();
 

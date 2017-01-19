@@ -27,7 +27,7 @@ public class ApplicationStatistics {
 
     private Long competition;
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
@@ -63,8 +63,8 @@ public class ApplicationStatistics {
     }
 
     @JsonIgnore
-    public String getLeadOrganisation() {
-        return getLeadProcessRole().map(role -> role.getOrganisation().getName()).orElse(null);
+    public Long getLeadOrganisation() {
+        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
     @JsonIgnore

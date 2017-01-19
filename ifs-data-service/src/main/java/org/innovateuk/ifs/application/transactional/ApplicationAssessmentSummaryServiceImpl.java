@@ -7,7 +7,9 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -18,9 +20,11 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,6 +55,9 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
+    private ProfileRepository profileRepository;
+
+    @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
     @Override
@@ -77,8 +84,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         return application.getProcessRoles().stream()
                 .filter(processRole ->
                         processRole.isLeadApplicant() || processRole.isCollaborator())
-                .map(ProcessRole::getOrganisation)
-                .map(Organisation::getName)
+                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
                 .collect(toList());
     }
 
@@ -86,14 +92,20 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
 
         User user = competitionParticipant.getUser();
-        Optional<Profile> profile = ofNullable(user.getProfile());
+        Optional<Profile> profile = ofNullable(profileRepository.findOne(user.getProfileId()));
+
+        Optional<Set<InnovationArea>> innovationAreas = profile.map(Profile::getInnovationAreas);
+        List<InnovationAreaResource> innovationAreaResources = null;
+        if (innovationAreas.isPresent()) {
+            innovationAreaResources = simpleMap(innovationAreas.get(), innovationAreaMapper::mapToResource);
+        }
 
         ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
         applicationAssessorResource.setUserId(user.getId());
         applicationAssessorResource.setFirstName(user.getFirstName());
         applicationAssessorResource.setLastName(user.getLastName());
         applicationAssessorResource.setBusinessType(profile.map(Profile::getBusinessType).orElse(null));
-        applicationAssessorResource.setInnovationAreas(simpleMap(user.getInnovationAreas(), innovationAreaMapper::mapToResource));
+        applicationAssessorResource.setInnovationAreas(innovationAreaResources);
         applicationAssessorResource.setSkillAreas(profile.map(Profile::getSkillsAreas).orElse(null));
         applicationAssessorResource.setAvailable(!mostRecentAssessment.isPresent());
         applicationAssessorResource.setMostRecentAssessmentState(mostRecentAssessment.map(Assessment::getActivityState).orElse(null));

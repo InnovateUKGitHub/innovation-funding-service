@@ -20,7 +20,9 @@ Assessment overview should show all the questions
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     when the user clicks the button/link    link=Intelligent water system
-    Then the user should see three sections
+    Then The user should see the text in the page    Project details
+    And The user should see the text in the page    Application questions
+    And The user should see the text in the page    Finances
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
@@ -47,11 +49,6 @@ Assessor should not be able to access the rejected application
     Then The user should see permissions error message
 
 *** Keywords ***
-the user should see three sections
-    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION} .bold-medium
-    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION} .heading-medium
-    the user should see the element    css=#section-${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION} .heading-medium
-
 the user fills in rejection details
     And the user should see the element    id=rejectReason
     the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu

@@ -279,7 +279,7 @@ Milestones: Page should contain the correct fields
     Then The user should see the text in the page    1. Open date
     And the user should see the text in the page    2. Briefing event
     And the user should see the text in the page    3. Submission date
-    And the user should see the text in the page    4. Allocate accessors
+    And the user should see the text in the page    4. Allocate assessors
     And the user should see the text in the page    5. Assessor briefing
     And the user should see the text in the page    6. Assessor accepts
     And the user should see the text in the page    7. Assessor deadline

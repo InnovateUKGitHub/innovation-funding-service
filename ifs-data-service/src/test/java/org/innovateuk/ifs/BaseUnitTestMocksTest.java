@@ -153,6 +153,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserRepository userRepositoryMock;
 
     @Mock
+    protected ProfileRepository profileRepositoryMock;
+
+    @Mock
     protected CompAdminEmailRepository compAdminEmailRepositoryMock;
 
     @Mock
@@ -286,6 +289,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationService organisationServiceMock;
+
+    @Mock
+    protected BaseUserService baseUserServiceMock;
 
     @Mock
     protected UserService userServiceMock;

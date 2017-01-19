@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.registration.service.AcceptProjectInviteControl
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -126,6 +127,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(false));
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisation));
         MvcResult mvcResult = mockMvc.perform(get(ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING).cookie(new Cookie(AcceptProjectInviteController.INVITE_HASH, encryptor.encrypt(invite.getHash()))))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(ACCEPT_INVITE_SHOW_PROJECT)).andReturn();
@@ -140,10 +142,17 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         UserResource inviteUser = newUserResource().withEmail("doesExist@example.com").build();
         loggedInUser = inviteUser;
         OrganisationResource organisation = newOrganisationResource().build();
-        InviteProjectResource invite = newInviteProjectResource().withHash("hash").withStatus(SENT).withEmail(inviteUser.getEmail()).withProjectName("project name").withOrganisation(organisation.getId()).build();
+        InviteProjectResource invite = newInviteProjectResource().
+                withHash("hash").
+                withStatus(SENT).
+                withEmail(inviteUser.getEmail()).
+                withProjectName("project name").
+                withOrganisation(organisation.getId()).
+                build();
         when(projectInviteRestServiceMock.getInviteByHash(invite.getHash())).thenReturn(restSuccess(invite));
         when(projectInviteRestServiceMock.checkExistingUser(invite.getHash())).thenReturn(restSuccess(true));
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(invite.getOrganisation())).thenReturn(restSuccess(organisation));
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisation));
         MvcResult mvcResult = mockMvc.perform(get(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING).cookie(new Cookie(AcceptProjectInviteController.INVITE_HASH, encryptor.encrypt(invite.getHash()))))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(ACCEPT_INVITE_SHOW_PROJECT)).andReturn();

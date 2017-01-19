@@ -3,29 +3,22 @@ package org.innovateuk.ifs.user.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.domain.UserInnovationAreaLink;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -53,15 +46,6 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "user")
-    private List<ProcessRole> processRoles = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(name = "user_organisation",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "organisation_id", referencedColumnName = "id")})
-    private List<Organisation> organisations = new ArrayList<>();
-
     @ManyToMany
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -78,32 +62,28 @@ public class User implements Serializable {
     @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
     private Ethnicity ethnicity;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, optional = true)
-    private Profile profile;
-
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserInnovationAreaLink> innovationAreas = new HashSet<>();
+    @Column(unique = true)
+    private Long profileId;
 
     public User() {
         // no-arg constructor
     }
 
     public User(String firstName, String lastName, String email, String imageUrl,
-                List<ProcessRole> processRoles, String uid) {
+                String uid) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.imageUrl = imageUrl;
-        this.processRoles = processRoles;
         this.uid = uid;
     }
 
     public User(Long id, String firstName, String lastName, String email, String imageUrl,
-                List<ProcessRole> processRoles, String uid) {
-        this(firstName, lastName, email, imageUrl, processRoles, uid);
+                String uid) {
+        this(firstName, lastName, email, imageUrl, uid);
         this.id = id;
     }
 
@@ -125,41 +105,6 @@ public class User implements Serializable {
 
     public String getUid() {
         return uid;
-    }
-
-    @JsonIgnore
-    public List<ProcessRole> getProcessRoles() {
-        return processRoles;
-    }
-
-    @JsonIgnore
-    public List<ProcessRole> getProcessRolesForRole(UserRoleType role) {
-        return processRoles.stream().filter(processRole -> processRole.getRole().getName().equals(role.getName())).collect(toList());
-    }
-
-    @JsonIgnore
-    public List<Organisation> getOrganisations() {
-        return organisations;
-    }
-
-    public void setOrganisations(List<Organisation> organisations) {
-        this.organisations = organisations;
-    }
-
-    public void addUserApplicationRole(ProcessRole... r) {
-        if (this.processRoles == null) {
-            this.processRoles = new ArrayList<>();
-        }
-        this.processRoles.addAll(asList(r));
-    }
-
-    public void addUserOrganisation(Organisation... orgs) {
-        organisations = organisations == null ? new ArrayList<>() : organisations;
-        asList(orgs).forEach(o -> {
-            if (!organisations.stream().map(Organisation::getId).collect(toList()).contains(o.getId())){
-                organisations.add(o);
-            }
-        });
     }
 
     public List<Role> getRoles() {
@@ -198,7 +143,6 @@ public class User implements Serializable {
     public String getFirstName() {
         return firstName;
     }
-
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -279,12 +223,13 @@ public class User implements Serializable {
     public void setEthnicity(Ethnicity ethnicity) {
         this.ethnicity = ethnicity;
     }
-    public Profile getProfile() {
-        return profile;
+
+    public Long getProfileId() {
+        return profileId;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
     }
 
     public List<Affiliation> getAffiliations() {
@@ -294,23 +239,5 @@ public class User implements Serializable {
     public void setAffiliations(List<Affiliation> affiliations) {
         this.affiliations.clear();
         this.affiliations.addAll(affiliations);
-    }
-
-    public boolean isProfileCompliant() {
-        boolean skillsComplete = profile != null && profile.getSkillsAreas() != null;
-        boolean affiliationsComplete = affiliations != null && !affiliations.isEmpty();
-        boolean contractComplete = profile != null && profile.getContractSignedDate() != null;
-        return skillsComplete && affiliationsComplete && contractComplete;
-    }
-
-    public Set<InnovationArea> getInnovationAreas() {
-        return innovationAreas.stream().map(UserInnovationAreaLink::getCategory).collect(Collectors.toSet());
-    }
-
-    public void addInnovationArea(InnovationArea innovationArea) {
-        if (innovationArea == null) {
-            throw new NullPointerException("innovationArea cannot be null");
-        }
-        innovationAreas.add(new UserInnovationAreaLink(this, innovationArea));
     }
 }

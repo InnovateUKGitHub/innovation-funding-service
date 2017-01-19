@@ -34,7 +34,7 @@ The User can Add and Remove Assessors
     And The user clicks the button/link    link=Invite
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
-    And The user should see the element    jQuery=tr:nth-child(1) .no
+    And The user should see the element    jQuery=tr:nth-child(1) .yes
     #TODO Add an extra check for the innovation area when INFUND-6865 is ready
     When The user clicks the button/link    link=Find
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove)
@@ -82,7 +82,7 @@ Invite non-registered assessors server side validations
     [Tags]
     Given the user clicks the button/link    link=Invite
     When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
-    And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
+    And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see a field error    Please select an innovation area.
     And the user should see a field error    Please enter a name.
     And the user should see a field error    Please enter an email address.
@@ -96,9 +96,10 @@ Invite non-registered users
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
+    And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
     And The user should not see the text in the page    Please select an innovation area.    #check for the client side validation
-    And the user clicks the button/link    jQuery=.button:contains("Add assessor(s) to list")
+    And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see the element    css=.no
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(worth.email.test+OlivierGiroud@gmail.com)

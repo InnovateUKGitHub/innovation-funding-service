@@ -45,7 +45,7 @@ public class Application implements ProcessActivity {
     @Max(100)
     private BigDecimal completion = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "application")
@@ -169,7 +169,11 @@ public class Application implements ProcessActivity {
         if (this.processRoles == null) {
             this.processRoles = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(processRoles));
+        for (ProcessRole processRole : processRoles) {
+            if (!this.processRoles.contains(processRole)) {
+                this.processRoles.add(processRole);
+            }
+        }
     }
 
     public LocalDate getStartDate() {
@@ -213,8 +217,8 @@ public class Application implements ProcessActivity {
     }
 
     @JsonIgnore
-    public Organisation getLeadOrganisation() {
-        return getLeadProcessRole().map(role -> role.getOrganisation()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
     @JsonIgnore
