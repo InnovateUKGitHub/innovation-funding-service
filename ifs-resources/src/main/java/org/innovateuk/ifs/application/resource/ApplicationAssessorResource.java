@@ -26,6 +26,7 @@ public class ApplicationAssessorResource {
     private String rejectReason;
     private String rejectComment;
     private boolean available;
+    private Long mostRecentAssessmentId;
     private AssessmentStates mostRecentAssessmentState;
     private long totalApplicationsCount;
     private long assignedCount;
@@ -43,6 +44,7 @@ public class ApplicationAssessorResource {
                                        String rejectReason,
                                        String rejectComment,
                                        boolean available,
+                                       Long mostRecentAssessmentId,
                                        AssessmentStates mostRecentAssessmentState,
                                        long totalApplicationsCount,
                                        long assignedCount,
@@ -56,6 +58,7 @@ public class ApplicationAssessorResource {
         this.rejectReason = rejectReason;
         this.rejectComment = rejectComment;
         this.available = available;
+        this.mostRecentAssessmentId = mostRecentAssessmentId;
         this.mostRecentAssessmentState = mostRecentAssessmentState;
         this.totalApplicationsCount = totalApplicationsCount;
         this.assignedCount = assignedCount;
@@ -132,6 +135,14 @@ public class ApplicationAssessorResource {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public Long getMostRecentAssessmentId() {
+        return mostRecentAssessmentId;
+    }
+
+    public void setMostRecentAssessmentId(Long mostRecentAssessmentId) {
+        this.mostRecentAssessmentId = mostRecentAssessmentId;
     }
 
     public AssessmentStates getMostRecentAssessmentState() {
@@ -219,6 +230,7 @@ public class ApplicationAssessorResource {
                 .append(skillAreas, that.skillAreas)
                 .append(rejectReason, that.rejectReason)
                 .append(rejectComment, that.rejectComment)
+                .append(mostRecentAssessmentId, that.mostRecentAssessmentId)
                 .append(mostRecentAssessmentState, that.mostRecentAssessmentState)
                 .isEquals();
     }
@@ -235,6 +247,7 @@ public class ApplicationAssessorResource {
                 .append(rejectReason)
                 .append(rejectComment)
                 .append(available)
+                .append(mostRecentAssessmentId)
                 .append(mostRecentAssessmentState)
                 .append(totalApplicationsCount)
                 .append(assignedCount)

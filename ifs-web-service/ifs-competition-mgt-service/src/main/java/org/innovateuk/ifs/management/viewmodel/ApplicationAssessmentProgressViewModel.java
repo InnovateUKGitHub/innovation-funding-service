@@ -17,6 +17,8 @@ public class ApplicationAssessmentProgressViewModel {
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
     private List<ApplicationAvailableAssessorsRowViewModel> available;
+    private List<ApplicationAssessmentProgressRejectedRowViewModel> rejected;
+    private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
 
     public ApplicationAssessmentProgressViewModel(Long applicationId,
                                                   String applicationName,
@@ -24,6 +26,8 @@ public class ApplicationAssessmentProgressViewModel {
                                                   String competitionName,
                                                   List<String> partnerOrganisations,
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
+                                                  List<ApplicationAssessmentProgressRejectedRowViewModel> rejected,
+                                                  List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned,
                                                   List<ApplicationAvailableAssessorsRowViewModel> available) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -31,6 +35,8 @@ public class ApplicationAssessmentProgressViewModel {
         this.competitionName = competitionName;
         this.partnerOrganisations = partnerOrganisations;
         this.assigned = assigned;
+        this.rejected = rejected;
+        this.previouslyAssigned = previouslyAssigned;
         this.available = available;
     }
 
@@ -58,12 +64,16 @@ public class ApplicationAssessmentProgressViewModel {
         return assigned;
     }
 
-    public List<ApplicationAvailableAssessorsRowViewModel> getAvailable() {
-        return available;
+    public List<ApplicationAssessmentProgressRejectedRowViewModel> getRejected() {
+        return rejected;
     }
 
-    public void setAvailable(List<ApplicationAvailableAssessorsRowViewModel> available) {
-        this.available = available;
+    public List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> getPreviouslyAssigned() {
+        return previouslyAssigned;
+    }
+
+    public List<ApplicationAvailableAssessorsRowViewModel> getAvailable() {
+        return available;
     }
 
     @Override
@@ -81,6 +91,8 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(competitionName, that.competitionName)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(assigned, that.assigned)
+                .append(rejected, that.rejected)
+                .append(previouslyAssigned, that.previouslyAssigned)
                 .append(available, that.available)
                 .isEquals();
     }
@@ -94,6 +106,8 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(competitionName)
                 .append(partnerOrganisations)
                 .append(assigned)
+                .append(rejected)
+                .append(previouslyAssigned)
                 .append(available)
                 .toHashCode();
     }

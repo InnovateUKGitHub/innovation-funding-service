@@ -31,6 +31,7 @@ public class ApplicationAssessorResourceBuilderTest {
         String expectedRejectReason = "rejectReason";
         String expectedRejectComment = "rejectComment";
         boolean expectedAvailable = true;
+        Long expectedMostRecentAssessmentId = 1L;
         AssessmentStates expectedMostRecentAssessmentState = ACCEPTED;
         long expectedTotalApplicationsCount = 10;
         long expectedAssignedCount = 20;
@@ -46,6 +47,7 @@ public class ApplicationAssessorResourceBuilderTest {
                 .withRejectReason(expectedRejectReason)
                 .withRejectComment(expectedRejectComment)
                 .withAvailable(expectedAvailable)
+                .withMostRecentAssessmentId(expectedMostRecentAssessmentId)
                 .withMostRecentAssessmentState(expectedMostRecentAssessmentState)
                 .withTotalApplicationsCount(expectedTotalApplicationsCount)
                 .withAssignedCount(expectedAssignedCount)
@@ -61,6 +63,7 @@ public class ApplicationAssessorResourceBuilderTest {
         assertEquals(expectedRejectReason, applicationAssessorResource.getRejectReason());
         assertEquals(expectedRejectComment, applicationAssessorResource.getRejectComment());
         assertEquals(expectedAvailable, applicationAssessorResource.isAvailable());
+        assertEquals(expectedMostRecentAssessmentId, applicationAssessorResource.getMostRecentAssessmentId());
         assertEquals(expectedMostRecentAssessmentState, applicationAssessorResource.getMostRecentAssessmentState());
         assertEquals(expectedTotalApplicationsCount, applicationAssessorResource.getTotalApplicationsCount());
         assertEquals(expectedAssignedCount, applicationAssessorResource.getAssignedCount());
@@ -85,6 +88,7 @@ public class ApplicationAssessorResourceBuilderTest {
         String[] expectedRejectReasons = {"rejectReason1", "rejectReason2"};
         String[] expectedRejectComments = {"rejectComment1", "rejectComment2"};
         Boolean[] expectedAvailable = {true, false};
+        Long[] expectedMostRecentAssessmentIds = {1L, 2L};
         AssessmentStates[] expectedMostRecentAssessmentStates = {ACCEPTED, OPEN};
         Long[] expectedTotalApplicationsCount = {10L, 11L};
         Long[] expectedAssignedCount = {20L, 21L};
@@ -100,6 +104,7 @@ public class ApplicationAssessorResourceBuilderTest {
                 .withRejectReason(expectedRejectReasons)
                 .withRejectComment(expectedRejectComments)
                 .withAvailable(expectedAvailable)
+                .withMostRecentAssessmentId(expectedMostRecentAssessmentIds)
                 .withMostRecentAssessmentState(expectedMostRecentAssessmentStates)
                 .withTotalApplicationsCount(expectedTotalApplicationsCount)
                 .withAssignedCount(expectedAssignedCount)
@@ -116,6 +121,7 @@ public class ApplicationAssessorResourceBuilderTest {
         assertEquals(expectedRejectReasons[0], first.getRejectReason());
         assertEquals(expectedRejectComments[0], first.getRejectComment());
         assertEquals(expectedAvailable[0], first.isAvailable());
+        assertEquals(expectedMostRecentAssessmentIds[0], first.getMostRecentAssessmentId());
         assertEquals(expectedMostRecentAssessmentStates[0], first.getMostRecentAssessmentState());
         assertEquals(expectedTotalApplicationsCount[0].intValue(), first.getTotalApplicationsCount());
         assertEquals(expectedAssignedCount[0].intValue(), first.getAssignedCount());
@@ -131,6 +137,7 @@ public class ApplicationAssessorResourceBuilderTest {
         assertEquals(expectedRejectReasons[1], second.getRejectReason());
         assertEquals(expectedRejectComments[1], second.getRejectComment());
         assertEquals(expectedAvailable[1], second.isAvailable());
+        assertEquals(expectedMostRecentAssessmentIds[1], second.getMostRecentAssessmentId());
         assertEquals(expectedMostRecentAssessmentStates[1], second.getMostRecentAssessmentState());
         assertEquals(expectedTotalApplicationsCount[1].intValue(), second.getTotalApplicationsCount());
         assertEquals(expectedAssignedCount[1].intValue(), second.getAssignedCount());

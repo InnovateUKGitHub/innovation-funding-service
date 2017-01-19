@@ -67,6 +67,10 @@ public class ApplicationAssessorResourceBuilder extends BaseBuilder<ApplicationA
         return withArraySetFieldByReflection("available", value);
     }
 
+    public ApplicationAssessorResourceBuilder withMostRecentAssessmentId(Long... value) {
+        return withArraySetFieldByReflection("mostRecentAssessmentId", value);
+    }
+
     public ApplicationAssessorResourceBuilder withMostRecentAssessmentState(AssessmentStates... value) {
         return withArraySetFieldByReflection("mostRecentAssessmentState", value);
     }

@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.management.form.AvailableAssessorsForm;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,10 +18,13 @@ import javax.validation.Valid;
 @RequestMapping("/competition/{competitionId}/application/{applicationId}/assessors")
 public class CompetitionManagementApplicationAssessmentProgressController {
 
-    private static final String FORM_ATTR_NAME = "form";
-
     @Autowired
     private ApplicationAssessmentProgressModelPopulator applicationAssessmentProgressModelPopulator;
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    private static final String FORM_ATTR_NAME = "form";
 
     @RequestMapping(method = RequestMethod.GET)
     public String applicationProgress(Model model,
@@ -31,6 +32,12 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId) {
         model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, form.getSortField()));
+        return "competition/application-progress";
+    }
+
+    @RequestMapping(params = {"withdraw"}, method = RequestMethod.POST)
+    public String withdrawAssessment(Model model, @RequestParam(name = "withdraw") Long assessmentId) {
+        assessmentRestService.withdrawAssessment(assessmentId);
         return "competition/application-progress";
     }
 }

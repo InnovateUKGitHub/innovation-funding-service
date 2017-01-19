@@ -18,19 +18,17 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -96,16 +94,23 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build(3);
 
-        Map<Long, Assessment> assessmentsForParticipants = asMap(
+        Map<Long, Optional<Assessment>> assessmentsForParticipants = asMap(
+                1L,
                 // Intentionally leaving the first user without an assessment to make them available
+                Optional.empty(),
                 2L,
-                newAssessment()
+                Optional.of(newAssessment()
                         .withActivityState(buildActivityStateWithState(PENDING))
-                        .build(),
+                        .build()),
                 3L,
-                newAssessment()
-                        .withActivityState(buildActivityStateWithState(OPEN))
-                        .build());
+                Optional.of(newAssessment()
+                        .withActivityState(buildActivityStateWithState(REJECTED))
+                        .withProcessOutcome(newProcessOutcome()
+                                .withOutcomeType(REJECT.getType())
+                                .withDescription("Conflict of interest")
+                                .withComment("Member of board of directors")
+                                .build(1))
+                        .build()));
 
         Map<Long, Long> totalApplicationCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
         Map<Long, Long> assignedCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
@@ -129,13 +134,24 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                                 .withName("Electronics, Sensors and photonics")
                                 .build(1))
                 .withAvailable(true, false, false)
-                .withMostRecentAssessmentState(null, PENDING, OPEN)
+                .withMostRecentAssessmentId(assessmentsForParticipants.get(1L).map(Assessment::getId).orElse(null),
+                        assessmentsForParticipants.get(2L).map(Assessment::getId).orElse(null),
+                        assessmentsForParticipants.get(3L).map(Assessment::getId).orElse(null))
+                .withMostRecentAssessmentState(assessmentsForParticipants.get(1L).map(Assessment::getActivityState).orElse(null),
+                        assessmentsForParticipants.get(2L).map(Assessment::getActivityState).orElse(null),
+                        assessmentsForParticipants.get(3L).map(Assessment::getActivityState).orElse(null))
                 .withTotalApplicationsCount(totalApplicationCountsForParticipants.get(1L),
                         totalApplicationCountsForParticipants.get(2L),
                         totalApplicationCountsForParticipants.get(3L))
-                .withAssignedCount(assignedCountsForParticipants.get(1L), assignedCountsForParticipants.get(2L), assignedCountsForParticipants.get(3L))
-                .withSubmittedCount(submittedCountsForParticipants.get(1L), submittedCountsForParticipants.get(2L), submittedCountsForParticipants.get(3L))
+                .withAssignedCount(assignedCountsForParticipants.get(1L),
+                        assignedCountsForParticipants.get(2L),
+                        assignedCountsForParticipants.get(3L))
+                .withSubmittedCount(submittedCountsForParticipants.get(1L),
+                        submittedCountsForParticipants.get(2L),
+                        submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
+                .withRejectReason(null, null, "Conflict of interest")
+                .withRejectComment(null, null, "Member of board of directors")
                 .build(3);
 
         EnumSet<AssessmentStates> assessmentStatesThatAreUnassigned = of(REJECTED, WITHDRAWN);
@@ -157,7 +173,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                             .build();
                 });
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(isA(Long.class), eq(application.getId())))
-                .then(invocation -> ofNullable(assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class))));
+                .then(invocation -> assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
 
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(
                 isA(Long.class), eq(getBackingStates(assessmentStatesThatAreUnassigned))))
