@@ -83,7 +83,7 @@
                             </td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor"
-                                   th:attr="data-modal-form-url=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId)}"
+                                   th:attr="data-modal-form-url=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId})}"
                                    th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
