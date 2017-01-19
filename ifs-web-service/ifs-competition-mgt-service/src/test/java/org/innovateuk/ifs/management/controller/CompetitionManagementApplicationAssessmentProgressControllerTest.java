@@ -14,6 +14,7 @@ import org.mockito.Spy;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
@@ -126,12 +127,12 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         Long applicationId = 2L;
         Long assessmentId = 3L;
 
-        when(assessmentRestService.withdrawAssessment(1L)).thenReturn(restSuccess());
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId)
-                .param("withdraw", String.valueOf(3L)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/application-progress"));
+                .param("withdraw", String.valueOf(assessmentId)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors", competitionId, applicationId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);

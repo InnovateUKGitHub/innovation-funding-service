@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static java.lang.String.format;
+
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
  */
@@ -36,8 +38,10 @@ public class CompetitionManagementApplicationAssessmentProgressController {
     }
 
     @RequestMapping(params = {"withdraw"}, method = RequestMethod.POST)
-    public String withdrawAssessment(Model model, @RequestParam(name = "withdraw") Long assessmentId) {
-        assessmentRestService.withdrawAssessment(assessmentId);
-        return "competition/application-progress";
+    public String withdrawAssessment(@RequestParam(name = "withdraw") Long assessmentId,
+                                     @PathVariable("competitionId") Long competitionId,
+                                     @PathVariable("applicationId") Long applicationId) {
+        assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
+        return format("redirect:/competition/%s/application/%s/assessors", competitionId, applicationId);
     }
 }
