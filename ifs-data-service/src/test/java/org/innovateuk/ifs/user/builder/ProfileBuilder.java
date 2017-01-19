@@ -53,6 +53,10 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         }, innovationAreas);
     }
 
+    public ProfileBuilder withInnovationAreas(List<InnovationArea>... innovationAreaLists) {
+        return withArray((innovationAreaList, profile) -> innovationAreaList.forEach(profile::addInnovationArea), innovationAreaLists);
+    }
+
     public ProfileBuilder withBusinessType(BusinessType... businessTypes) {
         return withArray((businessType, profile) -> setField("businessType", businessType, profile), businessTypes);
     }

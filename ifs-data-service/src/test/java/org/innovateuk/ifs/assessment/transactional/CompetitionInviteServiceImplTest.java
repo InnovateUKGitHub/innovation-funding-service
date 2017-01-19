@@ -1357,7 +1357,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
     }
 
-    private CompetitionInvite setUpCompetitionInvite(Competition competition, String email, String name, InviteStatus status, Category innovationArea, User user) {
+    private CompetitionInvite setUpCompetitionInvite(Competition competition, String email, String name, InviteStatus status, InnovationArea innovationArea, User user) {
         return newCompetitionInvite()
                 .withCompetition(competition)
                 .withEmail(email)

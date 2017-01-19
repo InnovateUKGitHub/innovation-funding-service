@@ -82,6 +82,9 @@ public class Profile extends AuditableEntity {
     }
 
     public void addInnovationArea(InnovationArea innovationArea) {
+        if (innovationArea == null) {
+            throw new NullPointerException("innovationArea cannot be null");
+        }
         innovationAreas.add(new ProfileInnovationAreaLink(this, innovationArea));
     }
 

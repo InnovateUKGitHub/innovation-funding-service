@@ -4,12 +4,10 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.user.domain.Profile;
-import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
 
 public class ProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ProfileRepository> {
