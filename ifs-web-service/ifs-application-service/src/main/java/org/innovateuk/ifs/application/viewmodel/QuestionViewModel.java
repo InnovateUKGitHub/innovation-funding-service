@@ -157,4 +157,8 @@ public class QuestionViewModel {
     public Boolean getIsSection() {
         return Boolean.FALSE;
     }
+
+    public Boolean isShowReturnButtons() {
+        return Boolean.TRUE;
+    }
 }

@@ -88,6 +88,14 @@ public class Profile extends AuditableEntity {
         innovationAreas.add(new ProfileInnovationAreaLink(this, innovationArea));
     }
 
+    public void addInnovationAreas(Set<InnovationArea> innovationAreas) {
+        Set<ProfileInnovationAreaLink> innovationAreaLinks = innovationAreas.stream()
+                .map(innovationArea -> new ProfileInnovationAreaLink(this, innovationArea))
+                .collect(Collectors.toSet());
+
+        this.innovationAreas.addAll(innovationAreaLinks);
+    }
+
     public BusinessType getBusinessType() {
         return businessType;
     }

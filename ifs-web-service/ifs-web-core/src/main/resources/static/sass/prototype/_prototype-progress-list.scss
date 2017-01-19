@@ -1,0 +1,143 @@
+/*-------- Progress list -------------*/
+.progress-list{
+  background-color: $panel-colour;
+  margin: 10px 0 50px;
+  padding: 15px;
+  > .heading-medium {
+    margin-top: 0;
+  }
+  > ul > li{
+    margin-top: 10px;
+    padding: 15px 19px 15px 15px;
+    background-color: $white;
+    border: 1px solid $border-colour;
+    overflow: auto;
+    .task{
+      float: left;
+      width: 75%;
+      vertical-align: top;
+      .heading-small {
+        margin-top: 0;
+      }
+      span {
+        font-size: 16px;
+      }
+      @include media-down(mobile) {
+        float: none;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      .label-holder {
+        float: left;
+        height: 45px;
+        margin-top: 10px;
+        @include media-down(mobile) {
+          margin-top: 5px;
+        }
+      }
+      &.task-half-width {
+        width: 50%;
+        @include media-down(mobile) {
+          width: 100%;
+        }
+      }
+    }
+    .action-required {
+      float: left;
+      width: 75%;
+      margin-top: 30px;
+      vertical-align: top;
+      strong {
+        @extend  %action-required;
+        padding-left: 20px;
+      }
+      @include media-down(mobile) {
+        width: 50%;
+        margin-top: 0;
+        vertical-align: middle;
+      }
+    }
+    .notification {
+      float: left;
+      width: 25%;
+      vertical-align: middle;
+      text-align: center;
+      strong, a {
+        display: block;
+        margin-top: 15px;
+        text-align: center;
+        @include media-down(mobile) {
+          text-align: left;
+        }
+      }
+      .pending {
+        color: $secondary-text-colour;
+      }
+    }
+    .status {
+      float: right;
+      width: 24%;
+      vertical-align: middle;
+      text-align: center;
+      .deadline {
+        display: block;
+        text-align: center;
+        color: $red;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .score {
+        .percent {
+          font-size: 35px;
+          display: block;
+          text-align: center;
+        }
+        > span {
+          display: block;
+          text-align: center;
+          font-size: 16px;
+          color: $secondary-text-colour;
+        }
+        strong {
+          display: block;
+          text-align: center;
+        }
+      }
+      > strong, a {
+        display: block;
+        margin-top: 15px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .negative-text {
+        color: $red;
+      }
+      @include media-down(mobile) {
+        width: 50%;
+      }
+    }
+    &.positive {
+      border-right: 5px solid $green;
+      padding: 15px;
+      .status > strong {
+        color: $green;
+      }
+      .score > strong {
+        color: $green;
+      }
+      .score .percent {
+        color: $text-colour
+      }
+    }
+    &.negative {
+      border-right: 5px solid $red;
+      padding: 15px;
+      .score > strong {
+        color: $red;
+      }
+      .score .percent {
+        color: $text-colour
+      }
+    }
+  }
+}
