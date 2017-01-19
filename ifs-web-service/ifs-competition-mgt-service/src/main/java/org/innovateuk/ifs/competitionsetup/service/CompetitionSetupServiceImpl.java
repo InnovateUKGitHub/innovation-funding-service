@@ -118,7 +118,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	public CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
 													 CompetitionSetupSection section,
 													 CompetitionSetupSubsection subsection,
-                                                      Optional<Long> objectId) {
+													 Optional<Long> objectId) {
 
         checkIfSubsectionIsInSection(section, subsection);
 		CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
