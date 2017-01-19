@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class InviteAssessorsProfileViewModel {
     private String email;
     private String phone;
     private AddressResource address;
-    private List<InnovationAreaResource> innovationAreas;
+    private List<InnovationSectorViewModel> innovationSectors;
     private String businessType;
     private String skills;
 
@@ -26,7 +25,7 @@ public class InviteAssessorsProfileViewModel {
             String email,
             String phone,
             AddressResource addressResource,
-            List<InnovationAreaResource> innovationAreas,
+            List<InnovationSectorViewModel> innovationSectors,
             String businessType,
             String skills
     ) {
@@ -35,7 +34,7 @@ public class InviteAssessorsProfileViewModel {
         this.email = email;
         this.phone = phone;
         this.address = addressResource;
-        this.innovationAreas = innovationAreas;
+        this.innovationSectors = innovationSectors;
         this.businessType = businessType;
         this.skills = skills;
     }
@@ -60,9 +59,7 @@ public class InviteAssessorsProfileViewModel {
         return address;
     }
 
-    public List<InnovationAreaResource> getInnovationAreas() {
-        return innovationAreas;
-    }
+    public List<InnovationSectorViewModel> getInnovationSectors() { return innovationSectors; }
 
     public String getBusinessType() {
         return businessType;

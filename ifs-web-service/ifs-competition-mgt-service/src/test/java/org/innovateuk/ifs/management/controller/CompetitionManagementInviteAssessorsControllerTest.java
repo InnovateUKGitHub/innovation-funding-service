@@ -475,6 +475,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withPostcode("TES TEST")
                 .build();
 
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
+                .withSector(1L, 2L, 1L)
+                .withSectorName("sector 1", "sector 2", "sector 1")
+                .withName("innovation area 1", "innovation area 2", "innovation area 3")
+                .build(3);
+
         AssessorProfileResource expectedProfile = newAssessorProfileResource()
                 .withFirstName("Test")
                 .withLastName("Tester")
@@ -483,6 +489,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withSkillsAreas("A Skill")
                 .withBusinessType(ACADEMIC)
                 .withAddress(expectedAddress)
+                .withInnovationAreas(expectedInnovationAreas)
                 .build();
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
@@ -499,7 +506,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals("A Skill", model.getSkills());
         assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
         assertEquals("test@test.com", model.getEmail());
-        assertEquals(emptyList(), model.getInnovationAreas());
+        assertEquals(2, model.getInnovationSectors().size());
         assertEquals(expectedAddress, model.getAddress());
 
         verify(assessorRestService, only()).getAssessorProfile(assessorId);

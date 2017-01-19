@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.builder.UserProfileBaseResourceBuilder;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -24,7 +24,7 @@ public class AssessorProfileResourceBuilder extends UserProfileBaseResourceBuild
         super(newActions);
     }
 
-    public AssessorProfileResourceBuilder withInnovationAreas(List<CategoryResource>... innovationAreas) {
+    public AssessorProfileResourceBuilder withInnovationAreas(List<InnovationAreaResource>... innovationAreas) {
         return withArraySetFieldByReflection("innovationAreas", innovationAreas);
     }
 

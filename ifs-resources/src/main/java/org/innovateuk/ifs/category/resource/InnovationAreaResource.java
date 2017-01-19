@@ -10,19 +10,28 @@ import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
  */
 public class InnovationAreaResource extends CategoryResource {
 
-    private Long parent;
+    private Long sector;
+    private String sectorName;
 
     @Override
     public CategoryType getType() {
         return INNOVATION_AREA;
     }
 
-    public Long getParent() {
-        return parent;
+    public Long getSector() {
+        return sector;
     }
 
-    public void setParent(Long parent) {
-        this.parent = parent;
+    public void setSector(Long sector) {
+        this.sector = sector;
+    }
+
+    public String getSectorName() {
+        return sectorName;
+    }
+
+    public void setSectorName(String sectorName) {
+        this.sectorName = sectorName;
     }
 
     @Override
@@ -35,7 +44,7 @@ public class InnovationAreaResource extends CategoryResource {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(parent, that.parent)
+                .append(sector, that.sector)
                 .isEquals();
     }
 
@@ -43,7 +52,7 @@ public class InnovationAreaResource extends CategoryResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(parent)
+                .append(sector)
                 .toHashCode();
     }
 }

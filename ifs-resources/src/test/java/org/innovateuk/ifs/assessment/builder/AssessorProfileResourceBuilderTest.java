@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.junit.Test;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -38,7 +39,7 @@ public class AssessorProfileResourceBuilderTest {
         String expectedSkillsAreas = "Skills Area";
         BusinessType expectedBusinessType = BUSINESS;
         List<AffiliationResource> expectedAffiliations = newAffiliationResource().build(2);
-        List<CategoryResource> expectedInnovationAreas = newCategoryResource().build(2);
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().build(2);
 
         AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
                 .withAffiliations(expectedAffiliations)
@@ -87,7 +88,7 @@ public class AssessorProfileResourceBuilderTest {
         String[] expectedSkillsAreas = {"Skills Area 1", "Skills Area 2"};
         BusinessType[] expectedBusinessType = {BUSINESS, ACADEMIC};
         List<AffiliationResource> expectedAffiliations = newAffiliationResource().build(2);
-        List<CategoryResource> expectedInnovationAreas = newCategoryResource().build(2);
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().build(2);
 
         List<AssessorProfileResource> assessorProfileResources = newAssessorProfileResource()
                 .withSkillsAreas(expectedSkillsAreas)

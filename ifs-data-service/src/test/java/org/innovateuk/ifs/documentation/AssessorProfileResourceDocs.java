@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder;
-import org.innovateuk.ifs.category.resource.CategoryType;
-import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -11,8 +9,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
@@ -32,7 +29,7 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("innovationAreas").description("innovation areas for the user"),
             fieldWithPath("businessType").description("business type of assessor"),
             fieldWithPath("skillsAreas").description("skills areas for the assessor"),
-            fieldWithPath("affiliations").description("affiliations for the assesor")
+            fieldWithPath("affiliations").description("affiliations for the assessor")
     };
 
     public static final AssessorProfileResourceBuilder assessorProfileResourceBuilder = newAssessorProfileResource()
@@ -47,11 +44,10 @@ public class AssessorProfileResourceDocs {
             .withSkillsAreas("Forensic analysis")
             .withBusinessType(BusinessType.ACADEMIC)
             .withInnovationAreas(
-                    newCategoryResource()
+                    newInnovationAreaResource()
                             .withId(2L, 3L)
-                            .withType(INNOVATION_AREA, INNOVATION_AREA)
                             .withName("Nanochemistry", "Biochemistry")
-                            .withParent(1L)
+                            .withSector(1L)
                             .build(2)
             )
             .withAffiliations(

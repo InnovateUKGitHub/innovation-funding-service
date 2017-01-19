@@ -58,16 +58,17 @@
     <h2 class="heading-medium">Skills</h2>
 
     <h3 class="heading-small">Innovation areas</h3>
-    <!--*/ ul class="list list-bullet">
+
+    <ul class="list list-bullet">
         <li th:each="innovationSector : ${model.innovationSectors}">
-            materials and manufacturing
+            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
             <ul class="list list-bullet">
                 <li th:each="innovationArea : ${innovationSector.children}">
                     <th:block th:text="${innovationArea.name}">digital sciences</th:block>
                 </li>
             </ul>
         </li>
-    </ul /*-->
+    </ul>
 
     <h3 class="heading-small" th:if="${model.skills}">Skill areas</h3>
     <p th:if="${model.skills}" th:text="${model.skills}">Human computer interaction, Wearables, IoT</p>
