@@ -68,30 +68,18 @@ public enum FormInputType implements Identifiable {
         return this.name().toLowerCase();
     }
 
-    /**
-     * @return whether or not we would expect a displayable question-type fragment for this form input type
-     */
     public boolean isDisplayableQuestionType() {
         return !combineLists(FINANCE_TYPES, ACADEMIC_FINANCE_TYPES, FINANCIAL_SUMMARY_TYPES).contains(this);
     }
 
-    /**
-     * @return whether or not we would expect a displayable finance fragment for this form input type
-     */
     public boolean isDisplayableFinanceType() {
         return FINANCE_TYPES.contains(this);
     }
 
-    /**
-     * @return whether or not we would expect a displayable finance fragment for this form input type
-     */
     public boolean isDisplayableAcademicFinanceType() {
         return ACADEMIC_FINANCE_TYPES.contains(this);
     }
 
-    /**
-     * @return whether or not we would expect a displayable finance fragment for this form input type
-     */
     public boolean isDisplayableFinanceType(String financeView) {
 
         switch (financeView) {
@@ -101,9 +89,6 @@ public enum FormInputType implements Identifiable {
         }
     }
 
-    /**
-     * @return whether or not we would expect a displayable financial summary fragment for this form input type
-     */
     public boolean isDisplayableFinancialSummaryType() {
         return FINANCIAL_SUMMARY_TYPES.contains(this);
     }
