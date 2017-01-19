@@ -12,6 +12,7 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
@@ -64,35 +65,31 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
+        List<Profile> participantProfiles = newProfile().
+                withId(1L, 2L, 3L).
+                withBusinessType(BUSINESS, ACADEMIC, BUSINESS).
+                withSkillsAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components").
+                withInnovationArea(
+                        newInnovationArea()
+                                .withId(1L)
+                                .withName("Emerging Tech and Industries")
+                                .build(),
+                        newInnovationArea()
+                                .withId(2L)
+                                .withName("Robotics and AS")
+                                .build(),
+                        newInnovationArea()
+                                .withId(3L)
+                                .withName("Electronics, Sensors and photonics")
+                                .build()).
+                build(3);
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
                 .withUser(newUser()
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withInnovationAreas(asList(newInnovationArea()
-                                        .withId(1L)
-                                        .withName("Emerging Tech and Industries")
-                                        .build()),
-                                asList(newInnovationArea()
-                                        .withId(2L)
-                                        .withName("Robotics and AS")
-                                        .build()),
-                                asList(newInnovationArea()
-                                        .withId(3L)
-                                        .withName("Electronics, Sensors and photonics")
-                                        .build()))
-                        .withProfile(newProfile()
-                                        .withBusinessType(BUSINESS)
-                                        .withSkillsAreas("Solar Power, Genetics, Recycling")
-                                        .build(),
-                                newProfile()
-                                        .withBusinessType(ACADEMIC)
-                                        .withSkillsAreas("Human computer interaction, Wearables, IoT")
-                                        .build(),
-                                newProfile()
-                                        .withBusinessType(BUSINESS)
-                                        .withSkillsAreas("Electronic/photonic components")
-                                        .build()
+                        .withProfile(
+                                participantProfiles.get(0), participantProfiles.get(1), participantProfiles.get(2)
                         )
                         .buildArray(3, User.class))
                 .withStatus(ACCEPTED)
@@ -148,6 +145,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(competitionParticipantRepositoryMock
                 .getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
+        when(profileRepositoryMock.findOne(participantProfiles.get(0).getId())).thenReturn(participantProfiles.get(0));
+        when(profileRepositoryMock.findOne(participantProfiles.get(1).getId())).thenReturn(participantProfiles.get(1));
+        when(profileRepositoryMock.findOne(participantProfiles.get(2).getId())).thenReturn(participantProfiles.get(2));
         when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class)))
                 .then(invocation -> {
                     InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
@@ -182,7 +182,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
             Long userId = competitionParticipant.getUser().getId();
             inOrder.verify(assessmentRepositoryMock)
                     .findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(userId, application.getId());
-            competitionParticipant.getUser().getInnovationAreas().forEach(
+            profileRepositoryMock.findOne(competitionParticipant.getUser().getProfileId()).getInnovationAreas().forEach(
                     innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
             inOrder.verify(assessmentRepositoryMock)
                     .countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
@@ -196,6 +196,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
     @Test
     public void getApplicationAssessmentSummary() throws Exception {
+        Organisation org1 = buildOrganisationWithName("Acme Ltd.");
+        Organisation org2 = buildOrganisationWithName("IO systems");
+        Organisation org3 = buildOrganisationWithName("Liquid Dynamics");
         Application application = newApplication()
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
@@ -203,9 +206,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
-                        .withOrganisation(buildOrganisationWithName("Acme Ltd."),
-                                buildOrganisationWithName("IO systems"),
-                                buildOrganisationWithName("Liquid Dynamics"))
+                        .withOrganisation(org1, org2, org3)
                         .buildArray(3, ProcessRole.class))
                 .build();
 
@@ -218,6 +219,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(organisationRepositoryMock.findOne(org1.getId())).thenReturn(org1);
+        when(organisationRepositoryMock.findOne(org2.getId())).thenReturn(org2);
+        when(organisationRepositoryMock.findOne(org3.getId())).thenReturn(org3);
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
 

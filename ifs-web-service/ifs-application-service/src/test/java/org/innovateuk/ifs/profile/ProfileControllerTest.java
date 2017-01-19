@@ -67,7 +67,6 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withDisability(Disability.YES)
                 .withGender(Gender.FEMALE)
                 .withEthnicity(2L)
-                .withOrganisations(singletonList(6L))
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(newEthnicityResource().build(4)));
@@ -81,6 +80,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withAddress(asList(addressResources))
                 .build();
         when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
+        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(organisation);
     }
 
     private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
