@@ -99,6 +99,7 @@
         color: $red;
         font-size: 15px;
         font-weight: bold;
+        margin-top: 0;
         @include media-down(mobile) {
           font-size: 13px;
         }
