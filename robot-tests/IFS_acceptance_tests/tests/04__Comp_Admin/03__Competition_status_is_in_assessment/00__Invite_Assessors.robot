@@ -111,7 +111,7 @@ Assessor overview information
     Given The user clicks the button/link    link=Overview
     Then the user should see the element    jQuery=tr:nth-child(2) td:contains(Invite accepted)
     #And the user should see the element    jQuery=tr:nth-child(6) td:contains(Awaiting response)    # I have disabled this check because the are some dependencies.
-    #TODO PENDING INFUND-7415
-    #And the user should see the element    jQuery=tr:nth-child(5) td:contains(Inivitation declined)
-    #And the user should see the element    jQuery=tr:nth-child(5) td:contains(Academic)
-    #And the user should see the element    jQuery=tr:nth-child(5) td:contains(Yes)
+    And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(5):contains(Invite declined)
+    And the user should see the element    jQuery=tr:nth-child(4) td:contains(Academic)
+    And the user should see the element    jQuery=tr:nth-child(4) td:contains(Yes)
+    And the user should see the element    jQuery=tr:nth-child(4) td:contains(Invite declined as not available)
