@@ -204,6 +204,18 @@ public class ProjectSpendProfileController {
         return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
     }
 
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @RequestMapping(value = "/confirm", method = GET)
+    public String viewConfirmSpendProfilePage(@PathVariable("projectId") Long projectId,
+                                              @PathVariable("organisationId") Long organisationId,
+                                              Model model,
+                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        return "project/spend-profile-confirm";
+    }
+
     private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
                                       ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
 

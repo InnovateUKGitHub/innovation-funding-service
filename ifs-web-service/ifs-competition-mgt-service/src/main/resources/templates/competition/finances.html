@@ -38,7 +38,7 @@
                     <span class="form-label-bold">Finances form</span>
                     <span th:if="${#fields.hasErrors('fullApplicationFinance')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
-		                </span>
+                    </span>
                 </legend>
                 <label class="block-label selection-button-radio" for="full-application-finance-yes">
                     <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
@@ -64,7 +64,7 @@
                     Yes
                 </label>
                 <label class="block-label selection-button-radio" for="include-growth-table-no">
-                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" />
+                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${isSectorCompetition}"/>
                     No
                 </label>
             </fieldset>
