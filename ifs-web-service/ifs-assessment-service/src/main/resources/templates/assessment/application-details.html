@@ -5,7 +5,6 @@
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-details">
-        <div th:include="fragments/layout :: prototype-nav" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -14,7 +13,7 @@
             <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${model.application},linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (application=${model.application})" th:remove="tag" />
+                <div th:include="fragments/elements :: application-title (app=${model.application})" th:remove="tag" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
