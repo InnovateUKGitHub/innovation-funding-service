@@ -10,6 +10,7 @@ import org.mockito.internal.util.collections.Sets;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static com.google.common.primitives.Longs.asList;
@@ -195,4 +196,18 @@ public class OpenFinanceSectionViewModelTest {
     }
 
 
+    @Test
+    public void testGetOrganisationSizeAlert() {
+        assertEquals(Boolean.FALSE, viewModel.getOrganisationSizeAlert());
+
+        Long fundingSectionId = 2738L;
+        List<SectionResource> fundingSections = newSectionResource().withId(fundingSectionId).withType(SectionType.FUNDING_FINANCES).build(1);
+        viewModel.setFundingSection(fundingSections.stream().findFirst().orElse(null));
+
+        assertEquals(Boolean.FALSE, viewModel.getOrganisationSizeAlert());
+
+        sectionsMarkedAsComplete.add(fundingSectionId);
+
+        assertEquals(Boolean.TRUE, viewModel.getOrganisationSizeAlert());
+    }
 }
