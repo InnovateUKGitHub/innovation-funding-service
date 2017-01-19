@@ -13,7 +13,7 @@
             <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${assessmentId})},daysPercentage=${currentCompetition.assessmentDaysLeftPercentage},daysLeft=${currentCompetition.assessmentDaysLeft}" th:remove="tag" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+                <div th:include="fragments/elements :: application-title (app=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
                 <h1 class="heading-xlarge">Funding</h1>
             </div>
 

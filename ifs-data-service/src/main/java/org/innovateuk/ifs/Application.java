@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-
 @SpringBootApplication
 @EnableScheduling
 public class Application extends SpringBootServletInitializer {

@@ -43,7 +43,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -66,6 +66,7 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newP
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
+import static org.innovateuk.ifs.project.transactional.ProjectGrantOfferServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -521,6 +522,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withProjectUsers(asList(pm))
                 .withDuration(10L)
                 .withAddress(address)
+                .withTargetStartDate(LocalDate.now())
                 .build();
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
@@ -544,7 +546,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("Address3", "");
         templateArgs.put("TownCity", "Swindon");
         templateArgs.put("PostCode", "SN1 1AA");
-        templateArgs.put("ProjectStartDate","");
+        templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
         templateArgs.put("Date", LocalDateTime.now().toString()); // will never match generated value
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
