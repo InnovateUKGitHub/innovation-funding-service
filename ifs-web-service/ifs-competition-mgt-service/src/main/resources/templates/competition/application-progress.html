@@ -280,8 +280,7 @@
                                     th:attr="data-required-errormessage=#{validation.availableAssessorsForm.selectedSortField.required}">
                                 <option th:each="sortType : ${T(org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType).values()}"
                                         th:value="${sortType}"
-                                        th:text="${sortType.label}"
-                                        th:selected="*{sortField} == ${sortType}">value</option>
+                                        th:text="${sortType.label}">value</option>
                             </select>
                             <button class="button button-secondary button-small js-hidden" type="submit">Sort</button>
                         </form>

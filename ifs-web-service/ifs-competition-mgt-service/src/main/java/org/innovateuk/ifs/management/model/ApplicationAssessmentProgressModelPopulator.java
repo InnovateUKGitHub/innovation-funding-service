@@ -31,15 +31,14 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
 
-    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap() {
-        return Collections.unmodifiableMap(Stream.of(
+    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap =
+        Collections.unmodifiableMap(Stream.of(
                 new AbstractMap.SimpleEntry<>(TITLE, comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
                 new AbstractMap.SimpleEntry<>(SKILLS, comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
                 new AbstractMap.SimpleEntry<>(TOTAL_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
                 new AbstractMap.SimpleEntry<>(ASSIGNED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
                 new AbstractMap.SimpleEntry<>(SUBMITTED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
                 .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
-    }
 
     public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, AvailableAssessorsSortFieldType sortSelection) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
@@ -80,7 +79,7 @@ public class ApplicationAssessmentProgressModelPopulator {
     private List<ApplicationAvailableAssessorsRowViewModel> getSortedAvailableAssessors(List<ApplicationAssessorResource> assessors, AvailableAssessorsSortFieldType selectedSort) {
         List<ApplicationAvailableAssessorsRowViewModel> available = assessors.stream()
                 .map(this::getAvailableRowViewModel).collect(toList());
-        available.sort(sortMap().get(selectedSort));
+        available.sort(sortMap.get(selectedSort));
         return available;
     }
 
