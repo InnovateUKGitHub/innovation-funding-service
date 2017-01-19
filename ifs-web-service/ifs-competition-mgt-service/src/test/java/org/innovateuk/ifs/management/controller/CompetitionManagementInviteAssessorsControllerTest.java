@@ -28,6 +28,7 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -459,9 +460,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
                 .withName("Dave Smith", "John Barnes")
-                .withInnovationArea(newInnovationAreaResource()
+                .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, InnovationAreaResource.class))
+                        .buildArray(2, InnovationAreaResource.class)))
                 .withCompliant(TRUE, FALSE)
                 .withEmail("dave@email.com", "john@email.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
@@ -472,9 +473,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
                 .withName("Dave Smith", "John Barnes")
-                .withInnovationArea(newInnovationAreaResource()
+                .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, InnovationAreaResource.class))
+                        .buildArray(2, InnovationAreaResource.class)))
                 .withCompliant(TRUE, FALSE)
                 .withEmail("dave@email.com", "john@email.com")
                 .build(2);
@@ -483,9 +484,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
                 .withName("Dave Smith", "John Barnes")
-                .withInnovationArea(newInnovationAreaResource()
+                .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, InnovationAreaResource.class))
+                        .buildArray(2, InnovationAreaResource.class)))
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus(ACCEPTED, REJECTED)
@@ -523,7 +524,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedAvailableAssessors, (i, availableAssessorResource) -> {
             AvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(availableAssessorResource.getName(), availableAssessorRowViewModel.getName());
-            assertEquals(availableAssessorResource.getInnovationArea().getName(), availableAssessorRowViewModel.getInnovationArea());
+            assertEquals(availableAssessorResource.getInnovationAreas(), availableAssessorRowViewModel.getInnovationAreas());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
             assertEquals(availableAssessorResource.getEmail(), availableAssessorRowViewModel.getEmail());
             assertEquals(availableAssessorResource.getBusinessType(), availableAssessorRowViewModel.getBusinessType());
@@ -540,7 +541,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedCreatedInvites, (i, createdInviteResource) -> {
             InvitedAssessorRowViewModel invitedAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(createdInviteResource.getName(), invitedAssessorRowViewModel.getName());
-            assertEquals(createdInviteResource.getInnovationArea().getName(), invitedAssessorRowViewModel.getInnovationArea());
+            assertEquals(createdInviteResource.getInnovationAreas(), invitedAssessorRowViewModel.getInnovationAreas());
             assertEquals(createdInviteResource.isCompliant(), invitedAssessorRowViewModel.isCompliant());
             assertEquals(createdInviteResource.getEmail(), invitedAssessorRowViewModel.getEmail());
         });
@@ -555,7 +556,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedInviteOverviews, (i, inviteOverviewResource) -> {
             OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
-            assertEquals(inviteOverviewResource.getInnovationArea().getName(), overviewAssessorRowViewModel.getInnovationArea());
+            assertEquals(inviteOverviewResource.getInnovationAreas(), overviewAssessorRowViewModel.getInnovationAreas());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());

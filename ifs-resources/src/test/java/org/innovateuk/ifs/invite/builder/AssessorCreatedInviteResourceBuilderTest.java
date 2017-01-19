@@ -20,7 +20,7 @@ public class AssessorCreatedInviteResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        Set<CategoryResource> expectedInnovationAreas = Sets.newHashSet(newInnovationAreaResource().build());
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().build(2);
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
         long expectedInviteId = 2L;
@@ -43,14 +43,20 @@ public class AssessorCreatedInviteResourceBuilderTest {
     @Test
     public void buildMany() {
         String[] expectedNames = {"name1", "name2"};
-        InnovationAreaResource[] expectedInnovationAreas = newInnovationAreaResource().buildArray(2, InnovationAreaResource.class);
-        Boolean[] expectedCompliants = {TRUE, FALSE};
+        @SuppressWarnings("unchecked") List<InnovationAreaResource>[] expectedInnovationAreas = new List[]{
+                newInnovationAreaResource()
+                        .withName("Creative economy", "Offshore Renewable Energy")
+                        .build(2),
+                newInnovationAreaResource()
+                        .withName("Urban Living", "Advanced Therapies")
+                        .build(2)
+        };        Boolean[] expectedCompliants = {TRUE, FALSE};
         String[] expectedEmails = {"email1", "email2"};
         Long[] expectedInviteIds = {1L,2L};
 
         List<AssessorCreatedInviteResource> assessorCreatedInviteResources = newAssessorCreatedInviteResource()
                 .withName(expectedNames)
-                .withInnovationAreas(Sets.newHashSet(expectedInnovationAreas))
+                .withInnovationAreas(expectedInnovationAreas)
                 .withCompliant(expectedCompliants)
                 .withEmail(expectedEmails)
                 .withInviteId(expectedInviteIds)

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,14 +13,14 @@ import java.util.Set;
 abstract class AssessorInviteResource {
 
     private String name;
-    private Set<InnovationAreaResource> innovationAreas;
+    private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
 
 
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(String name, Set<InnovationAreaResource> innovationAreas, boolean compliant) {
+    protected AssessorInviteResource(String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
         this.name = name;
         this.innovationAreas = innovationAreas;
         this.compliant = compliant;
@@ -33,11 +34,11 @@ abstract class AssessorInviteResource {
         this.name = name;
     }
 
-    public Set<InnovationAreaResource> getInnovationAreas() {
+    public List<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
     }
 
-    public void setInnovationAreas(Set<InnovationAreaResource> innovationAreas) {
+    public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
         this.innovationAreas = innovationAreas;
     }
 

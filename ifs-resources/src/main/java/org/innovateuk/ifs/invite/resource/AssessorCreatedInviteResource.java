@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ public class AssessorCreatedInviteResource extends AssessorInviteResource {
     public AssessorCreatedInviteResource() {
     }
 
-    public AssessorCreatedInviteResource(String name, Set<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
+    public AssessorCreatedInviteResource(String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
         super(name, innovationAreas, compliant);
         this.email = email;
         this.inviteId = inviteId;

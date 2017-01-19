@@ -14,6 +14,7 @@ import java.util.Set;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -25,7 +26,7 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        Set<CategoryResource> expectedInnovationAreas = Sets.newHashSet(newInnovationAreaResource().build());
+        List<InnovationAreaResource> expectedInnovationAreas = asList(newInnovationAreaResource().build());
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
         BusinessType expectedBusinessType = BUSINESS;
@@ -33,7 +34,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         AvailableAssessorResource availableAssessorResource = newAvailableAssessorResource()
                 .withName(expectedName)
-                .withInnovationArea(expectedInnovationAreas)
+                .withInnovationAreas(expectedInnovationAreas)
                 .withCompliant(expectedCompliant)
                 .withEmail(expectedEmail)
                 .withBusinessType(expectedBusinessType)
@@ -51,9 +52,14 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildMany() {
         String[] expectedNames = {"name1", "name2"};
-        List<Set<CategoryResource>> expectedInnovationAreas = new ArrayList<>();
-        expectedInnovationAreas.add(Sets.newHashSet(newInnovationAreaResource().build()));
-        expectedInnovationAreas.add(Sets.newHashSet(newInnovationAreaResource().build()));
+        @SuppressWarnings("unchecked") List<InnovationAreaResource>[] expectedInnovationAreas = new List[]{
+                newInnovationAreaResource()
+                        .withName("Creative economy", "Offshore Renewable Energy")
+                        .build(2),
+                newInnovationAreaResource()
+                        .withName("Urban Living", "Advanced Therapies")
+                        .build(2)
+        };
         Boolean[] expectedCompliants = {TRUE, FALSE};
         String[] expectedEmails = {"email1", "email2"};
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
@@ -61,7 +67,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         List<AvailableAssessorResource> availableAssessorResources = newAvailableAssessorResource()
                 .withName(expectedNames)
-                .withInnovationArea(expectedInnovationAreas.get(0), expectedInnovationAreas.get(1))
+                .withInnovationAreas(expectedInnovationAreas)
                 .withCompliant(expectedCompliants)
                 .withEmail(expectedEmails)
                 .withBusinessType(expectedBusinessTypes)
@@ -70,7 +76,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         AvailableAssessorResource first = availableAssessorResources.get(0);
         assertEquals(expectedNames[0], first.getName());
-        assertEquals(expectedInnovationAreas.get(0), first.getInnovationAreas());
+        assertEquals(expectedInnovationAreas[0], first.getInnovationAreas());
         assertEquals(expectedCompliants[0], first.isCompliant());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedBusinessTypes[0], first.getBusinessType());
@@ -78,7 +84,7 @@ public class AvailableAssessorResourceBuilderTest {
 
         AvailableAssessorResource second = availableAssessorResources.get(1);
         assertEquals(expectedNames[1], second.getName());
-        assertEquals(expectedInnovationAreas.get(1), second.getInnovationAreas());
+        assertEquals(expectedInnovationAreas[1], second.getInnovationAreas());
         assertEquals(expectedCompliants[1], second.isCompliant());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedBusinessTypes[1], second.getBusinessType());

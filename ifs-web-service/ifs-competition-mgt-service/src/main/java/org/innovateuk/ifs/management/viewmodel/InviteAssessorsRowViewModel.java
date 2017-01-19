@@ -1,17 +1,21 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+
+import java.util.List;
+
 /**
  * Abstract holder of model attributes for the assessors shown in the 'Invite Assessors' view.
  */
 abstract class InviteAssessorsRowViewModel {
 
     private String name;
-    private String innovationArea;
+    private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
 
-    protected InviteAssessorsRowViewModel(String name, String innovationArea, boolean compliant) {
+    protected InviteAssessorsRowViewModel(String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
         this.name = name;
-        this.innovationArea = innovationArea;
+        this.innovationAreas = innovationAreas;
         this.compliant = compliant;
     }
 
@@ -19,8 +23,8 @@ abstract class InviteAssessorsRowViewModel {
         return name;
     }
 
-    public String getInnovationArea() {
-        return innovationArea;
+    public List<InnovationAreaResource> getInnovationAreas() {
+        return innovationAreas;
     }
 
     public boolean isCompliant() {

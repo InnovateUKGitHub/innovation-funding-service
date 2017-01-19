@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
@@ -43,7 +44,7 @@ public class AvailableAssessorResourceBuilder extends BaseBuilder<AvailableAsses
         return withArraySetFieldByReflection("businessType", value);
     }
 
-    public AvailableAssessorResourceBuilder withInnovationArea(Set<CategoryResource>... value) {
+    public AvailableAssessorResourceBuilder withInnovationAreas(List<InnovationAreaResource>... value) {
         return withArraySetFieldByReflection("innovationAreas", value);
     }
 

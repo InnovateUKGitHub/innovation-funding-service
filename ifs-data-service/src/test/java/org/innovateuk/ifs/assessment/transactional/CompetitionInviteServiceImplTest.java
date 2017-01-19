@@ -41,6 +41,7 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -823,10 +824,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(2L)
                 .withName("Earth Observation")
                 .build();
-        Set<CategoryResource> innovationAreaSet = newHashSet(newInnovationAreaResource()
-                .withId(2L)
-                .withName("Earth Observation")
-                .build());
+        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaCategoryResource);
 
         // TODO INFUND-6865 Users should have innovation areas
         User compliantUser = newUser()
@@ -836,7 +834,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                         .withPosition("Software Developer")
                         .withExists(true)
                         .build(1))
-
+                .withInnovationAreas(asList(innovationArea))
                 .withProfile(newProfile()
                         .withSkillsAreas("Java")
                         .withContractSignedDate(now())
@@ -896,7 +894,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
                 .withInviteId(1L, 2L, 3L, 4L, 5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
-                .withInnovationAreas(newHashSet(), newHashSet(), newHashSet(), newHashSet(), innovationAreaSet)
+                .withInnovationAreas(innovationAreaList, emptyList(), emptyList(), emptyList(), innovationAreaList)
                 .withCompliant(true, false, false, false, false)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "christopher@example.com")
                 .build(5);
@@ -909,7 +907,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, innovationAreaMapperMock);
         inOrder.verify(competitionInviteRepositoryMock).getByCompetitionIdAndStatus(competitionId, CREATED);
-        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
+        inOrder.verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -936,7 +934,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-                .withInnovationArea(null, null, null)
+                .withInnovationAreas(null, null, null)
                 .withCompliant(false, false, false)
                 .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
                 .withDetails(null, "Invite declined as not available", null)

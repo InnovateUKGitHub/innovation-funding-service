@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class AssessorCreatedInviteResourceBuilder extends BaseBuilder<AssessorCr
         return withArraySetFieldByReflection("inviteId", value);
     }
 
-    public AssessorCreatedInviteResourceBuilder withInnovationAreas(Set<CategoryResource>... value) {
+    public AssessorCreatedInviteResourceBuilder withInnovationAreas(List<InnovationAreaResource>... value) {
         return withArraySetFieldByReflection("innovationAreas", value);
     }
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.builder;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -24,7 +26,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        CategoryResource expectedInnovationArea = newInnovationAreaResource().build();
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().build(2);
         Boolean expectedCompliant = FALSE;
         BusinessType expectedBusinessType = ACADEMIC;
         ParticipantStatusResource expectedStatus = ACCEPTED;
@@ -32,7 +34,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
 
         AssessorInviteOverviewResource assessorInviteOverviewResource = newAssessorInviteOverviewResource()
                 .withName(expectedName)
-                .withInnovationArea(expectedInnovationArea)
+                .withInnovationAreas(expectedInnovationAreas)
                 .withCompliant(expectedCompliant)
                 .withBusinessType(expectedBusinessType)
                 .withStatus(expectedStatus)
@@ -40,7 +42,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
                 .build();
 
         assertEquals(expectedName, assessorInviteOverviewResource.getName());
-        assertEquals(expectedInnovationArea, assessorInviteOverviewResource.getInnovationAreas());
+        assertEquals(expectedInnovationAreas, assessorInviteOverviewResource.getInnovationAreas());
         assertEquals(expectedCompliant, assessorInviteOverviewResource.isCompliant());
         assertEquals(expectedBusinessType, assessorInviteOverviewResource.getBusinessType());
         assertEquals(expectedStatus, assessorInviteOverviewResource.getStatus());
@@ -50,7 +52,14 @@ public class AssessorInviteOverviewResourceBuilderTest {
     @Test
     public void buildMany() {
         String[] expectedNames = {"name1", "name2"};
-        CategoryResource[] expectedInnovationAreas = newInnovationAreaResource().buildArray(2, InnovationAreaResource.class);
+        @SuppressWarnings("unchecked") List<InnovationAreaResource>[] expectedInnovationAreas = new List[]{
+                newInnovationAreaResource()
+                        .withName("Creative economy", "Offshore Renewable Energy")
+                        .build(2),
+                newInnovationAreaResource()
+                        .withName("Urban Living", "Advanced Therapies")
+                        .build(2)
+        };
         Boolean[] expectedCompliants = {TRUE, FALSE};
         BusinessType[] expectedBusinessTypes = {ACADEMIC, BUSINESS};
         ParticipantStatusResource[] expectedStatuses = {PENDING, ACCEPTED};
@@ -58,7 +67,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
 
         List<AssessorInviteOverviewResource> assessorCreatedInviteResources = newAssessorInviteOverviewResource()
                 .withName(expectedNames)
-                .withInnovationArea(expectedInnovationAreas)
+                .withInnovationAreas(expectedInnovationAreas)
                 .withCompliant(expectedCompliants)
                 .withBusinessType(expectedBusinessTypes)
                 .withStatus(expectedStatuses)

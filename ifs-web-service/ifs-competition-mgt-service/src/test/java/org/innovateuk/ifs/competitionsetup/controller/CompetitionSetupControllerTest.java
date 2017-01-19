@@ -152,7 +152,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(asList(category));
 
-        mockMvc.perform(get(URL_PREFIX + "/getInnovationArea/" + innovationSectorId))
+        mockMvc.perform(get(URL_PREFIX + "/getInnovationAreas/" + innovationSectorId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(1)))
                 .andExpect(jsonPath("[0]name", is("Innovation Area 1")))

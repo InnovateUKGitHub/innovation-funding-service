@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import com.google.common.collect.Sets;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
@@ -37,16 +36,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -430,15 +430,15 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return competitionInvite.getUser() != null && competitionInvite.getUser().isProfileCompliant();
     }
 
-    private Set<InnovationAreaResource> getInnovationAreasForInvite(CompetitionInvite competitionInvite) {
+    private List<InnovationAreaResource> getInnovationAreasForInvite(CompetitionInvite competitionInvite) {
         boolean inviteForNewUser = competitionInvite.getUser() == null;
 
         if (inviteForNewUser) {
-            return Sets.newHashSet(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
+            return asList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
         } else {
             return competitionInvite.getUser().getInnovationAreas().stream()
                     .map(innovationArea -> innovationAreaMapper.mapToResource(innovationArea))
-                    .collect(toSet());
+                    .collect(toList());
         }
     }
 }
