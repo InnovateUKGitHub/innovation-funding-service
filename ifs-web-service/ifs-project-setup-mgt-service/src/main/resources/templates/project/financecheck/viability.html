@@ -20,7 +20,7 @@
 
     <th:block th:if="${model.isShowApprovalMessage()}">
         <div class="success-alert">
-            <p>The partner's finance eligibility has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+            <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>
         </div>
     </th:block>
 
