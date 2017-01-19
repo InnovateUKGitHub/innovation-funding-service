@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="extra-margin">
-                <a href="#">Review application</a>
+                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}">Review application</a>
             </div>
 
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
