@@ -30,7 +30,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, form.getSort()));
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, form.getSortField()));
         return "competition/application-progress";
     }
 }
