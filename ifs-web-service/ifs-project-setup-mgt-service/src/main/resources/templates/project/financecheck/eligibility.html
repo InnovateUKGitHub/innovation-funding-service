@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" />
 
-<!--    <div class="page-title">
+    <div class="page-title">
         <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">
             <th:block th:text="${model.organisationName}" />
@@ -21,7 +21,7 @@
         </h1>
     </div>
 
-    <h2 class="heading-medium"><th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}"/> : <th:block th:text="${model.financeCheckSummaryResource.projectName}"/></h2>-->
+    <h2 class="heading-medium"><th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}"/> : <th:block th:text="${model.financeCheckSummaryResource.projectName}"/></h2>
 
     <hr/>
 
