@@ -822,10 +822,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
         List<InnovationAreaResource> innovationAreaList = asList(innovationAreaCategoryResource);
 
-        // TODO INFUND-6865 Users should have innovation areas
         Profile profile1 = newProfile()
                 .withSkillsAreas("Java")
                 .withContractSignedDate(now())
+                .withInnovationArea(innovationArea)
                 .build();
         User compliantUser = newUser()
                 .withAffiliations(newAffiliation()
@@ -900,7 +900,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(competitionInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED)).thenReturn(combineLists(existingUserInvites, newUserInvite));
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaCategoryResource);
-
         when(profileRepositoryMock.findOne(profile1.getId())).thenReturn(profile1);
         when(profileRepositoryMock.findOne(profile2.getId())).thenReturn(profile2);
         when(profileRepositoryMock.findOne(profile3.getId())).thenReturn(profile3);

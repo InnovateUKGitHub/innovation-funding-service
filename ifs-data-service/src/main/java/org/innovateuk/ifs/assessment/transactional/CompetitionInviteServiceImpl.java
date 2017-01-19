@@ -448,7 +448,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         if (inviteForNewUser) {
             return asList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
         } else {
-            return competitionInvite.getUser().getInnovationAreas().stream()
+            return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
                     .map(innovationArea -> innovationAreaMapper.mapToResource(innovationArea))
                     .collect(toList());
         }

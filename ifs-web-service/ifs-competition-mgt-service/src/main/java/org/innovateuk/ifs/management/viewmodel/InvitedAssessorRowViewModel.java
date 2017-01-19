@@ -12,8 +12,8 @@ public class InvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
     private String email;
     private long inviteId;
 
-    public InvitedAssessorRowViewModel(String name, List<InnovationAreaResource> innovationArea, boolean compliant, String email, long inviteId) {
-        super(name, innovationArea, compliant);
+    public InvitedAssessorRowViewModel(String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
+        super(name, innovationAreas, compliant);
         this.email = email;
         this.inviteId = inviteId;
     }
