@@ -60,7 +60,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
             return;
         }
 
-        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(
+        List<Assessment> assessments = assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
                 competitionParticipant.getUserId(),
                 competitionParticipant.getCompetitionId()
         );

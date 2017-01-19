@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
@@ -70,7 +72,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return asLeadApplicant(data -> {
 
-            Organisation organisation = retrieveOrganisationById(collaborator.getOrganisations().get(0));
+            List<Organisation> organisations = organisationRepository.findByUsersId(collaborator.getId());
+            Organisation organisation = organisations.get(0);
 
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, Optional.of(organisation.getId()), organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
@@ -129,7 +132,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
 
-        Organisation leadOrganisation = retrieveOrganisationById(data.getLeadApplicant().getOrganisations().get(0));
+        List<Organisation> organisations = organisationRepository.findByUsersId(data.getLeadApplicant().getId());
+        Organisation leadOrganisation = organisations.get(0);
 
         List<ApplicationInviteResource> applicationInvite = baseApplicationInviteBuilder.
                 withApplication(data.getApplication().getId()).

@@ -591,7 +591,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         inviteResource.setOrganisation(organisationId);
         inviteResource.setOrganisationName(organisationResource.getName());
         inviteResource.setApplicationId(projectResource.getApplication());
-        inviteResource.setLeadOrganisation(leadOrganisation.getName());
+        inviteResource.setLeadOrganisationId(leadOrganisation.getId());
 
         return inviteResource;
     }
