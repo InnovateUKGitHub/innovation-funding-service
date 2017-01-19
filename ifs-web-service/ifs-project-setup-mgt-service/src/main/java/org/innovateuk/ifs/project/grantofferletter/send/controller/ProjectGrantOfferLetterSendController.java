@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -24,10 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.function.Supplier;
@@ -119,18 +117,13 @@ public class ProjectGrantOfferLetterSendController {
     @RequestMapping(value = "/signed/{approvalType}", method = POST)
     public String signedGrantOfferLetterApproval(
             @PathVariable("projectId") final Long projectId,
-            @PathVariable ApprovalType approvalType,
+            @PathVariable("approvalType") final ApprovalType approvalType,
             @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterSendForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model) {
-
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
-
-        ServiceResult<Void> generateResult = projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType);
-
-        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> doViewGrantOfferLetterSend(projectId, model, form)
-        );
+        projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+        return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, ProjectGrantOfferLetterSendForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
