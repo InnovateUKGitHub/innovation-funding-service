@@ -77,6 +77,9 @@ public class OverheadsHandler extends FinanceRowHandler {
         switch(rateType) {
             case DEFAULT_PERCENTAGE:
                 return OverheadRateType.DEFAULT_PERCENTAGE.getRate();
+            case CUSTOM_RATE:
+            case TOTAL:
+                return customRate;
             case NONE:
             default:
                 return 0;
