@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -114,7 +114,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		if (fieldName.endsWith("funder")) {
 			funder.setFunder(value);
 		} else if(fieldName.endsWith("funderBudget")) {
-			funder.setFunderBudget(new BigDecimal(value));
+			funder.setFunderBudget(new BigInteger(value));
 		} else {
 			return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
 		}
