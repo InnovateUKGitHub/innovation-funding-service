@@ -43,7 +43,7 @@
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -112,7 +112,7 @@
             <h2 class="heading-medium">Rejected (1)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -141,7 +141,7 @@
             <h2 class="heading-medium">Previously assigned (0)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -193,6 +193,7 @@
                     </tbody>
                 </table>
             </div>
+            */-->
 
             <h2 class="heading-medium">Available assessors</h2>
 
@@ -265,31 +266,31 @@
             </div>
             */-->
 
-            <!--/* TODO INFUND-7233
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
-                    <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+                    <p><span class="heading-xlarge no-margin" th:text="${#lists.size(model.available)}">20</span> <span class="heading-small">Assessors</span></p>
                 </div>
 
                 <div class="column-third alignright">
                     <div class="form-group">
-                        <form>
+                        <form method="get" >
                             <label for="sort-by">Sort by</label>
-                            <select name="sort-by" id="sort-by" class="form-control">
-                                <option value="Title">Assessor Name</option>
-                                <option value="Skill">Skill areas</option>
-                                <option value="Total applications">Total applications</option>
-                                <option value="Assigned applications">Assigned applications</option>
-                                <option value="Accepted applications">Submitted applications</option>
+                            <select name="sort" id="sort-by" class="js-auto-submit form-control">
+                                <option value="title" th:selected="${(model.sortField == 'title')}">Assessor Name</option>
+                                <option value="skills" th:selected="${(model.sortField == 'skills')}">Skill areas</option>
+                                <option value="totalApplications" th:selected="${(model.sortField == 'totalApplications')}">Total applications</option>
+                                <option value="assignedApplications" th:selected="${(model.sortField == 'assignedApplications')}">Assigned applications</option>
+                                <option value="submittedApplications" th:selected="${(model.sortField == 'submittedApplications')}">Submitted applications</option>
                             </select>
-                            <button class="button button-secondary button-small" type="submit">Sort</button>
+
+                            <button class="button button-secondary button-small js-hidden" type="submit">Sort</button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -301,70 +302,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
+                        <tr th:each="assessor : ${model.available}">
+                            <td><a th:href="${'/prototypes/5229-assessor-profile'}" th:text="${assessor.name}">John Barnes</a></td>
+                            <td th:text="${assessor.skillAreas}">skills</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
+                            <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
+                            <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
                                 <a href="#" class="button-secondary no-margin">Assign</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">0</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">9</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">1</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">9</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
+                        <tr th:if="${#lists.isEmpty(model.available)}">
+                            <td colspan="6">There were no available assessors found.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            */-->
 
             <!--/* TODO ??
             <ul class="pagination">

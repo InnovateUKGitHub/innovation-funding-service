@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressAssignedRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressViewModel;
+import org.innovateuk.ifs.management.viewmodel.ApplicationAvailableAssessorsRowViewModel;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -15,9 +16,11 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
@@ -50,15 +53,94 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         Long competitionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = newApplicationAssessmentSummaryResource()
+        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = setupApplicationAssessmentSummaryResource(competitionId, applicationId);
+
+        List<ApplicationAssessorResource> assigned = setupAssignedApplicationAssessorResources();
+        List<ApplicationAssessorResource> rejected = setupRejectedApplicationAssessorResources();
+        List<ApplicationAssessorResource> withdrawn = setupWithdrawnApplicationAssessorResources();
+        List<ApplicationAssessorResource> available = setupAvailableApplicationAssessorResources();
+
+        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
+        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
+
+        List<ApplicationAssessmentProgressAssignedRowViewModel> expectedAssignedRows = setupExpectedAssignedRows();
+        List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = setupExpectedAvailableAssessors();
+
+        ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
+                applicationId,
+                "Progressive Machines",
+                competitionId,
+                "Connected digital additive manufacturing",
+                asList("Acme Ltd.", "IO Systems"),
+                expectedAssignedRows,
+                expectedAvailableAssessors,
+                "title"
+        );
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(view().name("competition/application-progress"));
+
+        InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
+        inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
+        inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void applicationProgressWithAvailableAssessorsSortedByTotalApplications() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+
+        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = setupApplicationAssessmentSummaryResource(competitionId, applicationId);
+
+        List<ApplicationAssessorResource> assigned = setupAssignedApplicationAssessorResources();
+        List<ApplicationAssessorResource> rejected = setupRejectedApplicationAssessorResources();
+        List<ApplicationAssessorResource> withdrawn = setupWithdrawnApplicationAssessorResources();
+        List<ApplicationAssessorResource> available = setupAvailableApplicationAssessorResources();
+
+        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
+        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
+
+        List<ApplicationAssessmentProgressAssignedRowViewModel> expectedAssignedRows = setupExpectedAssignedRows();
+        List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = setupExpectedAvailableAssessors();
+        sort(expectedAvailableAssessors, Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
+
+        ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
+                applicationId,
+                "Progressive Machines",
+                competitionId,
+                "Connected digital additive manufacturing",
+                asList("Acme Ltd.", "IO Systems"),
+                expectedAssignedRows,
+                expectedAvailableAssessors,
+                "totalApplications"
+        );
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sort=totalApplications", competitionId, applicationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(view().name("competition/application-progress"));
+
+        InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
+        inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
+        inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
+        return newApplicationAssessmentSummaryResource()
                 .withId(applicationId)
                 .withName("Progressive Machines")
                 .withCompetitionId(competitionId)
                 .withCompetitionName("Connected digital additive manufacturing")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO Systems"))
                 .build();
+    }
 
-        List<ApplicationAssessorResource> assigned = newApplicationAssessorResource()
+    private List<ApplicationAssessorResource> setupAssignedApplicationAssessorResources() {
+        return newApplicationAssessorResource()
                 .withFirstName("William", "Richard", "Rachel", "Samantha", "Valerie", "Gareth")
                 .withLastName("Adamson", "Bown", "Carr", "Peacock", "Lloyd", "Morris")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS, ACADEMIC, BUSINESS, ACADEMIC)
@@ -86,8 +168,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withAssignedCount(6L, 3L, 1L, 5L, 2L, 1L)
                 .withSubmittedCount(4L, 1L, 0L, 2L, 1L, 0L)
                 .build(6);
+    }
 
-        List<ApplicationAssessorResource> rejected = newApplicationAssessorResource()
+    private List<ApplicationAssessorResource> setupRejectedApplicationAssessorResources() {
+        return newApplicationAssessorResource()
                 .withFirstName("Angela", "Anne", "David")
                 .withLastName("Casey", "Chadwick", "Cherrie")
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
@@ -107,8 +191,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withAssignedCount(6L, 4L, 1L)
                 .withSubmittedCount(2L, 3L, 0L)
                 .build(3);
+    }
 
-        List<ApplicationAssessorResource> withdrawn = newApplicationAssessorResource()
+    private List<ApplicationAssessorResource> setupWithdrawnApplicationAssessorResources() {
+        return newApplicationAssessorResource()
                 .withFirstName("Paul", "Graeme", "Lawrence")
                 .withLastName("Cousins", "Crawford", "Currie")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
@@ -126,8 +212,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withAssignedCount(6L, 1L, 3L)
                 .withSubmittedCount(2L, 0L, 3L)
                 .build(3);
+    }
 
-        List<ApplicationAssessorResource> available = newApplicationAssessorResource()
+    private List<ApplicationAssessorResource> setupAvailableApplicationAssessorResources() {
+        return newApplicationAssessorResource()
                 .withFirstName("Christopher", "Jayne", "Narinder")
                 .withLastName("Dockerty", "Gill", "Goddard")
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
@@ -146,11 +234,10 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withAssignedCount(5L, 1L, 1L)
                 .withSubmittedCount(2L, 1L, 0L)
                 .build(3);
+    }
 
-        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
-        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
-
-        List<ApplicationAssessmentProgressAssignedRowViewModel> expectedAssignedRows = asList(
+    private List<ApplicationAssessmentProgressAssignedRowViewModel> setupExpectedAssignedRows() {
+        return asList(
                 new ApplicationAssessmentProgressAssignedRowViewModel("William Adamson", 6, 6, BUSINESS,
                         asList("Infrastructure systems", "Earth Observation"), false, false, false, false),
                 new ApplicationAssessmentProgressAssignedRowViewModel("Richard Bown", 4, 3, ACADEMIC,
@@ -163,25 +250,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                         asList("User Experience", "Resource efficiency"), true, true, true, false),
                 new ApplicationAssessmentProgressAssignedRowViewModel("Gareth Morris", 3, 1, ACADEMIC,
                         asList("Technical feasibility", "Medicines Technology"), true, true, true, true));
+    }
 
-        ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
-                applicationId,
-                "Progressive Machines",
-                competitionId,
-                "Connected digital additive manufacturing",
-                asList("Acme Ltd.", "IO Systems"),
-                expectedAssignedRows
-        );
-
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedModel))
-                .andExpect(view().name("competition/application-progress"));
-
-        InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
-        inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
-        inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
-        inOrder.verifyNoMoreInteractions();
+    private List<ApplicationAvailableAssessorsRowViewModel> setupExpectedAvailableAssessors() {
+        return asList(
+                new ApplicationAvailableAssessorsRowViewModel("Christopher Dockerty", "Solar Power, Genetics, Recycling", 9, 5, 2),
+                new ApplicationAvailableAssessorsRowViewModel("Jayne Gill", "Human computer interaction, Wearables, IoT", 4, 1, 1),
+                new ApplicationAvailableAssessorsRowViewModel("Narinder Goddard", "Electronic/photonic components", 3, 1, 0));
     }
 
     @Test
