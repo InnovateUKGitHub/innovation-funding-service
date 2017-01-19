@@ -95,7 +95,7 @@
         <tr>
             <th colspan="2" scope="col" class="no-border"></th>
             <#list TableData.yearEligibleCostTotal?keys as year>
-                <th colspan="2">${year}</th>
+                <th colspan="2">${year} to ${(year?number+1)?c}</th>
             </#list>
             <th colspan="2" scope="col">Total</th>
         </tr>
