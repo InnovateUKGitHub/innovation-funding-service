@@ -177,7 +177,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
         boolean noAssessmentOrWithdrawn = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId())
                 .map(assessment -> assessment.getActivityState().equals(AssessmentStates.WITHDRAWN))
-                .orElse(Boolean.TRUE);
+                .orElse(true);
 
         if (noAssessmentOrWithdrawn) {
             return serviceSuccess(application);
