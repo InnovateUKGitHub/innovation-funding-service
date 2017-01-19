@@ -82,13 +82,17 @@ Application details are editable before Open date
 
 Assessed Questions are editable before open date
     [Documentation]    INFUND-6936
-    [Tags]    Pending
-    #TODO INFUND-7565
-    Given the user clicks the button/link    link=Business opportunity
+    [Tags]
+    Given the user navigates to the page    ${CA_UpcomingComp}
+    And the user can see the open date of the competition belongs to the future
+    When the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
+    And the user clicks the button/link    link=Application
+    And the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jquery=h1:contains("Business opportunity")
     And the user clicks the button/link    jquery=.button:contains("Edit this question")
     And the user edits the assessed question information
-    And the user clicks the button/link    jquery=.button:contains("Save and close")
+    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Business opportunity
     And the user sees the correct assessed question information
     And the user clicks the button/link    link = Return to application questions
 
@@ -106,7 +110,10 @@ Application details are not editable after Open date
 Assessed Questions are not editable after open date
     [Documentation]    INFUND-6936
     [Tags]
-    [Setup]  the user navigates to the page  ${server}/management/competition/setup/1/section/application/landing-page
+    [Setup]
+    Given the user navigates to the page    ${CA_LIVE}
+    Then the user should see the element    jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
+    And the user navigates to the page    ${server}/management/competition/setup/1/section/application/
     Given the user clicks the button/link    link=Business opportunity
     Then the user should see the element    jquery=h1:contains("Business opportunity")
     And the user should not see the element    jquery=.button:contains("Edit")
