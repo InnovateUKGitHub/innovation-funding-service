@@ -147,8 +147,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.createAssessment(assessmentCreateResource),
-                UserRoleType.COMP_ADMIN,
-                UserRoleType.COMP_EXEC
+                UserRoleType.COMP_ADMIN
         );
     }
 
