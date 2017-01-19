@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for an assessor in the Application Progress view.
  */
-abstract class ApplicationAssessmentProgressRowViewModel {
+public abstract class ApplicationAssessmentProgressRowViewModel {
 
     private long id;
     private String name;
