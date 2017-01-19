@@ -64,12 +64,7 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
         String processedTemplate = renderResult.getSuccessObject();
 
         List<String> expectedMainLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource(PATH_TO_EXPECTED_GOL_HTML + EXPECTED_GOL_HTML_NAME).toURI()).toPath());
-        expectedMainLines.replaceAll(line -> {
-            if (line.contains(DATE_PREFIX)) {
-                return DATE_TODAY;
-            }
-            return line;
-        });
+        expectedMainLines.replaceAll(line -> line.contains(DATE_PREFIX) ? DATE_TODAY : line);
 
         simpleFilterNot(expectedMainLines, StringUtils::isEmpty).forEach(expectedLine -> {
             if (!processedTemplate.contains(expectedLine.trim())) {
