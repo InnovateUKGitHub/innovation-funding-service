@@ -85,7 +85,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private FinanceHandler financeHandler;
 
     @Override
-    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId, boolean isInternalUser, boolean showProjectFinance){
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         OpenSectionViewModel openSectionViewModel = new OpenSectionViewModel();

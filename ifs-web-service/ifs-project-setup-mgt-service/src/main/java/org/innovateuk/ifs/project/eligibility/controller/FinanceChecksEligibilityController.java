@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.OpenFinanceSectionModelPopulator;
+import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -52,7 +52,7 @@ public class FinanceChecksEligibilityController {
     private OrganisationService organisationService;
 
     @Autowired
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenProjectFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -115,7 +115,7 @@ public class FinanceChecksEligibilityController {
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
 
-        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, true, true);
+        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
 
         model.addAttribute("project", project);
     }

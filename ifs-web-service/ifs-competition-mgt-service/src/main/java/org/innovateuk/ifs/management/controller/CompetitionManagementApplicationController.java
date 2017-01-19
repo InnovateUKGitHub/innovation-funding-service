@@ -6,7 +6,7 @@ import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.OpenFinanceSectionModelPopulator;
+import org.innovateuk.ifs.application.populator.OpenApplicationFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -77,7 +77,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
@@ -224,7 +224,7 @@ public class CompetitionManagementApplicationController extends BaseController {
             model.addAttribute("applicationReadyForSubmit", false);
 
             //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
-            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId, false, false);
+            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId);
             model.addAttribute("model", openFinanceSectionViewModel);
 
             return "comp-mgt-application-finances";

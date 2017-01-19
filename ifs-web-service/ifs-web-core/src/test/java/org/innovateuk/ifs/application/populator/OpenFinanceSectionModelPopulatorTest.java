@@ -61,7 +61,7 @@ import static org.mockito.Mockito.when;
 public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
-    private OpenFinanceSectionModelPopulator populator;
+    private OpenApplicationFinanceSectionModelPopulator populator;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -114,7 +114,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     @Before
     public void setUp() {
         super.setUp();
-
     }
 
     @Test
@@ -143,8 +142,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisation()).build());
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisation());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;
@@ -185,8 +185,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisation()).build());
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisation());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;

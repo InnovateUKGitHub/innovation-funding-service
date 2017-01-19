@@ -180,6 +180,8 @@ public class BaseUnitTest {
     @Mock
     public DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
+    public DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
+    @Mock
     public FinanceHandler financeHandler;
     @Mock
     public ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;

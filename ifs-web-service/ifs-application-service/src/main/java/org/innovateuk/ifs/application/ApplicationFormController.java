@@ -137,7 +137,7 @@ public class ApplicationFormController {
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -257,10 +257,10 @@ public class ApplicationFormController {
                                  List<SectionResource> allSections) {
         if(SectionType.GENERAL.equals(section.getType())
                 || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, false, false);
+            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId, false, false);
+            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
         applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);

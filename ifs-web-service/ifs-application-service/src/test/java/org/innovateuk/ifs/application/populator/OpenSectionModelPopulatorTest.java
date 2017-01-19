@@ -110,6 +110,8 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
     public void testPopulateModelWithValidObjects() throws Exception {
         Long competitionId = 1L, applicationId = 23L;
 
+        Long organisationId = 245L;
+
         ApplicationResource application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
 
         ApplicationForm applicationForm = new ApplicationForm();
@@ -126,7 +128,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
@@ -143,6 +145,8 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testPopulateModelWithInvalidObjects() throws Exception {
+        Long organisationId = 245L;
+
         Long competitionId = Long.MIN_VALUE, applicationId = Long.MAX_VALUE;
 
         ApplicationResource application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
@@ -161,7 +165,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(0);
         setupServices(competition, application, user, formInputs);
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
@@ -177,6 +181,9 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
     }
 
     private void setupServices(CompetitionResource competitionResource, ApplicationResource applicationResource, UserResource userResource, List<FormInputResource> formInputs) {
+
+        Long organisationId = 245L;
+
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
@@ -187,6 +194,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         inviteOrg1.setInviteResources(newApplicationInviteResource().build(2));
 
         when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(RestResult.restSuccess(asList(inviteOrg1)));
+
         when(userService.isLeadApplicant(userResource.getId(), applicationResource)).thenReturn(Boolean.TRUE);
 
         when(sectionService.getCompletedSectionsByOrganisation(applicationResource.getId())).thenReturn(asMap(1L, new HashSet<>()));
@@ -194,8 +202,11 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         ProcessRoleResource leadApplicantProcessRole = newProcessRoleResource().withUser(userResource).build();
 
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(leadApplicantProcessRole);
+
         when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(userResource);
 
         when(formInputService.findApplicationInputsByCompetition(competitionResource.getId())).thenReturn(formInputs);
+
+        when(userService.getUserOrganisationId(userResource.getId(), applicationResource.getId())).thenReturn(organisationId);
     }
 }

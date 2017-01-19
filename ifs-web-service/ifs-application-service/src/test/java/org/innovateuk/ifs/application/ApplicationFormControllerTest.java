@@ -15,8 +15,8 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Spy
     @InjectMocks
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Spy
     @InjectMocks
@@ -131,6 +131,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
     }
 
     @Test
