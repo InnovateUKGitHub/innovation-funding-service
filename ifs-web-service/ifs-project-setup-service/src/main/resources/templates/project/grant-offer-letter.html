@@ -13,7 +13,7 @@
 
     <div class="page-title">
         <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
-        <h1 class="heading-xlarge">Grant Offer Letter</h1>
+        <h1 class="heading-xlarge">Grant offer letter</h1>
     </div>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
