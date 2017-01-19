@@ -403,6 +403,7 @@ Application: Finances
     When the user clicks the button/link     jQuery=.button:contains("Edit this question")
     Then the user should see the element     css=label.selected[for="full-application-finance-yes"]
     And the user should see the element      css=label[for="full-application-finance-no"]
+    # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
     And The user clicks the button/link      jQuery=button:contains("Save and close")
     Then the user navigates to the page      ${landingPage}
@@ -424,19 +425,21 @@ Application: Mark as done and the Edit again
     And the user should see the text in the page    Yes
     And The user clicks the button/link    jQuery=button:contains(Done)
 
+# TODO see pending test cases below related ton INFUND-7643. They can be unblocked when INFUND-6942 is implemented
 Application: should have a green check
     [Documentation]  INFUND-6773
-    [Tags]  Failing
-    # TODO investigate why the Done button is not there when running with Robot
+    [Tags]  HappyPath  Pending
+    # TODO Pending due to INFUND-7643
     Given the user navigates to the page    ${landingPage}
     When The user clicks the button/link    jQuery=.button:contains("Done")
-    And The user clicks the button/link    link=Competition setup
-    And the user should see the element    jQuery=li:contains("Application") > img[alt$="section is done"]
+    And The user clicks the button/link     link=Competition setup
+    And the user should see the element     jQuery=li:contains("Application") > img[alt$="section is done"]
     And The user should see the element    jQuery=.button:contains("Save")
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]  Pending
+    # TODO Pending due to INFUND-7643
     [Setup]
     Given The user should see the element    jQuery=.button:contains("Save")
     When The user clicks the button/link    link=Initial details
@@ -448,10 +451,9 @@ Ready To Open button is visible when the user re-opens a section
     ...    AND    And The user clicks the button/link    link=Competition setup
 
 User should be able to Save the Competition as Open
-    [Documentation]    INFUND-4468
-    ...
-    ...    INFUND-3002
-    [Tags]    Pending
+    [Documentation]    INFUND-4468, INFUND-3002
+    [Tags]  Pending
+    # TODO Pending due to INFUND-7643
     When the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
@@ -483,7 +485,8 @@ Assessor: Mark as Done then Edit again
 
 Assessor: Should have a Green Check
     [Documentation]    INFUND-5641
-    [Tags]    HappyPath
+    [Tags]  HappyPath  Pending
+    # TODO Pending due to INFUND-7643
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=li:contains("Assessors") > img[alt$="section is done"]
     And the user clicks the button/link     jQuery=.button:contains("Save")
