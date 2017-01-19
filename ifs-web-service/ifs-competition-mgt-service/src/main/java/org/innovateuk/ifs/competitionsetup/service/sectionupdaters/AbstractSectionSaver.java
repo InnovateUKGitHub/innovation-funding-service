@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static java.util.Arrays.asList;
 import static org.apache.commons.beanutils.ConvertUtils.convert;
 import static org.apache.commons.beanutils.PropertyUtils.getPropertyType;
 import static org.apache.commons.beanutils.PropertyUtils.setNestedProperty;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
  * Class to hold all the common functionality in the section savers.
