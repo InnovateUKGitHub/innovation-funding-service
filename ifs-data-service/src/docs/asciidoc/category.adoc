@@ -1,23 +1,47 @@
-=== Retrieve categories by type
+=== Retrieve innovation areas
 ==== Request
-include::{snippets}/category/find-by-type/http-request.adoc[]
-include::{snippets}/category/find-by-type/path-parameters.adoc[]
+include::{snippets}/category/find-innovation-areas/http-request.adoc[]
+include::{snippets}/category/find-innovation-areas/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/category/find-by-type/http-response.adoc[]
-include::{snippets}/category/find-by-type/response-fields.adoc[]
+include::{snippets}/category/find-innovation-areas/http-response.adoc[]
+include::{snippets}/category/find-innovation-areas/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/category/find-by-type/curl-request.adoc[]
+include::{snippets}/category/find-innovation-areas/curl-request.adoc[]
 
-=== Retrieve categories by parent category id
+=== Retrieve innovation sectors
 ==== Request
-include::{snippets}/category/find-by-parent-id/http-request.adoc[]
-include::{snippets}/category/find-by-parent-id/path-parameters.adoc[]
+include::{snippets}/category/find-innovation-sectors/http-request.adoc[]
+include::{snippets}/category/find-innovation-sectors/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/category/find-by-parent-id/http-response.adoc[]
-include::{snippets}/category/find-by-parent-id/response-fields.adoc[]
+include::{snippets}/category/find-innovation-sectors/http-response.adoc[]
+include::{snippets}/category/find-innovation-sectors/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/category/find-by-parent-id/curl-request.adoc[]
+include::{snippets}/category/find-innovation-sectors/curl-request.adoc[]
+
+=== Retrieve research categories
+==== Request
+include::{snippets}/category/find-research-categories/http-request.adoc[]
+include::{snippets}/category/find-research-categories/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/category/find-research-categories/http-response.adoc[]
+include::{snippets}/category/find-research-categories/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/category/find-research-categories/curl-request.adoc[]
+
+=== Retrieve by innovation sector
+==== Request
+include::{snippets}/category/find-by-innovation-sector/http-request.adoc[]
+include::{snippets}/category/find-by-innovation-sector/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/category/find-by-innovation-sector/http-response.adoc[]
+include::{snippets}/category/find-by-innovation-sector/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/category/find-by-innovation-sector/curl-request.adoc[]

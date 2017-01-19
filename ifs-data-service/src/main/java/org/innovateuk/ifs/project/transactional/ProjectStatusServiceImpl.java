@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,6 +85,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
+        ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
         return new ProjectStatusResource(
                 project.getName(),
                 project.getId(),
@@ -91,7 +95,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 project.getApplication().getId(),
                 project.getApplication().getFormattedId(),
                 getProjectPartnerCount(project.getId()),
-                null != project.getApplication().getLeadOrganisation() ? project.getApplication().getLeadOrganisation().getName() : "",
+                null != leadOrganisation ? leadOrganisation.getName() : "",
                 projectDetailsStatus,
                 getBankDetailsStatus(project),
                 financeChecksStatus,

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
 import org.innovateuk.ifs.user.domain.Ethnicity;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
@@ -111,8 +112,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     public AssessorDataBuilder addSkills(String skillAreas, BusinessType businessType, List<String> innovationAreas) {
         return with((AssessorData data) -> {
             User user = userRepository.findOne(data.getUser().getId());
+            Profile profile = profileRepository.findOne(user.getProfileId());
 
-            Set<String> userInnovationAreaNames = user.getInnovationAreas().stream()
+            Set<String> userInnovationAreaNames = profile.getInnovationAreas().stream()
                     .map(InnovationArea::getName)
                     .collect(toSet());
 
@@ -129,7 +131,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     })
                     .collect(toSet());
 
-            user.addInnovationAreas(additionalInnovationAreas);
+            profile.addInnovationAreas(additionalInnovationAreas);
 
             userRepository.save(user);
 
