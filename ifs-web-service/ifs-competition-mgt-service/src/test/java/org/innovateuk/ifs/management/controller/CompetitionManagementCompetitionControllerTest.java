@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionClosedModelPopulator;
-import org.innovateuk.ifs.management.model.CompetitionInAssessmentModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionClosedViewModel;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInAssessmentViewModel;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Spy
     @InjectMocks
-    private CompetitionInAssessmentModelPopulator competitionInAssessmentModelPopulator;
+    private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
 
     @Spy
     @InjectMocks

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
  * Build the model for the Competition Management Competition 'In Assessment' view.
  */
 @Component
-public class CompetitionInAssessmentModelPopulator {
+public class CompetitionInFlightModelPopulator {
 
     public CompetitionInAssessmentViewModel populateModel(CompetitionResource competition) {
-        return new CompetitionInAssessmentViewModel(competition.getId(), competition.getName(), competition.getCompetitionStatus());
+        return new CompetitionInAssessmentViewModel(competition);
     }
 }
