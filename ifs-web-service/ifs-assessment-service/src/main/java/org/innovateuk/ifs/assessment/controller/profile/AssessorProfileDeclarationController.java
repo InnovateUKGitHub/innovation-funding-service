@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileFamilyAffiliationForm;
@@ -29,13 +28,10 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
@@ -158,75 +154,46 @@ public class AssessorProfileDeclarationController {
     }
 
     private AffiliationResource getPrincipalEmployer(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder()
-                .setAffiliationType(EMPLOYER)
-                .setExists(TRUE)
-                .setOrganisation(form.getPrincipalEmployer())
-                .setPosition(form.getRole())
-                .createAffiliationResource();
+        return AffiliationResourceBuilder.createPrincipalEmployer(form.getPrincipalEmployer(), form.getRole());
     }
 
     private AffiliationResource getProfessionalAffiliations(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder()
-                .setAffiliationType(PROFESSIONAL)
-                .setExists(StringUtils.isNotBlank(form.getProfessionalAffiliations()))
-                .setDescription(form.getProfessionalAffiliations())
-                .createAffiliationResource();
+        return AffiliationResourceBuilder.createProfessaionAffiliations(form.getProfessionalAffiliations());
     }
 
     private List<AffiliationResource> getAppointments(AssessorProfileDeclarationForm form) {
         if (form.getHasAppointments()) {
-            return form.getAppointments().stream().map(appointmentForm -> new AffiliationResourceBuilder()
-                    .setAffiliationType(PERSONAL)
-                    .setExists(TRUE)
-                    .setOrganisation(appointmentForm.getOrganisation())
-                    .setPosition(appointmentForm.getPosition())
-                    .createAffiliationResource()
+
+            return form.getAppointments().stream().map(appointmentForm ->
+                    AffiliationResourceBuilder.createAppointment(appointmentForm.getOrganisation(), appointmentForm.getPosition())
             )
                     .collect(toList());
         } else {
-            return singletonList(new AffiliationResourceBuilder()
-                    .setAffiliationType(PERSONAL)
-                    .setExists(FALSE)
-                    .createAffiliationResource()
-            );
+            return singletonList(AffiliationResourceBuilder.createEmptyAppointments());
         }
     }
 
     private AffiliationResource getFinancialInterests(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder()
-                .setAffiliationType(PERSONAL_FINANCIAL)
-                .setExists(form.getHasFinancialInterests())
-                .setDescription(form.getHasFinancialInterests() ? form.getFinancialInterests() : null)
-                .createAffiliationResource();
+        return AffiliationResourceBuilder.createFinancialInterests(form.getHasFinancialInterests(), form.getFinancialInterests());
     }
 
     private List<AffiliationResource> getFamilyAffiliations(AssessorProfileDeclarationForm form) {
         if (form.getHasFamilyAffiliations()) {
             return form.getFamilyAffiliations().stream()
-                    .map(familyAffiliationForm -> new AffiliationResourceBuilder()
-                            .setAffiliationType(FAMILY)
-                            .setExists(TRUE)
-                            .setRelation(familyAffiliationForm.getRelation())
-                            .setOrganisation(familyAffiliationForm.getOrganisation())
-                            .setPosition(familyAffiliationForm.getPosition())
-                            .createAffiliationResource()
+                    .map(familyAffiliationForm ->
+                            AffiliationResourceBuilder.createFamilyAffiliation(
+                                    familyAffiliationForm.getRelation(),
+                                    familyAffiliationForm.getOrganisation(),
+                                    familyAffiliationForm.getPosition()
+                            )
                     )
                     .collect(toList());
         } else {
-            return singletonList(new AffiliationResourceBuilder()
-                    .setAffiliationType(FAMILY)
-                    .setExists(FALSE)
-                    .createAffiliationResource()
-            );
+            return singletonList(AffiliationResourceBuilder.createEmptyFamilyAffiliations());
         }
     }
 
     private AffiliationResource getFamilyFinancialInterests(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder()
-                .setAffiliationType(FAMILY_FINANCIAL)
-                .setExists(form.getHasFamilyFinancialInterests())
-                .setDescription(form.getHasFamilyFinancialInterests() ? form.getFamilyFinancialInterests() : null)
-                .createAffiliationResource();
+        return AffiliationResourceBuilder.createFamilyFinancialInterests(form.getHasFamilyFinancialInterests(), form.getFamilyFinancialInterests());
     }
 }

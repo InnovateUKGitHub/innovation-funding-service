@@ -118,7 +118,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	public CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
 													 CompetitionSetupSection section,
 													 CompetitionSetupSubsection subsection,
-                                                      Optional<Long> objectId) {
+													 Optional<Long> objectId) {
 
         checkIfSubsectionIsInSection(section, subsection);
 		CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
@@ -244,7 +244,10 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 		model.addAttribute("competition", competitionResource);
 		model.addAttribute("currentSection", section);
-		model.addAttribute("currentSectionFragment", "section-" + section.getPath());
+
+		if (section.hasDisplayableSetupFragment()) {
+			model.addAttribute("currentSectionFragment", "section-" + section.getPath());
+		}
 
 		model.addAttribute("allSections", CompetitionSetupSection.values());
         model.addAttribute("isInitialComplete", isInitialComplete(competitionResource));

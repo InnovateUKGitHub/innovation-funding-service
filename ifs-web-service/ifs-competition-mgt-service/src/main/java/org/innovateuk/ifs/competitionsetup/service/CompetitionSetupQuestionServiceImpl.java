@@ -17,7 +17,7 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceFo
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationDetailsFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationProjectFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationQuestionFormPopulator;
-import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.FinancesFormPopulator;
+import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationFinanceFormPopulator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     @Autowired
     private ApplicationDetailsFormPopulator applicationDetailsFormPopulator;
     @Autowired
-    private FinancesFormPopulator financesFormPopulator;
+    private ApplicationFinanceFormPopulator applicationFinanceFormPopulator;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getQuestion(final Long questionId) {
@@ -105,7 +105,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 .collect(Collectors.toList()));
 
         form.setDetailsForm((ApplicationDetailsForm) applicationDetailsFormPopulator.populateForm(competitionResource, Optional.empty()));
-        form.setFinanceForm((ApplicationFinanceForm) financesFormPopulator.populateForm(competitionResource, Optional.empty()));
+        form.setFinanceForm((ApplicationFinanceForm) applicationFinanceFormPopulator.populateForm(competitionResource, Optional.empty()));
 
         validator.validate(form, bindingResult);
 
