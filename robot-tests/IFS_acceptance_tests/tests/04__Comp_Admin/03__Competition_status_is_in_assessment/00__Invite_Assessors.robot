@@ -17,7 +17,10 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so I know if they have accepted, declined or still awaiting repsonse
 ...
-...               INFUND-6389 As a member of the competitions team I can see the innovation sector and innovation area(s) on the Invite assessors dashboard  so that I can invite appropriate assessors
+...               INFUND-6389 As a member of the competitions team I can see the innovation sector and innovation area(s) on the Invite assessors dashboard so ...
+...
+...               INFUND-6449
+...               As a member of the competitions team, I can see the invited assessors list so...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -107,11 +110,14 @@ Invite non-registered users
 
 Assessor overview information
     [Documentation]    INFUND-6450
+    ...
+    ...    INFUND-6449
     [Tags]
     Given The user clicks the button/link    link=Overview
     Then the user should see the element    jQuery=tr:nth-child(2) td:contains(Invite accepted)
-    #And the user should see the element    jQuery=tr:nth-child(6) td:contains(Awaiting response)    # I have disabled this check because the are some dependencies.
+    #And the user should see the element    jQuery=tr:nth-child(6) td:contains(Awaiting response)    # I have disabled this check because the are some dependencies. In order to enable this we should ask for extra testdata
     And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(5):contains(Invite declined)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Academic)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Yes)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Invite declined as not available)
+    #And the user should see the element    jQuery=tr:nth-child(4) td:contains....innovation area    #TODO Pending innovation area to be implemented
