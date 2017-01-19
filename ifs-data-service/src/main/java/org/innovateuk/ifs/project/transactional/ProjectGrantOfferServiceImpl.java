@@ -38,6 +38,7 @@ import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -51,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -76,6 +78,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
+    public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -239,6 +242,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
+<<<<<<< HEAD
     private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(Project project) {
         final String leadOrganisation = project.getApplication().getLeadOrganisation().getName();
         final List<String> organisations = project.getPartnerOrganisations().stream().map(po -> po.getOrganisation().getName())
@@ -246,13 +250,21 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         organisations.add(0, leadOrganisation);
         return organisations;
     }
+=======
+    private Map<String, Object> getTemplateData(Project project) {
+        ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
+        Map<String, Object> templateReplacements = new HashMap<>();
+        List<String> addresses = getAddresses(project);
+>>>>>>> origin/development
 
     private Map<String, Object> getTemplateData(Project project) {
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
         templateReplacements.put("SortedOrganisations", organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(project));
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
-        templateReplacements.put("LeadOrgName", project.getApplication().getLeadOrganisation().getName());
+        templateReplacements.put("LeadOrgName", leadOrganisation.getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() < 2 ? "" : addresses.get(1));
         templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
@@ -262,7 +274,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
         templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
-                project.getTargetStartDate().toString() : "");
+                project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", getYearlyGOLProfileTable(project));

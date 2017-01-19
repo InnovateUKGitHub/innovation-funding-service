@@ -9,8 +9,10 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +28,9 @@ public abstract class ApplicationSummaryMapper {
 
 	@Autowired
 	private ApplicationSummarisationService applicationSummarisationService;
+
+	@Autowired
+	private OrganisationRepository organisationRepository;
 
 	@Autowired
 	private FundingDecisionMapper fundingDecisionMapper;
@@ -48,8 +53,10 @@ public abstract class ApplicationSummaryMapper {
             result.setLeadApplicant(source.getLeadApplicant().getName());
         }
 
-        if(source.getLeadOrganisation()!=null) {
-            result.setLead(source.getLeadOrganisation().getName());
+		ProcessRole leadProcessRole = source.getLeadApplicantProcessRole();
+		Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        if(leadOrganisation!=null) {
+            result.setLead(leadOrganisation.getName());
         }
 
 		if(source.getFundingDecision() != null) {
@@ -62,7 +69,7 @@ public abstract class ApplicationSummaryMapper {
 		BigDecimal grantRequested = getGrantRequested(source);
 		result.setGrantRequested(grantRequested);
 
-		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size();
+		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisationId)).size();
 		result.setNumberOfPartners(numberOfPartners);
 
 		BigDecimal totalProjectCost = getTotalProjectCost(source);

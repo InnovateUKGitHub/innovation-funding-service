@@ -31,7 +31,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
     public InternalUserDataBuilder createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber) {
         return with(data -> {
 
-            User user = userRepository.save(new User(firstName, lastName, emailAddress, null, emptyList(), UUID.randomUUID().toString()));
+            User user = userRepository.save(new User(firstName, lastName, emailAddress, null, UUID.randomUUID().toString()));
             Role role = roleRepository.findOneByName(data.getRole().getName());
             user.getRoles().add(role);
             userRepository.save(user);

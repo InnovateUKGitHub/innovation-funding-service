@@ -36,7 +36,7 @@ public class ProcessRoleRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         ProcessRole processRole = processRoles.stream().findFirst().get();
         assertEquals(roleName, processRole.getRole().getName());
-        assertEquals(Long.valueOf(applicationId), processRole.getApplication().getId());
+        assertEquals(Long.valueOf(applicationId), processRole.getApplicationId());
         assertEquals(Long.valueOf(userId), processRole.getUser().getId());
     }
 }

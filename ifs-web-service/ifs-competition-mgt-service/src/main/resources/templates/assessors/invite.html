@@ -96,9 +96,11 @@
                                           th:text="${err}" />
                                 </span>
                             </label>
-                            <p class="form-hint">The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</p>
+                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                             <select th:field="*{selectedInnovationArea}"
                                     class="form-control width-full"
+                                    data-progressive-group-select="Innovation sector"
+                                    data-progressive-group-select-instruction="Please select an innovation sector"
                                     required="required"
                                     th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     aria-labelledby="innovation-area"
@@ -181,7 +183,7 @@
                             </p>
 
                             <div class="alignright extra-margin-top">
-                                <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessor(s) to list</button>
+                                <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessors to list</button>
                             </div>
                         </div>
                     </form>
@@ -213,6 +215,9 @@
                                 <br />
                                 <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
                             </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="5">There are no assessors to be invited to this competition.</td>
                         </tr>
                     </tbody>
                 </table>
