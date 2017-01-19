@@ -425,6 +425,7 @@ Application: Mark as done and the Edit again
     And the user should see the text in the page    Yes
     And The user clicks the button/link    jQuery=button:contains(Done)
 
+# TODO see pending test cases below related ton INFUND-7643. They can be unblocked when INFUND-6942 is implemented
 Application: should have a green check
     [Documentation]  INFUND-6773
     [Tags]  HappyPath  Pending
