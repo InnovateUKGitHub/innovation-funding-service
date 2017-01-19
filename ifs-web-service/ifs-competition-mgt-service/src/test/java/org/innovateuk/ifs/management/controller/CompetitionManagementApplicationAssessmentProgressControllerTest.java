@@ -3,6 +3,8 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressAssignedRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressViewModel;
@@ -12,19 +14,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionManagementApplicationAssessmentProgressControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationAssessmentProgressController> {
@@ -172,6 +179,35 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .andExpect(view().name("competition/application-progress"));
 
         InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
+        inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
+        inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void assignAssessor() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessorId = 3L;
+
+        AssessmentCreateResource expectedAssessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(applicationId)
+                .withAssessorId(assessorId)
+                .build();
+
+        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
+        ApplicationAssessmentSummaryResource expectedApplicationAssessmentSummary = newApplicationAssessmentSummaryResource().build();
+
+        when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
+        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(expectedApplicationAssessmentSummary));
+        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(Collections.emptyList()));
+
+        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/application-progress"));
+
+        InOrder inOrder = inOrder(assessmentRestService, applicationAssessmentSummaryRestService);
+        inOrder.verify(assessmentRestService).createAssessment(expectedAssessmentCreateResource);
         inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
         inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
         inOrder.verifyNoMoreInteractions();

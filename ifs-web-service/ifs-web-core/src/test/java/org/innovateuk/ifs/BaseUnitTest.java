@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -214,6 +215,8 @@ public class BaseUnitTest {
     public CookieUtil cookieUtil;
     @Mock
     public CategoryService categoryServiceMock;
+    @Mock
+    public AssessmentRestService assessmentRestService;
 
     @Spy
     @InjectMocks
