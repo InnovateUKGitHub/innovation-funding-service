@@ -60,7 +60,7 @@ oc cluster up && {
   }
 
   echo Waiting some time for the IFS app to initialise...
-  sleep 60
+  sleep 120
 
   echo "Refreshing ldap with users in ifs db"
   docker exec -it $ldap /usr/local/bin/ldap-delete-all-users.sh
