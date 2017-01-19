@@ -98,18 +98,16 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         })));
     }
 
-    private String getOrganisationName(Long organisationId) {
-        Organisation organisation = organisationRepository.findOne(organisationId);
-        return organisation != null ? organisation.getName() : null;
+    private InviteProjectResource mapInviteToInviteResource(ProjectInvite invite) {
+        InviteProjectResource inviteResource = inviteMapper.mapToResource(invite);
+        Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
+        inviteResource.setLeadOrganisation(organisation.getName());
+        return inviteResource;
     }
 
     @Override
     public ServiceResult<InviteProjectResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> {
-            InviteProjectResource inviteResource = inviteMapper.mapToResource(invite);
-            inviteResource.setLeadOrganisation(getOrganisationName(inviteResource.getLeadOrganisationId()));
-            return inviteResource;
-        });
+        return getByHash(hash).andOnSuccessReturn(this::mapInviteToInviteResource);
     }
 
     @Override
@@ -118,11 +116,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
             return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
         }
         List<ProjectInvite> invites = inviteProjectRepository.findByProjectId(projectId);
-        List<InviteProjectResource> inviteResources = invites.stream().map(invite -> {
-                InviteProjectResource inviteResource = inviteMapper.mapToResource(invite);
-                inviteResource.setLeadOrganisation(getOrganisationName(inviteResource.getLeadOrganisationId()));
-                return inviteResource;
-            }).collect(Collectors.toList());
+        List<InviteProjectResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
         return serviceSuccess(Lists.newArrayList(inviteResources));
     }
 

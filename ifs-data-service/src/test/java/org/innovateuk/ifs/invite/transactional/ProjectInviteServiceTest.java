@@ -35,6 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mapstruct.factory.Mappers.getMapper;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
@@ -187,10 +188,11 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testGetInvitesByProject() throws Exception {
         Project project = newProject().build();
-        ProjectInvite inviteProject = newInvite().build();
+        ProjectInvite inviteProject = newInvite().withOrganisation(newOrganisation()).build();
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(inviteProject);
         when(inviteProjectRepositoryMock.findByProjectId(project.getId())).thenReturn(asList(inviteProject));
         when(inviteProjectMapperMock.mapToResource(inviteProject)).thenReturn(inviteProjectResource);
+        when(organisationRepositoryMock.findOne(anyLong())).thenReturn(inviteProject.getOrganisation());
         ServiceResult<List<InviteProjectResource>> invitesByProject = inviteProjectService.getInvitesByProject(project.getId());
         assertTrue(invitesByProject.isSuccess());
         assertEquals(asList(inviteProjectResource), invitesByProject.getSuccessObject());

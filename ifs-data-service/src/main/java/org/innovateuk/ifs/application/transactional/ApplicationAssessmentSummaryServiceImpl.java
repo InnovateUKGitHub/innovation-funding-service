@@ -84,10 +84,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         return application.getProcessRoles().stream()
                 .filter(processRole ->
                         processRole.isLeadApplicant() || processRole.isCollaborator())
-                .map(processRole -> {
-                    Organisation org = organisationRepository.findOne(processRole.getOrganisationId());
-                    return org.getName();
-                })
+                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
                 .collect(toList());
     }
 

@@ -434,7 +434,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private boolean isUserCompliant(CompetitionInvite competitionInvite) {
-        if (competitionInvite.getUser() == null) {
+        if (competitionInvite == null || competitionInvite.getUser() == null) {
             return false;
         }
         Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());

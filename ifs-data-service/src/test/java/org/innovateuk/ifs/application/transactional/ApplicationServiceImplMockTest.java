@@ -120,7 +120,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
+        ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
         Application application = ApplicationBuilder.newApplication().
@@ -138,7 +138,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
+        when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(processRole));
         when(organisationRepositoryMock.findByUsers(user)).thenReturn(singletonList(organisation));
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
@@ -164,7 +166,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
                         competition.getId(), user.getId()).getSuccessObject();
 
-        verify(applicationRepositoryMock).save(isA(Application.class));
+        verify(applicationRepositoryMock, times(2)).save(isA(Application.class));
         verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
         assertEquals(applicationResource, created);
     }
@@ -654,6 +656,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ));
         when(organisationRepositoryMock.findByUsers(user)).thenReturn(singletonList(organisation));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());

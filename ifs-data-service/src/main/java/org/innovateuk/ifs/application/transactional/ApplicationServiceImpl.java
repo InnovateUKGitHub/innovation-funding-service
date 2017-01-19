@@ -30,6 +30,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -103,6 +104,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
     }
 
+    private void generateProcessRolesForApplication(User user, Role role, Application application) {
+        List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
+        List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
+        Long userOrganisationId = usersProcessRoles.size() != 0
+                ? usersProcessRoles.get(0).getOrganisationId()
+                : usersOrganisations.get(0).getId();
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);
+        processRoleRepository.save(processRole);
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+        application.setProcessRoles(processRoles);
+        applicationRepository.save(application);
+    }
+
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
         Application application = new Application();
         application.setName(applicationName);
@@ -117,23 +132,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetition(competition);
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
-
             Application savedApplication = applicationRepository.save(application);
-
-            List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
-            List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-
-            Long userOrganisationId = usersProcessRoles.size() != 0
-                    ? usersProcessRoles.get(0).getOrganisationId()
-                    : usersOrganisations.get(0).getId();
-
-            ProcessRole processRole = new ProcessRole(user, savedApplication.getId(), role, userOrganisationId);
-            List<ProcessRole> processRoles = new ArrayList<>();
-            processRoles.add(processRole);
-            savedApplication.setProcessRoles(processRoles);
-
-            processRoleRepository.save(processRole);
-
+            generateProcessRolesForApplication(user, role, savedApplication);
+            savedApplication = applicationRepository.findOne(savedApplication.getId());
             return serviceSuccess(applicationMapper.mapToResource(savedApplication));
         });
     }
