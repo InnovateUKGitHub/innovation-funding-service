@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -34,10 +35,6 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
     @Override
     protected UserBuilder createNewBuilderWithActions(List<BiConsumer<Integer, User>> actions) {
         return new UserBuilder(actions);
-    }
-
-    public UserBuilder withOrganisations(List<Organisation>... organisationsList) {
-        return withArray((organisations, user) -> user.addUserOrganisation(organisations.toArray(new Organisation[organisations.size()])), organisationsList);
     }
 
     public UserBuilder withEmailAddress(final String... emailAddresses) {
@@ -92,16 +89,12 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((status, user) -> setField("status", status, user), statuses);
     }
 
-    public UserBuilder withProcessRoles(List<ProcessRole>... processRolesList) {
-        return withArray((processRoles, object) -> setField("processRoles", processRoles, object), processRolesList);
-    }
-
     public UserBuilder withUid(String... uids) {
         return withArray((uid, object) -> setField("uid", uid, object), uids);
     }
 
     public UserBuilder withProfile(Profile... profiles) {
-        return withArray((profile, user) -> setField("profile", profile, user), profiles);
+        return withArray((profile, user) -> setField("profileId", profile.getId(), user), profiles);
     }
 
     public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {

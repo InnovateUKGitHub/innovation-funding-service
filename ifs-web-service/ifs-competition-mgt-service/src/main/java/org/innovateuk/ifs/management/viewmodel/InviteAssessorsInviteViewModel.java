@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import java.util.List;
  */
 public class InviteAssessorsInviteViewModel extends InviteAssessorsViewModel<InvitedAssessorRowViewModel> {
 
-    private List<CategoryResource> innovationSectorOptions;
+    private List<InnovationSectorResource> innovationSectorOptions;
 
-    public List<CategoryResource> getInnovationSectorOptions() {
+    public List<InnovationSectorResource> getInnovationSectorOptions() {
         return innovationSectorOptions;
     }
 
-    public void setInnovationSectorOptions(List<CategoryResource> innovationSectorOptions) {
+    public void setInnovationSectorOptions(List<InnovationSectorResource> innovationSectorOptions) {
         this.innovationSectorOptions = innovationSectorOptions;
     }
 }

@@ -48,25 +48,26 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     public void setUp() throws Exception {
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
-        List<ProcessRole> proccessRoles = new ArrayList<>();
-        proccessRoles.add(
+        List<ProcessRole> processRoles = new ArrayList<>();
+        Application application = new Application(
+                APPLICATION_ID,
+                "",
+                new ApplicationStatus(
+                        ApplicationStatusConstants.CREATED.getId(),
+                        ApplicationStatusConstants.CREATED.getName()
+                )
+        );
+        processRoles.add(
             new ProcessRole(
                 leadApplicantProcessRole,
                 null,
-                new Application(
-                    APPLICATION_ID,
-                    "",
-                    new ApplicationStatus(
-                        ApplicationStatusConstants.CREATED.getId(),
-                        ApplicationStatusConstants.CREATED.getName()
-                    )
-                ),
+                 application.getId(),
                 null,
                 null
             )
         );
-        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc");
-        proccessRoles.get(0).setUser(user);
+        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
+        processRoles.get(0).setUser(user);
         swapOutForUser(userMapper.mapToResource(user));
     }
 

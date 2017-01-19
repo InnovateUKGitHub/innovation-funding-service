@@ -48,7 +48,7 @@ Accept invitation as academic
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
     And If the user goes to the previous page he should redirect to the login page
-    And the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Please verify your email address    You have recently set up an account
+    And the user reads his email and clicks the link  ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
     When the user clicks the button/link    link=${OPEN_COMPETITION_LINK}

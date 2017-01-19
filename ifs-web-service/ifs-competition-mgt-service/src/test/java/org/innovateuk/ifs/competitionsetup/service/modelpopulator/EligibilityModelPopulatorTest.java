@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,8 +18,6 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -56,8 +55,8 @@ public class EligibilityModelPopulatorTest {
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
 		
-		List<CategoryResource> researchCategories = new ArrayList<>();
-		when(categoryService.getCategoryByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(researchCategories);
+		List<ResearchCategoryResource> researchCategories = new ArrayList<>();
+		when(categoryService.getResearchCategories()).thenReturn(researchCategories);
 		when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories)).thenReturn("formattedcategories");
 
 		populator.populateModel(model, competition);

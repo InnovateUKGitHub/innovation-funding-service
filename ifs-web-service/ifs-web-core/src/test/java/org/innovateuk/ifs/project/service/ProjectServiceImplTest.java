@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -600,6 +601,22 @@ public class ProjectServiceImplTest {
         assertTrue(result.isSuccess());
 
         verify(projectRestService).sendGrantOfferLetter(123L);
+
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowState()  throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GOLState.APPROVED));
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+
+        verify(projectRestService).getGrantOfferLetterWorkflowState(projectId);
 
     }
 }

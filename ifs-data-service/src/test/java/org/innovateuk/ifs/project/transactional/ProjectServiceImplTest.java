@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
@@ -31,6 +32,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -41,11 +43,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -187,7 +192,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        o = application.getLeadOrganisation();
+        o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
         partnerRole = newRole().
@@ -206,7 +211,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         pu = newProjectUser().
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
-                withOrganisation(application.getLeadOrganisation()).
+                withOrganisation(o).
                 withInvite(newInvite().
                         build()).
                 build(1);
@@ -216,7 +221,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withApplication(application).
                 withPartnerOrganisations(po).
                 withDateSubmitted(LocalDateTime.now()).
-                withOtherDocumentsApproved(Boolean.TRUE).
+                withOtherDocumentsApproved(ApprovalType.APPROVED).
                 withSpendProfileSubmittedDate(LocalDateTime.now()).
                 build();
 
@@ -232,6 +237,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
     }
 
     @Test
@@ -240,8 +246,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Role partnerRole = newRole().withType(PARTNER).build();
 
         ProjectResource newProjectResource = newProjectResource().build();
-
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
         PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
                 withOrganisation(organisation).
@@ -574,7 +578,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -610,7 +614,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -641,7 +645,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -672,7 +676,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -959,6 +963,33 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     }
 
+
+    @Test
+    public void testCannotSubmitDocumentsAlreadySubmitted() {
+
+        Long projectId = 1L;
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withId(1L).build())
+                .withRole(PROJECT_MANAGER)
+                .build();
+
+        List<ProjectUser> pu = Collections.singletonList(projectUserToSet);
+
+        Project projectInDB = newProject().withId(projectId).withProjectUsers(pu)
+                .withOtherDocumentsApproved(ApprovalType.UNSET).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(projectId, 1L);
+
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
+
+    }
+
     @Test
     public void testAcceptOrRejectOtherDocumentsWhenProjectNotInDB() {
 
@@ -987,9 +1018,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isFailure());
 
-        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.nullValue());
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
     }
+
 
     @Test
     public void testAcceptOrRejectOtherDocumentsAlreadyApprovedError() {
@@ -997,7 +1029,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Long projectId = 1L;
 
         Project projectInDB = newProject().withId(projectId)
-                .withOtherDocumentsApproved(true).build();
+                .withOtherDocumentsApproved(ApprovalType.APPROVED).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
@@ -1005,7 +1037,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isFailure());
 
-        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(true));
+        assertThat(projectInDB.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.APPROVED));
 
     }
 
@@ -1023,7 +1055,27 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
 
-        assertEquals(true, projectInDB.getOtherDocumentsApproved());
+        assertEquals(ApprovalType.APPROVED, projectInDB.getOtherDocumentsApproved());
+        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+
+    }
+
+    @Test
+    public void testAcceptOrRejectOtherDocumentsRejectSuccess() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, false);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(ApprovalType.REJECTED, projectInDB.getOtherDocumentsApproved());
+        assertEquals(null, projectInDB.getDocumentsSubmittedDate());
         verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
 
     }
@@ -1043,8 +1095,31 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
 
-        assertEquals(true, projectInDB.getOtherDocumentsApproved());
+        assertEquals(ApprovalType.APPROVED, projectInDB.getOtherDocumentsApproved());
         verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+
+    }
+
+    @Test
+    public void testUpdateDocumentsResetApproval() {
+
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        FileEntry entry = newFileEntry().build();
+        FileEntryResource entryResource = newFileEntryResource().build();
+        Supplier<InputStream> input = () -> null;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        ServiceResult<Pair<File, FileEntry>> successfulFileUpdateResult = serviceSuccess(Pair.of(new File("updatedfile"), entry));
+        when(fileServiceMock.updateFile(any(), any())).thenReturn(successfulFileUpdateResult);
+
+        ServiceResult<Void> result = service.updateCollaborationAgreementFileEntry(projectId, entryResource, input);
+
+        assertTrue(result.isSuccess());
+
+        assertEquals(ApprovalType.UNSET, projectInDB.getOtherDocumentsApproved());
+        verify(fileServiceMock).updateFile(entryResource, input);
 
     }
 
@@ -1170,7 +1245,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsImcomplete() {
+    public void testSaveDocumentsSubmitDateTimeFailsWhenUploadsIncomplete() {
         ProjectUser projectUserToSet = newProjectUser()
                 .withId(1L)
                 .withUser(newUser().withId(1L).build())
@@ -1211,11 +1286,16 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testInviteProjectFinanceUser(){
         InviteProjectResource invite = newInviteProjectResource().build();
-        ProcessRole[] roles = newProcessRole().withOrganisation(o).withRole(LEADAPPLICANT).build(1).toArray(new ProcessRole[0]);
+        ProcessRole[] roles = newProcessRole()
+                .withOrganisation(o)
+                .withRole(LEADAPPLICANT)
+                .build(1)
+                .toArray(new ProcessRole[0]);
         Application a = newApplication().withProcessRoles(roles).build();
 
         Project project = newProject().withId(projectId).withApplication(a).build();
 
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
         when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().build());
@@ -1284,8 +1364,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
         List<Organisation> organisations = new ArrayList<>();
-        organisations.add(application.getLeadOrganisation());
-        application.getLeadOrganisation().setOrganisationType(businessOrganisationType);
+        Organisation leadOrganisation = organisationRepositoryMock.findOne(application.getLeadOrganisationId());
+        leadOrganisation.setOrganisationType(businessOrganisationType);
+        organisations.add(leadOrganisation);
+        leadOrganisation.setOrganisationType(businessOrganisationType);
         organisations.add(newOrganisation().withOrganisationType(businessOrganisationType).build());
         organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
@@ -1596,8 +1678,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).build();
-        spendProfile.setApproval(ApprovalType.APPROVED);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).build();
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
 
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1619,8 +1706,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
-        spendProfile.setApproval(ApprovalType.APPROVED);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
 
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1652,7 +1744,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         User u = newUser().withEmailAddress("a@b.com").build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation o = application.getLeadOrganisation();
+        Organisation o = organisationRepositoryMock.findOne(application.getLeadOrganisationId());
         o.setOrganisationType(businessOrganisationType);
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
@@ -1662,7 +1754,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(Boolean.FALSE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(LocalDateTime.now()).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(LocalDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
@@ -1696,7 +1788,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(Boolean.TRUE).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(LocalDateTime.now()).build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(LocalDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         spendProfile.setApproval(ApprovalType.APPROVED);
@@ -1851,6 +1945,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
     }
 
+    @Test
+    public void testGetGrantOfferLetterWorkflowStateWhenProjectDoesNotExist() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowState() {
+
+        Project projectInDB = newProject().build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GOLState.APPROVED);
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+
+    }
+
     private void assertFilesCannotBeSubmittedIfNotByProjectManager(Consumer<FileEntry> fileSetter1,
                                                                    Consumer<FileEntry> fileSetter2,
                                                                    Supplier<ServiceResult<Boolean>> getConditionFn) {
@@ -1952,7 +2072,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             collaborativeRoles.forEach(processRole -> {
 
                 List<ProjectUser> matchingProjectUser = simpleFilter(project.getProjectUsers(), projectUser ->
-                        projectUser.getOrganisation().equals(processRole.getOrganisation()) &&
+                        projectUser.getOrganisation().getId().equals(processRole.getOrganisationId()) &&
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());

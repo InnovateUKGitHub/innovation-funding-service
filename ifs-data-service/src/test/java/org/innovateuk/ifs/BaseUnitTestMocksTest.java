@@ -23,21 +23,23 @@ import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseReposit
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
-import org.innovateuk.ifs.category.mapper.CategoryLinkMapper;
-import org.innovateuk.ifs.category.mapper.CategoryMapper;
-import org.innovateuk.ifs.category.repository.CategoryLinkRepository;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.transactional.CategoryLinkService;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
+import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.category.repository.*;
+import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
@@ -152,6 +154,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserRepository userRepositoryMock;
 
     @Mock
+    protected ProfileRepository profileRepositoryMock;
+
+    @Mock
     protected CompAdminEmailRepository compAdminEmailRepositoryMock;
 
     @Mock
@@ -248,6 +253,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
+    protected CompetitionMapper competitionMapperMock;
+
+    @Mock
     protected AssessorInviteToSendMapper assessorInviteToSendMapperMock;
 
     @Mock
@@ -282,6 +290,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationService organisationServiceMock;
+
+    @Mock
+    protected BaseUserService baseUserServiceMock;
 
     @Mock
     protected UserService userServiceMock;
@@ -332,6 +343,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FileHttpHeadersValidator fileValidatorMock;
 
     @Mock
+    protected FileEntryRepository fileEntryRepositoryMock;
+
+    @Mock
     protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
@@ -380,16 +394,28 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CategoryRepository categoryRepositoryMock;
 
     @Mock
-    protected CategoryMapper categoryMapperMock;
+    protected InnovationAreaRepository innovationAreaRepositoryMock;
 
     @Mock
-    protected CategoryLinkService categoryLinkServiceMock;
+    protected InnovationSectorRepository innovationSectorRepositoryMock;
 
     @Mock
-    protected CategoryLinkRepository categoryLinkRepositoryMock;
+    protected ResearchCategoryRepository researchCategoryRepositoryMock;
 
     @Mock
-    protected CategoryLinkMapper categoryLinkMapperMock;
+    protected InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    protected InnovationSectorMapper innovationSectorMapperMock;
+
+    @Mock
+    protected ResearchCategoryMapper researchCategoryMapperMock;
+
+    @Mock
+    protected CompetitionCategoryLinkService competitionCategoryLinkServiceMock;
+
+    @Mock
+    protected CompetitionCategoryLinkRepository competitionCategoryLinkRepositoryMock;
 
     @Mock
     protected BankDetailsMapper bankDetailsMapperMock;
@@ -492,6 +518,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
+
+    @Mock
+    protected FinanceRowMetaFieldRepository financeRowMetaFieldRepositoryMock;
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;

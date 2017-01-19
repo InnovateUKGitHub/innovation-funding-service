@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
@@ -81,7 +82,7 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with (project -> project.setAdditionalContractFile(additionalContractFile));
     }
 
-    public ProjectResourceBuilder withOtherDocumentsApproved(Boolean otherDocumentsApproved) {
+    public ProjectResourceBuilder withOtherDocumentsApproved(ApprovalType otherDocumentsApproved) {
         return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
     }
 
