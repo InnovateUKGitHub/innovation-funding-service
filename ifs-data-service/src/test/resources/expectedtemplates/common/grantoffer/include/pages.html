@@ -95,7 +95,7 @@
         <tr>
             <th colspan="2" scope="col" class="no-border"></th>
             <#list TableData.yearEligibleCostTotal?keys as year>
-                <th colspan="2">${year}</th>
+                <th colspan="2">${year} to ${(year?number+1)?c}</th>
             </#list>
             <th colspan="2" scope="col">Total</th>
         </tr>
@@ -112,20 +112,19 @@
         </tr>
         </thead>
         <tbody>
-        <#assign keys = TableData.organisationGrantAllocationTotal?keys>
-            <#list keys as org>
-                <tr>
-                    <td>${org}</td>
-                    <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
-                    <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
-                        <#list 0..costLength as i>
-                            <td class="textright">${TableData.organisationEligibleCostTotal[org][i]}</td>
-                            <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]}</td>
-                        </#list>
-                        <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]}</td>
-                        <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]}</td>
-                </tr>
-            </#list>
+        <#list SortedOrganisations as org>
+            <tr>
+                <td>${org}</td>
+                <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
+                <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
+                    <#list 0..costLength as i>
+                        <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
+                        <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
+                    </#list>
+                    <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
+                    <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
+            </tr>
+        </#list>
         </tbody>
         <tfoot>
         <tr>
@@ -133,24 +132,24 @@
             <td></td>
             <#list 0..costLength as i>
                 <#assign YearlyEligible = 0>
-                <#assign YearlyGrant = 0>
+                    <#assign YearlyGrant = 0>
 
-                <#list keys as org>
-                    <#assign YearlyEligible += TableData.organisationEligibleCostTotal[org][i]>
-                    <#assign YearlyGrant += TableData.organisationGrantAllocationTotal[org][i]>
-                </#list>
-                <td class="textright">${YearlyEligible}</td>
-                <td class="textright">${YearlyGrant}</td>
+                        <#list SortedOrganisations as org>
+                            <#assign YearlyEligible += TableData.organisationEligibleCostTotal[org][i]>
+                                <#assign YearlyGrant += TableData.organisationGrantAllocationTotal[org][i]>
+                        </#list>
+                        <td class="textright">${YearlyEligible?round}</td>
+                        <td class="textright">${YearlyGrant?round}</td>
             </#list>
 
             <#assign grandTotalEligible = 0>
-            <#assign grandTotalGrant = 0>
-            <#list keys as org>
-                <#assign grandTotalEligible += TableData.getEligibleCostGrandTotalPerOrganisation()[org]>
-                <#assign grandTotalGrant += TableData.getGrantAllocationGrandTotalPerOrganisation()[org]>
-            </#list>
-            <td class="textright">${grandTotalEligible}</td>
-            <td class="textright">${grandTotalGrant}</td>
+                <#assign grandTotalGrant = 0>
+                    <#list SortedOrganisations as org>
+                        <#assign grandTotalEligible += TableData.getEligibleCostGrandTotalPerOrganisation()[org]>
+                            <#assign grandTotalGrant += TableData.getGrantAllocationGrandTotalPerOrganisation()[org]>
+                    </#list>
+                    <td class="textright">${grandTotalEligible?round}</td>
+                    <td class="textright">${grandTotalGrant?round}</td>
         </tr>
         </tfoot>
     </table>

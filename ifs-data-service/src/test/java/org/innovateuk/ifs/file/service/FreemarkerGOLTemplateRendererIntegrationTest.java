@@ -38,8 +38,8 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
 
     @Test
     public void testGenerateGrantOfferLetterHtmlFile() throws URISyntaxException, IOException {
-
         Map<String, Object> templateArguments = asMap(
+                "SortedOrganisations", Arrays.asList("Empire Ltd", "Ludlow", "EGGS"),
                 "LeadContact", "Steve Smith",
                 "LeadOrgName", "test2",
                 "Address1", "Address1",
@@ -97,9 +97,9 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
         organisationAndGrantPercentageMap.put("EGGS", 50);
 
 
-        years.add(0, "2016/2017");
-        years.add(1, "2017/2018");
-        years.add(2, "2018/2019");
+        years.add(0, "2016");
+        years.add(1, "2017");
+        years.add(2, "2018");
         organisationYearsMap.put("Empire Ltd", years);
         organisationYearsMap.put("Ludlow", years);
         organisationYearsMap.put("EGGS", years);
