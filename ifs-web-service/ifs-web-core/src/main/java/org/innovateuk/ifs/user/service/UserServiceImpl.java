@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 	public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
 		List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
 		return userApplicationRoles.stream()
-				.filter(prr -> organisation.equals(prr.getOrganisation()))
+				.filter(prr -> organisation.equals(prr.getOrganisationId()))
 				.collect(Collectors.toList());
 	}
 
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 			return new ArrayList<>();
 		}
 		return processRoleService.getByApplicationId(application.getId()).stream()
-				.filter(pr -> leadProcessRole.getOrganisation().equals(pr.getOrganisation()))
+				.filter(pr -> leadProcessRole.getOrganisationId().equals(pr.getOrganisationId()))
 				.collect(Collectors.toList());
 	}
 
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long getUserOrganisationId(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return userApplicationRole.getOrganisation();
+        return userApplicationRole.getOrganisationId();
     }
 
     @Override

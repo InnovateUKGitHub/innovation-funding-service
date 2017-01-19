@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -55,6 +57,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -92,6 +95,12 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Mock
+    private OverheadFileSaver overheadFileSaver;
+
+    @Mock
+    private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
+    @Mock
     private Model model;
 
     private ApplicationResource application;
@@ -123,15 +132,17 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         this.setupQuestionStatus(applications.get(0));
 
         application = applications.get(0);
-        sectionId = Long.valueOf(1);
-        questionId = Long.valueOf(1);
-        formInputId = Long.valueOf(111);
-        costId = Long.valueOf(1);
+        sectionId = 1L;
+        questionId = 1L;
+        formInputId = 111L;
+        costId = 1L;
 
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
         when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
+        when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
     }
 
     @Test
@@ -1078,9 +1089,60 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 get("/application/{applicationId}/form/{sectionType}", application.getId(), SectionType.FINANCE))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()));
-
     }
 
+    @Test
+    public void testOverheadFile_overheadFileSaverIsCalledOnFormSubmit() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+        ).andExpect(status().is3xxRedirection());
+
+        verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
+    }
+
+    @Test
+    public void testOverheadFile_errorsAreNotShownOnOverheadFileRequest() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
 
 
+        ValidationMessages validationMessages = new ValidationMessages();
+        validationMessages.addError(new org.innovateuk.ifs.commons.error.Error("save_application_error", HttpStatus.FORBIDDEN));
+        when(overheadFileSaver.isOverheadFileRequest(any())).thenReturn(true);
+        when(financeHandler.getFinanceFormHandler(any()).update(any(), any(), any(), any())).thenReturn(validationMessages);
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
+        ).andExpect(status().is2xxSuccessful())
+        .andExpect(model().hasNoErrors());
+
+        verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
+    }
+
+    @Test
+    public void testOverheadFile_pageIsNotRedirectedOnOverheadFileUploadRequest() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
+        when(overheadFileSaver.isOverheadFileRequest(any())).thenReturn(true);
+
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
+        ).andExpect(status().is2xxSuccessful());
+
+        verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
+    }
 }

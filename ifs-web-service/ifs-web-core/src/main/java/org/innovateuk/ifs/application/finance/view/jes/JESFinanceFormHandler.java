@@ -221,7 +221,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     @Override
-    public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value) {
+    public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         // not to be implemented, there are not any finance positions for the JES form
         throw new NotImplementedException("There are not any finance positions for the JES form");
     }

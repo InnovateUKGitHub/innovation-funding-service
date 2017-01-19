@@ -47,7 +47,7 @@ public class SubContractingCostHandler extends FinanceRowHandler {
         return new SubContractingCost(cost.getId(), cost.getCost(), country, cost.getItem(), cost.getDescription());
     }
 
-    public ApplicationFinanceRow mapSubContractingCost(FinanceRowItem costItem) {
+    private ApplicationFinanceRow mapSubContractingCost(FinanceRowItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
         ApplicationFinanceRow cost =  new ApplicationFinanceRow(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
                 0, subContractingCost.getCost(),null,null);

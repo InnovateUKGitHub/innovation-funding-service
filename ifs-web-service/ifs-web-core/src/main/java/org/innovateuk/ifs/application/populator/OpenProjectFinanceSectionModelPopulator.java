@@ -66,15 +66,18 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
                 section, true, section.getId(), user, isSubFinanceSection(section));
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition) || SectionType.FINANCE.equals(section.getType()));
         sectionApplicationViewModel.setCurrentApplication(application);
         sectionApplicationViewModel.setCurrentCompetition(competition);
+
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openFinanceSectionViewModel.getSectionsMarkedAsComplete()) || SectionType.FINANCE.equals(section.getType()));
 
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections, Optional.of(organisationResource));
 
         String organisationType = organisationResource.getOrganisationTypeName();
         addOrganisationAndUserProjectFinanceDetails(application.getCompetition(), projectResource.getId(), costsQuestions, user, model, form, organisationType, organisationId);
+
+        addFundingSection(openFinanceSectionViewModel, application.getCompetition());
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());

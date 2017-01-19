@@ -9,7 +9,7 @@ public enum MilestoneType {
     OPEN_DATE("1. Open date"),
     BRIEFING_EVENT("2. Briefing event"),
     SUBMISSION_DATE("3. Submission date"),
-    ALLOCATE_ASSESSORS("4. Allocate accessors"),
+    ALLOCATE_ASSESSORS("4. Allocate assessors"),
     ASSESSOR_BRIEFING("5. Assessor briefing"),
     ASSESSORS_NOTIFIED("Assessors notified", false),
     ASSESSOR_ACCEPTS("6. Assessor accepts"),

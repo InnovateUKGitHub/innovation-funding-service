@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -82,7 +82,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
     @Test(expected = RuntimeException.class)
     public void testPopulateModelWithInvalidObjects() throws Exception {
         userApplicationRoles.forEach(
-                processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisation()));
+                processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisationId()));
 
         setupInviteServicesFailure(applicationId);
 
@@ -106,8 +106,8 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
 
     private void setupSuccess(){
         userApplicationRoles.forEach(
-                processRoleResource -> setupOrganisationServicesSuccess(processRoleResource.getOrganisation(), newOrganisationResource()
-                        .withId(processRoleResource.getOrganisation())
+                processRoleResource -> setupOrganisationServicesSuccess(processRoleResource.getOrganisationId(), newOrganisationResource()
+                        .withId(processRoleResource.getOrganisationId())
                         .withOrganisationType(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())
                         .build()));
 

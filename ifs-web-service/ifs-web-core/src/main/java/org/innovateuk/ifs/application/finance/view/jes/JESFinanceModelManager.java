@@ -43,7 +43,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         if (applicationFinanceResource != null) {
 
             ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisation());
+            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);

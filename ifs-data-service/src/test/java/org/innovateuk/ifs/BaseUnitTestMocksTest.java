@@ -39,6 +39,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
@@ -151,6 +152,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserRepository userRepositoryMock;
+
+    @Mock
+    protected ProfileRepository profileRepositoryMock;
 
     @Mock
     protected CompAdminEmailRepository compAdminEmailRepositoryMock;
@@ -288,6 +292,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationService organisationServiceMock;
 
     @Mock
+    protected BaseUserService baseUserServiceMock;
+
+    @Mock
     protected UserService userServiceMock;
 
     @Mock
@@ -334,6 +341,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FileHttpHeadersValidator fileValidatorMock;
+
+    @Mock
+    protected FileEntryRepository fileEntryRepositoryMock;
 
     @Mock
     protected FileEntryMapper fileEntryMapperMock;
@@ -508,6 +518,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceRowMetaValueRepository financeRowMetaValueRepositoryMock;
+
+    @Mock
+    protected FinanceRowMetaFieldRepository financeRowMetaFieldRepositoryMock;
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;

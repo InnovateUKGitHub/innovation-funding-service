@@ -142,9 +142,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisation()).build());
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisation());
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;
@@ -185,9 +185,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisation()).build());
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisation());
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;

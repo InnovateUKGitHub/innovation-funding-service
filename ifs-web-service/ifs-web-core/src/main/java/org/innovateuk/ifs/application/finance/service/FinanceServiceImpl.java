@@ -60,8 +60,8 @@ public class FinanceServiceImpl implements FinanceService {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
-        if(processRole.getOrganisation()!=null && competitionResource.isOpen()) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation()).getSuccessObjectOrThrowException();
+        if(processRole.getOrganisationId()!=null && competitionResource.isOpen()) {
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccessObjectOrThrowException();
         }
         return null;
     }
@@ -69,7 +69,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisationId()).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return getApplicationFinanceDetails(userId, applicationId, userApplicationRole.getOrganisation());
+        return getApplicationFinanceDetails(userId, applicationId, userApplicationRole.getOrganisationId());
     }
 
     @Override

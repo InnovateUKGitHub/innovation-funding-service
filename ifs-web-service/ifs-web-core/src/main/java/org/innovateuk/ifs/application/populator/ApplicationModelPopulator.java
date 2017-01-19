@@ -152,7 +152,7 @@ public class ApplicationModelPopulator {
 
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 
-            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, userApplicationRole.getOrganisation());
+            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, userApplicationRole.getOrganisationId());
         }
     }
 
@@ -160,7 +160,7 @@ public class ApplicationModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
     }
 

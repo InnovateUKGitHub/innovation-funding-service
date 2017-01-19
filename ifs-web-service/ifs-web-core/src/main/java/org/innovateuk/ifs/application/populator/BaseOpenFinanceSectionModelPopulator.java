@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,10 +47,15 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
     @Autowired
     private FormInputService formInputService;
 
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     protected void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
-        Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
+        Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
 
         boolean organisationSizeComplete = false;
@@ -116,8 +123,7 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
         form.setFormInput(values);
     }
 
-    private SectionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation,
-        Long userId, SectionResource currentSection) {
+    private SectionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Long userId, SectionResource currentSection) {
 
         if (isApplicationInViewMode(application, userOrganisation)) {
             return new SectionAssignableViewModel();
@@ -158,5 +164,9 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
 
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
+    }
+
+    protected void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
+        viewModel.setFundingSection(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).stream().findFirst().orElse(null));
     }
 }
