@@ -9,16 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
-import javax.persistence.Temporal;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static java.util.Arrays.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -155,6 +154,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         @Override
         public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(Integer.toUnsignedLong(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size()));
         }
 
         @Override

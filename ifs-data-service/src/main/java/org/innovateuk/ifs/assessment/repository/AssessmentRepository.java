@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.jpa.repository.Query;
@@ -38,6 +37,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
 
     List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+
+    long countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
 
     @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
             "  THEN 'TRUE'" +

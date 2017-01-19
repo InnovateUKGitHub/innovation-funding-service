@@ -24,8 +24,17 @@ public interface AssessmentService {
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @SecuredBySpring(
+            value = "READ_BY_STATE_AND_COMPETITION",
+            description = "Comp admins and execs can see assessments in a particular state per competition")
     ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @SecuredBySpring(
+            value = "COUNT_BY_STATE_AND_COMPETITION",
+            description = "Comp admins and execs can see a count of assessments in a particular state per competition")
+    ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ_SCORE')")
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId);

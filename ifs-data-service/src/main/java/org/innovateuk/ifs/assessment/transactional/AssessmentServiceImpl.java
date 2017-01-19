@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.application.repository.ApplicationStatusRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -17,13 +16,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.Assessment} data.
@@ -59,6 +58,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
         List<AssessmentResource> assessmentResources = simpleMap(assessmentRepository.findByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId), assessmentMapper::mapToResource);
         return serviceSuccess(assessmentResources);
+    }
+
+    @Override
+    public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+        return serviceSuccess(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId));
     }
 
     @Override

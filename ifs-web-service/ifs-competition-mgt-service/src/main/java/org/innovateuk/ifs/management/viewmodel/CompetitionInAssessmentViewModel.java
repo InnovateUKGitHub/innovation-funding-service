@@ -7,9 +7,9 @@ public class CompetitionInAssessmentViewModel {
 
     private Long competitionId;
     private String competitionName;
-    private Integer changesSinceLastNotify;
+    private long changesSinceLastNotify;
 
-    public CompetitionInAssessmentViewModel(Long competitionId, String competitionName, Integer changesSinceLastNotify) {
+    public CompetitionInAssessmentViewModel(Long competitionId, String competitionName, long changesSinceLastNotify) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.changesSinceLastNotify = changesSinceLastNotify;
@@ -23,7 +23,7 @@ public class CompetitionInAssessmentViewModel {
         return competitionName;
     }
 
-    public Integer getChangesSinceLastNotify() {
+    public long getChangesSinceLastNotify() {
         return changesSinceLastNotify;
     }
 }

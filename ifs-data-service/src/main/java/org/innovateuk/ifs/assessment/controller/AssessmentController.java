@@ -4,7 +4,10 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -27,19 +30,19 @@ public class AssessmentController {
         return assessmentService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/{id}/assign", method = GET)
+    @RequestMapping(value = "/{id}/assign", method = GET)
     public RestResult<AssessmentResource> findAssignableById(@PathVariable("id") long id) {
         return assessmentService.findAssignableById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
-    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId ) {
+    @RequestMapping(value = "/user/{userId}/competition/{competitionId}", method = GET)
+    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId) {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
     }
 
-    @RequestMapping(value= "/state/{state}/competition/{competitionId}", method = GET)
-    public RestResult<List<AssessmentResource>> findByStateAndCompetition(@PathVariable("state") AssessmentStates state, @PathVariable("competitionId") Long competitionId ) {
-        return assessmentService.findByStateAndCompetition(state, competitionId).toGetResponse();
+    @RequestMapping(value = "/state/{state}/competition/{competitionId}/count", method = GET)
+    public RestResult<Long> countByStateAndCompetition(@PathVariable("state") AssessmentStates state, @PathVariable("competitionId") Long competitionId) {
+        return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{id}/score", method = GET)

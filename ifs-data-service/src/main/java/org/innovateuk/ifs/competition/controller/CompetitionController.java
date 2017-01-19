@@ -37,28 +37,29 @@ public class CompetitionController {
         return competitionService.findAll().toGetResponse();
     }
 
-    @RequestMapping(value="/live", method= RequestMethod.GET)
+    @RequestMapping(value = "/live", method = RequestMethod.GET)
     public RestResult<List<CompetitionSearchResultItem>> live() {
         return competitionService.findLiveCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value="/projectSetup", method= RequestMethod.GET)
+    @RequestMapping(value = "/projectSetup", method = RequestMethod.GET)
     public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
         return competitionService.findProjectSetupCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value="/upcoming", method= RequestMethod.GET)
+    @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
     public RestResult<List<CompetitionSearchResultItem>> upcoming() {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value="/search/{page}/{size}", method= RequestMethod.GET)
+    @RequestMapping(value = "/search/{page}/{size}", method = RequestMethod.GET)
     public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("size") int size) {
         return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
-    @RequestMapping(value="/count", method= RequestMethod.GET)
+
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
     }
@@ -72,7 +73,7 @@ public class CompetitionController {
     public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
         return competitionService.closeAssessment(id).toPutResponse();
     }
-    
+
     @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
     public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
@@ -112,9 +113,10 @@ public class CompetitionController {
     @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
     public RestResult<Void> notifyAssessors(@PathVariable("id") final Long id) {
 
-        for (AssessmentResource assessment : assessmentService.findByStateAndCompetition(AssessmentStates.CREATED, id).getSuccessObject()) {
-            assessmentService.notify(assessment.getId());
-        }
+        assessmentService.findByStateAndCompetition(AssessmentStates.CREATED, id).getSuccessObject()
+                .stream()
+                .map(AssessmentResource::getId)
+                .forEach(assessmentService::notify);
 
         return competitionService.notifyAssessors(id).toPutResponse();
     }

@@ -17,7 +17,7 @@ public class CompetitionInAssessmentModelPopulator {
     private AssessmentRestService assessmentRestService;
 
     public CompetitionInAssessmentViewModel populateModel(CompetitionResource competition) {
-        Integer changesSinceLastNotify = assessmentRestService.getByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObject().size();
+        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObject();
         return new CompetitionInAssessmentViewModel(competition.getId(), competition.getName(), changesSinceLastNotify);
     }
 }
