@@ -15,10 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
@@ -31,8 +31,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -127,6 +126,30 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void assignAssessor() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessorId = 3L;
+
+        AssessmentCreateResource expectedAssessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(applicationId)
+                .withAssessorId(assessorId)
+                .build();
+
+        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
+        ApplicationAssessmentSummaryResource expectedApplicationAssessmentSummary = newApplicationAssessmentSummaryResource().build();
+
+        when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
+
+        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sort=title", competitionId, applicationId)));
+
+        verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
+        verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
+    }
+
     private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
         return newApplicationAssessmentSummaryResource()
                 .withId(applicationId)
@@ -139,6 +162,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
     private List<ApplicationAssessorResource> setupAssignedApplicationAssessorResources() {
         return newApplicationAssessorResource()
+                .withUserId(1L, 2L, 3L, 4L, 5L, 6L)
                 .withFirstName("William", "Richard", "Rachel", "Samantha", "Valerie", "Gareth")
                 .withLastName("Adamson", "Bown", "Carr", "Peacock", "Lloyd", "Morris")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS, ACADEMIC, BUSINESS, ACADEMIC)
@@ -170,6 +194,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
     private List<ApplicationAssessorResource> setupRejectedApplicationAssessorResources() {
         return newApplicationAssessorResource()
+                .withUserId(7L, 8L, 9L)
                 .withFirstName("Angela", "Anne", "David")
                 .withLastName("Casey", "Chadwick", "Cherrie")
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
@@ -193,6 +218,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
     private List<ApplicationAssessorResource> setupWithdrawnApplicationAssessorResources() {
         return newApplicationAssessorResource()
+                .withUserId(10L, 11L, 12L)
                 .withFirstName("Paul", "Graeme", "Lawrence")
                 .withLastName("Cousins", "Crawford", "Currie")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
@@ -214,6 +240,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
     private List<ApplicationAssessorResource> setupAvailableApplicationAssessorResources() {
         return newApplicationAssessorResource()
+                .withUserId(13L, 14L, 15L)
                 .withFirstName("Christopher", "Jayne", "Narinder")
                 .withLastName("Dockerty", "Gill", "Goddard")
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
@@ -236,53 +263,24 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> setupExpectedAssignedRows() {
         return asList(
-                new ApplicationAssessmentProgressAssignedRowViewModel("William Adamson", 6, 6, BUSINESS,
+                new ApplicationAssessmentProgressAssignedRowViewModel(1L, "William Adamson", 6, 6, BUSINESS,
                         asList("Infrastructure systems", "Earth Observation"), false, false, false, false),
-                new ApplicationAssessmentProgressAssignedRowViewModel("Richard Bown", 4, 3, ACADEMIC,
+                new ApplicationAssessmentProgressAssignedRowViewModel(2L, "Richard Bown", 4, 3, ACADEMIC,
                         asList("Internet of Things", "Open"), true, false, false, false),
-                new ApplicationAssessmentProgressAssignedRowViewModel("Rachel Carr", 5, 1, BUSINESS,
+                new ApplicationAssessmentProgressAssignedRowViewModel(3L, "Rachel Carr", 5, 1, BUSINESS,
                         asList("Creative Economy", "Bioscience"), true, true, false, false),
-                new ApplicationAssessmentProgressAssignedRowViewModel("Samantha Peacock", 7, 5, ACADEMIC,
+                new ApplicationAssessmentProgressAssignedRowViewModel(4L, "Samantha Peacock", 7, 5, ACADEMIC,
                         asList("Enhanced Food Quality", "Cyber Security"), true, true, true, false),
-                new ApplicationAssessmentProgressAssignedRowViewModel("Valerie Lloyd", 6, 2, BUSINESS,
+                new ApplicationAssessmentProgressAssignedRowViewModel(5L, "Valerie Lloyd", 6, 2, BUSINESS,
                         asList("User Experience", "Resource efficiency"), true, true, true, false),
-                new ApplicationAssessmentProgressAssignedRowViewModel("Gareth Morris", 3, 1, ACADEMIC,
+                new ApplicationAssessmentProgressAssignedRowViewModel(6L, "Gareth Morris", 3, 1, ACADEMIC,
                         asList("Technical feasibility", "Medicines Technology"), true, true, true, true));
     }
 
     private List<ApplicationAvailableAssessorsRowViewModel> setupExpectedAvailableAssessors() {
         return asList(
-                new ApplicationAvailableAssessorsRowViewModel("Christopher Dockerty", "Solar Power, Genetics, Recycling", 9, 5, 2),
-                new ApplicationAvailableAssessorsRowViewModel("Jayne Gill", "Human computer interaction, Wearables, IoT", 4, 1, 1),
-                new ApplicationAvailableAssessorsRowViewModel("Narinder Goddard", "Electronic/photonic components", 3, 1, 0));
-    }
-
-    @Test
-    public void assignAssessor() throws Exception {
-        Long competitionId = 1L;
-        Long applicationId = 2L;
-        Long assessorId = 3L;
-
-        AssessmentCreateResource expectedAssessmentCreateResource = newAssessmentCreateResource()
-                .withApplicationId(applicationId)
-                .withAssessorId(assessorId)
-                .build();
-
-        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
-        ApplicationAssessmentSummaryResource expectedApplicationAssessmentSummary = newApplicationAssessmentSummaryResource().build();
-
-        when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
-        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(expectedApplicationAssessmentSummary));
-        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(Collections.emptyList()));
-
-        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/application-progress"));
-
-        InOrder inOrder = inOrder(assessmentRestService, applicationAssessmentSummaryRestService);
-        inOrder.verify(assessmentRestService).createAssessment(expectedAssessmentCreateResource);
-        inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
-        inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
-        inOrder.verifyNoMoreInteractions();
+                new ApplicationAvailableAssessorsRowViewModel(13L, "Christopher Dockerty", "Solar Power, Genetics, Recycling", 9, 5, 2),
+                new ApplicationAvailableAssessorsRowViewModel(14L, "Jayne Gill", "Human computer interaction, Wearables, IoT", 4, 1, 1),
+                new ApplicationAvailableAssessorsRowViewModel(15L, "Narinder Goddard", "Electronic/photonic components", 3, 1, 0));
     }
 }
