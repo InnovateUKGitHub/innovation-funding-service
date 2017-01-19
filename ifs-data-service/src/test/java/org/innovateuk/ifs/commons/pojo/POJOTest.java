@@ -89,7 +89,6 @@ public class POJOTest {
             AssessorInviteToSendResource.class,
             Address.class,
             OrganisationType.class,
-            Application.class,
             ApplicationStatus.class,
             FileEntry.class,
             FormValidator.class,
