@@ -12,6 +12,17 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7016 Finance checks page is missing Project title
 ...
 ...               INFUND-7026 For internal user, in finance checks RAG is not N/A in case of academic
+...
+...               INFUND-4822 As a project finance team member I want to be able to view a summary of progress through the finance checks section for each partner so I can review and navigate to the sections
+...
+...               INFUND-4829 As a project finance team member I want to be able to confirm whether a full credit report has been used to confirm an applicant organisation's viability for funding so that this may be kept on record as part of the decision-making process
+...
+...               INFUND-4831 As a project finance team member I want to be able to confirm that the partner organisation is viable for funding so that no further viability checks need be carried out
+...
+...               INFUND-4856 As a project finance team member I want to be able to view the RAG rating indicating the effort level carried out for the viability checks of each partner organisation so that I can appraise colleagues who may be expected to carry out future checks.
+...
+...               INFUND-7076 Generate spend profile available before Viability checks are all approved or N/A
+
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -32,14 +43,6 @@ Project Finance user can see the finance check summary page
     And the user should see the text in the page  Overview
     And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
-    [Teardown]  the user clicks the button/link  link=Competition Dashboard
-
-Project finance approves Viability
-    [Documentation]  INFUND-7076
-    [Tags]  HappyPath
-    When project finance approves Viability for  1
-    Then project finance approves Viability for  2
-    # TODO some extra validation testing INFUND-7076
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
@@ -50,6 +53,7 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should not see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
+
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
@@ -116,6 +120,13 @@ Approve Eligibility and verify Viability and RAG: Academic partner organisation
     And the user should see the text in the element  css=span.viability-rag-2    N/A
     And the user should see the text in the element  css=span.viability-2    N/A
 
+
+Generate spend profile button disabled until viability checks are completed
+    [Documentation]    INFUND-7076
+    [Tags]
+    When the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']    # checking here that the generate spend profile button is still disabled
+
+
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
     [Tags]    HappyPath
@@ -125,7 +136,149 @@ Project Finance user can view academic Jes form
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form53.pdf
     Then the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page
+    [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
+
+Viability checks are populated in the table
+    [Documentation]    INFUND-4822
+    [Tags]
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    Not set
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    N/A
+
+
+Project finance user can see the viability check page for the lead partner
+    [Documentation]    INFUND-4831
+    [Tags]
+    when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
+    Then the user should see the text in the page    Empire Ltd
+    And the user should see the text in the page    60674010
+
+
+Checking the approve viability checkbox enables RAG selection but not confirm viability button
+    [Documentation]    INFUND-4831, INFUND-4856
+    [Tags]
+    When the user selects the checkbox    project-viable
+    Then the user should see the element    id=rag-rating
+    And the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
+
+RAG choices update on the finance checks page
+    [Documentation]    INFUND-4822, INFUND-4856
+    [Tags]
+    When the rag rating updates on the finance check page for lead    Green
+    And the rag rating updates on the finance check page for lead    Amber
+    And the rag rating updates on the finance check page for lead    Red
+    When the user selects the option from the drop-down menu    --    id=rag-rating
+    Then the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
+    [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
+
+Credit report information saves when leaving the page
+    [Documentation]    INFUND-4829
+    [Tags]
+    When the user selects the checkbox    creditReportConfirmed
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    Then checkbox should be selected    creditReportConfirmed
+
+Clicking cancel on the viability modal
+    [Documentation]
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
+    Then the user should see the element    id=rag-rating
+    And the user should see the checkbox    creditReportConfirmed
+    And the user should see the checkbox    confirmViabilityChecked
+    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
+
+Confirming viability should show credit report info on a readonly page
+    [Documentation]    INFUND-4829
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should not see the element    id=rag-rating
+    And the user should not see the checkbox    confirmViabilityChecked
+    And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+    And the user should see that the checkbox is disabled    creditReportConfirmed
+
+
+Confirming viability should update on the finance checks page
+    [Documentation]    INFUND-4831, INFUND-4822
+    [Tags]
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
+
+
+Project finance user can see the viability checks for the industrial partner
+    [Documentation]    INFUND-4831
+    [Tags]
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    Then the user should see the text in the page    Ludlow
+    And the user should see the text in the page    5353232
+
+Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
+    [Documentation]    INFUND-4831, INFUND-4856
+    [Tags]
+    When the user selects the checkbox    project-viable
+    Then the user should see the element    id=rag-rating
+    And the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
+
+RAG choices update on the finance checks page for partner
+    [Documentation]    INFUND-4822, INFUND-4856
+    [Tags]
+    When the rag rating updates on the finance check page for partner    Green
+    And the rag rating updates on the finance check page for partner    Amber
+    And the rag rating updates on the finance check page for partner    Red
+    When the user selects the option from the drop-down menu    --    id=rag-rating
+    Then the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
+    [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
+
+Credit report information saves when leaving the page for partner
+    [Documentation]    INFUND-4829
+    [Tags]
+    When the user selects the checkbox    creditReportConfirmed
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    Then checkbox should be selected    creditReportConfirmed
+
+Clicking cancel on the viability modal for partner
+    [Documentation]    INFUND-4822
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
+    Then the user should see the element    id=rag-rating
+    And the user should see the checkbox    creditReportConfirmed
+    And the user should see the checkbox    confirmViabilityChecked
+    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
+
+Confirming viability should show credit report info on a readonly page for partner
+    [Documentation]    INFUND-4829
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
+    And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should not see the element    id=rag-rating
+    And the user should not see the checkbox    confirmViabilityChecked
+    And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+    And the user should see that the checkbox is disabled    creditReportConfirmed
+
+
+
+Confirming viability should update on the finance checks page for partner
+    [Documentation]    INFUND-4831, INFUND-4822
+    [Tags]
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Approved")
+
+Generate spend profile button enabled after viability checks are completed
+    [Documentation]    INFUND-7076
+    [Tags]
+    When the user should not see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
+
+
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -259,3 +412,19 @@ project finance approves Viability for
     When the user selects the option from the drop-down menu  Green  id=rag-rating
     Then the user clicks the button/link    css=#confirm-button
     And the user clicks the button/link     jQuery=.modal-confirm-viability .button:contains("Confirm viability")
+
+the rag rating updates on the finance check page for lead
+   [Arguments]    ${rag_rating}
+   When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
+   And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
+   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    ${rag_rating}
+   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+   And the user should see the element    jQuery=.button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
+
+the rag rating updates on the finance check page for partner
+   [Arguments]    ${rag_rating}
+   When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
+   And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
+   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    ${rag_rating}
+   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+   And the user should see the element    jQuery=.button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
