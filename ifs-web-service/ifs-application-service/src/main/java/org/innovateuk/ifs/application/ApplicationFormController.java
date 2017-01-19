@@ -474,7 +474,7 @@ public class ApplicationFormController {
         if(!isMarkSectionAsIncompleteRequest(params) ) {
             String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
             ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId());
-            if(!overheadFileSaver.isOverheadFileDeleteRequest(request)) {
+            if(!overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(saveErrors);
             }
         }
@@ -723,7 +723,7 @@ public class ApplicationFormController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if(saveApplicationErrors.hasErrors() || !validFinanceTerms){
+        if(saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)){
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;
