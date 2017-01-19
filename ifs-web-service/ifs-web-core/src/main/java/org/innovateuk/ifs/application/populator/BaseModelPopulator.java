@@ -54,7 +54,7 @@ public abstract class BaseModelPopulator {
     protected Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
     }
 

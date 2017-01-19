@@ -104,23 +104,24 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         overMaxAllowedTextSize = StringUtils.repeat("<ifs_test>", 30);
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
+        Application application = new Application(
+                APPLICATION_ID,
+                "",
+                new ApplicationStatus(
+                        ApplicationStatusConstants.CREATED.getId(),
+                        ApplicationStatusConstants.CREATED.getName()
+                )
+        );
         proccessRoles.add(
                 new ProcessRole(
                         leadApplicantProcessRole,
                         null,
-                        new Application(
-                                APPLICATION_ID,
-                                "",
-                                new ApplicationStatus(
-                                        ApplicationStatusConstants.CREATED.getId(),
-                                        ApplicationStatusConstants.CREATED.getName()
-                                )
-                        ),
+                        application.getId(),
                         null,
                         null
                 )
         );
-        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc");
+        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
         proccessRoles.get(0).setUser(user);
         swapOutForUser(userMapper.mapToResource(user));
     }

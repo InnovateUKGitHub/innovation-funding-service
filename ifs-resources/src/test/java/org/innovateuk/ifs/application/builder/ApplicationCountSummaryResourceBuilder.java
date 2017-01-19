@@ -37,8 +37,8 @@ public class ApplicationCountSummaryResourceBuilder extends BaseBuilder<Applicat
         return withArraySetFieldByReflection("name", names);
     }
 
-    public ApplicationCountSummaryResourceBuilder withLeadOrganisation(String... leadOrganisations) {
-        return withArraySetFieldByReflection("leadOrganisation", leadOrganisations);
+    public ApplicationCountSummaryResourceBuilder withLeadOrganisationId(Long... leadOrganisations) {
+        return withArraySetFieldByReflection("leadOrganisationId", leadOrganisations);
     }
 
     public ApplicationCountSummaryResourceBuilder withAssessors(Long... assessorss) {

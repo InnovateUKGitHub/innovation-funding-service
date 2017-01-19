@@ -96,9 +96,11 @@
                                           th:text="${err}" />
                                 </span>
                             </label>
-                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessor(s) to list'.</p>
+                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                             <select th:field="*{selectedInnovationArea}"
                                     class="form-control width-full"
+                                    data-progressive-group-select="Innovation sector"
+                                    data-progressive-group-select-instruction="Please select an innovation sector"
                                     required="required"
                                     th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     aria-labelledby="innovation-area"
@@ -181,7 +183,7 @@
                             </p>
 
                             <div class="alignright extra-margin-top">
-                                <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessor(s) to list</button>
+                                <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessors to list</button>
                             </div>
                         </div>
                     </form>

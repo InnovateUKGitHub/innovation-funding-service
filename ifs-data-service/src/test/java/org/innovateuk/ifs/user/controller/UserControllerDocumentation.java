@@ -96,7 +96,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void findByRole() throws Exception {
 
         final UserResource userResource = newUserResource().build();
-        when(userServiceMock.findByProcessRole(eq(COMP_TECHNOLOGIST))).thenReturn(serviceSuccess(asList(userResource, userResource)));
+        when(baseUserServiceMock.findByProcessRole(eq(COMP_TECHNOLOGIST))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
         mockMvc.perform(get("/user/findByRole/{userRoleName}", COMP_TECHNOLOGIST.getName()))
                 .andDo(this.document.snippets(
