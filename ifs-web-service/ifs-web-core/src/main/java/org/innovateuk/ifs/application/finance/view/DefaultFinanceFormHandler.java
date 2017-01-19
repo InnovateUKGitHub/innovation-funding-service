@@ -196,18 +196,18 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     }
 
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
-        if(!oldValue.equals(newValue)) {
+        if(null != oldValue && !oldValue.equals(newValue)) {
             Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
                     .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
                     .findFirst();
 
             //set your funding section to marked as in complete
             sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
-                    .forEach(fundingSection -> {
+                    .forEach(fundingSection ->
                         sectionService.markAsInComplete(fundingSection.getId(),
                                 applicationFinance.getApplication(),
-                                (processRole.isPresent() ? processRole.get().getId() : null));
-                    });
+                                (processRole.isPresent() ? processRole.get().getId() : null))
+                    );
 
             //reset your funding level
             QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
