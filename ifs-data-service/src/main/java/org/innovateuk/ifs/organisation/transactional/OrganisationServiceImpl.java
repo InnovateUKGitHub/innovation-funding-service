@@ -5,6 +5,10 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.ErrorTemplate;
+import org.innovateuk.ifs.commons.error.ErrorTemplateImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -63,7 +67,19 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> findById(final Long organisationId) {
-        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(organisationMapper::mapToResource);
+        Organisation org = organisationRepository.findOne(organisationId);
+        return find(org, notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(o -> {
+            return organisationMapper.mapToResource(o);
+        });
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getPrimaryForUser(final Long userId) {
+        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        if (organisations.size() == 0) {
+            return serviceFailure(CommonErrors.notFoundError(Organisation.class));
+        }
+        return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
     }
 
     @Override

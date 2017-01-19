@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,15 +20,13 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
@@ -479,17 +478,68 @@ class CsvUtils {
         String competitionName;
         String hash;
         InviteStatus inviteStatus;
+        String rejectionReason;
+        String rejectionComment;
+        String skillAreas;
+        BusinessType businessType;
+        List<String> innovationAreas;
+        String principalEmployer;
+        String role;
+        String professionalAffiliations;
+        List<Map<String, String>> appointments;
+        String financialInterests;
+        List<Map<String, String>> familyAffiliations;
+        String familyFinancialInterests;
+        boolean contractSigned;
 
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 6;
+            int i = line.size() - 19;
             disability = Disability.fromDisplayName(line.get(i++));
             ethnicity = line.get(i++);
             gender = Gender.fromDisplayName(line.get(i++));
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));
+            rejectionReason = line.get(i++);
+            rejectionComment = line.get(i++);
+            skillAreas = line.get(i++);
+
+            String businessTypeString = line.get(i++);
+            businessType = !businessTypeString.isEmpty() ? BusinessType.valueOf(businessTypeString) : null;
+
+            innovationAreas = simpleMap(line.get(i++).split("\n"), String::trim);
+            principalEmployer = line.get(i++);
+            role = line.get(i++);
+            professionalAffiliations = line.get(i++);
+            appointments = extractListOfMaps(line.get(i++));
+            financialInterests = line.get(i++);
+            familyAffiliations = extractListOfMaps(line.get(i++));
+            familyFinancialInterests = line.get(i++);
+            contractSigned = Boolean.valueOf(line.get(i++));
+        }
+
+        private List<Map<String, String>> extractListOfMaps(String column) {
+            if (column.isEmpty()) {
+                return emptyList();
+            }
+
+            List<String> rows = asList(column.split("\n"));
+
+            return simpleMap(rows, row -> {
+                List<String> pairs = asList(row.split("\\|"));
+
+                Map<String, String> kvMap = new HashMap<>();
+
+                pairs.forEach(pair -> {
+                    String[] keyValue = pair.split(":");
+
+                    kvMap.put(keyValue[0].trim(), keyValue[1].trim());
+                });
+
+                return kvMap;
+            });
         }
     }
 
