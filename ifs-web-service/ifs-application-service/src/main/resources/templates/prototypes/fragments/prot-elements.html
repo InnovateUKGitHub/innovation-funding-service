@@ -213,4 +213,198 @@
   </div>
 </th:block>
 
+
+<!-- =========================== Warnings and panels =========================== -->
+
+<th:block th:fragment="prot-progress-list">
+  <h2 class="heading-large">My Dashboard</h2>
+  <div class="progress-list">
+    <h3 class="heading-medium">Projects in setup</h3>
+    <ul>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 1</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>In progress</strong></div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 2</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>In progress</strong></div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 3</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>In progress</strong></div>
+      </li>
+    </ul>
+  </div>
+  <div class="progress-list">
+    <h3 class="heading-medium no-margin-top">Applications in progress</h3>
+    <ul>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 1</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status">
+          <div class="pie-container">
+            <div class="pie medium">75%</div>
+            <div class="pie-overlay">
+              <span class="day">28</span>
+              <span>days left</span>
+            </div>
+          </div>
+          <span class="deadline">Deadline 28 January</span>
+          <strong>75% complete</strong>
+        </div>
+        <div class="action-required">
+          <strong>12 sections assigned to you</strong>
+        </div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 2</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status">
+          <div class="pie-container">
+            <div class="pie medium">50%</div>
+            <div class="pie-overlay">
+              <span class="day">41</span>
+              <span>days left</span>
+            </div>
+          </div>
+          <span class="deadline">Deadline 28 January</span>
+          <strong>50% complete</strong>
+        </div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 3</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status">
+          <div class="pie-container">
+            <div class="pie medium">25%</div>
+            <div class="pie-overlay">
+              <span class="day">147</span>
+              <span>days left</span>
+            </div>
+          </div>
+          <span class="deadline">Deadline 28 January</span>
+          <strong>15% complete</strong>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="progress-list">
+    <h3 class="heading-medium no-margin-top">Previous applications</h3>
+    <ul>
+      <li class="negative">
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 1</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>Not successful</strong></div>
+      </li>
+      <li class="positive">
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 2</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>Successful</strong></div>
+      </li>
+    </ul>
+  </div>
+
+  <hr />
+
+  <h2 class="heading-large">Technology inspired</h2>
+  <div class="progress-list">
+    <h3 class="heading-medium">Invitations to assess (1)</h3>
+    <ul>
+      <li>
+        <div class="task task-half-width">
+          <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+          <strong>Empire Gas Ltd</strong>
+        </div>
+        <div class="notification"><strong class="pending">Pending</strong></div>
+        <div class="status"><a href="#">Accept or reject</a></div>
+      </li>
+    </ul>
+  </div>
+
+  <form>
+    <div class="progress-list">
+      <h3 class="heading-medium">Applications for assessment (4)</h3>
+      <ul>
+        <li>
+          <div class="task task-half-width">
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>Ready for assessment</strong></div>
+        </li>
+        <li class="positive">
+          <div class="task task-half-width">
+            <div class="label-holder">
+              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
+                <input id="assessment-submit-checkbox" type="checkbox" value="" checked="checked" />
+              </label>
+            </div>
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>Assessed</strong></div>
+          <div class="status">
+            <div class="score">
+              <strong class="percent">72%</strong>
+              <span>Overall score</span>
+              <strong>Recommended</strong>
+            </div>
+          </div>
+        </li>
+        <li class="negative">
+          <div class="task task-half-width">
+            <div class="label-holder">
+              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
+                <input id="assessment-submit-checkbox2" type="checkbox" value="" />
+              </label>
+            </div>
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>Assessed</strong></div>
+          <div class="status">
+            <div class="score">
+              <strong class="percent">37%</strong>
+              <span>Overall score</span>
+              <strong>Not recommended</strong>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="task task-half-width">
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>In progress</strong></div>
+        </li>
+      </ul>
+      <p class="extra-margin-top">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
+      <div class="extra-margin-top">
+        <a href="#" class="button">Submit assessments</a>
+      </div>
+    </div>
+  </form>
+
+</th:block>
+
 </html>
