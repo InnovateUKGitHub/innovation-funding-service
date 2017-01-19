@@ -3,14 +3,15 @@ ext.ifsDatasourceUsername=""
 ext.ifsDatasourcePassword=""
 ext.ifsFlywayLocations=""
 
+project.properties['idp.rest.key'] ?:"123456789"
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_test"
-ext.testIfsDatasourceUsername=ext.get('ifs.datasource.username')
-ext.testIfsDatasourcePassword=ext.get('ifs.datasource.password')
+ext.testIfsDatasourceUsername="ifs"
+ext.testIfsDatasourcePassword="ifs"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
-project.ext['flyway.user']=ext.get('ifs.datasource.username')
-project.ext['flyway.password']=ext.get('ifs.datasource.password')
+project.ext['flyway.user']="ifs"
+project.ext['flyway.password']="ifs"
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
@@ -35,8 +36,6 @@ ext.idpRestBaseURL=""
 
 ext.ifsDataServiceRestBaseURL="http://localhost:8080"
 
-ext.companyHouseKey=ext.get('ifs.company-house.key')
-
 ext.postcodeLookupKey=""
 
 // Choose an appropriate location for a location to store uploaded files.
@@ -48,8 +47,6 @@ ext.postcodeLookupKey=""
 ext.ifsFileStorageLocation="/tmp"
 
 ext.ifsWebBaseURL="http://localhost:8080"
-
-ext.ifsWebSystemUserId=ext.get('ifs.web.system.user.id')
 
 ext.serverPort=""
 ext.activeProfile="environment"

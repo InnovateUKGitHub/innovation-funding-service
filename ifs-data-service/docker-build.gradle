@@ -1,16 +1,16 @@
 ext.ifsDatasourceHost = "ifs-database"
 ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
-ext.ifsDatasourceUsername=ext.get('ifs.datasource.username')
-ext.ifsDatasourcePassword=ext.get('ifs.datasource.password')
+ext.ifsDatasourceUsername="root"
+ext.ifsDatasourcePassword="password"
 
 ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
-ext.testIfsDatasourceUsername=ext.get('ifs.datasource.username')
-ext.testIfsDatasourcePassword=ext.get('ifs.datasource.password')
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
 
 project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
-project.ext['flyway.user']=ext.get('ifs.datasource.username')
-project.ext['flyway.password']=ext.get('ifs.datasource.password')
+project.ext['flyway.user']='root'
+project.ext['flyway.password']="password"
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
@@ -38,16 +38,11 @@ ext.idpRestBaseURL="https://iuk-auth-localdev/regapi"
 
 ext.ifsDataServiceRestBaseURL="http://ifs-data-service:8080"
 
-ext.companyHouseKey=ext.get('ifs.company-house.key')
-
 ext.postcodeLookupKey=""
 
 ext.ifsFileStorageLocation="/tmp/uploads"
 
 ext.ifsWebBaseURL="https://ifs-local-dev"
-
-
-ext.ifsWebSystemUserId=ext.get('ifs.web.system.user.id')
 
 ext.serverPort=8080
 ext.activeProfile="local"
