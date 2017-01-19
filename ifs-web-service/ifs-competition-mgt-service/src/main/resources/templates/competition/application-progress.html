@@ -84,9 +84,9 @@
                                 <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin"
-                                data-js-modal="remove-assigned-assessor-modal"
-                                th:attr="data-modal-form-url='/FORM ACTION/'+${assessor.assessmentId}"
+                                <a class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
+                                href="#"
+                                th:attr="data-modal-form-url=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId})}"
                                 th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
@@ -113,7 +113,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="assessor : ${model.rejected}">
-                            <td><a th:href="${'/}" th:text="${assessor.name}">Irving Wolfe</a></td>
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">Irving Wolfe</a></td>
                             <td th:text="${assessor.businessType}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>

@@ -19,9 +19,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -63,8 +66,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        List<Profile> participantProfiles = newProfile().
-                withId(1L, 2L, 3L).
+        Profile[] profiles = newProfile().
                 withBusinessType(BUSINESS, ACADEMIC, BUSINESS).
                 withSkillsAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components").
                 withInnovationArea(
@@ -80,15 +82,16 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                                 .withId(3L)
                                 .withName("Electronics, Sensors and photonics")
                                 .build()).
-                build(3);
+                buildArray(3, Profile.class);
+
+        Map<Long, Profile> participantProfiles = Stream.of(profiles).collect(toMap(Profile::getId, identity()));
+
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
                 .withUser(newUser()
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withProfile(
-                                participantProfiles.get(0), participantProfiles.get(1), participantProfiles.get(2)
-                        )
+                        .withProfile(profiles)
                         .buildArray(3, User.class))
                 .withStatus(ACCEPTED)
                 .withCompetition(competition)
@@ -124,15 +127,15 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withId(1L)
                                 .withName("Emerging Tech and Industries")
-                                .build(1),
+                                .buildSet(1),
                         newInnovationAreaResource()
                                 .withId(2L)
                                 .withName("Robotics and AS")
-                                .build(1),
+                                .buildSet(1),
                         newInnovationAreaResource()
                                 .withId(3L)
                                 .withName("Electronics, Sensors and photonics")
-                                .build(1))
+                                .buildSet(1))
                 .withAvailable(true, false, false)
                 .withMostRecentAssessmentId(assessmentsForParticipants.get(1L).map(Assessment::getId).orElse(null),
                         assessmentsForParticipants.get(2L).map(Assessment::getId).orElse(null),
@@ -161,9 +164,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(competitionParticipantRepositoryMock
                 .getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
-        when(profileRepositoryMock.findOne(participantProfiles.get(0).getId())).thenReturn(participantProfiles.get(0));
-        when(profileRepositoryMock.findOne(participantProfiles.get(1).getId())).thenReturn(participantProfiles.get(1));
-        when(profileRepositoryMock.findOne(participantProfiles.get(2).getId())).thenReturn(participantProfiles.get(2));
+
+        Stream.of(profiles).forEach(profile -> when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile));
+
         when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class)))
                 .then(invocation -> {
                     InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
@@ -191,14 +194,16 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         assertEquals(expected, found);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, assessmentRepositoryMock);
+        InOrder inOrder = inOrder(applicationRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, assessmentRepositoryMock, profileRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED);
         competitionParticipants.forEach(competitionParticipant -> {
             Long userId = competitionParticipant.getUser().getId();
+            Long profileId = competitionParticipant.getUser().getProfileId();
             inOrder.verify(assessmentRepositoryMock)
                     .findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(userId, application.getId());
-            profileRepositoryMock.findOne(competitionParticipant.getUser().getProfileId()).getInnovationAreas().forEach(
+            inOrder.verify(profileRepositoryMock).findOne(profileId);
+            participantProfiles.get(profileId).getInnovationAreas().forEach(
                     innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
             inOrder.verify(assessmentRepositoryMock)
                     .countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));
@@ -212,9 +217,10 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
     @Test
     public void getApplicationAssessmentSummary() throws Exception {
-        Organisation org1 = buildOrganisationWithName("Acme Ltd.");
-        Organisation org2 = buildOrganisationWithName("IO systems");
-        Organisation org3 = buildOrganisationWithName("Liquid Dynamics");
+        Organisation[] organisations = newOrganisation()
+                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics")
+                .buildArray(3, Organisation.class);
+
         Application application = newApplication()
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
@@ -222,7 +228,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
-                        .withOrganisation(org1, org2, org3)
+                        .withOrganisation(organisations)
                         .buildArray(3, ProcessRole.class))
                 .build();
 
@@ -235,23 +241,18 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationRepositoryMock.findOne(org1.getId())).thenReturn(org1);
-        when(organisationRepositoryMock.findOne(org2.getId())).thenReturn(org2);
-        when(organisationRepositoryMock.findOne(org3.getId())).thenReturn(org3);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
 
         assertEquals(expected, found);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock);
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();
-    }
-
-    private Organisation buildOrganisationWithName(String name) {
-        return newOrganisation()
-                .withName(name)
-                .build();
     }
 
     private ActivityState buildActivityStateWithState(AssessmentStates state) {

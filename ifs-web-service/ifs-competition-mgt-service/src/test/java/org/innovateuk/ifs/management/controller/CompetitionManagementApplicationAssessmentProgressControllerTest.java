@@ -14,6 +14,7 @@ import org.mockito.Spy;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
@@ -126,12 +127,12 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         Long applicationId = 2L;
         Long assessmentId = 3L;
 
-        when(assessmentRestService.withdrawAssessment(1L)).thenReturn(restSuccess());
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId)
-                .param("withdraw", String.valueOf(3L)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/application-progress"));
+        mockMvc.perform(
+                post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors", competitionId, applicationId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -155,22 +156,22 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS, ACADEMIC, BUSINESS, ACADEMIC)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Infrastructure systems", "Earth Observation")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Internet of Things", "Open")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Creative Economy", "Bioscience")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Enhanced Food Quality", "Cyber Security")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("User Experience", "Resource efficiency")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Technical feasibility", "Medicines Technology")
-                                .build(2)
+                                .buildSet(2)
                 )
                 .withMostRecentAssessmentId(100L, 101L, 102L, 103L, 104L, 105L)
                 .withMostRecentAssessmentState(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED)
@@ -187,13 +188,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Infrastructure systems", "Earth Observation")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Internet of Things", "Open")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Creative Economy", "Bioscience")
-                                .build(2))
+                                .buildSet(2))
                 .withRejectReason("Conflict of interest", "Not available", "Not my area of expertise")
                 .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.", "No prior experience")
                 .withMostRecentAssessmentState(REJECTED)
@@ -210,13 +211,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Data", "Cyber Security")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("User Experience", "Precision Medicine")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Advanced Materials", "Nuclear")
-                                .build(2))
+                                .buildSet(2))
                 .withMostRecentAssessmentState(WITHDRAWN)
                 .withTotalApplicationsCount(24L, 2L, 5L)
                 .withAssignedCount(6L, 1L, 3L)
@@ -231,13 +232,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Experimental development", "Infrastructure")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Electronics, Sensors and photonics", "Agri Productivity")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Manufacturing Readiness", "Offshore Renewable Energy")
-                                .build(2))
+                                .buildSet(2))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
                 .withAvailable(true)
                 .withTotalApplicationsCount(9L, 4L, 3L)

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
@@ -24,9 +25,9 @@ public class ApplicationAssessorResourceBuilderTest {
         String expectedFirstName = "firstName";
         String expectedLastName = "lastName";
         BusinessType expectedBusinessType = ACADEMIC;
-        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
+        Set<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
                 .withName("Early Stage Manufacturing", "Bioscience")
-                .build(2);
+                .buildSet(2);
         String expectedSkillAreas = "skillAreas";
         String expectedRejectReason = "rejectReason";
         String expectedRejectComment = "rejectComment";
@@ -76,13 +77,13 @@ public class ApplicationAssessorResourceBuilderTest {
         String[] expectedFirstNames = {"firstName1", "firstName2"};
         String[] expectedLastNames = {"lastName1", "lastName2"};
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
-        @SuppressWarnings("unchecked") List<InnovationAreaResource>[] expectedInnovationAreas = new List[]{
+        @SuppressWarnings("unchecked") Set<InnovationAreaResource>[] expectedInnovationAreas = new Set[]{
                 newInnovationAreaResource()
                         .withName("Creative economy", "Offshore Renewable Energy")
-                        .build(2),
+                        .buildSet(2),
                 newInnovationAreaResource()
                         .withName("Urban Living", "Advanced Therapies")
-                        .build(2)
+                        .buildSet(2)
         };
         String[] expectedSkillAreas = {"skillAreas1", "skillAreas2"};
         String[] expectedRejectReasons = {"rejectReason1", "rejectReason2"};
