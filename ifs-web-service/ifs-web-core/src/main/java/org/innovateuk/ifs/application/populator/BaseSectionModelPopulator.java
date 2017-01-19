@@ -59,8 +59,9 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         return applicationNavigationPopulator.addNavigation(section, applicationId);
     }
 
-    protected Boolean calculateAllReadOnly(CompetitionResource competition) {
-        return null != competition && !competition.isOpen();
+    protected Boolean calculateAllReadOnly(CompetitionResource competition, Long currentSectionId, Set<Long> markedAsCompleteSections) {
+        return (null != competition && !competition.isOpen()) ||
+                (null != markedAsCompleteSections && markedAsCompleteSections.contains(currentSectionId));
     }
 
     protected void addUserDetails(BaseSectionViewModel viewModel, ApplicationResource application, Long userId) {

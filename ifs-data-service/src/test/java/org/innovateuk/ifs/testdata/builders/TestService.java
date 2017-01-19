@@ -2,7 +2,6 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 
-import javax.transaction.Transactional;
 import java.util.function.Supplier;
 
 /**
@@ -11,11 +10,9 @@ import java.util.function.Supplier;
  */
 public interface TestService {
 
-    @Transactional
     @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
     void doWithinTransaction(Runnable runnable);
 
-    @Transactional
     @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
     <T> T doWithinTransaction(Supplier<T> supplier);
 
