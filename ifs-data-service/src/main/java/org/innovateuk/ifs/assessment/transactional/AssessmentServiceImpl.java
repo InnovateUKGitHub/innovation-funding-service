@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -17,10 +18,7 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -150,11 +148,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
         return getAssessor(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
+                        .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application -> getRole(UserRoleType.ASSESSOR)
-
-                                // TODO: INFUND-7236 Change state to CREATED
-
-                                .andOnSuccess(role -> getAssessmentActivityState(AssessmentStates.PENDING)
+                                .andOnSuccess(role -> getAssessmentActivityState(AssessmentStates.CREATED)
                                         .andOnSuccess(activityState -> {
                                             ProcessRole processRole = new ProcessRole();
                                             processRole.setUser(assessor);
@@ -176,6 +172,18 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<User> getAssessor(Long assessorId) {
         return find(userRepository.findByIdAndRolesName(assessorId, UserRoleType.ASSESSOR.getName()), notFoundError(User.class, assessorId));
+    }
+
+    private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
+        boolean noAssessmentOrWithdrawn = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId())
+                .map(assessment -> assessment.getActivityState().equals(AssessmentStates.WITHDRAWN))
+                .orElse(Boolean.TRUE);
+
+        if (noAssessmentOrWithdrawn) {
+            return serviceSuccess(application);
+        }
+
+        return serviceFailure(new Error(ASSESSMENT_CREATE_FAILED, assessor.getId(), application.getId()));
     }
 
     private ServiceResult<ActivityState> getAssessmentActivityState(AssessmentStates assessmentState) {
