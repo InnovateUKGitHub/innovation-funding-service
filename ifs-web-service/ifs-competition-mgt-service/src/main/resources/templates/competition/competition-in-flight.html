@@ -60,7 +60,8 @@
 
         <p th:if="${(model.competitionStatus.name() == 'OPEN' or
         model.competitionStatus.name() == 'READY_TO_OPEN')}">
-            <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">View and update competition setup</a>
+            <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">View and update
+                competition setup</a>
         </p>
     </div>
 
@@ -69,22 +70,39 @@
     <ul class="grid-row">
         <li class="column-third">
             <div class="highlight-panel">
-                <span class="heading-large">10</span><br/>
-                <small>Assessors invited</small>
+                <th:block th:switch="${model.competitionStatus.name()}">
+                    <small th:case="READY_TO_OPEN">Assessors invited</small>
+                    <small th:case="OPEN">Assessors invited</small>
+                    <small th:case="CLOSED">Applications requiring additional assessors</small>
+                    <small th:case="IN_ASSESSMENT">Total assignments</small>
+                    <small th:case="FUNDERS_PANEL">Applications</small>
+                    <small th:case="ASSESSOR_FEEDBACK">Applications</small>
+                </th:block>
             </div>
         </li>
 
         <li class="column-third">
             <div class="highlight-panel">
-                <span class="heading-large">4</span><br/>
-                <small>Invitations accepted</small>
+                <th:block th:switch="${model.competitionStatus.name()}">
+                    <small th:case="READY_TO_OPEN">Invitations accepted</small>
+                    <small th:case="OPEN">Invitations accepted</small>
+                    <small th:case="CLOSED">Assignments made</small>
+                    <small th:case="IN_ASSESSMENT">Awaiting response</small>
+                    <small th:case="FUNDERS_PANEL">Applications being funded</small>
+                    <small th:case="ASSESSOR_FEEDBACK">Applications being funded</small>
+                </th:block>
             </div>
         </li>
 
         <li class="column-third">
             <div class="highlight-panel">
-                <span class="heading-large">5</span><br/>
-                <small>Applications per assessor</small>
+                <th:block th:switch="${model.competitionStatus.name()}">
+                    <small th:case="OPEN">Applications per assessor</small>
+                    <small th:case="CLOSED">Assessors without applications</small>
+                    <small th:case="IN_ASSESSMENT">Assignments accepted</small>
+                    <small th:case="FUNDERS_PANEL">Applications not being funded</small>
+                    <small th:case="ASSESSOR_FEEDBACK">Applications not being funded</small>
+                </th:block>
             </div>
         </li>
     </ul>
@@ -92,22 +110,36 @@
     <ul class="grid-row extra-margin">
         <li class="column-third">
             <div class="highlight-panel">
-                <span class="heading-large">12</span><br/>
-                <small>Applications started</small>
+                <th:block th:switch="${model.competitionStatus.name()}">
+                    <small th:case="OPEN">Applications started</small>
+                    <small th:case="CLOSED">Invitations invited</small>
+                    <small th:case="IN_ASSESSMENT">Assessments started</small>
+                    <small th:case="FUNDERS_PANEL">Applications on hold</small>
+                    <small th:case="ASSESSOR_FEEDBACK">Applications on hold</small>
+                </th:block>
             </div>
         </li>
 
         <li class="column-third">
             <div class="highlight-panel">
-                <span class="heading-large">6</span><br/>
-                <small>Applications (beyond 50%)</small>
+                <th:block th:switch="${model.competitionStatus.name()}">
+                    <small th:case="OPEN">Applications (beyond 50%)</small>
+                    <small th:case="CLOSED">Invitations accepted</small>
+                    <small th:case="IN_ASSESSMENT">Assessments submitted</small>
+                    <small th:case="FUNDERS_PANEL">Applications notified of decision</small>
+                    <small th:case="ASSESSOR_FEEDBACK">Applications notified of decision</small>
+                </th:block>
             </div>
         </li>
 
         <li class="column-third">
             <div class="highlight-panel">
-                <span class="heading-large">4</span><br/>
-                <small>Applications submitted</small>
+                <th:block th:switch="${model.competitionStatus.name()}">
+                    <small th:case="OPEN">Applications submitted</small>
+                    <small th:case="CLOSED">Applications per assessor</small>
+                    <small th:case="FUNDERS_PANEL">Applications awaiting a decision</small>
+                    <small th:case="ASSESSOR_FEEDBACK">Applications awaiting a decision</small>
+                </th:block>
             </div>
         </li>
     </ul>
@@ -119,9 +151,15 @@
             <a class="button" th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite
                 assessors</a>
         </div>
-        <form action="#" method="post">
-            <button type="submit" th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}" class="button button-large">Close assessment</button>
-            <button type="submit" th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}" class="button button-large">Notify assessors</button>
+        <form action="#" th:action="@{/competition}" method="post">
+            <button type="submit"
+                    th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
+                    class="button button-large">Close assessment
+            </button>
+            <button type="submit"
+                    th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
+                    class="button button-large">Notify assessors
+            </button>
         </form>
         <a class="button" th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage
             applications</a>
