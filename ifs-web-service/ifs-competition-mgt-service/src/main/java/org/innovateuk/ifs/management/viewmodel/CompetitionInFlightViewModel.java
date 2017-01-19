@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Holder of model attributes for the Competition Management Competition 'In Assessment' view.
@@ -21,8 +22,9 @@ public class CompetitionInFlightViewModel {
     private String executive;
     private String lead;
     private BigDecimal funding;
+    private List<MilestonesRowViewModel> milestones;
 
-    public CompetitionInFlightViewModel(CompetitionResource competitionResource) {
+    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
@@ -32,6 +34,7 @@ public class CompetitionInFlightViewModel {
         this.executive = competitionResource.getExecutiveName();
         this.lead = competitionResource.getLeadTechnologistName();
         this.funding = competitionResource.getFunders().stream().map(CompetitionFunderResource::getFunderBudget).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.milestones = milestones;
 
     }
 
@@ -69,5 +72,9 @@ public class CompetitionInFlightViewModel {
 
     public BigDecimal getFunding() {
         return funding;
+    }
+
+    public List<MilestonesRowViewModel> getMilestones() {
+        return milestones;
     }
 }
