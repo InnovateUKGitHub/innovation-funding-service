@@ -69,9 +69,6 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     @Autowired
     private FinanceHandler financeHandler;
 
-    @Autowired
-    private OverheadFileRestService overheadFileRestService;
-
     @Override
     public BaseSectionViewModel populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
         CompetitionResource competition = competitionService.getById(application.getCompetition());

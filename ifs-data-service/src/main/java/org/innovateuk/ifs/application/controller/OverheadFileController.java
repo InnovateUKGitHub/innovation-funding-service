@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileU
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * Controller for handling the overheads calculation spreadsheet file
+ * Controller for handling the overheads calculation spreadsheet file upload
  */
 @RestController
 @RequestMapping("/overheadcalculation")

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.service.OverheadFileRestService;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;

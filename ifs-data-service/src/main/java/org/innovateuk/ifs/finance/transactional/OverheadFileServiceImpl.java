@@ -35,13 +35,13 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
     private static String fileMetaFieldType = "file_entry";
 
     @Autowired
-    ApplicationFinanceRowRepository financeRowRepository;
+    private ApplicationFinanceRowRepository financeRowRepository;
 
     @Autowired
-    FinanceRowMetaValueRepository financeRowMetaValueRepository;
+    private FinanceRowMetaValueRepository financeRowMetaValueRepository;
 
     @Autowired
-    FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+    private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;

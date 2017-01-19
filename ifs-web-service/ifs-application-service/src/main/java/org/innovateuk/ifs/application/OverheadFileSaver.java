@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.OverheadFileRestService;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -24,6 +24,9 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 @Component
 public class OverheadFileSaver {
+    public static final String OVERHEAD_FILE_SUBMIT = "overheadfilesubmit";
+    public static final String OVERHEAD_FILE_DELETE = "overheadfiledelete";
+    public static final String OVERHEAD_FILE_ID = "fileoverheadid";
 
     @Autowired
     private OverheadFileRestService overheadFileRestService;
@@ -62,7 +65,7 @@ public class OverheadFileSaver {
     private ValidationMessages deleteOverheadFile(HttpServletRequest request) {
         ValidationMessages messages = new ValidationMessages();
         try {
-            Long overheadId = Long.valueOf(request.getParameter("fileoverheadid"));
+            Long overheadId = Long.valueOf(request.getParameter(OVERHEAD_FILE_ID));
 
             RestResult<Void> fileEntryResult = overheadFileRestService.removeOverheadCalculationFile(overheadId);
 
@@ -93,10 +96,10 @@ public class OverheadFileSaver {
     }
 
     private boolean isOverheadFileUploadRequest(HttpServletRequest request) {
-        return request instanceof StandardMultipartHttpServletRequest && request.getParameter("overheadfilesubmit") != null;
+        return request instanceof StandardMultipartHttpServletRequest && request.getParameter(OVERHEAD_FILE_SUBMIT) != null;
     }
 
     private boolean isOverheadFileDeleteRequest(HttpServletRequest request) {
-        return request.getParameter("overheadfiledelete") != null;
+        return request.getParameter(OVERHEAD_FILE_DELETE) != null;
     }
 }
