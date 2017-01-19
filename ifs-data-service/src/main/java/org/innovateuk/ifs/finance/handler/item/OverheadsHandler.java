@@ -29,7 +29,7 @@ public class OverheadsHandler extends FinanceRowHandler {
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
 
         Overhead overhead = (Overhead) costItem;
-        switch(overhead.getRateType()) {
+        switch (overhead.getRateType()) {
             case DEFAULT_PERCENTAGE:
             case CUSTOM_RATE:
                 super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
@@ -68,10 +68,9 @@ public class OverheadsHandler extends FinanceRowHandler {
                 filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.USE_TOTAL_META_FIELD)).
                 findFirst();
 
-        if(useTotalOptionMetaValue.isPresent() && useTotalOptionMetaValue.get().getValue().equals("false")) {
+        if (useTotalOptionMetaValue.isPresent() && useTotalOptionMetaValue.get().getValue().equals("false")) {
             overhead.setUseTotalOption(false);
-        }
-        else {
+        } else {
             overhead.setUseTotalOption(true);
             addOptionalCalculationFile(cost, overhead);
         }
@@ -84,7 +83,7 @@ public class OverheadsHandler extends FinanceRowHandler {
                 filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD)).
                 findFirst();
 
-        if(overheadFileMetaValue.isPresent()) {
+        if (overheadFileMetaValue.isPresent()) {
             fileEntryService.findOne(Long.valueOf(overheadFileMetaValue.get().getValue())).
                     andOnSuccessReturnVoid(fileEntry -> overhead.setCalculationFile(fileEntry));
         }
