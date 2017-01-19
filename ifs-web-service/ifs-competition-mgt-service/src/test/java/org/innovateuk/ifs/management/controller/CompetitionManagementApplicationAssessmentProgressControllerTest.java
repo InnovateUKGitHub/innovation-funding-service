@@ -138,13 +138,12 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .build();
 
         AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
-        ApplicationAssessmentSummaryResource expectedApplicationAssessmentSummary = newApplicationAssessmentSummaryResource().build();
 
         when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sort=title", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
