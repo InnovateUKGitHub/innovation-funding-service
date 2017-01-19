@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.finance.builder;
 
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -27,6 +29,10 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
 
     public static ApplicationFinanceResourceBuilder newApplicationFinanceResource() {
         return new ApplicationFinanceResourceBuilder(emptyList()).with(uniqueIds());
+    }
+
+    public ApplicationFinanceResourceBuilder withResearchCategories(Set<ResearchCategoryResource> categories) {
+        return with(applicationFinanceResource -> applicationFinanceResource.setResearchCategories(categories));
     }
 
     @Override

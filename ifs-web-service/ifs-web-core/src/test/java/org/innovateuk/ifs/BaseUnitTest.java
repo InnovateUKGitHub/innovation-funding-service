@@ -80,6 +80,7 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_SET;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
@@ -658,6 +659,7 @@ public class BaseUnitTest {
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
+        applicationFinanceResource.setResearchCategories(EMPTY_SET);
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new GrantClaimCategory();
         costCategory.addCost(new GrantClaim(1L, 50));

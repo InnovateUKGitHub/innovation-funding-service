@@ -288,6 +288,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(app.getId())).thenReturn(restSuccess(fileEntry));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(financeService.getApplicationFinanceDetails(users.get(0).getId(), app.getId())).thenReturn(applicationFinanceResource);
 
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
@@ -300,7 +301,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                .andExpect(model().attribute("rsCategory", Matchers.nullValue()));
     }
 
     @Test

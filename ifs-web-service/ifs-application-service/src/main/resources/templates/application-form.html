@@ -38,7 +38,8 @@
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                  currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                  pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                 applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant})">
+                 applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), researchCategories=(${model.application.researchCategories}),
+                 rsCategory=(${model.application.researchCategoryId})">
 
                 <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
             </div>
@@ -60,7 +61,8 @@
                                 <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
                                                 markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
                                                 subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}), readonly=${model.application.allReadOnly}">
+                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}), researchCategories=(${model.application.researchCategories}),
+                                                rsCategory=(${model.application.researchCategoryId})">
 
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
                                     <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}"></div>
@@ -92,15 +94,12 @@
 
             <input type="hidden" id="application_id" th:value="${model.application.currentApplication.id}"/>
             <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.id}"/>
-
-            <th:block th:if="${model.showReturnButtons}">
-                <div th:if="${model.application.allReadOnly}" th:remove="tag">
-                    <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
-                </div>
-                <div th:unless="${model.application.allReadOnly}" th:remove="tag">
-                    <button th:unless="${model.currentSection != null}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
-                </div>
-            </th:block>
+            <div th:if="${model.application.allReadOnly}" th:remove="tag">
+                <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+            </div>
+            <div th:unless="${model.application.allReadOnly}" th:remove="tag">
+                <button th:unless="${model.currentSection != null and model.subFinanceSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+            </div>
 
             <ul class="pagination" th:if="${model.navigation.hasNavigation}">
                 <li class="prev" th:if="${model.navigation.previousUrl}">

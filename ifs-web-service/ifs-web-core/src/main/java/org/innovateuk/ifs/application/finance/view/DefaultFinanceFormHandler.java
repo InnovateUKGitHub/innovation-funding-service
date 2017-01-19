@@ -9,8 +9,10 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.item.*;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -66,6 +68,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     
     @Autowired
     private UnsavedFieldsManager unsavedFieldsManager;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
@@ -189,6 +194,10 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                 OrganisationSize newValue = OrganisationSize.valueOf(value);
                 handleOrganisationSizeChange(applicationFinance, competitionId, userId, applicationFinance.getOrganisationSize(), newValue);
                 applicationFinance.setOrganisationSize(newValue);
+                break;
+            case "researchCategoryId":
+                Set<ResearchCategoryResource> cats = categoryService.getResearchCategories().stream().filter(cat -> cat.getId().toString().equals(value)).collect(Collectors.toSet());
+                applicationFinance.setResearchCategories(cats);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
