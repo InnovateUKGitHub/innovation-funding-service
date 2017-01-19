@@ -42,6 +42,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6977 As a lead partner I want to be given back edit rights to the Spend Profile so that I can manage further edits if they have been rejected by Innovate UK
 ...
 ...               INFUND-6907 Internal server error if tried to save SP with a validation error in it
+...
+...               INFUND-6852 When partner submits SP, he should get a popup Submit-Cancel, before is Submitted
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -244,6 +246,12 @@ Non-lead partner can see correct project start date and duration
     And the user should see the text in the page     June 2017
     And the user should see the text in the page     ${project_duration} months
 
+Industrial partner can choose cancel on the dialogue
+    [Documentation]    INFUND-6852
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    Then the user should see the element    jQuery=a:contains("Send to lead partner")
+
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
@@ -332,6 +340,12 @@ Academic partner edits spend profile and this updates on the table
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    0
+
+Academic partner can choose cancel on the dialogue
+    [Documentation]    INFUND-6852
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    Then the user should see the element    jQuery=a:contains("Send to lead partner")
 
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
