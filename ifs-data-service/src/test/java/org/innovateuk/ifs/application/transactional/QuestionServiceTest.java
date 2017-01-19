@@ -351,6 +351,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
         List<SectionResource> sectionsResources = newSectionResource().build(2);
 
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(sectionService.getByCompetitionIdVisibleForAssessment(competitionId)).thenReturn(serviceSuccess(sectionsResources));
         when(sectionMapperMock.mapToDomain(same(sectionsResources.get(0)))).thenReturn(sections.get(0));

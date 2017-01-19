@@ -22,16 +22,15 @@ public class ProcessRoleTest {
         role = new Role();
         organisation = new Organisation();
 
-        processRoleTest = new ProcessRole(id, user, application, role, organisation);
+        processRoleTest = new ProcessRole(id, user, application.getId(), role, organisation.getId());
     }
 
     @Test
     public void userApplicationRoleShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(processRoleTest.getUser(), user);
         Assert.assertEquals(processRoleTest.getId(), id);
-        Assert.assertEquals(processRoleTest.getApplication(), application);
+        Assert.assertEquals(processRoleTest.getApplicationId(), application.getId());
         Assert.assertEquals(processRoleTest.getRole(), role);
-        Assert.assertEquals(processRoleTest.getOrganisation(), organisation);
-
+        Assert.assertEquals(processRoleTest.getOrganisationId(), organisation.getId());
     }
 }

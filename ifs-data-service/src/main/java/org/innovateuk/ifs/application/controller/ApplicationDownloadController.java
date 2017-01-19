@@ -20,6 +20,8 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -53,6 +55,8 @@ public class ApplicationDownloadController {
     private ApplicationSummarisationService applicationSummarisationService;
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
     private Integer cellCount = 0;
     private Integer rowCount = 0;
     private Integer headerCount = 0;
@@ -152,17 +156,20 @@ public class ApplicationDownloadController {
             String totalFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(total);
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 
+            ProcessRole leadRole = a.getLeadApplicantProcessRole();
+            Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+
             // ADD APPLICATION ROW
             cellCount = 0;
             XSSFRow row = sheet.createRow(rowCount++);
             row = createCellWithValue(row, a.getFormattedId());
             row = createCellWithValue(row, a.getName());
-            row = createCellWithValue(row, a.getLeadOrganisation().getName());
+            row = createCellWithValue(row, leadOrganisation.getName());
             row = createCellWithValue(row, a.getLeadApplicant().getFirstName());
             row = createCellWithValue(row, a.getLeadApplicant().getLastName());
             row = createCellWithValue(row, a.getLeadApplicant().getEmail());
             row = createCellWithValue(row, a.getDurationInMonths().toString());
-            row = createCellWithValue(row, String.valueOf(a.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size()));
+            row = createCellWithValue(row, String.valueOf(a.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisationId)).size()));
             row = createCellWithValue(row, projectSummaryString);
             row = createCellWithValue(row, totalFormatted);
             row = createCellWithValue(row, fundingSoughtFormatted);

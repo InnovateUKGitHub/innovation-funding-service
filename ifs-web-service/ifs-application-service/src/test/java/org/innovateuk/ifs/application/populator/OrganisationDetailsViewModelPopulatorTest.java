@@ -82,7 +82,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
     @Test(expected = RuntimeException.class)
     public void testPopulateModelWithInvalidObjects() throws Exception {
         userApplicationRoles.forEach(
-                processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisation()));
+                processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisationId()));
 
         setupInviteServicesFailure(applicationId);
 
@@ -106,8 +106,8 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
 
     private void setupSuccess(){
         userApplicationRoles.forEach(
-                processRoleResource -> setupOrganisationServicesSuccess(processRoleResource.getOrganisation(), newOrganisationResource()
-                        .withId(processRoleResource.getOrganisation())
+                processRoleResource -> setupOrganisationServicesSuccess(processRoleResource.getOrganisationId(), newOrganisationResource()
+                        .withId(processRoleResource.getOrganisationId())
                         .withOrganisationType(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())
                         .build()));
 
