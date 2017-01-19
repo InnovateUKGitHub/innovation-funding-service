@@ -160,7 +160,7 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
+    -v REMOTE_URL:'http://127.0.0.1:4444/wd/hub' \
     $includeHappyPath \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
@@ -326,7 +326,7 @@ while getopts ":p :q :h :t :e :r :c :n :w :d:" opt ; do
     esac
 done
 
-startSeleniumGrid
+#startSeleniumGrid
 
 if [[ ${rerunFailed} -eq 0 ]]
 then
@@ -336,7 +336,7 @@ fi
 if [[ ${quickTest} -eq 1 ]]
 then
     coloredEcho "=> Using quickTest: TRUE" blue
-    addTestFiles
+    #addTestFiles
     runTests
 elif [[ ${testScrub} ]]
 then
