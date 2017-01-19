@@ -8,14 +8,20 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 abstract class ApplicationAssessmentProgressRowViewModel {
 
+    private long id;
     private String name;
     private long totalApplicationsCount;
     private long assignedCount;
 
-    protected ApplicationAssessmentProgressRowViewModel(String name, long totalApplicationsCount, long assignedCount) {
+    protected ApplicationAssessmentProgressRowViewModel(long id, String name, long totalApplicationsCount, long assignedCount) {
+        this.id = id;
         this.name = name;
         this.totalApplicationsCount = totalApplicationsCount;
         this.assignedCount = assignedCount;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
@@ -39,6 +45,7 @@ abstract class ApplicationAssessmentProgressRowViewModel {
         ApplicationAssessmentProgressRowViewModel that = (ApplicationAssessmentProgressRowViewModel) o;
 
         return new EqualsBuilder()
+                .append(id, that.id)
                 .append(totalApplicationsCount, that.totalApplicationsCount)
                 .append(assignedCount, that.assignedCount)
                 .append(name, that.name)
@@ -48,6 +55,7 @@ abstract class ApplicationAssessmentProgressRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(name)
                 .append(totalApplicationsCount)
                 .append(assignedCount)

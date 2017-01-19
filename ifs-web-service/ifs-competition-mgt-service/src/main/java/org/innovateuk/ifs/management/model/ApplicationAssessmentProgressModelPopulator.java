@@ -68,7 +68,9 @@ public class ApplicationAssessmentProgressModelPopulator {
     }
 
     private ApplicationAssessmentProgressAssignedRowViewModel getAssignedRowViewModel(ApplicationAssessorResource applicationAssessorResource) {
-        return new ApplicationAssessmentProgressAssignedRowViewModel(applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
+        return new ApplicationAssessmentProgressAssignedRowViewModel(
+                applicationAssessorResource.getUserId(),
+                applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
                 applicationAssessorResource.getTotalApplicationsCount(),
                 applicationAssessorResource.getAssignedCount(),
                 applicationAssessorResource.getBusinessType(),
@@ -76,10 +78,12 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessorResource.isNotified(),
                 applicationAssessorResource.isAccepted(),
                 applicationAssessorResource.isStarted(),
-                applicationAssessorResource.isSubmitted());
+                applicationAssessorResource.isSubmitted()
+        );
     }
 
-    private List<ApplicationAvailableAssessorsRowViewModel> getSortedAvailableAssessors(List<ApplicationAssessorResource> assessors, AvailableAssessorsSortFieldType selectedSort) {
+    private List<ApplicationAvailableAssessorsRowViewModel> getSortedAvailableAssessors(List<ApplicationAssessorResource> assessors,
+                                                                                        AvailableAssessorsSortFieldType selectedSort) {
         List<ApplicationAvailableAssessorsRowViewModel> available = assessors.stream()
                 .map(this::getAvailableRowViewModel).collect(toList());
         available.sort(sortMap().get(selectedSort));
@@ -87,11 +91,14 @@ public class ApplicationAssessmentProgressModelPopulator {
     }
 
     private ApplicationAvailableAssessorsRowViewModel getAvailableRowViewModel(ApplicationAssessorResource applicationAssessorResource) {
-        return new ApplicationAvailableAssessorsRowViewModel(applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
+        return new ApplicationAvailableAssessorsRowViewModel(
+                applicationAssessorResource.getUserId(),
+                applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
                 defaultString(applicationAssessorResource.getSkillAreas()),
                 applicationAssessorResource.getTotalApplicationsCount(),
                 applicationAssessorResource.getAssignedCount(),
-                applicationAssessorResource.getSubmittedCount());
+                applicationAssessorResource.getSubmittedCount()
+        );
     }
 
     private AvailableAssessorsSortFieldType sortFieldForAvailableAssessors(String selectedSort) {
