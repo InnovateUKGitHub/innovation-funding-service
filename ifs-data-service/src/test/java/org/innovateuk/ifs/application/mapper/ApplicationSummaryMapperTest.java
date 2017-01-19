@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationSummarisationServ
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +50,9 @@ public class ApplicationSummaryMapperTest {
 	
 	@Mock
 	private FundingDecisionMapper fundingDecisionMapper;
+
+	@Mock
+	protected OrganisationRepository organisationRepository;
 	
 	private Application source;
 	
@@ -68,7 +72,9 @@ public class ApplicationSummaryMapperTest {
 		
 		Organisation org1 = newOrganisation().withId(1L).withName("leadorg").build();
 		Organisation org2 = newOrganisation().withId(2L).withName("otherorg1").build();
-		
+		when(organisationRepository.findOne(1L)).thenReturn(org1);
+		when(organisationRepository.findOne(2L)).thenReturn(org2);
+
 		ProcessRole leadProcessRole = leadProcessRole(org1);
 		source.addUserApplicationRole(leadProcessRole);
 		
@@ -135,7 +141,7 @@ public class ApplicationSummaryMapperTest {
 	private ProcessRole leadProcessRole(Organisation organisation) {
 		ProcessRole leadProcessRole = new ProcessRole();
 		
-		leadProcessRole.setOrganisation(organisation);
+		leadProcessRole.setOrganisationId(organisation.getId());
 		Role role = new Role();
 		role.setName(UserRoleType.LEADAPPLICANT.getName());
         leadProcessRole.setUser(newUser().build());
@@ -145,7 +151,7 @@ public class ApplicationSummaryMapperTest {
 	
 	private ProcessRole collaboratorProcessRole(Organisation organisation) {
 		ProcessRole collaboratorProcessRole = new ProcessRole();
-		collaboratorProcessRole.setOrganisation(organisation);
+		collaboratorProcessRole.setOrganisationId(organisation.getId());
 		Role role = new Role();
 		role.setName(UserRoleType.COLLABORATOR.getName());
 				

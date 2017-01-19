@@ -16,6 +16,8 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationById(Long organisationId);
 
+    OrganisationResource getOrganisationForUser(Long userId);
+
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
 
     OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation);
