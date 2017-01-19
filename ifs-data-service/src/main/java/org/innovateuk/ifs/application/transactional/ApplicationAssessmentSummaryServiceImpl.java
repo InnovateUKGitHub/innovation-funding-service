@@ -16,7 +16,6 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
@@ -24,7 +23,6 @@ import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -82,8 +80,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
 
     private List<String> getPartnerOrganisationNames(Application application) {
         return application.getProcessRoles().stream()
-                .filter(processRole ->
-                        processRole.isLeadApplicant() || processRole.isCollaborator())
+                .filter(ProcessRole::isCollaborator)
                 .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
                 .collect(toList());
     }
