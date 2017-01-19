@@ -78,8 +78,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
-        processRole1.setApplication(application1);
-        processRole2.setApplication(application2);
+        processRole1.setApplicationId(application1.getId());
+        processRole2.setApplicationId(application2.getId());
 
         applicantRoles.add(leadApplicantRole);
         applicantRoles.add(collaboratorRole);

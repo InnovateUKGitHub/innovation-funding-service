@@ -182,6 +182,9 @@ public class ApplicationFormController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private OverheadFileSaver overheadFileSaver;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -473,14 +476,18 @@ public class ApplicationFormController {
             applicationService.save(application);
         }
 
-        if(!isMarkSectionAsIncompleteRequest(params)) {
+        errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
+
+        if(!isMarkSectionAsIncompleteRequest(params) ) {
             String organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId()));
+            ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
+            if(!overheadFileSaver.isOverheadFileRequest(request)) {
+                errors.addAll(saveErrors);
+            }
         }
 
         if(isMarkQuestionRequest(params)) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors, bindingResult));
-
         } else if(isMarkSectionRequest(params)){
             errors.addAll(handleMarkSectionRequest(application, sectionId, request, processRole, errors, validFinanceTerms));
         }
@@ -523,7 +530,6 @@ public class ApplicationFormController {
     private void logSaveApplicationDetails(Map<String, String[]> params) {
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
     }
-
 
     private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar, BindingResult bindingResult) {
         ValidationMessages messages = new ValidationMessages();
@@ -720,7 +726,7 @@ public class ApplicationFormController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if(saveApplicationErrors.hasErrors() || !validFinanceTerms){
+        if(saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)){
             validationHandler.addAnyErrors(saveApplicationErrors);
             populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
             return APPLICATION_FORM;

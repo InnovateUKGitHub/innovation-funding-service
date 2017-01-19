@@ -14,7 +14,7 @@
 
     <div th:include="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" th:remove="tag" />
       	<div class="page-title">
-            <div th:include="fragments/elements :: application-title (application=${model.application.currentApplication})" th:remove="tag" />
+            <div th:include="fragments/elements :: application-title (app=${model.application.currentApplication})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${model.title}" />
         </div>
         <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
@@ -41,7 +41,9 @@
                  applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), researchCategories=(${model.application.researchCategories}),
                  rsCategoryId=(${model.application.researchCategoryId})">
 
-                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                <th:block th:if="${formInput.type.displayableQuestionType}">
+                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                </th:block>
             </div>
 
 
@@ -64,15 +66,24 @@
                                                 currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}), researchCategories=(${model.application.researchCategories}),
                                                 rsCategoryId=(${model.application.researchCategoryId})">
 
-                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
-                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}"></div>
-                                    <th:block th:if="${model.isFinanceOverview}">
-                                        <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
-                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
-                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
-                                            <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
-                                        </th:block>
+                                <th:block th:if="${formInput.type.displayableQuestionType}">
+                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                                </th:block>
+
+                                <th:block th:if="${formInput.type.isDisplayableFinanceType(financeView)}">
+                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
+                                </th:block>
+
+                                <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
+
+                                    <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+                                            currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
+                                            completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
+
+                                        <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
+
                                     </th:block>
+
                                 </th:block>
                             </th:block>
                             <th:block th:unless="${model.isSection}">

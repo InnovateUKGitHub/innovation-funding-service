@@ -296,7 +296,7 @@ the user fills the milestones with invalid data
 Validation summary should be visible
     Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
     And the user should see the text in the page    3. Submission date: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    4. Allocate accessors: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    4. Allocate assessors: please enter a future date that is after the previous milestone
     And the user should see the text in the page    5. Assessor briefing: please enter a future date that is after the previous milestone
     And the user should see the text in the page    6. Assessor accepts: please enter a future date that is after the previous milestone
     And the user should see the text in the page    7. Assessor deadline: please enter a future date that is after the previous milestone

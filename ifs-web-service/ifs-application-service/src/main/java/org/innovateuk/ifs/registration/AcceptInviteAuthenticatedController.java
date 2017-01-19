@@ -121,7 +121,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         OrganisationResource organisation;
         if(inviteOrganisation.getOrganisation() == null){
             // no one has confirmed the InviteOrganisation, we can use the users organisation.
-            organisation = organisationService.getOrganisationById(loggedInUser.getOrganisations().get(0));
+            organisation = organisationService.getOrganisationForUser(loggedInUser.getId());
         }else{
             organisation = organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
         }

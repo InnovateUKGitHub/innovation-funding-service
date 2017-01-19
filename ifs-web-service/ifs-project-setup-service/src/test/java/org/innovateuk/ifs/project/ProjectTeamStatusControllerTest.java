@@ -32,7 +32,6 @@ public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<P
         super.setUp();
         setupInvites();
         loginDefaultUser();
-        loggedInUser.setOrganisations(Collections.singletonList(8L));
     }
 
     @Override
