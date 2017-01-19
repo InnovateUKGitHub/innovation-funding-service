@@ -443,8 +443,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedEligibilityResource)))
-                //.andDo(document("project/partner-organisation/eligibility/{method-name}",
-                .andDo(this.document.snippets(
+                .andDo(document("project/partner-organisation/eligibility/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which eligibility is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which eligibility is being retrieved")
@@ -470,8 +469,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityStatus}", projectId, organisationId, eligibility, eligibilityStatus)
         )
                 .andExpect(status().isOk())
-                //.andDo(document("project/partner-organisation/eligibility/{method-name}",
-                .andDo(this.document.snippets(
+                .andDo(document("project/partner-organisation/eligibility/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which eligibility is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which eligibility is being saved"),

@@ -21,10 +21,6 @@
         </h1>
     </div>
 
-    <h2 class="heading-medium"><th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.projectId,8)}"/> : <th:block th:text="${model.financeCheckSummaryResource.projectName}"/></h2>
-
-    <hr/>
-
     <th:block th:if="${model.isShowApprovalMessage()}">
         <div class="success-alert">
             <p>The partner's finance eligibility has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>

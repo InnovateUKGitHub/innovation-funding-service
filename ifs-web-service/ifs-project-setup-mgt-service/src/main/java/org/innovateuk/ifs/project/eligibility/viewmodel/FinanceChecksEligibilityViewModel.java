@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.eligibility.viewmodel;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 
@@ -57,6 +58,15 @@ public class FinanceChecksEligibilityViewModel {
         return isApproved();
     }
 
+    public boolean isShowApprovalMessage() {
+        return isApproved();
+    }
+
+    public String getApproverName()
+    {
+        return StringUtils.trim(getApproverFirstName() + " " + getApproverLastName());
+    }
+
     public FinanceCheckEligibilityResource getEligibilityOverview() {
         return eligibilityOverview;
     }
@@ -104,12 +114,6 @@ public class FinanceChecksEligibilityViewModel {
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
     }
-
-    public boolean isShowApprovalMessage() {
-        return isApproved();
-    }
-
-    public String getApproverName() { return getApproverFirstName().concat(getApproverLastName()); }
 
     public boolean isEligibilityApproved() {
         return eligibilityApproved;
