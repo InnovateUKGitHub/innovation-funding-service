@@ -28,12 +28,10 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -74,7 +72,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -82,7 +80,7 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@Ignore("Manual web test data generation")
+//@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
 public class GenerateTestData extends BaseIntegrationTest {
@@ -674,14 +672,20 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
                         withOpenDate(line.openDate).
+                        withBriefingDate(line.briefingDate).
                         withSubmissionDate(line.submissionDate).
-                        withFundersPanelDate(line.fundersPanelDate).
-                        withFundersPanelEndDate(line.fundersPanelEndDate).
+                        withAllocateAssesorsDate(line.allocateAssessorDate).
                         withAssessorBriefingDate(line.assessorBriefingDate).
                         withAssessorAcceptsDate(line.assessorAcceptsDate).
                         withAssessorsNotifiedDate(line.assessorsNotifiedDate).
                         withAssessorEndDate(line.assessorEndDate).
-                        withAssessmentClosedDate(line.assessmentClosedDate);
+                        withAssessmentClosedDate(line.assessmentClosedDate).
+                        withLineDrawDate(line.drawLineDate).
+                        withAsessmentPanelDate(line.assessmentPanelDate).
+                        withPanelDate(line.panelDate).
+                        withFundersPanelDate(line.fundersPanelDate).
+                        withFundersPanelEndDate(line.fundersPanelEndDate).
+                        withReleaseFeedbackDate(line.releaseFeedback);
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
