@@ -47,29 +47,20 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-6478 As a Competitions executive I will be able to view all innovation areas selected when viewing Initial details of my competition in read only mode and the Competition type is Sector competition
 ...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
+...
+...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../CompAdmin_Commons.robot
 
+*** Variables ***
+${landingPage}    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+
 *** Test Cases ***
 User can create a new competition
-    [Documentation]    INFUND-2945
-    ...
-    ...    INFUND-2982
-    ...
-    ...    INFUND-2983
-    ...
-    ...    INFUND-2986
-    ...
-    ...    IFUND-3888
-    ...
-    ...    INFUND-3002
-    ...
-    ...    INFUND-2980
-    ...
-    ...    INFUND-4725
+    [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725
     [Tags]    HappyPath
     Given the user clicks the button/link    id=section-3
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
@@ -402,23 +393,28 @@ Application: Project Summary
     And the user checks the question fields
     [Teardown]    The user clicks the button/link    link=Application
 
-Application: Finances Form
-    [Documentation]    INFUND-5640 INFUND-6039
+Application: Finances
+    [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page  ${landingPage}
     Given the user clicks the button/link    link=Finances
-    And the user should see the element    jQuery=h1:contains("Application finances")
-    And the user should see the text in the page    Each partner is required to complete the following finance sections
-    When The user clicks the button/link    jQuery=a:contains("Edit this question")
-    And The user clicks the button/link    jQuery=label:contains("No")
-    And The user clicks the button/link    jQuery=button:contains("Save and close")
-    And the user clicks the button/link    link=Finances
-    Then the finance information should be correct
-    [Teardown]    The user clicks the button/link    link=Application
+    Then the user should see the element     jQuery=h1:contains("Application finances")
+    And the user should see the element      jQuery=.panel:contains("Each partner is required to complete the following finance sections, selected by the template for this competition.")
+    When the user clicks the button/link     jQuery=.button:contains("Edit this question")
+    Then the user should see the element     css=label.selected[for="full-application-finance-yes"]
+    And the user should see the element      css=label[for="full-application-finance-no"]
+    # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
+    When the user selects the radio button   includeGrowthTable  include-growth-table-no
+    And The user clicks the button/link      jQuery=button:contains("Save and close")
+    Then the user navigates to the page      ${landingPage}
+    When the user clicks the button/link     link=Finances
+    Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
 
 Application: Mark as done and the Edit again
     [Documentation]    INFUND-3000
-    [Tags]    HappyPath    Pending
+    [Tags]  Pending
     [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
-    # Pending INFUND-5964
+    # TODO Pending INFUND-5964
     Given the user moves focus and waits for autosave
     When The user clicks the button/link    jQuery=.button[value="Save and close"]
     Then The user should see the text in the page    Test title
@@ -429,16 +425,21 @@ Application: Mark as done and the Edit again
     And the user should see the text in the page    Yes
     And The user clicks the button/link    jQuery=button:contains(Done)
 
+# TODO see pending test cases below related ton INFUND-7643. They can be unblocked when INFUND-6942 is implemented
 Application: should have a green check
-    [Tags]    HappyPath
+    [Documentation]  INFUND-6773
+    [Tags]  HappyPath  Pending
+    # TODO Pending due to INFUND-7643
+    Given the user navigates to the page    ${landingPage}
     When The user clicks the button/link    jQuery=.button:contains("Done")
-    And The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=ul > li:nth-child(5) > img
+    And The user clicks the button/link     link=Competition setup
+    And the user should see the element     jQuery=li:contains("Application") > img[alt$="section is done"]
     And The user should see the element    jQuery=.button:contains("Save")
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]
+    [Tags]  Pending
+    # TODO Pending due to INFUND-7643
     [Setup]
     Given The user should see the element    jQuery=.button:contains("Save")
     When The user clicks the button/link    link=Initial details
@@ -450,10 +451,9 @@ Ready To Open button is visible when the user re-opens a section
     ...    AND    And The user clicks the button/link    link=Competition setup
 
 User should be able to Save the Competition as Open
-    [Documentation]    INFUND-4468
-    ...
-    ...    INFUND-3002
-    [Tags]    HappyPath
+    [Documentation]    INFUND-4468, INFUND-3002
+    [Tags]  Pending
+    # TODO Pending due to INFUND-7643
     When the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-3
@@ -485,13 +485,13 @@ Assessor: Mark as Done then Edit again
 
 Assessor: Should have a Green Check
     [Documentation]    INFUND-5641
-    [Tags]    HappyPath
+    [Tags]  HappyPath  Pending
+    # TODO Pending due to INFUND-7643
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(6) .section-status
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user clicks the button/link    link=All competitions
-    And the user clicks the button/link    id=section-3
-    And the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
+    Then the user should see the element    jQuery=li:contains("Assessors") > img[alt$="section is done"]
+    And the user clicks the button/link     jQuery=.button:contains("Save")
+    When the user navigates to the page     ${CA_UpcomingComp}
+    Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -588,10 +588,6 @@ The user enters valid data in the initial details
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
     Element should contain    ${SECTION}    ${COMP_NAME}
-
-The finance information should be correct
-    the user should see the text in the page    Application finances
-    the user should see the text in the page    No
 
 the user fills the scope assessment questions
     The user clicks the button/link    jQuery=Button:contains("+Add guidance row")

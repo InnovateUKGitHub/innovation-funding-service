@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
@@ -73,6 +74,10 @@ public class AssessmentController {
     @RequestMapping(value = "/submitAssessments", method = PUT)
     public RestResult<Void> submitAssessments(@RequestBody @Valid AssessmentSubmissionsResource assessmentSubmissionsResource) {
         return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();
+    }
 
+    @RequestMapping(method = POST)
+    public RestResult<AssessmentResource> createAssessment(@RequestBody @Valid AssessmentCreateResource assessmentCreateResource) {
+        return assessmentService.createAssessment(assessmentCreateResource).toPostCreateResponse();
     }
 }

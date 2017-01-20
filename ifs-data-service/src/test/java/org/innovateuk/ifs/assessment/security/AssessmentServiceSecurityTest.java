@@ -9,17 +9,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
-import javax.persistence.Temporal;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static java.util.Arrays.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_EXEC;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -85,7 +86,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void notifyAssessor() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN, COMP_EXEC);
     }
 
     @Test
@@ -113,7 +114,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void withdrawAssessment() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN, COMP_EXEC);
     }
 
     @Test
@@ -134,6 +135,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.submitAssessments(assessmentSubmissions),
                 () -> verify(assessmentPermissionRules).userCanSubmitAssessments(isA(AssessmentSubmissionsResource.class), isA(UserResource.class))
         );
+    }
+
+    @Test
+    public void createAssessment() throws Exception {
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(1L)
+                .withAssessorId(3L)
+                .build();
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN, COMP_EXEC);
     }
 
     public static class TestAssessmentService implements AssessmentService {
@@ -184,6 +195,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
             return null;
         }
     }
