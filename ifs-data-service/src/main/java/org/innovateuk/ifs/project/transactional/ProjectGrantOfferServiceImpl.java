@@ -39,6 +39,7 @@ import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -55,7 +56,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -82,6 +83,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private FileService fileService;
@@ -242,24 +246,18 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
-<<<<<<< HEAD
     private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(Project project) {
-        final String leadOrganisation = project.getApplication().getLeadOrganisation().getName();
-        final List<String> organisations = project.getPartnerOrganisations().stream().map(po -> po.getOrganisation().getName())
-                .filter(o -> !o.equals(leadOrganisation)).sorted().collect(Collectors.toList());
+        final String leadOrganisation = organisationRepository.findOne(project.getApplication().getLeadOrganisationId()).getName();
+        final List<String> organisations = project.getPartnerOrganisations().stream()
+                .filter(po -> !po.isLeadOrganisation()).map(po -> po.getOrganisation().getName())
+                .sorted().collect(toList());
         organisations.add(0, leadOrganisation);
         return organisations;
     }
-=======
+
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
-
-        Map<String, Object> templateReplacements = new HashMap<>();
-        List<String> addresses = getAddresses(project);
->>>>>>> origin/development
-
-    private Map<String, Object> getTemplateData(Project project) {
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
         templateReplacements.put("SortedOrganisations", organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(project));
