@@ -306,7 +306,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long userId = 1L;
         UserProfileResource expected = newUserProfileResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getUserProfile", usersUrl, userId), UserProfileResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getUser", usersUrl, userId), UserProfileResource.class, expected, OK);
 
         UserProfileResource response = service.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);

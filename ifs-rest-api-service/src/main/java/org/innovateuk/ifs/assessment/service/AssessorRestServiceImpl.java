@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;

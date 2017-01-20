@@ -779,7 +779,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         long competitionId = 1L;
 
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
-                .withId(2L)
                 .withName("Jeremy Alufson")
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com")
@@ -789,8 +788,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInnovationArea()
                 .build(1);
 
-        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(newUser()
-                .withId(2L)
         Profile profile = newProfile()
                 .withSkillsAreas("Java")
                 .withBusinessType(BUSINESS)

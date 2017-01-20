@@ -241,7 +241,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserProfileResource> getUserProfile(Long userId) {
-        return getWithRestResult(format("%s/id/%s/getUserProfile", userRestURL, userId), UserProfileResource.class);
+        return getWithRestResult(format("%s/id/%s/getUser", userRestURL, userId), UserProfileResource.class);
     }
 
     @Override

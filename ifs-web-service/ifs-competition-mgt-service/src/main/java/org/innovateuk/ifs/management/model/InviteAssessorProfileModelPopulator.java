@@ -2,12 +2,14 @@ package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsProfileViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,15 +29,18 @@ public class InviteAssessorProfileModelPopulator {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccessObjectOrThrowException();
 
+        UserResource user = assessorProfile.getUser();
+        ProfileResource profile = assessorProfile.getProfile();
+
         return new InviteAssessorsProfileViewModel(
                 competition,
-                assessorProfile.getFirstName() + " " + assessorProfile.getLastName(),
-                assessorProfile.getEmail(),
-                assessorProfile.getPhoneNumber(),
-                assessorProfile.getAddress(),
-                innovationSectorViewModel(assessorProfile.getInnovationAreas()),
-                Optional.ofNullable(assessorProfile.getBusinessType()).map(BusinessType::getDisplayName).orElse(null),
-                assessorProfile.getSkillsAreas()
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                profile.getAddress(),
+                innovationSectorViewModel(profile.getInnovationAreas()),
+                Optional.ofNullable(profile.getBusinessType()).map(BusinessType::getDisplayName).orElse(null),
+                profile.getSkillsAreas()
         );
     }
 
@@ -45,8 +50,12 @@ public class InviteAssessorProfileModelPopulator {
         innovationAreas
                 .stream()
                 .collect(Collectors.groupingBy(InnovationAreaResource::getSector))
-                .forEach((id, innovationAreaResources) ->
-                        sectors.add(new InnovationSectorViewModel(innovationAreaResources.get(0).getSectorName(), innovationAreaResources)));
+                .forEach(
+                        (id, innovationAreaResources) ->
+                        sectors.add(
+                                new InnovationSectorViewModel(innovationAreaResources.get(0).getSectorName(), innovationAreaResources)
+                        )
+                );
 
         return sectors;
     }

@@ -129,30 +129,4 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
     }
-
-    @Test
-    public void findByIdAndRolesName() throws Exception {
-        Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
-
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByIdAndRolesName_wrongRole() throws Exception {
-        Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
-
-        assertFalse(user.isPresent());
-    }
-
-    @Test
-    public void saveWithInnovationArea() {
-        InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
-        User user = newUser().with(id(null)).withUid("my-uid").withInnovationAreas(asList(innovationArea)).build();
-        User savedUser = repository.save(user);
-        flushAndClearSession();
-
-        User retrievedUser = repository.findOne(savedUser.getId());
-
-        assertTrue(retrievedUser.getInnovationAreas().contains(innovationArea));
-    }
 }

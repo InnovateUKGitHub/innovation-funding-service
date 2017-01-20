@@ -383,7 +383,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         when(userProfileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/user/id/{userId}/getUserProfile", userId)
+        mockMvc.perform(get("/user/id/{userId}/getUser", userId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(profileDetails)));

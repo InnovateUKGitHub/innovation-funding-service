@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Profile;
@@ -51,7 +52,7 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 .withUser(user)
                 .build(1);
 
-        user.setProfile(profile);
+//        user.setProfile(profile);
         user.setAffiliations(affiliations);
 
         userRepository.save(user);
@@ -63,20 +64,20 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
 
         AssessorProfileResource assessorProfileResource = restResult.getSuccessObjectOrThrowException();
 
-        assertEquals("Professor", assessorProfileResource.getFirstName());
-        assertEquals("Plum", assessorProfileResource.getLastName());
+        assertEquals("Professor", assessorProfileResource.getUser().getFirstName());
+        assertEquals("Plum", assessorProfileResource.getUser().getLastName());
 
-        assertEquals("Testing Skills Area", assessorProfileResource.getSkillsAreas());
-        assertEquals(ACADEMIC, assessorProfileResource.getBusinessType());
+        assertEquals("Testing Skills Area", assessorProfileResource.getProfile().getSkillsAreas());
+        assertEquals(ACADEMIC, assessorProfileResource.getProfile().getBusinessType());
 
-        List<AffiliationResource> affiliationResources = assessorProfileResource.getAffiliations();
+        List<AffiliationResource> affiliationResources = assessorProfileResource.getProfile().getAffiliations();
         assertEquals(1, affiliationResources.size());
         assertEquals(true, affiliationResources.get(0).getExists());
         assertEquals("University of Nowhere", affiliationResources.get(0).getOrganisation());
         assertEquals(PROFESSIONAL, affiliationResources.get(0).getAffiliationType());
         assertEquals("Head of Debating", affiliationResources.get(0).getPosition());
 
-        assertEquals(emptyList(), assessorProfileResource.getInnovationAreas());
+        assertEquals(emptyList(), assessorProfileResource.getProfile().getInnovationAreas());
     }
 
     @Test

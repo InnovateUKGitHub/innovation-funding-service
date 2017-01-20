@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -468,8 +470,11 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
     @Test
     public void getAssessorProfile() throws Exception {
         AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
-                .withFirstName("Test")
-                .withLastName("Tester")
+                .withUser(newUserResource()
+                        .withFirstName("Test")
+                        .withLastName("Tester")
+                        .build()
+                )
                 .build();
 
         when(assessorServiceMock.getAssessorProfile(1L)).thenReturn(serviceSuccess(assessorProfileResource));

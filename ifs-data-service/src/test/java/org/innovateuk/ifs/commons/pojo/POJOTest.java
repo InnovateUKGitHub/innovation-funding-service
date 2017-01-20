@@ -155,7 +155,7 @@ public class POJOTest {
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
             NewUserStagedInviteListResource.class,
-            AssessorProfileResource.class,
+            ProfileResource.class,
             CompetitionSetupFinanceResource.class,
             ApplicationCountSummaryResource.class
             );

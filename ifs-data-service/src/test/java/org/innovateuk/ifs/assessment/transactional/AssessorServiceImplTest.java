@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
-import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -196,6 +197,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getAssessorProfile() throws Exception {
+        long assessorId = 7L;
+        long profileId = 11L;
+
         Optional<User> user = Optional.of(
                 newUser()
                         .withId(1L)
@@ -204,19 +208,29 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         .withLastName("Bloggs")
                         .build()
         );
+        user.get().setProfileId(profileId); // TODO add to the builder
 
+        Profile profile = newProfile().build();
+
+        UserResource userResource = newUserResource().build();
+        ProfileResource profileResource = newProfileResource().build();
         AssessorProfileResource assessorProfileResource = newAssessorProfileResource().build();
 
-        when(userRepositoryMock.findByIdAndRolesName(1L, ASSESSOR.getName())).thenReturn(user);
-        when(assessorProfileMapperMock.mapToResource(user.get())).thenReturn(assessorProfileResource);
+        when(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName())).thenReturn(user);
+        when(profileRepositoryMock.findOne(profileId)).thenReturn(profile);
+        when(userMapperMock.mapToResource(user.get())).thenReturn(userResource);
+        when(assessorProfileMapperMock.mapToResource(profile)).thenReturn(profileResource);
 
-        ServiceResult<AssessorProfileResource> serviceResult = assessorService.getAssessorProfile(1L);
+
+        ServiceResult<AssessorProfileResource> serviceResult = assessorService.getAssessorProfile(assessorId);
 
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(userRepositoryMock, assessorProfileMapperMock);
-        inOrder.verify(userRepositoryMock).findByIdAndRolesName(1L, ASSESSOR.getName());
-        inOrder.verify(assessorProfileMapperMock).mapToResource(user.get());
+        inOrder.verify(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName()));
+        inOrder.verify(profileRepositoryMock.findOne(profileId));
+        inOrder.verify(userMapperMock.mapToResource(user.get()));
+        inOrder.verify(assessorProfileMapperMock.mapToResource(profile));
         inOrder.verifyNoMoreInteractions();
     }
 }

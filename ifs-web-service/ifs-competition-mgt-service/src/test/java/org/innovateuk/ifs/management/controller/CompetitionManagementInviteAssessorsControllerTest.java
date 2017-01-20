@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -36,6 +37,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -48,6 +50,8 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceB
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
+import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -482,14 +486,22 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build(3);
 
         AssessorProfileResource expectedProfile = newAssessorProfileResource()
-                .withFirstName("Test")
-                .withLastName("Tester")
-                .withEmail("test@test.com")
-                .withPhoneNumber("012345")
-                .withSkillsAreas("A Skill")
-                .withBusinessType(ACADEMIC)
-                .withAddress(expectedAddress)
-                .withInnovationAreas(expectedInnovationAreas)
+                .withUser(
+                        newUserResource()
+                                .withFirstName("Test")
+                                .withLastName("Tester")
+                                .withEmail("test@test.com")
+                                .withPhoneNumber("012345")
+                                .build()
+                )
+                .withProfile(
+                        newProfileResource()
+                                .withSkillsAreas("A Skill")
+                                .withBusinessType(ACADEMIC)
+                                .withInnovationAreas(expectedInnovationAreas)
+                                .withAddress(expectedAddress)
+                                .build()
+                )
                 .build();
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));

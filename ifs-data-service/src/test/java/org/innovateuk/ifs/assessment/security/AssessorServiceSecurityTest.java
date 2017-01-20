@@ -2,10 +2,10 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;

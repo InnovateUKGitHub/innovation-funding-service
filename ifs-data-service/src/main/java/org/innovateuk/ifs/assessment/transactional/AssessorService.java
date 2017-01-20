@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -18,7 +17,7 @@ public interface AssessorService {
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "READ",
-            securedType = AssessorProfileResource.class,
+            securedType = ProfileResource.class,
             description = "Comp Admins can read any Assessor profile")
     ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
 }

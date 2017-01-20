@@ -8,10 +8,12 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -33,32 +35,40 @@ public class AssessorProfileResourceDocs {
     };
 
     public static final AssessorProfileResourceBuilder assessorProfileResourceBuilder = newAssessorProfileResource()
-            .withTitle("Mr")
-            .withFirstName("First")
-            .withLastName("Last")
-            .withPhoneNumber("012434 567890")
-            .withGender(Gender.MALE)
-            .withDisability(Disability.NOT_STATED)
-            .withEthnicity(newEthnicityResource().with(id(1L)).build())
-            .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
-            .withSkillsAreas("Forensic analysis")
-            .withBusinessType(BusinessType.ACADEMIC)
-            .withInnovationAreas(
-                    newInnovationAreaResource()
-                            .withId(2L, 3L)
-                            .withName("Nanochemistry", "Biochemistry")
-                            .withSector(1L)
-                            .build(2)
+            .withUser(
+                    newUserResource()
+                            .withTitle("Mr")
+                            .withFirstName("First")
+                            .withLastName("Last")
+                            .withPhoneNumber("012434 567890")
+                            .withGender(Gender.MALE)
+                            .withDisability(Disability.NOT_STATED)
+//                            .withEthnicity(newEthnicityResource().with(id(1L)).build())
+                            .withEmail("test@test.com")
+                            .build()
             )
-            .withAffiliations(
-                    newAffiliationResource()
-                            .withId(1L)
-                            .withUser(1L)
-                            .withExists(true)
-                            .withAffiliationType(PROFESSIONAL)
-                            .withOrganisation("University of Somewhere")
-                            .withPosition("Professor")
-                            .build(1)
-            )
-            .withEmail("test@test.com");
+            .withProfile(
+                    newProfileResource()
+                            .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
+                            .withSkillsAreas("Forensic analysis")
+                            .withBusinessType(BusinessType.ACADEMIC)
+                            .withInnovationAreas(
+                                    newInnovationAreaResource()
+                                            .withId(2L, 3L)
+                                            .withName("Nanochemistry", "Biochemistry")
+                                            .withSector(1L)
+                                            .build(2)
+                            )
+                            .withAffiliations(
+                                    newAffiliationResource()
+                                            .withId(1L)
+                                            .withUser(1L)
+                                            .withExists(true)
+                                            .withAffiliationType(PROFESSIONAL)
+                                            .withOrganisation("University of Somewhere")
+                                            .withPosition("Professor")
+                                            .build(1)
+                            )
+                    .build()
+            );
 }

@@ -15,16 +15,17 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
@@ -67,14 +68,22 @@ public class InviteAssessorProfileModelPopulatorTest {
                 .build(3);
 
         AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
-                .withFirstName(expectedFirstName)
-                .withLastName(expectedLastName)
-                .withEmail(expectedEmail)
-                .withPhoneNumber(expectedPhone)
-                .withSkillsAreas(expectedSkills)
-                .withBusinessType(ACADEMIC)
-                .withAddress(expectedAddress)
-                .withInnovationAreas(expectedInnovationAreas)
+                .withUser(
+                        newUserResource()
+                                .withFirstName(expectedFirstName)
+                                .withLastName(expectedLastName)
+                                .withEmail(expectedEmail)
+                                .withPhoneNumber(expectedPhone)
+                                .build()
+                )
+                .withProfile(
+                        newProfileResource()
+                                .withBusinessType(ACADEMIC)
+                                .withSkillsAreas(expectedSkills)
+                                .withInnovationAreas(expectedInnovationAreas)
+                                .withAddress(expectedAddress)
+                                .build()
+                )
                 .build();
 
         when(competitionService.getById(competitionId)).thenReturn(expectedCompetition);

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.*;
 
@@ -11,15 +12,14 @@ import java.util.List;
 /**
  * DTO to encapsulate an Assessors profile view.
  */
-public class AssessorProfileResource extends UserProfileBaseResource {
+public class ProfileResource {
 
-    private UserResource userResource;
     private List<InnovationAreaResource> innovationAreas = new ArrayList<>();
-
 
     private BusinessType businessType;
     private String skillsAreas;
     private List<AffiliationResource> affiliations = new ArrayList<>();
+    private AddressResource address;
 
     public List<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
@@ -53,13 +53,22 @@ public class AssessorProfileResource extends UserProfileBaseResource {
         this.affiliations = affiliations;
     }
 
+
+    public AddressResource getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressResource address) {
+        this.address = address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorProfileResource that = (AssessorProfileResource) o;
+        ProfileResource that = (ProfileResource) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
