@@ -122,7 +122,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         users.add(testUser2);
         users.add(testUser3);
 
-        when(userServiceMock.findAll()).thenReturn(serviceSuccess(users));
+        when(baseUserServiceMock.findAll()).thenReturn(serviceSuccess(users));
         mockMvc.perform(get("/user/findAll/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is((Number) testUser1.getId().intValue())))
@@ -147,7 +147,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void userControllerShouldReturnUserById() throws Exception {
         UserResource testUser1 = newUserResource().withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
 
-        when(userServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
+        when(baseUserServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
         mockMvc.perform(get("/user/id/" + testUser1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
@@ -227,7 +227,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void userControllerShouldReturnUserByUid() throws Exception {
         UserResource testUser1 = newUserResource().withUID("aebr34-ab345g-234gae-agewg").withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
 
-        when(userServiceMock.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
+        when(baseUserServiceMock.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
 
         mockMvc.perform(get("/user/uid/" + testUser1.getUid()))
                 .andExpect(status().isOk())

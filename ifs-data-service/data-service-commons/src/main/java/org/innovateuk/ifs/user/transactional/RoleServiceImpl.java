@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.user.domain.Role} data.
  */
 @Service
-public class RoleServiceImpl extends BaseTransactionalService implements RoleService {
+public class RoleServiceImpl extends UserTransactionalService implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;

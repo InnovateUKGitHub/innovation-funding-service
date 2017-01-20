@@ -197,6 +197,8 @@ ${assessment_skills_url}    ${server}/assessment/profile/skills
 ${assessment_skills_edit_url}   ${server}/assessment/profile/skills/edit
 ${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
+${Application_management_dashboard}    ${server}/management/assessment/competition/4
+
 # Database variables
 ${database_name}    ifs
 ${database_user}    root
