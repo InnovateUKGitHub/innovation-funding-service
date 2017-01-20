@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -31,6 +32,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @Rollback
+@Ignore
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
 
     @Autowired

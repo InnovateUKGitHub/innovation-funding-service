@@ -137,7 +137,6 @@
                             <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
-                            <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -147,9 +146,6 @@
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Re-assign</a>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
