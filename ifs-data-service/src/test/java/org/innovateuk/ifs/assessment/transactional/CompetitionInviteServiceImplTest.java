@@ -775,7 +775,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         long competitionId = 1L;
 
         List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
-                .withId(1L)
                 .withName("Emerging Tech and Industries")
                 .build(1);
 
@@ -789,7 +788,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(1);
 
         InnovationArea innovationArea = newInnovationArea()
-                .withId(1L)
                 .withName("Emerging Tech and Industries")
                 .build();
 
@@ -819,6 +817,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         assertEquals(expected, actual);
 
         verify(userRepositoryMock, only()).findAllAvailableAssessorsByCompetition(competitionId);
+        verify(profileRepositoryMock, times(2)).findOne(profile.getId());
+        verify(innovationAreaMapperMock).mapToResource(innovationArea);
     }
 
     @Test
@@ -826,11 +826,11 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea().build();
-        InnovationAreaResource innovationAreaCategoryResource = newInnovationAreaResource()
+        InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
                 .withId(2L)
                 .withName("Earth Observation")
                 .build();
-        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaCategoryResource);
+        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
 
         Profile profile1 = newProfile()
                 .withSkillsAreas("Java")
@@ -909,7 +909,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(5);
 
         when(competitionInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED)).thenReturn(combineLists(existingUserInvites, newUserInvite));
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaCategoryResource);
+        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
         when(profileRepositoryMock.findOne(profile1.getId())).thenReturn(profile1);
         when(profileRepositoryMock.findOne(profile2.getId())).thenReturn(profile2);
         when(profileRepositoryMock.findOne(profile3.getId())).thenReturn(profile3);
@@ -929,11 +929,11 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea().build();
-        InnovationAreaResource innovationAreaCategoryResource = newInnovationAreaResource()
+        InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
                 .withId(2L)
                 .withName("Earth Observation")
                 .build();
-        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaCategoryResource);
+        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
 
         Profile[] profiles = newProfile()
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
@@ -971,16 +971,17 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
         when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
         when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-//        when(innovationAreaMapperMock.mapToResource((InnovationArea) null)).thenReturn( new ArrayList<InnovationAreaResource>());
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaCategoryResource);
+        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
 
 
         List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
 
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock);
+        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, profileRepositoryMock, innovationAreaMapperMock);
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
         inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
+        inOrder.verify(profileRepositoryMock, calls(2)).findOne(isA(Long.class));
+        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
 
         inOrder.verifyNoMoreInteractions();
     }

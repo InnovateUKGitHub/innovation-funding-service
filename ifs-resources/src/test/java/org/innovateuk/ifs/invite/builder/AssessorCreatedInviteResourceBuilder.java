@@ -39,6 +39,7 @@ public class AssessorCreatedInviteResourceBuilder extends BaseBuilder<AssessorCr
         return withArraySetFieldByReflection("inviteId", value);
     }
 
+    // TODO INFUND 7674
     public AssessorCreatedInviteResourceBuilder withInnovationAreas(List<InnovationAreaResource>... value) {
         return withArraySetFieldByReflection("innovationAreas", value);
     }

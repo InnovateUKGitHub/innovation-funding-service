@@ -322,7 +322,7 @@ public class CompetitionSetupController {
 
 
     /* AJAX Function */
-    @RequestMapping(value = "/getInnovationAreas/{innovationSectorId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getInnovationArea/{innovationSectorId}", method = RequestMethod.GET)
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
