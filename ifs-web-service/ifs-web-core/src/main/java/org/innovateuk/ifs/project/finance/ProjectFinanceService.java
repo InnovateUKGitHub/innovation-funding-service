@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.finance;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -43,6 +46,10 @@ public interface ProjectFinanceService {
     ViabilityResource getViability(Long projectId, Long organisationId);
 
     ServiceResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating);
+
+    EligibilityResource getEligibility(Long projectId, Long organisationId);
+
+    ServiceResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityStatus eligibilityStatus);
 
     boolean isCreditReportConfirmed(Long projectId, Long organisationId);
 
