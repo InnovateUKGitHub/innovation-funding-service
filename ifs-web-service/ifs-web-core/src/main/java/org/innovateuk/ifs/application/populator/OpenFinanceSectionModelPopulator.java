@@ -5,10 +5,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
@@ -81,13 +78,16 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                 section, true, section.getId(), user, isSubFinanceSection(section));
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition) || SectionType.FINANCE.equals(section.getType()));
         sectionApplicationViewModel.setCurrentApplication(application);
         sectionApplicationViewModel.setCurrentCompetition(competition);
 
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
+        addFundingSection(openFinanceSectionViewModel, application.getCompetition());
+
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openFinanceSectionViewModel.getSectionsMarkedAsComplete())
+                || SectionType.FINANCE.equals(section.getType()));
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
@@ -217,6 +217,10 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
 
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
+    }
+
+    private void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
+        viewModel.setFundingSection(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).stream().findFirst().orElse(null));
     }
 
     //TODO - INFUND-7482 - remove usages of Model model

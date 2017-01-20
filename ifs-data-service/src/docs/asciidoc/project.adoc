@@ -677,3 +677,16 @@ include::{snippets}/project/get-grant-offer-letter-workflow-state/http-response.
 
 ===== Curl Example
 include::{snippets}/project/get-grant-offer-letter-workflow-state/curl-request.adoc[]
+
+=== Get Finance Check Eligibility
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-eligibility/http-request.adoc[]
+include::{snippets}/project/get-finance-check-eligibility/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-eligibility/http-response.adoc[]
+include::{snippets}/project/get-finance-check-eligibility/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-eligibility/curl-request.adoc[]

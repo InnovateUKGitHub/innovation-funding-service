@@ -310,9 +310,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
-        return find(getAssessment(assessmentId)).andOnSuccess(assessment ->
-                sectionService.getByCompetitionIdVisibleForAssessment(assessment.getParticipant().getApplication().getCompetition().getId())
-                        .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList())));
+        return find(getAssessment(assessmentId)).andOnSuccess(assessment -> {
+            Application application = applicationRepository.findOne(assessment.getParticipant().getApplicationId());
+            return sectionService.getByCompetitionIdVisibleForAssessment(application.getCompetition().getId())
+                    .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList()));
+        });
     }
 
     @Override
@@ -345,7 +347,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
         if (question.hasMultipleStatuses()) {
             //INFUND-3016: The current user might not have a QuestionStatus, but maybe someone else in his organisation does? If so, use that one.
-            List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), markedAsCompleteBy.getOrganisation().getId());
+            List<ProcessRole> otherOrganisationMembers = processRoleRepository.findByApplicationIdAndOrganisationId(application.getId(), markedAsCompleteBy.getOrganisationId());
             Optional<QuestionStatus> optionalQuestionStatus = otherOrganisationMembers.stream()
                     .map(m -> getQuestionStatusByMarkedAsCompleteId(question, application.getId(), m.getId()))
                     .filter(m -> m != null)
@@ -437,7 +439,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, Long organisationId) {
         Boolean markedAsComplete = null;
         if (questionStatus.getMarkedAsCompleteBy() != null &&
-                questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {
+                questionStatus.getMarkedAsCompleteBy().getOrganisationId().equals(organisationId)) {
             markedAsComplete = questionStatus.getMarkedAsComplete();
         }
         return Optional.ofNullable(markedAsComplete);
@@ -453,7 +455,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {
         return questionStatuses.stream().
-                filter(qs -> !qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisation().getId().equals(organisationId)))
+                filter(qs -> !qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisationId().equals(organisationId)))
                 .collect(Collectors.toList());
     }
 

@@ -86,6 +86,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Assessor Journey
      */
+    ASSESSMENT_CREATE_FAILED(BAD_REQUEST),
     ASSESSMENT_REJECTION_FAILED(BAD_REQUEST),
     ASSESSMENT_RECOMMENDATION_FAILED(BAD_REQUEST),
     ASSESSMENT_ACCEPT_FAILED(BAD_REQUEST),

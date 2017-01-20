@@ -38,7 +38,7 @@
                     <span class="form-label-bold">Finances form</span>
                     <span th:if="${#fields.hasErrors('fullApplicationFinance')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
-		                </span>
+                    </span>
                 </legend>
                 <label class="block-label selection-button-radio" for="full-application-finance-yes">
                     <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
@@ -54,7 +54,7 @@
         <div th:class="${#fields.hasErrors('includeGrowthTable')}? 'form-group error':'form-group'">
             <fieldset class="inline">
                 <legend>
-                    <span class="form-label-bold">Include Project Growth Table</span>
+                    <span class="form-label-bold">Include project growth table</span>
                     <span th:if="${#fields.hasErrors('includeGrowthTable')}" th:remove="tag">
 		                      <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}" />
 		                </span>
@@ -64,7 +64,7 @@
                     Yes
                 </label>
                 <label class="block-label selection-button-radio" for="include-growth-table-no">
-                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" />
+                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${isSectorCompetition}"/>
                     No
                 </label>
             </fieldset>
@@ -79,7 +79,7 @@
         <dl class="application-question-list grid-row">
             <dt class="column-third">Full application finances</dt>
             <dd class="column-two-thirds" th:text="${competitionSetupForm.fullApplicationFinance ? 'Full application finances' :  'Light finances'}" />
-            <dt class="column-third">Include Project Growth Table</dt>
+            <dt class="column-third">Include project growth table</dt>
             <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
         </dl>
         <div class="extra-margin">

@@ -73,4 +73,9 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     public RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions) {
         return putWithRestResult(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, Void.class);
     }
+
+    @Override
+    public RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
+        return postWithRestResult(format("%s", assessmentRestURL), assessmentCreateResource, AssessmentResource.class);
+    }
 }

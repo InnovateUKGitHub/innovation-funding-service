@@ -76,6 +76,8 @@ configurations {
 }
 
 dependencies {
+    compile project(":ifs-data-service:data-service-commons")
+
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.hibernate:hibernate-validator:5.2.4.Final"
     compile "org.springframework.security:spring-security-crypto"
@@ -107,9 +109,7 @@ dependencies {
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.0"
 
 
-    compile project(":ifs-resources")
     testCompile project(':ifs-resources').sourceSets.test.output
-    compile project(":ifs-commons")
     testCompile project(":ifs-commons").sourceSets.test.output
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
