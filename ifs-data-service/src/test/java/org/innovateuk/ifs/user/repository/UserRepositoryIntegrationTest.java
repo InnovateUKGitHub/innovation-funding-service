@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -128,5 +126,19 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
+    }
+
+    @Test
+    public void findByIdAndRolesName() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
+
+        assertTrue(user.isPresent());
+    }
+
+    @Test
+    public void findByIdAndRolesName_wrongRole() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
+
+        assertFalse(user.isPresent());
     }
 }

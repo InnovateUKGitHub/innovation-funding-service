@@ -49,7 +49,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     private InvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
         return new InvitedAssessorRowViewModel(
                 assessorCreatedInviteResource.getName(),
-                assessorCreatedInviteResource.getInnovationAreaName(),
+                assessorCreatedInviteResource.getInnovationAreas(),
                 assessorCreatedInviteResource.isCompliant(),
                 assessorCreatedInviteResource.getEmail(),
                 assessorCreatedInviteResource.getInviteId()

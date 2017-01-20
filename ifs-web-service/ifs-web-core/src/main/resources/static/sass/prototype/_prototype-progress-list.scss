@@ -104,6 +104,10 @@
           font-size: 13px;
         }
       }
+      .awaiting {
+        @extend .deadline;
+        color: $secondary-text-colour;
+      }
       .score {
         .percent {
           font-size: 35px;

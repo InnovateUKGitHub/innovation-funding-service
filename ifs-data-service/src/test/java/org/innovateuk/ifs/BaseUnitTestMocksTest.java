@@ -87,6 +87,7 @@ import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.mapper.ProcessOutcomeMapper;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -533,6 +534,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected NotificationSender notificationSender;
+
+    @Mock
+    protected ActivityStateRepository activityStateRepositoryMock;
 
     @Before
     public void setupMockInjection() {

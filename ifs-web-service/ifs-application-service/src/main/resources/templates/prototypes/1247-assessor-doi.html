@@ -16,7 +16,9 @@
 
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
 
-    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" th:unless="${param.status != null and param.status[0] == 'edit'}" />
+
+    <th:block th:if="${param.status != null and param.status[0] == 'edit'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Declaration of interest'}, ${'/prototypes/5230-assessor-doi?version=v2'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -75,7 +77,7 @@
 
 			<div class="visuallyhidden extra-margin-bottom" id="add-appointments">
 
-				<div class="table-overflow">
+				<!-- <div class="table-overflow">
 					<table>
 						<thead>
 							<tr>
@@ -97,8 +99,31 @@
 							</tr>
 						</tbody>
 					</table>
+				</div> -->
 
-				</div>
+        <div class="grid-row">
+          <div class="column-one-third">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
+              <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
+            </div>
+          </div>
+          <div class="column-one-third">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-appointments-position">Position</label>
+              <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
+            </div>
+          </div>
+          <div class="column-one-third extra-margin-top">
+            <a href="#">Remove</a>
+          </div>
+        </div>
+
+        <div class="grid-row section-divide">
+          <div class="column-full alignright">
+            <a href="#" class="button-link-style">Add another position</a>
+          </div>
+        </div>
 
 			</div>
 
@@ -148,7 +173,7 @@
 				</fieldset>
 			</div>
 
-			<div id="add-family" class="extra-margin-bottom visuallyhidden">
+			<!-- <div id="add-family" class="extra-margin-bottom visuallyhidden">
 
 				<table>
 					<thead>
@@ -176,7 +201,38 @@
 					</tbody>
 				</table>
 
-			</div>
+			</div> -->
+      <div id="add-family" class="extra-margin-bottom visuallyhidden">
+        <div class="grid-row">
+          <div class="column-one-quarter">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-family-relation">Relation</label>
+              <input type="text" id="doi-family-relation" name="doi-family-relation" class="form-control width-full" />
+            </div>
+          </div>
+          <div class="column-one-quarter">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-family-organisation">Organisation</label>
+              <input type="text" id="doi-family-organisation" name="doi-family-organisation" class="form-control width-full" />
+            </div>
+          </div>
+          <div class="column-one-quarter">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-family-position">Position</label>
+              <input type="text" id="doi-family-position" name="doi-family-position" class="form-control width-full" />
+            </div>
+          </div>
+          <div class="column-one-quarter extra-margin-top">
+            <a href="#">Remove</a>
+          </div>
+        </div>
+
+        <div class="grid-row section-divide">
+          <div class="column-full alignright">
+            <a href="#" class="button-link-style">Add another family member</a>
+          </div>
+        </div>
+      </div>
 
 		</fieldset>
 
@@ -206,7 +262,7 @@
 
 		</fieldset>
 
-		<div class="form-block">
+		<div class="form-block extra-margin-bottom">
 			<label class="block-label selection-button-checkbox" for="confirm-doi">
 				<input id="confirm-doi" type="checkbox" value="" />
 				I confirm that for the financial year ending 31 March 2017 the above represents an accurate account of my interests outside Innovate UK
@@ -226,7 +282,10 @@
 		</div>
 
 		<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-			<button class="button button-large extra-margin" formaction="/prototypes/5230-assessor-doi?version=v2">Save changes</button>
+			<div class="extra-margin">
+			  <button class="button button-large" formaction="/prototypes/5230-assessor-doi?version=v2">Save and return to your declaration of interest</button>
+			  <a href="/prototypes/5230-assessor-doi?version=v2" class="button-link-style">Cancel</a>
+			</div>
 		</div>
 
 	</form>

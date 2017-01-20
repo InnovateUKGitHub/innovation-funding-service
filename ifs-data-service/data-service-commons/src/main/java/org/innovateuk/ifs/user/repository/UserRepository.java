@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -20,7 +19,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Optional<User> findByEmailAndStatus(@Param("email") String email, @Param("status") final UserStatus status);
 
-    Optional<User> findByIdAndRolesName(Long id, String type);
+    Optional<User> findByIdAndRolesName(Long id, String name);
 
     @Override
     List<User> findAll();

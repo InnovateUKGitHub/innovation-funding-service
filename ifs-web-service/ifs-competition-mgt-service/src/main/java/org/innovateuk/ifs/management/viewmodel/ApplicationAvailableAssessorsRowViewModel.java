@@ -11,8 +11,13 @@ public class ApplicationAvailableAssessorsRowViewModel extends ApplicationAssess
     private String skillAreas;
     private long submittedCount;
 
-    public ApplicationAvailableAssessorsRowViewModel(String name, String skillAreas, long totalApplications, long assignedApplications, long submittedApplications) {
-        super(name, totalApplications, assignedApplications);
+    public ApplicationAvailableAssessorsRowViewModel(long id,
+                                                     String name,
+                                                     String skillAreas,
+                                                     long totalApplications,
+                                                     long assignedApplications,
+                                                     long submittedApplications) {
+        super(id, name, totalApplications, assignedApplications);
         this.skillAreas = skillAreas;
         this.submittedCount = submittedApplications;
     }
