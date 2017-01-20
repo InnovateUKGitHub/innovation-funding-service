@@ -19,17 +19,20 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
     private boolean submitted;
     private long assessmentId;
 
-    public ApplicationAssessmentProgressAssignedRowViewModel(String name,
-                                                             long totalApplicationsCount,
-                                                             long assignedCount,
-                                                             BusinessType businessType,
-                                                             List<String> innovationAreas,
-                                                             boolean notified,
-                                                             boolean accepted,
-                                                             boolean started,
-                                                             boolean submitted,
-                                                             long assessmentId) {
-        super(name, totalApplicationsCount, assignedCount);
+    public ApplicationAssessmentProgressAssignedRowViewModel(
+            long id,
+            String name,
+            long totalApplicationsCount,
+            long assignedCount,
+            BusinessType businessType,
+            List<String> innovationAreas,
+            boolean notified,
+            boolean accepted,
+            boolean started,
+            boolean submitted,
+            long assessmentId
+    ) {
+        super(id, name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
         this.innovationAreas = innovationAreas;
         this.notified = notified;
@@ -69,13 +72,9 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         ApplicationAssessmentProgressAssignedRowViewModel that = (ApplicationAssessmentProgressAssignedRowViewModel) o;
 

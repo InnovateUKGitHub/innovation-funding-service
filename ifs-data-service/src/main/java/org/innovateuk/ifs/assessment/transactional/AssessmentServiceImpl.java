@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -8,21 +9,24 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.Assessment} data.
@@ -38,6 +42,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -135,5 +142,56 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         }
 
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
+        return getAssessor(assessmentCreateResource.getAssessorId())
+                .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
+                        .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
+                        .andOnSuccess(application -> getRole(UserRoleType.ASSESSOR)
+                                .andOnSuccess(role -> getAssessmentActivityState(AssessmentStates.CREATED)
+                                        .andOnSuccess(activityState -> {
+                                            ProcessRole processRole = new ProcessRole();
+                                            processRole.setUser(assessor);
+                                            processRole.setApplicationId(application.getId());
+                                            processRole.setRole(role);
+
+                                            ProcessRole newProcessRole = processRoleRepository.save(processRole);
+
+                                            Assessment assessment = new Assessment(application, newProcessRole);
+                                            assessment.setActivityState(activityState);
+
+                                            return serviceSuccess(assessmentRepository.save(assessment))
+                                                    .andOnSuccessReturn(assessmentMapper::mapToResource);
+                                        })
+                                )
+                        )
+                );
+    }
+
+    private ServiceResult<User> getAssessor(Long assessorId) {
+        return find(userRepository.findByIdAndRolesName(assessorId, UserRoleType.ASSESSOR.getName()), notFoundError(User.class, assessorId));
+    }
+
+    private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
+        boolean noAssessmentOrWithdrawn = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId())
+                .map(assessment -> assessment.getActivityState().equals(AssessmentStates.WITHDRAWN))
+                .orElse(true);
+
+        if (noAssessmentOrWithdrawn) {
+            return serviceSuccess(application);
+        }
+
+        return serviceFailure(new Error(ASSESSMENT_CREATE_FAILED, assessor.getId(), application.getId()));
+    }
+
+    private ServiceResult<ActivityState> getAssessmentActivityState(AssessmentStates assessmentState) {
+        return find(
+                activityStateRepository.findOneByActivityTypeAndState(
+                        ActivityType.APPLICATION_ASSESSMENT,
+                        assessmentState.getBackingState()
+                ),
+                notFoundError(ActivityState.class, assessmentState));
     }
 }

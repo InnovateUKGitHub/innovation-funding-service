@@ -217,6 +217,8 @@ public class BaseUnitTest {
     public CookieUtil cookieUtil;
     @Mock
     public CategoryService categoryServiceMock;
+    @Mock
+    public AssessmentRestService assessmentRestService;
 
     @Spy
     @InjectMocks

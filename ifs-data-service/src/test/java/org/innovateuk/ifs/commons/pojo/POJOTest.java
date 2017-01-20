@@ -155,8 +155,9 @@ public class POJOTest {
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
             NewUserStagedInviteListResource.class,
-            CompetitionSetupFinanceResource.class,
-            ApplicationCountSummaryResource.class
+            ApplicationCountSummaryResource.class,
+            AssessmentCreateResource.class,
+            CompetitionSetupFinanceResource.class
             );
 
     @Before
@@ -183,6 +184,8 @@ public class POJOTest {
 
     @Test
     public void ensureExpectedPojoCount() {
+        classes.forEach(pojoClass -> System.out.println(pojoClass.getClazz()));
+
         Assert.assertEquals(String.format("Classes added / removed? %s => %s ", classesToTest.size()+EXPECTED_RESOURCES, classes.size()), classesToTest.size()+EXPECTED_RESOURCES, classes.size());
     }
 
