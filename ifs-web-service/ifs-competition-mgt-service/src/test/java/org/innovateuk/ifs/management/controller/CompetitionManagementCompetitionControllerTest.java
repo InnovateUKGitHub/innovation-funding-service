@@ -3,6 +3,8 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.management.model.CompetitionClosedModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
@@ -14,8 +16,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
@@ -48,8 +54,16 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withName("Technology inspired")
                 .build();
 
+
+        List<MilestoneResource> milestoneResources = newMilestoneResource()
+               .withId(1L)
+                 .withName(MilestoneType.OPEN_DATE)
+                .withDate(LocalDateTime.now())
+                .withCompetitionId(1L).build(1);
+
         when(competitionService.getById(competition.getId())).thenReturn(competition);
         when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId())).thenReturn(restSuccess(3L));
+        when(milestoneServiceMock.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(milestoneResources);
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
@@ -72,7 +86,15 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withName("Photonics for health")
                 .build();
 
+        List<MilestoneResource> milestoneResources = newMilestoneResource()
+                .withId(1L)
+                .withName(MilestoneType.OPEN_DATE)
+                .withDate(LocalDateTime.now())
+                .withCompetitionId(1L).build(1);
+
         when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId())).thenReturn(restSuccess(3L));
+        when(milestoneServiceMock.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(milestoneResources);
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}", competition.getId()))
                 .andExpect(status().isOk())
