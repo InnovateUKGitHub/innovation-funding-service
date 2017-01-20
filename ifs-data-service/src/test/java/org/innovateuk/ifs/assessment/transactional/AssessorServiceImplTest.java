@@ -226,11 +226,11 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, assessorProfileMapperMock);
-        inOrder.verify(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName()));
-        inOrder.verify(profileRepositoryMock.findOne(profileId));
-        inOrder.verify(userMapperMock.mapToResource(user.get()));
-        inOrder.verify(assessorProfileMapperMock.mapToResource(profile));
+        InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock, userMapperMock, assessorProfileMapperMock);
+        inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
+        inOrder.verify(profileRepositoryMock).findOne(profileId);
+        inOrder.verify(userMapperMock).mapToResource(user.get());
+        inOrder.verify(assessorProfileMapperMock).mapToResource(profile);
         inOrder.verifyNoMoreInteractions();
     }
 }

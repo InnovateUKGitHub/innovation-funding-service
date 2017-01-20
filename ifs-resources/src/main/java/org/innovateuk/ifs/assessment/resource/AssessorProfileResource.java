@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.assessment.resource;
 
-import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 
-// we're not going to have a mapper for this
 public class AssessorProfileResource {
 
     private UserResource user;
@@ -25,5 +23,14 @@ public class AssessorProfileResource {
 
     public ProfileResource getProfile() {
         return profile;
+    }
+
+    // TODO we can remove the setters once POJOTest is removed
+    public void setUser(UserResource user) {
+        this.user = user;
+    }
+
+    public void setProfile(ProfileResource profile) {
+        this.profile = profile;
     }
 }
