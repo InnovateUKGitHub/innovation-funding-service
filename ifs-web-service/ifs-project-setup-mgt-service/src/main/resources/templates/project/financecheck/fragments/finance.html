@@ -47,7 +47,7 @@
 
         <th:block th:if="${(viewmode == 'readonly') or (viewmode == 'edit')}">
 
-            <div class="form-group" th:attr="data-repeatable-container=${question.id}" th:if="${costCategory!=null}">
+            <div th:attr="data-repeatable-container=${question.id}" th:if="${costCategory!=null}">
                 <div class="form-group inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}">
                         <span>Working Days per Year</span>
@@ -104,7 +104,8 @@
             </th:block>
     </th:block>
 
-    <th:block th:fragment="labour_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
+    <th:block th:fragment="labour_row">
+        <th:block  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
             <td class="form-group"   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
 
@@ -199,6 +200,7 @@
             </td>
 
         </tr>
+    </th:block>
     </th:block>
 
     <!-- ===========================Form: overheads =========================== -->

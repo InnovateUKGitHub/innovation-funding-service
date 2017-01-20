@@ -4,7 +4,7 @@
     <div th:include="fragments/layout :: head" th:with="pageTitle='Eligibility'" th:remove="tag" />
 </head>
 
-<body th:with="context='project-management'">
+<body th:with="context='project-management'" class="eligibility-form">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -50,10 +50,6 @@
     </div>
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"  enctype="multipart/form-data" novalidate="novalidate">
-        <div class="page-title">
-          <h1 class="heading-xlarge" th:text="${model.projectName}"></h1>
-        </div>
-        <hr/>
         <h2 class="heading-medium">Finances overview</h2>
         <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
         <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
@@ -61,6 +57,7 @@
             <h3>
                 <span th:text="${subSection.getName()}" th:remove="tag" />
                 <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
+                <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}" />
             </h3>
             <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
                 <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
