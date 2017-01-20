@@ -16,8 +16,16 @@ public class ApplicationAssessmentProgressRejectedRowViewModel extends Applicati
     private String rejectReason;
     private String rejectComment;
 
-    public ApplicationAssessmentProgressRejectedRowViewModel(String name, long totalApplicationsCount, long assignedCount, BusinessType businessType, List<String> innovationAreas, String rejectReason, String rejectComment) {
-        super(name, totalApplicationsCount, assignedCount);
+    public ApplicationAssessmentProgressRejectedRowViewModel(
+            long id,
+            String name,
+            long totalApplicationsCount,
+            long assignedCount,
+            BusinessType businessType,
+            List<String> innovationAreas,
+            String rejectReason,
+            String rejectComment) {
+        super(id, name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
         this.innovationAreas = innovationAreas;
         this.rejectReason = rejectReason;

@@ -128,8 +128,6 @@ public class BaseUnitTest {
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
-    public AssessmentRestService assessmentRestService;
-    @Mock
     public InviteOrganisationRestService inviteOrganisationRestService;
     @Mock
     public UserAuthenticationService userAuthenticationService;

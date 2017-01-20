@@ -14,8 +14,14 @@ public class ApplicationAssessmentProgressPreviouslyAssignedRowViewModel extends
     private BusinessType businessType;
     private List<String> innovationAreas;
 
-    public ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(String name, long totalApplicationsCount, long assignedCount, BusinessType businessType, List<String> innovationAreas) {
-        super(name, totalApplicationsCount, assignedCount);
+    public ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(
+            long id,
+            String name,
+            long totalApplicationsCount,
+            long assignedCount,
+            BusinessType businessType,
+            List<String> innovationAreas) {
+        super(id, name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
         this.innovationAreas = innovationAreas;
     }

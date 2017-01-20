@@ -39,7 +39,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                     .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
 
     public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, AvailableAssessorsSortFieldType sortSelection) {
-        ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
+        ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
+                .getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
 
         List<ApplicationAssessorResource> assessors = applicationAssessmentSummaryRestService.getAssessors(applicationId).getSuccessObjectOrThrowException();
         Map<Boolean, List<ApplicationAssessorResource>> assessorsPartitionedByAvailable = assessors.stream().collect(partitioningBy(ApplicationAssessorResource::isAvailable));
@@ -71,7 +72,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                 .collect(toList());
     }
 
-    private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> getPreviouslyAssignedAssessors(List<ApplicationAssessorResource> assessors) {
+    private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> getPreviouslyAssignedAssessors(
+            List<ApplicationAssessorResource> assessors) {
         return assessors.stream()
                 .filter(ApplicationAssessorResource::isWithdrawn)
                 .map(this::getPreviouslyAssignedRowViewModel)
@@ -90,13 +92,15 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessorResource.isAccepted(),
                 applicationAssessorResource.isStarted(),
                 applicationAssessorResource.isSubmitted(),
-                applicationAssessorResource.getMostRecentAssessmentId());
-                applicationAssessorResource.isSubmitted()
+                applicationAssessorResource.getMostRecentAssessmentId()
         );
     }
 
-    private ApplicationAssessmentProgressRejectedRowViewModel getRejectedRowViewModel(ApplicationAssessorResource applicationAssessorResource) {
-        return new ApplicationAssessmentProgressRejectedRowViewModel(applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
+    private ApplicationAssessmentProgressRejectedRowViewModel getRejectedRowViewModel(
+            ApplicationAssessorResource applicationAssessorResource) {
+        return new ApplicationAssessmentProgressRejectedRowViewModel(
+                applicationAssessorResource.getUserId(),
+                applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
                 applicationAssessorResource.getTotalApplicationsCount(),
                 applicationAssessorResource.getAssignedCount(),
                 applicationAssessorResource.getBusinessType(),
@@ -106,8 +110,11 @@ public class ApplicationAssessmentProgressModelPopulator {
         );
     }
 
-    private ApplicationAssessmentProgressPreviouslyAssignedRowViewModel getPreviouslyAssignedRowViewModel(ApplicationAssessorResource applicationAssessorResource) {
-        return new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
+    private ApplicationAssessmentProgressPreviouslyAssignedRowViewModel getPreviouslyAssignedRowViewModel(
+            ApplicationAssessorResource applicationAssessorResource) {
+        return new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(
+                applicationAssessorResource.getUserId(),
+                applicationAssessorResource.getFirstName() + " " + applicationAssessorResource.getLastName(),
                 applicationAssessorResource.getTotalApplicationsCount(),
                 applicationAssessorResource.getAssignedCount(),
                 applicationAssessorResource.getBusinessType(),

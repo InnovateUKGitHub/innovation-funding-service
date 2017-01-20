@@ -17,13 +17,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
@@ -34,9 +31,6 @@ import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -164,7 +158,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(
                 post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -301,21 +295,21 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
     private List<ApplicationAssessmentProgressRejectedRowViewModel> setupExpectedRejectedRows() {
         return asList(
-                new ApplicationAssessmentProgressRejectedRowViewModel("Angela Casey", 6, 6, ACADEMIC,
+                new ApplicationAssessmentProgressRejectedRowViewModel(7L, "Angela Casey", 6, 6, ACADEMIC,
                         asList("Infrastructure systems", "Earth Observation"), "Conflict of interest", "Member of board of directors"),
-                new ApplicationAssessmentProgressRejectedRowViewModel("Anne Chadwick", 7, 4, BUSINESS,
+                new ApplicationAssessmentProgressRejectedRowViewModel(8L, "Anne Chadwick", 7, 4, BUSINESS,
                         asList("Internet of Things", "Open"), "Not available", "I do like reviewing the applications to your competitions but please do not assign so many to me."),
-                new ApplicationAssessmentProgressRejectedRowViewModel("David Cherrie", 1, 1, ACADEMIC,
+                new ApplicationAssessmentProgressRejectedRowViewModel(9L, "David Cherrie", 1, 1, ACADEMIC,
                         asList("Creative Economy", "Bioscience"), "Not my area of expertise", "No prior experience"));
     }
 
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> setupExpectedPreviouslyAssignedRows() {
         return asList(
-                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel("Paul Cousins", 24, 6, BUSINESS,
+                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(10L, "Paul Cousins", 24, 6, BUSINESS,
                         asList("Data", "Cyber Security")),
-                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel("Graeme Crawford", 2, 1, ACADEMIC,
+                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(11L, "Graeme Crawford", 2, 1, ACADEMIC,
                         asList("User Experience", "Precision Medicine")),
-                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel("Lawrence Currie", 5, 3, BUSINESS,
+                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(12L, "Lawrence Currie", 5, 3, BUSINESS,
                         asList("Advanced Materials", "Nuclear"))
         );
     }
