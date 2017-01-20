@@ -68,9 +68,9 @@ public class ApplicationResource {
     private String previousApplicationNumber;
     private String previousApplicationTitle;
 
-    @NotNull(message="{validation.application.research.category.required}")
     private Set<ResearchCategoryResource> researchCategories;
 
+    @NotNull(message="{validation.application.research.category.required}")
     private Long researchCategoryId;
 
     public Long getId() {

@@ -138,14 +138,14 @@
                                 <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')" th:remove="tag" />
                             </legend>
 
-                            <label th:class="${'block-label selection-button-radio '  + (cat.id == application.researchCategoryId ? ' selected focused' : '')}"  th:each="cat : ${model.application.researchCategories}" th:for="${'financePosition-cat-' + cat.id}">
+                            <label th:class="${'block-label selection-button-radio '  + (cat.id == application.researchCategoryId ? ' selected focused' : '')}"  th:each="cat : ${researchCategories}" th:for="${'financePosition-cat-' + cat.id}">
 
                                 <input th:value="${cat.id}"
                                        type="radio"
                                        th:name="application.researchCategoryId"
                                        th:id="${'financePosition-cat-' + cat.id}"
-                                       th:checked="${cat.id == model.application.researchCategoryId}"
-                                       th:disabled="${readonly and (cat.id != model.application.researchCategoryId)}"
+                                       th:checked="${cat.id == rsCategoryId}"
+                                       th:disabled="${readonly and (cat.id != rsCategoryId)}"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.application.research.category.required}"/>
                                 <span th:text="${cat.name}" th:remove="tag" />
