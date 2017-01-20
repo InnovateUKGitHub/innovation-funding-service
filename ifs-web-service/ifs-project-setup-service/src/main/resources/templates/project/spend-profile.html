@@ -38,7 +38,7 @@
 
         <div class="error-summary" th:if="${form == null}"
              th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
-            <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+            <h2 class="heading-medium error-summary-heading">You cannot send us your spend profile. Your total costs are higher than the eligible project costs.</h2>
             Please review
             <ul class="error-summary-list">
                 <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
