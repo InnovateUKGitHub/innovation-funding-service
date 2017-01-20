@@ -15,7 +15,7 @@ public class AvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
     private BusinessType businessType;
     private boolean added;
 
-    public AvailableAssessorRowViewModel(Long id, (String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, BusinessType businessType, boolean added) {
+    public AvailableAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, BusinessType businessType, boolean added) {
         super(name, innovationAreas, compliant);
         this.id = id;
         this.email = email;
