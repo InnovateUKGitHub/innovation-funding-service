@@ -52,9 +52,10 @@
 }
 
 .form-row {
+  @extend %contain-floats;
 	border-bottom:1px solid $border-colour;
 	padding:20px 0;
-	overflow: hidden;
+
 	&:first-child { border-top:1px solid $border-colour; }
 	+ .alignright {
 		margin-top:10px;

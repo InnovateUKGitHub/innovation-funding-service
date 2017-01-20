@@ -43,6 +43,8 @@ ${READY_TO_OPEN_COMPETITION_NAME}    Photonics for health
 ${COMP_SETUP_COMPETITION}    9
 ${FUNDERS_PANEL_COMPETITION}    5
 ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
+${NOT_EDITABLE_COMPETITION}     8
+${NOT_EDITABLE_COMPETITION_NAME}     New designs for a circular economy
 ${FUNDERS_PANEL_APPLICATION_1}    24
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}    00000024
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}    Sensing & Control network using the lighting infrastructure
@@ -130,7 +132,8 @@ ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
 ${COMP_MANAGEMENT_UPDATE_COMP}    ${SERVER}/management/competition/setup/${OPEN_COMPETITION}
-${COMP_MANAGEMENT_OPEN_COMP}    ${SERVER}/management/competition/setup/${FUNDERS_PANEL_COMPETITION}
+${COMP_MANAGEMENT_NOT_EDITABLE_COMP}    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
+${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}    ${SERVER}/application/${FUNDERS_PANEL_APPLICATION_2}/form/section/7
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
@@ -194,6 +197,8 @@ ${assessment_skills_url}    ${server}/assessment/profile/skills
 ${assessment_skills_edit_url}   ${server}/assessment/profile/skills/edit
 ${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
+${Application_management_dashboard}    ${server}/management/assessment/competition/4
+
 # Database variables
 ${database_name}    ifs
 ${database_user}    root

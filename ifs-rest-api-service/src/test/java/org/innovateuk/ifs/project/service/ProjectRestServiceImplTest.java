@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Assert;
@@ -603,6 +604,19 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         RestResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowState() {
+        long projectId = 123L;
+
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/state";
+        setupGetWithRestResultExpectations(nonBaseUrl, GOLState.class, GOLState.APPROVED, OK);
+
+        RestResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(GOLState.APPROVED, result.getSuccessObject());
     }
 
 }

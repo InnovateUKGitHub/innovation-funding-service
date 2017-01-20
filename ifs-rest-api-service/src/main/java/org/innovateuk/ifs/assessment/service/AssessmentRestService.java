@@ -10,19 +10,27 @@ import java.util.List;
  */
 public interface AssessmentRestService {
 
-    RestResult<AssessmentResource> getById(Long id);
+    RestResult<AssessmentResource> getById(long id);
 
-    RestResult<AssessmentResource> getAssignableById(Long id);
+    RestResult<AssessmentResource> getAssignableById(long id);
 
-    RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long CompetitionId);
+    RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId);
 
-    RestResult<AssessmentTotalScoreResource> getTotalScore(Long id);
+    RestResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId);
 
-    RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision);
+    RestResult<AssessmentTotalScoreResource> getTotalScore(long id);
 
-    RestResult<Void> rejectInvitation(Long id, ApplicationRejectionResource applicationRejection);
+    RestResult<Void> recommend(long id, AssessmentFundingDecisionResource assessmentFundingDecision);
 
-    RestResult<Void> acceptInvitation(Long id);
+    RestResult<Void> rejectInvitation(long id, ApplicationRejectionResource applicationRejection);
+
+    RestResult<Void> acceptInvitation(long id);
+
+    RestResult<Void> notify(long id);
+
+    RestResult<Void> withdrawAssessment(long id);
 
     RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions);
+
+    RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class ProjectTest {
         durationInMonths = 12L;
         name = "My Project";
 
-        project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate);
+        project = new Project(id, application, startDate, address, durationInMonths, name, documentsSubmittedDate, ApprovalType.UNSET);
     }
 
     @Test

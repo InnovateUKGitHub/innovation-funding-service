@@ -5,9 +5,7 @@ import org.innovateuk.ifs.project.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +19,7 @@ import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.new
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.project.controller.FinanceCheckController.*;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
@@ -36,24 +34,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTest<FinanceCheckController> {
-
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setup(){
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
 
     @Test
     public void saveFinanceCheck() throws Exception {
@@ -73,7 +62,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 contentType(APPLICATION_JSON).
                 content(toJson(financeCheckResource))).
                 andExpect(status().isOk()).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         requestFields(financeCheckResourceFields)
                 ));
     }
@@ -97,7 +86,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get(url, 123L, 456L)).
                 andExpect(status().isOk()).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
@@ -118,7 +107,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post(url, 123L, 456L)).
                 andExpect(status().isOk()).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
@@ -147,7 +136,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(url, 123L, 456L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(status))).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
@@ -186,7 +175,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get(url, 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(expected))).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked")
                         ),
@@ -196,6 +185,39 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         verify(financeCheckServiceMock).getFinanceCheckSummary(123L);
     }
 
+    @Test
+    public void getFinanceCheckEligibilityDetails() throws Exception {
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        FinanceCheckEligibilityResource expected = newFinanceCheckEligibilityResource().
+                withProjectId(projectId).
+                withOrganisationId(organisationId).
+                withDurationInMonths(6L).
+                withTotalCost(new BigDecimal(10000.00)).
+                withPercentageGrant(new BigDecimal(50.00)).
+                withFundingSought(new BigDecimal(5000.00)).
+                withOtherPublicSectorFunding(new BigDecimal(0.00)).
+                withContributionToProject(new BigDecimal(50.00)).
+                build();
+
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(123L, 456L)).thenReturn(serviceSuccess(expected));
+
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility";
+
+        mockMvc.perform(get(url, 123L, 456L)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(expected))).
+                andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Finance Check eligibility is linked"),
+                                parameterWithName("organisationId").description("Id of the organisation to which the Finance Check eligibility is linked")
+                        ),
+                        responseFields(financeCheckEligibilityResourceFields)
+                ));
+
+        verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(123L, 456L);
+    }
     @Override
     protected FinanceCheckController supplyControllerUnderTest() {
         return new FinanceCheckController();

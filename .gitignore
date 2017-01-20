@@ -120,3 +120,4 @@ ifs-web-service.iws
 .bash_profile
 */libs/
 ifs-libs/*
+.gradletasknamecache

@@ -9,10 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +168,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> notifyAssessors(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        competition.notifyAssessors(LocalDateTime.now());
+        if (competition.getCompetitionStatus().equals(CompetitionStatus.CLOSED)) {
+            competition.notifyAssessors(LocalDateTime.now());
+        }
         return serviceSuccess();
     }
 }

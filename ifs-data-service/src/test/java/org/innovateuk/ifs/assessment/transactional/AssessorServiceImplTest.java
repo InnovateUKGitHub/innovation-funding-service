@@ -3,12 +3,14 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -23,11 +25,14 @@ import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -66,9 +71,15 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         RoleResource roleResource = newRoleResource().build();
 
+        InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
+
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource()
                 .withEmail(email)
+                .withInnovationArea(innovationAreaResource)
                 .build();
+
+        when(profileRepositoryMock.findOne(anyLong())).thenReturn(newProfile().build());
+        when(innovationAreaMapperMock.mapToDomain(innovationAreaResource)).thenReturn(newInnovationArea().build());
 
         when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
         when(roleServiceMock.findByUserRoleType(ASSESSOR)).thenReturn(serviceSuccess(roleResource));
@@ -92,7 +103,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock, userRepositoryMock, competitionParticipantRepositoryMock);
+        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock,
+                userRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, profileRepositoryMock);
         inOrder.verify(competitionInviteServiceMock).getInvite(hash);
         inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
@@ -100,6 +112,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(userRepositoryMock).findOne(createdUserResource.getId());
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteEmail(email);
         inOrder.verify(competitionParticipantRepositoryMock).save(participantsForOtherInvites);
+        inOrder.verify(profileRepositoryMock).findOne(anyLong());
+        inOrder.verify(innovationAreaMapperMock).mapToDomain(innovationAreaResource);
+        inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
 
         participantsForOtherInvites.forEach(competitionParticipant -> {

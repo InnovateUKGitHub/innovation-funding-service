@@ -87,7 +87,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
                 notFoundError(FinanceCheck.class, key)).
                 andOnSuccessReturn(this::mapToResource);
+
     }
+    private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
     public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
@@ -153,6 +155,30 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(new FinanceCheckSummaryResource(project.getId(), project.getName(), competition.getId(), competition.getName(), project.getTargetStartDate(),
                 project.getDurationInMonths().intValue(), totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, spendProfile.isPresent(),
                 getPartnerStatuses(partnerOrganisations), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+    }
+
+    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
+        Project project = projectRepository.findOne(projectId);
+        Application application = project.getApplication();
+
+        return financeRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
+
+            financeRowService.financeDetails(application.getId(), organisationId).
+                    andOnSuccessReturn(applicationFinanceResource -> {
+
+                        BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
+                        BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
+                        FinanceCheckEligibilityResource eligibilityResource = new FinanceCheckEligibilityResource(project.getId(),
+                                organisationId,
+                                application.getDurationInMonths(),
+                                projectFinance.getTotal(),
+                                grantPercentage,
+                                fundingSought,
+                                projectFinance.getTotalOtherFunding(),
+                                projectFinance.getTotal().subtract(fundingSought).subtract(projectFinance.getTotalOtherFunding()));
+                        return eligibilityResource;
+                    })
+        );
     }
 
     private boolean getFinanceCheckApprovalStatus(Long projectId) {

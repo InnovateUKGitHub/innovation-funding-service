@@ -220,6 +220,34 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
+    public void testGetEligibility() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getEligibility(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSaveEligibility() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityStatus.RED),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
     public void testGetCreditReport() {
         assertAccessDenied(() -> classUnderTest.getCreditReport(1L, 2L),
                 () -> {

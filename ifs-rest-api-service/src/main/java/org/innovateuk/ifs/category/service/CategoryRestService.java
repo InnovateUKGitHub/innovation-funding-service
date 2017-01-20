@@ -16,5 +16,5 @@ public interface CategoryRestService {
 
     RestResult<List<ResearchCategoryResource>> getResearchCategories();
 
-    RestResult<List<InnovationAreaResource>> getInnovatationAreasBySector(long sectorId);
+    RestResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId);
 }
