@@ -13,4 +13,6 @@ import java.util.List;
 public interface FinanceRowMetaFieldRepository extends PagingAndSortingRepository<FinanceRowMetaField, Long> {
 	@Override
     List<FinanceRowMetaField> findAll();
+	FinanceRowMetaField findByType(String type);
+	FinanceRowMetaField findByTitle(String title);
 }
