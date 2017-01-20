@@ -5,23 +5,22 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
-import javax.persistence.Temporal;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static java.util.Arrays.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_EXEC;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -87,7 +86,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void notifyAssessor() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN, COMP_EXEC);
     }
 
     @Test
@@ -115,7 +114,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void withdrawAssessment() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN, COMP_EXEC);
     }
 
     @Test
@@ -145,10 +144,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 .withAssessorId(3L)
                 .build();
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.createAssessment(assessmentCreateResource),
-                UserRoleType.COMP_ADMIN
-        );
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN, COMP_EXEC);
     }
 
     public static class TestAssessmentService implements AssessmentService {
