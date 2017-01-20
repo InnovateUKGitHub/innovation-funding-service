@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -19,6 +17,8 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.junit.Assert.*;
@@ -125,5 +125,19 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
+    }
+
+    @Test
+    public void findByIdAndRolesName() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
+
+        assertTrue(user.isPresent());
+    }
+
+    @Test
+    public void findByIdAndRolesName_wrongRole() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
+
+        assertFalse(user.isPresent());
     }
 }
