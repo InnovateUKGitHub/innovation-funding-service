@@ -59,17 +59,22 @@
                 <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
                 <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}" />
             </h3>
-            <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
-                <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-                    <!--/*
-                    viewmode=approved; generates the inputs as text,
-                    viewmode=readonly, generates readonly inputs,
-                    viewmode=edit, generates the editable inputs + repeating row elements)
-                    */-->
-                    <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')"/>
-
+            <th:block th:with="viewmode=${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly'">
+                <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
+                    <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
+                        <!--/*
+                        viewmode=approved; generates the inputs as text,
+                        viewmode=readonly, generates readonly inputs,
+                        viewmode=edit, generates the editable inputs + repeating row elements)
+                        */-->
+                        <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" />
+                    </th:block>
                 </th:block>
-            </div>
+                <div class="alignright-button">
+                    <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
+                    <button th:if="${viewmode=='edit'}" class="button">Save</button>
+                </div>
+            </th:block>
         </section>
         <div class="grid-row total-cost">
             <div class="column-half">
