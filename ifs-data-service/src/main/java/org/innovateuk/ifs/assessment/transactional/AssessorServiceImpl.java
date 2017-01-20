@@ -11,6 +11,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -58,6 +59,9 @@ public class AssessorServiceImpl implements AssessorService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private AffiliationMapper affiliationMapper;
+
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
@@ -82,10 +86,17 @@ public class AssessorServiceImpl implements AssessorService {
         return getAssessor(assessorId)
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(
-                                profile -> new AssessorProfileResource(
-                                        userMapper.mapToResource(user),
-                                        assessorProfileMapper.mapToResource(profile)
-                                )
+                                profile -> {
+                                    // TODO this isn't nice
+                                    // it seams  likely that affiliations will move on to Profile, so this would get neater
+                                    UserResource userResource = userMapper.mapToResource(user);
+                                    ProfileResource profileResource = assessorProfileMapper.mapToResource(profile);
+                                    profileResource.setAffiliations(affiliationMapper.mapToResource(user.getAffiliations()));
+                                    return new AssessorProfileResource(
+                                            userResource,
+                                            profileResource
+                                    );
+                                }
                         )
                 );
     }

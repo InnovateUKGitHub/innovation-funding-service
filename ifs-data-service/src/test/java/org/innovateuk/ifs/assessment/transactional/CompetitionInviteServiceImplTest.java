@@ -773,12 +773,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
+        long assessorId = 3L;
 
         List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
                 .withName("Emerging Tech and Industries")
                 .build(1);
 
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
+                .withId(assessorId)
                 .withName("Jeremy Alufson")
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com")
@@ -798,6 +800,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withContractSignedDate(now())
                 .build();
         User assessor = newUser()
+                .withId(assessorId)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
                 .withEmailAddress("worth.email.test+assessor1@gmail.com")

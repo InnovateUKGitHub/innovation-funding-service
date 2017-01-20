@@ -2,11 +2,11 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
-import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
@@ -29,6 +30,9 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
     private UserRepository userRepository;
 
     @Autowired
+    private ProfileRepository profileRepository;
+
+    @Autowired
     @Override
     protected void setControllerUnderTest(AssessorController controller) {
         this.controller = controller;
@@ -41,9 +45,12 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
         User user = userRepository.findOne(3L);
 
         Profile profile = newProfile()
+                .with(id(null))
                 .withSkillsAreas("Testing Skills Area")
                 .withBusinessType(ACADEMIC)
                 .build();
+        profileRepository.save(profile);
+
         List<Affiliation> affiliations = newAffiliation()
                 .withExists(true)
                 .withOrganisation("University of Nowhere")
@@ -52,10 +59,10 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 .withUser(user)
                 .build(1);
 
-//        user.setProfile(profile);
+        user.setProfileId(profile.getId());
         user.setAffiliations(affiliations);
-
         userRepository.save(user);
+
         flushAndClearSession();
 
         RestResult<AssessorProfileResource> restResult = controller.getAssessorProfile(3L);
