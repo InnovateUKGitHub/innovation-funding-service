@@ -1127,6 +1127,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
+                        .param(ApplicationFormController.RESEARCH_CATEGORY_ID_KEY, "1")
         ).andExpect(status().is2xxSuccessful())
         .andExpect(model().hasNoErrors());
 
