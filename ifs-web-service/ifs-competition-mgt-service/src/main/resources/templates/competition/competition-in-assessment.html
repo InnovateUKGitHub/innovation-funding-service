@@ -24,6 +24,11 @@
                 <div class="column-third">
                     <a class="button" th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications</a>
                     <a class="button" th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors</a>
+                    <form action="#"
+                          th:action="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
+                          method="post">
+                        <button type="submit" class="button button-large" th:disabled="${model.changesSinceLastNotify == 0}">Notify assessors</button>
+                    </form>
                 </div>
                 <form action="#"
                       th:action="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"

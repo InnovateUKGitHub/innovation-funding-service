@@ -9,7 +9,9 @@
 
 <main id="content" class="full-width">
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  <div class="grid-container">
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
+
+    <div class="grid-container">
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="page-title">
