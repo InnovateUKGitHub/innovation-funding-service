@@ -457,7 +457,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .build();
     }
     @Test
-    public void testGenerateGrantOfferLetterIfReadySuccess() { //here
+    public void testGenerateGrantOfferLetterIfReadySuccess() {
         FileEntryResource fileEntryResource = newFileEntryResource().
                 withFilesizeBytes(1024).
                 withMediaType("application/pdf").
@@ -534,7 +534,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .withName("project 1")
                 .withApplication(app)
-                .withPartnerOrganisations(asList(po, po2, po3)) //add here
+                .withPartnerOrganisations(asList(po3, po, po2))
                 .withProjectUsers(asList(pm))
                 .withDuration(10L)
                 .withAddress(address)
