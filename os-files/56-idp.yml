@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: List
 items:
+
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -19,13 +20,19 @@ items:
         containers:
         - image: orangebus/ifs-shib-idp:1.0-SNAPSHOT
           name: idp
+          env:
+          - name: HTTPSPORT
+            value: "9443"
+          - name: HTTPPORT
+            value: "9080"
           ports:
-          - containerPort: 443
+          - containerPort: 9443
+          - containerPort: 9080
           resources: {}
-    test: false
-    triggers:
-    - type: ConfigChange
-  status: {}
+          test: false
+  triggers:
+  - type: ConfigChange
+
 - apiVersion: v1
   kind: Service
   metadata:
@@ -34,21 +41,23 @@ items:
     ports:
     - name: 443-tcp
       port: 443
-      targetPort: 443
+      targetPort: 9443
     selector:
       deploymentconfig: idp
   status:
     loadBalancer: {}
-- apiVersion: v1
-  kind: Route
-  metadata:
-    name: idp
-  spec:
-    host: idp
-    port:
-      targetPort: 443-tcp
-    tls:
-      termination: passthrough
-    to:
-      kind: Service
-      name: idp
+
+# Routes not required for development
+#- apiVersion: v1
+#  kind: Route
+#  metadata:
+#    name: idp
+#  spec:
+#    host: idp
+#    port:
+#      targetPort: 443-tcp
+#    tls:
+#      termination: passthrough
+#    to:
+#      kind: Service
+#      name: idp

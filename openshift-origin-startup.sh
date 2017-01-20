@@ -23,8 +23,13 @@ done
 
 oc cluster up && {
   oc new-project test-project
-  oc adm policy add-scc-to-user anyuid -n test-project -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
-  oc edit scc anyuid --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+
+#  shib docker images no longer need run as root:
+#  oc adm policy add-scc-to-user anyuid -n test-project -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+#  shib docker images no longer need run sys_ptrace elevation:
+#  oc edit scc anyuid --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+
+# Load pods/dc/svcs:
   oc create -f os-files
 
   echo Waiting for pods to startup...

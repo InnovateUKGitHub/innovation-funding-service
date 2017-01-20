@@ -17,10 +17,16 @@ items:
           deploymentconfig: ldap
       spec:
         containers:
-        - image: orangebus/ifs-ldap:1.0-SNAPSHOT
+        - env:
+          - name: LDAPPORT
+            value: "8389"
+          - name: LDAPSSLPORT
+            value: "8636"
+          image: orangebus/ifs-ldap:1.0-SNAPSHOT
           name: ldap
           ports:
-          - containerPort: 389
+          - containerPort: 8389
+          - containerPort: 8636
           resources: {}
     test: false
     triggers:
@@ -34,7 +40,7 @@ items:
     ports:
     - name: 389-tcp
       port: 389
-      targetPort: 389
+      targetPort: 8389
     selector:
       deploymentconfig: ldap
   status:
