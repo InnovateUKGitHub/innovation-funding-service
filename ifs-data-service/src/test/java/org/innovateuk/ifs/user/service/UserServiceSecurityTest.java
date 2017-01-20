@@ -39,12 +39,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     }
 
     @Test
-    public void testFindAll() {
-        classUnderTest.findAll();
-        assertViewMultipleUsersExpectations();
-    }
-
-    @Test
     public void testFindAssignableUsers() {
         classUnderTest.findAssignableUsers(123L);
         assertViewMultipleUsersExpectations();
@@ -55,22 +49,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         assertAccessDenied(() -> classUnderTest.findByEmail("asdf@example.com"), () -> {
             assertViewSingleUserExpectations();
         });
-    }
-
-    @Test
-    public void testGetUserById() {
-        assertAccessDenied(() -> classUnderTest.getUserById(123L), () -> {
-            assertViewSingleUserExpectations();
-        });
-    }
-
-    @Test
-    public void testGetUserByUid() {
-
-        // this method must remain unsecured because it is the way in which we get a user onto the
-        // SecurityContext in the first place for permission checking
-        classUnderTest.getUserResourceByUid("asdf");
-        verifyNoMoreInteractionsWithRules();
     }
 
     @Test
@@ -134,27 +112,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
      * Test class for use in Service Security tests.
      */
     public static class TestUserService implements UserService {
-
-        @Override
-        public ServiceResult<UserResource> getUserResourceByUid(String uid) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<UserResource> getUserById(Long id) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findAll() {
-            return serviceSuccess(newUserResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-            return serviceSuccess(newUserResource().build(2));
-        }
-
         @Override
         public ServiceResult<UserResource> findByEmail(String email) {
             return serviceSuccess(newUserResource().build());

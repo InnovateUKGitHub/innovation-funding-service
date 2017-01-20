@@ -20,13 +20,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    /**
-     * This URL is the url that is used after login, to redirect the user to his dashboard.
-     */
+    // This URL is the url that is used after login, to redirect the user to his dashboard.
     private String url;
-
-    @OneToMany(mappedBy = "role")
-    private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany(mappedBy="roles")
     private List<User> users = new ArrayList<>();
@@ -35,23 +30,13 @@ public class Role {
     	// no-arg constructor
     }
 
-    public Role(Long id, String name, List<ProcessRole> processRoles) {
+    public Role(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.processRoles = processRoles;
     }
 
     protected Boolean canEqual(Object other) {
         return other instanceof Role;
-    }
-
-    @JsonIgnore
-    public List<ProcessRole> getProcessRoles() {
-        return processRoles;
-    }
-
-    public void setProcessRoles(List<ProcessRole> processRoles) {
-        this.processRoles = processRoles;
     }
 
     public Long getId() {
@@ -69,6 +54,7 @@ public class Role {
     public void setId(Long id) {
         this.id = id;
     }
+
     @JsonIgnore
     public List<User> getUsers() {
         return this.users;
@@ -93,7 +79,6 @@ public class Role {
         return new EqualsBuilder()
             .append(this.id, rhs.id)
             .append(this.name, rhs.name)
-            .append(this.processRoles, rhs.processRoles)
             .append(this.users, rhs.users)
             .isEquals();
     }
@@ -103,7 +88,6 @@ public class Role {
         return new HashCodeBuilder()
             .append(id)
             .append(name)
-            .append(processRoles)
             .append(users)
             .toHashCode();
     }

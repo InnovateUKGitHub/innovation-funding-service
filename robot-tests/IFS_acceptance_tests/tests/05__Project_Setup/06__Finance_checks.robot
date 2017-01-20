@@ -22,7 +22,10 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4856 As a project finance team member I want to be able to view the RAG rating indicating the effort level carried out for the viability checks of each partner organisation so that I can appraise colleagues who may be expected to carry out future checks.
 ...
 ...               INFUND-7076 Generate spend profile available before Viability checks are all approved or N/A
-
+...
+...               INFUND-7095 Create NOT_APPLICABLE Viability state (and set for Academic Orgs upon Project creation)
+...
+...               INFUND-4830 As a project finance team member I want to be able to confirm that the appropriate viability finance checks have been carried out so I can approve the partner organisation as viable for funding
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -107,7 +110,7 @@ Approve Eligibility: Collaborator partner organisation
 
 
 Approve Eligibility and verify Viability and RAG: Academic partner organisation
-    [Documentation]    INFUND-5193, INFUND-7026
+    [Documentation]    INFUND-5193, INFUND-7026, INFUND-7095
     [Tags]    HappyPath
     When the user clicks the button/link    css=a.eligibility-2
     And the user selects the checkbox    costs-reviewed
@@ -140,7 +143,7 @@ Project Finance user can view academic Jes form
 
 
 Viability checks are populated in the table
-    [Documentation]    INFUND-4822
+    [Documentation]    INFUND-4822, INFUND-7095
     [Tags]
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
@@ -151,15 +154,15 @@ Viability checks are populated in the table
 
 
 Project finance user can see the viability check page for the lead partner
-    [Documentation]    INFUND-4831
+    [Documentation]    INFUND-4831, INFUND-4830
     [Tags]
     when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
-    Then the user should see the text in the page    Empire Ltd
-    And the user should see the text in the page    60674010
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
 
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
-    [Documentation]    INFUND-4831, INFUND-4856
+    [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
     [Tags]
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
@@ -184,7 +187,7 @@ Credit report information saves when leaving the page
     Then checkbox should be selected    creditReportConfirmed
 
 Clicking cancel on the viability modal
-    [Documentation]
+    [Documentation]    INFUND-4822, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
@@ -194,7 +197,7 @@ Clicking cancel on the viability modal
     And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
 
 Confirming viability should show credit report info on a readonly page
-    [Documentation]    INFUND-4829
+    [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
@@ -213,14 +216,14 @@ Confirming viability should update on the finance checks page
 
 
 Project finance user can see the viability checks for the industrial partner
-    [Documentation]    INFUND-4831
+    [Documentation]    INFUND-4831, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
-    Then the user should see the text in the page    Ludlow
-    And the user should see the text in the page    5353232
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
-    [Documentation]    INFUND-4831, INFUND-4856
+    [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
     [Tags]
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
@@ -245,7 +248,7 @@ Credit report information saves when leaving the page for partner
     Then checkbox should be selected    creditReportConfirmed
 
 Clicking cancel on the viability modal for partner
-    [Documentation]    INFUND-4822
+    [Documentation]    INFUND-4822, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
@@ -255,7 +258,7 @@ Clicking cancel on the viability modal for partner
     And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
 
 Confirming viability should show credit report info on a readonly page for partner
-    [Documentation]    INFUND-4829
+    [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
