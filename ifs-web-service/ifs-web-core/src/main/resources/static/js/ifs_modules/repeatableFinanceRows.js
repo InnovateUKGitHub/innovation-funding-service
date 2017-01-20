@@ -1,22 +1,22 @@
 // Set up the handlers for adding and removing Cost Category costs rows
-IFS.application.repeatableRows = (function () {
+IFS.core.repeatableFinanceRows = (function () {
   'use strict'
 
   return {
     init: function () {
-      IFS.application.repeatableRows.backForwardCacheReload()
+      IFS.core.repeatableFinanceRows.backForwardCacheReload()
       jQuery('body').on('click', '[data-repeatable-rowcontainer]', function (e) {
         e.preventDefault()
-        IFS.application.repeatableRows.backForwardCacheInvalidate()
-        IFS.application.repeatableRows.addRow(this, e)
+        IFS.core.repeatableFinanceRows.backForwardCacheInvalidate()
+        IFS.core.repeatableFinanceRows.addRow(this, e)
       })
       jQuery('body').on('click', '.js-remove-row', function (e) {
-        IFS.application.repeatableRows.backForwardCacheInvalidate()
-        IFS.application.repeatableRows.removeRow(this, e)
+        IFS.core.repeatableFinanceRows.backForwardCacheInvalidate()
+        IFS.core.repeatableFinanceRows.removeRow(this, e)
       })
 
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
-        IFS.application.repeatableRows.persistUnsavedRow(name, newFieldId)
+        IFS.core.repeatableFinanceRows.persistUnsavedRow(name, newFieldId)
       })
     },
 
@@ -29,7 +29,7 @@ IFS.application.repeatableRows = (function () {
       return url
     },
     addRow: function (el, event) {
-      var url = IFS.application.repeatableRows.getAjaxUrl(el)
+      var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
       if (url.length) {
         event.preventDefault()
         jQuery.ajaxProtected({
@@ -51,7 +51,7 @@ IFS.application.repeatableRows = (function () {
       }
     },
     removeRow: function (el, event) {
-      var url = IFS.application.repeatableRows.getAjaxUrl(el)
+      var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
       if (url.length) {
         event.preventDefault()
         jQuery.ajaxProtected({
