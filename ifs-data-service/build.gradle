@@ -195,7 +195,6 @@ flywayClean.dependsOn processResources
 
 
 task cleanDeployServices() {
-    asciidoctor.enabled = false
 
     buildDocker.mustRunAfter clean
     // ensures test schema is created for unit tests
@@ -213,6 +212,8 @@ task cleanDeployServices() {
     dependsOn createSchema
     dependsOn flywayClean
     dependsOn flywayMigrate
+
+
 
 }
 
