@@ -604,6 +604,7 @@ IFS.core.formValidation = (function () {
     setSectionValid: function (section) {
       section = jQuery(section)
       section.removeClass('error')
+      var inputs = section.find('.field-error')
 
       //  remove error messages from section + error summary
       section.find('.error-message').each(function () {
@@ -613,10 +614,11 @@ IFS.core.formValidation = (function () {
         errorMessage.remove()
       })
 
-      var inputs = section.find('.field-error')
       jQuery.each(inputs, function () {
         jQuery(this).removeClass('field-error').val('')
-        if (s.html5validationMode) { this.setCustomValidity('') }
+        if (s.html5validationMode) {
+          this.setCustomValidity('')
+        }
       })
     },
     getIdentifier: function (el) {
