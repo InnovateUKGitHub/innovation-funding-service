@@ -26,7 +26,7 @@ public class AvailableAssessorResourceBuilderTest {
     @Test
     public void buildOne() {
         String expectedName = "name";
-        List<InnovationAreaResource> expectedInnovationAreas = asList(newInnovationAreaResource().build());
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().build(1);
         Boolean expectedCompliant = FALSE;
         String expectedEmail = "email";
         BusinessType expectedBusinessType = BUSINESS;
