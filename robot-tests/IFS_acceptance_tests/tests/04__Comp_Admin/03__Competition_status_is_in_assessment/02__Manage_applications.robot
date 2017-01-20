@@ -21,7 +21,6 @@ The user can click the View Progress button
     [Documentation]    INFUND-7042, INFUND-7046
     When The user clicks the button/link    jQuery=tr:nth-child(7) a:contains(View progress)
     Then The user should see the text in the page    00000021: Intelligent water system
-    And the user should see the text in the page    Mo Juggling Mo Problems Ltd
     And the user should see the text in the page    University of Bath
     And the user should see the text in the page    Cardiff University
 
