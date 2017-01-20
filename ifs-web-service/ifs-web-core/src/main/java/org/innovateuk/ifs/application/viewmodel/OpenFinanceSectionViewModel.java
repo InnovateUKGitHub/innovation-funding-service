@@ -78,7 +78,6 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
 
     public boolean showSectionStatus(SectionResource subSection) {
         return showSectionAsLink(subSection);
-
     }
 
     public void setFundingSection(SectionResource fundingSection) {
