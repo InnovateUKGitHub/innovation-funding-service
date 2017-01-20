@@ -31,14 +31,23 @@ public class AssessmentController {
         return assessmentService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/{id}/assign", method = GET)
+    @RequestMapping(value = "/{id}/assign", method = GET)
     public RestResult<AssessmentResource> findAssignableById(@PathVariable("id") long id) {
         return assessmentService.findAssignableById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
-    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId ) {
+    @RequestMapping(value = "/user/{userId}/competition/{competitionId}", method = GET)
+    public RestResult<List<AssessmentResource>> findByUserAndCompetition(
+            @PathVariable("userId") long userId,
+            @PathVariable("competitionId") long competitionId) {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/state/{state}/competition/{competitionId}/count", method = GET)
+    public RestResult<Long> countByStateAndCompetition(
+            @PathVariable("state") AssessmentStates state,
+            @PathVariable("competitionId") Long competitionId) {
+        return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{id}/score", method = GET)

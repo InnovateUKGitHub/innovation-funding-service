@@ -47,6 +47,15 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
+    @RequestMapping(value = "/withdraw/{assessmentId}", method = RequestMethod.POST)
+    public String withdrawAssessment(@PathVariable("competitionId") Long competitionId,
+                                     @PathVariable("applicationId") Long applicationId,
+                                     @PathVariable("assessmentId") Long assessmentId,
+                                     @RequestParam(value = "sortField", defaultValue = "TITLE") String sortField) {
+        assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
+        return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
+    }
+
     private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort) {
         model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
         return "competition/application-progress";

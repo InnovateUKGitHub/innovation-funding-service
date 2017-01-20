@@ -372,6 +372,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccessReturn(projectFinance -> {
+                    EligibilityResource eligibilityResource = new EligibilityResource(projectFinance.getEligibility(), projectFinance.getEligibilityStatus());
+                    eligibilityResource.setEligibilityApprovalDate(projectFinance.getEligibilityApprovalDate());
+                    setEligibilityApprovalUser(eligibilityResource, projectFinance.getEligibilityApprovalUser());
+
+                    return eligibilityResource;
+                });
+    }
+
+    private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {
+
+        if (eligibilityApprovalUser != null) {
+            eligibilityResource.setEligibilityApprovalUserFirstName(eligibilityApprovalUser.getFirstName());
+            eligibilityResource.setEligibilityApprovalUserLastName(eligibilityApprovalUser.getLastName());
+        }
+    }
+
+    @Override
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
@@ -381,6 +405,53 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityStatus)
                 .andOnSuccess(() -> setViabilityApprovalUser(projectFinance, viability))
                 .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus)));
+    }
+
+    @Override
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityStatus eligibilityStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccess(projectFinance -> validateEligibility(projectFinance, eligibility, eligibilityStatus)
+                        .andOnSuccess(() -> setEligibilityApprovalUser(projectFinance, eligibility))
+                        .andOnSuccess(() -> saveEligibility(projectFinance, eligibility, eligibilityStatus)));
+    }
+
+    private ServiceResult<Void> validateEligibility(ProjectFinance projectFinanceInDB, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+
+        if (Eligibility.APPROVED == projectFinanceInDB.getEligibility()) {
+            return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+        }
+
+        if (Eligibility.APPROVED == eligibility && EligibilityStatus.UNSET == eligibilityStatus) {
+            return serviceFailure(ELIGIBILITY_RAG_STATUS_MUST_BE_SET);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> setEligibilityApprovalUser(ProjectFinance projectFinance, Eligibility eligibility) {
+        if (Eligibility.APPROVED == eligibility) {
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> {
+                projectFinance.setEligibilityApprovalUser(currentUser);
+                projectFinance.setEligibilityApprovalDate(LocalDate.now());
+            });
+        } else {
+            return serviceSuccess();
+        }
+
+    }
+
+    private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+
+        projectFinance.setEligibility(eligibility);
+        projectFinance.setEligibilityStatus(eligibilityStatus);
+
+        projectFinanceRepository.save(projectFinance);
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {

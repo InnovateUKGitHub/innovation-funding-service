@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.viability.viewmodel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.time.LocalDate;
@@ -114,7 +115,8 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public String getApproverName() {
-        return approverName;
+
+        return StringUtils.trim(approverName);
     }
 
     public LocalDate getApprovalDate() {

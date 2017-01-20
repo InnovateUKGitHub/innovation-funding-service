@@ -17,6 +17,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
     private boolean accepted;
     private boolean started;
     private boolean submitted;
+    private long assessmentId;
 
     public ApplicationAssessmentProgressAssignedRowViewModel(
             long id,
@@ -28,7 +29,8 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
             boolean notified,
             boolean accepted,
             boolean started,
-            boolean submitted
+            boolean submitted,
+            long assessmentId
     ) {
         super(id, name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
@@ -37,6 +39,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
         this.accepted = accepted;
         this.started = started;
         this.submitted = submitted;
+        this.assessmentId = assessmentId;
     }
 
     public BusinessType getBusinessType() {
@@ -63,6 +66,10 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
         return submitted;
     }
 
+    public long getAssessmentId() {
+        return assessmentId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,6 +84,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
                 .append(accepted, that.accepted)
                 .append(started, that.started)
                 .append(submitted, that.submitted)
+                .append(assessmentId, that.assessmentId)
                 .append(businessType, that.businessType)
                 .append(innovationAreas, that.innovationAreas)
                 .isEquals();
@@ -92,6 +100,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
                 .append(accepted)
                 .append(started)
                 .append(submitted)
+                .append(assessmentId)
                 .toHashCode();
     }
 }

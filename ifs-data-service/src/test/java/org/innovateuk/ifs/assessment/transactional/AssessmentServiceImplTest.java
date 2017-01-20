@@ -214,43 +214,37 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void withdrawAssessment() throws Exception {
-        Long assessmentId = 1L;
-
         Assessment assessment = newAssessment()
-                .withId(assessmentId)
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
         when(assessmentWorkflowHandler.withdrawAssessment(assessment)).thenReturn(true);
 
-        ServiceResult<Void> result = assessmentService.withdrawAssessment(assessmentId);
+        ServiceResult<Void> result = assessmentService.withdrawAssessment(assessment.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessment.getId());
         inOrder.verify(assessmentWorkflowHandler).withdrawAssessment(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void withdrawAssessment_eventNotAccepted() throws Exception {
-        Long assessmentId = 1L;
-
         Assessment assessment = newAssessment()
-                .withId(assessmentId)
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
         when(assessmentWorkflowHandler.withdrawAssessment(assessment)).thenReturn(false);
 
-        ServiceResult<Void> result = assessmentService.withdrawAssessment(assessmentId);
+        ServiceResult<Void> result = assessmentService.withdrawAssessment(assessment.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_WITHDRAW_FAILED));
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessment.getId());
         inOrder.verify(assessmentWorkflowHandler).withdrawAssessment(assessment);
         inOrder.verifyNoMoreInteractions();
     }
