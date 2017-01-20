@@ -213,6 +213,30 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    public void findByActivityStateStateAndTargetCompetitionId() throws Exception {
+        State state = State.CREATED;
+        Application application = applicationRepository.findOne(1L);
+
+        List<Assessment> found = repository
+                .findByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
+
+        assertEquals(1, found.size());
+        assertEquals(state, found.get(0).getActivityState().getBackingState());
+        assertEquals(application.getCompetition().getId(), found.get(0).getTarget().getCompetition().getId());
+    }
+
+    @Test
+    public void countByActivityStateStateAndTargetCompetitionId() throws Exception {
+        State state = State.CREATED;
+        Application application = applicationRepository.findOne(1L);
+
+        long found = repository
+                .countByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
+
+        assertEquals(1L, found);
+    }
+
+    @Test
     public void isFeedbackComplete() throws Exception {
         Application application = applicationRepository.findOne(1L);
         Competition competition = application.getCompetition();

@@ -187,6 +187,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
         this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
         this.userProfileService = serviceLocator.getBean(UserProfileService.class);
+        this.baseUserService = serviceLocator.getBean(BaseUserService.class);
+        this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
+
     }
 
     @Override
