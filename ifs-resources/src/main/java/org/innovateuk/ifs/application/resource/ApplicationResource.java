@@ -67,7 +67,11 @@ public class ApplicationResource {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+
+    @NotNull(message="{validation.application.research.category.required}")
     private Set<ResearchCategoryResource> researchCategories;
+
+    private Long researchCategoryId;
 
     public Long getId() {
         return id;
@@ -286,5 +290,13 @@ public class ApplicationResource {
 
     public void setResearchCategories(Set<ResearchCategoryResource> researchCategories) {
         this.researchCategories = researchCategories;
+    }
+
+    public Long getResearchCategoryId() {
+        return researchCategoryId;
+    }
+
+    public void setResearchCategoryId(Long researchCategoryId) {
+        this.researchCategoryId = researchCategoryId;
     }
 }

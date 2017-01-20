@@ -984,7 +984,7 @@ public class ApplicationFormController {
     private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
-        if (fieldName.startsWith("application.") || fieldName.equals("researchCategoryId")) {
+        if (fieldName.startsWith("application.")) {
         	// this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
@@ -1068,7 +1068,7 @@ public class ApplicationFormController {
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
             applicationService.save(application);
-        } else if (fieldName.equals("researchCategoryId")) {
+        } else if (fieldName.equals("application.researchCategoryId")) {
             Long catId = Long.parseLong(value);
             Set<ResearchCategoryResource> cats =
                     categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
