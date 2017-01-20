@@ -221,7 +221,7 @@ Project Finance can see the progress of partners bank details
     [Tags]    HappyPath
     [Setup]  log in as a different user             &{internal_finance_credentials}
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
-    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
+    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(2) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
