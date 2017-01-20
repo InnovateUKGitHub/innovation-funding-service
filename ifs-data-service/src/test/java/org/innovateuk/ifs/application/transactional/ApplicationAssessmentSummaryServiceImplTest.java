@@ -22,6 +22,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
@@ -196,18 +197,19 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
     @Test
     public void getApplicationAssessmentSummary() throws Exception {
-        Organisation org1 = buildOrganisationWithName("Acme Ltd.");
-        Organisation org2 = buildOrganisationWithName("IO systems");
-        Organisation org3 = buildOrganisationWithName("Liquid Dynamics");
+        Organisation[] organisations = newOrganisation()
+                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
         Application application = newApplication()
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
-                        .withOrganisation(org1, org2, org3)
-                        .buildArray(3, ProcessRole.class))
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withOrganisation(organisations)
+                        .buildArray(4, ProcessRole.class))
                 .build();
 
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
@@ -219,23 +221,18 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationRepositoryMock.findOne(org1.getId())).thenReturn(org1);
-        when(organisationRepositoryMock.findOne(org2.getId())).thenReturn(org2);
-        when(organisationRepositoryMock.findOne(org3.getId())).thenReturn(org3);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
 
         ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
 
         assertEquals(expected, found);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock);
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();
-    }
-
-    private Organisation buildOrganisationWithName(String name) {
-        return newOrganisation()
-                .withName(name)
-                .build();
     }
 
     private ActivityState buildActivityStateWithState(AssessmentStates state) {

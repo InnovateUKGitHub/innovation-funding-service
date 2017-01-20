@@ -200,4 +200,9 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         return createErrorModelAndViewWithTitleAndMessage(e, req, e.getArguments(), HttpStatus.BAD_REQUEST, "error.title.invite.already.sent", e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    @ExceptionHandler(value = ApplicationAssessorAssignException.class)
+    public ModelAndView applicationAssessorAssignException(HttpServletRequest req, ApplicationAssessorAssignException e) {
+        return createErrorModelAndViewWithTitleAndMessage(e, req, e. getArguments(), HttpStatus.BAD_REQUEST, "error.title.application.assessor.assign", e.getMessage());
+    }
 }

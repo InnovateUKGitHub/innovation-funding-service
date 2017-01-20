@@ -18,8 +18,19 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
     private boolean started;
     private boolean submitted;
 
-    public ApplicationAssessmentProgressAssignedRowViewModel(String name, long totalApplicationsCount, long assignedCount, BusinessType businessType, List<String> innovationAreas, boolean notified, boolean accepted, boolean started, boolean submitted) {
-        super(name, totalApplicationsCount, assignedCount);
+    public ApplicationAssessmentProgressAssignedRowViewModel(
+            long id,
+            String name,
+            long totalApplicationsCount,
+            long assignedCount,
+            BusinessType businessType,
+            List<String> innovationAreas,
+            boolean notified,
+            boolean accepted,
+            boolean started,
+            boolean submitted
+    ) {
+        super(id, name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
         this.innovationAreas = innovationAreas;
         this.notified = notified;
@@ -54,17 +65,14 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         ApplicationAssessmentProgressAssignedRowViewModel that = (ApplicationAssessmentProgressAssignedRowViewModel) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(notified, that.notified)
                 .append(accepted, that.accepted)
                 .append(started, that.started)
@@ -77,6 +85,7 @@ public class ApplicationAssessmentProgressAssignedRowViewModel extends Applicati
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(businessType)
                 .append(innovationAreas)
                 .append(notified)
