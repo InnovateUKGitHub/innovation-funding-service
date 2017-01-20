@@ -218,8 +218,8 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
     @Test
     public void getApplicationAssessmentSummary() throws Exception {
         Organisation[] organisations = newOrganisation()
-                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics")
-                .buildArray(3, Organisation.class);
+                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
 
         Application application = newApplication()
                 .withName("Progressive machines")
@@ -227,9 +227,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withName("Connected digital additive manufacturing")
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
                         .withOrganisation(organisations)
-                        .buildArray(3, ProcessRole.class))
+                        .buildArray(4, ProcessRole.class))
                 .build();
 
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
