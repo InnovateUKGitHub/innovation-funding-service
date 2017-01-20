@@ -4,11 +4,15 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -28,6 +32,16 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     @Override
     protected void setControllerUnderTest(ApplicationAssessmentSummaryController controller) {
         this.controller = controller;
+    }
+
+    @Test
+    public void getAssessors() throws Exception {
+        RestResult<List<ApplicationAssessorResource>> serviceResult = controller.getAssessors(1L);
+        assertTrue(serviceResult.isSuccess());
+
+        List<ApplicationAssessorResource> applicationAssessorResources = serviceResult.getSuccessObjectOrThrowException();
+
+        assertEquals(Collections.emptyList(), applicationAssessorResources);
     }
 
     @Test

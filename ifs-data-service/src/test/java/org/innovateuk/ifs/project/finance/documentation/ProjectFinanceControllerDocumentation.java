@@ -11,6 +11,9 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -38,6 +41,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CSV_GENERATION_FAILURE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.EligibilityDocs.eligibilityResourceFields;
 import static org.innovateuk.ifs.documentation.SpendProfileDocs.*;
 import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
@@ -60,6 +64,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -416,6 +421,60 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("organisationId").description("Organisation Id for which viability is being saved"),
                                 parameterWithName("viability").description("The viability being saved"),
                                 parameterWithName("viabilityStatus").description("The viability status being saved")
+                        )
+                ));
+    }
+
+    @Test
+    public void getEligibility() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
+        expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
+        expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
+
+        when(projectFinanceServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedEligibilityResource)))
+                .andDo(document("project/partner-organisation/eligibility/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which eligibility is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which eligibility is being retrieved")
+                        ),
+                        responseFields(eligibilityResourceFields)
+                        )
+                );
+    }
+
+    @Test
+    public void saveEligibility() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        Eligibility eligibility = Eligibility.APPROVED;
+        EligibilityStatus eligibilityStatus = EligibilityStatus.GREEN;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityStatus)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityStatus}", projectId, organisationId, eligibility, eligibilityStatus)
+        )
+                .andExpect(status().isOk())
+                .andDo(document("project/partner-organisation/eligibility/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which eligibility is being saved"),
+                                parameterWithName("organisationId").description("Organisation Id for which eligibility is being saved"),
+                                parameterWithName("eligibility").description("The eligibility being saved"),
+                                parameterWithName("eligibilityStatus").description("The eligibility status being saved")
                         )
                 ));
     }

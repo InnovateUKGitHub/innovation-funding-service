@@ -21,7 +21,7 @@
     <ul class="ifs-progress-list extra-margin">
 
       <li class="complete">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">Successful application</h2>
           <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
@@ -33,7 +33,7 @@
       </li>
       <!--/* ========================= Project Details ========================= */-->
       <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
             <a th:if="${model.projectDetailsSection.accessible}" th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
@@ -44,7 +44,7 @@
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
       <li th:classappend="${model.monitoringOfficerStatus.getSectionStatus()}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
 
           <h2 class="heading-medium">
@@ -61,7 +61,7 @@
       </li>
       <!--/* ========================= Bank Details ========================= */-->
       <li th:if="${model.bankDetailsSection.notAccessible}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">Bank details</h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
@@ -70,7 +70,7 @@
 
       <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
           th:classappend="${model.bankDetailsStatus.getSectionStatus()}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
             <a th:if="${model.bankDetailsSection.accessible}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
@@ -82,7 +82,7 @@
       <!--/* ========================= Finance Check ========================= */-->
 
       <li th:classappend="${model.financeChecksStatus.getSectionStatus()}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
             <th:block th:unless="${model.financeChecksSection.notRequired}">Finance checks</th:block>
@@ -95,7 +95,7 @@
       <!--/* ========================= Spend Profile ========================= */-->
 
       <li th:classappend="${model.spendProfileStatus.getSectionStatus()}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
 
           <h2 class="heading-medium">
@@ -111,7 +111,7 @@
       <!--/* ========================= Other documents ========================= */-->
 
       <li th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
-        <div class="progress-status" />
+        <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
             <a th:if="${model.otherDocumentsSection.accessible}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
@@ -127,9 +127,9 @@
       </li>
       <!--/* ========================= GOL ========================= */-->
 
-      <!--TODO extra case to be outlined before GOL has been sent by internal user-->
+        <!--/* TODO extra case to be outlined before GOL has been sent by internal user  */-->
       <li th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
-        <div class="progress-status" />
+          <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
             <a th:if="${model.grantOfferLetterSection.accessible}" th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>

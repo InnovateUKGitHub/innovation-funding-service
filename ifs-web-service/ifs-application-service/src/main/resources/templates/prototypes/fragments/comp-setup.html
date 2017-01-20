@@ -1237,8 +1237,8 @@
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
 
         <th:block th:unless="${type=='readOnly'}">
-            <td th:unless="${time=='-'}"><input type="number" class="form-control width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
-            <td th:unless="${time=='-'}"><input type="number" class="form-control width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
             <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="pm" th:id="${'row-'+rowNo + '-am-pm'}"/></td>
             <td th:if="${time=='-'}">-</td>
             <td th:if="${time=='-'}">-</td>

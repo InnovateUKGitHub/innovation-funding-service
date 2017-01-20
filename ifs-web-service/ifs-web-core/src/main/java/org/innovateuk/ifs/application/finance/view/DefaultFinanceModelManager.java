@@ -26,6 +26,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * Managing all the view attributes for the finances
  */
@@ -78,7 +80,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
     private void addGrantClaim(Model model, Form form, ApplicationFinanceResource applicationFinanceResource) {
         if(applicationFinanceResource.getGrantClaim()!=null) {
-            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaim().getGrantClaimPercentage());
+            model.addAttribute("organisationGrantClaimPercentage", ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
             model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
             String formInputKey = "finance-grantclaimpercentage-" + applicationFinanceResource.getGrantClaim();
             String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";

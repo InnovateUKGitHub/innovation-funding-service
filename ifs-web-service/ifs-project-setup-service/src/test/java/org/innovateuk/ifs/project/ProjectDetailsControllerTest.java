@@ -72,7 +72,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 		super.setUp();
 		setupInvites();
 		loginDefaultUser();
-		loggedInUser.setOrganisations(Collections.singletonList(8L));
 	}
 	
     @Override
@@ -303,7 +302,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         inviteProjectResource.setUser(invitedUserId);
         inviteProjectResource.setOrganisation(organisationId);
         inviteProjectResource.setApplicationId(applicationId);
-        inviteProjectResource.setLeadOrganisation(leadOrganisation.getName());
+        inviteProjectResource.setLeadOrganisationId(leadOrganisation.getId());
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
@@ -356,7 +355,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withProject(projectId).withName(invitedUserName)
                 .withEmail(invitedUserEmail)
                 .withOrganisation(organisationId)
-                .withLeadOrganisation(leadOrganisation.getName()).build();
+                .withLeadOrganisation(leadOrganisation.getId()).build();
 
         createdInvite.setOrganisation(organisationId);
         createdInvite.setApplicationId(projectResource.getApplication());
@@ -366,7 +365,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withProject(projectId).withNames("exist test", invitedUserName)
                 .withEmails("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
-                .withLeadOrganisation(leadOrganisation.getName()).build(2);
+                .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
         when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(notFoundError(UserResource.class, invitedUserEmail)));
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -565,7 +564,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withEmails("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(CREATED)
-                .withLeadOrganisation(leadOrganisation.getName()).build(2);
+                .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -611,7 +610,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withEmails("existing@test.com", invitedUserEmail)
                 .withOrganisation(organisationId)
                 .withStatus(OPENED)
-                .withLeadOrganisation(leadOrganisation.getName()).build(2);
+                .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);

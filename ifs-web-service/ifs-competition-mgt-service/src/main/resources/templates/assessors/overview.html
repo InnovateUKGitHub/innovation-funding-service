@@ -164,13 +164,16 @@
                     <tr th:each="assessor : ${model.assessors}">
                         <td><span th:text="${assessor.name}">John Barnes</span></td>
                         <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
-                        <td th:text="${assessor.innovationArea}">Electronics, sensors &amp; photonics, Materials</td>
+                        <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
                         <td>
                             <span class="yes" th:if="${assessor.compliant}">Yes</span>
                             <span class="no" th:unless="${assessor.compliant}">No</span>
                         </td>
                         <td th:text="${assessor.status.displayName}">Invite accepted</td>
                         <td th:text="${assessor.details}">Invite declined as person is too busy</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(model.assessors)}">
+                        <td colspan="6">There are no assessors invited to this competition.</td>
                     </tr>
                 </tbody>
             </table>
