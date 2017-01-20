@@ -136,8 +136,12 @@ public class ApplicationModelPopulator {
         return userService.isLeadApplicant(userId, application);
     }
 
-    public void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
-                                                     Model model, ApplicationForm form) {
+    public void addOrganisationAndUserFinanceDetails(Long competitionId,
+                                                     Long applicationId,
+                                                     UserResource user,
+                                                     Model model,
+                                                     ApplicationForm form,
+                                                     Long organisationId) {
         model.addAttribute("currentUser", user);
 
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
@@ -147,12 +151,11 @@ public class ApplicationModelPopulator {
             applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
-
-            ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-
-            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, userApplicationRole.getOrganisationId());
+            // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
+            if(!form.isAdminMode() || organisationId != null) {
+                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+            }
         }
     }
 
