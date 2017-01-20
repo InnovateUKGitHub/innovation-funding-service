@@ -308,7 +308,10 @@
                             <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
                             <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
+                                <form method="post"
+                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}?sortField={sortField}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
+                                    <button type="submit" class="button-secondary no-margin">Assign</button>
+                                </form>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.available)}">

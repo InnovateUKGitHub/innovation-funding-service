@@ -16,6 +16,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
@@ -28,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -463,9 +465,53 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentSubmissions)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(toJson(new RestErrorResponse(errorList))))
-                .andReturn();
+                .andExpect(content().json(toJson(new RestErrorResponse(errorList))));
 
         verify(assessmentServiceMock, only()).submitAssessments(assessmentSubmissions);
     }
+
+    @Test
+    public void create() throws Exception {
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(1L)
+                .withAssessorId(2L)
+                .build();
+        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
+
+        when(assessmentServiceMock.createAssessment(assessmentCreateResource)).thenReturn(serviceSuccess(expectedAssessmentResource));
+
+        mockMvc.perform(post("/assessment/")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(assessmentCreateResource)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(toJson(expectedAssessmentResource)));
+
+        verify(assessmentServiceMock, only()).createAssessment(assessmentCreateResource);
+    }
+
+    @Test
+    public void create_noApplicationId() throws Exception {
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withAssessorId(1L)
+                .build();
+
+        mockMvc.perform(post("/assessment")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(assessmentCreateResource)))
+                .andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    public void create_noAssessorId() throws Exception {
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(1L)
+                .build();
+
+        mockMvc.perform(post("/assessment")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(assessmentCreateResource)))
+                .andExpect(status().isNotAcceptable());
+    }
 }
+
+
