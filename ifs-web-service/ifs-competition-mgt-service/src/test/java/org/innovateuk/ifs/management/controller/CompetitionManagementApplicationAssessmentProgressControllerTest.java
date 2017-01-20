@@ -26,6 +26,8 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.ne
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TITLE;
+import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TOTAL_APPLICATIONS;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -113,7 +115,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 expectedAvailableAssessors
         );
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sortField=TOTAL_APPLICATIONS", competitionId, applicationId))
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
@@ -141,7 +143,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -163,9 +165,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
-                .param("sortField", "TOTAL_APPLICATIONS"))
+                .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TOTAL_APPLICATIONS", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -182,7 +184,26 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(
                 post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessment_preservesQueryParams() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
+                    .param("sortField", TOTAL_APPLICATIONS.name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
