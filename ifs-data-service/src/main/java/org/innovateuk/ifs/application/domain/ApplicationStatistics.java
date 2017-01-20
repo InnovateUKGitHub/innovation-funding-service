@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -31,6 +32,8 @@ public class ApplicationStatistics {
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
+    @Where(clause = "process_type = 'Assessment'")
+    // TODO 7668 Issue with retrieval may be caused by this class noting being an Application
     private List<Assessment> assessments;
 
     public Long getId() {
