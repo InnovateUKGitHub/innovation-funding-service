@@ -10,7 +10,7 @@ import org.innovateuk.ifs.user.domain.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -147,7 +147,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder moveCompetitionIntoFundersPanelStatus() {
-        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.FUNDERS_PANEL));
+        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.NOTIFICATIONS));
     }
 
     public CompetitionDataBuilder sendFundingDecisions(Pair<String, FundingDecision>... fundingDecisions) {
@@ -172,24 +172,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
-        MilestoneResource foundMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
-        int foundIndex = milestones.indexOf(foundMilestone);
-        List<MilestoneType> orderedMilestoneType = asList(MilestoneType.values());
-        Collections.sort(milestones, (o1, o2) -> ((Integer) orderedMilestoneType.indexOf(o1.getType())).compareTo(orderedMilestoneType.indexOf(o2.getType())));
+        MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
 
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
+        long daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
 
-        milestones.forEach(milestoneResource -> {
-            int thisIndex = milestones.indexOf(milestoneResource);
-            if (thisIndex < foundIndex) {
-                milestoneResource.setDate(LocalDateTime.now().minusDays(1 + (milestones.size() - thisIndex)));
-            } else if (thisIndex == foundIndex) {
-                milestoneResource.setDate(LocalDateTime.now().plusDays(1));
-            } else {
-                milestoneResource.setDate(LocalDateTime.now().plusDays(2 + thisIndex));
+        milestones.forEach(m -> {
+            if (m.getDate() != null) {
+                m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
+                milestoneService.updateMilestone(m).getSuccessObjectOrThrowException();
             }
-            milestoneService.updateMilestone(milestoneResource).getSuccessObjectOrThrowException();
         });
-
     }
 
     public CompetitionDataBuilder restoreOriginalMilestones() {
