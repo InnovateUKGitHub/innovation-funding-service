@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.assessment.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -25,8 +26,6 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -152,36 +151,59 @@ public class AssessmentFinancesSummaryModelPopulator {
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-        List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
+        SectionResource section = sectionService.getFinanceSection(competitionId);
 
-        if(sections.isEmpty()) {
+        if(section == null) {
             return;
         }
-
-        SectionResource section = sections.get(0);
 
         sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
         model.addAttribute("financeSection", section);
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
-        model.addAttribute("financeSectionChildren", financeSectionChildren);
+        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
+        model.addAttribute("financeSectionChildren", financeSubSectionChildren);
 
         List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
 
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSectionChildren.stream()
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
-        model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
 
         List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
                 .collect(Collectors.toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+
+
+        //Remove all questions without non-empty form inputs.
+        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
+                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
+        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
+            financeSectionChildrenQuestionFormInputs.remove(questionId);
+            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
+                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
+        });
+
+        model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
+    }
+
+    private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
+        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
+        financeSectionChildren.stream().forEach(sectionResource -> {
+                    if (!sectionResource.getChildSections().isEmpty()) {
+                        financeSubSectionChildren.addAll(
+                                sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
+                        );
+                    }
+                }
+        );
+        return financeSubSectionChildren;
     }
 
     private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list){
@@ -189,7 +211,7 @@ public class AssessmentFinancesSummaryModelPopulator {
     }
 
     private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list){
-        return simpleFilter(list, input -> id.equals(input.getQuestion()));
+        return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
     }
 }
 
