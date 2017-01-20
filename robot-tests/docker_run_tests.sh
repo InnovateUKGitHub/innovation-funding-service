@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export PYTHONPATH="$PYTHONPATH:/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python"
-
-
 function setEnv() {
     echo "setting environment"
     eval $(docker-machine env default)
@@ -46,7 +43,7 @@ function clearDownFileRepository() {
     docker exec ifs_data_1  rm -rf ${virusScanScannedFolder}
 }
 
-function addTestFiles() {
+function addTestFiles() { 
 
     clearDownFileRepository
     echo "***********Adding test files***************"
@@ -60,10 +57,10 @@ function addTestFiles() {
     echo "***********Adding standard file upload location ***********"
     docker exec ifs_data_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
-    echo "***********Creating file entry for each db entry***********"
+    echo "***********Creating file entry for each db entry***********" 
     max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
     for i in `seq 1 ${max_file_entry_id}`;
-    do
+    do 
       if [ "${i}" != "8" ]
       then
         docker exec ifs_data_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
@@ -134,7 +131,7 @@ function startSeleniumGrid() {
     then
       echo "waiting 5 seconds for the grid to be properly started"
       sleep 5
-    fi
+    fi    
   }
 
 function stopSeleniumGrid() {
@@ -165,7 +162,7 @@ function startPybot() {
       local rerunString=''
     fi
 
-    /usr/local/bin/pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs -v docker:1 -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
+    pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs -v docker:1 -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:${postcodeLookupImplemented} -v UPLOAD_FOLDER:${uploadFileDir} -v DOWNLOAD_FOLDER:download_files -v BROWSER=chrome -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' ${includeHappyPath} --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
 function runTests() {
