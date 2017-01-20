@@ -113,6 +113,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((id, object) -> setField("competitionType", id, object), typeId);
     }
 
+    public CompetitionResourceBuilder withCompetitionTypeName(String... names) {
+        return withArray((name, object) -> setField("competitionTypeName", name, object), names);
+    }
+
     public CompetitionResourceBuilder withInnovationSector(Long... ids) {
         return withArray((id, object) -> setField("innovationSector", id, object), ids);
     }
@@ -144,10 +148,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withActivityCode(String... activityCodes) {
         return withArray((activityCode, object) -> setField("activityCode", activityCode, object), activityCodes);
-    }
-
-    public CompetitionResourceBuilder withInnovateBudget(String... innovateBudgets) {
-        return withArray((innovateBudget, object) -> setField("innovateBudget", innovateBudget, object), innovateBudgets);
     }
 
     public CompetitionResourceBuilder withFunders(List<CompetitionFunderResource> fundersList) {

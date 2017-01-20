@@ -46,6 +46,9 @@
 .extra-margin{
 	margin-top: 30px;
 }
+.extra-margin-bottom{
+  margin-bottom: 30px;
+}
 
 .width-150{
 	width: 150px;
@@ -69,8 +72,30 @@ table {
     width: 40%;
 
     .width-full {
-        width: 100%;
+      width: 100%;
     }
+  }
+}
+
+.table-overflow {
+  overflow: auto;
+  padding-bottom: 0.5em;
+  width: 100%;
+
+  // Forces visible scrollbar on browser/OS that might hide it by default
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+    background-color: rgba(0,0,0,0.1);
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.4);
+    border-radius: 20px;
+  }
+
+  table{
+    max-width: 100%;
   }
 }
 

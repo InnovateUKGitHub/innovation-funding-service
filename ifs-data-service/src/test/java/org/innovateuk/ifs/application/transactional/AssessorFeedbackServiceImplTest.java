@@ -326,7 +326,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
 
         leadApplicantProcessRoles.forEach(processRole ->
-                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
+                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
 
         asList(fundedApplication1, unfundedApplication2, fundedApplication3).forEach(application ->
@@ -386,7 +386,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
 
         allProcessRoles.forEach(processRole ->
-                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
+                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
 
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());

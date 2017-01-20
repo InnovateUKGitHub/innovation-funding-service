@@ -3,15 +3,15 @@ package org.innovateuk.ifs.assessment.controller.profile;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileFamilyAffiliationForm;
+import org.innovateuk.ifs.assessment.form.profile.populator.AssessorProfileDeclarationFormPopulator;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditDeclarationModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationResourceBuilder;
-import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -25,23 +25,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Controller to manage the Assessor Profile Declaration of Interest page
@@ -57,6 +48,12 @@ public class AssessorProfileDeclarationController {
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     @Autowired
+    private AssessorProfileDeclarationFormPopulator assessorProfileDeclarationFormPopulator;
+
+    @Autowired
+    private AssessorProfileEditDeclarationModelPopulator assessorProfileEditDeclarationModelPopulator;
+
+    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
@@ -64,66 +61,73 @@ public class AssessorProfileDeclarationController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String getDeclaration(Model model,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
-                                 BindingResult bindingResult) {
-        if (!bindingResult.hasErrors()) {
-            populateFormWithExistingValues(form, loggedInUser);
-        }
-        return doViewDeclaration(model);
+                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser));
+        return "profile/declaration-of-interest";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(path = "/edit", method = RequestMethod.GET)
+    public String getEditDeclaration(Model model,
+                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                     @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
+                                     BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            assessorProfileDeclarationFormPopulator.populateForm(form, loggedInUser);
+        }
+        return doEditDeclaration(model);
+    }
+
+    @RequestMapping(path = "/edit", method = RequestMethod.POST)
     public String submitDeclaration(Model model,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> getDeclaration(model, loggedInUser, form, bindingResult);
+        Supplier<String> failureView = () -> getEditDeclaration(model, loggedInUser, form, bindingResult);
 
         validateLists(form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = userService.updateUserAffiliations(loggedInUser.getId(), populateAffiliatonsFromForm(form));
+            ServiceResult<Void> updateResult = userService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form));
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
+                    .failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
         });
     }
 
-    @RequestMapping(params = {"addAppointment"}, method = RequestMethod.POST)
+    @RequestMapping(path = "/edit", params = {"addAppointment"}, method = RequestMethod.POST)
     public String addAppointment(Model model,
                                  @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
         form.getAppointments().add(new AssessorProfileAppointmentForm());
-        return doViewDeclaration(model);
+        return doEditDeclaration(model);
     }
 
-    @RequestMapping(params = {"removeAppointment"}, method = RequestMethod.POST)
+    @RequestMapping(path = "/edit", params = {"removeAppointment"}, method = RequestMethod.POST)
     public String removeAppointment(Model model,
                                     @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     @RequestParam(name = "removeAppointment") Integer position) {
         form.getAppointments().remove(position.intValue());
-        return doViewDeclaration(model);
+        return doEditDeclaration(model);
     }
 
-    @RequestMapping(params = {"addFamilyMemberAffiliation"}, method = RequestMethod.POST)
+    @RequestMapping(path = "/edit", params = {"addFamilyMemberAffiliation"}, method = RequestMethod.POST)
     public String addFamilyMemberAffiliation(Model model,
                                              @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
         form.getFamilyAffiliations().add(new AssessorProfileFamilyAffiliationForm());
-        return doViewDeclaration(model);
+        return doEditDeclaration(model);
     }
 
-    @RequestMapping(params = {"removeFamilyMemberAffiliation"}, method = RequestMethod.POST)
+    @RequestMapping(path = "/edit", params = {"removeFamilyMemberAffiliation"}, method = RequestMethod.POST)
     public String removeFamilyMemberAffiliation(Model model,
                                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                                 @RequestParam(name = "removeFamilyMemberAffiliation") Integer position) {
         form.getFamilyAffiliations().remove(position.intValue());
-        return doViewDeclaration(model);
+        return doEditDeclaration(model);
     }
 
-    private String doViewDeclaration(Model model) {
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel());
-        return "profile/declaration-of-interest";
+    private String doEditDeclaration(Model model) {
+        model.addAttribute("model", assessorProfileEditDeclarationModelPopulator.populateModel());
+        return "profile/declaration-of-interest-edit";
     }
 
     private void validateLists(AssessorProfileDeclarationForm form, BindingResult bindingResult) {
@@ -136,27 +140,7 @@ public class AssessorProfileDeclarationController {
         }
     }
 
-    private void populateFormWithExistingValues(AssessorProfileDeclarationForm form, UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(userService.getUserAffiliations(user.getId()));
-
-        form.setPrincipalEmployer(getPrincipalEmployer(affiliations).map(AffiliationResource::getOrganisation).orElse(null));
-        form.setRole(getPrincipalEmployer(affiliations).map(AffiliationResource::getPosition).orElse(null));
-        form.setProfessionalAffiliations(getProfessionalAffiliations(affiliations));
-
-        form.setHasAppointments(hasAppointments(affiliations));
-        form.setAppointments(getAppointments(affiliations));
-
-        form.setHasFinancialInterests(hasFinancialInterests(affiliations));
-        form.setFinancialInterests(getFinancialInterests(affiliations));
-
-        form.setHasFamilyAffiliations(hasFamilyAffiliations(affiliations));
-        form.setFamilyAffiliations(getFamilyAffiliations(affiliations));
-
-        form.setHasFamilyFinancialInterests(hasFamilyFinancialInterests(affiliations));
-        form.setFamilyFinancialInterests(getFamilyFinancialInterests(affiliations));
-    }
-
-    private List<AffiliationResource> populateAffiliatonsFromForm(AssessorProfileDeclarationForm form) {
+    private List<AffiliationResource> populateAffiliationsFromForm(AssessorProfileDeclarationForm form) {
         return combineLists(
                 combineLists(
                         getAppointments(form),
@@ -169,115 +153,47 @@ public class AssessorProfileDeclarationController {
         );
     }
 
-    private Optional<AffiliationResource> getPrincipalEmployer(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(EMPLOYER, affiliations);
-    }
-
     private AffiliationResource getPrincipalEmployer(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(EMPLOYER).setExists(TRUE).setOrganisation(form.getPrincipalEmployer()).setPosition(form.getRole()).createAffiliationResource();
-    }
-
-    private String getProfessionalAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(PROFESSIONAL, affiliations).map(AffiliationResource::getDescription).orElse(null);
+        return AffiliationResourceBuilder.createPrincipalEmployer(form.getPrincipalEmployer(), form.getRole());
     }
 
     private AffiliationResource getProfessionalAffiliations(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(PROFESSIONAL).setExists(StringUtils.isNotBlank(form.getProfessionalAffiliations())).setDescription(form.getProfessionalAffiliations()).createAffiliationResource();
-    }
-
-    private Boolean hasAppointments(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return hasAffiliationsByType(PERSONAL, affiliations);
-    }
-
-    private List<AssessorProfileAppointmentForm> getAppointments(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationsByType(PERSONAL, affiliations).map(affiliationResources -> affiliationResources.stream().filter(AffiliationResource::getExists).map(row -> new AssessorProfileAppointmentForm(row.getOrganisation(), row.getPosition())).collect(toList())).orElse(Collections.emptyList());
+        return AffiliationResourceBuilder.createProfessaionAffiliations(form.getProfessionalAffiliations());
     }
 
     private List<AffiliationResource> getAppointments(AssessorProfileDeclarationForm form) {
         if (form.getHasAppointments()) {
-            return form.getAppointments().stream().map(appointmentForm -> new AffiliationResourceBuilder()
-                    .setAffiliationType(PERSONAL)
-                    .setExists(TRUE)
-                    .setOrganisation(appointmentForm.getOrganisation())
-                    .setPosition(appointmentForm.getPosition())
-                    .createAffiliationResource()
-            ).collect(toList());
+
+            return form.getAppointments().stream().map(appointmentForm ->
+                    AffiliationResourceBuilder.createAppointment(appointmentForm.getOrganisation(), appointmentForm.getPosition())
+            )
+                    .collect(toList());
         } else {
-            return singletonList(new AffiliationResourceBuilder().setAffiliationType(PERSONAL).setExists(FALSE).createAffiliationResource());
+            return singletonList(AffiliationResourceBuilder.createEmptyAppointments());
         }
     }
 
-    private Boolean hasFinancialInterests(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return hasAffiliationsByType(PERSONAL_FINANCIAL, affiliations);
-    }
-
-    private String getFinancialInterests(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(PERSONAL_FINANCIAL, affiliations).map(AffiliationResource::getDescription).orElse(null);
-    }
-
     private AffiliationResource getFinancialInterests(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(PERSONAL_FINANCIAL).setExists(form.getHasFinancialInterests()).setDescription(form.getHasFinancialInterests() ? form.getFinancialInterests() : null).createAffiliationResource();
-    }
-
-    private Boolean hasFamilyAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return hasAffiliationsByType(FAMILY, affiliations);
-    }
-
-    private List<AssessorProfileFamilyAffiliationForm> getFamilyAffiliations(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationsByType(FAMILY, affiliations).map(affiliationResources -> affiliationResources.stream().filter(AffiliationResource::getExists).map(row -> new AssessorProfileFamilyAffiliationForm(row.getRelation(), row.getOrganisation(), row.getPosition())).collect(toList())).orElse(Collections.emptyList());
+        return AffiliationResourceBuilder.createFinancialInterests(form.getHasFinancialInterests(), form.getFinancialInterests());
     }
 
     private List<AffiliationResource> getFamilyAffiliations(AssessorProfileDeclarationForm form) {
         if (form.getHasFamilyAffiliations()) {
-            return form.getFamilyAffiliations().stream().map(familyAffiliationForm -> new AffiliationResourceBuilder()
-                    .setAffiliationType(FAMILY)
-                    .setExists(TRUE)
-                    .setRelation(familyAffiliationForm.getRelation())
-                    .setOrganisation(familyAffiliationForm.getOrganisation())
-                    .setPosition(familyAffiliationForm.getPosition())
-                    .createAffiliationResource()
-            ).collect(toList());
+            return form.getFamilyAffiliations().stream()
+                    .map(familyAffiliationForm ->
+                            AffiliationResourceBuilder.createFamilyAffiliation(
+                                    familyAffiliationForm.getRelation(),
+                                    familyAffiliationForm.getOrganisation(),
+                                    familyAffiliationForm.getPosition()
+                            )
+                    )
+                    .collect(toList());
         } else {
-            return singletonList(new AffiliationResourceBuilder().setAffiliationType(FAMILY).setExists(FALSE).createAffiliationResource());
+            return singletonList(AffiliationResourceBuilder.createEmptyFamilyAffiliations());
         }
-    }
-
-    private Boolean hasFamilyFinancialInterests(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return hasAffiliationsByType(FAMILY_FINANCIAL, affiliations);
-    }
-
-    private String getFamilyFinancialInterests(Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return getAffiliationByType(FAMILY_FINANCIAL, affiliations).map(AffiliationResource::getDescription).orElse(null);
     }
 
     private AffiliationResource getFamilyFinancialInterests(AssessorProfileDeclarationForm form) {
-        return new AffiliationResourceBuilder().setAffiliationType(FAMILY_FINANCIAL).setExists(form.getHasFamilyFinancialInterests()).setDescription(form.getHasFamilyFinancialInterests() ? form.getFamilyFinancialInterests() : null).createAffiliationResource();
-    }
-
-    private Map<AffiliationType, List<AffiliationResource>> getAffiliationsMap(List<AffiliationResource> affiliations) {
-        if (affiliations == null) {
-            return emptyMap();
-        } else {
-            return affiliations.stream().collect(groupingBy(AffiliationResource::getAffiliationType));
-        }
-    }
-
-    private Optional<AffiliationResource> getAffiliationByType(AffiliationType affiliationType, Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return ofNullable(affiliations.get(affiliationType)).flatMap(affiliationsByType -> affiliationsByType.stream().findFirst());
-    }
-
-    private Optional<List<AffiliationResource>> getAffiliationsByType(AffiliationType affiliationType, Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return ofNullable(affiliations.get(affiliationType));
-    }
-
-    /**
-     * Determine if the user specified an answer for having affiliations of the specified affiliationType. An affiliation question that has been answered as not existing is recorded as a single entry with the <code>exists</code> property as {@link Boolean#FALSE}.
-     *
-     * @param affiliationType
-     * @param affiliations
-     * @return
-     */
-    private Boolean hasAffiliationsByType(AffiliationType affiliationType, Map<AffiliationType, List<AffiliationResource>> affiliations) {
-        return ofNullable(affiliations.get(affiliationType)).map(affiliationsByType -> !(affiliationsByType.size() == 1 && FALSE == affiliationsByType.get(0).getExists())).orElse(null);
+        return AffiliationResourceBuilder.createFamilyFinancialInterests(form.getHasFamilyFinancialInterests(), form.getFamilyFinancialInterests());
     }
 }

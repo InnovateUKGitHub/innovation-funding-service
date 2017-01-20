@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.category.builder.CategoryResourceBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.builder.*;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.util.ArrayList;
-
-import static com.google.common.primitives.Longs.asList;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
@@ -24,9 +21,16 @@ public static final FieldDescriptor[] categoryResourceFields = {
             fieldWithPath("children").description("child categories if exists")
     };
 
-    public static final CategoryResourceBuilder categoryResourceBuilder = newCategoryResource()
+    public static final InnovationAreaResourceBuilder innovationAreaResourceBuilder = newInnovationAreaResource()
             .withId(2L ,3L)
-            .withName("Category name")
-            .withType(CategoryType.INNOVATION_AREA)
+            .withName("Innovation area name")
             .withParent(1L);
+
+    public static final InnovationSectorResourceBuilder innovationSectorResourceBuilder = newInnovationSectorResource()
+            .withId(2L ,3L)
+            .withName("Innovation sector name");
+
+    public static final ResearchCategoryResourceBuilder researchCategoryResourceBuilder = newResearchCategoryResource()
+            .withId(2L ,3L)
+            .withName("Research category name");
 }

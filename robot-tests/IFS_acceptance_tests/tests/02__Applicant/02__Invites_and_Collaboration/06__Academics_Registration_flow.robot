@@ -16,6 +16,7 @@ Academic organisations search
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And The user should see the text in the page    Your organisation must be UK based to receive funding from Innovate UK
     When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
@@ -28,13 +29,7 @@ Academic organisations search
     Then the user should see the text in the page    No results found.
 
 Accept invitation as academic
-    [Documentation]    INFUND-1166
-    ...
-    ...    INFUND-917
-    ...
-    ...    INFUND-2450
-    ...
-    ...    INFUND-2256
+    [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     When the user enters text to a text field    id=organisationSearchName    Liv
@@ -53,13 +48,16 @@ Accept invitation as academic
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
     And If the user goes to the previous page he should redirect to the login page
-    And the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Please verify your email address    You have recently set up an account
+    And the user reads his email and clicks the link  ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Passw0rd123
+    And guest user log-in    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  ${correct_password}
     When the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
-    And the user clicks the button/link    link=Your finances
-    Then the user should see the text in the page    TSB reference
-    And the user should not see the text in the page    Labour
+    And the user clicks the button/link     link=Your finances
+    Then the user should see the element    link=Your project costs
+    And the user should see the element     link=Your organisation
+    And the user should see the element    jQuery=h3:contains("Your funding")
+    When the user clicks the button/link    link=Your project costs
+    Then the user should not see the text in the page    Labour
     And the user should not see an error in the page
 
 *** Keywords ***

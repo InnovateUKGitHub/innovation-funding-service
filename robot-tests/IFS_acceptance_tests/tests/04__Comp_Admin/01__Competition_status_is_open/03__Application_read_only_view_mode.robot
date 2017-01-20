@@ -5,6 +5,7 @@ Documentation     INFUND-2443 Acceptance test: Check that the comp manager canno
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -12,11 +13,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
-    [Documentation]    INFUND-2300
-    ...
-    ...    INFUND-2304
-    ...
-    ...    INFUND-2435
+    [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
     [Setup]    Run keywords    Guest user log-in    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
@@ -31,17 +28,18 @@ Comp admin can open the view mode of the application
     And the user should see the text in the page    A novel solution to an old problem
     And the user should see the text in the page    ${valid_pdf}
     And the user can view this file without any errors
-    # And the user should see the text in the page    ${quarantine_pdf}
-    # nad the user cannot see this file but gets a quarantined message
+    #    And the user should see the text in the page    ${quarantine_pdf}
+    #    And the user cannot see this file but gets a quarantined message
+    # TODO when working on Guarantined files. Variable has been removed
 
 Comp admin should be able to view but not edit the finances for every partner
-    [Documentation]    INFUND-2443
-    ...    INFUND-2483
-    [Tags]    Failing
+    [Documentation]    INFUND-2443, INFUND-2483
+    [Tags]
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should not see the element    link=your finances
-    And the user should see the text in the page    Funding breakdown
+    And the user should see the element     jQuery=h3:contains("Finances Summary")
+    And the user should see the element     jQuery=h2:contains("Funding breakdown")
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user    &{collaborator1_credentials}
@@ -57,7 +55,6 @@ the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
 
-
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
@@ -69,6 +66,7 @@ the user can view this file without any errors
     the user goes back to the previous page
 
 the user cannot see this file but gets a quarantined message
+    [Documentation]    Currently not used. It was used in Comp admin can open the view mode of the application
     the user clicks the button/link    link=test_quarantine.pdf(7 KB)
     the user should not see an error in the page
     the user should see the text in the page    ${quarantine_warning}
@@ -98,15 +96,16 @@ the finance Project cost breakdown calculations should be correct
     Wait Until Element Contains    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 
 the applicant edits the Subcontracting costs section
-    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
-    the user clicks the button/link    jQuery=button:contains('Add another subcontractor')
+    the user clicks the button/link    link=Your project costs
+    the user clicks the button/link    jQuery=#form-input-20 button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
-    Mouse Out    css=input
-    focus    css=.app-submit-btn
+    the user selects the checkbox           css=#agree-state-aid-page
+    the user clicks the button/link         jQuery=.button:contains("Mark as complete")
+
 
 the user should see the correct finances change
     Wait Until Element Contains    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}

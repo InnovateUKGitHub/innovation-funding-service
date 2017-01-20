@@ -42,6 +42,7 @@ import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -55,6 +56,7 @@ import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectD
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +117,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
@@ -317,7 +322,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
                 failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) ?
+                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
                         serviceSuccess(true) :
                         serviceSuccess(false));
     }
@@ -456,17 +461,20 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-        if (approved == null) {
+    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
+        //TODO INFUND-7493
+        if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }
         return getProject(projectId)
                 .andOnSuccess(project -> {
-                    if (project.getOtherDocumentsApproved() != null
-                            && project.getOtherDocumentsApproved()) {
+                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
                         return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
                     }
-                    project.setOtherDocumentsApproved(approved);
+                    project.setOtherDocumentsApproved(approval ? ApprovalType.APPROVED : ApprovalType.REJECTED);
+                    if (approval.equals(false)) {
+                        project.setDocumentsSubmittedDate(null);
+                    }
                     return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
                 });
     }
@@ -512,6 +520,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
         project.setCollaborationAgreement(fileEntry);
     }
 
@@ -534,6 +543,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
+        project.setOtherDocumentsApproved(ApprovalType.UNSET);
         project.setExploitationPlan(fileEntry);
     }
 
@@ -587,7 +597,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        globalArguments.put("leadOrganisation", leadOrganisation.getName());
         globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
         globalArguments.put("projectManagerEmail", projectManager.getEmail());
         globalArguments.put("monitoringOfficerName", getMonitoringOfficerFullName(monitoringOfficer));
@@ -693,7 +705,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findOne(projectId);
-        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
 
         Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
                 userId -> simpleFindFirst(project.getProjectUsers(),
@@ -715,7 +728,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
-        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
         Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
@@ -805,7 +819,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
-        String leadOrganisationName = project.getApplication().getLeadOrganisation().getName();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
@@ -880,8 +896,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private List<ProjectUser> getLeadPartners(Project project) {
-        Application application = project.getApplication();
-        Organisation leadPartnerOrganisation = application.getLeadOrganisation();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
         return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
@@ -905,7 +921,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
 
             List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
-                    role -> createPartnerProjectUser(project, role.getUser(), role.getOrganisation()));
+                    role -> {
+                        Organisation organisation = organisationRepository.findOne(role.getOrganisationId());
+                        return createPartnerProjectUser(project, role.getUser(), organisation);
+                    });
 
             ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
 
@@ -915,7 +934,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
                 List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisation().getId())));
+                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId())));
 
                 project.setProjectUsers(projectUsers);
                 project.setPartnerOrganisations(partnerOrganisations);
@@ -1140,6 +1159,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
+    }
+
+    @Override
+    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
+
     }
 
 

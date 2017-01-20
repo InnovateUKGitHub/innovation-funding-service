@@ -383,8 +383,7 @@
                            type="text"
                            th:field="${competitionSetupForm.pafNumber}"
                            required="required"
-                           th:attr="data-required-errormessage=#{validation.additionalinfoform.pafnumber.required}"
-                           th:readonly="${isSetupAndLive}"/>
+                           th:attr="data-required-errormessage=#{validation.additionalinfoform.pafnumber.required}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -398,8 +397,7 @@
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}"
                            required="required"
-                           th:attr="data-required-errormessage=#{validation.additionalinfoform.budgetcode.required}"
-                           th:readonly="${isSetupAndLive}"/>
+                           th:attr="data-required-errormessage=#{validation.additionalinfoform.budgetcode.required}" />
                 </div>
 
 
@@ -415,8 +413,7 @@
                             th:field="${competitionSetupForm.activityCode}"
                             maxlength="255"
                             th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size},
-                                     data-required-errormessage=#{validation.additionalinfoform.activitycode.required}"
-                            th:readonly="${isSetupAndLive}"/>
+                                     data-required-errormessage=#{validation.additionalinfoform.activitycode.required}" />
 
                 </div>
 
@@ -870,7 +867,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${preventEdit}" type="submit" class="button extra-margin">Edit</button>
         </th:block>
     </form>
 

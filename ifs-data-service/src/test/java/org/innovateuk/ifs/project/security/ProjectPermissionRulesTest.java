@@ -142,7 +142,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(null);
 
@@ -486,5 +486,39 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
         assertFalse(rules.internalUserCanSendGrantOfferLetter(project, user));
+    }
+
+    @Test
+    public void testInternalUserCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
+                assertTrue(rules.internalUserCanViewSendGrantOfferLetterStatus(project, user));
+            } else {
+                assertFalse(rules.internalUserCanViewSendGrantOfferLetterStatus(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testPartnersCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        // Ensure partners can access
+        UserResource user = newUserResource().build();
+        setupUserAsPartner(project, user);
+        assertTrue(rules.externalUserCanViewSendGrantOfferLetterStatus(project, user));
+    }
+
+    @Test
+    public void testNonPartnersCannotViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        // Ensure non-partners cannot access
+        allGlobalRoleUsers.forEach(user2 -> assertFalse(rules.externalUserCanViewSendGrantOfferLetterStatus(project, user2)));
     }
 }

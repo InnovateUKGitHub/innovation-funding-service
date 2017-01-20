@@ -10,7 +10,6 @@ import java.util.List;
 public class RoleTest {
     Role role;
 
-    List<ProcessRole> processRoles;
     Long id;
     String name;
 
@@ -18,18 +17,11 @@ public class RoleTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "userApplicationRoleTestName";
-
-        processRoles = new ArrayList<>();
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
-        processRoles.add(new ProcessRole());
-
-        role = new Role(id, name, processRoles);
+        role = new Role(id, name);
     }
 
     @Test
     public void roleShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(role.getProcessRoles(), processRoles);
         Assert.assertEquals(role.getId(), id);
         Assert.assertEquals(role.getName(), name);
     }

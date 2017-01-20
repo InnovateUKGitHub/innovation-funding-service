@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competitionsetup.form.FunderRowForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Arrays.asList;
 
 /**
  * Form populator for the additional info competition setup section.
@@ -31,8 +31,6 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm();
 
 		competitionSetupForm.setActivityCode(competitionResource.getActivityCode());
-		competitionSetupForm.setInnovateBudget(competitionResource.getInnovateBudget());
-
 		competitionSetupForm.setCompetitionCode(competitionResource.getCode());
 		competitionSetupForm.setPafNumber(competitionResource.getPafCode());
 		competitionSetupForm.setBudgetCode(competitionResource.getBudgetCode());

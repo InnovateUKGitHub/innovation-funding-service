@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.security;
 
+import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.config.IfSThymeleafDialect;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -60,7 +61,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CsrfStatelessFilterControllerTest.ContextConfiguration.class)
-@TestPropertySource(properties = {"ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7", "ifs.web.security.csrf.token.validity.mins: 30"})
+@TestPropertySource(properties = {
+        "ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9",
+        "ifs.web.security.csrf.encryption.salt = 9ea751556a3feee7",
+        "ifs.web.security.csrf.token.validity.mins = 30"
+})
 @WebAppConfiguration
 @ActiveProfiles("CsrfStatelessFilterControllerTest")
 public class CsrfStatelessFilterControllerTest {
@@ -211,7 +216,7 @@ public class CsrfStatelessFilterControllerTest {
      * Using a unique @Profile to make sure that all of the @Bean methods are bypassed unless the profile is active,
      * which will only be the case for this integration test.
      * Without this restriction, these beans clash with the real ones during the running of
-     * other {@link org.innovateuk.ifs.BaseWebIntegrationTest} integration tests which load the main Spring application configuration as well as this one.
+     * other {@link BaseWebIntegrationTest} integration tests which load the main Spring application configuration as well as this one.
      * </p>
      */
     @Configuration

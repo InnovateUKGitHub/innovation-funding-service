@@ -77,113 +77,117 @@
                 </div>
             </div>
 
-            <details class="extra-margin-bottom" th:open="${form.invites.size()} > 0">
+            <details class="extra-margin-bottom" th:open="${form.visible}">
                 <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
 
-                <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
-                      method="POST"
-                      th:object="${form}"
-                      novalidate="novalidate">
-                    <p>Enter the new assessor's details below to add them to your invite list.</p>
+                <div class="panel">
+                    <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
+                          method="POST"
+                          th:object="${form}"
+                          novalidate="novalidate">
+                        <p>Enter the new assessor's details below to add them to your invite list.</p>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')}? error">
-                        <label for="grouped-innovation-area" class="form-label-bold">
-                            Innovation area
-                            <span th:if="${#fields.hasErrors('selectedInnovationArea')}" th:remove="tag">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')}? error">
+                            <label for="grouped-innovation-area" class="form-label-bold">
+                                Innovation area
+                                <span th:if="${#fields.hasErrors('selectedInnovationArea')}" th:remove="tag">
+                                    <span class="error-message"
+                                          th:each="err : ${#fields.errors('selectedInnovationArea')}"
+                                          th:text="${err}" />
+                                </span>
+                            </label>
+                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
+                            <select th:field="*{selectedInnovationArea}"
+                                    class="form-control width-full"
+                                    data-progressive-group-select="Innovation sector"
+                                    data-progressive-group-select-instruction="Please select an innovation sector"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
+                                    aria-labelledby="innovation-area"
+                                    id="grouped-innovation-area">
+                                <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
+                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                    <option th:each="innovationArea : ${innovationSector.children}"
+                                            th:value="${innovationArea.id}"
+                                            th:text="${innovationArea.name}"
+                                            th:selected="*{selectedInnovationArea} == ${innovationArea.id}"></option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="form-group" th:classappend="${#fields.hasErrors('invites')}? error">
+                            <span th:if="${#fields.hasErrors('invites')}" th:remove="tag">
                                 <span class="error-message"
-                                      th:each="err : ${#fields.errors('selectedInnovationArea')}"
+                                      th:each="err : ${#fields.errors('invites')}"
                                       th:text="${err}" />
                             </span>
-                        </label>
-                        <p class="form-hint">The innovation area you select will be for all assessors added until you click the 'Add assessor(s) to list' button.</p>
-                        <select th:field="*{selectedInnovationArea}"
-                                class="form-control width-full"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
-                                aria-labelledby="innovation-area"
-                                id="grouped-innovation-area">
-                            <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
-                            <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
-                                <option th:each="innovationArea : ${innovationSector.children}"
-                                        th:value="${innovationArea.id}"
-                                        th:text="${innovationArea.name}"
-                                        th:selected="*{selectedInnovationArea} == ${innovationArea.id}"></option>
-                            </optgroup>
-                        </select>
-                    </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('invites')}? error">
-                        <span th:if="${#fields.hasErrors('invites')}" th:remove="tag">
-                            <span class="error-message"
-                                  th:each="err : ${#fields.errors('invites')}"
-                                  th:text="${err}" />
-                        </span>
+                            <table id="invite-table">
+                                <thead>
+                                <tr>
+                                    <th id="invite-label-assessor-name" scope="col">Name</th>
+                                    <th id="invite-label-assessor-email" scope="col">Email</th>
+                                    <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="row, iterStat : *{invites}">
+                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? error">
+                                        <label>
+                                             <span th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}" th:remove="tag">
+                                                 <span class="error-message"
+                                                       th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}"
+                                                       th:text="${err}" />
+                                             </span>
+                                        </label>
+                                        <input type="text"
+                                               aria-labelledby="invite-label-assessor-name"
+                                               class="form-control width-full"
+                                               required="required"
+                                               th:errorclass="field-error"
+                                               th:attr="data-required-errormessage=#{validation.standard.name.required}"
+                                               th:field="*{invites[__${iterStat.index}__].name}"
+                                        />
+                                    </td>
+                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? error">
+                                        <label>
+                                             <span th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}" th:remove="tag">
+                                                 <span class="error-message"
+                                                       th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}"
+                                                       th:text="${err}" />
+                                             </span>
+                                        </label>
+                                        <input type="email"
+                                               aria-labelledby="invite-label-assessor-email"
+                                               class="form-control width-full"
+                                               required="required"
+                                               th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
+                                               th:errorclass="field-error"
+                                               th:field="*{invites[__${iterStat.index}__].email}"
+                                        />
+                                    </td>
+                                    <td class="alignright width-20-percent">
+                                        <button class="buttonlink remove-another-row"
+                                                name="removeNewUser"
+                                                th:value="${iterStat.index}"
+                                                type="submit">
+                                            Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                        <table id="invite-table">
-                            <thead>
-                            <tr>
-                                <th id="invite-label-assessor-name" scope="col">Name</th>
-                                <th id="invite-label-assessor-email" scope="col">Email</th>
-                                <th scope="col"><span class="visuallyhidden">Actions</span></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="row, iterStat : *{invites}">
-                                <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
-                                    <label>
-                                         <span th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}" th:remove="tag">
-                                             <span class="error-message"
-                                                   th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}"
-                                                   th:text="${err}" />
-                                         </span>
-                                    </label>
-                                    <input type="text"
-                                           aria-labelledby="invite-label-assessor-name"
-                                           class="form-control width-full"
-                                           required="required"
-                                           th:errorclass="field-error"
-                                           th:attr="data-required-errormessage=#{validation.standard.name.required}"
-                                           th:field="*{invites[__${iterStat.index}__].name}"
-                                    />
-                                </td>
-                                <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
-                                    <label>
-                                         <span th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}" th:remove="tag">
-                                             <span class="error-message"
-                                                   th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}"
-                                                   th:text="${err}" />
-                                         </span>
-                                    </label>
-                                    <input type="email"
-                                           aria-labelledby="invite-label-assessor-email"
-                                           class="form-control width-full"
-                                           required="required"
-                                           th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
-                                           th:errorclass="field-error"
-                                           th:field="*{invites[__${iterStat.index}__].email}"
-                                    />
-                                </td>
-                                <td class="alignright width-20-percent">
-                                    <button class="buttonlink remove-another-row"
-                                            name="removeNewUser"
-                                            th:value="${iterStat.index}"
-                                            type="submit">
-                                        Remove
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <p class="alignright extra-margin">
+                                <button class="buttonlink" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor of this type</button>
+                            </p>
 
-                        <p class="alignright extra-margin">
-                            <button class="buttonlink" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor of this type</button>
-                        </p>
-
-                        <div class="alignright extra-margin-top">
-                            <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessor(s) to list</button>
+                            <div class="alignright extra-margin-top">
+                                <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessors to list</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </details>
 
             <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
@@ -211,6 +215,9 @@
                                 <br />
                                 <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
                             </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="5">There are no assessors to be invited to this competition.</td>
                         </tr>
                     </tbody>
                 </table>

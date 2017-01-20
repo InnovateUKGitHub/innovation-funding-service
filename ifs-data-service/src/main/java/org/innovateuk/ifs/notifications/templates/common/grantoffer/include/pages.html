@@ -19,7 +19,7 @@
         Application number: ${ApplicationNumber}<br/>
 
         <#assign sendDate = .now>
-            Date: ${sendDate?string["MM/dd/yyyy"]}
+            Date: ${sendDate?string["d MMMM yyyy"]}
     </p>
     <p class="bold">
         Dear ${LeadContact},
@@ -86,7 +86,7 @@
     <h1>Eligible cost and grant allocations</h1>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
-        Date: ${sendDate?string["MM/dd/yyyy"]}<br/>
+        Date: ${sendDate?string["d MMMM yyyy"]}<br/>
         ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
     </p>
@@ -119,11 +119,11 @@
                     <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
                     <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
                         <#list 0..costLength as i>
-                            <td class="textright">${TableData.organisationEligibleCostTotal[org][i]}</td>
-                            <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]}</td>
+                            <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
+                            <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
                         </#list>
-                        <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]}</td>
-                        <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]}</td>
+                        <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
+                        <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
                 </tr>
             </#list>
         </tbody>
@@ -131,13 +131,26 @@
         <tr>
             <td>Total (per annum)</td>
             <td></td>
-            <#assign years = TableData.yearEligibleCostTotal?keys>
-                <#list years as year>
-                    <td class="textright">${TableData.yearEligibleCostTotal[year]}</td>
-                    <td class="textright">${TableData.yearGrantAllocationTotal[year]}</td>
+            <#list 0..costLength as i>
+                <#assign YearlyEligible = 0>
+                <#assign YearlyGrant = 0>
+
+                <#list keys as org>
+                    <#assign YearlyEligible += TableData.organisationEligibleCostTotal[org][i]>
+                    <#assign YearlyGrant += TableData.organisationGrantAllocationTotal[org][i]>
                 </#list>
-                <td class="textright">${TableData.eligibleCostGrandTotal}</td>
-                <td class="textright">${TableData.grantAllocationGrandTotal}</td>
+                <td class="textright">${YearlyEligible?round}</td>
+                <td class="textright">${YearlyGrant?round}</td>
+            </#list>
+
+            <#assign grandTotalEligible = 0>
+            <#assign grandTotalGrant = 0>
+            <#list keys as org>
+                <#assign grandTotalEligible += TableData.getEligibleCostGrandTotalPerOrganisation()[org]>
+                <#assign grandTotalGrant += TableData.getGrantAllocationGrandTotalPerOrganisation()[org]>
+            </#list>
+            <td class="textright">${grandTotalEligible?round}</td>
+            <td class="textright">${grandTotalGrant?round}</td>
         </tr>
         </tfoot>
     </table>
@@ -147,7 +160,7 @@
     <h1>Acceptance of award</h1>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
-        Date: ${sendDate?string["MM/dd/yyyy"]}<br/>
+        Date: ${sendDate?string["d MMMM yyyy"]}<br/>
         Innovate UK: ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
     </p>

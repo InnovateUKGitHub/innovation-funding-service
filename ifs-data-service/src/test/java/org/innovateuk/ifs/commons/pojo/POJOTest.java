@@ -17,8 +17,7 @@ import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.PageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.*;
@@ -64,7 +63,7 @@ import java.util.List;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 37;
+    private static final int EXPECTED_RESOURCES = 38;
 
     // The package to test
     private static final String POJO_PACKAGE = "org.innovateuk.ifs";
@@ -76,6 +75,8 @@ public class POJOTest {
             AffiliationResource.class,
             Alert.class,
             AlertResource.class,
+            ApplicationAssessmentSummaryResource.class,
+            ApplicationAssessorResource.class,
             ApplicationRejectionResource.class,
             AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
@@ -139,6 +140,7 @@ public class POJOTest {
             PartnerOrganisationResource.class,
             SpendProfileCSVResource.class,
             FinanceCheckSummaryResource.class,
+            FinanceCheckEligibilityResource.class,
             FinanceCheckPartnerStatusResource.class,
             SpendProfileCSVResource.class,
             ContractResource.class,
@@ -152,7 +154,9 @@ public class POJOTest {
             AssessmentSubmissionsResource.class,
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
-            NewUserStagedInviteListResource.class
+            NewUserStagedInviteListResource.class,
+            CompetitionSetupFinanceResource.class,
+            ApplicationCountSummaryResource.class
             );
 
     @Before

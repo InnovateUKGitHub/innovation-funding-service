@@ -38,6 +38,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-5805 As a successful applicant I want to be able to view the grant terms and conditions from my dashboard so that I can confirm what I agreed to in the application
 ...
 ...               INFUND-6781 Spend Profile is accessible before preliminary sections are completed
+...
+...               INFUND-7174 Not eligible partner should not have access to his Bank details page
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -218,7 +220,7 @@ Lead partner can change the Start Date
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
     Then The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
-    And the user should see the text in the page    1 Jan
+    And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
 
@@ -374,12 +376,12 @@ Non lead partner nominates finance contact
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 3.
 Non lead partner not eligible for funding
-    [Documentation]    INFUND-7090
+    [Documentation]    INFUND-7090, INFUND-7174
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
-    #    The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    You do not have the necessary permissions for your request    TODO INFUND-7174
+    When The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    You do not have the necessary permissions for your request
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status

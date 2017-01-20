@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A DTO which enables to application to transfer {@link org.innovateuk.ifs.invite.domain.ApplicationInvite} entities.
  */
 public class ApplicationInviteResource extends InviteResource {
+    private Long leadOrganisationId;
     private String leadOrganisation;
     private String leadApplicant;
     private String leadApplicantEmail;
@@ -128,6 +129,14 @@ public class ApplicationInviteResource extends InviteResource {
         this.applicationName = applicationName;
     }
 
+    public Long getLeadOrganisationId() {
+        return leadOrganisationId;
+    }
+
+    public void setLeadOrganisationId(Long leadOrganisationId) {
+        this.leadOrganisationId = leadOrganisationId;
+    }
+
     public String getLeadOrganisation() {
         return leadOrganisation;
     }
@@ -201,7 +210,7 @@ public class ApplicationInviteResource extends InviteResource {
         ApplicationInviteResource that = (ApplicationInviteResource) o;
 
         return new EqualsBuilder()
-                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadOrganisationId, that.leadOrganisationId)
                 .append(leadApplicant, that.leadApplicant)
                 .append(leadApplicantEmail, that.leadApplicantEmail)
                 .append(id, that.id)
@@ -224,7 +233,7 @@ public class ApplicationInviteResource extends InviteResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(leadOrganisation)
+                .append(leadOrganisationId)
                 .append(leadApplicant)
                 .append(leadApplicantEmail)
                 .append(id)

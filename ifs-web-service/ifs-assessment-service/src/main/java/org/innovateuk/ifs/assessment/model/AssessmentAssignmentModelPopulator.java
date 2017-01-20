@@ -46,7 +46,7 @@ public class AssessmentAssignmentModelPopulator {
     private OrganisationRestService organisationRestService;
 
     public AssessmentAssignmentViewModel populateModel(Long assessmentId) {
-        AssessmentResource assessment = getAssessment(assessmentId);
+        AssessmentResource assessment = getAssignableAssessment(assessmentId);
         ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -56,8 +56,8 @@ public class AssessmentAssignmentModelPopulator {
         return new AssessmentAssignmentViewModel(assessmentId, competition.getId(), application, collaborators, leadPartner, projectSummary);
     }
 
-    private AssessmentResource getAssessment(final Long assessmentId) {
-        return assessmentService.getById(assessmentId);
+    private AssessmentResource getAssignableAssessment(final Long assessmentId) {
+        return assessmentService.getAssignableById(assessmentId);
     }
 
     private ApplicationResource getApplication(final Long applicationId) {
@@ -67,7 +67,7 @@ public class AssessmentAssignmentModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 
@@ -79,7 +79,7 @@ public class AssessmentAssignmentModelPopulator {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                         || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
                 .collect(Collectors.toCollection(supplier));
     }
 

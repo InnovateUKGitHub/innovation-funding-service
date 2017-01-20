@@ -45,37 +45,38 @@ public class Application implements ProcessActivity {
     @Max(100)
     private BigDecimal completion = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy="application")
+    @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy="application")
+    @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationStatusId", referencedColumnName="id")
+    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
     private ApplicationStatus applicationStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="competition", referencedColumnName="id")
+    @JoinColumn(name = "competition", referencedColumnName = "id")
     private Competition competition;
 
-    @OneToMany(mappedBy="application")
+    @OneToMany(mappedBy = "application")
     private List<ApplicationInvite> invites;
 
     @Enumerated(EnumType.STRING)
     private FundingDecisionStatus fundingDecision;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="assessorFeedbackFileEntryId", referencedColumnName="id")
+    @JoinColumn(name = "assessorFeedbackFileEntryId", referencedColumnName = "id")
     private FileEntry assessorFeedbackFileEntry;
-    
-    @OneToMany(mappedBy="application", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE, CascadeType.PERSIST})
+
+    @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
     private Boolean stateAidAgreed;
 
     public Application() {
-        /*default constructor*/}
+        /*default constructor*/
+    }
 
     public Application(Long id, String name, ApplicationStatus applicationStatus) {
         this.id = id;
@@ -95,7 +96,7 @@ public class Application implements ProcessActivity {
         return other instanceof Application;
     }
 
-    public String getFormattedId(){
+    public String getFormattedId() {
         return ApplicationResource.formatter.format(id);
     }
 
@@ -115,19 +116,25 @@ public class Application implements ProcessActivity {
         return resubmission;
     }
 
-    public void setResubmission(Boolean resubmission) { this.resubmission = resubmission; }
+    public void setResubmission(Boolean resubmission) {
+        this.resubmission = resubmission;
+    }
 
     public String getPreviousApplicationNumber() {
         return previousApplicationNumber;
     }
 
-    public void setPreviousApplicationNumber(String previousApplicationNumber) { this.previousApplicationNumber = previousApplicationNumber; }
+    public void setPreviousApplicationNumber(String previousApplicationNumber) {
+        this.previousApplicationNumber = previousApplicationNumber;
+    }
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
     }
 
-    public void setPreviousApplicationTitle(String previousApplicationTitle) { this.previousApplicationTitle = previousApplicationTitle; }
+    public void setPreviousApplicationTitle(String previousApplicationTitle) {
+        this.previousApplicationTitle = previousApplicationTitle;
+    }
 
 
     public void setName(String name) {
@@ -158,11 +165,15 @@ public class Application implements ProcessActivity {
         this.competition = competition;
     }
 
-    public void addUserApplicationRole(ProcessRole... processRoles){
-        if(this.processRoles == null){
+    public void addUserApplicationRole(ProcessRole... processRoles) {
+        if (this.processRoles == null) {
             this.processRoles = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(processRoles));
+        for (ProcessRole processRole : processRoles) {
+            if (!this.processRoles.contains(processRole)) {
+                this.processRoles.add(processRole);
+            }
+        }
     }
 
     public LocalDate getStartDate() {
@@ -191,7 +202,7 @@ public class Application implements ProcessActivity {
     }
 
     @JsonIgnore
-    public ProcessRole getLeadApplicantProcessRole(){
+    public ProcessRole getLeadApplicantProcessRole() {
         return getLeadProcessRole().orElse(null);
     }
 
@@ -201,13 +212,13 @@ public class Application implements ProcessActivity {
     }
 
     @JsonIgnore
-    public User getLeadApplicant(){
+    public User getLeadApplicant() {
         return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
     }
 
     @JsonIgnore
-    public Organisation getLeadOrganisation(){
-        return getLeadProcessRole().map(role -> role.getOrganisation()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
     @JsonIgnore
@@ -216,9 +227,10 @@ public class Application implements ProcessActivity {
     }
 
     @JsonIgnore
-    public boolean isOpen(){
+    public boolean isOpen() {
         return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }
+
 
     public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
@@ -231,13 +243,13 @@ public class Application implements ProcessActivity {
     public void setSubmittedDate(LocalDateTime submittedDate) {
         this.submittedDate = submittedDate;
     }
-    
+
     public void setFundingDecision(FundingDecisionStatus fundingDecision) {
-	this.fundingDecision = fundingDecision;
+        this.fundingDecision = fundingDecision;
     }
-    
+
     public FundingDecisionStatus getFundingDecision() {
-	return fundingDecision;
+        return fundingDecision;
     }
 
     public FileEntry getAssessorFeedbackFileEntry() {
@@ -247,30 +259,30 @@ public class Application implements ProcessActivity {
     public void setAssessorFeedbackFileEntry(FileEntry assessorFeedbackFileEntry) {
         this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
     }
-    
+
     public List<FormInputResponse> getFormInputResponses() {
-		return formInputResponses;
-	}
-    
-    public void setFormInputResponses(List<FormInputResponse> formInputResponses) {
-		this.formInputResponses = formInputResponses;
-	}
-    
-    public void addFormInputResponse(FormInputResponse formInputResponse) {
-    	Optional<FormInputResponse> existing = getFormInputResponseByFormInput(formInputResponse.getFormInput());
-    	if(existing.isPresent()) {
-    		existing.get().setFileEntry(formInputResponse.getFileEntry());
-    		existing.get().setUpdateDate(formInputResponse.getUpdateDate());
-    		existing.get().setUpdatedBy(formInputResponse.getUpdatedBy());
-    		existing.get().setValue(formInputResponse.getValue());
-    	} else {
-        	formInputResponses.add(formInputResponse);
-    	}
+        return formInputResponses;
     }
 
-	public Optional<FormInputResponse> getFormInputResponseByFormInput(FormInput formInput) {
-		return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
-	}
+    public void setFormInputResponses(List<FormInputResponse> formInputResponses) {
+        this.formInputResponses = formInputResponses;
+    }
+
+    public void addFormInputResponse(FormInputResponse formInputResponse) {
+        Optional<FormInputResponse> existing = getFormInputResponseByFormInput(formInputResponse.getFormInput());
+        if (existing.isPresent()) {
+            existing.get().setFileEntry(formInputResponse.getFileEntry());
+            existing.get().setUpdateDate(formInputResponse.getUpdateDate());
+            existing.get().setUpdatedBy(formInputResponse.getUpdatedBy());
+            existing.get().setValue(formInputResponse.getValue());
+        } else {
+            formInputResponses.add(formInputResponse);
+        }
+    }
+
+    public Optional<FormInputResponse> getFormInputResponseByFormInput(FormInput formInput) {
+        return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+    }
 
     public BigDecimal getCompletion() {
         return completion;
@@ -287,4 +299,5 @@ public class Application implements ProcessActivity {
     public void setStateAidAgreed(Boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
     }
+
 }

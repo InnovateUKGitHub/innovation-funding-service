@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -13,7 +14,16 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends CrudRepository<CompetitionParticipant, Long> {
 
-    CompetitionParticipant getByInviteHash( String hash);
+    @Override
+    List<CompetitionParticipant> findAll();
+
+    CompetitionParticipant getByInviteHash(String hash);
 
     List<CompetitionParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
+
+    List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+
+    List<CompetitionParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
+
+    List<CompetitionParticipant> getByInviteEmail(String email);
 }

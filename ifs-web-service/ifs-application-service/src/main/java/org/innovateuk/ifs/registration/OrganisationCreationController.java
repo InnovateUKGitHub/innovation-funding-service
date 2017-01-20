@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.registration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -19,8 +21,6 @@ import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -28,12 +28,12 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,10 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_TYPE;
 
@@ -167,7 +167,7 @@ public class OrganisationCreationController {
         BindingResult bindingResult;// Merge information from cookie into ModelAttribute.
         String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
 
-        if (StringUtils.hasText(organisationFormJson)) {
+        if (StringUtils.isNotBlank(organisationFormJson)) {
             organisationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
             addOrganisationType(organisationForm, request);
             bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
@@ -193,7 +193,7 @@ public class OrganisationCreationController {
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */
     private void addAddressOptions(OrganisationCreationForm organisationForm) {
-        if (StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
+        if (StringUtils.isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
             AddressForm addressForm = organisationForm.getAddressForm();
             addressForm.setPostcodeOptions(searchPostcode(organisationForm.getAddressForm().getPostcodeInput()));
             addressForm.setPostcodeInput(organisationForm.getAddressForm().getPostcodeInput());
@@ -206,7 +206,7 @@ public class OrganisationCreationController {
      */
     private void addSelectedAddress(OrganisationCreationForm organisationForm) {
         AddressForm addressForm = organisationForm.getAddressForm();
-        if (StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
+        if (StringUtils.isNotBlank(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null) {
             addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
             organisationForm.setAddressForm(addressForm);
         }
@@ -218,7 +218,7 @@ public class OrganisationCreationController {
     private OrganisationTypeResource addOrganisationType(OrganisationCreationForm organisationForm, HttpServletRequest request) {
         String organisationTypeJson = cookieUtil.getCookieValue(request, ORGANISATION_TYPE);
         OrganisationTypeResource organisationType = null;
-        if(StringUtils.hasText(organisationTypeJson)){
+        if(StringUtils.isNotBlank(organisationTypeJson)){
             OrganisationTypeForm organisationTypeForm = JsonUtil.getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class);
             if(organisationTypeForm.getOrganisationType()!=null){
                 organisationType = organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType()).getSuccessObject();
@@ -240,10 +240,10 @@ public class OrganisationCreationController {
 
     private void searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm) {
         if (organisationForm.isOrganisationSearching()) {
-            if (StringUtils.hasText(organisationForm.getOrganisationSearchName())) {
+            if (StringUtils.isNotBlank(organisationForm.getOrganisationSearchName())) {
+                String trimmedSearchString = StringUtils.normalizeSpace(organisationForm.getOrganisationSearchName());
                 List<OrganisationSearchResult> searchResults;
-                String encodedSearchString = escapePathVariable(organisationForm.getOrganisationSearchName());
-                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), encodedSearchString)
+                searchResults = organisationSearchRestService.searchOrganisation(organisationForm.getOrganisationType().getId(), trimmedSearchString)
                         .handleSuccessOrFailure(
                                 f -> new ArrayList<>(),
                                 s -> s
@@ -314,7 +314,7 @@ public class OrganisationCreationController {
      * after user has selected a organisation, get the details and add it to the form and the model.
      */
     private OrganisationSearchResult addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
-        if (!organisationForm.isManualEntry() && StringUtils.hasText(organisationForm.getSearchOrganisationId())) {
+        if (!organisationForm.isManualEntry() && StringUtils.isNotBlank(organisationForm.getSearchOrganisationId())) {
             OrganisationSearchResult s = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationType().getId(), organisationForm.getSearchOrganisationId()).getSuccessObject();
             organisationForm.setOrganisationName(s.getName());
             model.addAttribute("selectedOrganisation", s);
@@ -394,19 +394,19 @@ public class OrganisationCreationController {
         }
 
         if (!referer.contains(FIND_ORGANISATION)) {
-            if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
+            if (StringUtils.isNotBlank(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
                 return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
-            } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
+            } else if (StringUtils.isNotBlank(organisationForm.getSearchOrganisationId()) && StringUtils.isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
                 return String.format("redirect:%s/%s/%s/search-postcode?searchTerm=%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
-            } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId())) {
+            } else if (StringUtils.isNotBlank(organisationForm.getSearchOrganisationId())) {
                 return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId());
             } else {
                 return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
         } else {
-            if (organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
+            if (organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
                 return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
-            } else if (StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
+            } else if (StringUtils.isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
                 return String.format("redirect:%s/%s?searchTerm=%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
             } else {
                 return String.format("redirect:%s/%s", BASE_URL, redirectPart);
@@ -521,7 +521,7 @@ public class OrganisationCreationController {
      */
     private void linkOrganisationToInvite(OrganisationResource organisationResource, HttpServletRequest request) {
         String cookieHash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        if (StringUtils.hasText(cookieHash)) {
+        if (StringUtils.isNotBlank(cookieHash)) {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
             inviteRestService.getInviteByHash(cookieHash).andOnSuccess(

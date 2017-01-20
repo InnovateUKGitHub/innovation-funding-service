@@ -143,8 +143,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = emptyList();
-        user.setRoles(projectFinanaceUser);
+        List<RoleResource> projectFinanceUser = emptyList();
+        user.setRoles(projectFinanceUser);
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
@@ -154,6 +154,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
+
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, true);
     }
@@ -161,6 +162,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     protected void setupUserNotAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, false);
     }
+
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();
@@ -176,7 +178,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }

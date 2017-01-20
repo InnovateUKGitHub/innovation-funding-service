@@ -13,26 +13,26 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           var target = jQuery(this).attr('data-repeatable-rowcontainer')
 
           if (jQuery(target).children().length === 0) {
-            IFS.assessment.repeatableDeclarationRows.addRow(this, e)
+            IFS.assessment.repeatableDeclarationRows.addRow(this, false)
           }
         } else {
           e.preventDefault()
 
-          IFS.assessment.repeatableDeclarationRows.addRow(this, e)
+          IFS.assessment.repeatableDeclarationRows.addRow(this, true)
         }
       })
       jQuery('body').on('click', '.remove-another-row', function (e) {
         e.preventDefault()
 
-        IFS.assessment.repeatableDeclarationRows.removeRow(this, e)
+        IFS.assessment.repeatableDeclarationRows.removeRow(this, true)
       })
     },
-    addRow: function (el) {
+    addRow: function (el, focus) {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       if (jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment') {
-        newRow = '<tr>' +
+        newRow = jQuery('<tr>' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text" ' +
@@ -50,9 +50,9 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '<td>' +
           '<button class="remove-another-row buttonlink" name="removeAppointment" type="button" value="0">Remove</button>' +
           '</td>' +
-          '</tr>'
+          '</tr>')
       } else {
-        newRow = '<tr>' +
+        newRow = jQuery('<tr>' +
           '<td class="form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
@@ -77,23 +77,26 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '<td>' +
           '<button class="remove-another-row buttonlink" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +
           '</td>' +
-          '</tr>'
+          '</tr>')
       }
 
       // insert the new row with the correct values and move focus to the first field to aid keyboard users
-      jQuery(target).append(newRow)
-      jQuery(newRow).find('input').first().focus()
+      newRow.appendTo(target)
+
+      // only move focus if required. We don't want to move focus when clicking the radio button
+      if (focus === true) {
+        newRow.find('input').first().focus()
+      }
     },
     removeRow: function (el) {
       var $element = jQuery(el)
       var rowParent = $element.closest('tbody')
-      var rows = jQuery(rowParent).children()
+      var rows
 
-      if (rows.length <= 1) {
-        return
-      }
-
+      // must remove row before getting row information to correctly count remaining rows
       $element.closest('tr').remove()
+
+      rows = jQuery(rowParent).children()
 
       // re-number rows to ensure no empty/missing data is created server-side
       jQuery(rows).each(function (rowIndex) {
