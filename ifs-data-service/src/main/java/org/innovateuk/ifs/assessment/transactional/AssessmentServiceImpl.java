@@ -62,6 +62,17 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
+        List<AssessmentResource> assessmentResources = simpleMap(assessmentRepository.findByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId), assessmentMapper::mapToResource);
+        return serviceSuccess(assessmentResources);
+    }
+
+    @Override
+    public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+        return serviceSuccess(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId));
+    }
+
+    @Override
     public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
         return serviceSuccess(assessmentRepository.getTotalScore(assessmentId));
     }

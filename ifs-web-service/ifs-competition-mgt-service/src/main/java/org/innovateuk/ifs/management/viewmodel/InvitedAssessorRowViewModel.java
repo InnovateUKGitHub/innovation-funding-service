@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+
+import java.util.List;
+
 /**
  * Holder of model attributes for the invited assessors shown in the 'Invite' tab of the Invite Assessors view.
  */
@@ -8,8 +12,8 @@ public class InvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
     private String email;
     private long inviteId;
 
-    public InvitedAssessorRowViewModel(String name, String innovationArea, boolean compliant, String email, long inviteId) {
-        super(name, innovationArea, compliant);
+    public InvitedAssessorRowViewModel(String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
+        super(name, innovationAreas, compliant);
         this.email = email;
         this.inviteId = inviteId;
     }
