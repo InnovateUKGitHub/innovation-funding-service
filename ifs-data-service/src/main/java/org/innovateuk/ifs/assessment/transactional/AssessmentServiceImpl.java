@@ -171,7 +171,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {
-        return find(userRepository.findByIdAndRolesName(assessorId, UserRoleType.ASSESSOR.getName()), notFoundError(User.class, assessorId));
+        return find(userRepository.findByIdAndRolesName(assessorId, UserRoleType.ASSESSOR.getName()), notFoundError(User.class, UserRoleType.ASSESSOR, assessorId));
     }
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {

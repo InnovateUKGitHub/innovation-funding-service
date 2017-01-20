@@ -76,7 +76,7 @@ public class AssessmentController {
         return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();
     }
 
-    @RequestMapping(value = "", method = POST)
+    @RequestMapping(method = POST)
     public RestResult<AssessmentResource> createAssessment(@RequestBody @Valid AssessmentCreateResource assessmentCreateResource) {
         return assessmentService.createAssessment(assessmentCreateResource).toPostCreateResponse();
     }

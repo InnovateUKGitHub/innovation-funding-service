@@ -149,6 +149,30 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
     }
 
+    @Test
+    public void assignAssessor_preservesQueryParams() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessorId = 3L;
+
+        AssessmentCreateResource expectedAssessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(applicationId)
+                .withAssessorId(assessorId)
+                .build();
+
+        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
+
+        when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
+
+        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
+                .param("sortField", "TOTAL_APPLICATIONS"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TOTAL_APPLICATIONS", competitionId, applicationId)));
+
+        verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
+        verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
+    }
+
     private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
         return newApplicationAssessmentSummaryResource()
                 .withId(applicationId)

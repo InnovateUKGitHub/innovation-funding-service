@@ -33,14 +33,14 @@ public interface AssessmentService {
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> rejectInvitation(long assessmentId, ApplicationRejectionResource applicationRejection);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
     @SecuredBySpring(value = "WITHDRAW_ASSESSOR", description = "Comp Admins can withdraw an application from an assessor")
     ServiceResult<Void> withdrawAssessment(long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(long assessmentId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
     @SecuredBySpring(value = "NOTIFY_ASSESSOR", description = "Comp Admins can notify an assessor of an assigned application")
     ServiceResult<Void> notify(long assessmentId);
 
@@ -48,6 +48,6 @@ public interface AssessmentService {
     ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
 
     @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
     ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
 }
