@@ -57,6 +57,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -79,6 +80,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
+
     public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
     @Autowired
@@ -231,7 +233,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             if (approval == ApprovalType.APPROVED) {
                 return getProject(projectId).andOnSuccess(project -> {
                     if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
-
                         FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
                         return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
                                 .andOnSuccess(() -> serviceSuccess()).
@@ -442,9 +443,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         List<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
                 !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
-                        && organisationAndGrantPercentageMap.get(organisation.getName()).equals(Integer.valueOf(0))
+                        && organisationAndGrantPercentageMap.get(organisation.getName()).equals(0)
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
-                .collect(Collectors.toList());
+                .collect(toList());
         organisationsExcludedFromGrantOfferLetter.forEach(excludedOrganisation -> {
             organisationAndGrantPercentageMap.remove(excludedOrganisation.getName());
             organisationYearsMap.remove(excludedOrganisation.getName());
@@ -469,7 +470,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private Map<String, SpendProfileTableResource> getSpendProfileTableResourcePerOrganisation(Project project,
                                                                                                List<Organisation> organisations) {
         return organisations.stream()
-                .collect(Collectors.toMap(Organisation::getName, organisation -> {
+                .collect(toMap(Organisation::getName, organisation -> {
                     ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
                     if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
                         return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
@@ -503,7 +504,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             organisationGrantAllocationTotal.put(organisation.getName(), grantAllocationPerYear);
             organisationYearsMap.put(organisation.getName(), projectYears);
         });
-
     }
 
     private Organisation getOrganisationFrom(String name, Project project) {
