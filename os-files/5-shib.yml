@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: List
 items:
+
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -17,20 +18,26 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - env:
+        - image: orangebus/ifs-shib-sp:1.0-SNAPSHOT
+          name: shib
+          env:
           - name: SPHOST
             value: ifs-local-dev
           - name: IDPHOST
             value: idp
-          image: orangebus/ifs-shib-sp:1.0-SNAPSHOT
-          name: shib
+          - name: HTTPSPORT
+            value: "9443"
+          - name: HTTPPORT
+            value: "9080"
           ports:
-          - containerPort: 443
+          - containerPort: 9443
+          - containerPort: 9080
           resources: {}
-    test: false
+          test: false
     triggers:
     - type: ConfigChange
   status: {}
+
 - apiVersion: v1
   kind: Service
   metadata:
@@ -44,6 +51,8 @@ items:
       deploymentconfig: shib
   status:
     loadBalancer: {}
+
+ Routes not required for development
 - apiVersion: v1
   kind: Route
   metadata:

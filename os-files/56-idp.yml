@@ -47,17 +47,17 @@ items:
   status:
     loadBalancer: {}
 
-# Routes not required for development
-#- apiVersion: v1
-#  kind: Route
-#  metadata:
-#    name: idp
-#  spec:
-#    host: idp
-#    port:
-#      targetPort: 443-tcp
-#    tls:
-#      termination: passthrough
-#    to:
-#      kind: Service
-#      name: idp
+ Routes not required for development
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: idp
+  spec:
+    host: idp
+    port:
+      targetPort: 443-tcp
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: idp
