@@ -997,14 +997,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
         List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
 
-        List<CompetitionInvite> invites = newCompetitionInvite()
+        CompetitionInvite[] invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withInnovationArea(innovationArea)
-                .build(3);
+                .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
                 .withCompetition(newCompetition().build())
-                .withInvite(invites.get(0), invites.get(1), invites.get(2))
+                .withInvite(invites)
                 .withStatus(ACCEPTED, REJECTED, PENDING)
                 .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
                 .build(3);
