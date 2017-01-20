@@ -18,137 +18,227 @@
 
 	<h1 class="heading-xlarge">Your dashboard</h1>
 
-	<div th:if="${param.status != null} and ${param.status[0] == 'projectSetup'}" th:remove="tag">
-		
-		<h2 class="heading-large">Projects in setup</h2>
+	<th:block th:if="${param.status != null} and ${param.status[0] == 'projectSetup'}">
+		<!---->
+		<!--<h2 class="heading-large">Projects in setup</h2>-->
 
-		<ul class="boxed-list">
-			<li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium">
-		                <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">194741: Machine learning in robots</a>
-		                </h2>
-		            </div>
-		            <div class="column-assessment-status">
-		                <div class="awaiting-assessment">
-		                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-		                    <p>Project in set-up</p>
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		</ul>
+		<!--<ul class="boxed-list">-->
+			<!--<li>-->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium">-->
+		                <!--<a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">194741: Machine learning in robots</a>-->
+		                <!--</h2>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status">-->
+		                <!--<div class="awaiting-assessment">-->
+		                	<!--<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>-->
+		                    <!--<p>Project in set-up</p>-->
+		                <!--</div>-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		<!--</ul>-->
 
-	</div>
+		<div class="progress-list">
+			<h3 class="heading-medium">Projects in setup</h3>
+			<ul>
+				<li>
+					<div class="task">
+						<h4 class="heading-small"><a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a></h4>
+						<span>Application number: 194741</span>
+					</div>
+					<div class="status"><strong>In progress</strong></div>
+				</li>
+			</ul>
+		</div>
 
-
-	<div th:unless="${param.action != null and param.action[0] == 'accVerified'}" th:remove="tag">
-
-		<h2 class="heading-large">In progess</h2>
-		<ul class="boxed-list">
-		    <li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium">
-		                <a href="#">0000002: Providing sustainable childcare</a>
-		                </h2>
-		                <strong class="greentext">Application submitted</strong>
-		            </div>
-		            <div class="column-assessment-status">
-		                <div class="awaiting-assessment">
-		                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-		                    <p>Awaiting assessment</p>
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		    <li>
-		        
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium">
-		                <a href="#">0000005: A new innovative solution</a>
-		                </h2>
-		                <strong class="greentext">Application submitted</strong>
-		            </div>
-		            <div class="column-assessment-status">
-		            	<div class="awaiting-assessment">
-		                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-		                    <p>Awaiting assessment</p>
-
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		</ul>
-	</div>
-
-	<div th:unless="${param.action != null and param.action[0] == 'accVerified'}" th:remove="tag">
-
-		<h2 class="heading-large">Previous applications</h2>
-
-		<ul class="boxed-list">
-			<li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium">0000004: Using natural gas to heat homes</h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="no application-status assessed">
-		                    <h3 class="results-status">Unsuccessful</h3>
-		                </div>
-		                <!-- <p class="feedback">Feedback due: <br />14/06/16</p> -->
-		            </div>
-		        </div>
-		    </li>
-		    <li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium">000003: Mobile Phone Data for Logistics Analytics</h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="yes application-status assessed">
-		                    
-		                    <h3 class="results-status">Successful</h3>
-		            
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		    <li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"> <a href="/prototypes/545-application-feedback">0000003: Mobile Phone Data for Logistics Analytics</a></h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="yes application-status assessed">
-		                    
-		                    <h3 class="results-status">Successful</h3>
-		                    
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		    <li>
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/545-application-feedback?unsuccessful">0000004: Using natural gas to heat homes</a></h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="no application-status assessed">
-		                    <h3 class="results-status">Unsuccessful</h3>
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		</ul>
-	</div>
+	</th:block>
 
 
+	<th:block th:unless="${param.action != null and param.action[0] == 'accVerified'}">
+
+		<!--<h2 class="heading-large">In progess</h2>-->
+		<!--<ul class="boxed-list">-->
+		    <!--<li>-->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium">-->
+		                <!--<a href="#">0000002: Providing sustainable childcare</a>-->
+		                <!--</h2>-->
+		                <!--<strong class="greentext">Application submitted</strong>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status">-->
+		                <!--<div class="awaiting-assessment">-->
+		                	<!--<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt="" />-->
+		                    <!--<p>Awaiting assessment</p>-->
+		                <!--</div>-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		    <!--<li>-->
+		        <!---->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium">-->
+		                <!--<a href="#">0000005: A new innovative solution</a>-->
+		                <!--</h2>-->
+		                <!--<strong class="greentext">Application submitted</strong>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status">-->
+		            	<!--<div class="awaiting-assessment">-->
+		                	  <!--<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt="" />-->
+		                    <!--<p>Awaiting assessment</p>-->
+
+		                <!--</div>-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		<!--</ul>-->
+
+		<div class="progress-list">
+			<h3 class="heading-medium no-margin-top">Applications in progress</h3>
+			<ul>
+				<li>
+					<div class="task">
+						<h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
+						<span>Application number: 0000002</span>
+					</div>
+					<div class="status">
+						<img src="../images/icons/icon-awaiting-assessment.png" width="70" height="70" alt="Awaiting assessment" />
+						<span class="awaiting">Awaiting assessment</span>
+						<strong>Application submitted</strong>
+					</div>
+				</li>
+				<li>
+					<div class="task">
+						<h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
+						<span>Application number: 0000008</span>
+					</div>
+					<div class="status">
+						<div class="pie-container">
+							<div class="pie medium">50%</div>
+							<div class="pie-overlay">
+								<span class="day">41</span>
+								<span>days left</span>
+							</div>
+						</div>
+						<span class="deadline">Deadline 28 January</span>
+						<strong>50% complete</strong>
+					</div>
+				</li>
+				<li>
+					<div class="task">
+						<h4 class="heading-small"><a href="#">A new innovative solution</a></h4>
+						<span>Application number: 0000005</span>
+					</div>
+					<div class="status">
+						<img src="../images/icons/icon-awaiting-assessment.png" width="70" height="70" alt="Awaiting assessment" />
+						<span class="awaiting">Awaiting assessment</span>
+						<strong>Application submitted</strong>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+	</th:block>
+
+	<th:block th:unless="${param.action != null and param.action[0] == 'accVerified'}">
+
+		<!--<h2 class="heading-large">Previous applications</h2>-->
+
+		<!--<ul class="boxed-list">-->
+			<!--<li>-->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium">0000004: Using natural gas to heat homes</h2>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status navigation-right">-->
+		                <!--<div class="no application-status assessed">-->
+		                    <!--<h3 class="results-status">Unsuccessful</h3>-->
+		                <!--</div>-->
+		                <!--&lt;!&ndash; <p class="feedback">Feedback due: <br />14/06/16</p> &ndash;&gt;-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		    <!--<li>-->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium">000003: Mobile Phone Data for Logistics Analytics</h2>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status navigation-right">-->
+		                <!--<div class="yes application-status assessed">-->
+		                    <!---->
+		                    <!--<h3 class="results-status">Successful</h3>-->
+		            <!---->
+		                <!--</div>-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		    <!--<li>-->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium"> <a href="/prototypes/545-application-feedback">0000003: Mobile Phone Data for Logistics Analytics</a></h2>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status navigation-right">-->
+		                <!--<div class="yes application-status assessed">-->
+		                    <!---->
+		                    <!--<h3 class="results-status">Successful</h3>-->
+		                    <!---->
+		                <!--</div>-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		    <!--<li>-->
+		        <!--<div class="grid-row">-->
+		            <!--<div class="column-assessment-details">-->
+		                <!--<h2 class="heading-medium"><a href="/prototypes/545-application-feedback?unsuccessful">0000004: Using natural gas to heat homes</a></h2>-->
+		            <!--</div>-->
+		            <!--<div class="column-assessment-status navigation-right">-->
+		                <!--<div class="no application-status assessed">-->
+		                    <!--<h3 class="results-status">Unsuccessful</h3>-->
+		                <!--</div>-->
+		            <!--</div>-->
+		        <!--</div>-->
+		    <!--</li>-->
+		<!--</ul>-->
+
+		<div class="progress-list">
+			<h3 class="heading-medium no-margin-top">Previous applications</h3>
+			<ul>
+				<li class="negative">
+					<div class="task">
+						<h4 class="heading-small"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
+						<span>Application number: 0000004</span>
+					</div>
+					<div class="status"><strong>Not successful</strong></div>
+				</li>
+				<li class="positive">
+					<div class="task">
+						<h4 class="heading-small"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
+						<span>Application number: 0000003</span>
+					</div>
+					<div class="status"><strong>Successful</strong></div>
+				</li>
+				<li class="positive">
+					<div class="task">
+						<h4 class="heading-small"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
+						<span>Application number: 0000002</span>
+					</div>
+					<div class="status"><strong>Successful</strong></div>
+				</li>
+				<li class="negative">
+					<div class="task">
+						<h4 class="heading-small"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
+						<span>Application number: 0000001</span>
+					</div>
+					<div class="status"><strong>Not successful</strong></div>
+				</li>
+			</ul>
+		</div>
+	</th:block>
 
 	<h2 class="heading-large">Your profile</h2> 
-	
 
 	<ul class="list list-bullet">
 		<li>
@@ -161,7 +251,6 @@
 			<a href="/info/terms-and-conditions">read the terms and conditions</a>
 		</li>
 	</ul>
-		
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
