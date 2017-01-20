@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -72,5 +74,29 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
 
     public AssessmentStates getActivityState() {
         return AssessmentStates.fromState(activityState.getState());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Assessment that = (Assessment) o;
+
+        return new EqualsBuilder()
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(responses, that.responses)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(participant)
+                .append(target)
+                .append(responses)
+                .toHashCode();
     }
 }

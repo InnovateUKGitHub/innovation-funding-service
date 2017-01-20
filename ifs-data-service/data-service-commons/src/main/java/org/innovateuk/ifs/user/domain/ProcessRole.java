@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -94,5 +96,33 @@ public class ProcessRole {
 
     public boolean isLeadApplicantOrCollaborator() {
         return isLeadApplicant() || isCollaborator();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProcessRole that = (ProcessRole) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(user, that.user)
+                .append(applicationId, that.applicationId)
+                .append(role, that.role)
+                .append(organisationId, that.organisationId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(user)
+                .append(applicationId)
+                .append(role)
+                .append(organisationId)
+                .toHashCode();
     }
 }
