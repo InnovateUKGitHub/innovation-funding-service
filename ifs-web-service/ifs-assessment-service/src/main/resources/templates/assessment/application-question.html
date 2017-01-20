@@ -29,7 +29,7 @@
                         <span th:text="${model.questionName}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.applicantResponse}" />
+                    <p th:text="${model.applicantResponse}" data-md-to-html="">This is the applicant response.</p>
                 </div>
 
                 <div th:if="${model.appendixExists}">

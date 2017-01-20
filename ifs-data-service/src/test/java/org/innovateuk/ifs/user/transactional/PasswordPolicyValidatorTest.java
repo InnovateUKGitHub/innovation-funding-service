@@ -2,6 +2,8 @@ package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.PasswordPolicyValidator.ExclusionRulePatternGenerator;
 import org.junit.Before;
@@ -12,12 +14,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.transactional.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME;
 import static org.innovateuk.ifs.user.transactional.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -88,10 +91,14 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         assertTrue(result.getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
 
         // try some different permutations of full name
-        assertTrue(validator.validatePassword("Bobby Smith", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("B0bby sm1th", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("sm1thB0bBy ", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("sst5m1th  B0bBYdef", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("Bobby Smith", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("B0bby sm1th", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("sm1thB0bBy ", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("sst5m1th  B0bBYdef", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
 
         // try some success cases
         assertTrue(validator.validatePassword("Something different", user).isSuccess());
@@ -112,9 +119,12 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         UserResource user = newUserResource().withFirstName("William").withLastName("Shatner").build();
 
         // assert that the user gets the appropriate error back indicating they used first name
-        assertTrue(validator.validatePassword("William", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("w1LLiaM", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("123w1LLiaM456", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("William", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("w1LLiaM", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("123w1LLiaM456", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
 
         // try a success case
         assertTrue(validator.validatePassword("w1LLster", user).isSuccess());
@@ -133,9 +143,12 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         UserResource user = newUserResource().withFirstName("William").withLastName("Shatner").build();
 
         // assert that the user gets the appropriate error back indicating they used last name
-        assertTrue(validator.validatePassword("Shatner", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("sh4tner", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("123sh4tner456", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("Shatner", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("sh4tner", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
+        assertTrue(validator.validatePassword("123sh4tner456", user).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
     }
 
     @Test
@@ -148,29 +161,56 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
     @Test
     public void testValidatePasswordStopsUserUsingOrganisationName() {
 
-        UserResource user = newUserResource().withFirstName("Steve").withLastName("Smith").
-                withOrganisations(asList(123L, 456L)).build();
+        User user = newUser().
+                withId(13L).
+                withFirstName("Steve").
+                withLastName("Smith").
+                build();
+        Organisation org1 = newOrganisation().withId(123L).withName("Empire Ltd").build();
+        Organisation org2 = newOrganisation().withId(456L).withName("EGGS").build();
+        org1.addUser(user);
+        org2.addUser(user);
 
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(newOrganisation().withName("Empire Ltd").build());
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(newOrganisation().withName("EGGS").build());
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1, org2));
+
+        UserResource userResource = newUserResource().
+                withId(13L).
+                withFirstName("Steve").
+                withLastName("Smith").
+                build();
 
         // assert that the user gets the appropriate error back indicating they used Organisation name
-        assertTrue(validator.validatePassword("Empire Ltd", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("EGGS", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("123Empire Ltd456", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("456eggs456", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("456eggsempire ltd456", user).getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
+        assertTrue(validator.validatePassword("Empire Ltd", userResource).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
+        assertTrue(validator.validatePassword("EGGS", userResource).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
+        assertTrue(validator.validatePassword("123Empire Ltd456", userResource).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
+        assertTrue(validator.validatePassword("456eggs456", userResource).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
+        assertTrue(validator.validatePassword("456eggsempire ltd456", userResource).
+                getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
     }
 
     @Test
     public void testValidatePasswordStopsUserUsingOrganisationNameButNotWhenVeryShort() {
 
-        UserResource user = newUserResource().withFirstName("William").withLastName("Lo").
-                withOrganisations(asList(123L, 456L)).build();
+        User user = newUser().withId(13L).withFirstName("William").withLastName("Lo").build();
+        Organisation org1 = newOrganisation().withId(123L).withName("Hi").build();
+        Organisation org2 = newOrganisation().withId(456L).withName("lo").build();
+        org1.addUser(user);
+        org2.addUser(user);
 
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(newOrganisation().withName("Hi").build());
-        when(organisationRepositoryMock.findOne(456L)).thenReturn(newOrganisation().withName("lo").build());
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1, org2));
 
-        assertTrue(validator.validatePassword("highlow", user).isSuccess());
+        UserResource userResource = newUserResource().
+                withId(13L).
+                withFirstName("William").
+                withLastName("Lo").
+                build();
+
+        assertTrue(validator.validatePassword("highlow", userResource).isSuccess());
     }
 }

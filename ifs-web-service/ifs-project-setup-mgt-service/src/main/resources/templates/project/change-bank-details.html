@@ -12,8 +12,9 @@
 
 <main id="content">
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" th:remove="tag"/>
 
-	<div class="grid-row">
+    <div class="grid-row">
 		<div class="column-two-thirds">
 			<div class="page-title">
 				<p class="subtitle no-margin" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.projectName}|">0102468: Technology inspired</p>

@@ -28,6 +28,7 @@ IFS.core.loadOrder = {
       IFS.core.wordCount.init()
       IFS.core.disableSubmitUntilChecked.init()
       IFS.core.finance.init()
+      IFS.core.progressiveGroupSelect.init()
     },
     finalize: function () {
       IFS.core.modal.init()

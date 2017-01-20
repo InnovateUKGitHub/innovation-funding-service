@@ -8,7 +8,9 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -22,6 +24,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 @Service
 public class AssessorServiceImpl implements AssessorService {
@@ -47,6 +50,9 @@ public class AssessorServiceImpl implements AssessorService {
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
+    @Autowired
+    private ProfileRepository profileRepository;
+
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
@@ -57,8 +63,10 @@ public class AssessorServiceImpl implements AssessorService {
                 userRegistrationResource.setRoles(singletonList(assessorRole));
                 return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
                     assignCompetitionParticipantsToUser(created);
-                    created.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
-                    userRepository.save(created);
+                    Profile profile = profileRepository.findOne(created.getProfileId());
+                    // profile is guaranteed to have been created by createUser(...)
+                    profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
+                    profileRepository.save(profile);
                 });
             });
         });

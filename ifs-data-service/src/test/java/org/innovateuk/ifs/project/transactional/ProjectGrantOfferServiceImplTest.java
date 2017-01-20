@@ -258,6 +258,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 BigDecimal.valueOf(200));
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
+        when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
+        when(organisationRepositoryMock.findOne(organisations.get(2).getId())).thenReturn(organisations.get(2));
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
@@ -474,18 +477,47 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .append("</body>\n")
                 .append("</html>\n").toString();
 
-        Competition comp = newCompetition().withName("Test Comp").build();
-        Organisation o = newOrganisation().withOrganisationType(BUSINESS).withName("Org1").build();
-        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
-        User u = newUser().withFirstName("ab").withLastName("cd").build();
-        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o).withUser(u).withRole(leadAppRole).build();
-        Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
-        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
-        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
-        Address address = AddressBuilder.newAddress().withAddressLine1("InnovateUK").withAddressLine2("Northstar House").withTown("Swindon").withPostcode("SN1 1AA").build();
+        Competition comp = newCompetition()
+                .withName("Test Comp")
+                .build();
+        Organisation o = newOrganisation()
+                .withOrganisationType(BUSINESS)
+                .withName("Org1")
+                .build();
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
+                .build();
+        User u = newUser()
+                .withFirstName("ab")
+                .withLastName("cd")
+                .build();
+        ProcessRole leadAppProcessRole = newProcessRole()
+                .withOrganisation(o)
+                .withUser(u)
+                .withRole(leadAppRole)
+                .build();
+        Application app = newApplication()
+                .withCompetition(comp)
+                .withProcessRoles(leadAppProcessRole)
+                .withId(3L)
+                .build();
+        ProjectUser pm = newProjectUser()
+                .withRole(PROJECT_MANAGER)
+                .withOrganisation(o)
+                .build();
+        PartnerOrganisation po = newPartnerOrganisation()
+                .withOrganisation(o)
+                .withLeadOrganisation(true)
+                .build();
+        Address address = newAddress()
+                .withAddressLine1("InnovateUK")
+                .withAddressLine2("Northstar House")
+                .withTown("Swindon")
+                .withPostcode("SN1 1AA")
+                .build();
         Project project = newProject()
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
-                .withName("project 1").withApplication(app)
+                .withName("project 1")
+                .withApplication(app)
                 .withPartnerOrganisations(asList(po))
                 .withProjectUsers(asList(pm))
                 .withDuration(10L)
@@ -493,7 +525,10 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withTargetStartDate(LocalDate.now())
                 .build();
 
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30).withApplication(456L).withOrganisation(3L)
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withGrantClaimPercentage(30)
+                .withApplication(456L)
+                .withOrganisation(3L)
                 .build();
         FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
                 .withTotalPercentageGrant(BigDecimal.valueOf(25))
@@ -527,6 +562,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
         YearlyGOLProfileTable expectedYearlyGOLProfileTable = new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
 
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);

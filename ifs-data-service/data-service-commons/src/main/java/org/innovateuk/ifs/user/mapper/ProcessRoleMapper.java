@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.user.mapper;
 
-import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.mapstruct.Mapper;
@@ -13,9 +11,7 @@ import org.mapstruct.Mappings;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        ApplicationMapper.class,
         RoleMapper.class,
-        OrganisationMapper.class,
         UserMapper.class
     }
 )
