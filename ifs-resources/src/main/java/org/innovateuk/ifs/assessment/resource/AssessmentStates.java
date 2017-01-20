@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+
 public enum AssessmentStates implements ProcessStates {
     // All types of status
     CREATED(State.CREATED),
@@ -56,5 +58,9 @@ public enum AssessmentStates implements ProcessStates {
 
     public static AssessmentStates fromState(State state) {
         return ProcessStates.fromState(AssessmentStates.values(), state);
+    }
+
+    public static Set<State> getBackingStates(Set<AssessmentStates> states) {
+        return simpleMapSet(states, AssessmentStates::getBackingState);
     }
 }

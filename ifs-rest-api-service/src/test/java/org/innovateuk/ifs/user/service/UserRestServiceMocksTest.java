@@ -93,8 +93,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withEthnicity(null)
-                .withDisability(null)
                 .build();
 
         Long organisationId = 1L;
@@ -165,8 +163,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withEthnicity(null)
-                .withDisability(null)
                 .build();
 
         Long organisationId = 1L;

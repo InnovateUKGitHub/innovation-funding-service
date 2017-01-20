@@ -61,10 +61,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     public void acceptInviteDifferentOrganisation() throws Exception {
         OrganisationResource expected = newOrganisationResource().withName("Name One").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(anyLong())).thenReturn(expected);
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
 
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
-        userOne.setOrganisations(asList(1L));
 
         ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
@@ -80,9 +80,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     public void acceptInviteDifferentOrganisationSameName() throws Exception {
         OrganisationResource expected = newOrganisationResource().withName("Name Two").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(anyLong())).thenReturn(expected);
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
 
         UserResource userOne = new UserResource();
-        userOne.setOrganisations(asList(1L));
         userOne.setEmail("email@testOne.com");
 
         ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();

@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
@@ -30,14 +31,23 @@ public class AssessmentController {
         return assessmentService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/{id}/assign", method = GET)
+    @RequestMapping(value = "/{id}/assign", method = GET)
     public RestResult<AssessmentResource> findAssignableById(@PathVariable("id") long id) {
         return assessmentService.findAssignableById(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/user/{userId}/competition/{competitionId}", method = GET)
-    public RestResult<List<AssessmentResource>> findByUserAndCompetition(@PathVariable("userId") long userId, @PathVariable("competitionId") long competitionId ) {
+    @RequestMapping(value = "/user/{userId}/competition/{competitionId}", method = GET)
+    public RestResult<List<AssessmentResource>> findByUserAndCompetition(
+            @PathVariable("userId") long userId,
+            @PathVariable("competitionId") long competitionId) {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/state/{state}/competition/{competitionId}/count", method = GET)
+    public RestResult<Long> countByStateAndCompetition(
+            @PathVariable("state") AssessmentStates state,
+            @PathVariable("competitionId") Long competitionId) {
+        return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{id}/score", method = GET)
@@ -73,6 +83,10 @@ public class AssessmentController {
     @RequestMapping(value = "/submitAssessments", method = PUT)
     public RestResult<Void> submitAssessments(@RequestBody @Valid AssessmentSubmissionsResource assessmentSubmissionsResource) {
         return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();
+    }
 
+    @RequestMapping(method = POST)
+    public RestResult<AssessmentResource> createAssessment(@RequestBody @Valid AssessmentCreateResource assessmentCreateResource) {
+        return assessmentService.createAssessment(assessmentCreateResource).toPostCreateResponse();
     }
 }

@@ -145,8 +145,8 @@ public class FinanceChecksViabilityController {
         Integer headCount = null; // for this release, these will always be null
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
-        String approver = "Dave Smith";
-        LocalDate approvalDate = LocalDate.now();
+        String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
+        LocalDate approvalDate = viability.getViabilityApprovalDate();
 
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,

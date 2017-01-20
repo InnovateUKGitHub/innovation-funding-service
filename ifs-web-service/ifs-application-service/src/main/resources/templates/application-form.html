@@ -14,7 +14,7 @@
 
     <div th:include="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" th:remove="tag" />
       	<div class="page-title">
-            <div th:include="fragments/elements :: application-title (application=${model.application.currentApplication})" th:remove="tag" />
+            <div th:include="fragments/elements :: application-title (app=${model.application.currentApplication})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${model.title}" />
         </div>
         <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
@@ -40,7 +40,9 @@
                  pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
                  applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant})">
 
-                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                <th:block th:if="${formInput.type.displayableQuestionType}">
+                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                </th:block>
             </div>
 
 
@@ -60,17 +62,26 @@
                                 <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
                                                 markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
                                                 subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection})">
+                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}), readonly=${model.application.allReadOnly}">
 
-                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
-                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}"></div>
-                                    <th:block th:if="${model.isFinanceOverview}">
-                                        <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
-                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
-                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
-                                            <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
-                                        </th:block>
+                                <th:block th:if="${formInput.type.displayableQuestionType}">
+                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                                </th:block>
+
+                                <th:block th:if="${formInput.type.isDisplayableFinanceType(financeView)}">
+                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
+                                </th:block>
+
+                                <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
+
+                                    <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+                                            currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
+                                            completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
+
+                                        <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
+
                                     </th:block>
+
                                 </th:block>
                             </th:block>
                             <th:block th:unless="${model.isSection}">
@@ -92,12 +103,15 @@
 
             <input type="hidden" id="application_id" th:value="${model.application.currentApplication.id}"/>
             <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.id}"/>
-            <div th:if="${model.application.allReadOnly}" th:remove="tag">
-                <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
-            </div>
-            <div th:unless="${model.application.allReadOnly}" th:remove="tag">
-                <button th:unless="${model.currentSection != null and model.subFinanceSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
-            </div>
+
+            <th:block th:if="${model.showReturnButtons}">
+                <div th:if="${model.application.allReadOnly}" th:remove="tag">
+                    <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+                </div>
+                <div th:unless="${model.application.allReadOnly}" th:remove="tag">
+                    <button th:unless="${model.currentSection != null}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+                </div>
+            </th:block>
 
             <ul class="pagination" th:if="${model.navigation.hasNavigation}">
                 <li class="prev" th:if="${model.navigation.previousUrl}">

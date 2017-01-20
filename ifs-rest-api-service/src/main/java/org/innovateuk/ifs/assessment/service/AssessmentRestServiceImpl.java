@@ -31,12 +31,17 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
 
     @Override
     public RestResult<AssessmentResource> getAssignableById(long id) {
-        return getWithRestResult(format("%s/%s/assign", assessmentRestURL,id), AssessmentResource.class);
+        return getWithRestResult(format("%s/%s/assign", assessmentRestURL, id), AssessmentResource.class);
     }
 
     @Override
     public RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId) {
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), ParameterizedTypeReferences.assessmentResourceListType());
+    }
+
+    @Override
+    public RestResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+        return getWithRestResult(format("%s/state/%s/competition/%s/count", assessmentRestURL, state.getStateName(), competitionId), Long.TYPE);
     }
 
     @Override
@@ -72,5 +77,10 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Override
     public RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions) {
         return putWithRestResult(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, Void.class);
+    }
+
+    @Override
+    public RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
+        return postWithRestResult(format("%s", assessmentRestURL), assessmentCreateResource, AssessmentResource.class);
     }
 }

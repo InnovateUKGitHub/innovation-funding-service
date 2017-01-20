@@ -41,44 +41,44 @@
                         </div>
 
                         <ul class="boxed-list">
-                            <li th:each="application,iterStat : ${model.outstanding}" th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${application.assessmentId})}">
+                            <li th:each="app,iterStat : ${model.outstanding}" th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${app.assessmentId})}">
                                 <div class="grid-row">
                                     <div class="column-assessment-details">
-                                        <h3 class="heading-medium"><a th:href="${application.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${application.assessmentId})}" th:text="${application.displayLabel}" /></h3>
-                                        <p th:text="${application.leadOrganisation}" />
+                                        <h3 class="heading-medium"><a th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}" th:text="${app.displayLabel}" /></h3>
+                                        <p th:text="${app.leadOrganisation}" />
                                     </div>
                                     <div class="column-assessment-status navigation-right">
-                                        <div th:if="${application.pending}" class="application-status pending empty">
+                                        <div th:if="${app.pending}" class="application-status pending empty">
                                             <p>Pending</p>
                                             <p class="application-listing_pending">
                                                 <a th:href="${assignmentUrl}">accept / reject assessment</a>
                                             </p>
                                         </div>
 
-                                        <div th:if="${application.accepted}" class="application-status open empty">
+                                        <div th:if="${app.accepted}" class="application-status open empty">
                                             <p>Accepted</p>
                                         </div>
 
-                                        <div th:if="${application.open}" class="application-status open empty">
+                                        <div th:if="${app.open}" class="application-status open empty">
                                             <p>In progress</p>
                                         </div>
 
-                                        <div th:if="${application.readyToSubmit}" class="application-status assessed" th:classappend="${application.recommended} ? 'yes' : 'no'">
+                                        <div th:if="${app.readyToSubmit}" class="application-status assessed" th:classappend="${app.recommended} ? 'yes' : 'no'">
                                             <p>Assessed</p>
-                                            <h3 class="score"><span th:text="${application.overallScore}">51.0</span>%</h3>
+                                            <h3 class="score"><span th:text="${app.overallScore}">51.0</span>%</h3>
                                             <small>Overall score</small>
 
                                             <div class="recommend-container">
-                                                <p class="recommend" th:classappend="${application.recommended} ? 'yes' : 'no'">
-                                                    <span th:text="${application.recommended} ? 'Recommended' : 'Not recommended'"/>
+                                                <p class="recommend" th:classappend="${app.recommended} ? 'yes' : 'no'">
+                                                    <span th:text="${app.recommended} ? 'Recommended' : 'Not recommended'"/>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <label th:if="${application.readyToSubmit}">
+                                <label th:if="${app.readyToSubmit}">
                                     <span class="visuallyhidden">Mark assessment for submission</span>
-                                    <input class="assessment-submit-checkbox" type="checkbox" th:field="*{assessmentIds}" th:value="${application.assessmentId}" />
+                                    <input class="assessment-submit-checkbox" type="checkbox" th:field="*{assessmentIds}" th:value="${app.assessmentId}" />
                                 </label>
                             </li>
                         </ul>
@@ -98,21 +98,21 @@
                 <div class="submitted" th:unless="${#lists.isEmpty(model.submitted)}">
                     <h3 class="heading-medium">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
                     <ul class="boxed-list bulk-select">
-                        <li th:each="application : ${model.submitted}">
+                        <li th:each="app : ${model.submitted}">
                             <div class="grid-row">
                                 <div class="column-assessment-details">
-                                    <h4 class="heading-medium" th:text="${application.displayLabel}" />
-                                    <p th:text="${application.leadOrganisation}" />
+                                    <h4 class="heading-medium" th:text="${app.displayLabel}" />
+                                    <p th:text="${app.leadOrganisation}" />
                                 </div>
                                 <div class="column-assessment-status navigation-right">
                                     <div class="application-status submitted">
                                         <p>Submitted</p>
-                                        <h3 class="score"><span th:text="${application.overallScore}">51.0</span>%</h3>
+                                        <h3 class="score"><span th:text="${app.overallScore}">51.0</span>%</h3>
                                         <small>Overall score</small>
 
                                         <div class="recommend-container">
-                                            <p class="recommend" th:classappend="${application.recommended} ? 'yes' : 'no'">
-                                                <span th:text="${application.recommended} ? 'Recommended' : 'Not recommended'"/>
+                                            <p class="recommend" th:classappend="${app.recommended} ? 'yes' : 'no'">
+                                                <span th:text="${app.recommended} ? 'Recommended' : 'Not recommended'"/>
                                             </p>
                                         </div>
                                     </div>
