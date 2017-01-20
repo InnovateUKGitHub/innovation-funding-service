@@ -131,7 +131,7 @@ public class ProjectFinanceController {
         return projectFinanceService.getCreditReport(projectId, organisationId).toGetResponse();
     }
 
-    @RequestMapping("/financeDetails/{projectId}/{organisationId}")
+    @RequestMapping("/{projectId}/organisation/{organisationId}/financeDetails")
     public RestResult<ProjectFinanceResource> financeDetails(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId) {
         return financeRowService.financeChecksDetails(projectId, organisationId).toGetResponse();
     }

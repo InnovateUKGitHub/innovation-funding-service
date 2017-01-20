@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.handler.item;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 
+import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 
@@ -64,10 +65,19 @@ public class OverheadsHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
+        return buildRowItem(cost, cost.getFinanceRowMetadata());
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+        return buildRowItem(cost, cost.getFinanceRowMetadata());
+    }
+
+    private FinanceRowItem buildRowItem(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues){
+        OverheadRateType type = OverheadRateType.valueOf(cost.getItem());
         Overhead overhead = new Overhead(cost.getId(), type, cost.getQuantity());
 
-        Optional<FinanceRowMetaValue> useTotalOptionMetaValue = cost.getFinanceRowMetadata().stream().
+        Optional<FinanceRowMetaValue> useTotalOptionMetaValue = financeRowMetaValues.stream().
                 filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.USE_TOTAL_META_FIELD)).
                 findFirst();
 
@@ -75,27 +85,19 @@ public class OverheadsHandler extends FinanceRowHandler {
             overhead.setUseTotalOption(false);
         } else {
             overhead.setUseTotalOption(true);
-            addOptionalCalculationFile(cost, overhead);
+            addOptionalCalculationFile(cost, financeRowMetaValues, overhead);
         }
 
         return overhead;
     }
 
-    private void addOptionalCalculationFile(ApplicationFinanceRow cost, Overhead overhead) {
-        Optional<FinanceRowMetaValue> overheadFileMetaValue = cost.getFinanceRowMetadata().stream().
+    private void addOptionalCalculationFile(FinanceRow cost, List<FinanceRowMetaValue> financeRowMetaValues, Overhead overhead) {
+        Optional<FinanceRowMetaValue> overheadFileMetaValue = financeRowMetaValues.stream().
                 filter(metaValue -> metaValue.getFinanceRowMetaField().getTitle().equals(OverheadCostCategory.CALCULATION_FILE_FIELD)).
                 findFirst();
 
-        if (overheadFileMetaValue.isPresent()) {
-            fileEntryService.findOne(Long.valueOf(overheadFileMetaValue.get().getValue())).
-                    andOnSuccessReturnVoid(fileEntry -> overhead.setCalculationFile(fileEntry));
-        }
-    }
-
-    @Override
-    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
-        OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
-        return new Overhead(cost.getId(), type, cost.getQuantity());
+        overheadFileMetaValue.ifPresent(financeRowMetaValue -> fileEntryService.findOne(Long.valueOf(financeRowMetaValue.getValue())).
+                andOnSuccessReturnVoid(overhead::setCalculationFile));
     }
 
     @Override

@@ -27,7 +27,6 @@ public interface FinanceService {
     RestResult<FileEntryResource> getFinanceEntryByApplicationFinanceId(Long applicationFinanceId);
     RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId);
 
-    ProjectFinanceResource getProjectFinanceDetails(Long userId, Long projectId, Long organisationId);
     List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId);
     ProjectFinanceResource addProjectFinance(Long userId, Long projectId);
     ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId);

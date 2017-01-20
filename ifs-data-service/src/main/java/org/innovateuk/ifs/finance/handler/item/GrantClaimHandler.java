@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
@@ -46,11 +47,15 @@ public class GrantClaimHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
-        return new GrantClaim(cost.getId(), cost.getQuantity());
+        return buildRowItem(cost);
     }
 
     @Override
     public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+        return buildRowItem(cost);
+    }
+
+    private FinanceRowItem buildRowItem(FinanceRow cost){
         return new GrantClaim(cost.getId(), cost.getQuantity());
     }
 

@@ -143,9 +143,4 @@ public class FinanceServiceImpl implements FinanceService {
     public RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId) {
         return applicationFinanceRestService.getFile(applicationFinanceId);
     }
-
-    @Override
-    public ProjectFinanceResource getProjectFinanceDetails(Long userId, Long projectId, Long organisationId) {
-        return projectFinanceRestService.getFinanceDetails(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
 }

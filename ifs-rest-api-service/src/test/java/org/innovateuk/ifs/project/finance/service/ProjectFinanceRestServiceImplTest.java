@@ -202,4 +202,20 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         setupPostWithRestResultVerifications(postUrl, Void.class);
     }
+
+    @Test
+    public void testGetProjectFinance() {
+
+        Long projectId = 123L;
+
+        Long organisationId = 456L;
+
+        ProjectFinanceResource expectedResult = newProjectFinanceResource().build();
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class, expectedResult);
+
+        RestResult<ProjectFinanceResource> result = service.getProjectFinance(projectId, organisationId);
+
+        assertEquals(expectedResult, result.getSuccessObject());
+    }
 }

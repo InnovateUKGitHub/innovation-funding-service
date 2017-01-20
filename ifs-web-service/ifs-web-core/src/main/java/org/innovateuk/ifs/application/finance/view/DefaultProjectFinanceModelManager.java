@@ -85,16 +85,17 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     }
 
     protected ProjectFinanceResource getOrganisationFinances(Long projectId, List<QuestionResource> costsQuestions, Long userId, Long organisationId) {
-        ProjectFinanceResource projectFinanceResource = financeService.getProjectFinanceDetails(userId, projectId, organisationId);
+        ProjectFinanceResource projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
         if(projectFinanceResource == null) {
             financeService.addProjectFinance(userId, projectId);
             // ugly fix since the addApplicationFinance method does not return the correct results.
-            projectFinanceResource = financeService.getProjectFinanceDetails(userId, projectId, organisationId);
+            projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
         }
 
         String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
 
-        //CompetitionResource competition = competitionService.getById(application.getCompetition());
+        // TODO: INFUND-4834 Check if we need any condition checks here and add them (after merge of approval branch)
+        // CompetitionResource competition = competitionService.getById(application.getCompetition());
         //if(!application.hasBeenSubmitted() && competition.isOpen()) {
 	        // add cost for each cost question
 	        for(QuestionResource question: costsQuestions) {
@@ -132,7 +133,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
 	@Override
     public void addCost(Model model, FinanceRowItem costItem, long projectId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
         if (FinanceRowType.LABOUR == costType) {
-            ProjectFinanceResource projectFinanceResource = financeService.getProjectFinanceDetails(userId, projectId, organisationId);
+            ProjectFinanceResource projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
             LabourCostCategory costCategory = (LabourCostCategory) projectFinanceResource.getFinanceOrganisationDetails(FinanceRowType.LABOUR);
             model.addAttribute("costCategory", costCategory);
         }
