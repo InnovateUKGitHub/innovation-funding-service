@@ -992,7 +992,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         InnovationArea innovationArea = newInnovationArea().build();
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
-                .withId(2L)
                 .withName("Earth Observation")
                 .build();
         List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
