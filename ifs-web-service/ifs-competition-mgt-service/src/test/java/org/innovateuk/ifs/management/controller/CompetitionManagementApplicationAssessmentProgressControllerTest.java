@@ -115,7 +115,8 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 expectedAvailableAssessors
         );
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name()))
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId)
+                .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
@@ -201,13 +202,56 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
         mockMvc.perform(
                 post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
-                    .param("sortField", TOTAL_APPLICATIONS.name()))
+                        .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessmentConfirm() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        ApplicationAssessmentProgressRemoveViewModel expectedModel = new ApplicationAssessmentProgressRemoveViewModel(
+                competitionId,
+                applicationId,
+                assessmentId,
+                TITLE
+        );
+
+        mockMvc.perform(
+                get("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/application-progress-remove-confirm"));
+    }
+
+    @Test
+    public void withdrawAssessmentConfirm_preservesQueryParams() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        ApplicationAssessmentProgressRemoveViewModel expectedModel = new ApplicationAssessmentProgressRemoveViewModel(
+                competitionId,
+                applicationId,
+                assessmentId,
+                TOTAL_APPLICATIONS
+        );
+
+        mockMvc.perform(
+                get("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId)
+                        .param("sortField", TOTAL_APPLICATIONS.name()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/application-progress-remove-confirm"));
     }
 
     private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
