@@ -990,6 +990,54 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Test
+    public void getInvitationOverview_notExistingUsers() throws Exception {
+        long competitionId = 1L;
+
+        InnovationArea innovationArea = newInnovationArea().build();
+        InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
+                .withName("Earth Observation")
+                .build();
+        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
+
+        CompetitionInvite[] invites = newCompetitionInvite()
+                .withName("John Barnes", "Dave Smith", "Richard Turner")
+                .withInnovationArea(innovationArea)
+                .buildArray(3, CompetitionInvite.class);
+
+        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+                .withCompetition(newCompetition().build())
+                .withInvite(invites)
+                .withStatus(ACCEPTED, REJECTED, PENDING)
+                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
+                .build(3);
+
+        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
+                .withName("John Barnes", "Dave Smith", "Richard Turner")
+                .withInnovationAreas(innovationAreaList)
+                .withCompliant(false, false, false)
+                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
+                .withDetails(null, "Invite declined as not available", null)
+                .build(3);
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
+        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
+        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
+        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
+
+        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
+        assertEquals(expected, actual);
+
+        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, innovationAreaMapperMock);
+        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
+        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
+        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
+
+        inOrder.verifyNoMoreInteractions();
+    }
+
+
+    @Test
     public void inviteUser_existing() {
         User newUser = newUser()
                 .withEmailAddress("tom@poly.io")

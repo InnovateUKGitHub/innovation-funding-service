@@ -43,8 +43,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
                 availableAssessorResource.isCompliant(),
                 availableAssessorResource.getEmail(),
                 availableAssessorResource.getBusinessType(),
-                availableAssessorResource.isAdded()
-        );
+                availableAssessorResource.isAdded());
     }
 
     @Override

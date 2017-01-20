@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -222,7 +223,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
+                    } else {
+                        assessorInviteOverview.setInnovationAreas(asList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
                     }
+
                     return assessorInviteOverview;
                 }));
     }
@@ -448,7 +452,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             return asList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
         } else {
             return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
-                    .map(innovationArea -> innovationAreaMapper.mapToResource(innovationArea))
+                    .map(innovationAreaMapper::mapToResource)
                     .collect(toList());
         }
     }
