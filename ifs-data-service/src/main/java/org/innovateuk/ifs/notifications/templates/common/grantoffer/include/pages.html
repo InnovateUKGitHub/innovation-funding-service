@@ -19,7 +19,7 @@
         Application number: ${ApplicationNumber}<br/>
 
         <#assign sendDate = .now>
-            Date: ${sendDate?string["d MMMM yyyy"]}
+        Date: ${sendDate?string["d MMMM yyyy"]}
     </p>
     <p class="bold">
         Dear ${LeadContact},
@@ -56,10 +56,10 @@
     </p>
     <h2>Additional Acceptance Conditions</h2>
     <p>You must now:<br/>
-    <ul>
-        <li>accept this offer on behalf of all consortium partners (if any);</li>
-        <li>accept this offer of Grant by signing and uploading the Acceptance of Award using the digital service.</li>
-    </ul>
+        <ul>
+            <li>accept this offer on behalf of all consortium partners (if any);</li>
+            <li>accept this offer of Grant by signing and uploading the Acceptance of Award using the digital service.</li>
+        </ul>
     </p>
     <p>
         We wish you every success with your Project
@@ -117,12 +117,12 @@
                 <td>${org}</td>
                 <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
                 <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
-                    <#list 0..costLength as i>
-                        <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
-                        <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
-                    </#list>
-                    <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
-                    <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
+                <#list 0..costLength as i>
+                    <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
+                    <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
+                </#list>
+                <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
+                <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
             </tr>
         </#list>
         </tbody>
