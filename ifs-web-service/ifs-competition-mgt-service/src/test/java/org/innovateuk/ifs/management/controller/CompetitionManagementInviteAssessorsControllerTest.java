@@ -31,6 +31,8 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
@@ -524,12 +526,18 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedAvailableAssessors, (i, availableAssessorResource) -> {
             AvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(availableAssessorResource.getName(), availableAssessorRowViewModel.getName());
-            assertEquals(availableAssessorResource.getInnovationAreas(), availableAssessorRowViewModel.getInnovationAreas());
+            assertEquals(formatInnovationAreas(availableAssessorResource.getInnovationAreas()), availableAssessorRowViewModel.getInnovationAreas());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
             assertEquals(availableAssessorResource.getEmail(), availableAssessorRowViewModel.getEmail());
             assertEquals(availableAssessorResource.getBusinessType(), availableAssessorRowViewModel.getBusinessType());
             assertEquals(availableAssessorResource.isAdded(), availableAssessorRowViewModel.isAdded());
         });
+    }
+
+    private String formatInnovationAreas(List<InnovationAreaResource> innovationAreas) {
+        return innovationAreas == null ? EMPTY : innovationAreas.stream()
+                .map(i -> i.getName())
+                .collect(joining(", "));
     }
 
     private void assertInvitedAssessors(List<AssessorCreatedInviteResource> expectedCreatedInvites, MvcResult result) {
@@ -541,7 +549,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedCreatedInvites, (i, createdInviteResource) -> {
             InvitedAssessorRowViewModel invitedAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(createdInviteResource.getName(), invitedAssessorRowViewModel.getName());
-            assertEquals(createdInviteResource.getInnovationAreas(), invitedAssessorRowViewModel.getInnovationAreas());
+            assertEquals(formatInnovationAreas(createdInviteResource.getInnovationAreas()), invitedAssessorRowViewModel.getInnovationAreas());
             assertEquals(createdInviteResource.isCompliant(), invitedAssessorRowViewModel.isCompliant());
             assertEquals(createdInviteResource.getEmail(), invitedAssessorRowViewModel.getEmail());
         });
@@ -556,7 +564,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedInviteOverviews, (i, inviteOverviewResource) -> {
             OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
-            assertEquals(inviteOverviewResource.getInnovationAreas(), overviewAssessorRowViewModel.getInnovationAreas());
+            assertEquals(formatInnovationAreas(inviteOverviewResource.getInnovationAreas()), overviewAssessorRowViewModel.getInnovationAreas());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());

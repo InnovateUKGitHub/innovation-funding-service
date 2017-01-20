@@ -196,8 +196,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     Profile profile = profileRepository.findOne(assessor.getProfileId());
                     availableAssessor.setCompliant(profile.isCompliant(assessor));
                     availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
-                    // TODO INFUND-6865 Users should have innovation areas
-                    availableAssessor.setInnovationAreas(null);
+                    availableAssessor.setInnovationAreas(profile.getInnovationAreas().stream()
+                            .map(innovationArea -> innovationAreaMapper.mapToResource(innovationArea))
+                            .collect(toList()));
                     return availableAssessor;
                 }).collect(toList()));
     }
@@ -221,8 +222,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
                         Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
-                        // TODO INFUND-6865 Users should have innovation areas
-                        assessorInviteOverview.setInnovationAreas(null);
+                        assessorInviteOverview.setInnovationAreas(profile.getInnovationAreas().stream()
+                                .map(innovationArea -> innovationAreaMapper.mapToResource(innovationArea))
+                                .collect(toList()));
                     }
                     return assessorInviteOverview;
                 }));

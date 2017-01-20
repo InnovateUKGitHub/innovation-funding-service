@@ -4,6 +4,9 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Abstract holder of model attributes for the assessors shown in the 'Invite Assessors' view.
  */
@@ -23,8 +26,10 @@ abstract class InviteAssessorsRowViewModel {
         return name;
     }
 
-    public List<InnovationAreaResource> getInnovationAreas() {
-        return innovationAreas;
+    public String getInnovationAreas() {
+        return innovationAreas == null ? EMPTY : innovationAreas.stream()
+                .map(i -> i.getName())
+                .collect(joining(", "));
     }
 
     public boolean isCompliant() {
